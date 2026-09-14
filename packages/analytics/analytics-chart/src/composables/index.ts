@@ -5,8 +5,10 @@ import useChartLegendValues from './useChartLegendValues'
 import useChartSelectedRange from './useChartSelectedRange'
 import useDonutChartOptions from './useDonutChartOptions'
 import useLineChartOptions from './useLineChartOptions'
+import useScatterChartOptions from './useScatterChartOptions'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
+import useScatterDatasets from './useScatterDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
 import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
@@ -21,8 +23,10 @@ export default {
   useChartSelectedRange,
   useExploreResultToDatasets,
   useExploreResultToTimeDataset,
+  useScatterDatasets,
   useDonutChartOptions,
   useLineChartOptions,
+  useScatterChartOptions,
   useI18n,
   useReportChartDataForSynthetics,
   useTranslatedUnits,

@@ -12,6 +12,7 @@ import {
   BORDER_WIDTH,
   NO_BORDER,
   determineBaseColor,
+  isChartLabel,
 } from '../utils'
 import composables from '../composables'
 
@@ -87,7 +88,8 @@ export default function useExploreResultToTimeDataset(
         // It will either be the first dimension or if no dimensions
         // are provided, then the metric is the primary dimension
         const dimension = (dimensionFieldNames && dimensionFieldNames[0])
-        const dimensionDisplay = display[dimension]
+        const dimensionDisplay = display?.[dimension]
+        const hasGroupedMetrics = !!dimensionDisplay && metricNames.length > 1
         let datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) || metricNames.map(name => ({ id: name, name }))
 
         // If the dimension is a country_code, get the country's display name
@@ -114,7 +116,6 @@ export default function useExploreResultToTimeDataset(
 
         const offsetMs = originToOffset(startMs)
         const zeroFilledTimeSeries = createZeroFilledTimeSeries(startMs, endMs, stepMs, offsetMs, records)
-        const dimensionPositions = new Set<string>()
 
         const timedEvents = !records?.length
           ? {}
@@ -123,7 +124,6 @@ export default function useExploreResultToTimeDataset(
             const event = druidRow.event as { [label: string]: string | number }
 
             for (const metric of metricNames) {
-              dimensionPositions.add(metric)
               if (!(timestamp in acc)) {
                 acc[timestamp] = {}
               }
@@ -135,7 +135,7 @@ export default function useExploreResultToTimeDataset(
 
             for (const metric of metricNames) {
               datasetLabels.forEach((label: DatasetLabel) => {
-                if (event[dimension] === label.id || metric === label.id) {
+                if (dimensionDisplay ? event[dimension] === label.id : metric === label.id) {
                   if (!acc[timestamp][metric]) {
                     acc[timestamp][metric] = {}
                   }
@@ -152,7 +152,7 @@ export default function useExploreResultToTimeDataset(
             return acc
           }, {})
 
-        const dimensionsCrossMetrics: Array<[string, string, string, boolean]> = metricNames.length === 1
+        const dimensionsCrossMetrics: Array<[string, string, string, boolean]> = dimensionDisplay || metricNames.length === 1
           ? metricNames.flatMap<[string, string, string, boolean]>(metric => {
             return datasetLabels.map<[string, string, string, boolean]>(label => [metric, label.id, label.name, label.id === 'empty'])
           })
@@ -175,17 +175,21 @@ export default function useExploreResultToTimeDataset(
           }
 
           const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
+          const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
+          const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
+          const metricIndex = metricNames.findIndex(name => name === metric)
 
           return {
             rawDimension: dimensionName,
             rawMetric: metric,
-            // @ts-ignore - dynamic i18n key
-            label: (i18n && i18n.te(`chartLabels.${dimensionName}`) && i18n.t(`chartLabels.${dimensionName}`)) || dimensionName,
+            label: hasGroupedMetrics ? `${dimensionLabel} — ${metricLabel}` : dimensionLabel,
             borderColor: baseColor,
             backgroundColor: baseColor,
             data: filled,
             total: filled.reduce((acc, { y }) => acc + Number(y), 0),
             ...defaultLineOptions,
+            // Keep dimension colors (including empty/status colors) while distinguishing metrics.
+            ...(hasGroupedMetrics ? { borderDash: metricIndex === 0 ? [] : [metricIndex * 4, 2] } : {}),
             fill,
             borderWidth: fill ? NO_BORDER : BORDER_WIDTH,
             isSegmentEmpty,

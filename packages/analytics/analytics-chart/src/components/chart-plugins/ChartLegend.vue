@@ -5,19 +5,38 @@
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty } in (items as any[])"
+      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash } in (items as any[])"
       :key="text"
-      @click="handleLegendItemClick(datasetIndex, index)"
+      :class="{ 'legend-key': isKey }"
+      @click="isKey ? undefined : handleLegendItemClick(datasetIndex, index)"
     >
+      <svg
+        v-if="lineDash?.length"
+        aria-hidden="true"
+        class="line-marker"
+        height="2"
+        width="16"
+      >
+        <line
+          :stroke="strokeStyle"
+          :stroke-dasharray="lineDash.join(' ')"
+          stroke-width="2"
+          x1="0"
+          x2="16"
+          y1="1"
+          y2="1"
+        />
+      </svg>
       <div
+        v-else
         class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <KTooltip>
         <div
           class="label-container"
-          :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
-          :title="value && showValues ? `${text}: ${value.formatted}` : text"
+          :class="{ 'strike-through': !isKey && !isDatasetVisible(datasetIndex, index), 'inline-value': isKey }"
+          :title="value && (showValues || isKey) ? `${text}: ${value.formatted}` : text"
         >
           <div
             class="label truncate-label"
@@ -25,10 +44,10 @@
             {{ text }}
           </div>
           <div
-            v-if="value && showValues"
+            v-if="value && (showValues || isKey)"
             class="sub-label"
           >
-            {{ value.formatted }}
+            <span v-if="isKey">-</span> {{ value.formatted }}
           </div>
         </div>
         <template
@@ -144,6 +163,22 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     display: flex;
     line-height: 1;
     margin: 0;
+
+    // A key shows a value that is not a dataset, thus it cannot be toggled.
+    &.legend-key {
+      cursor: default;
+    }
+
+    .line-marker {
+      margin-right: var(--kui-space-30, $kui-space-30);
+      overflow: visible;
+    }
+
+    .label-container.inline-value {
+      align-items: center;
+      display: flex;
+      gap: var(--kui-space-20, $kui-space-20);
+    }
 
     // Color bar preceding label
     .square-marker {

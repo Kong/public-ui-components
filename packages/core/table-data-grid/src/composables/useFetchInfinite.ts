@@ -2,6 +2,7 @@ import type {
   TableDataGridFetcher,
   TableDataGridFetcherResult,
   TableDataGridRow,
+  TableDataGridSort,
 } from '../types'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
@@ -26,6 +27,10 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
    * the datasource and clears cursor/block state back to block 0.
    */
   resetKey?: Readonly<Ref<unknown>>
+  /**
+   * Current resolved sort, forwarded to the fetcher.
+   */
+  sort?: Readonly<Ref<TableDataGridSort | undefined>>
 }
 
 /**
@@ -48,6 +53,7 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
 export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   fetcher,
   resetKey,
+  sort,
 }: UseFetchInfiniteOptions<Row>) => {
   // AG Grid thinks in row ranges; the public TableDataGrid fetcher thinks in a
   // cursor chain. These maps keep that translation internal to the datasource.
@@ -283,14 +289,16 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
         })
 
         if (blockGateResult !== 'ready') {
-          if (blockGateResult === 'failed') {
-            getRowsParams.failCallback()
-          }
-
+          // Both 'failed' and 'stale' still need a completion signal, or AG Grid leaves this block in flight forever.
+          getRowsParams.failCallback()
           return
         }
 
-        markFetchStarted()
+        // Skip for a stale generation, or isFetching can get stuck true.
+        if (isLatestDatasource(datasourceId)) {
+          markFetchStarted()
+        }
+
         try {
           // AG Grid schedules blocks by row range, so `blockIndex` is this
           // composable's range-to-cursor bridge: range 0-25 maps to block 0,
@@ -304,11 +312,17 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             mode: 'infinite',
             pageSize,
             cursor,
+            // Always read the latest sort, not a stale one.
+            sort: sort?.value,
           })
 
           if (!isLatestDatasource(datasourceId)) {
             // A reset replaced the datasource while this request was in flight.
             // Do not call callbacks on the old datasource or mutate current state.
+
+            // Signals AG Grid that this block's request has completed (as a failure).
+            getRowsParams.failCallback()
+
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
@@ -322,8 +336,9 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           })
         } catch (fetchError) {
           if (!isLatestDatasource(datasourceId)) {
-            // The latest datasource will issue its own requests; the stale
-            // failure should not surface as a current-grid error.
+            // Signals AG Grid that this block's request has completed (as a failure).
+            getRowsParams.failCallback()
+
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }

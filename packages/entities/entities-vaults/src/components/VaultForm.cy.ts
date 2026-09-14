@@ -189,7 +189,9 @@ function checkEncryptedFieldTypes(): void {
     pickAuth(method)
 
     encryptedCspFields[method].forEach((field) => {
-      cy.getTestId(hcvFieldId(field)).should('have.attr', 'type', 'password')
+      cy.getTestId(hcvFieldId(field))
+        .should('have.attr', 'type', 'text')
+        .and('have.css', '-webkit-text-security', 'disc')
     })
   })
 }

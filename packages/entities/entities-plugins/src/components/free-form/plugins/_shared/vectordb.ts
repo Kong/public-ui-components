@@ -1,5 +1,5 @@
-import type { FieldRenderer, RenderRules } from '../../shared/types'
-import ArrayField from '../../shared/ArrayField.vue'
+import type { FieldRenderer, RenderRules } from '../../core/types'
+import ArrayField from '../../core/components/ArrayField.vue'
 
 export const vectordbFieldRenderers: FieldRenderer[] = [
   {

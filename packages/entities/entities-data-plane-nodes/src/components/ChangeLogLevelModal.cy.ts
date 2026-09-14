@@ -86,7 +86,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       it('disables Save when the expiration (in seconds) is out of the 10-3600 range', () => {
         mountModal()
 
-        // Default is 10 mins (600s) - within range.
+        // Default is 1 min (60s) - within range.
         cy.get(actionButton).should('be.enabled')
 
         cy.getTestId('expiration-input').clear()
@@ -136,7 +136,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.wait('@submit').then(({ request }) => {
           expect(request.body).to.deep.equal({
             log_level: 'notice',
-            ttl: 600,
+            ttl: 60,
             targets: { node_ids: ['node-1', 'node-2'] },
           })
         })

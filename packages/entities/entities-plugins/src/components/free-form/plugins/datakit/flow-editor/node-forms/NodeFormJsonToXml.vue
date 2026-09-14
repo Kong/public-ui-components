@@ -66,8 +66,8 @@
 import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
-import Form from '../../../../shared/Form.vue'
-import StringField from '../../../../shared/StringField.vue'
+import Form from '../../../../core/components/Form.vue'
+import StringField from '../../../../core/components/StringField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'

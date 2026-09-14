@@ -26,7 +26,7 @@ interface YAMLNodeWithKeyPath {
   keyPath: JSONPath
 }
 
-function getYAMLNodeRange(node: YAMLNode, model: editor.ITextModel): IRange | undefined {
+export function getYAMLNodeRange(node: YAMLNode, model: editor.ITextModel): IRange | undefined {
   const range = node.range
   if (!range) {
     return undefined
@@ -176,7 +176,7 @@ function forEachYAMLNodeWithKeyPath(root: YAMLNode, fn: (node: YAMLNode, keyPath
   }
 }
 
-function getYAMLNodeAtPath(document: YAMLDocument.Parsed, keyPath: JSONPath): YAMLNode | undefined {
+export function getYAMLNodeAtPath(document: YAMLDocument.Parsed, keyPath: JSONPath): YAMLNode | undefined {
   const node = document.getIn(keyPath, true)
   return isNode(node)
     ? node

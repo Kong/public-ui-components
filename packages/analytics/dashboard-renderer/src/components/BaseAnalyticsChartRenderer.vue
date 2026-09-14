@@ -9,6 +9,7 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
+        :active-metric="activeMetric"
         :chart-data="data"
         :chart-options="options"
         :explore-link="exploreLink"

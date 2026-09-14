@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../shared/Form.vue'
+import Form from '../../../../core/components/Form.vue'
 import OutputValueField from './OutputValueField.vue'
 import { computed } from 'vue'
 import type { FieldName, NodeName } from '../../types'

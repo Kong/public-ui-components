@@ -37,6 +37,15 @@ yarn add @kong-ui-public/analytics-chart
 - type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
 - required: `true`
 
+#### `activeMetric`
+
+- type: `AllAggregations`
+- optional
+
+Selects the displayed metric only for time-series line or bar charts with multiple metrics and a group-by dimension. Other chart configurations ignore this prop. If omitted or absent from the result's `meta.metric_names`, the first metric is used.
+
+The host owns the selection control and passes its value with `:active-metric="activeMetric"`. Changing this prop updates the displayed datasets, axis, units, and thresholds without changing the original query result.
+
 #### `chartOptions`
 
 - type: [AnalyticsChartOptions](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-chart/src/types/chart-data.ts)

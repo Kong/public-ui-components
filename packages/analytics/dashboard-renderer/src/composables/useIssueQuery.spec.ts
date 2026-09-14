@@ -33,6 +33,11 @@ describe('useIssueQuery', () => {
   })
 
   const mockStore = {
+    datasourceConfigMap: ref({
+      managed_cache_usage: {
+        timeRangeOptions: ['15m', '1h', '6h', '12h', '24h', '7d'],
+      },
+    }),
     isReady: vi.fn().mockResolvedValue(undefined),
     stripUnknownFilters: ref(mockStripUnknownFilters),
   } as any
@@ -103,6 +108,63 @@ describe('useIssueQuery', () => {
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
       datasource: 'basic',
+    })
+  })
+
+  it('limits a relative context timeframe to the datasource maximum', async () => {
+    const queryFn = vi.fn().mockResolvedValue({})
+    const wrapper = mountComposable({
+      queryFn,
+    } as any)
+
+    await wrapper.vm.issueQuery({
+      datasource: 'managed_cache_usage',
+      metrics: [],
+      dimensions: [],
+      filters: [],
+    } as any, {
+      ...context,
+      timeSpec: {
+        type: 'relative',
+        time_range: '30d',
+      },
+    })
+
+    expect(queryFn.mock.calls[0][0]).toMatchObject({
+      query: {
+        time_range: {
+          type: 'relative',
+          time_range: '7d',
+          tz: 'UTC',
+        },
+      },
+    })
+  })
+
+  it('limits an absolute tile timeframe while preserving its end', async () => {
+    const queryFn = vi.fn().mockResolvedValue({})
+    const wrapper = mountComposable({
+      queryFn,
+    } as any)
+    const end = new Date('2024-01-30T00:00:00Z')
+
+    await wrapper.vm.issueQuery({
+      datasource: 'managed_cache_usage',
+      metrics: [],
+      dimensions: [],
+      filters: [],
+      time_range: {
+        type: 'absolute',
+        start: new Date('2024-01-01T00:00:00Z'),
+        end,
+      },
+    } as any, context)
+
+    expect(queryFn.mock.calls[0][0].query.time_range).toEqual({
+      type: 'absolute',
+      start: new Date('2024-01-23T00:00:00Z'),
+      end,
+      tz: 'UTC',
     })
   })
 

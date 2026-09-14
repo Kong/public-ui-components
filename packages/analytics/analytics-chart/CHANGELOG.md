@@ -3,6 +3,171 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.31.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.4...%40kong-ui-public%2Fanalytics-chart%4010.31.5) (2026-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.31.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.3...%40kong-ui-public%2Fanalytics-chart%4010.31.4) (2026-09-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.31.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.2...%40kong-ui-public%2Fanalytics-chart%4010.31.3) (2026-09-11)
+
+### Bug Fixes
+
+* **analytics:** remove splitting of outliers and add percentile plugin [MA-5465] ([#3822](https://github.com/Kong/public-ui-components/issues/3822)) ([9179182](https://github.com/Kong/public-ui-components/commit/91791828bc623dacedc120157815566fa3b510fa))
+
+
+## [10.31.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.1...%40kong-ui-public%2Fanalytics-chart%4010.31.2) (2026-09-10)
+
+### Bug Fixes
+
+* **analytics:** improve single value display [MA-5423] ([#3826](https://github.com/Kong/public-ui-components/issues/3826)) ([0d50b10](https://github.com/Kong/public-ui-components/commit/0d50b1096e824d4bdb5a74b139a3cf306bb568e6))
+
+
+## [10.31.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.0...%40kong-ui-public%2Fanalytics-chart%4010.31.1) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [10.31.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.30.1...%40kong-ui-public%2Fanalytics-chart%4010.31.0) (2026-09-10)
+
+### Features
+
+* **analytics:** support grouped multi-metric time series ([#3824](https://github.com/Kong/public-ui-components/issues/3824)) ([eb0bedf](https://github.com/Kong/public-ui-components/commit/eb0bedf14b3b155507f6a557de5d3471a5ed942c))
+
+
+## [10.30.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.30.0...%40kong-ui-public%2Fanalytics-chart%4010.30.1) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [10.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.29.0...%40kong-ui-public%2Fanalytics-chart%4010.30.0) (2026-09-10)
+
+### Features
+
+* add cost_per_request and active_agents ([#3823](https://github.com/Kong/public-ui-components/issues/3823)) ([fbee1fb](https://github.com/Kong/public-ui-components/commit/fbee1fb9d4c181ec0f2baec0b494f0f9eabde130))
+
+
+# [10.29.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.28.1...%40kong-ui-public%2Fanalytics-chart%4010.29.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter chart renderer [MA-5465] ([#3821](https://github.com/Kong/public-ui-components/issues/3821)) ([0dc7ea2](https://github.com/Kong/public-ui-components/commit/0dc7ea20801c283c06a6ac7684861cf9373e30e1))
+
+
+## [10.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.28.0...%40kong-ui-public%2Fanalytics-chart%4010.28.1) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [10.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.27.0...%40kong-ui-public%2Fanalytics-chart%4010.28.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter plot chart type [MA-5431] ([#3812](https://github.com/Kong/public-ui-components/issues/3812)) ([b6f01f1](https://github.com/Kong/public-ui-components/commit/b6f01f1f51674086ac522043986c3471cfbaf74d))
+
+
+# [10.27.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.6...%40kong-ui-public%2Fanalytics-chart%4010.27.0) (2026-09-09)
+
+### Features
+
+* add AI percentile metrics ([#3801](https://github.com/Kong/public-ui-components/issues/3801)) ([60f1ede](https://github.com/Kong/public-ui-components/commit/60f1eded5b3fb4155caf5389cfa9c2fcbaa1e10d))
+
+
+## [10.26.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.5...%40kong-ui-public%2Fanalytics-chart%4010.26.6) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.4...%40kong-ui-public%2Fanalytics-chart%4010.26.5) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.3...%40kong-ui-public%2Fanalytics-chart%4010.26.4) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.2...%40kong-ui-public%2Fanalytics-chart%4010.26.3) (2026-09-08)
+
+### Bug Fixes
+
+* **analytics-chart:** align TopN headers without dimensions [MA-5439] ([#3800](https://github.com/Kong/public-ui-components/issues/3800)) ([cab53b4](https://github.com/Kong/public-ui-components/commit/cab53b4f726fa5432cc6d879d43ed356d24bac21))
+
+
+## [10.26.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.1...%40kong-ui-public%2Fanalytics-chart%4010.26.2) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.0...%40kong-ui-public%2Fanalytics-chart%4010.26.1) (2026-09-05)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3782](https://github.com/Kong/public-ui-components/issues/3782)) ([ef460c0](https://github.com/Kong/public-ui-components/commit/ef460c00fb75b6798da333a68775475b4203be95))
+
+
+# [10.26.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.16...%40kong-ui-public%2Fanalytics-chart%4010.26.0) (2026-09-04)
+
+### Features
+
+* add translations for tokens/minute [MA-5407] ([#3779](https://github.com/Kong/public-ui-components/issues/3779)) ([ab1c212](https://github.com/Kong/public-ui-components/commit/ab1c212fadb17148fe31465bc9a5857bd00a7d1a))
+
+
+## [10.25.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.15...%40kong-ui-public%2Fanalytics-chart%4010.25.16) (2026-09-04)
+
+### Bug Fixes
+
+* **analytics:** time per token translations [MA-5369] ([#3775](https://github.com/Kong/public-ui-components/issues/3775)) ([fa045af](https://github.com/Kong/public-ui-components/commit/fa045afa92dc0c7954d8f159e16d20ffe874bf28))
+
+
+## [10.25.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.14...%40kong-ui-public%2Fanalytics-chart%4010.25.15) (2026-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.25.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.13...%40kong-ui-public%2Fanalytics-chart%4010.25.14) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.25.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.12...%40kong-ui-public%2Fanalytics-chart%4010.25.13) (2026-08-27)
 
 ### Bug Fixes

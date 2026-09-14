@@ -99,7 +99,7 @@ import { computed, inject } from 'vue'
 import { KCheckbox, KInputSwitch, KLabel, KMultiselect, KRadio } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import useI18n from '../../../../composables/useI18n'
-import { useFormShared } from '../../shared/composables'
+import { useFormShared } from '../../core/composables'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'

@@ -84,6 +84,7 @@ import {
 } from '@kong/design-tokens'
 
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
+import type { AlignX } from '../../types'
 import composables from '../../composables'
 
 const { i18n } = composables.useI18n()
@@ -114,8 +115,8 @@ const props = defineProps({
     default: false,
   },
   alignX: {
-    type: String as PropType<'left' | 'center' | 'right' | 'between' | 'around' | 'evenly'>,
-    default: 'space-evenly',
+    type: String as PropType<AlignX>,
+    default: 'left',
   },
 })
 
@@ -152,10 +153,12 @@ const metricUnit = computed((): string | undefined => {
   return undefined
 })
 
-// by default, display metric units for requests per minute, latency
-const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute'
-  || !!metricName.value?.includes('_latency_')
-  || metricName.value === 'error_rate')
+// by default, display metric units for requests / tokens per minute, latency
+const displayMetricUnit = computed((): boolean => !!metricName.value && (
+  metricName.value.includes('_per_minute')
+  || metricName.value.includes('_latency_')
+  || metricName.value === 'error_rate'),
+)
 
 const previousValue = computed<number | null>(() => {
   if (props.showTrend && trendPrevious.value !== undefined) {
@@ -321,6 +324,27 @@ onMounted(() => {
     justify-content: space-evenly;
   }
 
+  &.align-left,
+  &.align-between {
+    .single-value-wrapper .single-value-metric {
+      align-items: flex-start;
+    }
+
+    .single-value-wrapper .single-value-trend {
+      justify-content: flex-start;
+    }
+  }
+
+  &.align-right {
+    .single-value-wrapper .single-value-metric {
+      align-items: flex-end;
+    }
+
+    .single-value-wrapper .single-value-trend {
+      justify-content: flex-end;
+    }
+  }
+
   .single-value-error {
     &:deep(.empty-state-title) {
       font-size: var(--kui-font-size-20, $kui-font-size-20);
@@ -332,8 +356,8 @@ onMounted(() => {
   .single-value-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: -4px; // to account for .tile-content top padding :(
+    gap: var(--kui-space-40, $kui-space-40);
+    max-width: 100%;
 
     .single-value-metric {
       align-items: center;
@@ -349,22 +373,25 @@ onMounted(() => {
 
     .single-value {
       color: var(--kui-color-text, $kui-color-text);
-      font-size: var(--kui-font-size-70, $kui-font-size-70);
+      font-size: var(--kui-font-size-80, $kui-font-size-80);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-      line-height: var(--kui-line-height-70, $kui-line-height-70);
+      line-height: var(--kui-line-height-80, $kui-line-height-80);
     }
 
     .single-value-unit {
       color: var(--kui-color-text, $kui-color-text);
-      font-size: var(--kui-font-size-60, $kui-font-size-60);
+      font-size: var(--kui-font-size-70, $kui-font-size-70);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-      line-height: var(--kui-line-height-60, $kui-line-height-60);
+      line-height: var(--kui-line-height-70, $kui-line-height-70);
     }
 
     .single-value-trend {
       align-items: center;
       column-gap: var(--kui-space-40, $kui-space-40);
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: var(--kui-space-20, $kui-space-20);
 
       .trend-change {
         align-items: center;

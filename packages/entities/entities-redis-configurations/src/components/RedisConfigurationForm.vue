@@ -176,7 +176,7 @@
             :value="form.fields.config.sentinel_username"
             @open="(value, update) => setUpVaultSecretPicker(value, update)"
           />
-          <KInput
+          <SecretInput
             v-model.trim="form.fields.config.sentinel_password"
             :label="t('form.fields.sentinel_password.label')"
             :label-attributes="{
@@ -184,8 +184,6 @@
               tooltipAttributes: { maxWidth: '400' },
             }"
             :readonly="form.readonly"
-            show-password-mask-toggle
-            type="password"
           />
           <VaultSecretPickerProvider
             class="secret-picker-provider"
@@ -320,7 +318,7 @@
             :value="form.fields.config.username"
             @open="(value, update) => setUpVaultSecretPicker(value, update)"
           />
-          <KInput
+          <SecretInput
             v-model.trim="form.fields.config.password"
             data-testid="redis-password-input"
             :label="t('form.fields.password.label')"
@@ -329,8 +327,6 @@
               tooltipAttributes: { maxWidth: '400' },
             }"
             :readonly="form.readonly"
-            show-password-mask-toggle
-            type="password"
           />
           <VaultSecretPickerProvider
             class="secret-picker-provider"
@@ -528,6 +524,8 @@
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormBlock, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'

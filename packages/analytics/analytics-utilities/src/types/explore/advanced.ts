@@ -6,7 +6,7 @@ export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'ai_gateway',
   'ai_gateway_consumer',
-  //'ai_gateway_consumer_group',
+  'ai_gateway_consumer_group',
   'ai_gateway_data_plane_node',
   'application',
   'bot_info_action',

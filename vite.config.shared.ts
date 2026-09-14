@@ -83,6 +83,8 @@ export default defineConfig({
         '@kong/icons',
         '@kong-ui-public/i18n',
         '@kong-ui-public/entities-shared',
+        '@kong-ui-public/misc-widgets',
+        '@kong-ui-public/misc-widgets/dist/style.css',
         'axios',
       ],
       output: {
@@ -94,6 +96,7 @@ export default defineConfig({
           '@kong/kongponents': 'Kongponents',
           '@kong/icons': 'KongIcons',
           '@kong-ui-public/entities-shared': 'kong-ui-public-entities-shared',
+          '@kong-ui-public/misc-widgets': 'kong-ui-public-misc-widgets',
           axios: 'axios',
         },
         exports: 'named',

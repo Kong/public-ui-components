@@ -2,6 +2,7 @@ import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { ScatterPointExtra } from './scatter-data'
 
 // Chart.js extended interfaces
 export type Dataset = ChartDataset & {
@@ -19,11 +20,22 @@ export interface KChartData extends ChartData {
   labels?: string[]
   isLabelEmpty?: boolean[]
   isMultiDimension?: boolean
+  outlier?: ScatterOutlier
+  referenceLines?: ResolvedReferenceLine[]
 }
 
 export interface AnalyticsDataPoint {
   x: number
   y: number
+}
+
+/**
+ * A label for the chart tooltip instead of using the dataset's label.
+ * Scatter plots need this for outliers as they would show the "Outlier..." label
+ */
+export interface LabeledDataPoint extends AnalyticsDataPoint {
+  tooltipLabel?: string
+  extras?: ScatterPointExtra[]
 }
 
 /**
@@ -51,6 +63,11 @@ export interface EnhancedLegendItem extends LegendItem {
   value: LegendValueEntry
   text: string
   isSegmentEmpty?: boolean
+  /**
+   * A key is not tied to a specific dataset, only used for extra things in a chart like
+   * outliers, thresholds, etc. They also don't toggle anything and always show their value.
+   */
+  isKey?: boolean
 }
 
 /**
@@ -65,6 +82,75 @@ export interface Threshold {
   value: number
   label?: string
   highlightIntersections?: boolean
+}
+
+/**
+ * A horizontal reference line drawn at a percentile of the plotted y-values.
+ */
+export interface ScatterPercentileLine {
+  /**
+   * Percentile to draw, 0 to 100.
+   */
+  percentile: number
+  /**
+   * Overrides the default label.
+   */
+  label?: string
+  /**
+   * Dash pattern for the line, defaults to a dashed [6, 4] for the median and a
+   * dotted [2, 3] for anything else.
+   */
+  borderDash?: number[]
+  /**
+   * Line color, defaults to neutral text for the median, danger for anything above it.
+   */
+  color?: string
+}
+
+export interface ResolvedReferenceLine {
+  percentile: number
+  label: string
+  value: number
+  color: string
+  borderDash: number[]
+}
+
+export interface ScatterOutlier {
+  value: number
+  /**
+   * Legend key text, e.g. "Outlier (> p95)".
+   */
+  label: string
+  color: string
+}
+
+export interface ScatterOptions {
+  /**
+   * Reference lines derived from the plotted y-values, defaults to none.
+   */
+  percentileLines?: ScatterPercentileLine[]
+  /**
+   * Percentile above which points are colored as outliers, defaults to undefined
+   */
+  outlierPercentile?: number
+  /**
+   * Shade the chart region above `outlierPercentile`, defaults to false.
+   */
+  shadeOutlierRegion?: boolean
+  /**
+   * Maximum horizontal jitter, applied to points so that records sharing a timestamp
+   * don't stack into a single column, defaults to 0 (no jitter).
+   */
+  jitterMs?: number
+  /**
+   * Radius of each plotted point, defaults to 2.
+   */
+  pointRadius?: number
+  /**
+   * Opacity of the plotted points between 0 and 1, defaults to 0.6
+   * Doesn't apply to outlier points
+   */
+  pointOpacity?: number
 }
 
 /**
@@ -116,6 +202,10 @@ export interface AnalyticsChartOptions {
    * Only applies when type is 'donut'.
    */
   showCenterMetric?: boolean
+  /**
+   * Scatter plot options, only applies when type is 'scatter'.
+   */
+  scatter?: ScatterOptions
 }
 
 /**

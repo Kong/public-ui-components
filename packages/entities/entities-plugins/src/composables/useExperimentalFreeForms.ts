@@ -1,5 +1,5 @@
 import { inject, provide } from 'vue'
-import { getExperimentalPluginNames, getFreeFormComponent, shouldUseFreeForm } from '../components/free-form/shared/plugin-registry'
+import { getExperimentalPluginNames, getFreeFormComponent, shouldUseFreeForm } from '../components/free-form/plugin-registry'
 import { EXPERIMENTAL_FREE_FORM_PROVIDER } from '../constants'
 
 export function useExperimentalFreeForms() {

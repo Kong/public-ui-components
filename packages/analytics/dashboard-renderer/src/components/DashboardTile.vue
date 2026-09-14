@@ -27,6 +27,20 @@
 
       <div class="badge-container">
         <KBadge
+          v-if="rangeUnsupported"
+          appearance="warning"
+          data-testid="unsupported-time-range-badge"
+          :tooltip="i18n.t('unsupported_time_range_warning')"
+          :tooltip-attributes="{ maxWidth: '320px' }"
+        >
+          <template #icon>
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+          </template>
+          <span class="badge-text">
+            {{ i18n.t('unsupported_time_range_badge') }}
+          </span>
+        </KBadge>
+        <KBadge
           v-if="badgeData"
           data-testid="time-range-badge"
           :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
@@ -42,6 +56,18 @@
             {{ badgeData }}
           </span>
         </KBadge>
+      </div>
+
+      <div
+        v-if="showMetricSelector"
+        class="metric-selector-wrapper"
+      >
+        <KSegmentedControl
+          v-model="activeMetric"
+          class="metric-selector"
+          data-testid="metric-selector"
+          :options="metricOptions"
+        />
       </div>
 
       <div v-if="showRefresh">
@@ -174,6 +200,7 @@ import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
   AnalyticsBridge,
+  AllAggregations,
   ExploreExportState,
   DashboardTileType,
   ExploreQuery,
@@ -181,6 +208,7 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -191,19 +219,24 @@ import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
+import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
+import { KSegmentedControl } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -250,7 +283,7 @@ const emit = defineEmits<{
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
-const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
+const { datasourceConfigMap, stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -266,7 +299,7 @@ const tileTitle = computed<string | undefined>(() => {
 const tileDescription = computed<string | undefined>(() => definition.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableChartDefinition(definition)) {
+  if (isTableChartDefinition(definition) || isRequestsChartDefinition(definition)) {
     return false
   }
 
@@ -322,6 +355,7 @@ const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && k
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
+  'scatter': ScatterChartRenderer,
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
@@ -360,6 +394,7 @@ const componentData = computed(() => {
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
+    activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
     requestsLink: hideZoomActions ? undefined : requestsLinkZoomActions.value,
     exploreLink: hideZoomActions ? undefined : exploreLinkZoomActions.value,
@@ -411,6 +446,16 @@ const badgeData = computed<string | null>(() => {
   return null
 })
 
+const rangeUnsupported = computed(() => {
+  const query = definition.query
+  const datasource = query?.datasource
+  const supportedTimeRanges = datasource ? datasourceConfigMap.value[datasource]?.timeRangeOptions : undefined
+  const tileTimeRange = query && 'time_range' in query ? query.time_range : undefined
+  const timeRange = tileTimeRange ?? context.timeSpec
+
+  return isTimeRangeUnsupported(timeRange as TimeRangeV4 | undefined, supportedTimeRanges)
+})
+
 const hasTileHeader = computed<boolean>(() => {
   if (isSlottableTile.value) {
     return false
@@ -420,8 +465,10 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(tileTitle.value),
     hasHeaderActions.value,
     Boolean(badgeData.value),
+    rangeUnsupported.value,
     Boolean(tileDescription.value),
     showRefresh,
+    showMetricSelector.value,
   ].some(Boolean)
 })
 
@@ -433,9 +480,35 @@ const isTimeSeriesChart = computed(() => {
   return ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
+const metricNames = computed<AllAggregations[]>(() => chartData.value?.meta.metric_names ?? [])
+
+const activeMetric = ref<AllAggregations>()
+
+watch(metricNames, metrics => {
+  if (!activeMetric.value || !metrics.includes(activeMetric.value)) {
+    activeMetric.value = metrics[0]
+  }
+}, { immediate: true })
+
+const showMetricSelector = computed(() => (
+  isTimeSeriesChart.value
+  && (chartData.value?.data.length ?? 0) > 0
+  && metricNames.value.length > 1
+  && Object.keys(chartData.value?.meta.display ?? {}).length > 0
+))
+
+const isChartLabel = (name: string): name is keyof typeof english.chartLabels => Object.hasOwn(english.chartLabels, name)
+
+const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
+  value,
+  label: isChartLabel(value)
+    ? i18n.t(`chartLabels.${value}`)
+    : value,
+})))
+
 const isAgedOutQuery = computed(() => {
-  // Check table definitions first so TypeScript narrows before reading query.granularity.
-  if (isTableChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  if (!isExploreChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
@@ -450,8 +523,8 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  // Check table definitions first so TypeScript narrows before reading query.granularity.
-  const savedGranularity = isTableChartDefinition(definition) ? 'unknown' : definition.query.granularity ?? 'unknown'
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  const savedGranularity = isExploreChartDefinition(definition) ? definition.query.granularity ?? 'unknown' : 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -516,6 +589,10 @@ const hideExportModal = () => {
 }
 
 const getExportData = (): Promise<ExploreResultV4> => {
+  if (isRequestsChartDefinition(definition)) {
+    throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
+  }
+
   // goap datasources don't allow limit increases
   const isGoapDatasource = definition.query.datasource?.startsWith('goap')
 
@@ -596,6 +673,7 @@ defineExpose({ getExportData })
   .badge-container {
     display: flex;
     flex-grow: 1;
+    gap: var(--kui-space-30, $kui-space-30);
     justify-content: flex-end;
   }
 
@@ -620,6 +698,21 @@ defineExpose({ getExportData })
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .metric-selector-wrapper {
+      flex-shrink: 1;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+
+      .metric-selector {
+        width: max-content;
+
+        :deep(.k-segmented-control) {
+          margin: 0;
+        }
+      }
     }
 
     .tile-actions {
@@ -676,6 +769,10 @@ defineExpose({ getExportData })
     margin: 0;
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
+
+    &.type-chart-single_value {
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70) var(--kui-space-50, $kui-space-50);
+    }
 
     &.type-chart-table {
       display: flex;

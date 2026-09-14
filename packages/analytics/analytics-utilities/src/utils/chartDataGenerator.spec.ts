@@ -127,7 +127,6 @@ describe('chartDataGenerator', () => {
         { name: 'totalRequests', unit: 'count' },
         { name: 'latency', unit: 'ms' },
       ],
-      dimensionMap: { status_code: ['2xx', '5xx'] },
       metaOverrides: { query_id: 'multiple-metric-timeseries' },
       valueRange: [10, 20],
       timeSeries: true,
@@ -145,6 +144,40 @@ describe('chartDataGenerator', () => {
       expect(record.event.totalRequests).toBeTypeOf('number')
       expect(record.event.latency).toBeTypeOf('number')
       expect(record.event).not.toHaveProperty('status_code')
+    })
+  })
+
+  it('generates grouped rows for multiple metrics in a time series', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-20T12:00:00.000Z'))
+
+    const result = generateData({
+      metrics: [
+        { name: 'response_latency_average', unit: 'ms' },
+        { name: 'response_latency_p99', unit: 'ms' },
+      ],
+      dimensionMap: { gateway: ['gateway-a', 'gateway-b'] },
+      metaOverrides: { query_id: 'grouped-multiple-metric-timeseries' },
+      valueRange: [10, 20],
+      timeSeries: true,
+    })
+
+    expect(result.data).toHaveLength(14)
+    expect(new Set(result.data.map(record => record.timestamp)).size).toBe(7)
+    expect(new Set(result.data.map(record => record.event.gateway))).toEqual(new Set(['gateway-a', 'gateway-b']))
+    result.data.forEach(record => {
+      expect(record.event.response_latency_average).toBeTypeOf('number')
+      expect(record.event.response_latency_p99).toBeTypeOf('number')
+    })
+    expect(result.meta).toMatchObject({
+      query_id: 'grouped-multiple-metric-timeseries',
+      metric_names: ['response_latency_average', 'response_latency_p99'],
+      display: {
+        gateway: {
+          'gateway-a': { name: 'gateway-a', deleted: false },
+          'gateway-b': { name: 'gateway-b', deleted: false },
+        },
+      },
     })
   })
 

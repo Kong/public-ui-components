@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, type PropType } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
@@ -42,6 +42,10 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
       refreshCounter: {
         type: Number,
         required: true,
+      },
+      activeMetric: {
+        type: String,
+        default: undefined,
       },
       requestsLink: {
         type: [String, Object],
@@ -120,11 +124,46 @@ const dropdownSlotStubs = {
   }),
 }
 
+// eslint-disable-next-line vue/one-component-per-file -- Local stub exercises the tile header without rendering Kongponents.
+const segmentedControlStub = defineComponent({
+  name: 'KSegmentedControl',
+  props: {
+    modelValue: {
+      type: String,
+      default: undefined,
+    },
+    options: {
+      type: Array as PropType<Array<{ value: string, label: string }>>,
+      required: true,
+    },
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    return () => h('div', { 'data-testid': 'metric-selector' }, props.options.map(option => h('button', {
+      'data-testid': `metric-option-${option.value}`,
+      onClick: () => emit('update:modelValue', option.value),
+    }, option.label)))
+  },
+})
+
 const mockQueryProvider = {
   configFn: () => Promise.resolve({ analytics: { percentiles: true }, requests: null }),
   exploreBaseUrl: async () => 'http://test.com/explore',
   requestsBaseUrl: async () => 'http://test.com/requests',
-  datasourceConfigFn: () => Promise.resolve([]),
+  datasourceConfigFn: () => Promise.resolve([
+    {
+      name: 'api_usage',
+      showInUI: true,
+      fields: [],
+      timeRangeOptions: ['15m', '1h', '24h', '7d', '30d'],
+    },
+    {
+      name: 'managed_cache_usage',
+      showInUI: true,
+      fields: [],
+      timeRangeOptions: ['15m', '1h', '6h', '12h', '24h', '7d'],
+    },
+  ]),
   evaluateFeatureFlagFn: () => true,
 }
 
@@ -193,11 +232,28 @@ const mountTile = (
       stubs: {
         KBadge: false,
         KTooltip: false,
+        KSegmentedControl: segmentedControlStub,
         TimeseriesChartRenderer: false,
       },
     },
   })
 }
+
+const groupedMetricsResult = {
+  data: [{
+    timestamp: '2026-09-09T15:00:00Z',
+    event: { gateway: 'one', response_latency_average: 10, response_latency_p99: 20 },
+  }],
+  meta: {
+    start: '2026-09-09T15:00:00Z',
+    end: '2026-09-09T16:00:00Z',
+    granularity_ms: 3600000,
+    metric_names: ['response_latency_average', 'response_latency_p99'],
+    metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' },
+    query_id: 'test-query',
+    display: { gateway: { one: { name: 'Gateway one' } } },
+  },
+} as const
 
 describe('<DashboardTile /> zoom requests drilldown', () => {
   beforeEach(() => {
@@ -285,6 +341,106 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     await flushPromises()
 
     expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
+  })
+
+  it('warns when a relative timeframe is unsupported by the datasource', async () => {
+    const wrapper = mountTile('managed_cache_usage')
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'relative',
+          time_range: '30d',
+        },
+      },
+    })
+    await flushPromises()
+
+    const badge = wrapper.getTestId('unsupported-time-range-badge')
+    const badgeComponent = wrapper.findAllComponents({ name: 'KBadge' })
+      .find(component => component.attributes('data-testid') === 'unsupported-time-range-badge')
+
+    expect(badge.exists()).toBe(true)
+    expect(badgeComponent?.props('tooltip')).toContain('limited to the maximum supported timeframe')
+  })
+
+  it.each([
+    ['managed cache supports the selected timeframe', 'managed_cache_usage', '7d'],
+    ['another datasource supports the selected timeframe', 'api_usage', '30d'],
+  ] as const)('does not show the unsupported timeframe warning when %s', async (_, datasource, timeRange) => {
+    const wrapper = mountTile(datasource)
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'relative',
+          time_range: timeRange,
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('unsupported-time-range-badge').exists()).toBe(false)
+  })
+
+  it('warns when an absolute timeframe exceeds the datasource maximum', async () => {
+    const wrapper = mountTile('managed_cache_usage')
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'absolute',
+          start: new Date('2024-01-01T00:00:00Z'),
+          end: new Date('2024-01-09T00:00:00Z'),
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('unsupported-time-range-badge').exists()).toBe(true)
+  })
+})
+
+describe('<DashboardTile /> metric selector', () => {
+  beforeEach(() => {
+    setupPiniaTestStore()
+  })
+
+  it('shows the grouped time series selector, owns its selection, and passes it to the renderer', async () => {
+    const wrapper = mountTile('api_usage')
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    renderer.vm.$emit('chart-data', groupedMetricsResult)
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(true)
+    expect(renderer.props('activeMetric')).toBe('response_latency_average')
+
+    await wrapper.getTestId('metric-option-response_latency_p99').trigger('click')
+
+    expect(renderer.props('activeMetric')).toBe('response_latency_p99')
+
+    renderer.vm.$emit('chart-data', {
+      ...groupedMetricsResult,
+      meta: { ...groupedMetricsResult.meta, metric_names: ['response_latency_average'] },
+    })
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(false)
+    expect(renderer.props('activeMetric')).toBe('response_latency_average')
+  })
+
+  it.each([
+    ['single metric', { ...groupedMetricsResult.meta, metric_names: ['response_latency_average'] }],
+    ['without a group-by display', { ...groupedMetricsResult.meta, display: {} }],
+  ])('hides the selector for %s data', async (_, meta) => {
+    const wrapper = mountTile('api_usage')
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    renderer.vm.$emit('chart-data', { ...groupedMetricsResult, meta })
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(false)
   })
 })
 

@@ -20,11 +20,11 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/components/free-form/filler/**/*"
+    "src/components/free-form/core/filler/**/*"
   ],
   "exclude": [
-    "src/components/free-form/filler/**/*.cy.ts",
-    "src/components/free-form/filler/**/*.spec.ts",
-    "src/components/free-form/filler/**/*.pw.ts"
+    "src/components/free-form/core/filler/**/*.cy.ts",
+    "src/components/free-form/core/filler/**/*.spec.ts",
+    "src/components/free-form/core/filler/**/*.pw.ts"
   ]
 }

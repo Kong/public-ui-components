@@ -1,6 +1,6 @@
 import MeteringAndBillingForm from './MeteringAndBillingForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 const createSchema = (): FormSchema => ({
   type: 'record',

@@ -2,7 +2,8 @@ import type { Ref, ComputedRef } from 'vue'
 import type { Chart, ChartType as ChartJsChartType, TooltipModel, Color } from 'chart.js'
 import type { ChartType } from './chart-types'
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import type { Threshold } from './chart-data'
+import type { ResolvedReferenceLine, Threshold } from './chart-data'
+import type { ScatterChartColors } from '../utils/theme-colors'
 
 export interface TooltipEntry {
   backgroundColor: Color
@@ -11,6 +12,7 @@ export interface TooltipEntry {
   value: string | number
   rawValue: number
   isSegmentEmpty?: boolean
+  isExtra?: boolean
 }
 
 export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number
@@ -54,6 +56,19 @@ export interface LineChartOptions extends BaseChartOptions {
   granularity: Ref<GranularityValues>
   pointsWithoutHover?: ComputedRef<boolean | undefined>
   threshold?: Readonly<Ref<Record<ExploreAggregations, Threshold[]> | undefined>>
+}
+
+export interface ScatterChartOptions {
+  tooltipState: TooltipState
+  legendID: string
+  granularity: Ref<GranularityValues>
+  timeRangeMs: Ref<number | undefined>
+  metricAxesTitle?: Ref<string | undefined>
+  dimensionAxesTitle?: Ref<string | undefined>
+  metricUnit?: Ref<string | undefined>
+  outlierValue?: Ref<number | undefined>
+  referenceLines?: Ref<ResolvedReferenceLine[]>
+  themeColors: Ref<ScatterChartColors>
 }
 
 export interface DonutChartOptions {

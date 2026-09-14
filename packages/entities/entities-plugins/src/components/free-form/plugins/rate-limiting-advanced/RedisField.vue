@@ -11,11 +11,11 @@
 import { computed, inject, watchEffect } from 'vue'
 
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import RedisSelector from '../../shared/RedisSelector.vue'
-import { useFormShared } from '../../shared/composables'
-import SlideTransition from '../../shared/SlideTransition.vue'
+import RedisSelector from '../../components/RedisSelector.vue'
+import { useFormShared } from '../../core/composables'
+import SlideTransition from '../../core/components/SlideTransition.vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import { REDIS_PARTIAL_INFO } from '../../shared/const'
+import { REDIS_PARTIAL_INFO } from '../../const'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 const { formData } = useFormShared<FreeFormPluginData>()

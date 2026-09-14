@@ -243,6 +243,66 @@ describe('useVitalsExploreDatasets', () => {
     )
   })
 
+  it('keeps grouped metrics separate, preserving sparse, null and zero values', () => {
+    const result = useExploreResultToTimeDataset({ fill: false }, computed<ExploreResultV4>(() => ({
+      data: [
+        { timestamp: '2026-09-09T15:00:00Z', event: { ai_gateway: 'empty', response_latency_average: 38.36, response_latency_p99: 341 } },
+        { timestamp: '2026-09-09T16:00:00Z', event: { ai_gateway: 'empty', response_latency_average: 572.05, response_latency_p99: 10736 } },
+        { timestamp: '2026-09-09T16:00:00Z', event: { ai_gateway: 'gateway-id', response_latency_average: null, response_latency_p99: 0 } },
+        { timestamp: '2026-09-09T17:00:00Z', event: { ai_gateway: 'gateway-id', response_latency_average: 12.3456, response_latency_p99: 25 } },
+      ],
+      meta: {
+        start: '2026-09-09T15:00:00Z', end: '2026-09-09T18:00:00Z', granularity_ms: 3600000,
+        metric_names: ['response_latency_average', 'response_latency_p99'],
+        metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' }, query_id: '',
+        display: { ai_gateway: { 'gateway-id': { name: 'DP Mock AIGW' }, empty: { name: 'empty' } } },
+      },
+    })))
+
+    expect(result.value.datasets).toHaveLength(4)
+    const timestamps = ['15', '16', '17'].map(hour => Date.parse(`2026-09-09T${hour}:00:00Z`))
+    for (const [metric, dimension, label, values] of [
+      ['response_latency_average', 'empty', 'empty — Response latency (avg)', [38.36, 572.05, 0]],
+      ['response_latency_p99', 'empty', 'empty — Response latency (p99)', [341, 10736, 0]],
+      ['response_latency_average', 'DP Mock AIGW', 'DP Mock AIGW — Response latency (avg)', [0, 0, 12.346]],
+      ['response_latency_p99', 'DP Mock AIGW', 'DP Mock AIGW — Response latency (p99)', [0, 0, 25]],
+    ] as const) {
+      const dataset = result.value.datasets.find(ds => ds.rawMetric === metric && ds.rawDimension === dimension)
+      expect(dataset).toMatchObject({
+        label,
+        isSegmentEmpty: dimension === 'empty',
+        data: values.map((y, index) => ({ x: timestamps[index], y })),
+      })
+    }
+    const emptyDatasets = result.value.datasets.filter(ds => ds.isSegmentEmpty)
+    expect(emptyDatasets[0].borderColor).toBe(emptyDatasets[1].borderColor)
+    expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_average')).toMatchObject({ borderDash: [] })
+    expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ borderDash: [4, 2] })
+    expect(_consoleErrorSpy).not.toHaveBeenCalled()
+  })
+
+  it('preserves grouped color keys and keeps dimension IDs distinct from metric IDs', () => {
+    const result = useExploreResultToTimeDataset({ fill: false, colorPalette: { '200': '#123456' } }, computed<ExploreResultV4>(() => ({
+      data: [
+        { timestamp: '2026-09-09T15:00:00Z', event: { status_code: 'response_latency_average', response_latency_average: 10, response_latency_p99: 20 } },
+        { timestamp: '2026-09-09T15:00:00Z', event: { status_code: 'other-id', response_latency_average: 30, response_latency_p99: 40 } },
+      ],
+      meta: {
+        start: '2026-09-09T15:00:00Z', end: '2026-09-09T16:00:00Z', granularity_ms: 3600000,
+        metric_names: ['response_latency_average', 'response_latency_p99'],
+        metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' }, query_id: '',
+        display: { status_code: { response_latency_average: { name: '200' }, 'other-id': { name: '500' } } },
+      },
+    })))
+
+    expect(result.value.datasets).toHaveLength(4)
+    expect(result.value.datasets.slice(0, 2).map(ds => ds.rawDimension)).toEqual(['200', '200'])
+    expect(result.value.datasets.find(ds => ds.label === '200 — Response latency (avg)')).toMatchObject({
+      rawMetric: 'response_latency_average', borderColor: '#123456', backgroundColor: '#123456',
+      data: [{ x: Date.parse('2026-09-09T15:00:00Z'), y: 10 }],
+    })
+  })
+
   it('handles multi-metric/no dimension query', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [

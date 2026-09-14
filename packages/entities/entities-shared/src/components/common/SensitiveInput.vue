@@ -3,7 +3,8 @@
     ref="rootElement"
     class="kong-ui-public-sensitive-input"
   >
-    <KInput
+    <component
+      :is="useSecretInput ? SecretInput : KInput"
       v-if="!multiline"
       :autocomplete="autocomplete"
       data-testid="sensitive-input"
@@ -17,7 +18,7 @@
       :placeholder="isMasked ? undefined : resolvedPlaceholder"
       :readonly="isMasked || readonly"
       :required="required"
-      :type="inputType"
+      v-bind="useSecretInput ? { masked: !revealed, showMaskToggle: false } : { type: inputType }"
       @update:model-value="handleInput"
     >
       <template
@@ -67,7 +68,7 @@
           />
         </template>
       </template>
-    </KInput>
+    </component>
 
     <!-- Multiline mode: KTextArea + action row below (no visibility toggle; textarea has no type="password") -->
     <template v-else>
@@ -172,6 +173,9 @@ import {
 } from '@kong/design-tokens'
 import composables from '../../composables'
 import type { SensitiveInputLabels } from '../../types'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
+import { KInput } from '@kong/kongponents'
 
 const MASKED_VALUE = '••••••••••••••'
 
@@ -192,6 +196,7 @@ const {
   errorMessage,
   multiline = false,
   autocomplete = 'off',
+  useSecretInput = false,
 } = defineProps<{
   /** The sensitive value, bound via v-model. */
   modelValue?: string
@@ -229,6 +234,8 @@ const {
   /** When true, renders a KTextArea instead of a KInput. */
   multiline?: boolean
   autocomplete?: 'off' | 'new-password'
+  /** Opt in to SecretInput's text-based masking implementation. */
+  useSecretInput?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -256,8 +263,6 @@ const rotateLabel = computed(() => labels?.rotateLabel ?? t('sensitiveInput.rota
 const generateLabel = computed(() => labels?.generateLabel ?? t('sensitiveInput.generateKey'))
 const hintLabel = computed(() => labels?.hintLabel ?? t('sensitiveInput.oneTimeHint'))
 
-// Masked state always renders as plain dots; otherwise the value follows the
-// visibility toggle.
 const inputType = computed<'text' | 'password'>(() => {
   if (isMasked.value) return 'text'
   return revealed.value ? 'text' : 'password'

@@ -3,8 +3,8 @@
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
 This package currently supports AG Grid infinite row loading with a cursor-first
-fetcher contract, basic column definitions, empty/error presentation states, and
-state lifecycle emits.
+fetcher contract, basic column definitions, single-column sorting, empty/error
+presentation states, and state lifecycle emits.
 
 ## Peer Dependencies
 
@@ -115,8 +115,9 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called by the AG Grid infinite datasource. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
-| `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. |
+| `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
 | `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that rebuilds the datasource from the beginning. |
+| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort and page size. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
 
@@ -128,6 +129,7 @@ type TableDataGridInfiniteFetcherParams = {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
+  sort?: TableDataGridSort
 }
 
 type TableDataGridFetcherResult<Row> = {
@@ -144,6 +146,12 @@ type TableDataGridFetcher<Row> = (
 
 `cursor` is an opaque token returned by the previous response. The first request
 uses `cursor: undefined`; later requests receive the previous response cursor.
+
+`sort` carries the current single-column sort, with `sortColumnKey` and
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
+request-context change like `refreshKey` or `pageSize`: it rebuilds the
+datasource and restarts the cursor chain from the beginning, because a cursor
+produced under one sort order is not valid under another.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in
@@ -213,6 +221,36 @@ should opt out of the default flexible fill behavior.
 | `minWidth` | `number` | No | Minimum AG Grid column width in pixels. Columns with only `minWidth` still fill available width by default. |
 | `maxWidth` | `number` | No | Maximum AG Grid column width in pixels. Columns with `maxWidth` do not receive default flex sizing. |
 | `disableRowClick` | `boolean` | No | Suppresses `row:click` for clicks landing in this column's cells, e.g. an actions column. `cell:click` still fires. |
+| `sortable` | `boolean` | No | Enables sorting on this column via AG Grid's built-in header sort control. Only one column can be sorted at a time. |
+| `showSortIcon` | `boolean` | No | Shows the unsorted sort icon on this column even when it isn't the active sort, instead of only on hover or once sorted. Only relevant when `sortable` is true. |
+
+## Sorting
+
+`TableDataGrid` supports sorting by a single column at a time. Mark a column
+sortable with `header.sortable`, and AG Grid renders its built-in sort icon
+and handles the click. Sorting a second column replaces the first; AG Grid's
+shift-click multi-sort gesture is disabled.
+
+```vue
+<TableDataGrid
+  :fetcher="fetchRows"
+  :headers="[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+  ]"
+  :table-config="tableConfig"
+  @sort="handleSort"
+  @update:table-config="tableConfig = $event"
+/>
+```
+
+The current sort lives in `tableConfig` (`sortColumnKey`, `sortColumnOrder`),
+alongside `pageSize`. Pass `tableConfig` to restore a previously-chosen sort
+on mount, or to move the sort after mount without a click; omit it to let the
+component own the sort internally. A sort change emits `sort` (the narrower,
+sort-only payload) and then `update:tableConfig` (the full current config),
+and rebuilds the infinite datasource from the beginning — a cursor produced
+under one sort order is not valid under another.
 
 ## Custom Cell Content
 
@@ -249,6 +287,8 @@ Columns without a matching slot render their raw `rowValue`.
 | `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. |
 | `row:click` | `(row: TableDataGridRowClickPayload<Row>, event: RowClickedEvent<Row>)` | A row is clicked, unless the click landed in a `disableRowClick` column. |
 | `cell:click` | `TableDataGridCellClickPayload<Row>` | Any cell is clicked, including cells in `disableRowClick` columns. |
+| `sort` | `TableDataGridSort` | The current single-column sort changes. Fires before `update:tableConfig`. |
+| `update:tableConfig` | `TableDataGridConfig` | A meaningful change to the current table configuration (sort or page size). |
 
 ## Slots
 
@@ -272,3 +312,6 @@ Columns without a matching slot render their raw `rowValue`.
 - `TableDataGridFetcherResult`
 - `TableDataGridFetcher`
 - `TableDataGridReadyPayload`
+- `TableDataGridSortDirection`
+- `TableDataGridSort`
+- `TableDataGridConfig`

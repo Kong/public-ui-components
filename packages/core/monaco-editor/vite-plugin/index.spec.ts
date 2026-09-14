@@ -113,4 +113,35 @@ describe('vite-plugin-monaco', () => {
       expect(code).toMatchSnapshot()
     })
   })
+
+  describe('optimizeDeps config', () => {
+    const getOptimizeDeps = (options?: Parameters<typeof monacoPlugin>[0]) => {
+      const plugin = monacoPlugin(options)
+      const configHook = plugin.config as (config: unknown, env: unknown) => { optimizeDeps: { include: string[], exclude: string[] } }
+      return configHook.call(plugin, {}, { command: 'serve', mode: 'development' }).optimizeDeps
+    }
+
+    it('excludes monaco-editor/shiki so imports of them keep hitting resolveId', () => {
+      const { exclude } = getOptimizeDeps()
+      expect(exclude).toEqual(['monaco-editor', 'shiki'])
+    })
+
+    it('includes only plain-JS deep specifiers, not worker or css imports', () => {
+      const { include } = getOptimizeDeps({ languages: ['json'], features: ['find'] })
+
+      expect(include).toContain('monaco-editor/esm/vs/editor/editor.api')
+      expect(include.some((id) => id.includes('?'))).toBe(false)
+      expect(include.some((id) => id.endsWith('.css'))).toBe(false)
+    })
+
+    it('excludes a feature that only ships a .css entry, without erroring', () => {
+      // `codicon` is the only default feature whose entries are all `.css` (no `.js` at all) —
+      // makes sure filtering those out doesn't blow up or leave a `.css` specifier behind
+      const { include } = getOptimizeDeps({ languages: [], features: ['codicon'] })
+
+      // Only the always-present core editor entry point remains — codicon itself contributed
+      // nothing, since all of its entries are `.css` and got filtered out
+      expect(include).toEqual(['monaco-editor/esm/vs/editor/editor.api'])
+    })
+  })
 })

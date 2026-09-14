@@ -12,19 +12,22 @@ export interface DisplayBlob {
   [dimension: string]: Display
 }
 
-export interface QueryResponseMeta {
+export interface ResultMetaBase {
   start: string
   end: string
+  truncated?: boolean
+  limit?: number
+  datasource?: string
+}
+
+export interface QueryResponseMeta extends ResultMetaBase {
   start_ms?: number
   end_ms?: number
   display: DisplayBlob
   metric_names?: AllAggregations[]
   metric_units?: MetricUnit
   granularity_ms: number
-  truncated?: boolean
-  limit?: number
   query_id: string
-  datasource?: string
 }
 
 export interface GroupByResult {

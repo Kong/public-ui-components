@@ -83,19 +83,19 @@
 
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
-import ObjectField from '../../free-form/shared/ObjectField.vue'
-import AdvancedFields from '../../free-form/shared/AdvancedFields.vue'
+import ObjectField from '../../free-form/core/components/ObjectField.vue'
+import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
-import { useFormShared } from '../../free-form/shared/composables'
-import { usePluginContext } from '../../free-form/shared/plugin-context'
+import { useFormShared } from '../../free-form/core/composables'
+import { usePluginContext } from '../../free-form/plugin-context'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { FETCHED_REALMS_KEY } from '../key-auth-identity-realms/const'
 import { BEFORE_SAVE_KEY } from '../../const'
-import { FORM_EDITING } from '../../free-form/shared/const'
+import { FORM_EDITING } from '../../free-form/const'
 import { FEATURE_FLAGS } from '../../../constants'
 import composables from '../../../composables'
 
@@ -136,7 +136,22 @@ const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabl
 // Host opt-out: hides the realm field entirely, regardless of whether it's required in the schema.
 const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
 
-const { formData, getSchema } = useFormShared()
+const { formData, getSchema, isSchemaDefaulted } = useFormShared()
+
+// Host opt-out: strip a schema-computed default for a field the host fully disabled. Gated on
+// isSchemaDefaulted, not isEditing — a clone-to-create flow also hands in real data with
+// isEditing false, and that data must survive same as an edit-load's. A watcher, not onMounted,
+// since the data prop can re-derive defaults after mount too (e.g. an async edit-load). Deleted
+// rather than nulled to avoid tripping a required-but-non-nullable field.
+watch(() => formData.config?.identity_realms, (value) => {
+  if (value === undefined || !isSchemaDefaulted.value || identityRealmsEnabled.value) return
+  delete formData.config!.identity_realms
+}, { immediate: true })
+
+watch(() => formData.config?.realm, (value) => {
+  if (value === undefined || !isSchemaDefaulted.value || realmsEnabled.value) return
+  delete formData.config!.realm
+}, { immediate: true })
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 

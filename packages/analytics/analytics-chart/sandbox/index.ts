@@ -38,6 +38,11 @@ const router = createRouter({
       component: () => import('./pages/MultiChartDemo.vue'),
     },
     {
+      path: '/scatter-chart',
+      name: 'scatter-chart',
+      component: () => import('./pages/ScatterChartDemo.vue'),
+    },
+    {
       path: '/sparkline',
       name: 'sparkline',
       component: () => import('./pages/SparklineDemo.vue'),
@@ -66,6 +71,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Multi Charts',
     to: { name: 'multichart' },
+  },
+  {
+    name: 'Scatter Chart',
+    to: { name: 'scatter-chart' },
   },
   {
     name: 'Sparkline',

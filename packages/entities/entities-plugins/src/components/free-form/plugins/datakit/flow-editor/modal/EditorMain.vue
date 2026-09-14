@@ -114,7 +114,7 @@ import { KButton, KDropdown, KTooltip, KDropdownItem } from '@kong/kongponents'
 import { load as yamlLoad, JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../../locales/en.json'
-import BooleanField from '../../../../shared/BooleanField.vue'
+import BooleanField from '../../../../core/components/BooleanField.vue'
 import { HOTKEYS } from '../constants'
 import examples from '../../examples'
 import { useHotkeys } from '../composables/useHotkeys'

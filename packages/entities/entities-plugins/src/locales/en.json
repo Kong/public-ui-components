@@ -81,13 +81,13 @@
   "onboarding": {
     "steps": {
       "consumer": {
-        "step":"Consumer",
+        "step": "Consumer",
         "title": "Create a consumer",
         "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later.",
         "note": "A consumer can have both unique username and unique custom ID or one of them."
       },
       "credential": {
-        "step":"Credential",
+        "step": "Credential",
         "title": "Add a credential"
       }
     },
@@ -1052,6 +1052,7 @@
           "learn_more": "Learn more.",
           "kong_identity_label": "Kong Identity",
           "kong_identity_description": "Use Kong Identity to authenticate OpenID Connect tokens. If all data plane nodes are running version 3.15 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.",
+          "kong_identity_description_ai_manager": "Use Kong Identity to authenticate OpenID Connect tokens. If all AI Gateway nodes are running version 2.0 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.",
           "external_label": "External auth server",
           "external_description": "Connect to your existing identity provider to manage authentication outside of Kong.",
           "guide": {
@@ -1676,6 +1677,10 @@
       "options": {
         "fixed": "Fixed",
         "sliding": "Sliding"
+      },
+      "descriptions": {
+        "fixed": "Each request counts against one static time bucket, and only that bucket's counter.",
+        "sliding": "Each request counts against a rolling window, weighted by the rate of the window before it."
       }
     },
     "request_limits": {
@@ -1686,7 +1691,11 @@
       "request_number": "Request number",
       "time_interval": "Time interval",
       "interval_determiner": "Every",
-      "seconds": "Seconds"
+      "seconds": "Seconds",
+      "custom": "Custom",
+      "add_limit": "Add limit",
+      "remove_limit": "Remove limit {index}",
+      "expression_placeholder": "Define an expression for the limit. eg: ‘principal.metadata.limit * 2’"
     },
     "error_message": {
       "label": "Error message",
@@ -1723,6 +1732,13 @@
           "label": "500 requests every hour",
           "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
         }
+      }
+    },
+    "custom_key": {
+      "expression_placeholder": "e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id",
+      "expression_help": {
+        "text": "Define a Kong plug-in dynamic expression to determine the counter key for each request. The expression must return a string. {link}",
+        "learn": "Learn more"
       }
     }
   },
@@ -1809,6 +1825,10 @@
       "plugin_modules": {
         "label": "Plugin modules",
         "alert": "Upload all plugin modules to the data plane: schema.lua, handler.lua"
+      },
+      "streaming_enabled": {
+        "alert": "Each data plane node must run with KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=true. Otherwise, Kong Gateway removes this plugin from the node's configuration. {link}",
+        "alert_link": "Learn more"
       }
     },
     "step2_clone": {

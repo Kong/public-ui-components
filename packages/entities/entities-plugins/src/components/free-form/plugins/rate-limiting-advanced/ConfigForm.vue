@@ -4,6 +4,14 @@
     name="config"
     reset-label-path="reset"
   >
+    <!--
+      Overrides the key `identifier` computes, so it leads. Added by a newer
+      Gateway alongside the `expressions` record, hence the guard.
+    -->
+    <Field
+      v-if="getSchema('config.custom_key')"
+      name="custom_key"
+    />
     <Field name="identifier" />
     <RequestLimitsForm />
     <ErrorMessageForm />
@@ -36,14 +44,14 @@
 </template>
 
 <script setup lang="ts">
-import Field from '../../shared/Field.vue'
-import EnumField from '../../shared/EnumField.vue'
-import ObjectField from '../../shared/ObjectField.vue'
-import AdvancedFields from '../../shared/AdvancedFields.vue'
+import Field from '../../core/components/Field.vue'
+import EnumField from '../../core/components/EnumField.vue'
+import ObjectField from '../../core/components/ObjectField.vue'
+import AdvancedFields from '../../components/AdvancedFields.vue'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
 import RedisField from './RedisField.vue'
-import { useFormShared } from '../../shared/composables'
+import { useFormShared } from '../../core/composables'
 
 const { getSchema } = useFormShared()
 </script>

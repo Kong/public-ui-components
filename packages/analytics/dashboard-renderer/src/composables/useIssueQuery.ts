@@ -8,11 +8,12 @@ import type { DashboardRendererContext } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { storeToRefs } from 'pinia'
+import { limitTimeRange } from '../utils/time-range-support'
 
 export default function useIssueQuery() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
   const datasourceConfigStore = useDatasourceConfigStore()
-  const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
+  const { datasourceConfigMap, stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 
   // Ensure that any pending requests are canceled when superseded or on unmount.
   let abortController: AbortController | null = null
@@ -69,6 +70,8 @@ export default function useIssueQuery() {
         tz: context.tz,
       }
     }
+
+    time_range = limitTimeRange(time_range, datasourceConfigMap.value[datasource]?.timeRangeOptions)
 
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries

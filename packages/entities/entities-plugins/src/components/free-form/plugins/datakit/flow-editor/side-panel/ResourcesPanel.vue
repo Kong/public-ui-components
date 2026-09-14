@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { useVaultForm } from '../composables/useVaultForm'
-import Form from '../../../../shared/Form.vue'
+import Form from '../../../../core/components/Form.vue'
 import VaultField from './VaultField.vue'
 
 import type { FieldName } from '../../types'

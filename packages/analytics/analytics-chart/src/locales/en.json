@@ -8,6 +8,11 @@
   "jumpToExplore": "Open in explorer",
   "more_actions": "More actions",
   "emptyEntityInfo": "Requests that do not have a value for the selected group",
+  "scatter": {
+    "median": "Median",
+    "percentile": "p{value}",
+    "outlier": "Outlier (> {label})"
+  },
   "chartUnits": {
     "ms": "ms",
     "bytes": "Byte{plural}",
@@ -15,6 +20,7 @@
     "count/minute": "rpm",
     "requests": "request{plural}",
     "token count": "token{plural}",
+    "tokens/minute": "tpm",
     "%": "%",
     "ops/minute": "ops/minute"
   },
@@ -59,6 +65,31 @@
   },
   "chartLabels": {
     "ai_count": "LLM request count",
+    "latencies_response_ms": "Response latency",
+    "latencies_upstream_ms": "Upstream latency",
+    "latencies_kong_gateway_ms": "Kong latency",
+    "latencies_kong_internal_ms": "Kong internal latency",
+    "request_body_size": "Request size",
+    "response_body_size": "Response size",
+    "response_header_content_length": "Content length",
+    "ai": {
+      "cost": "Cost",
+      "costCaching": "Caching cost",
+      "promptTokens": "Prompt tokens",
+      "completionTokens": "Completion tokens",
+      "totalTokens": "Total tokens",
+      "llmLatency": "LLM latency",
+      "fetchLatency": "Fetch latency",
+      "embeddingsLatency": "Embeddings latency"
+    },
+    "mcp": {
+      "latency": "MCP latency",
+      "response_body_size": "MCP response size"
+    },
+    "a2a": {
+      "latency": "A2A latency",
+      "response_body_size": "A2A response size"
+    },
     "ai_gateway": "AI gateway",
     "ai_gateway_agent": "AI gateway agent",
     "ai_gateway_consumer": "AI gateway consumer",
@@ -122,6 +153,7 @@
     "application": "Application",
     "status_code": "Status code",
     "status_code_grouped": "Status code (grouped)",
+    "total_tokens_per_minute": "Total tokens per minute",
     "upstream_status_code": "Upstream status code",
     "upstream_status_code_grouped": "Upstream status code group",
     "time": "Time",
@@ -191,6 +223,7 @@
     "prompt_tokens": "Prompt token count",
     "completion_tokens": "Completion token count",
     "cost": "Costs",
+    "cost_per_request_average": "Cost per request (avg)",
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
@@ -205,8 +238,13 @@
     "a2a_error": "A2A error",
     "a2a_method": "A2A method",
     "a2a_task_id": "A2A task ID",
+    "active_agents": "Active agents",
     "mcp_error": "MCP error",
     "mcp_method": "MCP method",
+    "mcp_latency_average": "MCP latency (avg)",
+    "mcp_latency_p99": "MCP latency (p99)",
+    "mcp_latency_p95": "MCP latency (p95)",
+    "mcp_latency_p50": "MCP latency (p50)",
     "mcp_response_size_sum": "MCP response size (sum)",
     "mcp_session_id": "MCP session ID",
     "mcp_tool_name": "MCP tool name",
@@ -241,7 +279,15 @@
     "cache_items_average": "Cache items (avg)",
     "cache_memory_utilization_max": "Cache memory utilization (max)",
     "cache_status": "Cache status",
-    "cache_hit_rate": "Cache hit rate"
+    "cache_hit_rate": "Cache hit rate",
+    "time_to_first_token_average": "Time to first token (avg)",
+    "time_to_first_token_p99": "Time to first token (p99)",
+    "time_to_first_token_p95": "Time to first token (p95)",
+    "time_to_first_token_p50": "Time to first token (p50)",
+    "time_per_token_average": "Time per token (avg)",
+    "time_per_token_p99": "Time per token (p99)",
+    "time_per_token_p95": "Time per token (p95)",
+    "time_per_token_p50": "Time per token (p50)"
   },
   "metricAxisTitles": {
     "cache_hit_rate": "Cache hit rate {unit}",
@@ -308,6 +354,7 @@
     "prompt_tokens": "Prompt token count",
     "completion_tokens": "Completion token count",
     "cost": "Costs",
+    "cost_per_request_average": "Cost per request (avg)",
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
@@ -318,6 +365,11 @@
     "a2a_error": "A2A error",
     "a2a_method": "A2A method",
     "a2a_task_id": "A2A task ID",
+    "active_agents": "Active agents",
+    "mcp_latency_average": "MCP latency (avg)",
+    "mcp_latency_p99": "MCP latency (p99)",
+    "mcp_latency_p95": "MCP latency (p95)",
+    "mcp_latency_p50": "MCP latency (p50)",
     "mcp_response_size_sum": "MCP response size (sum) in {unit}",
     "mcp_response_body_size_sum": "MCP response body size (sum) in {unit}",
     "control_plane_count": "Control plane count",
@@ -332,7 +384,14 @@
     "cache_memory_utilization_max": "Cache memory utilization (max) in {unit}",
     "cached_tokens": "Cached tokens",
     "time_to_first_token_average": "Time to first token (avg)",
-    "time_per_token_average": "Time per token (avg)"
+    "time_to_first_token_p99": "Time to first token (p99)",
+    "time_to_first_token_p95": "Time to first token (p95)",
+    "time_to_first_token_p50": "Time to first token (p50)",
+    "time_per_token_average": "Time per token (avg)",
+    "time_per_token_p99": "Time per token (p99)",
+    "time_per_token_p95": "Time per token (p95)",
+    "time_per_token_p50": "Time per token (p50)",
+    "total_tokens_per_minute": "Total tokens per minute"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",

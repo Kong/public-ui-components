@@ -93,6 +93,7 @@
           >
             <!-- Primary dimension column -->
             <td
+              v-if="displayKeys.length"
               class="top-n-table-cell top-n-table-cell--name"
               :class="{ 'top-n-table-cell-dimension-compact': hasMultipleDimensions }"
             >

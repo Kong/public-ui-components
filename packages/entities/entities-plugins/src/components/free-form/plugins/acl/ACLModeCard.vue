@@ -29,48 +29,56 @@
     reused instance rather than unmounting/remounting it when the mode changes,
     leaving stale per-field state (label, input value) behind.
   -->
-  <ArrayField
-    :key="mode"
-    :add-item-label="t(`plugins.free-form.acl.field.${mode}.add`)"
-    :label="t(`plugins.free-form.acl.field.${mode}.label`)"
-    :label-attributes="labelAttributes"
-    :name="`config.${mode}`"
-  >
-    <template #item="{ autofocus, fieldName }">
-      <StringField
-        :autofocus="autofocus"
-        :multiline="isExpressionMode"
-        :name="fieldName"
-        :placeholder="t(`plugins.free-form.acl.field.${mode}.placeholder`)"
-        :rows="isExpressionMode ? 2 : undefined"
-      >
-        <!-- Only the CEL modes need the syntax hint; allow/deny take plain group names. -->
-        <template
-          v-if="isExpressionMode"
-          #help
+  <!--
+    `ff-acl-array` scopes the `:has()` rule below, which hides an item's remove
+    button whenever it is the only row left - the mode is useless with zero
+    rows, so once seeded down to one it shouldn't be emptied out again.
+  -->
+  <div class="ff-acl-array">
+    <ArrayField
+      :key="mode"
+      :add-item-label="t(`plugins.free-form.acl.field.${mode}.add`)"
+      :label="t(`plugins.free-form.acl.field.${mode}.label`)"
+      :label-attributes="labelAttributes"
+      :name="`config.${mode}`"
+    >
+      <template #item="{ autofocus, fieldName }">
+        <StringField
+          :autofocus="autofocus"
+          :multiline="isExpressionMode"
+          :name="fieldName"
+          :placeholder="t(`plugins.free-form.acl.field.${mode}.placeholder`)"
+          :rows="isExpressionMode ? 2 : undefined"
         >
-          <i18nT :keypath="expressionKeys.helpText">
-            <template #link>
-              <KExternalLink
-                hide-icon
-                :href="externalLinks.condition"
-              >
-                {{ t(expressionKeys.helpLearn) }}
-              </KExternalLink>
-            </template>
-          </i18nT>
-        </template>
-      </StringField>
-    </template>
-  </ArrayField>
+          <!-- Only the CEL modes need the syntax hint; allow/deny take plain group names. -->
+          <template
+            v-if="isExpressionMode"
+            #help
+          >
+            <i18nT :keypath="expressionKeys.helpText">
+              <template #link>
+                <KExternalLink
+                  hide-icon
+                  :href="externalLinks.condition"
+                >
+                  {{ t(expressionKeys.helpLearn) }}
+                </KExternalLink>
+              </template>
+            </i18nT>
+          </template>
+        </StringField>
+      </template>
+    </ArrayField>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared } from '../../shared/composables'
-import ArrayField from '../../shared/ArrayField.vue'
-import StringField from '../../shared/StringField.vue'
+import { useFormShared } from '../../core/composables'
+import ArrayField from '../../core/components/ArrayField.vue'
+import StringField from '../../core/components/StringField.vue'
+import * as utils from '../../core/utils'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 
@@ -94,7 +102,7 @@ const ALL_MODES: AclMode[] = ['allow', 'deny', 'allow_when', 'deny_when']
 // textarea instead of the single-line input the schema type would otherwise get.
 const EXPRESSION_MODES: AclMode[] = ['allow_when', 'deny_when']
 
-const { formData, getLabelAttributes, getSchema, getEmptyValue } = useFormShared<FreeFormPluginData<AclConfig>>()
+const { formData, getLabelAttributes, getSchema, getEmptyValue, getDefault } = useFormShared<FreeFormPluginData<AclConfig>>()
 const { i18n: { t }, i18nT } = useI18n()
 
 // allow_when/deny_when are newer additions to the ACL plugin's schema; a Gateway
@@ -137,6 +145,21 @@ const labelAttributes = computed(() => {
 const userSelectedMode = ref(false)
 const cache = ref<Partial<Record<AclMode, string[]>>>({})
 
+// A blank mode is otherwise zero rows, forcing the user to find and click "Add"
+// before they can type anything - so seed one empty row up front instead.
+function seedIfEmpty(m: AclMode) {
+  const config = formData.config
+  if (!config) return
+
+  if (!config[m]?.length) {
+    // Not just `null` - resolves the host's configured empty-scalar sentinel
+    // (FormConfig.emptyFieldValue), the same call ArrayField's own "Add"
+    // button makes, so the seeded row is indistinguishable from one the user
+    // added by hand.
+    config[m] = [getDefault(utils.resolve(`config.${m}`, utils.arraySymbol))]
+  }
+}
+
 // Watch formData to detect which mode has data on initial load
 watch(() => formData.config, (config) => {
   if (userSelectedMode.value) return
@@ -147,6 +170,8 @@ watch(() => formData.config, (config) => {
   if (active) {
     mode.value = active
   }
+
+  seedIfEmpty(mode.value)
 }, { deep: true, immediate: true })
 
 function handleModeChange() {
@@ -170,6 +195,8 @@ function handleModeChange() {
   if (cached) {
     config[mode.value] = [...cached]
   }
+
+  seedIfEmpty(mode.value)
 }
 </script>
 
@@ -189,6 +216,14 @@ function handleModeChange() {
   &-options {
     display: flex;
     gap: var(--kui-space-50, $kui-space-50);
+  }
+}
+
+.ff-acl-array {
+  // Only one row left: hide its remove button instead of letting the mode be
+  // emptied back out to zero rows.
+  :deep(.ff-array-field-container:has(.ff-array-field-item:only-child) .ff-array-field-item-remove-tooltip) {
+    display: none;
   }
 }
 </style>

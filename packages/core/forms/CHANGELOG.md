@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.34.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.4...%40kong-ui-public%2Fforms%404.34.5) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.34.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.3...%40kong-ui-public%2Fforms%404.34.4) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.34.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.2...%40kong-ui-public%2Fforms%404.34.3) (2026-09-09)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3790](https://github.com/Kong/public-ui-components/issues/3790)) ([aecf1ae](https://github.com/Kong/public-ui-components/commit/aecf1ae1184b73032c10eb89ddc6b9505ba20e63))
+
+
+## [4.34.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.1...%40kong-ui-public%2Fforms%404.34.2) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.34.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.0...%40kong-ui-public%2Fforms%404.34.1) (2026-09-05)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3782](https://github.com/Kong/public-ui-components/issues/3782)) ([ef460c0](https://github.com/Kong/public-ui-components/commit/ef460c00fb75b6798da333a68775475b4203be95))
+
+
+# [4.34.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.33...%40kong-ui-public%2Fforms%404.34.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
 ## [4.33.33](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.32...%40kong-ui-public%2Fforms%404.33.33) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/forms

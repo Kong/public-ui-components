@@ -1,4 +1,4 @@
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LabeledDataPoint, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
 import { formatTooltipTimestampByGranularity } from '../utils'
 import { isValid } from 'date-fns'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
@@ -44,7 +44,7 @@ export const lineChartTooltipBehavior = (
       const rawValue = p.parsed[valueAxis]
       const value = formatUnit(rawValue ?? 0, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
-      const tooltipLabel = p.dataset.label
+      const tooltipLabel = (p.raw as LabeledDataPoint)?.tooltipLabel || p.dataset.label
 
       return {
         backgroundColor: colors[i].backgroundColor,
@@ -55,6 +55,17 @@ export const lineChartTooltipBehavior = (
         isSegmentEmpty: (p.dataset as Dataset).isSegmentEmpty,
       } as TooltipEntry
     }).sort(sortFn)
+
+    const extras = (tooltip.dataPoints[0]?.raw as LabeledDataPoint)?.extras ?? []
+
+    for (const extra of extras) {
+      tooltipData.tooltipSeries.push({
+        label: extra.label,
+        value: extra.unit ? formatUnit(Number(extra.value) || 0, extra.unit, { translateUnit: tooltipData.translateUnit }) : String(extra.value),
+        rawValue: Number(extra.value) || 0,
+        isExtra: true,
+      } as TooltipEntry)
+    }
 
     tooltipData.left = `${tooltip.x}px`
     tooltipData.top = `${tooltip.y}px`

@@ -39,12 +39,32 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
    * selection/click mechanics are unaffected.
    */
   disableRowClick?: boolean
+  /** Enables sorting on this column via AG Grid's built-in header sort control. */
+  sortable?: boolean
+  /**
+   * Shows the unsorted sort icon on this column's header even when it isn't
+   * the active sort, instead of only on hover or once sorted. Only relevant
+   * when `sortable` is true.
+   */
+  showSortIcon?: boolean
+}
+
+export type TableDataGridSortDirection = 'asc' | 'desc'
+
+export type TableDataGridSort = {
+  sortColumnKey?: string
+  sortColumnOrder?: TableDataGridSortDirection
+}
+
+export type TableDataGridConfig = TableDataGridSort & {
+  pageSize?: number
 }
 
 export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
+  sort?: TableDataGridSort
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {

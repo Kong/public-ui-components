@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { inject, toRef } from 'vue'
-import { useField, useFieldAttrs } from '../../shared/composables'
+import { useField, useFieldAttrs } from '../../core/composables'
 import Base from '../../../fields/key-auth-identity-realms/Base.vue'
 import { FETCHED_REALMS_KEY } from '../../../fields/key-auth-identity-realms/const'
 
@@ -34,7 +34,7 @@ import type { MultiselectItem } from '@kong/kongponents'
 import type { Ref } from 'vue'
 import type { IdentityRealmItem } from '../../../fields/key-auth-identity-realms/types'
 import type { LabelAttributes } from '@kong/kongponents'
-import type { ResetLabelPathRule } from '../../shared/types'
+import type { ResetLabelPathRule } from '../../core/types'
 
 const props = defineProps<{
   name: string

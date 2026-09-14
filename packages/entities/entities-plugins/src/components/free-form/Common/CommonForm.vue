@@ -8,9 +8,9 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
-import DynamicLayout from '../shared/layout/DynamicLayout.vue'
+import DynamicLayout from '../layout/DynamicLayout.vue'
 
-import type { PluginFormLayoutProps as Props } from '../shared/layout/provider'
+import type { PluginFormLayoutProps as Props } from '../layout/provider'
 
 const props = defineProps<Props>()
 

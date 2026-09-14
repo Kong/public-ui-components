@@ -14,14 +14,14 @@
 <script setup lang="ts">
 import { computed, provide } from 'vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
-import DynamicLayout from '../../free-form/shared/layout/DynamicLayout.vue'
-import StringField from '../../free-form/shared/StringField.vue'
+import DynamicLayout from '../../free-form/layout/DynamicLayout.vue'
+import StringField from '../../free-form/core/components/StringField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
-import { FORM_EDITING } from '../../free-form/shared/const'
+import { FORM_EDITING } from '../../free-form/const'
 
-import type { PluginFormLayoutProps as Props } from '../../free-form/shared/layout/provider'
-import type { FieldRenderer, RenderRules } from '../../free-form/shared/types'
+import type { PluginFormLayoutProps as Props } from '../../free-form/layout/provider'
+import type { FieldRenderer, RenderRules } from '../../free-form/core/types'
 import type { EntityCreateEvent } from '../../../types'
 
 // Union of the rules for every plugin rendered through this form (basic-auth, key-auth).

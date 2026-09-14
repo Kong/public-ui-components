@@ -3,5 +3,9 @@
     "title": "Star",
     "ariaLabel": "Star buttons/github-buttons on GitHub",
     "tooltipLabel": "Star this repository on Github"
+  },
+  "secretInput": {
+    "show": "Show secret",
+    "hide": "Hide secret"
   }
 }

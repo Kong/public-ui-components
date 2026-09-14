@@ -170,3 +170,25 @@ export interface RequestQuery {
   classified?: boolean
   cursor?: string
 }
+
+export const API_REQUESTS_MAX_PAGE_SIZE = 1000
+
+export interface RequestRecord {
+  [field: string]: unknown
+}
+
+export interface ApiRequestsResultMeta {
+  query_id: string
+  time_range: {
+    start: string
+    end: string
+  }
+  size: number
+  offset?: number
+  cursor?: string
+}
+
+export interface ApiRequestsResult {
+  results: RequestRecord[]
+  meta: ApiRequestsResultMeta
+}

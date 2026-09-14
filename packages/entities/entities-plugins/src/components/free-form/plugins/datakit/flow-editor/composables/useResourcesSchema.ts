@@ -1,6 +1,6 @@
 import { computed } from 'vue'
-import { useFormShared } from '../../../../shared/composables'
-import type { RecordFieldSchema } from '../../../../../../types/plugins/form-schema'
+import { useFormShared } from '../../../../core/composables'
+import type { RecordFieldSchema } from '../../../../core/form-schema'
 import { clone } from '../store/helpers'
 
 export function useResourcesSchema() {

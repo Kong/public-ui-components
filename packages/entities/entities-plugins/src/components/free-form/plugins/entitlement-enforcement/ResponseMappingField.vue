@@ -35,10 +35,10 @@
 
 <script setup lang="ts">
 import { KInput } from '@kong/kongponents'
-import NumberField from '../../shared/NumberField.vue'
-import StringField from '../../shared/StringField.vue'
+import NumberField from '../../core/components/NumberField.vue'
+import StringField from '../../core/components/StringField.vue'
 import { get, set } from 'lodash-es'
-import { useFormShared } from '../../shared/composables'
+import { useFormShared } from '../../core/composables'
 import useI18n from '../../../../composables/useI18n'
 
 const { i18n: { t } } = useI18n()

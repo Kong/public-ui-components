@@ -8,8 +8,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import useI18n from '../../../../composables/useI18n'
-import BooleanField from '../../shared/BooleanField.vue'
-import { useFormData } from '../../shared/composables'
+import BooleanField from '../../core/components/BooleanField.vue'
+import { useFormData } from '../../core/composables'
 
 const props = defineProps<{
   name: string

@@ -141,7 +141,7 @@ import '@kong-ui-public/forms/dist/style.css'
 import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, toRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { useToaster } from '../composables/useToaster'
@@ -150,11 +150,11 @@ import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/Common'
-import type { GlobalAction } from './free-form/shared/types'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
-import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
-import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import type { ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
+import type { GlobalAction } from './free-form/core/types'
+import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
+import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
+import type { ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from './free-form/core/form-schema'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -255,7 +255,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** Opt in to SecretInput for generic encrypted free-form fields; purpose-specific password forms migrate directly. */
+  useSecretInput: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
 
 const isKonnectManagedRedisEnabled = computed<boolean>(() => {
   if (props.config.app !== 'konnect') return false

@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 
-import Form from '../../../../shared/Form.vue'
+import Form from '../../../../core/components/Form.vue'
 import type { NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'

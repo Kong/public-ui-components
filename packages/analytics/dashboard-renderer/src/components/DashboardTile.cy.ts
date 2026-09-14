@@ -607,7 +607,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('exist')
   })
 
   it('should not show aged out warning when query granularity matches granularity', () => {
@@ -622,7 +622,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('should not show aged out warning when query is not ready', () => {
@@ -640,7 +640,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('should not show aged out warning when saved granularity is missing', () => {
@@ -659,7 +659,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('jump to requests link should be reactive', () => {

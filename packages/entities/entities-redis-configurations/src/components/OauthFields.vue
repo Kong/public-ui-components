@@ -50,7 +50,7 @@
       :value="model.username ?? ''"
       @open="(value, update) => setUpVaultSecretPicker(value, update)"
     />
-    <KInput
+    <SecretInput
       v-model.trim="model.password"
       data-testid="redis-oauth-password-input"
       :label="t('form.fields.oauth.password.label')"
@@ -59,8 +59,6 @@
         tooltipAttributes: { maxWidth: '400' },
       }"
       :readonly="readonly"
-      show-password-mask-toggle
-      type="password"
     />
     <VaultSecretPickerProvider
       class="secret-picker-provider"
@@ -85,7 +83,8 @@
     v-for="field in stringFields"
     :key="field.key"
   >
-    <KInput
+    <component
+      :is="field.encrypted ? SecretInput : KInput"
       v-model.trim="model[field.key] as string"
       :data-testid="`redis-oauth-${field.key}-input`"
       :label="t(`form.fields.oauth.${field.key}.label`)"
@@ -95,8 +94,6 @@
       }"
       :readonly="readonly"
       :required="field.required ?? false"
-      :show-password-mask-toggle="field.encrypted"
-      :type="field.encrypted ? 'password' : 'text'"
     />
     <VaultSecretPickerProvider
       v-if="field.referenceable"
@@ -167,7 +164,10 @@
 </template>
 
 <script lang="ts" setup>
+import { KInput } from '@kong/kongponents'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import composables from '../composables'
 import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'

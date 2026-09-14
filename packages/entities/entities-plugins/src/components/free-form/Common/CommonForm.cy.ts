@@ -1,7 +1,7 @@
 import CommonForm from './CommonForm.vue'
 import { FEATURE_FLAGS } from '../../../constants'
-import StringField from '../shared/StringField.vue'
-import MapField from '../shared/MapField.vue'
+import StringField from '../core/components/StringField.vue'
+import MapField from '../core/components/MapField.vue'
 
 describe('<CommonForm />', () => {
   const createBaseSchema = () => ({

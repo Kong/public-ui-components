@@ -56,6 +56,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        :use-secret-input="useSecretInput"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -221,9 +222,10 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/const'
+import { EXPRESSIONS_FIELD } from './free-form/core/composables'
 import { BEFORE_SAVE_KEY } from './const'
-import type { GlobalAction } from './free-form/shared/types'
+import type { GlobalAction } from './free-form/core/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
@@ -341,6 +343,12 @@ const props = defineProps({
    * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
    */
   enableVaultSecretPicker: {
+    type: Boolean,
+    default: false,
+  },
+
+  /** Opt in to SecretInput for generic encrypted free-form fields; purpose-specific password forms migrate directly. */
+  useSecretInput: {
     type: Boolean,
     default: false,
   },
@@ -735,6 +743,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
   // alphabetically sort the schema keys and handle specific configuration for each field type
   Object.keys(schema).sort().forEach(key => {
+    // The root `expressions` record holds the expression twin of every field the
+    // Gateway marks `expressible`. Freeform renders each twin inline beside the
+    // field it overrides (see `ExpressionField`); VFG has no such affordance, and
+    // the generic record walk below would flatten the record into a row of stray
+    // `expressions-*` inputs, so skip it entirely.
+    if (!parentKey && key === EXPRESSIONS_FIELD) {
+      return
+    }
+
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect

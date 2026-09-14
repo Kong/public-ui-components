@@ -1118,6 +1118,48 @@ describe('<PluginList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
     })
+
+    it('switches to /plugins/search once filtering, even without the pluginTableImprovements.filtering flag', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/plugins*`,
+        },
+        (req) => {
+          if (!req.url.includes('/plugins/search')) {
+            req.reply({ statusCode: 200, body: plugins })
+          }
+        },
+      ).as('listPlugins')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/plugins/search*`,
+        },
+        { statusCode: 200, body: { data: plugins.data, offset: null } },
+      ).as('searchPlugins')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@listPlugins')
+      // Legacy EntityFilter (not PluginFilter) is used since the flag is off
+      cy.get('.kong-ui-entity-filter-input').should('exist')
+
+      cy.get('.kong-ui-entity-filter-input input').type('basic')
+      cy.wait('@searchPlugins').its('request.url').should('include', 'filter[name][contains]=basic')
+    })
   })
 
   describe('plugin list redesign (isPluginTableEnhanced)', () => {

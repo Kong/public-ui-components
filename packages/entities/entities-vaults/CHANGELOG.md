@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.3...%40kong-ui-public%2Fentities-vaults%404.17.4) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.17.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.2...%40kong-ui-public%2Fentities-vaults%404.17.3) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.17.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.1...%40kong-ui-public%2Fentities-vaults%404.17.2) (2026-09-09)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3790](https://github.com/Kong/public-ui-components/issues/3790)) ([aecf1ae](https://github.com/Kong/public-ui-components/commit/aecf1ae1184b73032c10eb89ddc6b9505ba20e63))
+
+
+## [4.17.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.0...%40kong-ui-public%2Fentities-vaults%404.17.1) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [4.17.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.16.33...%40kong-ui-public%2Fentities-vaults%404.17.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
 ## [4.16.33](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.16.32...%40kong-ui-public%2Fentities-vaults%404.16.33) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

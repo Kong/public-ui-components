@@ -3,6 +3,168 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.11...%40kong-ui-public%2Fentities-plugins%409.272.12) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.10...%40kong-ui-public%2Fentities-plugins%409.272.11) (2026-09-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.9...%40kong-ui-public%2Fentities-plugins%409.272.10) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.8...%40kong-ui-public%2Fentities-plugins%409.272.9) (2026-09-10)
+
+### Bug Fixes
+
+* **entities-plugins:** seed a default row and keep it in ACL allow/deny modes ([#3805](https://github.com/Kong/public-ui-components/issues/3805)) ([657229f](https://github.com/Kong/public-ui-components/commit/657229f9fa00e0b9c0b59a494471e4a5d9e5da02))
+
+
+## [9.272.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.7...%40kong-ui-public%2Fentities-plugins%409.272.8) (2026-09-10)
+
+### Bug Fixes
+
+* **entities-plugins:** call out streaming plugin flag in custom plugin form ([#3813](https://github.com/Kong/public-ui-components/issues/3813)) ([2d857cc](https://github.com/Kong/public-ui-components/commit/2d857cc9a6589514d0e8602f9c1007b7751587c6))
+
+
+## [9.272.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.6...%40kong-ui-public%2Fentities-plugins%409.272.7) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.5...%40kong-ui-public%2Fentities-plugins%409.272.6) (2026-09-09)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3790](https://github.com/Kong/public-ui-components/issues/3790)) ([aecf1ae](https://github.com/Kong/public-ui-components/commit/aecf1ae1184b73032c10eb89ddc6b9505ba20e63))
+
+
+## [9.272.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.4...%40kong-ui-public%2Fentities-plugins%409.272.5) (2026-09-08)
+
+### Bug Fixes
+
+* **entities-plugins:** clear rate-limiting-advanced expressions explicitly ([#3798](https://github.com/Kong/public-ui-components/issues/3798)) ([7373311](https://github.com/Kong/public-ui-components/commit/7373311c7825a8449b7c163d6f7e2163026c6a2c))
+
+
+## [9.272.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.3...%40kong-ui-public%2Fentities-plugins%409.272.4) (2026-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.2...%40kong-ui-public%2Fentities-plugins%409.272.3) (2026-09-08)
+
+### Bug Fixes
+
+* **entities-plugins:** fix search query shape for workspace filtering ([#3795](https://github.com/Kong/public-ui-components/issues/3795)) ([5ac0235](https://github.com/Kong/public-ui-components/commit/5ac02357fea6ebe9669313ef247e3cbe7cb8a476)), closes [#3792](https://github.com/Kong/public-ui-components/issues/3792)
+
+
+## [9.272.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.1...%40kong-ui-public%2Fentities-plugins%409.272.2) (2026-09-07)
+
+### Bug Fixes
+
+* **entities-plugins:** use search endpoint for workspace filtering regardless of feature flag ([#3792](https://github.com/Kong/public-ui-components/issues/3792)) ([2a9ac4e](https://github.com/Kong/public-ui-components/commit/2a9ac4e9bd31d7465586560089a77e120b0f49b0))
+
+
+## [9.272.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.0...%40kong-ui-public%2Fentities-plugins%409.272.1) (2026-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.272.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.4...%40kong-ui-public%2Fentities-plugins%409.272.0) (2026-09-07)
+
+### Features
+
+* **entities-plugins:** support expressible plugin config fields ([#3760](https://github.com/Kong/public-ui-components/issues/3760)) ([5a415da](https://github.com/Kong/public-ui-components/commit/5a415da5b4c850b19344c810e47b143f659c9df8))
+
+
+## [9.271.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.3...%40kong-ui-public%2Fentities-plugins%409.271.4) (2026-09-07)
+
+### Bug Fixes
+
+* **entities-plugins:** unset identity_realms/realm defaults on create when disabled ([#3786](https://github.com/Kong/public-ui-components/issues/3786)) ([efa536c](https://github.com/Kong/public-ui-components/commit/efa536cf73e627b68f064be2f751204e645ac235))
+
+
+## [9.271.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.2...%40kong-ui-public%2Fentities-plugins%409.271.3) (2026-09-06)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3784](https://github.com/Kong/public-ui-components/issues/3784)) ([07b7e1f](https://github.com/Kong/public-ui-components/commit/07b7e1f59bb0ea3f4f768e45cd08fd2d4ac3481c))
+
+
+## [9.271.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.1...%40kong-ui-public%2Fentities-plugins%409.271.2) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.271.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.0...%40kong-ui-public%2Fentities-plugins%409.271.1) (2026-09-05)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3782](https://github.com/Kong/public-ui-components/issues/3782)) ([ef460c0](https://github.com/Kong/public-ui-components/commit/ef460c00fb75b6798da333a68775475b4203be95))
+
+
+# [9.271.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.2...%40kong-ui-public%2Fentities-plugins%409.271.0) (2026-09-04)
+
+### Features
+
+* **entities-plugins:** cite the AI Gateway version in AI Manager's OIDC principals card ([#3776](https://github.com/Kong/public-ui-components/issues/3776)) ([f7e703c](https://github.com/Kong/public-ui-components/commit/f7e703c0f78901d8da15b57c5e014ebe5968bd72))
+
+
+## [9.270.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.1...%40kong-ui-public%2Fentities-plugins%409.270.2) (2026-09-03)
+
+### Bug Fixes
+
+* **entities-plugins:** respect key-auth context flags when resetting identity_realms/realm ([#3773](https://github.com/Kong/public-ui-components/issues/3773)) ([04e03f4](https://github.com/Kong/public-ui-components/commit/04e03f45d327d8018654038dcf491431a6331b4d))
+
+
+## [9.270.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.0...%40kong-ui-public%2Fentities-plugins%409.270.1) (2026-09-03)
+
+### Bug Fixes
+
+* **entities-plugins:** restore identity_realms default when leaving centrally-managed mode ([#3772](https://github.com/Kong/public-ui-components/issues/3772)) ([18e7a6d](https://github.com/Kong/public-ui-components/commit/18e7a6db246e19ea25f699f59c873852c6b5d7c6))
+
+
+# [9.270.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.3...%40kong-ui-public%2Fentities-plugins%409.270.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
+## [9.269.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.2...%40kong-ui-public%2Fentities-plugins%409.269.3) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.269.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.1...%40kong-ui-public%2Fentities-plugins%409.269.2) (2026-09-01)
 
 ### Bug Fixes

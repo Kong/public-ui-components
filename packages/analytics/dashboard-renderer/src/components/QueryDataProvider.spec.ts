@@ -101,6 +101,7 @@ describe('QueryDataProvider', () => {
     resetSwrvState()
     mockedFetcher = undefined
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
+      datasourceConfigMap: ref({}),
       isReady: vi.fn().mockResolvedValue(undefined),
       stripUnknownFilters: ref(({ filters }: { filters: any[] }) => filters),
     } as any)
