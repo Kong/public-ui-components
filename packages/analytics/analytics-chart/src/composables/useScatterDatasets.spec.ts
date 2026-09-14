@@ -39,23 +39,29 @@ const resolve = (option: unknown, raw?: unknown): unknown =>
   typeof option === 'function' ? option({ raw }) : option
 
 describe('jitter', () => {
+  const seeds = Array.from({ length: 50 }, (_, i) => 1718496000000 + i * 2)
+
   it('returns 0 when jitter is disabled', () => {
-    expect(jitter(0)).toBe(0)
+    expect(jitter(0, seeds[0])).toBe(0)
   })
 
   it('stays within the requested bound', () => {
-    for (let i = 0; i < 50; i++) {
-      const offset = jitter(100)
+    for (const seed of seeds) {
+      const offset = jitter(100, seed)
 
       expect(offset).toBeGreaterThanOrEqual(0)
       expect(offset).toBeLessThan(100)
     }
   })
 
-  it('varies across calls so overlapping points separate', () => {
-    const offsets = new Set(Array.from({ length: 50 }, () => jitter(100)))
+  it('returns the same offset for the same seed', () => {
+    expect(jitter(100, seeds[0])).toBe(jitter(100, seeds[0]))
+  })
 
-    expect(offsets.size).toBeGreaterThan(1)
+  it('varies across seeds so overlapping points separate', () => {
+    const offsets = new Set(seeds.map(seed => jitter(100, seed)))
+
+    expect(offsets.size).toBe(seeds.length)
   })
 })
 
@@ -229,6 +235,19 @@ describe('useScatterDatasets', () => {
     expect(first.y).toBe(1)
   })
 
+  it('keeps jittered points in place when the datasets recompute', () => {
+    const themeColors = ref(scatterChartColors())
+    const chartData = useScatterDatasets(
+      { scatter: { jitterMs: 500 }, themeColors },
+      makeResult(costRecords()),
+    )
+    const xValues = () => chartData.value.datasets[0].data.map(point => (point as { x: number }).x)
+    const before = xValues()
+
+    themeColors.value = { ...themeColors.value, outlier: '#000000' }
+
+    expect(xValues()).toEqual(before)
+  })
 })
 
 describe('useScatterDatasets theming', () => {

@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartShell"
     class="analytics-chart-shell"
     :class="{
       'show-values': showLegendValues,
@@ -109,6 +110,7 @@
         :metric-unit="computedMetricUnit"
         :shade-outlier-region="chartOptions.scatter?.shadeOutlierRegion"
         :synthetics-data-key="syntheticsDataKey"
+        :theme-colors="scatterThemeColors"
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
@@ -121,8 +123,9 @@
 import type { ComputedRef } from 'vue'
 import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
 import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { ScatterChartColors } from '../utils'
 
-import { computed, provide, toRef } from 'vue'
+import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -132,6 +135,7 @@ import {
   defaultStatusCodeColors,
   exploreResultToScatterData,
   isNoSuffixMetric,
+  scatterChartColors,
 } from '../utils'
 import composables from '../composables'
 import { isScatterChartData } from '../types'
@@ -233,6 +237,15 @@ const scatterData = computed<ScatterChartData | undefined>(() => {
   return isScatterChartData(props.chartData) ? props.chartData : exploreResultToScatterData(props.chartData)
 })
 
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
+const chartShellRef = useTemplateRef<HTMLDivElement>('chartShell')
+
+const scatterThemeColors = computed<ScatterChartColors>(() => {
+  void activeColorMode.value
+
+  return scatterChartColors(chartShellRef.value)
+})
+
 const chartMeta = computed<SharedMeta>(() => {
   if (isScatterChartData(props.chartData)) {
     const { start, end, metric, metricUnit, truncated, limit, datasource } = props.chartData
@@ -267,6 +280,7 @@ const computedChartData = computed(() => {
       {
         colorPalette: props.chartOptions.chartDatasetColors,
         scatter: props.chartOptions.scatter,
+        themeColors: scatterThemeColors,
       },
       scatterData,
     ).value

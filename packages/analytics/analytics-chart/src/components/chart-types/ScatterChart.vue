@@ -36,12 +36,11 @@
 
 <script setup lang="ts">
 import type { Chart, Plugin } from 'chart.js'
-import type { ComputedRef } from 'vue'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, TooltipState } from '../../types'
 import type { ScatterChartColors } from '../../utils'
 
-import { computed, inject, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, inject, reactive, ref, toRef, useTemplateRef } from 'vue'
 import { Scatter } from 'vue-chartjs'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
@@ -69,6 +68,7 @@ interface ScatterChartProps {
   chartTooltipSortFn?: ChartTooltipSortFn
   tooltipMetricDisplay?: string
   shadeOutlierRegion?: boolean
+  themeColors?: ScatterChartColors
 }
 
 const props = withDefaults(
@@ -84,11 +84,11 @@ const props = withDefaults(
     chartTooltipSortFn: (a, b) => b.rawValue - a.rawValue,
     tooltipMetricDisplay: '',
     shadeOutlierRegion: false,
+    themeColors: () => scatterChartColors(),
   },
 )
 
 const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
-const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { i18n } = composables.useI18n()
 const { formatUnit } = unitFormatter({ i18n })
@@ -101,7 +101,6 @@ const referenceLinePlugin = new ReferenceLinePlugin()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 
-const themeColors = ref<ScatterChartColors>(scatterChartColors())
 const chartInstance = ref<{ chart: Chart }>()
 
 const tooltipData: TooltipState = reactive({
@@ -129,14 +128,6 @@ const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolu
 )
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
-
-onMounted(() => {
-  themeColors.value = scatterChartColors(chartParentRef.value)
-})
-
-watch(activeColorMode, () => {
-  themeColors.value = scatterChartColors(chartParentRef.value)
-})
 
 const outlier = computed(() => props.chartData?.outlier)
 const referenceLines = computed(() => props.chartData?.referenceLines ?? [])
@@ -207,7 +198,7 @@ const { options } = composables.useScatterChartOptions({
   metricUnit: toRef(props, 'metricUnit'),
   outlierValue: outlierBandValue,
   referenceLines,
-  themeColors,
+  themeColors: toRef(props, 'themeColors'),
 })
 
 const chartFlexClass = (position: `${ChartLegendPosition}`) => {
