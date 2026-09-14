@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.42.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.41.0...%40kong-ui-public%2Fanalytics-utilities%4012.42.0) (2026-09-14)
+
+### Features
+
+* add share of requests / cost [MA-5454] ([#3836](https://github.com/Kong/public-ui-components/issues/3836)) ([89c3384](https://github.com/Kong/public-ui-components/commit/89c338403c8b571cd3e9a6f13cc1cab4c426308b))
+
+
 # [12.41.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.2...%40kong-ui-public%2Fanalytics-utilities%4012.41.0) (2026-09-11)
 
 ### Features
