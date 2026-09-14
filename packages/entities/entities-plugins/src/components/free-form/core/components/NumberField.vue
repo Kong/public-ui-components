@@ -48,6 +48,25 @@
       :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
       :message="i18n.t('vault_picker.component_error')"
     />
+
+    <!--
+      Self-guarded: renders nothing unless this field's schema is `expressible`
+      and declares a twin. `expressionEditor === false` is the escape hatch for a
+      plugin that lays the pair out itself (rate-limiting-advanced's limit rows).
+    -->
+    <ExpressionEditor
+      v-if="expressionEditor !== false"
+      class="ff-number-field-expression"
+      :name="absoluteName"
+      :placeholder="expressionEditor?.placeholder"
+    >
+      <template
+        v-if="$slots['expression-help']"
+        #help
+      >
+        <slot name="expression-help" />
+      </template>
+    </ExpressionEditor>
   </div>
 </template>
 
@@ -58,7 +77,9 @@ import { useField, useFieldAttrs } from '../composables'
 import { computed, inject, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from '../form-schema'
 import EnhancedInput from './EnhancedInput.vue'
-import type { BaseFieldProps, EmptyValue } from '../types'
+import ExpressionEditor from './ExpressionEditor.vue'
+import * as utils from '../utils'
+import type { BaseFieldProps, EmptyValue, ExpressionEditorFieldProps } from '../types'
 import useI18n from '../../../../composables/useFreeformI18n'
 
 export interface NumberFieldProps extends InputProps, BaseFieldProps {
@@ -66,16 +87,26 @@ export interface NumberFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
   max?: number | string
   min?: number | string
+  expressionEditor?: ExpressionEditorFieldProps
 }
 
 const {
   autofocus,
   showVaultSecretPicker = undefined,
+  expressionEditor = undefined,
   name,
   ...props
 } = defineProps<NumberFieldProps>()
 const { value: fieldValue, hide, ...field } = useField<number | string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+/**
+ * `useField` above provides this field's own resolved path to its descendants,
+ * so `ExpressionEditor` rendered below would double-resolve a relative `name`
+ * against it. The absolute path sidesteps that, same as `ExpressionField` does
+ * today for the value component it wraps.
+ */
+const absoluteName = computed(() => utils.resolveRoot(field.path?.value ?? ''))
 
 const { i18n } = useI18n()
 
@@ -156,6 +187,12 @@ const inputType = computed(() => realShowVaultSecretPicker.value ? 'text' : 'num
     :deep(.k-tooltip p) {
       margin: 0;
     }
+  }
+
+  // `ExpressionEditor` is spacing-neutral by design — whoever composes it owns
+  // the gap to the input above.
+  .ff-number-field-expression {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

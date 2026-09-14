@@ -13,7 +13,7 @@ free-form/
 │   │                        # pre-staged to become the standalone @kong-ui-public/freeform package)
 │   ├── types.ts             # Core type definitions
 │   ├── form-schema.ts       # FormSchema/UnionFieldSchema/etc. — the schema type contract
-│   ├── field-dispatch.ts    # Schema-type -> component mapping (shared by Field/ExpressionField)
+│   ├── field-dispatch.ts    # Schema-type -> component mapping, used by Field.vue
 │   ├── utils.ts (+ .spec.ts) # Path utilities, field sorting
 │   ├── composables/         # Vue composables (core logic, including map entry tracking)
 │   ├── filler/              # Test utilities for auto-filling forms (Cypress + Playwright);
@@ -32,8 +32,7 @@ free-form/
 │       ├── StringArrayField.vue # Tag-like comma-separated string sets
 │       ├── JsonField.vue        # JSON textarea editor
 │       ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
-│       ├── ExpressionField.vue  # An expressible field: its value input plus its expression
-│       ├── ExpressionEditor.vue # Just the collapsible expression editor
+│       ├── ExpressionEditor.vue # The collapsible expression editor; StringField/NumberField render one inline, or a plugin places it itself
 │       ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
 │       ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
 │       ├── SlideTransition.vue  # Height-animated collapse transition
@@ -60,9 +59,7 @@ free-form/
 │   ├── CredentialSecretField.vue (+ credential-secret-field.cy.ts) # Credential secret input (generate/reveal)
 │   ├── CollapsibleSection.vue # Generic collapsible section wrapper
 │   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the core `Form` with the shared plugin chrome
-│   ├── ConditionField.vue   # Optional condition editor in General Info
-│   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here (not core/) until its
-│                             #   mount harness stops depending on PluginConfigurationForm — see its own TODO
+│   └── ConditionField.vue   # Optional condition editor in General Info
 ├── Common/                  # Generic plugin form used by default
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
@@ -104,7 +101,6 @@ Defined in `Field.vue`. The mapping logic:
 
 | Schema Type | `one_of` present? | Component |
 |---|---|---|
-| any type, with an `expressions` twin | - | `ExpressionField` (the value input below, plus its expression) |
 | `string` | No | `StringField` |
 | `string` | Yes | `EnumField` |
 | `number` | `integer` | No | `NumberField` |
@@ -118,6 +114,8 @@ Defined in `Field.vue`. The mapping logic:
 | `map` | - | `MapField` |
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
+
+This is the whole mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a plugin rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
 
 ### Entity Checks
 
@@ -266,19 +264,18 @@ The Gateway marks a config field `expressible` when its value can alternatively 
 > [!WARNING]
 > **Shape the payload in `formData`, never in `onFormChange`.** `form-context.ts` decides whether an incoming `model` is a real change by comparing it against the payload it last emitted (`isEqual(getValue(), newData)`). A payload that disagrees with the form's own state fails that comparison for good, so the next `model` looks like a change and the form re-initializes from it — reverting what the user just did. rate-limiting-advanced unset an all-empty `expressions` record in its `handleFormChange` and clearing an expression silently came back. Mutating `formData` keeps the two in step.
 
-Rendering is entirely schema-driven, so **a plugin needs no configuration to get it**: `Field.vue` dispatches to `ExpressionField` (the plain input plus its expression) for any field whose twin resolves in the schema, and to the normal type mapping otherwise. Schemas without an `expressions` record are unaffected.
+Rendering is entirely schema-driven, so **a plugin needs no configuration to get it**: `StringField` and `NumberField` render their own `ExpressionEditor` below the value input whenever the field's twin resolves in the schema, and nothing otherwise. Schemas without an `expressions` record are unaffected. This is self-contained per field component rather than a separate dispatch step, so it applies equally whether the field was reached through `Field.vue`'s type-based dispatch or a plugin rendered `StringField`/`NumberField` directly (`MapField`'s inline string values, for one).
 
 | Component | Use |
 |---|---|
-| `ExpressionField` | The pair. What the dispatch resolves to; a plugin overriding the field replaces both halves |
-| `ExpressionEditor` | Just the collapsible editor. For a plugin that lays out the value input itself — see `rate-limiting-advanced/RequestLimitsForm.vue`, which pairs `limit` with `window_size` |
+| `ExpressionEditor` | The collapsible editor on its own. `StringField`/`NumberField` render one via their `expressionEditor` prop; a plugin that lays the value input out itself places it directly — see `rate-limiting-advanced/RequestLimitsForm.vue`, which pairs `limit` with `window_size` |
 
-It ships **no placeholder**: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression. Plugins pass their own, and override the help text through the `help` slot, using either of the normal field-copy patterns:
+`expressionEditor` accepts `{ placeholder }` (the field ships **no placeholder** by default: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression) or `false` to suppress the built-in editor entirely — the escape hatch for a plugin that places its own `ExpressionEditor` instead. Override the expression's help text through the `#expression-help` slot (distinct from the field's own `#help`). Two normal field-copy patterns:
 
-- **A registered renderer** — `fieldRenderers` is how a plugin customizes one field, and a registered renderer owns the whole field, expression included, so it renders `ExpressionField` itself with the wording it wants: `plugins/_shared/CustomKeyField.vue`, registered for `config.custom_key` by both rate-limiting forms. The field keeps its place among the auto-rendered siblings.
-- **Explicit placement** — for a field the plugin lays out itself, pass the props directly: `RequestLimitsForm.vue`'s per-row `ExpressionEditor`, which pairs each `limit` with its `window_size`.
+- **A registered renderer** — `fieldRenderers` is how a plugin customizes one field, and a registered renderer owns the whole field, expression included, so it renders `StringField`/`NumberField` itself with the wording it wants: `plugins/_shared/CustomKeyField.vue`, registered for `config.custom_key` by both rate-limiting forms. The field keeps its place among the auto-rendered siblings.
+- **Explicit placement** — for a field the plugin lays out itself, pass `expression-editor="false"` and render `ExpressionEditor` directly: `RequestLimitsForm.vue`'s per-row editor, which pairs each `limit` with its `window_size`.
 
-Note that `ExpressionField` resolves its own path and hands children the absolute form, so a relative `name` works either way.
+Note that `StringField`/`NumberField` resolve their own path and hand `ExpressionEditor` the absolute form, so a relative `name` works either way.
 
 #### Adopting it in a consuming app
 
@@ -455,7 +452,7 @@ filler.fillField('config.host', 'example.com')
 | `core/components/*.spec.ts`, `core/composables/*.spec.ts`, `core/utils.spec.ts` | Unit coverage for core components and composables |
 | `components/free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
 | `components/credential-secret-field.cy.ts`, `components/scope-entity-field.cy.ts` | Non-core field integration tests |
-| `components/ExpressionField.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
+| `core/components/expressible-fields.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
 | `layout/StandardLayout.cy.ts` | Layout behavior, scope switching, general info and code mode |
 | `*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
 
@@ -472,7 +469,7 @@ filler.fillField('config.host', 'example.com')
 ### Adding a New Field Type
 
 1. Create `core/components/[Type]Field.vue` component
-2. Add a case in `field-dispatch.ts`'s `resolveFieldComponent` (moved out of `Field.vue` so `ExpressionField` can share it)
+2. Add a case in `field-dispatch.ts`'s `resolveFieldComponent`
 3. Add handler type in `core/filler/shared/field-walker.ts` (`HandlerType` enum)
 4. Add Cypress handler in `core/filler/cypress/handlers/`
 5. Add Playwright handler in `core/filler/playwright/handlers/`
@@ -489,7 +486,7 @@ filler.fillField('config.host', 'example.com')
 | `composables/form-context.ts` | Central state; changes affect data flow everywhere |
 | `composables/render-rules.ts` | Bundle/dependency logic; changes affect field visibility |
 | `composables/schema.ts` | Default/empty-value resolution (`getDefault`, `getEmptyOrDefault`, `getEmptyValue`); changes affect every field's init and clear behavior |
-| `field-dispatch.ts` | Schema-type → component mapping, shared by `Field` and `ExpressionField`; add new types here |
+| `field-dispatch.ts` | Schema-type → component mapping, used by `Field`; add new types here |
 
 ## Standalone Usage (`@kong-ui-public/entities-plugins/freeform`)
 

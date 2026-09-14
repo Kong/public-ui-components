@@ -40,6 +40,7 @@
               class="rla-form-request-limits-inputs"
             >
               <NumberField
+                :expression-editor="false"
                 :name="`$.config.limit.${index}`"
                 :placeholder="t('sp.request_limits.custom')"
               />
@@ -67,9 +68,11 @@
 
           <!--
             `config.limit` is expressible element-wise, so the expression belongs
-            to the row rather than to the array. `ExpressionEditor` rather than
-            `ExpressionField`, because this form lays out the value inputs itself
-            — paired with `window_size` — instead of letting the field render them.
+            to the row rather than to the array. Placed here directly, with both
+            `NumberField`s' own editor turned off (`expression-editor="false"`):
+            this row pairs `limit` with `window_size`, so `NumberField`'s built-in
+            placement — inside its own column — would land inside the row instead
+            of spanning beneath it.
           -->
           <ExpressionEditor
             class="rla-form-request-limits-expression"

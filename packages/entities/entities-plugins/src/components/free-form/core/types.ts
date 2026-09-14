@@ -201,6 +201,18 @@ export interface BaseFieldProps {
   labelAttributes?: LabelAttributes
 }
 
+/**
+ * Configures the expression editor a `StringField`/`NumberField` renders below
+ * itself when its schema is `expressible` — mirrors `ExpressionEditor`'s own
+ * props. `false` turns it off entirely, for a plugin that pairs the value with
+ * its own `ExpressionEditor` instead (rate-limiting-advanced's limit rows,
+ * laid out beside `window_size`). Omitted renders it with defaults.
+ */
+export type ExpressionEditorFieldProps = false | {
+  /** Example expression shown while the field is empty. */
+  placeholder?: string
+}
+
 export type Match = (opt: {
   path: string
   /**
