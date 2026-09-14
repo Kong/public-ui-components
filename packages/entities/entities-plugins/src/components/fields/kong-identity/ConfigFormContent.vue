@@ -89,6 +89,7 @@ import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
 import { usePluginContext } from '../../free-form/plugin-context'
+import { useContextDisabledField } from '../../free-form/composables/use-context-disabled-field'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
@@ -135,22 +136,18 @@ const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabl
 // Host opt-out: hides the realm field entirely, regardless of whether it's required in the schema.
 const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
 
-const { formData, getSchema, isSchemaDefaulted } = useFormShared()
+// Host opt-out: hides the anonymous field entirely, regardless of the schema.
+const anonymousEnabled = computed(() => keyAuthContext?.anonymousEnabled ?? true)
+
+const { formData, getSchema } = useFormShared()
 
 // Host opt-out: strip a schema-computed default for a field the host fully disabled. Gated on
 // isSchemaDefaulted, not isEditing — a clone-to-create flow also hands in real data with
-// isEditing false, and that data must survive same as an edit-load's. A watcher, not onMounted,
-// since the data prop can re-derive defaults after mount too (e.g. an async edit-load). Deleted
-// rather than nulled to avoid tripping a required-but-non-nullable field.
-watch(() => formData.config?.identity_realms, (value) => {
-  if (value === undefined || !isSchemaDefaulted.value || identityRealmsEnabled.value) return
-  delete formData.config!.identity_realms
-}, { immediate: true })
-
-watch(() => formData.config?.realm, (value) => {
-  if (value === undefined || !isSchemaDefaulted.value || realmsEnabled.value) return
-  delete formData.config!.realm
-}, { immediate: true })
+// isEditing false, and that data must survive same as an edit-load's. Deleted rather than
+// nulled to avoid tripping a required-but-non-nullable field. See useContextDisabledField.
+useContextDisabledField('identity_realms', identityRealmsEnabled)
+useContextDisabledField('realm', realmsEnabled)
+useContextDisabledField('anonymous', anonymousEnabled)
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
@@ -338,12 +335,15 @@ const topOmit = computed(() => {
   return omit
 })
 
-// Advanced section: show only anonymous + conditionally realm/identity_realms
+// Advanced section: show conditionally anonymous/realm/identity_realms
 const advancedOmit = computed(() => {
   const schema = getSchema('$.config') as { fields?: Array<Record<string, unknown>> } | undefined
   const allFields: string[] = schema?.fields?.map((f: Record<string, unknown>) => Object.keys(f)[0]) ?? []
 
-  const advancedSet = new Set(['anonymous'])
+  const advancedSet = new Set<string>()
+  if (anonymousEnabled.value) {
+    advancedSet.add('anonymous')
+  }
   if (realmsEnabled.value && !realmRequired.value && selectedMode.value !== 'kong-identity') {
     advancedSet.add('realm')
   }

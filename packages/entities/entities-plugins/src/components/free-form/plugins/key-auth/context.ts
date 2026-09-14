@@ -11,4 +11,11 @@ export interface KeyAuthContext {
    * it's required in the schema. Defaults to `true` when no context is provided.
    */
   realmsEnabled?: boolean
+
+  /**
+   * Enables the `anonymous` field. When disabled, the field is hidden regardless of the
+   * schema, and any schema-computed default is stripped so it can't be silently submitted.
+   * Defaults to `true` when no context is provided.
+   */
+  anonymousEnabled?: boolean
 }

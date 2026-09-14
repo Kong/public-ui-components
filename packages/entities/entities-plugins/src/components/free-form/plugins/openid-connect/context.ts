@@ -5,4 +5,11 @@ export interface OpenidConnectContext {
    * prefilled with a random 32-character value.
    */
   source?: 'ai-manager'
+
+  /**
+   * Enables the `anonymous` field. When disabled, the field is hidden regardless of the
+   * schema, and any schema-computed default is stripped so it can't be silently submitted.
+   * Defaults to `true` when no context is provided.
+   */
+  anonymousEnabled?: boolean
 }
