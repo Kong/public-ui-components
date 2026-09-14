@@ -63,7 +63,7 @@
           v-if="isEmptyVisible"
           data-testid="monaco-editor-status-overlay-empty"
           :icon="CodeblockIcon"
-          :message="i18n.t('editor.messages.empty_message')"
+          :message="monacoEditor.editorStates.readOnly ? i18n.t('editor.messages.empty_message_readonly') : i18n.t('editor.messages.empty_message')"
           :title="i18n.t('editor.messages.empty_title')"
         />
       </Transition>

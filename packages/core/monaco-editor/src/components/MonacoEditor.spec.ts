@@ -25,6 +25,7 @@ const editorStates = reactive({
   editorStatus: 'loading',
   hasContent: false,
   currentLanguage: 'markdown',
+  readOnly: false,
 })
 
 const mockSetLanguage = vi.fn()
@@ -61,6 +62,7 @@ describe('MonacoEditor.vue', () => {
     lastUseMonacoOptions = null
     mockSetLanguage.mockClear()
     mockUpdateOptions.mockClear()
+    editorStates.readOnly = false
   })
 
   const mountComponent = (overrides: Record<string, any> = {}) =>
@@ -98,6 +100,27 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.text()).toContain('editor.messages.empty_title')
     expect(wrapper.text()).toContain('editor.messages.empty_message')
     expect(wrapper.find('.codeblock-icon').exists()).toBe(true)
+  })
+
+  it('should show the "start typing" empty message when the editor is not read-only', () => {
+    editorStates.editorStatus = 'ready'
+    editorStates.hasContent = false
+    editorStates.readOnly = false
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.text()).toContain('editor.messages.empty_message')
+    expect(wrapper.text()).not.toContain('editor.messages.empty_message_readonly')
+  })
+
+  it('should show the read-only empty message without "start typing" when the editor is read-only', () => {
+    editorStates.editorStatus = 'ready'
+    editorStates.hasContent = false
+    editorStates.readOnly = true
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.text()).toContain('editor.messages.empty_message_readonly')
   })
 
   it('should not show empty state when editor has content and it\'s ready', () => {
