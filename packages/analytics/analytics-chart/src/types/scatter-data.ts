@@ -1,5 +1,11 @@
 import type { Display, ResultMetaBase } from '@kong-ui-public/analytics-utilities'
 
+export interface ScatterPointExtra {
+  label: string
+  value: number | string
+  unit?: string
+}
+
 export interface ScatterDataPoint {
   /**
    * Epoch milliseconds.
@@ -14,6 +20,8 @@ export interface ScatterDataPoint {
    * named after the metric.
    */
   group?: string
+  /** Extra values to be placed in the tooltip */
+  extras?: ScatterPointExtra[]
 }
 
 export interface ScatterChartData extends ResultMetaBase {

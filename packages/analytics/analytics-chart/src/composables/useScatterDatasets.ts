@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
-import type { Dataset, ExploreToDatasetDeps, KChartData, ScatterChartData, ScatterOptions } from '../types'
+import type { ScriptableContext } from 'chart.js'
+import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
 
 import { computed } from 'vue'
@@ -10,7 +11,8 @@ import composables from '../composables'
 
 export const DEFAULT_POINT_RADIUS = 2
 export const DEFAULT_POINT_OPACITY = 0.6
-const PERCENTILE_LINE_WIDTH = 1.5
+const OUTLIER_RADIUS_BOOST = 1
+const HOVER_RADIUS_BOOST = 2
 const MEDIAN_PERCENTILE = 50
 const MEDIAN_BORDER_DASH = [6, 4]
 const OUTLIER_BORDER_DASH = [2, 3]
@@ -23,9 +25,7 @@ export interface ScatterDatasetDeps extends ExploreToDatasetDeps {
 interface ScatterPoint {
   x: number
   y: number
-  // This should only be set for outliers as they all behave as one dataset, without
-  // it each point in that dataset will just appear as `Outlier > 95`
-  tooltipLabel?: string
+  extras?: ScatterPointExtra[]
 }
 
 export const jitter = (jitterMs: number): number => {
@@ -37,8 +37,7 @@ export const jitter = (jitterMs: number): number => {
 }
 
 /**
- * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension
- * with optional percentile reference lines and outliers
+ * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension.
  *
  * Percentiles are computed over the points actually supplied, so they are only really
  * meaningful when the input is not truncated.
@@ -69,7 +68,7 @@ export default function useScatterDatasets(
         return { datasets: [] }
       }
 
-      const { metric, dimension, display, start, end } = data
+      const { metric, dimension, display } = data
 
       const scatter = deps.scatter || {}
       const jitterMs = scatter.jitterMs ?? 0
@@ -84,7 +83,11 @@ export default function useScatterDatasets(
         const groupId = point.group ?? metric
         const points = grouped.get(groupId) || []
 
-        points.push({ x: point.timestamp + jitter(jitterMs), y: point.value })
+        points.push({
+          x: point.timestamp + jitter(jitterMs),
+          y: point.value,
+          ...(point.extras?.length ? { extras: point.extras } : {}),
+        })
         grouped.set(groupId, points)
         allValues.push(point.value)
       })
@@ -97,95 +100,48 @@ export default function useScatterDatasets(
       const percentileValues = requestedPercentiles.length ? computePercentiles(allValues, requestedPercentiles) : new Map<number, number>()
 
       const outlierValue = scatter.outlierPercentile !== undefined ? percentileValues.get(scatter.outlierPercentile) : undefined
-      const splitOutliers = outlierValue !== undefined && Number.isFinite(outlierValue)
-
-      const outlierThresholdLabel = splitOutliers ? labelFor(scatter.outlierPercentile as number) : ''
+      const hasOutliers = outlierValue !== undefined && Number.isFinite(outlierValue)
 
       const colorPalette = isNullOrUndef(deps.colorPalette) ? datavisPalette : deps.colorPalette
       const themeColors = deps.themeColors?.value ?? scatterChartColors()
       const datasets: Dataset[] = []
-      // Outliers from every series collect into one dataset so that the legend gains a
-      // single toggleable "Outlier" entry rather than one per series. We may want
-      // to rethink how this works, but good enough for now...
-      const outliers: ScatterPoint[] = []
 
-      /**
-       * Splits the points of a series, returning the ones that aren't outliers and moving the rest into the
-       * shared `outliers` dataset above
-       */
-      const withoutOutliers = (points: ScatterPoint[], seriesLabel: string): ScatterPoint[] => {
-        if (!splitOutliers) {
-          return points
-        }
 
-        const kept: ScatterPoint[] = []
 
-        for (const point of points) {
-          if (point.y <= (outlierValue as number)) {
-            kept.push(point)
-            continue
-          }
+      const isOutlier = (raw: unknown): boolean => {
+        const y = (raw as ScatterPoint | undefined)?.y
 
-          outliers.push({
-            ...point,
-            tooltipLabel: i18n.t('scatter.outlierTooltip', { series: seriesLabel, label: outlierThresholdLabel }),
-          })
-        }
-
-        return kept
+        return hasOutliers && Number.isFinite(y) && (y as number) > (outlierValue as number)
       }
 
       Array.from(grouped.entries()).forEach(([groupId, points], i) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
         const baseColor = determineBaseColor(i, name, isSegmentEmpty, colorPalette)
+        // Translucent fill so overlapping points darken where the cloud is dense
+        const fillColor = withAlpha(baseColor, pointOpacity)
 
         // @ts-ignore - dynamic i18n key
         const label: string = (i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name
-        const kept = withoutOutliers(points, label)
 
         datasets.push({
           type: 'scatter',
           rawDimension: name,
           rawMetric: metric,
           label,
-          // Translucent fill so overlapping points darken where the cloud is dense
-          borderColor: baseColor,
-          backgroundColor: withAlpha(baseColor, pointOpacity),
-          data: kept,
-          pointRadius,
-          pointHoverRadius: pointRadius + 2,
+          // Outliers are recolored where they sit instead of being moved into a separate series
+          borderColor: (ctx: ScriptableContext<'line'>) => isOutlier(ctx.raw) ? themeColors.outlier : baseColor,
+          backgroundColor: (ctx: ScriptableContext<'line'>) => isOutlier(ctx.raw) ? themeColors.outlier : fillColor,
+          pointRadius: (ctx: ScriptableContext<'line'>) => isOutlier(ctx.raw) ? pointRadius + OUTLIER_RADIUS_BOOST : pointRadius,
+          pointHoverRadius: (ctx: ScriptableContext<'line'>) => (isOutlier(ctx.raw) ? pointRadius + OUTLIER_RADIUS_BOOST : pointRadius) + HOVER_RADIUS_BOOST,
+          data: points,
           pointBorderWidth: 0,
           showLine: false,
           isSegmentEmpty,
         } as Dataset)
       })
 
-      if (splitOutliers && outliers.length) {
-        const outlierColor = themeColors.outlier
-
-        datasets.push({
-          type: 'scatter',
-          rawDimension: 'outlier',
-          rawMetric: metric,
-          label: i18n.t('scatter.outlier', { label: outlierThresholdLabel }),
-          borderColor: outlierColor,
-          backgroundColor: outlierColor,
-          data: outliers,
-          pointRadius,
-          pointHoverRadius: pointRadius + 2,
-          pointBorderWidth: 0,
-          showLine: false,
-        } as Dataset)
-      }
-
-      // Reference lines are just two points which gives them legend entries. We may also
-      // want to revisit this.
-      const pointXValues = Array.from(grouped.values()).flat().map(point => point.x)
-      const startMs = new Date(start).valueOf()
-      const endMs = new Date(end).valueOf()
-      const xMin = Number.isFinite(startMs) ? startMs : Math.min(...pointXValues)
-      const xMax = Number.isFinite(endMs) ? endMs : Math.max(...pointXValues)
+      const referenceLines: ResolvedReferenceLine[] = []
 
       percentileLines.forEach(line => {
         const value = percentileValues.get(line.percentile)
@@ -195,28 +151,28 @@ export default function useScatterDatasets(
         }
 
         const isMedian = line.percentile === MEDIAN_PERCENTILE
-        const color = line.color || (isMedian ? themeColors.medianLine : themeColors.outlier)
 
-        datasets.push({
-          type: 'line',
-          rawDimension: `percentile-${line.percentile}`,
-          rawMetric: metric,
+        referenceLines.push({
+          percentile: line.percentile,
           label: labelFor(line.percentile, line.label),
-          data: [{ x: xMin, y: value }, { x: xMax, y: value }],
-          borderColor: color,
-          backgroundColor: color,
+          value,
+          color: line.color || (isMedian ? themeColors.medianLine : themeColors.outlier),
           borderDash: line.borderDash || (isMedian ? MEDIAN_BORDER_DASH : OUTLIER_BORDER_DASH),
-          borderWidth: PERCENTILE_LINE_WIDTH,
-          pointRadius: 0,
-          pointHitRadius: 0,
-          fill: false,
-          total: value,
-        } as Dataset)
+        })
       })
 
       return {
         datasets,
-        ...(splitOutliers ? { outlierValue: outlierValue as number } : {}),
+        ...(hasOutliers
+          ? {
+            outlier: {
+              value: outlierValue as number,
+              label: i18n.t('scatter.outlier', { label: labelFor(scatter.outlierPercentile as number) }),
+              color: themeColors.outlier,
+            },
+          }
+          : {}),
+        ...(referenceLines.length ? { referenceLines } : {}),
       }
     } catch (err) {
       console.warn(err)

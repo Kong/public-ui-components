@@ -5,6 +5,7 @@ import { computed, onUnmounted } from 'vue'
 import { Tooltip } from 'chart.js'
 import { isNullOrUndef } from 'chart.js/helpers'
 import { millisecondsToHours } from 'date-fns'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 import {
   formatChartTicksByGranularity,
@@ -12,8 +13,30 @@ import {
   lineChartTooltipBehavior,
   verticalTooltipPositioning,
 } from '../utils'
+import composables from '../composables'
+
+// TODO: update this to be region specific (if possible)
+const AXIS_FORMATTED_UNITS = ['usd', 'bytes']
+const CURRENCY_UNIT = 'usd'
 
 export default function useScatterChartOptions(chartOptions: ScatterChartOptions) {
+  const { i18n } = composables.useI18n()
+  const { formatUnit } = unitFormatter({ i18n })
+
+  const formatMetricTick = (value: number): string | number => {
+    const unit = chartOptions.metricUnit?.value
+
+    if (!unit || !AXIS_FORMATTED_UNITS.includes(unit)) {
+      return value
+    }
+
+    if (value === 0 && unit === CURRENCY_UNIT) {
+      return i18n.formatNumber(0, { style: 'currency', currency: 'USD' })
+    }
+
+    return formatUnit(value, unit)
+  }
+
   const dayBoundaryCrossed = computed(() => {
     const timeRange = Number(chartOptions.timeRangeMs.value)
     const now = new Date()
@@ -68,6 +91,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
     },
     ticks: {
       maxTicksLimit: 5,
+      callback: (value: number) => formatMetricTick(value),
     },
     grid: {
       drawBorder: false,
@@ -151,6 +175,9 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
       outlierBandPlugin: {
         value: chartOptions.outlierValue?.value,
         color: chartOptions.themeColors.value.outlierBand,
+      },
+      referenceLinePlugin: {
+        lines: chartOptions.referenceLines?.value,
       },
     },
     layout: {
