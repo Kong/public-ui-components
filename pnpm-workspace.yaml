@@ -44,7 +44,9 @@ overrides:
 allowBuilds:
   '@evilmartians/lefthook': true
   '@parcel/watcher': true
+  '@scarf/scarf': true
   '@swc/core': true
+  '@tree-sitter-grammars/tree-sitter-yaml': true
   core-js: true
   core-js-pure: true
   cypress: true
