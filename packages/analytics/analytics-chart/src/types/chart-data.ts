@@ -2,6 +2,7 @@ import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { ScatterPointExtra } from './scatter-data'
 
 // Chart.js extended interfaces
 export type Dataset = ChartDataset & {
@@ -19,7 +20,8 @@ export interface KChartData extends ChartData {
   labels?: string[]
   isLabelEmpty?: boolean[]
   isMultiDimension?: boolean
-  outlierValue?: number
+  outlier?: ScatterOutlier
+  referenceLines?: ResolvedReferenceLine[]
 }
 
 export interface AnalyticsDataPoint {
@@ -33,6 +35,7 @@ export interface AnalyticsDataPoint {
  */
 export interface LabeledDataPoint extends AnalyticsDataPoint {
   tooltipLabel?: string
+  extras?: ScatterPointExtra[]
 }
 
 /**
@@ -60,6 +63,11 @@ export interface EnhancedLegendItem extends LegendItem {
   value: LegendValueEntry
   text: string
   isSegmentEmpty?: boolean
+  /**
+   * A key is not tied to a specific dataset, only used for extra things in a chart like
+   * outliers, thresholds, etc. They also don't toggle anything and always show their value.
+   */
+  isKey?: boolean
 }
 
 /**
@@ -89,7 +97,8 @@ export interface ScatterPercentileLine {
    */
   label?: string
   /**
-   * Dash pattern for the line, defaults to a dashed [5, 5].
+   * Dash pattern for the line, defaults to a dashed [6, 4] for the median and a
+   * dotted [2, 3] for anything else.
    */
   borderDash?: number[]
   /**
@@ -98,23 +107,30 @@ export interface ScatterPercentileLine {
   color?: string
 }
 
-/**
- * TODO: The percentile math for median and outliers are not perfect, these need to be updated
- *       to actually display/inform the user of what is happening. So for now, the percentiles and
- *       median lines will default to none.
- *
- *       e.g. Fix the splitting of the outliers datasets from the original datasets, labels in
- *            the legend that explain what they are doing (or removed completely), better
- *            styling to differentiate the median/outliers
- */
+export interface ResolvedReferenceLine {
+  percentile: number
+  label: string
+  value: number
+  color: string
+  borderDash: number[]
+}
+
+export interface ScatterOutlier {
+  value: number
+  /**
+   * Legend key text, e.g. "Outlier (> p95)".
+   */
+  label: string
+  color: string
+}
+
 export interface ScatterOptions {
   /**
    * Reference lines derived from the plotted y-values, defaults to none.
    */
   percentileLines?: ScatterPercentileLine[]
   /**
-   * Percentile above which points are split into a separate "outlier" dataset,
-   * defaults to undefined (every point stays in its own series).
+   * Percentile above which points are colored as outliers, defaults to undefined
    */
   outlierPercentile?: number
   /**

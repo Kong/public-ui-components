@@ -23,7 +23,6 @@
         card-orientation="horizontal"
         data-testid="oidc-auth-mode-kong-identity"
         :selected-value="MODE_KONG_IDENTITY"
-        @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
           <KeyIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
@@ -41,7 +40,6 @@
         card-orientation="horizontal"
         data-testid="oidc-auth-mode-external"
         :selected-value="MODE_EXTERNAL"
-        @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
           <WorldIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
@@ -149,7 +147,7 @@
       />
 
       <div
-        v-for="(clientId, index) in clientIdArray"
+        v-for="(clientId, index) in clientIds"
         :key="index"
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
@@ -205,7 +203,7 @@
             data-testid="principals-client-secret"
             :disabled="hasAuthServersAccess && !selectedServer"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecretArray[index] ?? undefined"
+            :model-value="clientSecrets[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
             v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
             @update:model-value="handleClientSecretChange(index, $event)"
@@ -215,7 +213,7 @@
             v-if="autofillSlot"
             :schema="{ model: 'config-client_secret', referenceable: true }"
             :update="(val: string) => handleClientSecretChange(index, val)"
-            :value="clientSecretArray[index]"
+            :value="clientSecrets[index]"
           />
         </div>
         <button
@@ -255,7 +253,7 @@
 
     <template v-else>
       <div
-        v-for="(clientId, index) in clientIdArray"
+        v-for="(clientId, index) in clientIds"
         :key="index"
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
@@ -295,7 +293,7 @@
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecretArray[index] ?? undefined"
+            :model-value="clientSecrets[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
             v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
             @update:model-value="handleClientSecretChange(index, $event)"
@@ -313,14 +311,14 @@
             v-if="autofillSlot"
             :schema="{ model: 'config-client_secret', referenceable: true }"
             :update="(val: string) => handleClientSecretChange(index, val)"
-            :value="clientSecretArray[index]"
+            :value="clientSecrets[index]"
           />
         </div>
         <button
           :aria-label="t('plugins.free-form.openid-connect.principals.client.remove')"
           class="remove-client-btn"
           data-testid="remove-external-client-action"
-          :disabled="clientIdArray.length <= 1"
+          :disabled="clientIds.length <= 1"
           type="button"
           @click="removeClientRow(index)"
         >
@@ -411,8 +409,7 @@ import { SecretInput } from '@kong-ui-public/misc-widgets'
 import '@kong-ui-public/misc-widgets/dist/style.css'
 import useI18n from '../../../../composables/useI18n'
 import { USE_SECRET_INPUT_KEY } from '../../../../constants'
-import Field from '../../core/components/Field.vue'
-import { useFormShared } from '../../core/composables'
+import { Field, useFormShared } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
 import PrincipalLookupSettings from './PrincipalLookupSettings.vue'
@@ -482,17 +479,31 @@ const issuer = computed<string | null>({
   },
 })
 
-const clientIdValue = computed<Array<string | null> | null>({
-  get: () => formData.config?.client_id ?? null,
+// A cleared field is `null` on the model but still needs one row on screen, so the getter
+// fabricates `[null]`. The setter is that getter's inverse: a lone empty row is the
+// fabrication coming back (the inputs echo it on re-render) and clears the field again,
+// while extra rows are ones the user actually added and pass through. Writing `null` clears.
+const clientIds = computed<Array<string | null>, Array<string | null> | null>({
+  get: () => {
+    const ids = formData.config?.client_id
+    return Array.isArray(ids) && ids.length > 0 ? ids : [null]
+  },
   set: (value) => {
-    if (formData.config) formData.config.client_id = value
+    if (formData.config) {
+      formData.config.client_id = value && (value.length > 1 || value[0]) ? value : getEmptyValue()
+    }
   },
 })
 
-const clientSecretValue = computed<Array<string | null> | null>({
-  get: () => formData.config?.client_secret ?? null,
+const clientSecrets = computed<Array<string | null>, Array<string | null> | null>({
+  get: () => {
+    const secrets = formData.config?.client_secret
+    return Array.isArray(secrets) && secrets.length > 0 ? secrets : [null]
+  },
   set: (value) => {
-    if (formData.config) formData.config.client_secret = value
+    if (formData.config) {
+      formData.config.client_secret = value && (value.length > 1 || value[0]) ? value : getEmptyValue()
+    }
   },
 })
 
@@ -512,6 +523,24 @@ const selectedServer = ref<KongIdentityServer | null>(null)
 const leavePromptType = ref<'authServer' | 'client' | 'principal' | null>(null)
 let restoringServer = false
 
+interface KongIdentityModeCache {
+  issuer: string | null
+  clientId: Array<string | null> | null
+  clientSecret: Array<string | null> | null
+  selectedServer: KongIdentityServer | null
+  clients: KongIdentityClient[]
+}
+
+interface ExternalModeCache {
+  issuer: string | null
+  clientId: Array<string | null> | null
+  clientSecret: Array<string | null> | null
+}
+
+// Preserve what the user typed in each mode so toggling back and forth doesn't
+// throw their entries away.
+const kongIdentityCache = ref<KongIdentityModeCache | null>(null)
+const externalCache = ref<ExternalModeCache | null>(null)
 // AI Manager ships its own gateway, so the Kong Identity card cites the AI Gateway
 // version principals landed in rather than the data plane 3.15 baseline.
 const openidConnectContext = usePluginContext('openid-connect')
@@ -531,20 +560,8 @@ const clientItems = computed(() =>
   clients.value.map(c => ({ label: c.name, value: c.client_id || c.id })),
 )
 
-const clientIdArray = computed<Array<string | null>>(() => {
-  const ids = clientIdValue.value
-  if (Array.isArray(ids) && ids.length > 0) return ids
-  return [null]
-})
-
-const clientSecretArray = computed<Array<string | null>>(() => {
-  const secrets = clientSecretValue.value
-  if (Array.isArray(secrets) && secrets.length > 0) return secrets
-  return [null]
-})
-
 const isRemoveClientDisabled = computed(() =>
-  (hasAuthServersAccess.value && !selectedServer.value) || clientIdArray.value.length <= 1,
+  (hasAuthServersAccess.value && !selectedServer.value) || clientIds.value.length <= 1,
 )
 
 // Without auth-server access, the Kong Identity server/client dropdowns fall back to
@@ -577,7 +594,7 @@ const hasIncompatibleDataPlane = computed(() =>
 
 // Immediate so it runs on mount when the host resolves principalsDirectoryName late.
 // Guards on isEditing so saved edit-load values are never overwritten on mount;
-// explicit mode switches are handled by handleModeChange directly.
+// explicit mode switches are handled by the selectedMode watcher directly.
 watch(() => formsConfig?.principalsDirectoryName, (name) => {
   if (isEditing.value || selectedMode.value !== MODE_KONG_IDENTITY || name == null) return
   if (formData.config?.principals) {
@@ -647,8 +664,8 @@ function handleServerChange(serverId: string | null) {
     issuer.value = selectedServer.value.issuer
   }
   // Reset client selection when server changes
-  clientIdValue.value = [null]
-  clientSecretValue.value = [null]
+  clientIds.value = null
+  clientSecrets.value = null
   clients.value = []
   clientsLoading.value = !!serverId
   if (serverId) {
@@ -657,38 +674,36 @@ function handleServerChange(serverId: string | null) {
 }
 
 function handleClientChange(index: number, clientId: string | null) {
-  const clientIds = [...clientIdArray.value]
-  clientIds[index] = clientId
-  clientIdValue.value = clientIds
+  const next = [...clientIds.value]
+  next[index] = clientId
+  clientIds.value = next
 }
 
 function handleClientSecretChange(index: number, value: string) {
-  const secrets = [...clientSecretArray.value]
-  secrets[index] = value
-  clientSecretValue.value = secrets
+  const next = [...clientSecrets.value]
+  next[index] = value
+  clientSecrets.value = next
 }
 
 function addClientRow() {
-  // Base off the normalized arrays so the virtualized first row (when the
-  // model is still null) is preserved instead of being dropped.
-  clientIdValue.value = [...clientIdArray.value, null]
-  clientSecretValue.value = [...clientSecretArray.value, null]
+  clientIds.value = [...clientIds.value, null]
+  clientSecrets.value = [...clientSecrets.value, null]
 }
 
 function removeClientRow(index: number) {
-  if (clientIdArray.value.length <= 1) return
+  if (clientIds.value.length <= 1) return
 
-  const clientIds = [...clientIdArray.value]
-  clientIds.splice(index, 1)
-  clientIdValue.value = clientIds
+  const nextIds = [...clientIds.value]
+  nextIds.splice(index, 1)
+  clientIds.value = nextIds
 
-  const secrets = [...clientSecretArray.value]
-  secrets.splice(index, 1)
-  clientSecretValue.value = secrets
+  const nextSecrets = [...clientSecrets.value]
+  nextSecrets.splice(index, 1)
+  clientSecrets.value = nextSecrets
 }
 
 function getClientItemsForRow(index: number) {
-  const selectedIds = clientIdArray.value
+  const selectedIds = clientIds.value
   return clientItems.value.map(item => ({
     ...item,
     disabled: selectedIds.some((id, i) => i !== index && id === item.value),
@@ -739,12 +754,50 @@ function applyAuthMethodsForMode(mode: PrincipalsMode) {
   }
 }
 
-function handleModeChange(newMode: PrincipalsMode) {
-  // Clear the mode-specific credential fields either way
-  if (formData.config) {
-    formData.config.client_id = getEmptyValue()
-    formData.config.client_secret = getEmptyValue()
-    formData.config.issuer = getEmptyValue()
+// React to mode switches (both radio cards write the same `selectedMode` ref via
+// v-model). `oldMode` is the mode being left; the watcher only fires on actual
+// changes, so re-selecting the same mode is a no-op.
+watch(selectedMode, (newMode, oldMode) => {
+  // Stash what the user entered in the mode being left, so it can be restored if they
+  // toggle back instead of being lost.
+  if (oldMode === MODE_KONG_IDENTITY) {
+    kongIdentityCache.value = {
+      issuer: issuer.value,
+      clientId: clientIds.value,
+      clientSecret: clientSecrets.value,
+      selectedServer: selectedServer.value,
+      clients: clients.value,
+    }
+  } else {
+    externalCache.value = {
+      issuer: issuer.value,
+      clientId: clientIds.value,
+      clientSecret: clientSecrets.value,
+    }
+  }
+
+  // Restore the mode being entered from its cache, or clear if it's never been visited.
+  if (newMode === MODE_KONG_IDENTITY) {
+    const cached = kongIdentityCache.value
+    if (formData.config) {
+      formData.config.issuer = cached?.issuer ?? getEmptyValue()
+      formData.config.client_id = cached?.clientId ?? getEmptyValue()
+      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+    }
+    if (cached?.selectedServer) {
+      restoringServer = true
+    }
+    selectedServer.value = cached?.selectedServer ?? null
+    clients.value = cached?.clients ?? []
+  } else {
+    const cached = externalCache.value
+    if (formData.config) {
+      formData.config.issuer = cached?.issuer ?? getEmptyValue()
+      formData.config.client_id = cached?.clientId ?? getEmptyValue()
+      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+    }
+    selectedServer.value = null
+    clients.value = []
   }
 
   // Principal lookup is opt-in (the "Use principal lookup" toggle) in both modes, so it
@@ -767,15 +820,9 @@ function handleModeChange(newMode: PrincipalsMode) {
     }
   }
 
-  if (newMode === MODE_EXTERNAL) {
-    // Reset local state
-    selectedServer.value = null
-    clients.value = []
-  }
-
   applyAuthMethodsForMode(newMode)
   emit('mode-change', newMode)
-}
+})
 </script>
 
 <style lang="scss" scoped>

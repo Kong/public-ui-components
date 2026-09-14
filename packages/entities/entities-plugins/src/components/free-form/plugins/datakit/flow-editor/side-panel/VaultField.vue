@@ -79,9 +79,8 @@ import {
   KUI_COLOR_TEXT,
 } from '@kong/design-tokens'
 import type { FieldName } from '../../types'
-import { useMapField, useField } from '../../../../core/composables'
-import type { KeyId } from '../../../../core/composables/key-id-map'
-import type { BaseFieldProps } from 'src/components/free-form/core/types'
+import { useMapField, useField } from '@kong-ui-public/freeform'
+import type { KeyId, BaseFieldProps } from '@kong-ui-public/freeform'
 
 interface Emits {
   'update': [name: FieldName, value: string, oldName?: FieldName]

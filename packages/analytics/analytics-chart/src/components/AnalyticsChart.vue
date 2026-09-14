@@ -105,7 +105,6 @@
         data-testid="scatter-chart-container"
         :dimension-axes-title="timestampAxisTitle"
         :granularity="scatterGranularity"
-        :legend-values="legendValues"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
         :shade-outlier-region="chartOptions.scatter?.shadeOutlierRegion"

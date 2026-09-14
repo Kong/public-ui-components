@@ -108,10 +108,9 @@ import { get } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import { computed, nextTick, ref } from 'vue'
-import { useFormShared, useItemKeys } from '../../core/composables'
+import { useFormShared, useItemKeys, NumberField } from '@kong-ui-public/freeform'
+import type { EmptyValue } from '@kong-ui-public/freeform'
 import RadioField from '../../components/RadioField.vue'
-import NumberField from '../../core/components/NumberField.vue'
-import type { EmptyValue } from '../../core/types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 

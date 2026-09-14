@@ -18,6 +18,16 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       cssFileName: 'style',
     },
+    rollupOptions: {
+      external: [
+        'lodash-es',
+        'marked',
+        'dompurify',
+        '@kong-ui-public/forms',
+        '@vueuse/core',
+        '@kong/design-tokens',
+      ],
+    },
   },
 }))
 

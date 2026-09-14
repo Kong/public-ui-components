@@ -1,7 +1,7 @@
-import type { FieldRenderer, RenderRules } from '../../core/types'
-import ArrayField from '../../core/components/ArrayField.vue'
+import { ArrayField } from '@kong-ui-public/freeform'
+import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'
 
-export const vectordbFieldRenderers: FieldRenderer[] = [
+export const vectordbFieldRenderers: FieldRendererRule[] = [
   {
     match: 'config.vectordb.redis.sentinel_nodes',
     component: ArrayField as any,

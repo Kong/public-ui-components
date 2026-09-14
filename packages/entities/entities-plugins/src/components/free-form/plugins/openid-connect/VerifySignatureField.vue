@@ -8,8 +8,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import useI18n from '../../../../composables/useI18n'
-import BooleanField from '../../core/components/BooleanField.vue'
-import { useFormData } from '../../core/composables'
+import { BooleanField, useFormData } from '@kong-ui-public/freeform'
 
 const props = defineProps<{
   name: string

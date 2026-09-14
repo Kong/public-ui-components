@@ -98,12 +98,7 @@
 import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
-import Form from '../../../../core/components/Form.vue'
-import ArrayField from '../../../../core/components/ArrayField.vue'
-import BooleanField from '../../../../core/components/BooleanField.vue'
-import EnumField from '../../../../core/components/EnumField.vue'
-import NumberField from '../../../../core/components/NumberField.vue'
-import StringField from '../../../../core/components/StringField.vue'
+import { Form, ArrayField, BooleanField, EnumField, NumberField, StringField } from '@kong-ui-public/freeform'
 import useI18n from '../../../../../../composables/useI18n'
 import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'

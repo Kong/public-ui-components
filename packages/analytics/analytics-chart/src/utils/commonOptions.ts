@@ -56,6 +56,17 @@ export const lineChartTooltipBehavior = (
       } as TooltipEntry
     }).sort(sortFn)
 
+    const extras = (tooltip.dataPoints[0]?.raw as LabeledDataPoint)?.extras ?? []
+
+    for (const extra of extras) {
+      tooltipData.tooltipSeries.push({
+        label: extra.label,
+        value: extra.unit ? formatUnit(Number(extra.value) || 0, extra.unit, { translateUnit: tooltipData.translateUnit }) : String(extra.value),
+        rawValue: Number(extra.value) || 0,
+        isExtra: true,
+      } as TooltipEntry)
+    }
+
     tooltipData.left = `${tooltip.x}px`
     tooltipData.top = `${tooltip.y}px`
 

@@ -37,11 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../core/components/Form.vue'
+import { Form, NumberField, BooleanField } from '@kong-ui-public/freeform'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useTemplateRef } from 'vue'
-import NumberField from '../../../../core/components/NumberField.vue'
-import BooleanField from '../../../../core/components/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'

@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../core/components/Form.vue'
+import { Form } from '@kong-ui-public/freeform'
 import OutputValueField from './OutputValueField.vue'
 import { computed } from 'vue'
 import type { FieldName, NodeName } from '../../types'

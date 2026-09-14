@@ -5,7 +5,7 @@ import RateLimitingForm from './RateLimitingForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting'
 import { FEATURE_FLAGS } from '../../../../constants'
 
-import type { FormSchema } from '../../core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 globalThis.ResizeObserver = class {
   observe() {}

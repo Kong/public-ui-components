@@ -34,10 +34,6 @@ const APP_LINKS: SandboxNavigationItem[] = [
     to: { name: 'plugin-form-playground' },
   },
   {
-    name: 'Free Form (Mocking Schema)',
-    to: { name: 'free-form' },
-  },
-  {
     name: 'Custom Plugin Form',
     to: { name: 'create-custom-plugin' },
   },

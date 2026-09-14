@@ -86,8 +86,8 @@
 import { useTemplateRef, nextTick, ref, watch, computed, toRef } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../../composables/useI18n'
-import { useField, useMapField } from '../../../../core/composables'
-import type { KeyId } from '../../../../core/composables/key-id-map'
+import { useField, useMapField } from '@kong-ui-public/freeform'
+import type { KeyId } from '@kong-ui-public/freeform'
 import type { FieldName, IdConnection } from '../../types'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 

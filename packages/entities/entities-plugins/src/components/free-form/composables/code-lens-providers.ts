@@ -1,14 +1,6 @@
-// DO NOT EXPORT THIS FILE IN THE `components/free-form/core/composables/index.ts` BARREL
-// (this file intentionally stays in components/free-form/composables/, not core/composables/)
-//
-// tsconfig.filler.json
-// -> (include) components/free-form/core/filler/shared/field-walker.ts
-// -> (imports) components/free-form/core/composables/index.ts
-//              `export * from './code-lens-providers'`
-// -> (imports) components/free-form/composables/code-lens-providers.ts
-//              `import packages/entities/entities-plugins/src/types/index.ts`
-// -> ...
-// -> (imports) `*.vue` * <- tsc fails here
+// This composable is entities-plugins-specific (entities-shared, monaco-editor, vue-router,
+// entities-plugins plugin-form types) and must not move into the generic `@kong-ui-public/freeform`
+// package — it intentionally stays in components/free-form/composables/, not the framework package.
 
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { collectCodeLensProviders, emptyCodeLensList } from '@kong-ui-public/monaco-editor'
@@ -22,7 +14,8 @@ import { useRouter } from 'vue-router'
 
 import useI18n from '../../../composables/useI18n'
 import endpoints from '../../../plugins-endpoints'
-import { useFormShared } from '../core/composables/form-context'
+import { useFormShared } from '@kong-ui-public/freeform'
+import type { ForeignFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 
 import type { X509Certificate } from '@peculiar/x509'
 import type { AxiosRequestConfig } from 'axios'
@@ -30,7 +23,6 @@ import type { IDisposable, IRange } from 'monaco-editor'
 import type { RouteLocationRaw } from 'vue-router'
 
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../../types'
-import type { ForeignFieldSchema, UnionFieldSchema } from '../core/form-schema'
 
 type PluginFormConfig = KonnectPluginFormConfig | KongManagerPluginFormConfig
 

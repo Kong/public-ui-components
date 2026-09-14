@@ -12,7 +12,9 @@ vi.mock('monaco-editor', () => {
       setValue: vi.fn(),
       getValue: vi.fn(() => 'mocked code'),
       onDidChangeModelContent: vi.fn(() => createDisposable()),
+      onDidChangeConfiguration: vi.fn(() => createDisposable()),
       onDidDispose: vi.fn(() => createDisposable()),
+      getOption: vi.fn(() => false),
       updateOptions: vi.fn(),
       focus: vi.fn(),
       trigger: vi.fn(),
@@ -30,6 +32,9 @@ vi.mock('monaco-editor', () => {
     remeasureFonts: vi.fn(),
     defineTheme: vi.fn(),
     setTheme: vi.fn(),
+    EditorOption: {
+      readOnly: 84,
+    },
     createModel: vi.fn(() => ({
       setValue: vi.fn(),
       getValue: vi.fn(() => ''),

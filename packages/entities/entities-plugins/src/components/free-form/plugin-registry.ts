@@ -1,12 +1,13 @@
-import CommonForm from './Common/CommonForm.vue'
+import CommonForm from './components/CommonForm.vue'
 
-import type { FieldRenderer, PluginFormConfig, PluginFormLayoutComponent, RenderRules } from './core/types'
+import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'
+import type { PluginFormConfig, PluginFormLayoutComponent } from './types'
 
 export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
   experimental: boolean
   renderRules?: RenderRules
-  fieldRenderers: FieldRenderer[]
+  fieldRenderers: FieldRendererRule[]
 }
 
 type PluginConfigModule = PluginFormConfig

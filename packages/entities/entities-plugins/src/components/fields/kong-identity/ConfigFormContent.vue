@@ -83,12 +83,11 @@
 
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
-import ObjectField from '../../free-form/core/components/ObjectField.vue'
+import { ObjectField, useFormShared } from '@kong-ui-public/freeform'
 import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
-import { useFormShared } from '../../free-form/core/composables'
 import { usePluginContext } from '../../free-form/plugin-context'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'

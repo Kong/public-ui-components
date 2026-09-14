@@ -30,10 +30,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { intersection } from 'lodash-es'
-import { useFormShared } from '../../../../core/composables'
-import ObjectField from '../../../../core/components/ObjectField.vue'
-import type { RecordFieldSchema } from '../../../../core/form-schema'
-import EnumField from '../../../../core/components/EnumField.vue'
+import { useFormShared, ObjectField, EnumField } from '@kong-ui-public/freeform'
+import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import useI18n from '../../../../../../composables/useI18n'
 import type { InputOption } from '../composables/useNodeForm'
 import type { FieldName, IdConnection, NodeType } from '../../types'

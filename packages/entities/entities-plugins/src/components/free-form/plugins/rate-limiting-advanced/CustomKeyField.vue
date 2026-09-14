@@ -20,11 +20,11 @@
 
 <script setup lang="ts">
 import { KExternalLink } from '@kong/kongponents'
-import ExpressionField from '../../core/components/ExpressionField.vue'
+import { ExpressionField } from '@kong-ui-public/freeform'
+import type { BaseFieldProps } from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 
-import type { BaseFieldProps } from '../../core/types'
 
 /**
  * `config.custom_key`: the counter key, expressible like the limits but
