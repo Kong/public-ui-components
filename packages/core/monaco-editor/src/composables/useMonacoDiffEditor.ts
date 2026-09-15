@@ -3,6 +3,7 @@ import { DEFAULT_MONACO_DIFF_OPTIONS } from '../constants'
 import { useDebounceFn } from '@vueuse/core'
 import { isMonacoLoaded, loadMonaco } from '../singletons/monaco-loader'
 import { trackDisposableForModel } from '../singletons/lifecycle'
+import { createOrUpdateModel, getMonacoTheme } from '../utils/monaco'
 
 import * as monaco from 'monaco-editor'
 
@@ -75,21 +76,10 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
 
       // We want to create our models before creating the diff editor so we don't end
       // up with multiple models for the same editor (v-if toggles, etc.)
-      if (!originalModel) {
-        const uri = monaco.Uri.parse(`inmemory://model/diff-original/${options.language}-${crypto.randomUUID()}`)
-        originalModel = monaco.editor.createModel(toValue(options.original), options.language, uri)
-      } else {
-        originalModel.setValue(toValue(options.original))
-      }
+      originalModel = createOrUpdateModel(originalModel, toValue(options.original), options.language, 'diff-original')
+      modifiedModel = createOrUpdateModel(modifiedModel, toValue(options.modified), options.language, 'diff-modified')
 
-      if (!modifiedModel) {
-        const uri = monaco.Uri.parse(`inmemory://model/diff-modified/${options.language}-${crypto.randomUUID()}`)
-        modifiedModel = monaco.editor.createModel(toValue(options.modified), options.language, uri)
-      } else {
-        modifiedModel.setValue(toValue(options.modified))
-      }
-
-      const themeName = editorStates.theme === 'light' ? 'catppuccin-latte' : 'material-theme-darker'
+      const themeName = getMonacoTheme(editorStates.theme)
 
       // @shikijs/monaco patches `monaco.editor.create` to resync Shiki's tokenizer
       // when `theme` is passed in the construction options, but it does NOT patch

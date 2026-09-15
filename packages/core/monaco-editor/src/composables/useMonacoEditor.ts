@@ -4,6 +4,7 @@ import { parseKeybinding } from '../utils/commands'
 import { registerMarkdownShortcuts } from '../actions/markdownShortcuts'
 import { useDebounceFn } from '@vueuse/core'
 import { isMonacoLoaded, loadMonaco } from '../singletons/monaco-loader'
+import { createOrUpdateModel, getMonacoTheme } from '../utils/monaco'
 
 import * as monaco from 'monaco-editor'
 
@@ -173,19 +174,14 @@ export function useMonacoEditor<T extends HTMLElement>(
       // Only set up when not already set up or target element changed
       if (_isSetup && previousEl === el) return
 
-      if (!model) {
-        // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
-        const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
-        model = monaco.editor.createModel(options.code.value, options.language, uri)
-      } else {
-        model.setValue(options.code.value)
-      }
+      // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
+      model = createOrUpdateModel(model, options.code.value, options.language)
 
       editor.value = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'material-theme-darker',
+        theme: getMonacoTheme(editorStates.theme),
         model,
         editContext: false,
         ...options.monacoOptions,
