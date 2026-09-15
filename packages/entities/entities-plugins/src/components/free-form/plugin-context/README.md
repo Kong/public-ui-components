@@ -9,11 +9,11 @@ plugin components.
 ## Usage
 
 **1. Define the type in the plugin's own directory**, e.g.
-`plugins/key-auth/context.ts`:
+`plugins/openid-connect/context.ts`:
 
 ```ts
-export interface KeyAuthContext {
-  identityRealmsEnabled?: boolean
+export interface OpenidConnectContext {
+  source?: 'ai-manager'
 }
 ```
 
@@ -21,10 +21,10 @@ Then import it as a type and add one entry to `PluginContextRegistry` in
 [index.ts](./index.ts):
 
 ```ts
-import type { KeyAuthContext } from '../plugins/key-auth/context'
+import type { OpenidConnectContext } from '../plugins/openid-connect/context'
 
 export interface PluginContextRegistry {
-  'key-auth': KeyAuthContext
+  'openid-connect': OpenidConnectContext
 }
 ```
 
@@ -37,13 +37,13 @@ wrapper around `PluginEntityForm`, since `provide`/`inject` only flows from
 ancestor to descendant:
 
 ```ts
-providePluginContext('key-auth', { identityRealmsEnabled: false })
+providePluginContext('openid-connect', { source: 'ai-manager' })
 ```
 
 **3. Read it** inside that plugin's own form:
 
 ```ts
-const context = usePluginContext('key-auth')
+const context = usePluginContext('openid-connect')
 ```
 
 `usePluginContext` returns `undefined` if nothing was provided — handle that

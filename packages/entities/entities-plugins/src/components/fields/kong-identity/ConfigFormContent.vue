@@ -16,7 +16,7 @@
   />
 
   <div
-    v-if="isKonnect && identityRealmsInSchema && identityRealmsEnabled && selectedMode === 'centrally-managed'"
+    v-if="isKonnect && identityRealmsInSchema && selectedMode === 'centrally-managed'"
     class="identity-realms-section"
     data-testid="identity-realms-section"
     @click="handleRealmFieldTouch"
@@ -88,8 +88,6 @@ import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
-import { usePluginContext } from '../../free-form/plugin-context'
-import { useContextDisabledField } from '../../free-form/composables/use-context-disabled-field'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
@@ -128,26 +126,7 @@ const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | und
 const isKonnect = computed(() => appConfig?.app === 'konnect')
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
-// Host opt-out: disables the identity_realms field, its realms fetch, and the "Centrally
-// managed consumers" mode option entirely, regardless of schema.
-const keyAuthContext = usePluginContext('key-auth')
-const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
-
-// Host opt-out: hides the realm field entirely, regardless of whether it's required in the schema.
-const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
-
-// Host opt-out: hides the anonymous field entirely, regardless of the schema.
-const anonymousEnabled = computed(() => keyAuthContext?.anonymousEnabled ?? true)
-
 const { formData, getSchema } = useFormShared()
-
-// Host opt-out: strip a schema-computed default for a field the host fully disabled. Gated on
-// isSchemaDefaulted, not isEditing — a clone-to-create flow also hands in real data with
-// isEditing false, and that data must survive same as an edit-load's. Deleted rather than
-// nulled to avoid tripping a required-but-non-nullable field. See useContextDisabledField.
-useContextDisabledField('identity_realms', identityRealmsEnabled)
-useContextDisabledField('realm', realmsEnabled)
-useContextDisabledField('anonymous', anonymousEnabled)
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
@@ -174,7 +153,7 @@ const fetchedRealms = ref<MultiselectItem[]>([])
 const isLoadingRealms = ref(false)
 
 const fetchRealms = async () => {
-  if (appConfig?.app !== 'konnect' || !identityRealmsInSchema.value || !identityRealmsEnabled.value) return
+  if (appConfig?.app !== 'konnect' || !identityRealmsInSchema.value) return
 
   try {
     isLoadingRealms.value = true
@@ -329,25 +308,25 @@ const realmRequired = computed(() => !!getSchema('$.config.realm')?.required)
 // Top section: omit advanced fields + always-hidden identity fields
 const topOmit = computed(() => {
   const omit = ['anonymous', 'principals', 'identity_realms']
-  if (!realmsEnabled.value || !realmRequired.value) {
+  if (!realmRequired.value) {
     omit.push('realm')
   }
   return omit
 })
 
-// Advanced section: show conditionally anonymous/realm/identity_realms
+// Advanced section: show only anonymous + conditionally realm/identity_realms
 const advancedOmit = computed(() => {
   const schema = getSchema('$.config') as { fields?: Array<Record<string, unknown>> } | undefined
   const allFields: string[] = schema?.fields?.map((f: Record<string, unknown>) => Object.keys(f)[0]) ?? []
 
   const advancedSet = new Set<string>()
-  if (anonymousEnabled.value) {
+  if (getSchema('$.config.anonymous')) {
     advancedSet.add('anonymous')
   }
-  if (realmsEnabled.value && !realmRequired.value && selectedMode.value !== 'kong-identity') {
+  if (!realmRequired.value && selectedMode.value !== 'kong-identity') {
     advancedSet.add('realm')
   }
-  if (isKonnect.value && identityRealmsInSchema.value && identityRealmsEnabled.value && !hasPrincipals.value) {
+  if (isKonnect.value && identityRealmsInSchema.value && !hasPrincipals.value) {
     advancedSet.add('identity_realms')
   }
 

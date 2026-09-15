@@ -141,7 +141,7 @@
           <ObjectField
             as-child
             name="config"
-            :omit="advancedOmit"
+            :omit="ADVANCED_OMIT"
           />
         </div>
       </template>
@@ -158,7 +158,6 @@ import { FEATURE_FLAGS } from '../../../../constants'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
 import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCredentialSecret } from '@kong-ui-public/freeform'
 import type { FormConfig, RenderRules } from '@kong-ui-public/freeform'
-import { useContextDisabledField } from '../../composables/use-context-disabled-field'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
@@ -178,7 +177,7 @@ const TABS = [
   { hash: '#advanced', title: 'Advanced' },
 ] as const
 
-const BASE_ADVANCED_OMIT = [
+const ADVANCED_OMIT = [
   'client_id',
   'client_secret',
   'issuer',
@@ -260,13 +259,6 @@ const isKonnect = computed(() => appConfig?.app === 'konnect')
 // explicitly set rather than left to Kong's auto-generation.
 const openidConnectContext = usePluginContext('openid-connect')
 const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager')
-
-// Host opt-out: hides the anonymous field entirely, regardless of the schema.
-const anonymousEnabled = computed(() => openidConnectContext?.anonymousEnabled ?? true)
-
-const advancedOmit = computed(() => anonymousEnabled.value ? BASE_ADVANCED_OMIT : [...BASE_ADVANCED_OMIT, 'anonymous'])
-
-useContextDisabledField('anonymous', anonymousEnabled)
 
 // Feature-flagged: when the consuming app hasn't enabled the Identity Principals UI,
 // behave as if `principals` isn't in the schema and fall back to the plain common fields.
