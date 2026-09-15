@@ -7,7 +7,7 @@ import type {
   ValidDashboardChartQuery,
   ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
-import type { ExternalLink, ScatterChartData } from '@kong-ui-public/analytics-chart'
+import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
@@ -18,11 +18,6 @@ export interface DashboardRendererContext {
   showTileActions?: boolean
   zoomable?: boolean
   showTileZoomActions?: boolean
-  scatterDataFn?: (
-    query: ApiRequestsQuery,
-    context: DashboardRendererContext,
-    abortController: AbortController,
-  ) => Promise<ScatterChartData | undefined>
 }
 
 export interface PdfExportOptions {

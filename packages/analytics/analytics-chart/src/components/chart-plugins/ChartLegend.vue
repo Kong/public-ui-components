@@ -5,8 +5,8 @@
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash } in (items as any[])"
-      :key="text"
+      v-for="({ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash }, listIndex) in (items as any[])"
+      :key="legendItemKey({ datasetIndex, index, isKey }, listIndex)"
       :class="{ 'legend-key': isKey }"
       @click="isKey ? undefined : handleLegendItemClick(datasetIndex, index)"
     >
@@ -89,6 +89,17 @@ const props = defineProps({
 const { i18n } = composables.useI18n()
 const showValues = inject('showLegendValues', false)
 const position = inject('legendPosition', ref(ChartLegendPosition.Bottom))
+
+const legendItemKey = (
+  { datasetIndex, index, isKey }: Pick<EnhancedLegendItem, 'datasetIndex' | 'index' | 'isKey'>,
+  listIndex: number,
+): string => {
+  if (isKey) {
+    return `key-${listIndex}`
+  }
+
+  return `dataset-${datasetIndex ?? 0}-${index ?? 0}`
+}
 
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {

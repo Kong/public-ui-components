@@ -51,7 +51,6 @@ describe('useContextLinks', () => {
      */
     contextFilters = [],
     contextRefreshInterval,
-    contextScatterDataFn,
     contextTimeSpec,
     contextTz,
     globalFilters = [],
@@ -63,7 +62,6 @@ describe('useContextLinks', () => {
     contextEditable?: boolean
     contextFilters?: AllFilters[]
     contextRefreshInterval?: number
-    contextScatterDataFn?: DashboardRendererContext['scatterDataFn']
     contextTimeSpec?: TimeRangeV4
     contextTz?: string
     globalFilters?: AllFilters[]
@@ -78,7 +76,6 @@ describe('useContextLinks', () => {
       ...(contextTz !== undefined && { tz: contextTz }),
       ...(contextRefreshInterval !== undefined && { refreshInterval: contextRefreshInterval }),
       ...(contextEditable !== undefined && { editable: contextEditable }),
-      ...(contextScatterDataFn !== undefined && { scatterDataFn: contextScatterDataFn }),
     })
 
     ;(getCurrentInstance as Mock).mockImplementation(() => {
@@ -161,19 +158,6 @@ describe('useContextLinks', () => {
     const { queryReady } = await setup({ contextFilters: [], isLoading: true })
 
     expect(queryReady.value).to.eq(false)
-  })
-
-  it('carries a consumer-supplied scatterDataFn through enrichment', async () => {
-    const scatterDataFn = vi.fn()
-    const { enrichedContext } = await setup({ contextScatterDataFn: scatterDataFn })
-
-    expect(enrichedContext.value.scatterDataFn).toBe(scatterDataFn)
-  })
-
-  it('omits scatterDataFn entirely when the consumer supplies none', async () => {
-    const { enrichedContext } = await setup()
-
-    expect('scatterDataFn' in enrichedContext.value).to.eq(false)
   })
 
   it('uses the context tz when provided', async () => {

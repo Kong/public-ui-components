@@ -28,12 +28,10 @@ interface ScatterPoint {
   extras?: ScatterPointExtra[]
 }
 
-export const jitter = (jitterMs: number): number => {
-  if (!jitterMs) {
-    return 0
-  }
+export const jitter = (jitterMs: number, seed: number): number => {
+  const n = Math.sin(seed) * 10000
 
-  return Math.random() * jitterMs
+  return (n - Math.floor(n)) * jitterMs
 }
 
 /**
@@ -84,7 +82,7 @@ export default function useScatterDatasets(
         const points = grouped.get(groupId) || []
 
         points.push({
-          x: point.timestamp + jitter(jitterMs),
+          x: point.timestamp + jitter(jitterMs, point.timestamp + point.value),
           y: point.value,
           ...(point.extras?.length ? { extras: point.extras } : {}),
         })

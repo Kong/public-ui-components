@@ -172,7 +172,7 @@ export const requestsToScatterData = (
     const timestamp = readPath(record, timestampField)
 
     for (const source of unrolledSources(record, unroll)) {
-      const rawValue = readPath(source, metric) ?? readPath(record, metric)
+      const rawValue = readPath(source, metric)
       const rawGroup = dimension ? readPath(source, dimension) ?? readPath(record, dimension) : undefined
 
       const point = toPoint(

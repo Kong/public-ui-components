@@ -209,4 +209,23 @@ describe('ChartLegend', () => {
       await expect(wrapper.get('li').trigger('click')).resolves.not.toThrow()
     })
   })
+
+  describe('item keys', () => {
+    it('does not collide when a dataset and a key item share a label', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const dataset = (text: string, datasetIndex: number) => legendItem({ text, datasetIndex, index: undefined })
+      const keyItem = legendItem({ text: 'p95', isKey: true, datasetIndex: undefined, index: undefined })
+      const wrapper = mountLegend([dataset('A', 0), dataset('p95', 1)], createLineChart())
+
+      await wrapper.setProps({ items: [dataset('p95', 1), keyItem, dataset('A', 0)] })
+
+      const warnings = warn.mock.calls.map(([message]) => String(message))
+
+      expect(warnings.filter(message => message.includes('Duplicate keys'))).toEqual([])
+      expect(wrapper.findAll('li')).toHaveLength(3)
+      expect(wrapper.findAll('li.legend-key')).toHaveLength(1)
+
+      warn.mockRestore()
+    })
+  })
 })
