@@ -1,54 +1,16 @@
-import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { parseKeybinding } from '../utils/commands'
 import { registerMarkdownShortcuts } from '../actions/markdownShortcuts'
 import { useDebounceFn } from '@vueuse/core'
+import { isMonacoLoaded, loadMonaco } from '../singletons/monaco-loader'
+import { createOrUpdateModel, getMonacoTheme } from '../utils/monaco'
 
 import * as monaco from 'monaco-editor'
-import { shikiToMonaco } from '@shikijs/monaco'
-import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
 
 import type { MaybeRefOrGetter } from 'vue'
 import type { editor as Editor } from 'monaco-editor'
 import type { MonacoEditorStates, UseMonacoEditorOptions, MonacoEditorActionConfig } from '../types'
-
-// Flag if monaco loaded
-const isMonacoLoaded = ref(false)
-let initPromise: Promise<void> | null = null
-
-async function loadMonaco() {
-  if (initPromise) {
-    return initPromise
-  }
-
-  initPromise = (async () => {
-    try {
-      // @ts-ignore jsonDefaults location varies across Monaco Editor versions
-      // v0.55.0 introduced breaking changes and issues; Konnect still uses v0.52.x.
-      const jsonDefaults = monaco.json?.jsonDefaults || monaco.languages.json?.jsonDefaults
-      // Disable JSON token provider to prevent conflicts with @shikijs/monaco
-      // https://github.com/shikijs/shiki/issues/865#issuecomment-3689158990
-      jsonDefaults?.setModeConfiguration({ tokens: false })
-
-      const highlighter = await getSingletonHighlighter(
-        {
-          themes: Object.values(bundledThemes),
-          langs: Object.values(bundledLanguages),
-        },
-      )
-      highlighter.getLoadedLanguages().forEach(lang => {
-        monaco.languages.register({ id: lang })
-      })
-      shikiToMonaco(highlighter, monaco)
-      isMonacoLoaded.value = true
-    } catch (error) {
-      initPromise = null
-      throw error
-    }
-  })()
-
-  return initPromise
-}
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.
@@ -212,19 +174,14 @@ export function useMonacoEditor<T extends HTMLElement>(
       // Only set up when not already set up or target element changed
       if (_isSetup && previousEl === el) return
 
-      if (!model) {
-        // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
-        const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
-        model = monaco.editor.createModel(options.code.value, options.language, uri)
-      } else {
-        model.setValue(options.code.value)
-      }
+      // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
+      model = createOrUpdateModel(model, options.code.value, options.language)
 
       editor.value = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'material-theme-darker',
+        theme: getMonacoTheme(editorStates.theme),
         model,
         editContext: false,
         ...options.monacoOptions,
