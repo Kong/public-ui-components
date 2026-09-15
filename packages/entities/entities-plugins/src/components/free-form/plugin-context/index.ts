@@ -1,7 +1,6 @@
 import { getCurrentInstance, inject, provide, reactive } from 'vue'
 
 import type { ComponentInternalInstance, InjectionKey } from 'vue'
-import type { KeyAuthContext } from '../plugins/key-auth/context'
 import type { OpenidConnectContext } from '../plugins/openid-connect/context'
 
 /**
@@ -9,7 +8,6 @@ import type { OpenidConnectContext } from '../plugins/openid-connect/context'
  * Add one entry per plugin here.
  */
 export interface PluginContextRegistry {
-  'key-auth': KeyAuthContext
   'openid-connect': OpenidConnectContext
 }
 
