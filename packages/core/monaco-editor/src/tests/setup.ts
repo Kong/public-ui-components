@@ -5,7 +5,7 @@ vi.mock('monaco-editor', () => {
     parse: vi.fn(() => ({ toString: () => 'mock://uri' })),
   }
 
-  const createDisposable = () => vi.fn()
+  const createDisposable = () => ({ dispose: vi.fn() })
 
   const makeTextModelMock = () => ({
     setValue: vi.fn(),
