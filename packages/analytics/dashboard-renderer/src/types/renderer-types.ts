@@ -16,11 +16,6 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  scatterDataFn?: (
-    query: ApiRequestsQuery,
-    context: DashboardRendererContext,
-    abortController: AbortController,
-  ) => Promise<ScatterChartData | undefined>
 }
 
 export type ZoomConfiguration = {

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { useRoute } from 'vue-router'
 import useDashboardContext from './useDashboardContext'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext, ZoomConfiguration } from '../types'
@@ -23,12 +22,6 @@ vi.mock('vue', async (importActual) => {
     ...actual,
     default: actual,
     getCurrentInstance: vi.fn(),
-  }
-})
-
-vi.mock('vue-router', () => {
-  return {
-    useRoute: vi.fn(),
   }
 })
 
@@ -61,7 +54,6 @@ describe('useDashboardContext', () => {
     contextTz,
     globalFilters = [],
     hasZoomProp = false,
-    isExploreUrl = false,
     isFullscreen = false,
     isLoading = false,
     preview = false,
@@ -73,7 +65,6 @@ describe('useDashboardContext', () => {
     contextTz?: string
     globalFilters?: AllFilters[]
     hasZoomProp?: boolean
-    isExploreUrl?: boolean
     isFullscreen?: boolean
     isLoading?: boolean
     preview?: boolean
@@ -94,10 +85,6 @@ describe('useDashboardContext', () => {
           },
         },
       }
-    })
-
-    ;(useRoute as Mock).mockReturnValue({
-      path: isExploreUrl ? '/us/analytics/explorer' : '/us/analytics',
     })
 
     configFn.mockImplementation(() => {
@@ -273,20 +260,6 @@ describe('useDashboardContext', () => {
       const { zoomConfiguration } = await setup({ hasZoomProp, preview })
       expect(zoomConfiguration.value.enabled).to.eq(expected)
       expect(zoomConfiguration.value.showZoomInAction).to.eq(expected)
-    })
-
-    it.each([
-      [true, false, false],
-      [false, false, true],
-      [false, true, false],
-      [false, true, true],
-    ])('sets showExploreAction to %s when preview is %s isExploreUrl is %s', async (
-      expected,
-      preview,
-      isExploreUrl,
-    ) => {
-      const { zoomConfiguration } = await setup({ isExploreUrl, preview })
-      expect(zoomConfiguration.value.showExploreAction).to.eq(expected)
     })
 
     it.each([

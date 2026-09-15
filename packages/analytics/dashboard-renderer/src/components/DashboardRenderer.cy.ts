@@ -32,7 +32,7 @@ import {
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
-import { createMockRouter, dragTile } from '../test-utils'
+import { dragTile } from '../test-utils'
 import { ref, type Ref } from 'vue'
 
 interface MockOptions {
@@ -106,15 +106,9 @@ const mockDatasourceConfig: DatasourceConfig[] = [
 ]
 
 describe('<DashboardRenderer />', () => {
-  let router: any
-
-  beforeEach(async () => {
+  beforeEach(() => {
     cy.viewport(1200, 1000)
     setActivePinia(createPinia())
-    router = await createMockRouter({
-      component: DashboardRenderer,
-      urls: ['/'],
-    })
   })
 
   const routeAndGatewayServiceExploreResponse: ExploreResultV4 = {
@@ -293,7 +287,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -322,7 +315,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -386,7 +378,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -432,7 +423,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -519,7 +509,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
@@ -576,7 +565,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
@@ -640,7 +628,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
@@ -695,7 +682,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
@@ -755,7 +741,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: false }),
         },
@@ -778,7 +763,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ failToResolveConfig: true }),
         },
@@ -807,7 +791,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider({ shortRetention: true }),
         },
@@ -842,7 +825,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -881,7 +863,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -921,7 +902,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -965,7 +945,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1146,7 +1125,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1198,7 +1176,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1231,7 +1208,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1266,7 +1242,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1299,7 +1274,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1332,7 +1306,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1371,7 +1344,6 @@ describe('<DashboardRenderer />', () => {
     cy.mount(DashboardRenderer, {
       props,
       global: {
-        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
         },
@@ -1419,7 +1391,6 @@ describe('<DashboardRenderer />', () => {
           modelValue,
         },
         global: {
-          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
           },
@@ -1458,7 +1429,6 @@ describe('<DashboardRenderer />', () => {
           modelValue: headerDescriptionConfig({ header_description: '{timeframe}' }),
         },
         global: {
-          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
           },

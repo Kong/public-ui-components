@@ -1,5 +1,4 @@
 import { computed, getCurrentInstance, ref, type Ref, type DeepReadonly } from 'vue'
-import { useRoute } from 'vue-router'
 import type { DashboardRendererContext, ZoomConfiguration } from '../types'
 import type {
   AllFilters,
@@ -38,7 +37,6 @@ export default function useDashboardContext({
   const datasourceStore = useDatasourceConfigStore()
   const { loading: configLoading } = storeToRefs(configStore)
   const { loading: datasourceLoading } = storeToRefs(datasourceStore)
-  const route = useRoute()
 
   const timeSpec = computed<TimeRangeV4>(() => {
     if (context.value.timeSpec) {
@@ -144,7 +142,6 @@ export default function useDashboardContext({
       refreshInterval: refreshInterval.value,
       editable: editable.value,
       showTileActions: showTileActions.value,
-      ...(context.value.scatterDataFn && { scatterDataFn: context.value.scatterDataFn }),
     }
   })
 
@@ -160,8 +157,7 @@ export default function useDashboardContext({
   })
 
   const showZoomExploreAction = computed<boolean>(() => {
-    const isExploreRoute = route?.path.endsWith('analytics/explorer') ?? false
-    return !preview.value && !isExploreRoute
+    return !preview.value
   })
 
   const showZoomRequestsAction = computed<boolean>(() => {
