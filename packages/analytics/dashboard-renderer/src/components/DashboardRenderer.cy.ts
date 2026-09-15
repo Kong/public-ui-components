@@ -1224,7 +1224,7 @@ describe('<DashboardRenderer />', () => {
     cy.getTestId('tile-tile-1').find('.ui-resizable-se').should('not.exist')
   })
 
-  it('preview mode passes a non-interactive context to tiles', () => {
+  it('preview mode passes preview value to tiles', () => {
     const props = {
       context: {
         filters: [],
@@ -1248,17 +1248,16 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(false)
-      expect(context.zoomable).to.eq(false)
-      expect(tile.props('hideZoomActions')).to.eq(true)
+      expect(tile.props('preview')).to.eq(true)
       expect(tile.props('hideActions')).to.eq(true)
     })
   })
 
-  it('without preview mode normal defaults are set', () => {
+  it('preview defaults to false', () => {
     const props = {
       context: {
         filters: [],
@@ -1270,7 +1269,6 @@ describe('<DashboardRenderer />', () => {
       },
       modelValue: fourByFourDashboardConfigJustCharts,
       onTileTimeRangeZoom: () => {},
-      preview: false,
     }
 
     cy.mount(DashboardRenderer, {
@@ -1282,12 +1280,11 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(true)
-      expect(context.zoomable).to.eq(true)
-      expect(tile.props('hideZoomActions')).to.eq(false)
+      expect(tile.props('preview')).to.eq(false)
       expect(tile.props('hideActions')).to.eq(false)
     })
   })
