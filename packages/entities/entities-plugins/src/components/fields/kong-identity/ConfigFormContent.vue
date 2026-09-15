@@ -319,10 +319,7 @@ const advancedOmit = computed(() => {
   const schema = getSchema('$.config') as { fields?: Array<Record<string, unknown>> } | undefined
   const allFields: string[] = schema?.fields?.map((f: Record<string, unknown>) => Object.keys(f)[0]) ?? []
 
-  const advancedSet = new Set<string>()
-  if (getSchema('$.config.anonymous')) {
-    advancedSet.add('anonymous')
-  }
+  const advancedSet = new Set<string>(['anonymous'])
   if (!realmRequired.value && selectedMode.value !== 'kong-identity') {
     advancedSet.add('realm')
   }

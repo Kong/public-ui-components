@@ -21,7 +21,7 @@ free-form/
 │   ├── provider.ts               # Layout injection key and provider helper
 │   ├── DynamicLayout.vue (+ .cy.ts) # Runtime-selected layout wrapper
 │   └── StandardLayout.vue (+ .cy.ts, .expressions.spec.ts) # Default API Gateway layout with form/code modes
-├── plugin-context/          # Plugin-specific injected context (key-auth, openid-connect)
+├── plugin-context/          # Plugin-specific injected context (openid-connect)
 ├── const.ts                 # Injection keys (REDIS_PARTIAL_INFO, FORM_EDITING)
 ├── define-plugin-config.ts  # Plugin config helper with CommonForm fallback
 ├── plugin-registry.ts       # Auto-discovers plugins/*.ts and plugins/*/index.ts

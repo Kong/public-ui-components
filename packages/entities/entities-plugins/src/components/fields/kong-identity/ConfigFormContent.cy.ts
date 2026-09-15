@@ -717,6 +717,23 @@ describe('ConfigFormContent', () => {
             && val.config?.principals?.error_on_miss === false
         }))
       })
+
+      it('does not overwrite a saved principals.directory with the host-resolved principalsDirectoryName when editing', () => {
+        mountContent(schemaWithRealms, {
+          isKonnect: true,
+          isEditing: true,
+          principalsDirectoryName: 'host-resolved-dir',
+        }, {
+          config: {
+            principals: { enabled: true, directory: 'my-saved-dir', error_on_miss: false },
+            identity_realms: null,
+          },
+        })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.principals?.directory === 'my-saved-dir'
+        }))
+      })
     })
   })
 
