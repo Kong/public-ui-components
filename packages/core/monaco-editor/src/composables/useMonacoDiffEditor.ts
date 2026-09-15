@@ -43,6 +43,7 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
     hasContent: false,
     theme: options.theme || 'light',
     currentLanguage: options.language || '',
+    readOnly: true,
   })
 
   /** Update the language of both the original and modified models. */
