@@ -8,7 +8,7 @@ import { createOrUpdateModel, getMonacoTheme } from '../utils/monaco'
 import * as monaco from 'monaco-editor'
 
 import type { MaybeRefOrGetter } from 'vue'
-import type { editor as Editor } from 'monaco-editor'
+import type { editor as Editor, IDisposable } from 'monaco-editor'
 import type { MonacoEditorStates, UseMonacoDiffEditorOptions } from '../types'
 
 /**
@@ -32,6 +32,9 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
 
   /** The Monaco text model for the modified content. */
   let modifiedModel: monaco.editor.ITextModel | undefined
+
+  // The current `onDidChangeLanguage` listener on `modifiedModel`.
+  let languageListener: IDisposable | undefined
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
@@ -103,8 +106,10 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
       editorStates.hasContent = !!toValue(options.modified)
       editorStates.currentLanguage = modifiedModel.getLanguageId()
 
-      // Track language changes on the modified model
-      trackDisposableForModel(modifiedModel, modifiedModel.onDidChangeLanguage((e) => {
+      // Dispose the previous listener first so listeners don't
+      // accumulate unbounded on the same long-lived model.
+      languageListener?.dispose()
+      languageListener = trackDisposableForModel(modifiedModel, modifiedModel.onDidChangeLanguage((e) => {
         editorStates.currentLanguage = e.newLanguage
       }))
 
