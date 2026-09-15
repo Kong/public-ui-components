@@ -261,27 +261,6 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     setupPiniaTestStore()
   })
 
-  it.skip('does not populate explore zoom actions if on the explorer route', async () => {
-    const wrapper = mountTile('api_usage', ['time'], { })
-    await flushPromises()
-
-    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
-    expect(renderer.exists()).toBe(true)
-    expect(renderer.props('requestsLink')).toBeDefined()
-    expect(renderer.props('exploreLink')).toBeUndefined()
-
-    renderer.vm.$emit('select-chart-range', {
-      type: 'absolute',
-      start: new Date('2024-01-01T00:00:00Z'),
-      end: new Date('2024-01-01T01:00:00Z'),
-    })
-
-    await nextTick()
-
-    expect(wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink')).toBeDefined()
-    expect(wrapper.findComponent(TimeseriesChartRenderer).props('exploreLink')).toBeUndefined()
-  })
-
   it('does not populate requests zoom actions for platform tiles', async () => {
     const wrapper = mountTile('platform')
     await flushPromises()
