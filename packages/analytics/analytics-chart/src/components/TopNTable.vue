@@ -74,6 +74,7 @@
               class="top-n-table-header-cell"
               :class="{
                 'top-n-table-header-cell-metric': header.type === 'metric',
+                'top-n-table-header-cell-metric--bar': isBarColumn(header),
                 'top-n-table-header-cell-dimension-compact': isCompactDimensionHeader(header),
               }"
               data-testid="top-n-table-header-column"
@@ -97,7 +98,18 @@
               class="top-n-table-cell top-n-table-cell--name"
               :class="{ 'top-n-table-cell-dimension-compact': hasMultipleDimensions }"
             >
-              <span :data-testid="`row-${row.id}`">
+              <span
+                class="top-n-table-cell-label"
+                :data-testid="`row-${row.id}`"
+              >
+                <component
+                  :is="getDimensionIcon(displayKey, row.id)"
+                  v-if="getDimensionIcon(displayKey, row.id)"
+                  class="top-n-table-cell-icon"
+                  data-testid="top-n-table-cell-icon"
+                  decorative
+                  :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+                />
                 <slot
                   name="name"
                   :record="{
@@ -121,12 +133,22 @@
               class="top-n-table-cell top-n-table-cell--dimension"
               :class="{ 'top-n-table-cell-dimension-compact': !isLastDimensionHeader(header) }"
             >
-              <slot
-                name="name"
-                :record="getDimensionSlotRecord(row, header.key)"
-              >
-                {{ getDimensionDisplayValue(row, header.key) }}
-              </slot>
+              <span class="top-n-table-cell-label">
+                <component
+                  :is="getDimensionIcon(header.key, getDimensionId(row, header.key))"
+                  v-if="getDimensionIcon(header.key, getDimensionId(row, header.key))"
+                  class="top-n-table-cell-icon"
+                  data-testid="top-n-table-cell-icon"
+                  decorative
+                  :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+                />
+                <slot
+                  name="name"
+                  :record="getDimensionSlotRecord(row, header.key)"
+                >
+                  {{ getDimensionDisplayValue(row, header.key) }}
+                </slot>
+              </span>
             </td>
 
             <!-- Metric columns (primary 'value' + additional metrics) -->
@@ -134,19 +156,13 @@
               v-for="header in metricHeaders"
               :key="header.key"
               class="top-n-table-cell top-n-table-cell-metric"
+              :class="{ 'top-n-table-cell-metric--bar': isBarColumn(header) }"
             >
-              <span
-                v-if="header.key === 'value'"
-                :data-testid="`row-${row.id}`"
-              >
-                {{ getRowMetricDisplayValue(row, header.key) }}
-              </span>
-              <span
-                v-else
-                :data-testid="`row-${row.id}-${header.key}`"
-              >
-                {{ getRowMetricDisplayValue(row, header.key) }}
-              </span>
+              <TopNMetricCell
+                :data-testid="header.key === 'value' ? `row-${row.id}` : `row-${row.id}-${header.key}`"
+                v-bind="getRowMetricCell(row, header.key)"
+                :value-width="barColumnValueWidths[header.key]"
+              />
             </td>
           </tr>
         </tbody>
@@ -165,15 +181,36 @@ import type {
   HeaderTag,
 } from '@kong/kongponents'
 
+import type { Component } from 'vue'
+import type { TopNColumnOptionsMap, TopNColumnStats, TopNThresholdType } from '../utils/topn-columns'
+
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import composables from '../composables'
 import { isNoSuffixMetric } from '../utils'
+import {
+  getBarRatio,
+  getColumnOptions,
+  getColumnStats,
+  getRelativeValue,
+  getThresholdType,
+  toNumber,
+} from '../utils/topn-columns'
+import { getColumnIcon } from '../utils/dimension-icons'
+import TopNMetricCell from './top-n/TopNMetricCell.vue'
 
 type TableHeader = {
   key: string
+  columnKey: string
   label: string
   type: 'dimension' | 'metric'
+}
+
+type TopNMetricCellData = {
+  display: string
+  barRatio?: number
+  threshold?: TopNThresholdType
 }
 
 type TopNDimensionValue = {
@@ -187,11 +224,11 @@ type TopNRow = {
   id: string
   rowKey: string
   name: string
-  value?: string
   deleted: boolean
   dimensions: TopNDimensionValue[]
+  metrics: Record<string, TopNMetricCellData>
   original: AnalyticsExploreRecord
-} & Record<string, unknown>
+}
 
 const MAX_DIMENSIONS = 3
 
@@ -202,12 +239,14 @@ const props = withDefaults(defineProps<{
   emptyStateTitle?: string
   isLoading?: boolean
   titleTag?: HeaderTag
+  columnOptions?: TopNColumnOptionsMap
 }>(), {
   title: '',
   description: '',
   emptyStateTitle: '',
   isLoading: false,
   titleTag: 'h2',
+  columnOptions: undefined,
 })
 
 const { i18n } = composables.useI18n()
@@ -275,7 +314,8 @@ const tableHeaders = computed<TableHeader[]>(() => {
   const headers: TableHeader[] = displayKeys.value.map((key) => {
     return {
       key,
-      label: hasMultipleDimensions.value ? getChartLabel(key) : i18n.t('topNTable.nameLabel') as string,
+      columnKey: key,
+      label: getColumnLabel(key, hasMultipleDimensions.value ? getChartLabel(key) : i18n.t('topNTable.nameLabel') as string),
       type: 'dimension',
     }
   })
@@ -283,7 +323,8 @@ const tableHeaders = computed<TableHeader[]>(() => {
   if (columnKey.value) {
     headers.push({
       key: 'value',
-      label: columnName.value,
+      columnKey: columnKey.value,
+      label: getColumnLabel(columnKey.value, columnName.value),
       type: 'metric',
     })
   }
@@ -295,7 +336,8 @@ const tableHeaders = computed<TableHeader[]>(() => {
 
     headers.push({
       key: metricKey,
-      label: getChartLabel(metricKey),
+      columnKey: metricKey,
+      label: getColumnLabel(metricKey, getChartLabel(metricKey)),
       type: 'metric',
     })
   })
@@ -318,6 +360,10 @@ const additionalDimensionHeaders = computed<TableHeader[]>(() => {
 
 const isLastDimensionHeader = (header: TableHeader): boolean => {
   return header.type === 'dimension' && header.key === lastDimensionKey.value
+}
+
+const isBarColumn = (header: TableHeader): boolean => {
+  return header.type === 'metric' && !!getColumnOptions(props.columnOptions, header.columnKey)?.bar
 }
 
 const isCompactDimensionHeader = (header: TableHeader): boolean => {
@@ -389,22 +435,44 @@ const getMetricValue = (record: AnalyticsExploreRecord, metricKey: AllAggregatio
   })
 }
 
-/**
- * Legacy "single metric" formatter
- */
-const getValue = (record: AnalyticsExploreRecord): string => {
-  if (!columnKey.value) {
-    return '–'
+const columnStats = computed((): Record<string, TopNColumnStats> => {
+  return Object.fromEntries(metricKeys.value.map((metricKey) => [
+    metricKey,
+    getColumnStats(records.value.map((record) => toNumber(record.event[metricKey]))),
+  ]))
+})
+
+const formatRelativeValue = (relative: number): string => {
+  const percent = relative * 100
+
+  return formatUnit(percent, '%', {
+    translateUnit: (unitName) => translateChartUnit(unitName, percent),
+  })
+}
+
+const getMetricCell = (record: AnalyticsExploreRecord, metricKey: AllAggregations): TopNMetricCellData => {
+  const options = getColumnOptions(props.columnOptions, metricKey)
+  const raw = toNumber(record.event[metricKey])
+
+  if (!options || raw === null) {
+    return { display: getMetricValue(record, metricKey) }
   }
 
-  return getMetricValue(record, columnKey.value)
+  const stats = columnStats.value[metricKey]
+  const relative = options.value === 'relative' ? getRelativeValue(raw, stats) : null
+
+  return {
+    display: relative === null ? getMetricValue(record, metricKey) : formatRelativeValue(relative),
+    barRatio: options.bar ? getBarRatio(raw, stats, options.bar) : undefined,
+    threshold: getThresholdType(raw, options.thresholds),
+  }
 }
 
 /**
  * Table rows:
  * - Always include id/name/deleted/original
- * - `value` is the primary metric for backwards compatibility
- * - One property per metric key (e.g. row['status_4xx'])
+ * - `metrics.value` is the primary metric for backwards compatibility
+ * - One `metrics` entry per additional metric key (e.g. row.metrics['status_4xx'])
  */
 const tableData = computed<TopNRow[]>(() => {
   if (!records.value?.length) {
@@ -422,19 +490,12 @@ const tableData = computed<TopNRow[]>(() => {
       name: primaryDimension?.name || getName(entry),
       deleted: getDeleted(entry),
       dimensions,
+      metrics: {},
       original: entry,
     }
 
-    if (columnKey.value) {
-      row.value = getValue(entry)
-    }
-
     metricKeys.value.forEach((metricKey, index) => {
-      if (index === 0) {
-        return
-      }
-
-      row[metricKey] = getMetricValue(entry, metricKey)
+      row.metrics[index === 0 ? 'value' : metricKey] = getMetricCell(entry, metricKey)
     })
 
     return row
@@ -457,23 +518,27 @@ const errorMessage = computed((): string => {
   return ''
 })
 
-/**
- * Safe accessor for any metric column in the row.
- * This keeps the template type-clean and lets you tweak formatting here
- * if you ever need to.
- */
-const getRowMetricDisplayValue = (row: TopNRow, key: string): string => {
-  const value = row[key]
+const barColumnValueWidths = computed((): Record<string, number> => {
+  return Object.fromEntries(metricHeaders.value.filter(isBarColumn).map((header) => [
+    header.key,
+    Math.max(...tableData.value.map((row) => getRowMetricCell(row, header.key).display.length)),
+  ]))
+})
 
-  if (typeof value === 'string') {
-    return value
-  }
+const getRowMetricCell = (row: TopNRow, key: string): TopNMetricCellData => {
+  return row.metrics[key] ?? { display: '–' }
+}
 
-  if (value === null || value === undefined) {
-    return '–'
-  }
+const getDimensionId = (row: TopNRow, key: string): string => {
+  return row.dimensions.find((dimension) => dimension.dimension === key)?.id || ''
+}
 
-  return String(value)
+const getDimensionIcon = (key: string, id: string): Component | undefined => {
+  return getColumnIcon(getColumnOptions(props.columnOptions, key)?.icon_set, id)
+}
+
+const getColumnLabel = (key: string | undefined, fallback: string): string => {
+  return (key && getColumnOptions(props.columnOptions, key)?.label) || fallback
 }
 
 const getDimensionDisplayValue = (row: TopNRow, key: string): string => {
@@ -591,6 +656,12 @@ const translateChartUnit = (unit: string, value: number): string => {
       width: 1%;
     }
 
+    &-header-cell-metric--bar,
+    &-cell-metric--bar {
+      min-width: 200px;
+      width: auto;
+    }
+
     &-cell {
       min-width: 110px;
       padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
@@ -602,9 +673,22 @@ const translateChartUnit = (unit: string, value: number): string => {
         padding-right: var(--kui-space-80, $kui-space-80);
       }
 
+      &-dimension-compact,
+      &-metric--bar {
+        padding-right: var(--kui-space-80, $kui-space-80);
+      }
+
       &-dimension-compact {
         min-width: 110px;
-        padding-right: var(--kui-space-80, $kui-space-80);
+      }
+
+      &-label {
+        display: inline-flex;
+        gap: var(--kui-space-40, $kui-space-40);
+      }
+
+      &-icon {
+        flex-shrink: 0;
       }
     }
   }

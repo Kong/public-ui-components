@@ -292,6 +292,54 @@ export const donutChartSchema = {
 
 export type DonutChartOptions = FromSchemaWithOptions<typeof donutChartSchema>
 
+export const columnIconSet = ['ai_provider'] as const
+
+export type ColumnIconSet = typeof columnIconSet[number]
+
+export const topNColumnOptionsSchema = {
+  type: 'object',
+  properties: {
+    label: {
+      type: 'string',
+    },
+    value: {
+      type: 'string',
+      enum: ['raw', 'relative'],
+      description: '`relative` displays the value as a percentage of the column total across the returned rows.',
+    },
+    bar: {
+      type: 'string',
+      enum: ['relative', 'max'],
+      description: 'Renders a bar sized relative to the column total (`relative`) or the column maximum (`max`).',
+    },
+    icon_set: {
+      type: 'string',
+      enum: columnIconSet,
+    },
+    thresholds: {
+      type: 'array',
+      description: 'Colors the bar (or the value when there is no bar) once the raw metric value reaches a threshold.',
+      items: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['warning', 'error'],
+          },
+          value: {
+            type: 'number',
+          },
+        },
+        required: ['type', 'value'],
+        additionalProperties: false,
+      },
+    },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopNColumnOptions = FromSchemaWithOptions<typeof topNColumnOptionsSchema>
+
 export const topNTableSchema = {
   type: 'object',
   properties: {
@@ -310,6 +358,11 @@ export const topNTableSchema = {
       type: 'string',
     },
     entity_links: entityLinks,
+    column_options: {
+      type: 'object',
+      description: 'Per-column rendering options keyed by metric or dimension name.',
+      additionalProperties: topNColumnOptionsSchema,
+    },
   },
   required: ['type'],
   additionalProperties: false,
