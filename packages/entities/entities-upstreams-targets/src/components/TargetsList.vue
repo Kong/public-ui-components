@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-targets-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -58,6 +59,9 @@
           tag-max-width="auto"
           :tags="rowValue"
         />
+      </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
       </template>
 
       <!-- Row actions -->
@@ -158,9 +162,12 @@ import {
   useAxios,
   EntityTypes,
   TableTags,
+  getManagedByFieldLabel,
+  getManagedByLabel,
+  useManagedByEnabled,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, watch, toValue } from 'vue'
 import type { AxiosError } from 'axios'
 import { AddIcon } from '@kong/icons'
 import type {
@@ -260,7 +267,23 @@ const fields: BaseTableHeaders = {
   ...(props.failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
-const tableHeaders: BaseTableHeaders = fields
+// Once the flag is on the column is still opt-in: hidden until a user turns it on from the
+// column visibility menu.
+const defaultTablePreferences = {
+  columnVisibility: {
+    managed_by: false,
+  },
+}
+
+const baseTableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is behind a feature flag; while it is off the column is absent entirely, so it
+// never shows up in the column visibility menu either.
+const isManagedByEnabled = useManagedByEnabled()
+const tableHeaders = computed<BaseTableHeaders>(() => ({
+  ...toValue(baseTableHeaders),
+  ...(isManagedByEnabled.value ? { managed_by: { label: getManagedByFieldLabel(), sortable: false } } : {}),
+}))
 
 /**
  * Fetcher

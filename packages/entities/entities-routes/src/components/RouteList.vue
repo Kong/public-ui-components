@@ -177,6 +177,9 @@
       <template #updated_at="{ row, rowValue }">
         {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -252,7 +255,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch, onBeforeMount, toValue } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 
@@ -271,6 +274,9 @@ import {
   useTableState,
   useDeleteUrlBuilder,
   TableTags,
+  getManagedByFieldLabel,
+  getManagedByLabel,
+  useManagedByEnabled,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerRouteListConfig,
@@ -411,9 +417,20 @@ const fields: BaseTableHeaders = {
 const defaultTablePreferences = {
   columnVisibility: {
     created_at: false,
+    // Once the flag is on the column is still opt-in: hidden until a user turns it
+    // on from the column visibility menu.
+    managed_by: false,
   },
 }
-const tableHeaders: BaseTableHeaders = fields
+const baseTableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is behind a feature flag; while it is off the column is absent entirely, so it
+// never shows up in the column visibility menu either.
+const isManagedByEnabled = useManagedByEnabled()
+const tableHeaders = computed<BaseTableHeaders>(() => ({
+  ...toValue(baseTableHeaders),
+  ...(isManagedByEnabled.value ? { managed_by: { label: getManagedByFieldLabel(), sortable: false } } : {}),
+}))
 
 /**
  * Fetcher & Filtering

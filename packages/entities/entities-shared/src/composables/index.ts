@@ -14,6 +14,7 @@ import useTruncationDetector from './useTruncationDetector'
 import useValidators from './useValidators'
 import { useSchema, useSchemaProvider, useSubSchema } from './useSchema'
 import useTableState from './useTableState'
+import useManagedByEnabled from './useManagedByEnabled'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -37,4 +38,5 @@ export default {
   useSchemaProvider,
   useSubSchema,
   useTableState,
+  useManagedByEnabled,
 }
