@@ -12,7 +12,7 @@ const EMPTY_GROUP = 'empty'
 /**
  * Reduces an explore result to scatter input, plotting one point per record.
  *
- * Only the first metric and the first dimension are used... for now.
+ * With two or more metrics, the first is plotted on the x axis and the second on the y axis.
  */
 export const exploreResultToScatterData = (result: ExploreResultV4 | undefined): ScatterChartData | undefined => {
   if (!result || !('meta' in result) || !('data' in result)) {
@@ -36,7 +36,8 @@ export const exploreResultToScatterData = (result: ExploreResultV4 | undefined):
     return undefined
   }
 
-  const metric = metricNames[0]
+  const xMetric = metricNames.length > 1 ? metricNames[0] : undefined
+  const metric = xMetric ? metricNames[1] : metricNames[0]
   const dimension = (display && Object.keys(display)[0]) || undefined
   const records = (result.data ?? []) as AnalyticsExploreRecord[]
 
@@ -45,15 +46,28 @@ export const exploreResultToScatterData = (result: ExploreResultV4 | undefined):
   for (const record of records) {
     const point = toPoint(record.timestamp, record.event[metric], dimension ? record.event[dimension] : undefined)
 
-    if (point) {
-      points.push(point)
+    if (!point) {
+      continue
     }
+
+    if (xMetric) {
+      const x = toMetricValue(record.event[xMetric])
+
+      if (x === undefined) {
+        continue
+      }
+
+      point.x = x
+    }
+
+    points.push(point)
   }
 
   return {
     points,
     metric,
     metricUnit: metricUnits?.[metric],
+    ...(xMetric ? { xMetric, xMetricUnit: metricUnits?.[xMetric] } : {}),
     dimension,
     display: dimension ? display?.[dimension] : undefined,
     start,
@@ -62,6 +76,16 @@ export const exploreResultToScatterData = (result: ExploreResultV4 | undefined):
     limit,
     datasource,
   }
+}
+
+const toMetricValue = (rawValue: unknown): number | undefined => {
+  if (rawValue === null || rawValue === undefined || rawValue === '') {
+    return undefined
+  }
+
+  const value = Number(rawValue)
+
+  return Number.isFinite(value) ? value : undefined
 }
 
 /**
@@ -76,14 +100,10 @@ const toPoint = (
   rawGroup: unknown,
   extras?: ScatterPointExtra[],
 ): ScatterDataPoint | undefined => {
-  if (rawValue === null || rawValue === undefined || rawValue === '') {
-    return undefined
-  }
-
   const timestamp = new Date(rawTimestamp as string | number).valueOf()
-  const value = Number(rawValue)
+  const value = toMetricValue(rawValue)
 
-  if (!Number.isFinite(timestamp) || !Number.isFinite(value)) {
+  if (!Number.isFinite(timestamp) || value === undefined) {
     return undefined
   }
 
