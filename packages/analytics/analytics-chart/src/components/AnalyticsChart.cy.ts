@@ -1,4 +1,5 @@
 // Cypress component test spec file
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
@@ -708,5 +709,50 @@ describe('<AnalyticsChart />', () => {
         cy.getTestId('zoom-action-item-view-requests').should('exist')
       })
     })
+  })
+})
+
+describe('<AnalyticsChart /> scatter with a metric on x', () => {
+  const START = '2024-06-16T00:00:00.000Z'
+  const END = '2024-06-16T06:00:00.000Z'
+
+  const exploreData = {
+    data: Array.from({ length: 6 }, (_, i) => ({
+      timestamp: new Date(new Date(START).valueOf() + i * 60 * 60 * 1000).toISOString(),
+      event: { ai_request_count: (i + 1) * 10, cost: i + 1.5, ai_gateway_model: 'gpt' },
+    })),
+    meta: {
+      start: START,
+      end: END,
+      granularity_ms: 60 * 60 * 1000,
+      display: { ai_gateway_model: { gpt: { name: 'GPT' } } },
+      metric_names: ['ai_request_count', 'cost'],
+      metric_units: { ai_request_count: 'count', cost: 'usd' },
+      query_id: '',
+    },
+  } as unknown as ExploreResultV4
+
+  beforeEach(() => {
+    cy.viewport(800, 500)
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: exploreData,
+        chartOptions: { type: 'scatter' },
+        tooltipTitle: 'Requests vs cost',
+      },
+    })
+  })
+
+  it.only('titles the tooltip with the point time and lists the x metric', () => {
+    cy.get('[data-testid="scatter-chart"]').should('be.visible')
+
+    for (let step = 0; step <= 5; step++) {
+      cy.get('.chart-container > canvas').trigger('mousemove', 200 + step * 40, 60)
+    }
+
+    cy.get('.tooltip-container .context').should('contain.text', '2024')
+    cy.get('.tooltip-container .display-label').first().should('have.text', 'GPT')
+    cy.get('.tooltip-container .display-value').first().should('contain.text', '$')
+    cy.get('.tooltip-container .extra-row .display-label').should('have.text', 'Request count')
   })
 })
