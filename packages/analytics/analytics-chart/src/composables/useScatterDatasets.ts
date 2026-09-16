@@ -2,11 +2,11 @@ import type { Ref } from 'vue'
 import type { ScriptableContext } from 'chart.js'
 import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
+import { color } from '@kong-ui-public/analytics-utilities'
 
 import { computed } from 'vue'
-import { isNullOrUndef } from 'chart.js/helpers'
 
-import { computePercentiles, datavisPalette, determineBaseColor, scatterChartColors, withAlpha } from '../utils'
+import { computePercentiles, scatterChartColors, withAlpha } from '../utils'
 import composables from '../composables'
 
 export const DEFAULT_POINT_RADIUS = 2
@@ -36,7 +36,7 @@ export const jitter = (jitterMs: number, seed: number): number => {
 }
 
 /**
- * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension.
+ * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension value.
  *
  * Percentiles are computed over the points actually supplied, so they are only really
  * meaningful when the input is not truncated.
@@ -121,7 +121,6 @@ export default function useScatterDatasets(
       const outlierValue = scatter.outlierPercentile !== undefined ? percentileValues.get(scatter.outlierPercentile) : undefined
       const hasOutliers = outlierValue !== undefined && Number.isFinite(outlierValue)
 
-      const colorPalette = isNullOrUndef(deps.colorPalette) ? datavisPalette : deps.colorPalette
       const themeColors = deps.themeColors?.value ?? scatterChartColors()
       const datasets: Dataset[] = []
 
@@ -133,10 +132,10 @@ export default function useScatterDatasets(
         return hasOutliers && Number.isFinite(y) && (y as number) > (outlierValue as number)
       }
 
-      Array.from(grouped.entries()).forEach(([groupId, points], i) => {
+      Array.from(grouped.entries()).forEach(([groupId, points]) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
-        const baseColor = determineBaseColor(i, name, isSegmentEmpty, colorPalette)
+        const baseColor = color({ dimension, dimensionValue: groupId })
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 

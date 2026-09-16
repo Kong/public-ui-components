@@ -1,17 +1,15 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
-import { isNullOrUndef } from 'chart.js/helpers'
 import { parseISO } from 'date-fns'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
   defaultLineOptions,
-  datavisPalette,
   BORDER_WIDTH,
   NO_BORDER,
-  determineBaseColor,
   isChartLabel,
 } from '../utils'
 import composables from '../composables'
@@ -67,8 +65,8 @@ export default function useExploreResultToTimeDataset(
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const chartData: Ref<KChartData> = computed(() => {
 
+  const chartData: Ref<KChartData> = computed(() => {
     try {
       if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
         const records = exploreResult.value.data as AnalyticsExploreRecord[]
@@ -158,7 +156,7 @@ export default function useExploreResultToTimeDataset(
           })
           : datasetLabels.map(label => [label.name, label.id, label.name, label.id === 'empty'])
 
-        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty], i) => {
+        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty]) => {
           const filled = zeroFilledTimeSeries.map(ts => {
             if (ts in timedEvents && metric in timedEvents[ts]) {
               return { x: ts, y: timedEvents[ts][metric][dimensionId] || 0 }
@@ -168,13 +166,9 @@ export default function useExploreResultToTimeDataset(
           })
 
           // eslint-disable-next-line prefer-const
-          let { colorPalette, fill } = deps
+          let { fill } = deps
 
-          if (isNullOrUndef(colorPalette)) {
-            colorPalette = datavisPalette
-          }
-
-          const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
+          const baseColor = color({ dimension, dimensionValue: dimensionId })
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)

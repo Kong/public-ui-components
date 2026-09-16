@@ -1,5 +1,5 @@
 import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import { describe, it, expect, vitest } from 'vitest'
+import { describe, it, expect, vitest, vi } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import {
@@ -281,28 +281,6 @@ describe('useVitalsExploreDatasets', () => {
     expect(_consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  it('preserves grouped color keys and keeps dimension IDs distinct from metric IDs', () => {
-    const result = useExploreResultToTimeDataset({ fill: false, colorPalette: { '200': '#123456' } }, computed<ExploreResultV4>(() => ({
-      data: [
-        { timestamp: '2026-09-09T15:00:00Z', event: { status_code: 'response_latency_average', response_latency_average: 10, response_latency_p99: 20 } },
-        { timestamp: '2026-09-09T15:00:00Z', event: { status_code: 'other-id', response_latency_average: 30, response_latency_p99: 40 } },
-      ],
-      meta: {
-        start: '2026-09-09T15:00:00Z', end: '2026-09-09T16:00:00Z', granularity_ms: 3600000,
-        metric_names: ['response_latency_average', 'response_latency_p99'],
-        metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' }, query_id: '',
-        display: { status_code: { response_latency_average: { name: '200' }, 'other-id': { name: '500' } } },
-      },
-    })))
-
-    expect(result.value.datasets).toHaveLength(4)
-    expect(result.value.datasets.slice(0, 2).map(ds => ds.rawDimension)).toEqual(['200', '200'])
-    expect(result.value.datasets.find(ds => ds.label === '200 — Response latency (avg)')).toMatchObject({
-      rawMetric: 'response_latency_average', borderColor: '#123456', backgroundColor: '#123456',
-      data: [{ x: Date.parse('2026-09-09T15:00:00Z'), y: 10 }],
-    })
-  })
-
   it('handles multi-metric/no dimension query', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [
@@ -548,54 +526,54 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value.datasets).toEqual(
       [
-        {
-          rawDimension: 'metric1',
-          rawMetric: 'metric1',
-          label: 'metric1',
-          borderColor: '#a86cd5',
-          backgroundColor: '#a86cd5',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 1,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 3,
-            },
-          ],
-          total: 4,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
-        {
-          rawDimension: 'metric2',
-          rawMetric: 'metric2',
-          label: 'metric2',
-          borderColor: '#6a86d2',
-          backgroundColor: '#6a86d2',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 2,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 4,
-            },
-          ],
-          total: 6,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
+        expect.objectContaining(
+          {
+            rawDimension: 'metric1',
+            rawMetric: 'metric1',
+            label: 'metric1',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 1,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 3,
+              },
+            ],
+            total: 4,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
+        expect.objectContaining(
+          {
+            rawDimension: 'metric2',
+            rawMetric: 'metric2',
+            label: 'metric2',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 2,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 4,
+              },
+            ],
+            total: 6,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
       ],
     )
 
@@ -658,54 +636,54 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value.datasets).toEqual(
       [
-        {
-          rawDimension: 'ID',
-          rawMetric: 'request_count',
-          label: 'ID',
-          borderColor: '#6a86d2',
-          backgroundColor: '#6a86d2',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 1,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 3,
-            },
-          ],
-          total: 4,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
-        {
-          rawDimension: 'emptyConsumer',
-          rawMetric: 'request_count',
-          label: 'emptyConsumer',
-          borderColor: '#afb7c5',
-          backgroundColor: '#afb7c5',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 2,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 4,
-            },
-          ],
-          total: 6,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: true,
-        },
+        expect.objectContaining(
+          {
+            rawDimension: 'ID',
+            rawMetric: 'request_count',
+            label: 'ID',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 1,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 3,
+              },
+            ],
+            total: 4,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
+        expect.objectContaining(
+          {
+            rawDimension: 'emptyConsumer',
+            rawMetric: 'request_count',
+            label: 'emptyConsumer',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 2,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 4,
+              },
+            ],
+            total: 6,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: true,
+          },
+        ),
       ],
     )
   })

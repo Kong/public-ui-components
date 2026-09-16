@@ -1,10 +1,10 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
+import { color } from '@kong-ui-public/analytics-utilities'
 import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
-import { lookupDatavisColor, datavisPalette, determineBaseColor } from '../utils'
 import composables from '../composables'
 
 function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationParams): Dataset[] {
@@ -15,7 +15,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
     barSegmentLabels,
     pivotRecords,
     rowLabels,
-    colorPalette,
+    seriesDimension,
   } = dataSetGenerationParams
   const { i18n } = composables.useI18n()
 
@@ -24,7 +24,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       return {
         // @ts-ignore - dynamic i18n key
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
-        backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
+        backgroundColor: color({ metric }),
         data: rowLabels.map((rowPosition, i) => {
           return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
         }),
@@ -32,27 +32,26 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
     })
   }
 
-  const datasets = Array.from(barSegmentLabels).flatMap((dimension, i) => {
+  return Array.from(barSegmentLabels).flatMap((dimension) => {
     if (!dimension) {
       return []
     }
-
-    const baseColor = determineBaseColor(i, dimension.name, dimension.id === 'empty', colorPalette)
 
     // The label here matters for the title in the tooltip and legend.  It doesn't impact axes.
     return {
       // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
-      backgroundColor: baseColor,
+      backgroundColor: color({
+        dimension: seriesDimension,
+        dimensionValue: dimension.id,
+      }),
       data: rowLabels.map(rowPosition => {
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
       isSegmentEmpty: dimension.id === 'empty',
     } as Dataset
   })
-
-  return datasets
 }
 
 export default function useExploreResultToDatasets(
@@ -148,7 +147,8 @@ export default function useExploreResultToDatasets(
           barSegmentLabels,
           pivotRecords,
           rowLabels,
-          colorPalette: deps.colorPalette || datavisPalette,
+          seriesDimension: secondaryDimension,
+          colorPalette: deps.colorPalette,
         })
 
         // The labels here are for the axes.  They don't impact the tooltip or legend.
