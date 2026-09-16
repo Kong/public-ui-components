@@ -735,4 +735,138 @@ describe('<TopNTable />', () => {
       })
     })
   })
+
+  describe('column options', () => {
+    const AI_PROVIDER_TABLE_DATA = {
+      meta: {
+        display: {
+          ai_provider: {
+            openai: { name: 'OpenAI', deleted: false },
+            anthropic: { name: 'Anthropic', deleted: false },
+            'new-provider': { name: 'New provider', deleted: false },
+          },
+        },
+        end: '2024-01-31T20:00:00.000Z',
+        granularity_ms: 3600000,
+        metric_names: ['cost', 'ai_request_count', 'error_rate'],
+        metric_units: { cost: 'usd', ai_request_count: 'count', error_rate: '%' },
+        query_id: 'ai-provider-top-n',
+        start: '2024-01-31T19:00:00.000Z',
+        truncated: false,
+      },
+      data: [
+        ['openai', 60, 500, 20],
+        ['anthropic', 30, 300, 10],
+        ['new-provider', 10, 200, 5],
+      ].map(([aiProvider, cost, requests, errorRate]) => ({
+        event: { ai_provider: aiProvider, cost, ai_request_count: requests, error_rate: errorRate },
+        timestamp: '2024-01-31T20:00:00.000Z',
+      })),
+    }
+
+    const mountWithOptions = (columnOptions?: Record<string, unknown>) => {
+      cy.mount(TopNTable, {
+        props: {
+          data: AI_PROVIDER_TABLE_DATA,
+          title: TITLE,
+          columnOptions,
+        },
+      })
+    }
+
+    const metricCell = (rowIndex: number, colIndex: number) => cy.get('tbody tr').eq(rowIndex).find('td').eq(colIndex)
+
+    it('overrides header labels', () => {
+      mountWithOptions({
+        ai_provider: { label: 'Provider' },
+        cost: { label: 'Share of spend' },
+        error_rate: { label: 'Failure rate' },
+      })
+
+      cy.getTestId('top-n-table-header-column').eq(0).should('have.text', 'Provider')
+      cy.getTestId('top-n-table-header-column').eq(1).should('have.text', 'Share of spend')
+      cy.getTestId('top-n-table-header-column').eq(3).should('have.text', 'Failure rate')
+    })
+
+    it('displays values relative to the column total', () => {
+      mountWithOptions({ cost: { value: 'relative' }, ai_request_count: { value: 'relative' } })
+
+      metricCell(0, 1).should('have.text', '60 %')
+      metricCell(2, 1).should('have.text', '10 %')
+      metricCell(0, 2).should('have.text', '50 %')
+    })
+
+    it('sizes relative bars against the column total', () => {
+      mountWithOptions({ cost: { value: 'relative', bar: 'relative' } })
+
+      cy.get('.top-n-table-header-cell-metric--bar').should('have.length', 1)
+      metricCell(0, 1).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 60%')
+      metricCell(1, 1).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 30%')
+    })
+
+    it('fills bars with the datavis palette rather than the theme primary color', () => {
+      mountWithOptions({ cost: { bar: 'relative' } })
+
+      metricCell(0, 1).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(106, 134, 210)')
+    })
+
+    it('sizes max bars against the column maximum', () => {
+      mountWithOptions({ error_rate: { bar: 'max' } })
+
+      metricCell(0, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 100%')
+      metricCell(1, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 50%')
+      metricCell(2, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 25%')
+    })
+
+    it('colors the value when a threshold is crossed without a bar', () => {
+      mountWithOptions({ error_rate: { thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 20 }] } })
+
+      metricCell(0, 3).find('.top-n-metric-cell').should('have.class', 'top-n-metric-cell--text-error')
+      metricCell(1, 3).find('.top-n-metric-cell').should('have.class', 'top-n-metric-cell--text-warning')
+      metricCell(2, 3).find('.top-n-metric-cell').should('not.have.attr', 'data-threshold')
+    })
+
+    it('colors the bar instead of the value when a bar is shown', () => {
+      mountWithOptions({ error_rate: { bar: 'max', thresholds: [{ type: 'error', value: 15 }] } })
+
+      metricCell(0, 3).find('.top-n-metric-cell')
+        .should('have.class', 'top-n-metric-cell--bar-error')
+        .and('not.have.class', 'top-n-metric-cell--text-error')
+
+      metricCell(0, 3).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(214, 0, 39)')
+    })
+
+    it('renders ai provider icons for known providers only', () => {
+      mountWithOptions({ ai_provider: { icon_set: 'ai_provider' } })
+
+      metricCell(0, 0).find('[data-testid="top-n-table-cell-icon"]').should('exist')
+      metricCell(1, 0).find('[data-testid="top-n-table-cell-icon"]').should('exist')
+      metricCell(2, 0).find('[data-testid="top-n-table-cell-icon"]').should('not.exist')
+      metricCell(2, 0).should('contain.text', 'New provider')
+    })
+
+    it('keeps the name slot alongside the icon', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: AI_PROVIDER_TABLE_DATA,
+          columnOptions: { ai_provider: { icon_set: 'ai_provider' } },
+        },
+        slots: {
+          name: '<template #name="params">slotted-{{ params.record.id }}</template>',
+        },
+      })
+
+      metricCell(0, 0).find('[data-testid="top-n-table-cell-icon"]').should('exist')
+      metricCell(0, 0).should('contain.text', 'slotted-openai')
+    })
+
+    it('renders plain values without column options', () => {
+      mountWithOptions()
+
+      cy.get('.top-n-metric-cell-bar').should('not.exist')
+      cy.getTestId('top-n-table-cell-icon').should('not.exist')
+      metricCell(0, 1).should('contain.text', '$60.00')
+      metricCell(0, 3).should('have.text', '20 %')
+    })
+  })
 })
