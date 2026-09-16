@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-targets-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -58,6 +59,9 @@
           tag-max-width="auto"
           :tags="rowValue"
         />
+      </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
       </template>
 
       <!-- Row actions -->
@@ -158,6 +162,8 @@ import {
   useAxios,
   EntityTypes,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
@@ -260,7 +266,10 @@ const fields: BaseTableHeaders = {
   ...(props.failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
-const tableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 
 /**
  * Fetcher

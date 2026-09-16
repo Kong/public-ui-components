@@ -341,6 +341,44 @@ describe('<ConfigCardItem />', () => {
       })
     })
 
+    describe('ManagedBy', () => {
+      const mountManagedByItem = (value: Record<string, string> | null | undefined): void => {
+        cy.mount(ConfigCardItem, {
+          props: {
+            item: {
+              type: ConfigurationSchemaType.ManagedBy,
+              key: 'managed_by',
+              label: 'Managed By',
+              value,
+            },
+          },
+        })
+      }
+
+      it('renders the friendly label for a known owner', () => {
+        mountManagedByItem({ tool: 'terraform-provider-konnect', version: 'v2.12.0' })
+
+        cy.getTestId('managed_by-managed-by').should('be.visible')
+        cy.getTestId('managed_by-managed-by').should('contain.text', 'Terraform')
+      })
+
+      it('renders the custom label for an unmapped owner', () => {
+        mountManagedByItem({ service: 'some-service-we-have-never-seen' })
+
+        cy.getTestId('managed_by-managed-by').should('contain.text', 'Custom')
+      })
+
+      it('renders a dash instead of the raw object when there is no owner', () => {
+        mountManagedByItem(null)
+
+        // A null value takes the generic empty-value branch; the ManagedBy renderer is
+        // never reached, and the raw `managed_by` object never shows through
+        cy.getTestId('managed_by-no-value').should('be.visible')
+        cy.getTestId('managed_by-no-value').should('contain.text', '–')
+        cy.getTestId('managed_by-managed-by').should('not.exist')
+      })
+    })
+
     describe('ID & Redacted Types', () => {
       it('renders an ID correctly', () => {
         const val = 'abc-123-cats-are-neat'
