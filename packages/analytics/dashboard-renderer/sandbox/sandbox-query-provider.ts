@@ -37,6 +37,48 @@ const singleValueTrendExploreResponse: ExploreResultV4 = {
   },
 }
 
+const aiProviderExploreResponse: ExploreResultV4 = {
+  data: [
+    ['openai', 1_408, 35.2, 13.5, 23_100],
+    ['anthropic', 1_363, 16.36, 14.5, 5_000],
+    ['azure', 859, 20.62, 17.1, 45_500],
+    ['bedrock', 659, 3.3, 13.8, 7_700],
+    ['mistral', 212, 0.42, 4.2, 2_100],
+  ].map(([aiProvider, requests, cost, errorRate, ttft]) => ({
+    event: {
+      ai_provider: aiProvider,
+      ai_request_count: requests,
+      cost,
+      error_rate: errorRate,
+      time_to_first_token_p95: ttft,
+    },
+    timestamp: '2024-01-31T20:00:00.000Z',
+  })),
+  meta: {
+    display: {
+      ai_provider: {
+        openai: { name: 'OpenAI', deleted: false },
+        anthropic: { name: 'Anthropic', deleted: false },
+        azure: { name: 'Azure OpenAI', deleted: false },
+        bedrock: { name: 'AWS Bedrock', deleted: false },
+        mistral: { name: 'Mistral', deleted: false },
+      },
+    },
+    end: '2024-01-31T20:00:00.000Z',
+    granularity_ms: 60 * 60 * 1000,
+    metric_names: ['cost', 'ai_request_count', 'error_rate', 'time_to_first_token_p95'],
+    metric_units: {
+      cost: 'usd',
+      ai_request_count: 'count',
+      error_rate: '%',
+      time_to_first_token_p95: 'ms',
+    },
+    query_id: 'ai-provider-top-n',
+    start: '2024-01-31T19:00:00.000Z',
+    truncated: false,
+  },
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -84,6 +126,10 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
         { country_code: ['US', 'GB', 'FR', 'DE', 'RO', 'CN', 'IN', 'BR', 'ZA'] },
       ),
     )
+  }
+
+  if (query.query.dimensions?.includes('ai_provider')) {
+    return await delayedResponse(aiProviderExploreResponse)
   }
 
   if (query.query.dimensions && query.query.dimensions.findIndex(d => d === 'route') > -1) {

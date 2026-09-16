@@ -462,6 +462,33 @@ const dashboardConfig = ref<DashboardConfig>({
         size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Cost by provider',
+          column_options: {
+            ai_provider: { label: 'Provider', icon_set: 'ai_provider' },
+            cost: { label: 'Share of spend', value: 'relative', bar: 'relative' },
+            ai_request_count: { label: 'Share of requests', value: 'relative' },
+            error_rate: { label: 'Failure rate', bar: 'max', thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 15 }] },
+            time_to_first_token_p95: { label: 'P95 TTFT', thresholds: [{ type: 'warning', value: 10_000 }, { type: 'error', value: 20_000 }] },
+          },
+        },
+        header_description: 'Where spend concentrates vs where request volume concentrates.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_provider'],
+          metrics: ['cost', 'ai_request_count', 'error_rate', 'time_to_first_token_p95'],
+          time_range: { type: 'relative', time_range: '24h' },
+        },
+      },
+      layout: {
+        position: { col: 0, row: 15 },
+        size: { cols: 6, rows: 1, fit_to_content: true },
+      },
+    } satisfies TileConfig,
   ],
 })
 
