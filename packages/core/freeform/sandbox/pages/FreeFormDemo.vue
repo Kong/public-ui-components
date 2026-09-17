@@ -1,15 +1,15 @@
 <template>
-  <SandboxLayout title="Free Form (Mocking Schema)">
+  <SandboxPage title="Auto rendering">
     <Form
       class="form"
       :schema="buildMockingSchema()"
       @change="console.log"
     />
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import { Form } from '../../src'
 import { buildMockingSchema } from '../../src/components/free-form-mocking'
 </script>

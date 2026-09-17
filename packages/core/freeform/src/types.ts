@@ -25,6 +25,13 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
    * existing behavior.
    */
   emptyFieldValue?: 'null' | 'undefined'
+  /**
+   * The lowest AI Gateway version guaranteed to be running (e.g. the minimum
+   * across a fleet of nodes). Fields/options whose schema `min_ai_gateway_version`
+   * exceeds this are disabled rather than hidden. When omitted, no field or
+   * option is disabled on version grounds (fail-open).
+   */
+  minRuntimeVersion?: string
 }
 
 /**

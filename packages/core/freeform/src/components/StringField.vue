@@ -6,50 +6,73 @@
     :message="field.error.message"
   />
 
-  <div
+  <VersionGateTooltip
     v-else
-    v-show="!hide"
-    v-bind="$attrs"
+    :data-testid="`ff-version-tooltip-${field.path.value}`"
+    :version-info="fieldVersionInfo"
   >
-    <EnhancedInput
-      v-bind="fieldAttrs"
-      :id="inputId"
-      class="ff-string-field"
-      :data-1p-ignore="is1pIgnore"
-      :data-autofocus="autofocus ? 'true' : undefined"
-      :data-testid="`ff-${field.path.value}`"
-      :error="error"
-      :error-message="errorMessage"
-      :help="(multiline && error) ? errorMessage : help"
-      :model-value="fieldValue ?? ''"
-      :multiline="multiline"
-      :placeholder="placeholder ?? fieldAttrs.placeholder"
-      :secret="encrypted && useSecretInput"
-      :show-password-mask-toggle="encrypted && !useSecretInput"
-      :type="encrypted && !useSecretInput ? 'password' : encrypted ? undefined : 'text'"
-      @update:model-value="handleUpdate"
+    <div
+      v-show="!hide"
+      v-bind="$attrs"
     >
-      <template
-        v-if="fieldAttrs.labelAttributes?.info"
-        #label-tooltip
+      <EnhancedInput
+        v-bind="fieldAttrs"
+        :id="inputId"
+        class="ff-string-field"
+        :data-1p-ignore="is1pIgnore"
+        :data-autofocus="autofocus ? 'true' : undefined"
+        :data-testid="`ff-${field.path.value}`"
+        :disabled="isDisabled"
+        :error="error"
+        :error-message="errorMessage"
+        :help="(multiline && error) ? errorMessage : help"
+        :model-value="fieldValue ?? ''"
+        :multiline="multiline"
+        :placeholder="placeholder ?? fieldAttrs.placeholder"
+        :secret="encrypted && useSecretInput"
+        :show-password-mask-toggle="encrypted && !useSecretInput"
+        :type="encrypted && !useSecretInput ? 'password' : encrypted ? undefined : 'text'"
+        @update:model-value="handleUpdate"
       >
-        <slot name="tooltip">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="fieldAttrs.labelAttributes.info" />
-        </slot>
-      </template>
-      <template
-        v-if="!(multiline && error) && $slots.help"
-        #help
-      >
-        <slot name="help" />
-      </template>
+        <template
+          v-if="fieldAttrs.labelAttributes?.info"
+          #label-tooltip
+        >
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
+        </template>
+        <template
+          v-if="!(multiline && error) && $slots.help"
+          #help
+        >
+          <slot name="help" />
+        </template>
 
-      <!-- inline vault picker -->
-      <template
-        v-if="!multiline && inlineVaultPicker"
-        #after
-      >
+        <!-- inline vault picker -->
+        <template
+          v-if="!multiline && inlineVaultPicker"
+          #after
+        >
+          <component
+            :is="autofillSlot"
+            v-if="autofillSlot && realShowVaultSecretPicker"
+            :schema="schema"
+            :update="handleUpdate"
+            :value="fieldValue ?? ''"
+          />
+          <KAlert
+            v-if="realShowVaultSecretPicker && !autofillSlot"
+            appearance="warning"
+            :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+            :message="i18n.t('vault_picker.component_error')"
+          />
+        </template>
+      </EnhancedInput>
+
+      <!-- block vault picker -->
+      <template v-if="!inlineVaultPicker">
         <component
           :is="autofillSlot"
           v-if="autofillSlot && realShowVaultSecretPicker"
@@ -64,25 +87,8 @@
           :message="i18n.t('vault_picker.component_error')"
         />
       </template>
-    </EnhancedInput>
-
-    <!-- block vault picker -->
-    <template v-if="!inlineVaultPicker">
-      <component
-        :is="autofillSlot"
-        v-if="autofillSlot && realShowVaultSecretPicker"
-        :schema="schema"
-        :update="handleUpdate"
-        :value="fieldValue ?? ''"
-      />
-      <KAlert
-        v-if="realShowVaultSecretPicker && !autofillSlot"
-        appearance="warning"
-        :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-        :message="i18n.t('vault_picker.component_error')"
-      />
-    </template>
-  </div>
+    </div>
+  </VersionGateTooltip>
 </template>
 
 <script setup lang="ts">
@@ -91,10 +97,11 @@ import { computed, inject, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import EnhancedInput from './EnhancedInput.vue'
+import VersionGateTooltip from './VersionGateTooltip.vue'
 import { USE_SECRET_INPUT_KEY } from '../constants'
 
 import * as utils from '../utils'
-import { useField, useFieldAttrs } from '../composables'
+import { useField, useFieldAttrs, useFormShared } from '../composables'
 
 import type { StringFieldSchema } from '../form-schema'
 import type { BaseFieldProps, EmptyValue } from '../types'
@@ -129,8 +136,12 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | EmptyValue]
 }>()
 
+const { getFieldVersionInfo } = useFormShared()
 const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
+
+const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
+const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
 
 function handleUpdate(value: string) {
   fieldValue!.value = value === '' ? field.emptyValue!.value : value
