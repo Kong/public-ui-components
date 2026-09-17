@@ -92,7 +92,7 @@
       v-if="expressionEditor !== false"
       class="ff-string-field-expression"
       :name="absoluteName"
-      :placeholder="expressionEditor?.placeholder"
+      v-bind="expressionEditor || {}"
     >
       <template
         v-if="$slots['expression-help']"
@@ -149,6 +149,15 @@ const {
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
   'update:modelValue': [value: string | EmptyValue]
+}>()
+
+defineSlots<{
+  /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
+  tooltip?: () => any
+  /** Replaces the help text under the input. */
+  help?: () => any
+  /** Replaces the help text under the expression editor's textarea. */
+  'expression-help'?: () => any
 }>()
 
 const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRef(() => name))

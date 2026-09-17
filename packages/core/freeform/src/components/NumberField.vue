@@ -58,7 +58,7 @@
       v-if="expressionEditor !== false"
       class="ff-number-field-expression"
       :name="absoluteName"
-      :placeholder="expressionEditor?.placeholder"
+      v-bind="expressionEditor || {}"
     >
       <template
         v-if="$slots['expression-help']"
@@ -124,6 +124,13 @@ const between = computed(() => {
 
 const emit = defineEmits<{
   'update:modelValue': [value: number | string | EmptyValue]
+}>()
+
+defineSlots<{
+  /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
+  tooltip?: () => any
+  /** Replaces the help text under the expression editor's textarea. */
+  'expression-help'?: () => any
 }>()
 
 const initialValue = fieldValue!.value

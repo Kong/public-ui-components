@@ -115,16 +115,31 @@ export interface BaseFieldProps {
 }
 
 /**
- * Configures the expression editor a `StringField`/`NumberField` renders below
- * itself when its schema is `expressible` — mirrors `ExpressionEditor`'s own
- * props. `false` turns it off entirely, for a plugin that pairs the value with
- * its own `ExpressionEditor` instead (rate-limiting-advanced's limit rows,
- * laid out beside `window_size`). Omitted renders it with defaults.
+ * The `ExpressionEditor` knobs a `StringField`/`NumberField` re-expose through
+ * their `expressionEditor` prop. `ExpressionEditor`'s own `defineProps` uses
+ * this same type, so the pass-through and the component can't drift apart.
  */
-export type ExpressionEditorFieldProps = false | {
-  /** Example expression shown while the field is empty. */
+export interface SharedExpressionEditorFieldProps {
+  /**
+   * Example expression to show while the field is empty. There is no default,
+   * on purpose — a useful example is specific to the plugin and the field it
+   * overrides, so a shared one would be wrong for most of them.
+   *
+   * Left unset the field shows nothing rather than falling through to
+   * `useFieldAttrs`, whose fallback would offer the field's own default value
+   * as the placeholder — misleading here, since an expression is not a value.
+   */
   placeholder?: string
 }
+
+/**
+ * Configures the expression editor a `StringField`/`NumberField` renders below
+ * itself when its schema is `expressible`. `false` turns it off entirely, for
+ * a plugin that pairs the value with its own `ExpressionEditor` instead
+ * (rate-limiting-advanced's limit rows, laid out beside `window_size`).
+ * Omitted renders it with defaults.
+ */
+export type ExpressionEditorFieldProps = false | SharedExpressionEditorFieldProps
 
 export type Match = (opt: {
   path: string
