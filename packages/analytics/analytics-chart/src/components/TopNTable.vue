@@ -74,9 +74,9 @@
               class="top-n-table-header-cell"
               :class="{
                 'top-n-table-header-cell-metric': header.type === 'metric',
-                'top-n-table-header-cell-metric--bar': isBarColumn(header),
                 'top-n-table-header-cell-dimension-compact': isCompactDimensionHeader(header),
               }"
+              :colspan="isBarColumn(header) ? 2 : undefined"
               data-testid="top-n-table-header-column"
             >
               <span class="table-header-label">
@@ -152,18 +152,32 @@
             </td>
 
             <!-- Metric columns (primary 'value' + additional metrics) -->
-            <td
+            <template
               v-for="header in metricHeaders"
               :key="header.key"
-              class="top-n-table-cell top-n-table-cell-metric"
-              :class="{ 'top-n-table-cell-metric--bar': isBarColumn(header) }"
             >
-              <TopNMetricCell
-                :data-testid="header.key === 'value' ? `row-${row.id}` : `row-${row.id}-${header.key}`"
-                v-bind="getRowMetricCell(row, header.key)"
-                :value-width="barColumnValueWidths[header.key]"
-              />
-            </td>
+              <td
+                class="top-n-table-cell top-n-table-cell-metric"
+                :class="{ 'top-n-table-cell-metric--has-bar': isBarColumn(header) }"
+              >
+                <TopNMetricCell
+                  :data-testid="header.key === 'value' ? `row-${row.id}` : `row-${row.id}-${header.key}`"
+                  :display="getRowMetricCell(row, header.key).display"
+                  :has-bar="isBarColumn(header)"
+                  :relative="getRowMetricCell(row, header.key).relative"
+                  :threshold="getRowMetricCell(row, header.key).threshold"
+                />
+              </td>
+              <td
+                v-if="isBarColumn(header)"
+                class="top-n-table-cell top-n-table-cell-bar"
+              >
+                <TopNMetricBar
+                  :ratio="getRowMetricCell(row, header.key).barRatio ?? 0"
+                  :threshold="getRowMetricCell(row, header.key).threshold"
+                />
+              </td>
+            </template>
           </tr>
         </tbody>
       </table>
@@ -198,6 +212,7 @@ import {
   toNumber,
 } from '../utils/topn-columns'
 import { getColumnIcon } from '../utils/dimension-icons'
+import TopNMetricBar from './top-n/TopNMetricBar.vue'
 import TopNMetricCell from './top-n/TopNMetricCell.vue'
 
 type TableHeader = {
@@ -209,6 +224,7 @@ type TableHeader = {
 
 type TopNMetricCellData = {
   display: string
+  relative?: string
   barRatio?: number
   threshold?: TopNThresholdType
 }
@@ -410,6 +426,18 @@ const getDeleted = (record: AnalyticsExploreRecord): boolean => {
   return !!idRecord.deleted
 }
 
+const formatPercent = (percent: number): string => {
+  const format = (value: number) => formatUnit(value, '%', {
+    translateUnit: (unitName) => translateChartUnit(unitName, value),
+  })
+
+  if (percent > 0 && percent < 0.01) {
+    return `< ${format(0.01)}`
+  }
+
+  return format(percent)
+}
+
 const getMetricValue = (record: AnalyticsExploreRecord, metricKey: AllAggregations): string => {
   const val = record.event[metricKey]
 
@@ -424,6 +452,10 @@ const getMetricValue = (record: AnalyticsExploreRecord, metricKey: AllAggregatio
   }
 
   const unit = props.data.meta?.metric_units?.[metricKey] || 'count'
+
+  if (unit === '%') {
+    return formatPercent(value)
+  }
 
   // Only counts should use approximation
   const approximate = ['count', 'count/minute', 'token count'].includes(unit)
@@ -442,14 +474,6 @@ const columnStats = computed((): Record<string, TopNColumnStats> => {
   ]))
 })
 
-const formatRelativeValue = (relative: number): string => {
-  const percent = relative * 100
-
-  return formatUnit(percent, '%', {
-    translateUnit: (unitName) => translateChartUnit(unitName, percent),
-  })
-}
-
 const getMetricCell = (record: AnalyticsExploreRecord, metricKey: AllAggregations): TopNMetricCellData => {
   const options = getColumnOptions(props.columnOptions, metricKey)
   const raw = toNumber(record.event[metricKey])
@@ -462,7 +486,8 @@ const getMetricCell = (record: AnalyticsExploreRecord, metricKey: AllAggregation
   const relative = options.value === 'relative' ? getRelativeValue(raw, stats) : null
 
   return {
-    display: relative === null ? getMetricValue(record, metricKey) : formatRelativeValue(relative),
+    display: getMetricValue(record, metricKey),
+    relative: relative === null ? undefined : formatPercent(relative * 100),
     barRatio: options.bar ? getBarRatio(raw, stats, options.bar) : undefined,
     threshold: getThresholdType(raw, options.thresholds),
   }
@@ -516,13 +541,6 @@ const errorMessage = computed((): string => {
   }
 
   return ''
-})
-
-const barColumnValueWidths = computed((): Record<string, number> => {
-  return Object.fromEntries(metricHeaders.value.filter(isBarColumn).map((header) => [
-    header.key,
-    Math.max(...tableData.value.map((row) => getRowMetricCell(row, header.key).display.length)),
-  ]))
 })
 
 const getRowMetricCell = (row: TopNRow, key: string): TopNMetricCellData => {
@@ -617,7 +635,10 @@ const translateChartUnit = (unit: string, value: number): string => {
     }
 
     &-header-row {
+      background-color: var(--kui-color-background, $kui-color-background);
       border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      position: sticky;
+      top: 0;
     }
 
     &-header-cell {
@@ -656,12 +677,6 @@ const translateChartUnit = (unit: string, value: number): string => {
       width: 1%;
     }
 
-    &-header-cell-metric--bar,
-    &-cell-metric--bar {
-      min-width: 200px;
-      width: auto;
-    }
-
     &-cell {
       min-width: 110px;
       padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
@@ -674,8 +689,16 @@ const translateChartUnit = (unit: string, value: number): string => {
       }
 
       &-dimension-compact,
-      &-metric--bar {
+      &-bar {
         padding-right: var(--kui-space-80, $kui-space-80);
+      }
+
+      &-bar {
+        min-width: 200px;
+      }
+
+      &-metric--has-bar {
+        padding-right: var(--kui-space-50, $kui-space-50);
       }
 
       &-dimension-compact {

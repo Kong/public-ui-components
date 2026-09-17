@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import type { TopNThresholdType } from '../../utils/topn-columns'
 
-import { datavisPalette } from '../../utils/colors'
-
-import { computed } from 'vue'
-
-const props = defineProps<{
+defineProps<{
   display: string
-  barRatio?: number
+  relative?: string
   threshold?: TopNThresholdType
-  valueWidth?: number
+  hasBar?: boolean
 }>()
-
-const hasBar = computed((): boolean => props.barRatio !== undefined)
-
-const defaultBarColor = datavisPalette[1]
 </script>
 
 <template>
@@ -22,27 +14,16 @@ const defaultBarColor = datavisPalette[1]
     class="top-n-metric-cell"
     :class="{
       'top-n-metric-cell--bar': hasBar,
-      [`top-n-metric-cell--bar-${threshold}`]: hasBar && !!threshold,
       [`top-n-metric-cell--text-${threshold}`]: !hasBar && !!threshold,
     }"
     :data-threshold="threshold"
   >
+    <span class="top-n-metric-cell-value">{{ display }}</span>
     <span
-      class="top-n-metric-cell-value"
-      :style="valueWidth ? { minWidth: `${valueWidth}ch` } : undefined"
-    >
-      {{ display }}
-    </span>
-    <span
-      v-if="hasBar"
-      class="top-n-metric-cell-bar"
-      data-testid="top-n-metric-cell-bar"
-    >
-      <span
-        class="top-n-metric-cell-bar-fill"
-        :style="{ width: `${barRatio! * 100}%` }"
-      />
-    </span>
+      v-if="relative"
+      class="top-n-metric-cell-relative"
+      data-testid="top-n-metric-cell-relative"
+    >({{ relative }})</span>
   </span>
 </template>
 
@@ -50,46 +31,23 @@ const defaultBarColor = datavisPalette[1]
 @use "../../styles/globals" as *;
 
 .top-n-metric-cell {
-  align-items: center;
+  align-items: baseline;
   display: inline-flex;
-  gap: var(--kui-space-50, $kui-space-50);
-  width: 100%;
+  font-feature-settings: 'case';
+  font-variant-numeric: tabular-nums;
+  gap: var(--kui-space-20, $kui-space-20);
 
-  &-value {
-    font-variant-numeric: tabular-nums;
-  }
-
-  &-bar {
-    background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-    flex: 1 1 auto;
-    height: 8px;
-    min-width: 80px;
-    overflow: hidden;
-  }
-
-  &-bar-fill {
-    background-color: v-bind(defaultBarColor);
-    border-radius: inherit;
-    display: block;
-    height: 100%;
+  &-relative {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   }
 
   &--bar &-value {
-    flex-shrink: 0;
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   }
 
-  &--bar-warning &-bar-fill {
-    background-color: var(--kui-color-background-warning, $kui-color-background-warning);
-  }
-
-  &--bar-error &-bar-fill {
-    background-color: var(--kui-color-background-danger, $kui-color-background-danger);
-  }
-
-  &--text-warning,
-  &--text-error {
+  &--text-warning &-value,
+  &--text-error &-value {
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   }
 

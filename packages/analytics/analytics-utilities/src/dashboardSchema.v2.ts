@@ -305,7 +305,7 @@ export const topNColumnOptionsSchema = {
     value: {
       type: 'string',
       enum: ['raw', 'relative'],
-      description: '`relative` displays the value as a percentage of the column total across the returned rows.',
+      description: '`relative` shows the value\'s percentage of the column total across the returned rows next to the raw value.',
     },
     bar: {
       type: 'string',

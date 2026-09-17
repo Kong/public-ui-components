@@ -791,31 +791,69 @@ describe('<TopNTable />', () => {
     it('displays values relative to the column total', () => {
       mountWithOptions({ cost: { value: 'relative' }, ai_request_count: { value: 'relative' } })
 
-      metricCell(0, 1).should('have.text', '60 %')
-      metricCell(2, 1).should('have.text', '10 %')
-      metricCell(0, 2).should('have.text', '50 %')
+      metricCell(0, 1).find('.top-n-metric-cell-value').should('have.text', '$60.00')
+      metricCell(0, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(60 %)')
+      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(10 %)')
+      metricCell(0, 2).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(50 %)')
+    })
+
+    it('omits the relative value without the relative option', () => {
+      mountWithOptions({ cost: { label: 'Cost' } })
+
+      metricCell(0, 1).find('.top-n-metric-cell-value').should('have.text', '$60.00')
+      metricCell(0, 1).find('[data-testid="top-n-metric-cell-relative"]').should('not.exist')
+    })
+
+    it('clamps tiny relative values at 0.01 %', () => {
+      const data = structuredClone(AI_PROVIDER_TABLE_DATA)
+      data.data[2].event.cost = 0.001
+
+      cy.mount(TopNTable, { props: { data, columnOptions: { cost: { value: 'relative' } } } })
+
+      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(< 0.01 %)')
+    })
+
+    it('clamps tiny percent metrics at 0.01 %', () => {
+      const data = structuredClone(AI_PROVIDER_TABLE_DATA)
+      data.data[2].event.error_rate = 0.00004
+      data.data[1].event.error_rate = 0
+
+      cy.mount(TopNTable, { props: { data } })
+
+      metricCell(2, 3).should('have.text', '< 0.01 %')
+      metricCell(1, 3).should('have.text', '0 %')
+    })
+
+    it('spans bar column headers across the value and bar cells', () => {
+      mountWithOptions({ cost: { bar: 'relative' } })
+
+      cy.getTestId('top-n-table-header-column').eq(1).should('have.attr', 'colspan', '2')
+      cy.getTestId('top-n-table-header-column').eq(2).should('not.have.attr', 'colspan')
+      metricCell(0, 1).find('.top-n-metric-cell-bar').should('not.exist')
+      metricCell(0, 2).find('.top-n-metric-cell-bar').should('exist')
+      metricCell(0, 3).should('contain.text', '500')
     })
 
     it('sizes relative bars against the column total', () => {
       mountWithOptions({ cost: { value: 'relative', bar: 'relative' } })
 
-      cy.get('.top-n-table-header-cell-metric--bar').should('have.length', 1)
-      metricCell(0, 1).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 60%')
-      metricCell(1, 1).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 30%')
+      cy.get('th[colspan="2"]').should('have.length', 1)
+      metricCell(0, 2).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 60%')
+      metricCell(1, 2).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 30%')
     })
 
     it('fills bars with the datavis palette rather than the theme primary color', () => {
       mountWithOptions({ cost: { bar: 'relative' } })
 
-      metricCell(0, 1).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(106, 134, 210)')
+      metricCell(0, 2).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(106, 134, 210)')
     })
 
     it('sizes max bars against the column maximum', () => {
       mountWithOptions({ error_rate: { bar: 'max' } })
 
-      metricCell(0, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 100%')
-      metricCell(1, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 50%')
-      metricCell(2, 3).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 25%')
+      metricCell(0, 4).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 100%')
+      metricCell(1, 4).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 50%')
+      metricCell(2, 4).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 25%')
     })
 
     it('colors the value when a threshold is crossed without a bar', () => {
@@ -829,11 +867,9 @@ describe('<TopNTable />', () => {
     it('colors the bar instead of the value when a bar is shown', () => {
       mountWithOptions({ error_rate: { bar: 'max', thresholds: [{ type: 'error', value: 15 }] } })
 
-      metricCell(0, 3).find('.top-n-metric-cell')
-        .should('have.class', 'top-n-metric-cell--bar-error')
-        .and('not.have.class', 'top-n-metric-cell--text-error')
-
-      metricCell(0, 3).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(214, 0, 39)')
+      metricCell(0, 3).find('.top-n-metric-cell').should('not.have.class', 'top-n-metric-cell--text-error')
+      metricCell(0, 4).find('.top-n-metric-cell-bar').should('have.class', 'top-n-metric-cell--bar-error')
+      metricCell(0, 4).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(214, 0, 39)')
     })
 
     it('renders ai provider icons for known providers only', () => {

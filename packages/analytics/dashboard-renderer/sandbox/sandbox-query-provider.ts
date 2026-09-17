@@ -43,7 +43,11 @@ const aiProviderExploreResponse: ExploreResultV4 = {
     ['anthropic', 1_363, 16.36, 14.5, 5_000],
     ['azure', 859, 20.62, 17.1, 45_500],
     ['bedrock', 659, 3.3, 13.8, 7_700],
+    ['deepseek', 420, 2.1, 0.42, 3_300],
+    ['gemini', 503, 0.1, 0.05, 10_000],
+    ['ollama', 734, 4.5, 3.4, 4_200],
     ['mistral', 212, 0.42, 4.2, 2_100],
+    ['moonshot', 30, 0.001, 0.00004, 2_400],
   ].map(([aiProvider, requests, cost, errorRate, ttft]) => ({
     event: {
       ai_provider: aiProvider,
@@ -61,7 +65,11 @@ const aiProviderExploreResponse: ExploreResultV4 = {
         anthropic: { name: 'Anthropic', deleted: false },
         azure: { name: 'Azure OpenAI', deleted: false },
         bedrock: { name: 'AWS Bedrock', deleted: false },
+        deepseek: { name: 'DeepSeek', deleted: false },
+        gemini: { name: 'Gemini', deleted: false },
+        ollama: { name: 'Ollama', deleted: false },
         mistral: { name: 'Mistral', deleted: false },
+        moonshot: { name: 'Moonshot', deleted: false },
       },
     },
     end: '2024-01-31T20:00:00.000Z',

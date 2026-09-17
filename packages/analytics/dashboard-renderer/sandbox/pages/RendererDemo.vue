@@ -486,7 +486,7 @@ const dashboardConfig = ref<DashboardConfig>({
       },
       layout: {
         position: { col: 0, row: 15 },
-        size: { cols: 6, rows: 1, fit_to_content: true },
+        size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
   ],
