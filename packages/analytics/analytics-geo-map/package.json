@@ -42,7 +42,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/kongponents": "9.64.15",
-    "@types/geobuf": "^3.0.4",
+    "@types/geobuf": "^4.0.0",
     "@types/geojson": "^7946.0.16",
     "maplibre-gl": "^6.0.0",
     "vue": "^3.5.41"
@@ -73,6 +73,6 @@
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/icons": "^1.62.1",
-    "geobuf": "^3.0.2"
+    "geobuf": "^4.0.0"
   }
 }
