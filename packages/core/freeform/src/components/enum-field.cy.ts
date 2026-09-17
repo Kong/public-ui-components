@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import Form from './Form.vue'
 import EnumField from './EnumField.vue'
-import type { FormSchema } from '../form-schema'
+import type { FormSchema, StringFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
 const FIELD_NAME = 'protocols'
@@ -119,6 +119,95 @@ describe('EnumField', () => {
 
     cy.get('@onUpdateSpy').should((spy: any) => {
       expect(spy.lastCall?.args[0]).to.equal(null)
+    })
+  })
+
+  describe('version gating', () => {
+    const VERSION_FIELD_NAME = 'auth_type'
+
+    function getVersionGatedSchema(fieldOverrides: Partial<StringFieldSchema> = {}): FormSchema {
+      return {
+        type: 'record',
+        fields: [
+          {
+            [VERSION_FIELD_NAME]: {
+              type: 'string',
+              one_of: ['consumer', 'credential', 'service'],
+              enum_min_versions: [
+                { min_ai_gateway_version: '2.1', value: 'credential' },
+                { min_ai_gateway_version: '2.1', value: 'service' },
+              ],
+              ...fieldOverrides,
+            },
+          },
+        ],
+      }
+    }
+
+    function mountVersionGatedForm(options: {
+      config?: FormConfig
+      fieldOverrides?: Partial<StringFieldSchema>
+    } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: getVersionGatedSchema(options.fieldOverrides),
+          data: { [VERSION_FIELD_NAME]: 'consumer' },
+          config: options.config,
+        },
+      })
+    }
+
+    function openDropdown() {
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).click()
+    }
+
+    it('disables one_of options below minRuntimeVersion and shows a version tooltip', () => {
+      mountVersionGatedForm({ config: { minRuntimeVersion: '2.0' } })
+      openDropdown()
+
+      cy.getTestId('select-item-consumer').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-credential').find('button').should('be.disabled')
+      cy.getTestId('select-item-service').find('button').should('be.disabled')
+      cy.getTestId('ff-version-tooltip-item-credential')
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('does not disable options, and shows no version tooltip, when minRuntimeVersion satisfies the requirement', () => {
+      mountVersionGatedForm({ config: { minRuntimeVersion: '2.1' } })
+      openDropdown()
+
+      cy.getTestId('select-item-credential').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-service').find('button').should('not.be.disabled')
+      cy.getTestId('ff-version-tooltip-item-credential').should('not.exist')
+    })
+
+    it('fails open (no option disabled) when minRuntimeVersion is not provided', () => {
+      mountVersionGatedForm()
+      openDropdown()
+
+      cy.getTestId('select-item-credential').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-service').find('button').should('not.be.disabled')
+    })
+
+    it('disables the whole field and shows a version tooltip when the field itself is version-gated', () => {
+      mountVersionGatedForm({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: { min_ai_gateway_version: '2.1', enum_min_versions: undefined },
+      })
+
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).should('be.disabled')
+      cy.getTestId(`ff-version-tooltip-${VERSION_FIELD_NAME}`)
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('does not disable the field, and shows no version tooltip, when minRuntimeVersion satisfies the field-level requirement', () => {
+      mountVersionGatedForm({
+        config: { minRuntimeVersion: '2.1' },
+        fieldOverrides: { min_ai_gateway_version: '2.1', enum_min_versions: undefined },
+      })
+
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-version-tooltip-${VERSION_FIELD_NAME}`).should('not.exist')
     })
   })
 

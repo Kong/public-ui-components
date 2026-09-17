@@ -6,46 +6,59 @@
     :message="field.error.message"
   />
 
-  <SelectComponent
+  <VersionGateTooltip
     v-else
-    v-show="!hide"
-    v-bind="{ ...props, ...fieldAttrs }"
-    v-model="fieldModel"
-    class="ff-enum-field"
-    :clearable="!fieldAttrs.required"
-    :data-autofocus="autofocus ? 'true' : undefined"
-    :data-testid="`ff-${field.path.value}`"
-    :items="realItems"
-    :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
-    @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
+    :data-testid="`ff-version-tooltip-${field.path.value}`"
+    :version-info="fieldVersionInfo"
   >
-    <template
-      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info"
-      #label-tooltip
+    <SelectComponent
+      v-show="!hide"
+      v-bind="{ ...props, ...fieldAttrs }"
+      v-model="fieldModel"
+      class="ff-enum-field"
+      :clearable="!fieldAttrs.required"
+      :data-autofocus="autofocus ? 'true' : undefined"
+      :data-testid="`ff-${field.path.value}`"
+      :disabled="isDisabled"
+      :items="realItems"
+      :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
+      @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
     >
-      <slot name="tooltip">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="fieldAttrs.labelAttributes.info" />
-      </slot>
-    </template>
+      <template
+        v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info"
+        #label-tooltip
+      >
+        <slot name="tooltip">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-html="fieldAttrs.labelAttributes.info" />
+        </slot>
+      </template>
 
-    <template
-      v-if="$slots['item-label']"
-      #item-template="{ item }"
-    >
-      <slot
-        name="item-label"
-        v-bind="item"
-      />
-    </template>
+      <template
+        v-if="$slots['item-label'] || hasVersionGatedItems"
+        #item-template="{ item }"
+      >
+        <slot
+          name="item-label"
+          v-bind="item"
+        >
+          <VersionGateTooltip
+            :data-testid="`ff-version-tooltip-item-${item.value}`"
+            :version-info="item.versionInfo"
+          >
+            {{ item.label }}
+          </VersionGateTooltip>
+        </slot>
+      </template>
 
-    <template
-      v-if="$slots['dropdown-footer-text']"
-      #dropdown-footer-text
-    >
-      <slot name="dropdown-footer-text" />
-    </template>
-  </SelectComponent>
+      <template
+        v-if="$slots['dropdown-footer-text']"
+        #dropdown-footer-text
+      >
+        <slot name="dropdown-footer-text" />
+      </template>
+    </SelectComponent>
+  </VersionGateTooltip>
 </template>
 
 <script setup lang="ts">
@@ -58,6 +71,7 @@ import {
   type SelectProps,
   type MultiselectProps,
 } from '@kong/kongponents'
+import VersionGateTooltip from './VersionGateTooltip.vue'
 import { useField, useFieldAttrs, useFormShared } from '../composables'
 import type { BaseFieldProps, EmptyValue } from '../types'
 
@@ -82,11 +96,17 @@ const {
   autofocus,
   ...props
 } = defineProps<EnumFieldProps>()
-const { getSelectItems } = useFormShared()
+const { getSelectItems, getFieldVersionInfo } = useFormShared()
 const { value: fieldValue, hide, ...field } = useField<EnumValue>(
   toRef(() => name),
 )
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
+
+// `disabled` is only on `SelectProps`, not `MultiselectProps` (KMultiselect reads it off
+// fallthrough attrs instead) — read it loosely so both branches of `EnumFieldProps` work.
+const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
 
 function normalizeValue(value: EnumValue): EnumValue {
   // Required fields are already correctly shaped here (`[]` for a cleared
@@ -116,6 +136,8 @@ const realItems = computed<SelectItem[]>(() => {
   }
   return []
 })
+
+const hasVersionGatedItems = computed(() => realItems.value.some(item => item.versionInfo))
 
 const isMultiple = computed(() => {
   if (multiple !== undefined) {
