@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.33.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.33.0...%40kong-ui-public%2Fanalytics-chart%4010.33.1) (2026-09-17)
+
+### Bug Fixes
+
+* **analytics-chart:** add consumer group labels [MA-5228] ([#3848](https://github.com/Kong/public-ui-components/issues/3848)) ([659707c](https://github.com/Kong/public-ui-components/commit/659707cf1220ae3c746e99e19c1b989c115c4a2f))
+
+
 # [10.33.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.32.1...%40kong-ui-public%2Fanalytics-chart%4010.33.0) (2026-09-17)
 
 ### Features
