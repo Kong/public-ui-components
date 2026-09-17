@@ -66,6 +66,8 @@ export interface ScatterChartOptions {
   metricAxesTitle?: Ref<string | undefined>
   dimensionAxesTitle?: Ref<string | undefined>
   metricUnit?: Ref<string | undefined>
+  xMetric?: Ref<string | undefined>
+  xMetricUnit?: Ref<string | undefined>
   outlierValue?: Ref<number | undefined>
   referenceLines?: Ref<ResolvedReferenceLine[]>
   themeColors: Ref<ScatterChartColors>

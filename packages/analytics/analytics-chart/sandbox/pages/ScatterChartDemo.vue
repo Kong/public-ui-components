@@ -28,6 +28,29 @@
             </div>
           </div>
         </div>
+        <div class="flex-vertical">
+          <KLabel>X axis</KLabel>
+          <div class="chart-radio-group">
+            <div>
+              <KRadio
+                v-model="xAxis"
+                name="xAxis"
+                selected-value="time"
+              >
+                Time
+              </KRadio>
+            </div>
+            <div>
+              <KRadio
+                v-model="xAxis"
+                name="xAxis"
+                selected-value="metric"
+              >
+                Request count
+              </KRadio>
+            </div>
+          </div>
+        </div>
       </div>
       <br>
 
@@ -54,7 +77,7 @@
         <div>
           <KInputSwitch
             v-model="groupedToggle"
-            :label="groupedToggle ? 'Grouped by route' : 'Single series'"
+            :label="groupedToggle ? `Grouped by ${isMetricXAxis ? 'model' : 'route'}` : 'Single series'"
           />
         </div>
         <div>
@@ -100,11 +123,11 @@
 
     <div style="height: 500px;">
       <AnalyticsChart
-        :chart-data="chartData"
+        :chart-data="isMetricXAxis ? exploreData : requestsData"
         :chart-options="analyticsChartOptions"
         :legend-position="legendPosition"
         :show-legend-values="true"
-        tooltip-title="Cost"
+        :tooltip-title="isMetricXAxis ? 'Requests vs cost' : 'Cost'"
       />
     </div>
 
@@ -124,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Display } from '@kong-ui-public/analytics-utilities'
+import type { Display, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { AnalyticsChartOptions } from '../../src/types'
 import type { ScatterChartData, ScatterDataPoint } from '../../src/types'
@@ -148,6 +171,8 @@ const jitterMinutes = ref(90)
 const outlierPercentile = ref(95)
 const recordCount = ref(800)
 const pointOpacity = ref(0.6)
+const xAxis = ref<'time' | 'metric'>('time')
+const isMetricXAxis = computed(() => xAxis.value === 'metric')
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const ROUTES = ['route-a', 'route-b']
@@ -197,7 +222,7 @@ const points = computed<ScatterDataPoint[]>(() => {
 // Sources return raw ids only; a consumer that knows the names hands them in.
 const display: Display = { 'route-a': { name: 'Route A' }, 'route-b': { name: 'Route B' } }
 
-const chartData = computed<ScatterChartData>(() => ({
+const requestsData = computed<ScatterChartData>(() => ({
   points: points.value,
   metric: 'ai.cost',
   dimension: groupedToggle.value ? 'route' : undefined,
@@ -205,6 +230,41 @@ const chartData = computed<ScatterChartData>(() => ({
   start: start.toISOString(),
   end: end.toISOString(),
 }))
+
+const HOUR_MS = 60 * 60 * 1000
+const MODELS: Record<string, number> = { 'gpt-4o': 0.011, 'claude-sonnet': 0.007, 'llama-3': 0.005 }
+
+const exploreData = computed<ExploreResultV4>(() => {
+  const models = groupedToggle.value ? Object.keys(MODELS) : ['gpt-4o']
+  const buckets = emptyState.value ? 0 : (end.valueOf() - start.valueOf()) / HOUR_MS
+
+  const data = Array.from({ length: buckets }, (_, hour) => models.map(model => {
+    const requests = Math.round(Math.random() * 480)
+    const cost = requests * MODELS[model] * (0.7 + Math.random() * 0.5)
+
+    return {
+      timestamp: new Date(start.valueOf() + hour * HOUR_MS).toISOString(),
+      event: {
+        ai_request_count: requests,
+        cost: Math.round(cost * 1e4) / 1e4,
+        ...(groupedToggle.value ? { ai_gateway_model: model } : {}),
+      },
+    }
+  })).flat()
+
+  return {
+    data,
+    meta: {
+      start: start.toISOString(),
+      end: end.toISOString(),
+      granularity_ms: HOUR_MS,
+      display: groupedToggle.value ? { ai_gateway_model: Object.fromEntries(models.map(model => [model, { name: model }])) } : {},
+      metric_names: ['ai_request_count', 'cost'],
+      metric_units: { ai_request_count: 'count', cost: 'usd' },
+      query_id: '',
+    } as unknown as QueryResponseMeta,
+  }
+})
 
 const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: 'scatter',
