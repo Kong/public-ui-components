@@ -431,6 +431,43 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(false)
   })
 
+  describe('top_n column options', () => {
+    const withColumnOptions = (columnOptions: unknown) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              column_options: columnOptions,
+            },
+          },
+        },
+      ],
+    })
+
+    it('accepts column options keyed by metric or dimension', () => {
+      expect(validateDashboardConfigSchema(withColumnOptions({
+        request_count: { label: 'Share of requests', value: 'relative', bar: 'relative' },
+        response_latency_p95: { bar: 'max', thresholds: [{ type: 'warning', value: 100 }, { type: 'error', value: 500 }] },
+        ai_provider: { icon_set: 'ai_provider' },
+      }))).toBe(true)
+    })
+
+    it.each([
+      ['an unknown value mode', { request_count: { value: 'percent' } }],
+      ['an unknown bar scale', { request_count: { bar: 'min' } }],
+      ['an unknown icon set', { route: { icon_set: 'routes' } }],
+      ['a neutral threshold', { request_count: { thresholds: [{ type: 'neutral', value: 1 }] } }],
+      ['a threshold without a value', { request_count: { thresholds: [{ type: 'error' }] } }],
+      ['an unknown property', { request_count: { color: 'red' } }],
+    ])('rejects column options with %s', (_, columnOptions) => {
+      expect(validateDashboardConfigSchema(withColumnOptions(columnOptions))).toBe(false)
+    })
+  })
+
   it.each([
     [apiUsageQuerySchema, exploreAggregations, queryableExploreDimensions, filterableExploreDimensions],
     [basicQuerySchema, basicExploreAggregations, queryableBasicExploreDimensions, filterableBasicExploreDimensions],
