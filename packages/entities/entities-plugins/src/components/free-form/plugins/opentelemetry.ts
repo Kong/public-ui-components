@@ -1,4 +1,4 @@
-import MapField from '../core/components/MapField.vue'
+import { MapField } from '@kong-ui-public/freeform'
 import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({

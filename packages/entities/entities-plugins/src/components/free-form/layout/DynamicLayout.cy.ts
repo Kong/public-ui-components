@@ -17,7 +17,9 @@ const createBaseSchema = () => ({
     {
       config: {
         type: 'record',
-        fields: [],
+        fields: [
+          { some_setting: { type: 'string' } },
+        ],
       },
     },
   ],

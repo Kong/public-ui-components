@@ -71,14 +71,14 @@ import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
 import SandboxPage from '../SandboxPage.vue'
-import { PluginForm, providePluginContext, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
+import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
 import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
-import type { GlobalAction } from '../../src/components/free-form/core/types'
+import type { GlobalAction } from '@kong-ui-public/freeform'
 
 const toaster = new ToastManager()
 
@@ -127,10 +127,6 @@ const FeatureFlagProvider = defineComponent({
 })
 
 provideDeckCommandEditor()
-
-providePluginContext('key-auth', {
-  identityRealmsEnabled: true,
-})
 
 useProvideExperimentalFreeForms([
   'ace',

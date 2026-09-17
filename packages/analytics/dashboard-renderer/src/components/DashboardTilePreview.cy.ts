@@ -138,12 +138,10 @@ describe('<DashboardTilePreview />', () => {
     setup({ editable: true })
     expectPreviewPropIs('context.editable', true)
     expectTilePropIs('context.editable', false)
-    expectTilePropIs('context.zoomable', false)
 
     setup({ editable: false })
     expectPreviewPropIs('context.editable', false)
     expectTilePropIs('context.editable', false)
-    expectTilePropIs('context.zoomable', false)
   })
 
   it('sets hideActions', () => {

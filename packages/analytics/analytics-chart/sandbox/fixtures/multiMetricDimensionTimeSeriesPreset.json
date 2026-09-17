@@ -1,0 +1,411 @@
+{
+    "data": [
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 38.36,
+                "response_latency_p99": 341
+            },
+            "timestamp": "2026-09-09T15:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 572.05,
+                "response_latency_p99": 10736
+            },
+            "timestamp": "2026-09-09T16:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 38.89,
+                "response_latency_p99": 345
+            },
+            "timestamp": "2026-09-09T17:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 37,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-09T18:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T18:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.46,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-09T19:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T19:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 35.68,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-09T20:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T20:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.37,
+                "response_latency_p99": 343
+            },
+            "timestamp": "2026-09-09T21:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T21:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 35.81,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-09T22:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T22:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.2,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-09T23:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-09T23:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.13,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T00:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T00:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.13,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T01:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T01:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.41,
+                "response_latency_p99": 342
+            },
+            "timestamp": "2026-09-10T02:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T02:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 34.65,
+                "response_latency_p99": 339
+            },
+            "timestamp": "2026-09-10T03:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T03:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 34.7,
+                "response_latency_p99": 339
+            },
+            "timestamp": "2026-09-10T04:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T04:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.3,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T05:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T05:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.2,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T06:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T06:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.81,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T07:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T07:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.37,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T08:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T08:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.5,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T09:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T09:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.35,
+                "response_latency_p99": 342
+            },
+            "timestamp": "2026-09-10T10:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T10:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 35.85,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T11:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T11:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 64.87,
+                "response_latency_p99": 380
+            },
+            "timestamp": "2026-09-10T12:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T12:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 35.82,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T13:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T13:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 36.05,
+                "response_latency_p99": 340
+            },
+            "timestamp": "2026-09-10T14:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T14:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "empty",
+                "response_latency_average": 42.91,
+                "response_latency_p99": 346
+            },
+            "timestamp": "2026-09-10T15:00:00.000Z"
+        },
+        {
+            "event": {
+                "ai_gateway": "6a013f46-f4b2-4c48-acb9-6abef6239c11",
+                "response_latency_average": null,
+                "response_latency_p99": 0
+            },
+            "timestamp": "2026-09-10T15:00:00.000Z"
+        }
+    ],
+    "meta": {
+        "start_ms": 1788966000000,
+        "end_ms": 1789056000000,
+        "start": "2026-09-09T15:00:00.000Z",
+        "end": "2026-09-10T16:00:00.000Z",
+        "limit": 50,
+        "granularity_ms": 3600000,
+        "query_id": "explore-e5beb4a2-a168-4aa3-bf0a-16e251e640dd",
+        "metric_names": [
+            "response_latency_average",
+            "response_latency_p99"
+        ],
+        "truncated": false,
+        "datasource": "api_usage",
+        "display": {
+            "ai_gateway": {
+                "6a013f46-f4b2-4c48-acb9-6abef6239c11": {
+                    "name": "DP Mock AIGW",
+                    "deleted": false
+                },
+                "empty": {
+                    "name": "empty",
+                    "deleted": false
+                }
+            }
+        },
+        "metric_units": {
+            "response_latency_average": "ms",
+            "response_latency_p99": "ms"
+        }
+    }
+}

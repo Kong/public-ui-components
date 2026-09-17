@@ -79,6 +79,12 @@ export interface MonacoEditorStates {
      * @default ''
     */
   currentLanguage: string
+
+  /**
+     * Whether the editor is currently read-only.
+     * @default false
+    */
+  readOnly: boolean
 }
 
 export interface MonacoEditorActionButton {

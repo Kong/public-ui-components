@@ -61,8 +61,8 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useDebouncedFilter } from '@kong-ui-public/entities-shared'
 
 import endpoints from '../../../../plugins-endpoints'
-import { useField, useFieldAttrs } from '../../core/composables'
-import type { BaseFieldProps, EmptyValue } from '../../core/types'
+import { useField, useFieldAttrs } from '@kong-ui-public/freeform'
+import type { BaseFieldProps, EmptyValue } from '@kong-ui-public/freeform'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 interface CertificateItem extends MultiselectItem {

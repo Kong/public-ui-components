@@ -1,6 +1,6 @@
 import JwtSignerForm from './JwtSignerForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import type { FormSchema } from '../../core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 const ERROR_MESSAGE_FRAGMENT = 'HTTP/HTTPS URL'
 

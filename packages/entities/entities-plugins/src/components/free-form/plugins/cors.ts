@@ -1,5 +1,5 @@
 import { definePluginConfig } from '../define-plugin-config'
-import EnumField from '../core/components/EnumField.vue'
+import { EnumField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
   experimental: true,

@@ -55,15 +55,13 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 </script>
 
 <script setup lang="ts" generic="T extends Record<string, any>">
+import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
-import Form from '../core/components/Form.vue'
-import { normalizeMatch } from '../core/utils'
-import type { FieldRenderer as PluginFieldRenderer, FormConfig } from '../core/types'
-import FieldRenderer from '../core/components/FieldRenderer.vue'
+import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
+import type { FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from './RedisSelector.vue'
-import { FIELD_RENDERERS, useSchemaExposer } from '../core/composables'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
 
 defineOptions({ inheritAttrs: false })
@@ -80,7 +78,7 @@ const formRef = useTemplateRef('form')
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO, undefined)
 
-const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
+const configFieldRenderers = computed<FieldRendererRule[]>(() => props.fieldRenderers ?? [])
 
 const formTestId = computed(() => attrs['data-testid'] ?? 'ff-plugin-configuration-form')
 

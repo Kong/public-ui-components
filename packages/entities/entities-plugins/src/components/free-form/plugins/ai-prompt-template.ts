@@ -1,5 +1,4 @@
-import StringField from '../core/components/StringField.vue'
-import ArrayField from '../core/components/ArrayField.vue'
+import { StringField, ArrayField } from '@kong-ui-public/freeform'
 import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({

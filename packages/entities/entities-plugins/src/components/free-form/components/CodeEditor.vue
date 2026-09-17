@@ -24,7 +24,7 @@ import { omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import { computed, inject, shallowRef, toRaw, type ComputedRef } from 'vue'
 
-import { useFormShared } from '../core/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
 import { useCodeLensProviders } from '../composables/code-lens-providers'
 
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'

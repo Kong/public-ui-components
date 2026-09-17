@@ -22,8 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import Field from '../../core/components/Field.vue'
-import ObjectField from '../../core/components/ObjectField.vue'
+import { Field, ObjectField } from '@kong-ui-public/freeform'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
 import AdvancedFields from '../../components/AdvancedFields.vue'

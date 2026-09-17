@@ -113,12 +113,15 @@
           {{ t('plugins.free-form.openid-connect.lookup.match_consumer.label') }}
           <template #description>
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer.description') }}
-            <a
+            <KExternalLink
               class="principals-learn-more-link"
+              hide-icon
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}</a>
+            >
+              {{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}
+            </KExternalLink>
           </template>
         </KCheckbox>
       </div>
@@ -133,12 +136,15 @@
           {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.label') }}
           <template #description>
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.description') }}
-            <a
+            <KExternalLink
               class="principals-learn-more-link"
+              hide-icon
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}</a>
+            >
+              {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}
+            </KExternalLink>
           </template>
         </KCheckbox>
       </div>
@@ -157,12 +163,12 @@ import { computed, inject, ref, watch } from 'vue'
 import { isEqual } from 'lodash-es'
 import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSelect } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
-import { useFormShared } from '../../core/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
+import type { EmptyValue } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { EmptyValue } from '../../core/types'
 import type { OidcConfigSubset, OidcPrincipals } from './types'
 
 const { showPrincipalsFields = true, ...props } = defineProps<{
@@ -357,8 +363,6 @@ function handleEnableToggle(enabled: boolean) {
     color: var(--kui-color-text-primary, $kui-color-text-primary);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     gap: var(--kui-space-20, $kui-space-20);
-    outline: none;
-    text-decoration: none;
 
     &:hover {
       color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);

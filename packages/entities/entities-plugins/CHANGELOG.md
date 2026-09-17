@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.15...%40kong-ui-public%2Fentities-plugins%409.272.16) (2026-09-16)
+
+### Bug Fixes
+
+* **entities-plugins:** hide empty plugin configuration section [KM-3283] ([#3843](https://github.com/Kong/public-ui-components/issues/3843)) ([6cbc33d](https://github.com/Kong/public-ui-components/commit/6cbc33d11886b034aad45824739bfc2a5670d2b9))
+
+
+## [9.272.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.14...%40kong-ui-public%2Fentities-plugins%409.272.15) (2026-09-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.13...%40kong-ui-public%2Fentities-plugins%409.272.14) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.12...%40kong-ui-public%2Fentities-plugins%409.272.13) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.11...%40kong-ui-public%2Fentities-plugins%409.272.12) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.10...%40kong-ui-public%2Fentities-plugins%409.272.11) (2026-09-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.9...%40kong-ui-public%2Fentities-plugins%409.272.10) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.8...%40kong-ui-public%2Fentities-plugins%409.272.9) (2026-09-10)
+
+### Bug Fixes
+
+* **entities-plugins:** seed a default row and keep it in ACL allow/deny modes ([#3805](https://github.com/Kong/public-ui-components/issues/3805)) ([657229f](https://github.com/Kong/public-ui-components/commit/657229f9fa00e0b9c0b59a494471e4a5d9e5da02))
+
+
 ## [9.272.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.7...%40kong-ui-public%2Fentities-plugins%409.272.8) (2026-09-10)
 
 ### Bug Fixes

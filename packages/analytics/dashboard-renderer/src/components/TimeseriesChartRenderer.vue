@@ -1,6 +1,7 @@
 <!-- TimeseriesChartRenderer.vue -->
 <template>
   <BaseAnalyticsChartRenderer
+    :active-metric="activeMetric"
     :chart-options="chartOptions"
     :context="context"
     :explore-link="exploreLink"
@@ -9,6 +10,7 @@
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
     :requests-link="requestsLink"
+    :zoom-configuration="zoomConfiguration"
     @select-chart-range="emit('select-chart-range', $event)"
     @zoom-time-range="emit('zoom-time-range', $event)"
   />

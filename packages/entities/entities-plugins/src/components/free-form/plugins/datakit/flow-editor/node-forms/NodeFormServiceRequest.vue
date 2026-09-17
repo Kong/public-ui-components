@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../core/components/Form.vue'
+import { Form } from '@kong-ui-public/freeform'
 import InputsField from './InputsField.vue'
 import { useTemplateRef } from 'vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'

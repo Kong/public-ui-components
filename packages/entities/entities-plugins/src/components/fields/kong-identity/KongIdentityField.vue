@@ -75,8 +75,7 @@ import { computed, ref } from 'vue'
 import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
-import { useFormShared } from '../../free-form/core/composables'
-import { usePluginContext } from '../../free-form/plugin-context'
+import { useFormShared } from '@kong-ui-public/freeform'
 import composables from '../../../composables'
 
 import type { AuthMode } from './types'
@@ -98,17 +97,10 @@ const identityRealmsInSchema = computed(() => {
   return !!getSchema('$.config.identity_realms')
 })
 
-// Host opt-out: hides the "Centrally managed consumers" option entirely, regardless of schema.
-const keyAuthContext = usePluginContext('key-auth')
-const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
-
-// Host opt-out: the realm field is hidden entirely, regardless of whether it's required in the schema.
-const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
-
 // Launch decision: Centrally Managed is shown unconditionally whenever the schema
 // supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
 // Hiding it (platform-wide) is deferred to a fast-follow.
-const showCentrallyManaged = computed(() => identityRealmsInSchema.value && identityRealmsEnabled.value)
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
   return identityRealmsInSchema.value
@@ -143,10 +135,10 @@ function handleModeChange(mode: AuthMode) {
       // `directory` starts as 'default'; ConfigFormContent's selectedMode watcher overwrites it
       // with the host-resolved principalsDirectoryName once this mode change is detected.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
-      if (identityRealmsInSchema.value && identityRealmsEnabled.value) {
+      if (identityRealmsInSchema.value) {
         formData.config.identity_realms = []
       }
-      if (realmsEnabled.value && !getSchema('$.config.realm')?.required) {
+      if (!getSchema('$.config.realm')?.required) {
         formData.config.realm = null
       }
       break
@@ -154,7 +146,7 @@ function handleModeChange(mode: AuthMode) {
     case 'consumers': {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
-      if (identityRealmsInSchema.value && identityRealmsEnabled.value) {
+      if (identityRealmsInSchema.value) {
         formData.config.identity_realms = [{ scope: 'cp' }]
       }
       break

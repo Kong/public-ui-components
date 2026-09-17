@@ -42,14 +42,12 @@ import { provide } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import ConfigForm from './ConfigForm.vue'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import ArrayField from '../../core/components/ArrayField.vue'
-import FieldRenderer from '../../core/components/FieldRenderer.vue'
-import StringField from '../../core/components/StringField.vue'
+import { ArrayField, FieldRenderer, StringField } from '@kong-ui-public/freeform'
+import type { FormConfig } from '@kong-ui-public/freeform'
 import useI18n from '../../../../composables/useI18n'
 import { getCalloutId } from './utils'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
-import type { FormConfig } from '../../core/types'
 import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
 
 const props = defineProps<Props>()

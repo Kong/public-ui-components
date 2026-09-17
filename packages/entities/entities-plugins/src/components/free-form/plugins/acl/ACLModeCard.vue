@@ -75,10 +75,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared } from '../../core/composables'
-import ArrayField from '../../core/components/ArrayField.vue'
-import StringField from '../../core/components/StringField.vue'
-import * as utils from '../../core/utils'
+import { useFormShared, ArrayField, StringField } from '@kong-ui-public/freeform'
+import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 

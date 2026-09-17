@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.1...%40kong-ui-public%2Fmonaco-editor%400.25.2) (2026-09-14)
+
+### Bug Fixes
+
+* **monaco-editor:** show different empty state message in read-only mode ([#3840](https://github.com/Kong/public-ui-components/issues/3840)) ([45851b9](https://github.com/Kong/public-ui-components/commit/45851b9d1fff4b77494003a096c05b80be873a2b))
+
+
+## [0.25.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.0...%40kong-ui-public%2Fmonaco-editor%400.25.1) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
 # [0.25.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.18...%40kong-ui-public%2Fmonaco-editor%400.25.0) (2026-09-09)
 
 ### Bug Fixes

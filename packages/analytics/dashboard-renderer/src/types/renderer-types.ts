@@ -1,5 +1,8 @@
 import type {
+  AllAggregations,
   AllFilters,
+  ApiRequestsQuery,
+  ScatterChartOptions,
   TimeRangeV4,
   ValidDashboardChartQuery,
   ValidDashboardTableQuery,
@@ -13,8 +16,25 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  zoomable?: boolean
-  showTileZoomActions?: boolean
+}
+
+export type ZoomConfiguration = {
+  /**
+   * whether or not to allow zoom on a chart (i.e. click/drag/unclick to highlight a range)
+   */
+  enabled: boolean
+  /**
+   * whether the context menu should include "Zoom in"
+   */
+  showZoomInAction: boolean
+  /**
+   * whether or not the context menu should include "Explore"
+   */
+  showExploreAction: boolean
+  /**
+   * whether or not the context menu should include "Jump to requests"
+   */
+  showRequestsAction: boolean
 }
 
 export interface PdfExportOptions {
@@ -66,9 +86,20 @@ export interface ChartRendererProps<T> {
   chartOptions: T
   height: number
   refreshCounter: number
+  /**
+   * Active metric for grouped multi-metric time series charts.
+   * This is only used when rendering a time series chart with multiple metrics and a group-by dimension.
+   */
+  activeMetric?: AllAggregations
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+  zoomConfiguration?: ZoomConfiguration
+}
+
+export interface ScatterRendererProps extends Omit<ChartRendererProps<ScatterChartOptions>, 'query'> {
+  /** A scatter tile can show either request or explore data */
+  query: ApiRequestsQuery | ValidDashboardChartQuery
 }
 
 export interface TableRendererProps {
