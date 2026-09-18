@@ -234,23 +234,26 @@ watch([monacoDiffEditor.diffEditor, realMonacoOptions], ([diffEditor, options]) 
   :deep(.monaco-diff-editor) {
     position: absolute;
 
+    .monaco-diff-editor-container.light & {
+      /* stylelint-disable */
+      --vscode-editor-background: var(--kui-color-background, #{$kui-color-background});
+      --vscode-editorGutter-background: var(--kui-color-background, #{$kui-color-background});
+      --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, #{$kui-color-text-primary});
+      /* stylelint-enable */
+    }
+
     // Customize monaco editor colours via `--vscode-` variables
     /* stylelint-disable */
-    // Base editor colours, matching MonacoEditor's overrides
-    --vscode-editor-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-editorGutter-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, #{$kui-color-text-primary});
-
     // Diff colours - inserted (green). Backgrounds must stay translucent so they
     // don't hide the syntax tokens underneath (Monaco's own colours are ~20% alpha).
     --vscode-diffEditor-insertedLineBackground: var(--kui-color-background-success-weakest, #{$kui-color-background-success-weakest});
-    --vscode-diffEditor-insertedTextBackground: var(--kui-color-background-success-weaker, #{$kui-color-background-success-weaker});
+    --vscode-diffEditor-insertedTextBackground: var(--kui-color-background-success-weakest, #{$kui-color-background-success-weakest});
     --vscode-diffEditor-insertedTextBorder: transparent;
     --vscode-diffEditorGutter-insertedLineBackground: var(--kui-color-background-success-weakest, #{$kui-color-background-success-weakest});
 
     // Diff colours - removed (red)
     --vscode-diffEditor-removedLineBackground: var(--kui-color-background-danger-weakest, #{$kui-color-background-danger-weakest});
-    --vscode-diffEditor-removedTextBackground: var(--kui-color-background-danger-weaker, #{$kui-color-background-danger-weaker});
+    --vscode-diffEditor-removedTextBackground: var(--kui-color-background-danger-weakest, #{$kui-color-background-danger-weakest});
     --vscode-diffEditor-removedTextBorder: transparent;
     --vscode-diffEditorGutter-removedLineBackground: var(--kui-color-background-danger-weakest, #{$kui-color-background-danger-weakest});
     /* stylelint-enable */
