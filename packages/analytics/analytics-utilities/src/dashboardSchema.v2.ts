@@ -146,6 +146,24 @@ export const thresholdSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const yAxisPositions = ['left', 'right'] as const
+export type YAxisPosition = typeof yAxisPositions[number]
+
+export const yAxisSchema = {
+  type: 'object',
+  properties: {
+    show_grid: {
+      type: 'boolean',
+    },
+    title: {
+      type: 'string',
+    },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type YAxisOptions = FromSchemaWithOptions<typeof yAxisSchema>
+
 export const timeseriesChartSchema = {
   type: 'object',
   properties: {
@@ -162,6 +180,22 @@ export const timeseriesChartSchema = {
         type: 'array',
         items: thresholdSchema,
       },
+    },
+    metric_axis_map: {
+      type: 'object',
+      description: 'Maps a metric to the specified y axis, by default the metric will only use the left y axis. Only applies to timeseries_line.',
+      additionalProperties: {
+        type: 'string',
+        enum: yAxisPositions,
+      },
+    },
+    y_axes: {
+      type: 'object',
+      properties: {
+        left: yAxisSchema,
+        right: yAxisSchema,
+      },
+      additionalProperties: false,
     },
     chart_dataset_colors: chartDatasetColorsSchema,
     synthetics_data_key: syntheticsDataKey,
