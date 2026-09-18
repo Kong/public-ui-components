@@ -16,6 +16,24 @@ features:
     - yaml
 `,
 
+  // A lightly edited copy of `yaml` for the diff editor sandbox page: a changed
+  // value, a removed line, an added line, and one whitespace-only change (to
+  // exercise `ignoreTrimWhitespace`).
+  yamlModified: `// Write your YAML code here
+
+name: Monaco Playground
+version: 1.1.0
+features:
+  autoSave: true
+  languages:
+      - javascript
+    - typescript
+    - css
+    - markdown
+    - yaml
+    - json
+`,
+
   typescript: `// Write your TypeScript code here
 
 type User = {
