@@ -5,8 +5,9 @@ import type { ScatterChartColors } from '../utils'
 import { color } from '@kong-ui-public/analytics-utilities'
 
 import { computed } from 'vue'
+import { isNullOrUndef } from 'chart.js/helpers'
 
-import { computePercentiles, scatterChartColors, withAlpha } from '../utils'
+import { computePercentiles, datavisPalette, determineBaseColor, scatterChartColors, withAlpha } from '../utils'
 import composables from '../composables'
 
 export const DEFAULT_POINT_RADIUS = 2
@@ -46,6 +47,8 @@ export default function useScatterDatasets(
   scatterData: Ref<ScatterChartData | undefined>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -121,6 +124,7 @@ export default function useScatterDatasets(
       const outlierValue = scatter.outlierPercentile !== undefined ? percentileValues.get(scatter.outlierPercentile) : undefined
       const hasOutliers = outlierValue !== undefined && Number.isFinite(outlierValue)
 
+      const colorPalette = isNullOrUndef(deps.colorPalette) ? datavisPalette : deps.colorPalette
       const themeColors = deps.themeColors?.value ?? scatterChartColors()
       const datasets: Dataset[] = []
 
@@ -132,10 +136,12 @@ export default function useScatterDatasets(
         return hasOutliers && Number.isFinite(y) && (y as number) > (outlierValue as number)
       }
 
-      Array.from(grouped.entries()).forEach(([groupId, points]) => {
+      Array.from(grouped.entries()).forEach(([groupId, points], i) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
-        const baseColor = color({ dimension, dimensionValue: groupId })
+        const baseColor = useColors
+          ? color({ dimension, dimensionValue: groupId })
+          : determineBaseColor(i, name, isSegmentEmpty, colorPalette)
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 

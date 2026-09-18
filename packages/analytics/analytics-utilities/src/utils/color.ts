@@ -124,8 +124,8 @@ export const color = ({
   }
 
   // a universal color override for any dimension value of 'empty'
-  if (dimensionValue === 'empty') {
-    return colorByState({ state: 'empty' })
+  if (dimensionValue && ['empty', 'others', 'other'].includes(dimensionValue)) {
+    return colorByState({ state: dimensionValue as ColorState })
   }
 
   // if we have specific overrides for this dimension
