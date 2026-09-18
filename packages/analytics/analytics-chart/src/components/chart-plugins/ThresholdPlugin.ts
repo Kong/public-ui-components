@@ -1,10 +1,10 @@
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
-import type { Chart, Plugin } from 'chart.js'
-import type { Threshold, ThresholdType } from 'src/types'
+import type { Chart, ChartDataset, Plugin } from 'chart.js'
+import type { Dataset, Threshold, ThresholdType } from 'src/types'
 import type { createI18n } from '@kong-ui-public/i18n'
 import type english from '../../locales/en.json'
-import { thresholdColor } from '../../utils'
+import { LEFT_Y_AXIS_ID, thresholdColor } from '../../utils'
 
 const HOVER_TRIGGER_DELTA = 20
 const THRESHOLD_ERROR_BRUSH_COLOR = 'rgba(255, 171, 171, 0.4)'
@@ -36,11 +36,20 @@ const getExactIntersection = (p0: Point, p1: Point, targetY: number): number => 
   return p0.x + f * (p1.x - p0.x)
 }
 
-export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[]): ThresholdIntersection[] => {
+const datasetAxisId = (dataset: ChartDataset): string => ('yAxisID' in dataset && dataset.yAxisID) || LEFT_Y_AXIS_ID
+
+// Thresholds are keyed by metric, so they belong to their specified y axis, defaults to the left y axis
+export const thresholdAxisId = (chart: Chart, metric: string): string => {
+  const dataset = chart.data.datasets.find(ds => (ds as Dataset).rawMetric === metric)
+
+  return dataset ? datasetAxisId(dataset) : LEFT_Y_AXIS_ID
+}
+
+export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[], axisId: string = LEFT_Y_AXIS_ID): ThresholdIntersection[] => {
   const intersections: ThresholdIntersection[] = []
   chart.data.datasets.forEach((dataset) => {
     const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(dataset))
-    if (!meta.visible) {
+    if (!meta.visible || datasetAxisId(dataset) !== axisId) {
       return
     }
 
@@ -163,12 +172,13 @@ export class ThresholdPlugin implements Plugin {
     const onMouseMove = (event: MouseEvent) => {
       if (chart) {
         const yPos = event.clientY
-        const yScale = chart.scales['y']
         const rect = canvas.getBoundingClientRect()
-        const yValue = yScale.getValueForPixel(yPos - rect.top)
 
-        if (yValue) {
-          for (const key of Object.keys(this._thresholds || {})) {
+        for (const key of Object.keys(this._thresholds || {})) {
+          const yScale = chart.scales[thresholdAxisId(chart, key)] ?? chart.scales['y']
+          const yValue = yScale.getValueForPixel(yPos - rect.top)
+
+          if (yValue) {
             const thresholds = this._thresholds?.[key as ExploreAggregations]
             if (thresholds) {
               thresholds.forEach((t) => {
@@ -191,8 +201,10 @@ export class ThresholdPlugin implements Plugin {
       const threshold = this._thresholds?.[key as ExploreAggregations]
 
       if (threshold) {
+        const axisId = thresholdAxisId(chart, key)
+        const yScale = chart.scales[axisId] ?? chart.scales['y']
+
         threshold.forEach((t) => {
-          const yScale = chart.scales['y']
           const yValue = yScale.getPixelForValue(t.value)
 
           context.save()
@@ -225,7 +237,7 @@ export class ThresholdPlugin implements Plugin {
           }
         })
 
-        const intersections = getThresholdIntersections(chart, threshold)
+        const intersections = getThresholdIntersections(chart, threshold, axisId)
         const mergedIntersections = mergeThresholdIntersections(intersections)
 
         mergedIntersections.forEach((intersection) => {

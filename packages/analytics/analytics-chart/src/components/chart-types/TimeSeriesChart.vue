@@ -66,7 +66,7 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { Threshold, TooltipState, ZoomActionItem } from '../../types'
+import type { Threshold, TooltipState, YAxisConfig, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import type { Chart, Plugin } from 'chart.js'
@@ -94,6 +94,8 @@ interface TimeSeriesChartProps {
   zoomActionItems?: ZoomActionItem[]
   tooltipMetricDisplay?: string
   threshold?: Record<ExploreAggregations, Threshold[]>
+  leftYAxisGrid?: boolean
+  rightYAxis?: YAxisConfig
 }
 
 const props = withDefaults(
@@ -115,6 +117,8 @@ const props = withDefaults(
     zoomActionItems: undefined,
     tooltipMetricDisplay: '',
     threshold: undefined,
+    leftYAxisGrid: undefined,
+    rightYAxis: undefined,
   },
 )
 
@@ -193,6 +197,8 @@ const { options } = composables.useLineChartOptions({
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
   pointsWithoutHover: pointsWithoutHover,
   threshold: toRef(props, 'threshold'),
+  leftYAxisGrid: toRef(props, 'leftYAxisGrid'),
+  rightYAxis: toRef(props, 'rightYAxis'),
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
