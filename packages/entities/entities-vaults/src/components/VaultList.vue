@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-vaults-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -117,6 +118,9 @@
       <template #tags="{ rowValue }">
         <TableTags :tags="rowValue" />
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -195,6 +199,8 @@ import {
   useDeleteUrlBuilder,
   useTableState,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 
 import type {
@@ -303,9 +309,10 @@ const fields: BaseTableHeaders = {
   description: { label: t('vaults.list.table_headers.description'), sortable: false },
   tags: { label: t('vaults.list.table_headers.tags'), sortable: false },
 }
+
 // AI Gateway uses labels (not exposed this version) instead of tags, so hide the column.
 // AI Gateway also uses field-name-accurate labels: prefix→Name, name→Type.
-const tableHeaders = computed<BaseTableHeaders>(() => {
+const baseTableHeaders = computed<BaseTableHeaders>(() => {
   if (isAiGateway.value) {
     const { description, name, prefix } = fields
     return {
@@ -316,6 +323,10 @@ const tableHeaders = computed<BaseTableHeaders>(() => {
   }
   return fields
 })
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(baseTableHeaders)
 
 /**
  * Fetcher & Filtering

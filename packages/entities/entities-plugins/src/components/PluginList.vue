@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-plugins-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -235,6 +236,9 @@
       <template #updated_at="{ row, rowValue }">
         {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -351,6 +355,8 @@ import {
   useTableState,
   useGatewayFeatureSupported,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -545,7 +551,9 @@ if (isOrderingSupported) {
 fields.tags = { label: t('plugins.list.table_headers.tags'), sortable: false }
 fields.updated_at = { label: t('plugins.list.table_headers.updated_at'), sortable: true }
 
-const tableHeaders: BaseTableHeaders = fields
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 
 /**
  * Fetcher & Filtering

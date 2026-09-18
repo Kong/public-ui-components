@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-consumer-credentials-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       disable-row-click
       disable-sorting
       :empty-state-options="emptyStateOptions"
@@ -78,6 +79,9 @@
       </template>
       <template #tags="{ rowValue }">
         <TableTags :tags="rowValue" />
+      </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
       </template>
 
       <!-- Row actions -->
@@ -192,6 +196,8 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import type {
   CredentialPlugins,
@@ -304,7 +310,10 @@ const fields: Record<CredentialPlugins, BaseTableHeaders> = {
     tags: { label: t('credentials.list.table_headers.jwt.tags') },
   },
 }
-const tableHeaders = computed<BaseTableHeaders>(() => fields[props.config.plugin])
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(() => fields[props.config.plugin])
 
 /**
  * Fetcher & Filtering
