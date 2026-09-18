@@ -1,4 +1,5 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 
@@ -67,8 +68,10 @@ export default function useExploreResultToTimeDataset(
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const chartData: Ref<KChartData> = computed(() => {
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
+  const chartData: Ref<KChartData> = computed(() => {
     try {
       if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
         const records = exploreResult.value.data as AnalyticsExploreRecord[]
@@ -174,7 +177,9 @@ export default function useExploreResultToTimeDataset(
             colorPalette = datavisPalette
           }
 
-          const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
+          const baseColor = useColors
+            ? color({ dimension, dimensionValue: dimensionId })
+            : determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)

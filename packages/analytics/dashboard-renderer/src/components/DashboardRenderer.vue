@@ -348,7 +348,7 @@ defineExpose({
   .tile-container {
     background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
     height: 100%;
 
     &.slottable-tile {
