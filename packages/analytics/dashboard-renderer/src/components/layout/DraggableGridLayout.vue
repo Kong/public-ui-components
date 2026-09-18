@@ -96,7 +96,7 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
 onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
-      margin: 10,
+      margin: 5,
       column: props.columns,
       cellHeight: props.tileHeight,
       resizable: { handles: 'se, sw' },
@@ -151,7 +151,7 @@ defineExpose({ removeWidget })
 
 <style lang="scss" scoped>
 .grid-stack {
-  margin: 0 -10px;
+  margin: 0 -5px;
 }
 
 :deep(.tile-header) {
