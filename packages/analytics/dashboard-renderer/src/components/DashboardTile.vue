@@ -496,8 +496,19 @@ watch(metricNames, metrics => {
   }
 }, { immediate: true })
 
+const isDualAxisChart = computed(() => {
+  const chartOptions = chart.value
+
+  if (chartOptions.type !== 'timeseries_line') {
+    return false
+  }
+
+  return metricNames.value.some(metric => chartOptions.metric_axis_map?.[metric] === 'right')
+})
+
 const showMetricSelector = computed(() => (
   isTimeSeriesChart.value
+  && !isDualAxisChart.value
   && (chartData.value?.data.length ?? 0) > 0
   && metricNames.value.length > 1
   && Object.keys(chartData.value?.meta.display ?? {}).length > 0

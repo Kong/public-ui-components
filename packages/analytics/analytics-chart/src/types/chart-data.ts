@@ -1,7 +1,7 @@
 import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
-import type { ChartTooltipSortFn } from './chartjs-options'
+import type { ChartTooltipSortFn, YAxisConfig } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, YAxisPosition } from '@kong-ui-public/analytics-utilities'
 import type { ScatterPointExtra } from './scatter-data'
 
 // Chart.js extended interfaces
@@ -13,6 +13,7 @@ export type Dataset = ChartDataset & {
   fill?: boolean
   isThreshold?: boolean
   isSegmentEmpty?: boolean
+  unit?: string
 }
 
 export interface KChartData extends ChartData {
@@ -193,6 +194,18 @@ export interface AnalyticsChartOptions {
    * A static or dynamic metric threshold to be displayed on a timeseries chart
    */
   threshold?: Record<ExploreAggregations, Threshold[]>
+  /**
+   * Maps a metric to the specified y axis, by default the metric will use the left y axis. This
+   * only applies to timeseries_line chart
+   */
+  metricAxisMap?: Partial<Record<string, YAxisPosition>>
+  /**
+   * Axes title and grid line overrides for timeseries charts
+   */
+  yAxes?: {
+    left?: YAxisConfig
+    right?: YAxisConfig
+  }
   /**
    * Hide the truncation warning. Used if manually setting a limit
    */

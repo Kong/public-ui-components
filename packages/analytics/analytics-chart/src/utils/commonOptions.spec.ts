@@ -1,4 +1,5 @@
-import { hasTimeseriesData } from './commonOptions'
+import type { ExternalTooltipContext, TooltipState } from '../types'
+import { hasTimeseriesData, lineChartTooltipBehavior } from './commonOptions'
 
 describe('commonOptions.hasTimeseriesData', () => {
 
@@ -92,5 +93,39 @@ describe('commonOptions.hasTimeseriesData', () => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(valid).false
+  })
+})
+
+describe('commonOptions.lineChartTooltipBehavior', () => {
+  const makeContext = (datasets: Array<{ label: string, unit?: string }>) => ({
+    chart: { config: { options: {} } },
+    tooltip: {
+      opacity: 1,
+      body: [{}],
+      x: 0,
+      y: 0,
+      labelColors: datasets.map(() => ({ backgroundColor: '#000', borderColor: '#000' })),
+      dataPoints: datasets.map((dataset, i) => ({
+        parsed: { x: 1678262400000, y: i + 1 },
+        raw: { x: 1678262400000, y: i + 1 },
+        dataset,
+      })),
+    },
+  }) as unknown as ExternalTooltipContext
+
+  it('formats each series with its dataset unit, falling back to the chart unit', () => {
+    const tooltipData = {
+      showTooltip: false,
+      interactionMode: 'idle',
+      units: 'count',
+      translateUnit: (unit: string) => unit,
+      tooltipSeries: [],
+    } as unknown as TooltipState
+
+    lineChartTooltipBehavior(tooltipData, makeContext([{ label: 'requests' }, { label: 'latency', unit: 'ms' }]), 'minutely')
+
+    const values = Object.fromEntries(tooltipData.tooltipSeries.map(entry => [entry.label, entry.value]))
+    expect(values.requests).toContain('count')
+    expect(values.latency).toContain('ms')
   })
 })
