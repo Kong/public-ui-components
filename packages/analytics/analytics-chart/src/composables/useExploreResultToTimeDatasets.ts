@@ -4,12 +4,15 @@ import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
+import { isNullOrUndef } from 'chart.js/helpers'
 import { parseISO } from 'date-fns'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
   defaultLineOptions,
+  datavisPalette,
   BORDER_WIDTH,
   NO_BORDER,
+  determineBaseColor,
   isChartLabel,
 } from '../utils'
 import composables from '../composables'
@@ -65,6 +68,8 @@ export default function useExploreResultToTimeDataset(
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   const chartData: Ref<KChartData> = computed(() => {
     try {
@@ -156,7 +161,7 @@ export default function useExploreResultToTimeDataset(
           })
           : datasetLabels.map(label => [label.name, label.id, label.name, label.id === 'empty'])
 
-        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty]) => {
+        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty], i) => {
           const filled = zeroFilledTimeSeries.map(ts => {
             if (ts in timedEvents && metric in timedEvents[ts]) {
               return { x: ts, y: timedEvents[ts][metric][dimensionId] || 0 }
@@ -166,9 +171,15 @@ export default function useExploreResultToTimeDataset(
           })
 
           // eslint-disable-next-line prefer-const
-          let { fill } = deps
+          let { colorPalette, fill } = deps
 
-          const baseColor = color({ dimension, dimensionValue: dimensionId })
+          if (isNullOrUndef(colorPalette)) {
+            colorPalette = datavisPalette
+          }
+
+          const baseColor = useColors
+            ? color({ dimension, dimensionValue: dimensionId })
+            : determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)

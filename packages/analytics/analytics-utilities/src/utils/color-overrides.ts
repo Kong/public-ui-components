@@ -1,7 +1,7 @@
 import * as tokens from '@kong/design-tokens'
 
 export type ColorMap = Record<string, string>
-export type ColorState = 'empty' | 'warning' | 'error' | 'neutral'
+export type ColorState = 'empty' | 'warning' | 'error' | 'neutral' | '____OTHER____'
 
 export const statusCodeColors: ColorMap = {
   '100': tokens.KUI_STATUS_COLOR_100,
@@ -89,4 +89,5 @@ export const stateColors: Record<ColorState, string> = {
   warning: tokens.KUI_COLOR_TEXT_WARNING_WEAK,
   empty: tokens.KUI_COLOR_BACKGROUND_NEUTRAL_WEAK,
   neutral: tokens.KUI_COLOR_BACKGROUND_NEUTRAL,
+  '____OTHER____': tokens.KUI_COLOR_BACKGROUND_INFO,
 }
