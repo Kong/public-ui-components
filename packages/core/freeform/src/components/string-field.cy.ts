@@ -146,5 +146,12 @@ describe('StringField', () => {
       cy.getTestId(`ff-${FIELD_NAME}`).should('not.be.disabled')
       cy.getTestId(`ff-version-tooltip-${FIELD_NAME}`).should('not.exist')
     })
+
+    it('ignores gating entirely when config.versionGating is false', () => {
+      mountVersionGatedForm({ config: { minRuntimeVersion: '2.0', versionGating: false } })
+
+      cy.getTestId(`ff-${FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-version-tooltip-${FIELD_NAME}`).should('not.exist')
+    })
   })
 })

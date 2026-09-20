@@ -293,19 +293,32 @@ export function useSchemaHelpers(
     return {
       ...SHARED_LABEL_ATTRIBUTES,
       'data-testid': `ff-label-${fieldPath}`,
-      info,
+      // A gated field already shows the version-requirement tooltip on its
+      // control; rendering the description tooltip as well would pop two
+      // overlapping tooltips, so drop the description while gated.
+      info: getFieldVersionInfo(fieldPath) ? undefined : info,
     }
+  }
+
+  /**
+   * Master switch for the whole version-gating feature
+   * (`FormConfig.versionGating`, defaults to `true`). When off, no field or
+   * option is gated and all version tooltips disappear — the form behaves
+   * exactly as it did before version gating existed.
+   */
+  function isVersionGatingEnabled(): boolean {
+    return toValue(config)?.versionGating !== false
   }
 
   /**
    * Version info for a field whose `min_ai_gateway_version` exceeds
    * `FormConfig.minRuntimeVersion` — `undefined` when the field has no
-   * version requirement, or the requirement is met.
+   * version requirement, the requirement is met, or gating is disabled.
    */
   function getFieldVersionInfo(fieldPath: string): VersionInfo | undefined {
     const schema = getSchema(fieldPath)
     const minVersion = schema?.min_ai_gateway_version
-    if (!minVersion || isVersionSupported(toValue(config)?.minRuntimeVersion, minVersion)) {
+    if (!isVersionGatingEnabled() || !minVersion || isVersionSupported(toValue(config)?.minRuntimeVersion, minVersion)) {
       return undefined
     }
     return buildVersionInfo(minVersion)
@@ -318,7 +331,7 @@ export function useSchemaHelpers(
       || ((schema as ArrayLikeFieldSchema).elements as StringFieldSchema)?.enum_min_versions
     const items = utils.toSelectItems(oneOf)
 
-    if (!enumMinVersions?.length) {
+    if (!isVersionGatingEnabled() || !enumMinVersions?.length) {
       return items
     }
 

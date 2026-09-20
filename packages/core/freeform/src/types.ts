@@ -32,6 +32,13 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
    * option is disabled on version grounds (fail-open).
    */
   minRuntimeVersion?: string
+  /**
+   * Master switch for version gating. Defaults to `true`; set to `false` to
+   * ignore `min_ai_gateway_version` / `enum_min_versions` and
+   * `minRuntimeVersion` entirely — fields and options stay enabled and the
+   * form behaves exactly as before version gating existed.
+   */
+  versionGating?: boolean
 }
 
 /**

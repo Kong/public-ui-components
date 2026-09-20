@@ -2,6 +2,15 @@
   <SandboxPage title="Free Form (Version Gating)">
     <template #controls>
       <div class="version-picker">
+        <KInputSwitch
+          id="version-gating"
+          v-model="versionGating"
+        />
+        <KLabel for="version-gating">
+          Version gating
+        </KLabel>
+      </div>
+      <div class="version-picker">
         <KLabel for="min-runtime-version">
           Runtime version
         </KLabel>
@@ -15,7 +24,7 @@
     </template>
     <Form
       class="form"
-      :config="{ minRuntimeVersion }"
+      :config="{ minRuntimeVersion, versionGating }"
       :schema="schema"
       @change="console.log"
     >
@@ -42,6 +51,8 @@ import { Form, FieldRenderer, StringField, FIELD_RENDERERS } from '../../src'
 import type { FormSchema } from '../../src/form-schema'
 
 const minRuntimeVersion = ref<string | undefined>('2.0')
+
+const versionGating = ref(true)
 
 const versionItems = [
   { value: '', label: 'Not provided (fail-open)' },

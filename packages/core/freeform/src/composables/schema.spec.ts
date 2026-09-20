@@ -77,6 +77,67 @@ describe('useSchemaHelpers', () => {
       expect(labelAttributes.info).not.toContain('onerror')
       expect(labelAttributes.info).not.toContain('alert(')
     })
+
+    it('drops the description tooltip while the field is version-gated', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  gated: {
+                    type: 'string',
+                    description: 'Some description',
+                    min_ai_gateway_version: '3.2.0',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const gated = useSchemaHelpers(schema, { minRuntimeVersion: '3.1.0' })
+      expect(gated.getLabelAttributes('config.gated').info).toBeUndefined()
+
+      const ungated = useSchemaHelpers(schema, { minRuntimeVersion: '3.2.0' })
+      expect(ungated.getLabelAttributes('config.gated').info).toContain('Some description')
+    })
+
+    it('ignores version requirements entirely when versionGating is disabled', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  gated: {
+                    type: 'string',
+                    description: 'Some description',
+                    min_ai_gateway_version: '3.2.0',
+                    one_of: ['a', 'b'],
+                    enum_min_versions: [{ min_ai_gateway_version: '3.2.0', value: 'a' }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const helpers = useSchemaHelpers(schema, { minRuntimeVersion: '3.1.0', versionGating: false })
+
+      expect(helpers.getFieldVersionInfo('config.gated')).toBeUndefined()
+      expect(helpers.getLabelAttributes('config.gated').info).toContain('Some description')
+      expect(helpers.getSelectItems('config.gated')).toEqual([
+        { value: 'a', label: 'a' },
+        { value: 'b', label: 'b' },
+      ])
+    })
   })
 
   describe('emptyFieldValue config', () => {

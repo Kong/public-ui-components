@@ -209,6 +209,15 @@ describe('EnumField', () => {
       cy.getTestId(`ff-${VERSION_FIELD_NAME}`).should('not.be.disabled')
       cy.getTestId(`ff-version-tooltip-${VERSION_FIELD_NAME}`).should('not.exist')
     })
+
+    it('ignores gating entirely when config.versionGating is false', () => {
+      mountVersionGatedForm({ config: { minRuntimeVersion: '2.0', versionGating: false } })
+      openDropdown()
+
+      cy.getTestId('select-item-credential').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-service').find('button').should('not.be.disabled')
+      cy.getTestId('ff-version-tooltip-item-credential').should('not.exist')
+    })
   })
 
   describe('emptyFieldValue config', () => {
