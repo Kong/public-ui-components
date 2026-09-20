@@ -1,18 +1,20 @@
 import ACLForm from './ACLForm.vue'
-import aclSchema, { aclSchemaWithoutWhenModes } from '../../../../../fixtures/schemas/acl'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import aclSchema, { aclSchemaWithoutWhenModes, aclSchemaWithVersionGates } from '../../../../../fixtures/schemas/acl'
+import type { FormConfig, FormSchema } from '@kong-ui-public/freeform'
 
 interface MountOptions {
   schema?: FormSchema
   model?: Record<string, any>
+  formConfig?: FormConfig
 }
 
 const mountForm = (options: MountOptions = {}) => {
-  const { schema = aclSchema, model = { config: {} } } = options
+  const { schema = aclSchema, model = { config: {} }, formConfig } = options
 
   cy.mount(ACLForm as any, {
     props: {
       schema,
+      formConfig,
       formSchema: { fields: [] },
       formModel: {},
       model,
@@ -147,5 +149,38 @@ describe('<ACLForm /> - mode switching', () => {
     cy.getTestId('ff-acl-mode-deny').should('exist')
     cy.getTestId('ff-acl-mode-allow_when').should('not.exist')
     cy.getTestId('ff-acl-mode-deny_when').should('not.exist')
+  })
+})
+
+describe('<ACLForm /> - version gating', () => {
+  it('disables the CEL modes, but not allow/deny, when minRuntimeVersion is below their requirement', () => {
+    mountForm({ schema: aclSchemaWithVersionGates, formConfig: { minRuntimeVersion: '2.0' } })
+
+    cy.getTestId('ff-acl-mode-allow').should('not.be.disabled')
+    cy.getTestId('ff-acl-mode-deny').should('not.be.disabled')
+    cy.getTestId('ff-acl-mode-allow_when').should('be.disabled')
+    cy.getTestId('ff-acl-mode-deny_when').should('be.disabled')
+    cy.getTestId('ff-version-tooltip-allow_when').should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+  })
+
+  it('keeps all modes selectable when minRuntimeVersion satisfies the requirement', () => {
+    mountForm({ schema: aclSchemaWithVersionGates, formConfig: { minRuntimeVersion: '2.1' } })
+
+    cy.getTestId('ff-acl-mode-allow_when').should('not.be.disabled')
+    cy.getTestId('ff-acl-mode-deny_when').should('not.be.disabled')
+  })
+
+  it('fails open (all modes selectable) when minRuntimeVersion is not provided', () => {
+    mountForm({ schema: aclSchemaWithVersionGates })
+
+    cy.getTestId('ff-acl-mode-allow_when').should('not.be.disabled')
+    cy.getTestId('ff-acl-mode-deny_when').should('not.be.disabled')
+  })
+
+  it('ignores gating entirely when formConfig.versionGating is false', () => {
+    mountForm({ schema: aclSchemaWithVersionGates, formConfig: { minRuntimeVersion: '2.0', versionGating: false } })
+
+    cy.getTestId('ff-acl-mode-allow_when').should('not.be.disabled')
+    cy.getTestId('ff-acl-mode-deny_when').should('not.be.disabled')
   })
 })
