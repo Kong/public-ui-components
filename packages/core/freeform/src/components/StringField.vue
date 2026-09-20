@@ -123,6 +123,12 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   placeholder?: string
   inputId?: string
   inlineVaultPicker?: boolean
+  /**
+   * Declared (not left to fallthrough) because kongponents' InputProps omits
+   * it; before the VersionGateTooltip wrap it used to reach the input via
+   * $attrs fallthrough.
+   */
+  disabled?: boolean
 }
 
 const {
@@ -141,7 +147,7 @@ const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRe
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
 const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
-const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
+const isDisabled = computed(() => props.disabled || !!fieldVersionInfo.value)
 
 function handleUpdate(value: string) {
   fieldValue!.value = value === '' ? field.emptyValue!.value : value

@@ -83,6 +83,12 @@ type EnumFieldProps = {
   labelAttributes?: LabelAttributes
   items?: SelectItem[]
   placeholder?: string
+  /**
+   * Declared (not left to fallthrough) because kongponents' SelectProps /
+   * MultiselectProps omit it; before the VersionGateTooltip wrap it used to
+   * reach the select via $attrs fallthrough.
+   */
+  disabled?: boolean
 } & (MultipleSelectProps | SingleSelectProps) & BaseFieldProps
 
 const emit = defineEmits<{
@@ -104,9 +110,7 @@ const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
 
-// `disabled` is only on `SelectProps`, not `MultiselectProps` (KMultiselect reads it off
-// fallthrough attrs instead) — read it loosely so both branches of `EnumFieldProps` work.
-const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
+const isDisabled = computed(() => props.disabled || !!fieldVersionInfo.value)
 
 function normalizeValue(value: EnumValue): EnumValue {
   // Required fields are already correctly shaped here (`[]` for a cleared
