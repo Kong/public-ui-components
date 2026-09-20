@@ -87,6 +87,25 @@
           :message="i18n.t('vault_picker.component_error')"
         />
       </template>
+
+      <!--
+        Self-guarded: renders nothing unless this field's schema is `expressible`
+        and declares a twin. `expressionEditor === false` is the escape hatch for a
+        plugin that lays the pair out itself (rate-limiting-advanced's limit rows).
+      -->
+      <ExpressionEditor
+        v-if="expressionEditor !== false"
+        class="ff-string-field-expression"
+        :name="absoluteName"
+        v-bind="expressionEditor || {}"
+      >
+        <template
+          v-if="$slots['expression-help']"
+          #help
+        >
+          <slot name="expression-help" />
+        </template>
+      </ExpressionEditor>
     </div>
   </VersionGateTooltip>
 </template>
@@ -102,9 +121,10 @@ import { USE_SECRET_INPUT_KEY } from '../constants'
 
 import * as utils from '../utils'
 import { useField, useFieldAttrs, useFormShared } from '../composables'
+import ExpressionEditor from './ExpressionEditor.vue'
 
 import type { StringFieldSchema } from '../form-schema'
-import type { BaseFieldProps, EmptyValue } from '../types'
+import type { BaseFieldProps, EmptyValue, ExpressionEditorFieldProps } from '../types'
 
 defineOptions({
   inheritAttrs: false,
@@ -129,17 +149,28 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
    * $attrs fallthrough.
    */
   disabled?: boolean
+  expressionEditor?: ExpressionEditorFieldProps
 }
 
 const {
   autofocus,
   showVaultSecretPicker = undefined,
   showPasswordMaskToggle = undefined,
+  expressionEditor = undefined,
   name,
   ...props
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
   'update:modelValue': [value: string | EmptyValue]
+}>()
+
+defineSlots<{
+  /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
+  tooltip?: () => any
+  /** Replaces the help text under the input. */
+  help?: () => any
+  /** Replaces the help text under the expression editor's textarea. */
+  'expression-help'?: () => any
 }>()
 
 const { getFieldVersionInfo } = useFormShared()
@@ -176,6 +207,16 @@ const realShowVaultSecretPicker = computed(() => {
 })
 
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
+
+/**
+ * `useField` above provides this field's own resolved path to its descendants,
+ * so `ExpressionEditor` rendered below would double-resolve a relative `name`
+ * against it (`config.custom_key` becoming `config.custom_key.custom_key`).
+ * The absolute path sidesteps that, same as `ExpressionField` does today for
+ * the value component it wraps.
+ */
+const absoluteName = computed(() => utils.resolveRoot(field.path?.value ?? ''))
+
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return utils.getName(name) === 'name'
@@ -187,5 +228,11 @@ const is1pIgnore = computed(() => {
   :deep(.k-tooltip p) {
     margin: 0;
   }
+}
+
+// `ExpressionEditor` is spacing-neutral by design — whoever composes it owns
+// the gap to the input above.
+.ff-string-field-expression {
+  margin-top: var(--kui-space-40, $kui-space-40);
 }
 </style>

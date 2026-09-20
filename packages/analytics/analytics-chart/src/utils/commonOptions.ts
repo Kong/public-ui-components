@@ -15,7 +15,7 @@ export const lineChartTooltipBehavior = (
   context: ExternalTooltipContext,
   granularity: GranularityValues,
   options?: {
-    contextFormatter?: (x: number, granularity: GranularityValues) => string | number
+    contextFormatter?: (x: number, granularity: GranularityValues, raw: unknown) => string | number
   },
 ) : void => {
   const { tooltip } = context
@@ -34,7 +34,7 @@ export const lineChartTooltipBehavior = (
 
     const x = tooltip.dataPoints[0].parsed.x ?? 0 // convert null datapoints to 0
     tooltipData.tooltipContext = options?.contextFormatter
-      ? options.contextFormatter(x, granularity)
+      ? options.contextFormatter(x, granularity, tooltip.dataPoints[0].raw)
       : formatTooltipTimestampByGranularity({
         tickValue: new Date(x),
         granularity,

@@ -1,15 +1,14 @@
 // TODO: this test depends on PluginConfigurationForm (entities-plugins-specific) purely as a
-// mounting harness. Once ExpressionField's test setup is decoupled from
+// mounting harness. Once its test setup is decoupled from
 // PluginConfigurationForm — mounting through Form/ObjectField like the other field tests
 // in @kong-ui-public/freeform do — this test can move into that package alongside
-// ExpressionField.vue itself.
+// the expressible input fields.
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import PluginConfigurationForm from './PluginConfigurationForm.vue'
-import { ExpressionField } from '@kong-ui-public/freeform'
+import { StringField } from '@kong-ui-public/freeform'
 import type { FormSchema } from '@kong-ui-public/freeform'
-
 
 /**
  * An `expressible` field renders as a pair: the plain value, and the expression
@@ -92,17 +91,18 @@ describe('expressible fields', () => {
     // `propsOverrides` reaches the renderer as usual.
     expect(wrapper.find('[data-testid="value-only"]').text()).toBe('overridden')
     // And the renderer owns the field: nothing appends an expression to it. A
-    // renderer that wants one renders `ExpressionField`/`ExpressionEditor`
-    // itself — see `CustomKeyField` below, and rate-limiting-advanced's limit
-    // rows, which pair each limit with its own editor.
+    // renderer that wants one renders `StringField`/`NumberField` (their
+    // built-in editor) or `ExpressionEditor` directly — see `CustomKeyField`
+    // below, and rate-limiting-advanced's limit rows, which pair each limit
+    // with its own editor.
     expect(wrapper.find('[data-testid="ff-expression-add-config.minute"]').exists()).toBe(false)
   })
 
   it('is usable as a `fieldRenderers` component, configured by `propsOverrides`', () => {
     const wrapper = mountForm([{
       match: 'config.custom_key',
-      component: ExpressionField as any,
-      propsOverrides: { placeholder: 'e.g. principal.id' },
+      component: StringField as any,
+      propsOverrides: { expressionEditor: { placeholder: 'e.g. principal.id' } },
     }])
 
     // The field component for an expressible field, registered for one path and

@@ -7,6 +7,7 @@
     :refresh-counter="refreshCounter"
   >
     <TopNTable
+      :column-options="chartOptions.column_options"
       :data="data"
       :synthetics-data-key="chartOptions.synthetics_data_key"
     >

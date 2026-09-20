@@ -91,7 +91,7 @@ function assertLastExpressions(expected: unknown) {
   })
 }
 
-describe('ExpressionField', () => {
+describe('expressible fields', () => {
   it('offers the trigger only for fields that have a twin', () => {
     mountForm()
 

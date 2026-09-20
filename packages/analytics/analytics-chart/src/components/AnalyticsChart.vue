@@ -104,7 +104,7 @@
         :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
         data-testid="scatter-chart-container"
-        :dimension-axes-title="timestampAxisTitle"
+        :dimension-axes-title="scatterXAxisTitle"
         :granularity="scatterGranularity"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
@@ -114,6 +114,8 @@
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
+        :x-metric="scatterData?.xMetric"
+        :x-metric-unit="scatterData?.xMetricUnit"
       />
     </div>
   </div>
@@ -247,8 +249,8 @@ const scatterThemeColors = computed<ScatterChartColors>(() => {
 })
 
 const chartMeta = computed<SharedMeta>(() => {
-  if (isScatterChartData(props.chartData)) {
-    const { start, end, metric, metricUnit, truncated, limit, datasource } = props.chartData
+  if (scatterData.value) {
+    const { start, end, metric, metricUnit, truncated, limit, datasource } = scatterData.value
 
     return {
       start,
@@ -428,6 +430,10 @@ const metricAxesTitle = computed<string | undefined>(() => {
     }
   }
 
+  return metricTitle(metricName, metricUnit)
+})
+
+const metricTitle = (metricName: string, metricUnit: string): string | undefined => {
   // @ts-ignore - dynamic i18n key
   if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
     if (isNoSuffixMetric(metricUnit)) {
@@ -439,7 +445,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   return metricName || undefined
-})
+}
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
   if (props.chartOptions?.dimensionAxesTitle) {
@@ -457,16 +463,12 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
   return i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension
 })
 
-const axisTitleGranularity = computed<GranularityValues | null>(() => (
-  isScatterChart.value ? scatterGranularity.value : msToGranularity(Number(exploreData.value?.meta?.granularity_ms))
-))
-
 const timestampAxisTitle = computed(() => {
   if (isPlatformDatasource(chartMeta.value.datasource)) {
     return i18n.t('timestampAxisTitles.platform')
   }
 
-  const granularity = axisTitleGranularity.value
+  const granularity = msToGranularity(exploreData.value?.meta?.granularity_ms)
 
   if (!granularity) {
     return undefined
@@ -474,6 +476,16 @@ const timestampAxisTitle = computed(() => {
 
   // @ts-ignore - dynamic i18n key
   return i18n.te(`granularityAxisTitles.${granularity}`) ? i18n.t(`granularityAxisTitles.${granularity}`) : granularity
+})
+
+const scatterXAxisTitle = computed<string | undefined>(() => {
+  const xMetric = scatterData.value?.xMetric
+
+  if (!xMetric) {
+    return timestampAxisTitle.value
+  }
+
+  return metricTitle(xMetric, scatterData.value?.xMetricUnit ?? '')
 })
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
@@ -506,12 +518,9 @@ const timeSeriesGranularity = computed<GranularityValues>(() => {
   return msToGranularity(data.meta.granularity_ms) || 'hourly'
 })
 
-// This is to determine the how granular the scatter's x-axis should be. Maybe this could be configurable?
-const SCATTER_TICK_COUNT = 7
-
-const scatterGranularity = computed<GranularityValues>(() => {
-  return msToGranularity(Math.floor((timeRangeMs.value || 0) / SCATTER_TICK_COUNT)) || 'hourly'
-})
+const scatterGranularity = computed<GranularityValues>(() => (
+  msToGranularity(exploreData.value?.meta?.granularity_ms) || 'secondly'
+))
 
 const chartLegendSortFn = computed(() => {
   if (props.chartOptions.chartLegendSortFn) {

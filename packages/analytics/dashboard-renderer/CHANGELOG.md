@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.28.0...%40kong-ui-public%2Fdashboard-renderer%408.28.1) (2026-09-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.27.0...%40kong-ui-public%2Fdashboard-renderer%408.28.0) (2026-09-17)
+
+### Features
+
+* **analytics:** allow metric mapping to x axis of scatter charts [MA-5493] ([#3844](https://github.com/Kong/public-ui-components/issues/3844)) ([a016a13](https://github.com/Kong/public-ui-components/commit/a016a13df45e3dc94be9c3114d7dfeef10d9d59b))
+* **analytics:** topn cell icon and metric bar [MA-5424] ([#3845](https://github.com/Kong/public-ui-components/issues/3845)) ([e9a92de](https://github.com/Kong/public-ui-components/commit/e9a92de4a37d3d0caa521f260fb9a7fd9145095f))
+
+
+# [8.27.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.26.8...%40kong-ui-public%2Fdashboard-renderer%408.27.0) (2026-09-16)
+
+### Features
+
+* **analytics:** cleaner zoom config and respecting explorer context [ma-5352] ([#3780](https://github.com/Kong/public-ui-components/issues/3780)) ([ba7ccd8](https://github.com/Kong/public-ui-components/commit/ba7ccd833fe69f58b445d096fd098f85a68a0cf6))
+
+
 ## [8.26.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.26.7...%40kong-ui-public%2Fdashboard-renderer%408.26.8) (2026-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

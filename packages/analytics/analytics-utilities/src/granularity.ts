@@ -51,6 +51,27 @@ export function msToGranularity(ms?: number): GranularityValues | null {
   return key || null
 }
 
+export function finestGranularityForDuration(durationMs: number): GranularityValues {
+  const hourMs = Granularities.hourly
+  const dayMs = Granularities.daily
+
+  if (durationMs <= hourMs) {
+    return 'tenSecondly'
+  } else if (durationMs <= 6 * hourMs) {
+    return 'thirtySecondly'
+  } else if (durationMs <= 12 * hourMs) {
+    return 'minutely'
+  } else if (durationMs <= dayMs) {
+    return 'fiveMinutely'
+  } else if (durationMs <= 7 * dayMs) {
+    return 'thirtyMinutely'
+  } else if (durationMs < 60 * dayMs) {
+    return 'hourly'
+  }
+
+  return 'daily'
+}
+
 function toNearestTimeGrain(
   op: (x: number) => number,
   date: Date,

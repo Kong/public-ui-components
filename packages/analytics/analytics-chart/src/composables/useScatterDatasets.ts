@@ -25,6 +25,7 @@ export interface ScatterDatasetDeps extends ExploreToDatasetDeps {
 interface ScatterPoint {
   x: number
   y: number
+  timestamp?: number
   extras?: ScatterPointExtra[]
 }
 
@@ -66,7 +67,9 @@ export default function useScatterDatasets(
         return { datasets: [] }
       }
 
-      const { metric, dimension, display } = data
+      const { metric, dimension, display, xMetric, xMetricUnit } = data
+      // @ts-ignore - dynamic i18n key
+      const xMetricLabel: string = xMetric ? (i18n.te(`chartLabels.${xMetric}`) && i18n.t(`chartLabels.${xMetric}`)) || xMetric : ''
 
       const scatter = deps.scatter || {}
       const jitterMs = scatter.jitterMs ?? 0
@@ -81,10 +84,28 @@ export default function useScatterDatasets(
         const groupId = point.group ?? metric
         const points = grouped.get(groupId) || []
 
+        let xValue: { x: number, timestamp?: number }
+        let extras: ScatterPointExtra[]
+
+        if (point.x !== undefined) {
+          xValue = { x: point.x, timestamp: point.timestamp }
+          extras = [
+            {
+              label: xMetricLabel,
+              value: point.x,
+              ...(xMetricUnit ? { unit: xMetricUnit } : {}),
+            },
+            ...(point.extras ?? []),
+          ]
+        } else {
+          xValue = { x: point.timestamp + jitter(jitterMs, point.timestamp + point.value) }
+          extras = point.extras ?? []
+        }
+
         points.push({
-          x: point.timestamp + jitter(jitterMs, point.timestamp + point.value),
+          ...xValue,
           y: point.value,
-          ...(point.extras?.length ? { extras: point.extras } : {}),
+          ...(extras.length ? { extras } : {}),
         })
         grouped.set(groupId, points)
         allValues.push(point.value)
