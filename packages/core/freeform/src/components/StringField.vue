@@ -120,7 +120,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import { USE_SECRET_INPUT_KEY } from '../constants'
 
 import * as utils from '../utils'
-import { useField, useFieldAttrs, useFormShared } from '../composables'
+import { useField, useFieldAttrs } from '../composables'
 import ExpressionEditor from './ExpressionEditor.vue'
 
 import type { StringFieldSchema } from '../form-schema'
@@ -167,13 +167,10 @@ defineSlots<{
   'expression-help'?: () => any
 }>()
 
-const { getFieldVersionInfo } = useFormShared()
-
-const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRef(() => name))
+const { value: fieldValue, hide, versionInfo, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
-const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
-const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
+const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!versionInfo?.value)
 
 function handleUpdate(value: string) {
   fieldValue!.value = value === '' ? field.emptyValue!.value : value

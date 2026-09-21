@@ -98,17 +98,15 @@ const {
   autofocus,
   ...props
 } = defineProps<EnumFieldProps>()
-const { getSelectItems, getFieldVersionInfo } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<EnumValue>(
+const { getSelectItems } = useFormShared()
+const { value: fieldValue, hide, versionInfo, ...field } = useField<EnumValue>(
   toRef(() => name),
 )
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
-const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
-
 // `disabled` is only on `SelectProps`, not `MultiselectProps` (KMultiselect reads it off
 // fallthrough attrs instead) — read it loosely so both branches of `EnumFieldProps` work.
-const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
+const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!versionInfo?.value)
 
 function normalizeValue(value: EnumValue): EnumValue {
   // Required fields are already correctly shaped here (`[]` for a cleared
