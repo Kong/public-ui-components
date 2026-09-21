@@ -21,15 +21,15 @@
     @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
   >
     <template
-      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info || fieldVersionInfo"
+      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info || versionInfo"
       #label-tooltip
     >
       <slot name="tooltip">
         <p
-          v-if="fieldVersionInfo"
+          v-if="versionInfo"
           class="ff-version-compatibility-note"
         >
-          {{ fieldVersionInfo.tooltip }}
+          {{ versionInfo.tooltip }}
         </p>
         <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
         <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
