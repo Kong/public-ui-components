@@ -11,7 +11,7 @@ import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import useScatterDatasets from './useScatterDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
-import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
+import useEvaluateFeatureFlag from './useEvaluateFeatureFlag'
 import useTooltipAbsolutePosition from './useTooltipAbsolutePosition'
 import useSparklineSync from './useSparklineSync'
 
