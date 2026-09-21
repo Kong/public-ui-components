@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.44.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.43.0...%40kong-ui-public%2Fanalytics-utilities%4012.44.0) (2026-09-21)
+
+### Features
+
+* **analytics:** consistent colors for identical dimensions/metrics on all charts [MA-5427] ([#3849](https://github.com/Kong/public-ui-components/issues/3849)) ([77054ff](https://github.com/Kong/public-ui-components/commit/77054fffca34e71525b9679eab48417ff30e8311))
+
+
 # [12.43.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.42.0...%40kong-ui-public%2Fanalytics-utilities%4012.43.0) (2026-09-17)
 
 ### Features

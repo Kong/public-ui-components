@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fapp-layout%404.13.21...%40kong-ui-public%2Fapp-layout%405.0.0) (2026-09-21)
+
+### Features
+
+* **app-layout:** remove konnect-navigation-next prop [KHCP-21514] ([#3853](https://github.com/Kong/public-ui-components/issues/3853)) ([962c4f3](https://github.com/Kong/public-ui-components/commit/962c4f32090097596e75b089abb195b0c39e95ef))
+
+### BREAKING CHANGES
+
+* **app-layout:** remove konnect-navigation-next prop from AppPageHeader
+
+
 ## [4.13.21](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fapp-layout%404.13.20...%40kong-ui-public%2Fapp-layout%404.13.21) (2026-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
