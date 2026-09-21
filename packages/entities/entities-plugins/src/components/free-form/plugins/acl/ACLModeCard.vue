@@ -228,29 +228,12 @@ function handleModeChange() {
     display: flex;
     gap: var(--kui-space-50, $kui-space-50);
 
-    // VersionGateTooltip renders its KPop wrapper only for GATED modes —
-    // ungated modes pass through bare, so their KRadio cards are direct flex
-    // items that stretch to equal height and size to their own content width.
-    // The wrapper breaks both (its `width: 100%` is a field-context fix whose
-    // specificity ties ours and wins on injection order), so re-create the
-    // direct-child sizing for the wrapped cards: content-width flex item
-    // (`.ff-acl-mode` prefix keeps specificity above the tooltip's own rule)
-    // with the stretch handed down through the popover's trigger wrapper.
-    > :deep(.k-popover.ff-version-gate-tooltip) {
-      display: flex;
-      flex: 0 1 auto;
-      flex-direction: column;
+    // VersionGateTooltip stretches its root to 100% (its fix for block/flex
+    // collapse in field contexts); here that would stretch each wrapper to the
+    // whole row. Re-content-size the wrapper so radios keep their card width.
+    :deep(.k-popover.ff-version-gate-tooltip) {
+      flex: 0 0 auto;
       width: auto;
-    }
-
-    > :deep(.k-popover.ff-version-gate-tooltip .popover-trigger-wrapper) {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-    }
-
-    > :deep(.k-popover.ff-version-gate-tooltip .k-radio) {
-      flex: 1 1 auto;
     }
   }
 }
