@@ -193,7 +193,7 @@ importers:
         specifier: workspace:^
         version: link:../analytics-metric-provider
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^
+        specifier: link:../analytics-utilities
         version: link:../analytics-utilities
       '@kong/icons':
         specifier: ^1.62.1
@@ -402,7 +402,7 @@ importers:
         version: 5.7.0
     devDependencies:
       '@kong-ui-public/analytics-chart':
-        specifier: workspace:^
+        specifier: link:../analytics-chart
         version: link:../analytics-chart
       '@kong-ui-public/analytics-config-store':
         specifier: workspace:^
@@ -414,7 +414,7 @@ importers:
         specifier: workspace:^
         version: link:../analytics-metric-provider
       '@kong-ui-public/analytics-utilities':
-        specifier: workspace:^
+        specifier: link:../analytics-utilities
         version: link:../analytics-utilities
       '@kong-ui-public/entities-shared':
         specifier: workspace:^

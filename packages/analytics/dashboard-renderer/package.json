@@ -39,11 +39,11 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-chart": "link:../analytics-chart",
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-geo-map": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
-    "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/analytics-utilities": "link:../analytics-utilities",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
