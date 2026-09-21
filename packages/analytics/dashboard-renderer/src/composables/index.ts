@@ -1,5 +1,5 @@
 import useI18n from './useI18n'
-import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
+import useEvaluateFeatureFlag from './useEvaluateFeatureFlag'
 import useRequestQueue from './useRequestQueue'
 import useContextLinks from './useContextLinks'
 import useIssueQuery from './useIssueQuery'

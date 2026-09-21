@@ -7,7 +7,7 @@ export default function useEvaluateFeatureFlag() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
   const evaluateFeatureFlag = (key: string, defaultValue: boolean) => {
-    if (!queryBridge) {
+    if (typeof queryBridge?.evaluateFeatureFlagFn !== 'function') {
       return defaultValue
     }
     return queryBridge.evaluateFeatureFlagFn(key, defaultValue)
