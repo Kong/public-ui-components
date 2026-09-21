@@ -3,6 +3,382 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.2...%40kong-ui-public%2Fmonaco-editor%400.25.3) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.25.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.1...%40kong-ui-public%2Fmonaco-editor%400.25.2) (2026-09-14)
+
+### Bug Fixes
+
+* **monaco-editor:** show different empty state message in read-only mode ([#3840](https://github.com/Kong/public-ui-components/issues/3840)) ([45851b9](https://github.com/Kong/public-ui-components/commit/45851b9d1fff4b77494003a096c05b80be873a2b))
+
+
+## [0.25.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.0...%40kong-ui-public%2Fmonaco-editor%400.25.1) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+# [0.25.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.18...%40kong-ui-public%2Fmonaco-editor%400.25.0) (2026-09-09)
+
+### Bug Fixes
+
+* **monaco-editor:** pre-bundle the plugin's deep monaco-editor/shiki imports ([#3796](https://github.com/Kong/public-ui-components/issues/3796)) ([36a76b0](https://github.com/Kong/public-ui-components/commit/36a76b0dd3b4d0f67200e6a88bfe01024b338884))
+
+### Features
+
+* **monaco-editor:** add zod-based YAML schema validation ([#3758](https://github.com/Kong/public-ui-components/issues/3758)) ([20358e0](https://github.com/Kong/public-ui-components/commit/20358e0c8daa281a79e2d40ed5db165c2e6ea284))
+
+
+## [0.24.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.17...%40kong-ui-public%2Fmonaco-editor%400.24.18) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.16...%40kong-ui-public%2Fmonaco-editor%400.24.17) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
+## [0.24.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.15...%40kong-ui-public%2Fmonaco-editor%400.24.16) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [0.24.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.14...%40kong-ui-public%2Fmonaco-editor%400.24.15) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.13...%40kong-ui-public%2Fmonaco-editor%400.24.14) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+## [0.24.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.12...@kong-ui-public/monaco-editor@0.24.13) (2026-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.11...@kong-ui-public/monaco-editor@0.24.12) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [0.24.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.10...@kong-ui-public/monaco-editor@0.24.11) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [0.24.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.9...@kong-ui-public/monaco-editor@0.24.10) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.8...@kong-ui-public/monaco-editor@0.24.9) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.7...@kong-ui-public/monaco-editor@0.24.8) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.62.0 ([#3625](https://github.com/Kong/public-ui-components/issues/3625)) ([3c35427](https://github.com/Kong/public-ui-components/commit/3c3542730cdc90bd9ee4e6dfc52b51df4b4f50c2))
+
+
+
+
+
+## [0.24.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.6...@kong-ui-public/monaco-editor@0.24.7) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.5...@kong-ui-public/monaco-editor@0.24.6) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [0.24.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.4...@kong-ui-public/monaco-editor@0.24.5) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.3...@kong-ui-public/monaco-editor@0.24.4) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.2...@kong-ui-public/monaco-editor@0.24.3) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.1...@kong-ui-public/monaco-editor@0.24.2) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.0...@kong-ui-public/monaco-editor@0.24.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+# [0.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.23.0...@kong-ui-public/monaco-editor@0.24.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [0.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.25...@kong-ui-public/monaco-editor@0.23.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [0.22.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.24...@kong-ui-public/monaco-editor@0.22.25) (2026-07-08)
+
+
+### Bug Fixes
+
+* **monaco-editor:** swap dark theme ([#3548](https://github.com/Kong/public-ui-components/issues/3548)) ([051e14a](https://github.com/Kong/public-ui-components/commit/051e14a36987c6c75df6986cc6b6594ed03e1977))
+
+
+
+
+
+## [0.22.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.23...@kong-ui-public/monaco-editor@0.22.24) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.22.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.22...@kong-ui-public/monaco-editor@0.22.23) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [0.22.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.21...@kong-ui-public/monaco-editor@0.22.22) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [0.22.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.20...@kong-ui-public/monaco-editor@0.22.21) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [0.22.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.19...@kong-ui-public/monaco-editor@0.22.20) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [0.22.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.18...@kong-ui-public/monaco-editor@0.22.19) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update shiki monorepo to v4 ([#3457](https://github.com/Kong/public-ui-components/issues/3457)) ([95add7d](https://github.com/Kong/public-ui-components/commit/95add7d377810dd15758ac70e2edfc299b61476a))
+
+
+
+
+
+## [0.22.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.17...@kong-ui-public/monaco-editor@0.22.18) (2026-06-11)
+
+
+### Bug Fixes
+
+* **monaco-editor:** adjust z-index values for toolbar and split pane [KHCP-20406] ([#3441](https://github.com/Kong/public-ui-components/issues/3441)) ([befb142](https://github.com/Kong/public-ui-components/commit/befb142dcc3133988c2e9f392ecf918392c67107))
+
+
+
+
+
+## [0.22.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.16...@kong-ui-public/monaco-editor@0.22.17) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [0.22.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.15...@kong-ui-public/monaco-editor@0.22.16) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [0.22.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.14...@kong-ui-public/monaco-editor@0.22.15) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [0.22.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.13...@kong-ui-public/monaco-editor@0.22.14) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
+## [0.22.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.12...@kong-ui-public/monaco-editor@0.22.13) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.22.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.11...@kong-ui-public/monaco-editor@0.22.12) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
+## [0.22.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.10...@kong-ui-public/monaco-editor@0.22.11) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3192](https://github.com/Kong/public-ui-components/issues/3192)) ([547be23](https://github.com/Kong/public-ui-components/commit/547be23b721f0be6c81b2753dd03d945b071881d))
+
+
+
+
+
+## [0.22.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.9...@kong-ui-public/monaco-editor@0.22.10) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
 ## [0.22.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.8...@kong-ui-public/monaco-editor@0.22.9) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor

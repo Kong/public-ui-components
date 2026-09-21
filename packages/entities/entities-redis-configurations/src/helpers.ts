@@ -160,6 +160,11 @@ export const pickCloudAuthFields =
           azure_client_secret: cloudAuth.azure_client_secret,
           azure_tenant_id: cloudAuth.azure_tenant_id,
         }
+      case AuthProvider.OAUTH:
+        // The nested `oauth` record is standardized separately (see getOauthConfig in useRedisConfigurationForm)
+        return {
+          auth_provider: cloudAuth.auth_provider,
+        }
       default:
         return null
     }

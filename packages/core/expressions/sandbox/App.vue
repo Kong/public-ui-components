@@ -65,16 +65,18 @@ import { ref, watch } from 'vue'
 import type { RhsValueCompletion, SchemaDefinition } from '../src'
 import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, RouterPlaygroundModal, STREAM_SCHEMA_DEFINITION } from '../src'
 
-type NamedSchemaDefinition = { name: string, definition: SchemaDefinition }
+type NamedSchemaDefinition = { name: string, definition: SchemaDefinition, functions?: string[] }
 
 const schemaPresets: NamedSchemaDefinition[] = [
   {
     name: 'http',
     definition: HTTP_SCHEMA_DEFINITION,
+    functions: ['any', 'lower'],
   },
   {
     name: 'stream',
     definition: STREAM_SCHEMA_DEFINITION,
+    functions: ['any', 'lower'],
   },
   { name: 'empty', definition: {} },
 ]

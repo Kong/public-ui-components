@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -71,7 +71,7 @@ jobs:
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}"
           echo "run-tests=${{ (github.event_name == 'push' && steps.up-to-date.outputs.status == 'true') && 'false' || 'true' }}" >> $GITHUB_OUTPUT
 
-      # If we detect changes in any of the config files (e.g. lockfile, shared cypress configs, etc.), we need to build every package
+      # If we detect changes in any of the config files (e.g. pnpm-workspace.yaml, shared cypress configs, etc.), we need to build every package
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
@@ -82,6 +82,7 @@ jobs:
             ./cypress.config.ts
             ./cypress/**
             ./package.json
+            ./pnpm-workspace.yaml
             ./eslintrc.cjs
             ./.stylelintrc.js
             ./.github/**
@@ -94,7 +95,7 @@ jobs:
           # we execute lerna changed to grab all the packages changed
           lernaCommand="changed"
 
-          # if config-files-changed detects the change of pnpm-lock.yaml file - we will grab all the packages
+          # if config-files-changed detects a change in any of the watched config files - we will grab all the packages
           if [[ "${{ steps.config-files-changed.outputs.any_modified }}" == "true" ]]; then
             lernaCommand="ls"
           fi
@@ -133,7 +134,7 @@ jobs:
           # we execute lerna changed to grab all the packages changed
           lernaCommand="changed"
 
-          # if config-files-changed detects the change of pnpm-lock.yaml file - we will grab all the packages
+          # if config-files-changed detects a change in any of the watched config files - we will grab all the packages
           if [[ "${{ steps.config-files-changed.outputs.any_modified }}" == "true" ]]; then
             lernaCommand="ls"
           fi
@@ -269,28 +270,21 @@ jobs:
 
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
+          rm -f pnpm-publish-summary.json
+
           if [[ "${filterStr}" != "" ]]; then
-            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
+            pnpm $filterStr publish --no-git-checks --access public --report-summary --tag "${tag}"
           fi
 
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
+          if [[ ! -f pnpm-publish-summary.json ]] || [[ "$(jq '.publishedPackages | length' pnpm-publish-summary.json)" == "0" ]]; then
             echo "There are no new packages that should be published"
             exit 0
           fi
 
-          npm_instructions=""
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-          do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
-
-            pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
-            if [ "${npm_instructions}" != "" ]; then
-              npm_instructions="${npm_instructions}\n"
-            fi
-            npm_instructions="${npm_instructions}${pkg}"
-          done
+          # pnpm 11's native publish flow no longer prints npm CLI's "+ name@version"
+          # lines to stdout, so the published package list is read from the
+          # --report-summary JSON file instead.
+          npm_instructions=$(jq -r --arg tag "${tag}" '.publishedPackages[]?|.name+"@"+$tag' pnpm-publish-summary.json)
 
           if [[ -z "${npm_instructions}" ]]; then
             echo "Error creating preview instructions"
@@ -339,7 +333,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -348,13 +342,13 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: package-dist-artifacts
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 #v7.1.9
+        uses: cypress-io/github-action@09090944bd8aaa2a517cefb6e38bf1aae336b42b # v7.4.3
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
@@ -401,7 +395,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -412,7 +406,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: package-dist-artifacts
           path: packages/
@@ -462,7 +456,7 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Get aggregate Workflow status
         uses: Kong/workflow-conclusion-action@e9d844ce2869399e71dbcb43d2c6192ddbdb3904 # v3.0.3 node24

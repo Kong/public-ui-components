@@ -52,15 +52,12 @@ import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
-import {
-  datavisPalette,
-  isSummableMetricUnit,
-} from '../../utils'
+import { isSummableMetric } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
 import { color } from 'chart.js/helpers'
 import composables from '../../composables'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
+import type { KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import type { DonutChartData, LegendValues } from '../../types/chart-data'
@@ -69,22 +66,22 @@ const props = withDefaults(defineProps<{
   chartData: KChartData
   tooltipTitle: string
   metricUnit?: string
+  metricName?: string
   legendPosition?: `${ChartLegendPosition}`
   legendValues?: LegendValues
   syntheticsDataKey?: string
-  datasetColors?: AnalyticsChartColors | string[]
   tooltipDimensionDisplay?: string
   tooltipMetricDisplay?: string
   showCenterMetric?: boolean
 }>(), {
   metricUnit: '',
+  metricName: '',
   legendPosition: ChartLegendPosition.Bottom,
   legendValues: undefined,
   syntheticsDataKey: '',
-  datasetColors: () => datavisPalette,
   tooltipDimensionDisplay: '',
   tooltipMetricDisplay: '',
-  showCenterMetric: false,
+  showCenterMetric: true,
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
@@ -144,9 +141,9 @@ const formattedDataset = computed<DonutChartData[]>(() => {
     labels: [],
     backgroundColor: [],
     borderColor: '#ffffff',
-    borderWidth: 3,
+    borderWidth: 1,
     hoverBorderColor: [],
-    hoverBorderWidth: 3,
+    hoverBorderWidth: 1,
     data: [],
     hoverOffset: 10,
   })
@@ -156,13 +153,13 @@ const formattedDataset = computed<DonutChartData[]>(() => {
 
 const { formatUnit } = unitFormatter({ i18n })
 
-const isSummable = computed(() => isSummableMetricUnit(props.metricUnit))
+const isSummable = computed(() => isSummableMetric(props.metricName ?? ''))
 
 const grandTotal = computed(() => {
   const sum = formattedDataset.value[0]?.data.reduce((a, b) => a + b, 0) ?? 0
   return formatUnit(sum, props.metricUnit, {
     approximate: true,
-    translateUnit: (unit, value) => isSummableMetricUnit(unit) && unit !== 'usd' ? '' : translateUnit(unit, value),
+    translateUnit: (unit, value) => translateUnit(unit, value),
   }).trim()
 })
 

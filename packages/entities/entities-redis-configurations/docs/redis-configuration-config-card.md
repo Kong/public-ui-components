@@ -99,15 +99,11 @@ A `@loading` event is emitted when loading state changes. The event payload is a
 
 #### fetch:error
 
-An `@fetch:error` event is emitted when the component fails to fetch the redis configuration. The event payload is the response error.
-
-#### fetch:not-found
-
-A `@fetch:not-found` event is emitted when the underlying GET returns **404** (for example after a Konnect-managed add-on or linked partial is deleted). It is **not** emitted as `@fetch:error`, so hosts can redirect to the list instead of showing a global not-found page. The payload is the Axios error.
+An `@fetch:error` event is emitted when the component fails to fetch the redis configuration (including **404** after a Konnect-managed add-on or linked partial is deleted). Hosts typically check `error.response?.status === 404` to redirect to the list.
 
 #### fetch:success
 
-A `@fetch:success` event is emitted when the redis **partial** configuration is successfully fetched (legacy Konnect/Kong Manager partial card, or the nested partial section inside Konnect-managed Redis config tab). The event payload is the redis configuration object (`RedisConfigurationResponse`).
+A `@fetch:success` event is emitted when the Koko redis partial loads (`RedisConfigurationResponse`). Legacy Konnect/Kong Manager cards always emit this. Konnect-managed detail emits it from the partial segment when the add-on is `ready`; the cache segment uses `fetch:managed-add-on-success` for the add-on payload.
 
 #### fetch:managed-add-on-success
 

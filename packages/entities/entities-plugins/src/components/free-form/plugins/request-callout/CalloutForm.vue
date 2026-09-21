@@ -38,10 +38,7 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
 
-import { toSelectItems } from '../../shared/utils'
-import { useFormShared } from '../../shared/composables'
-import EnumField from '../../shared/EnumField.vue'
-import ObjectField from '../../shared/ObjectField.vue'
+import { toSelectItems, useFormShared, EnumField, ObjectField } from '@kong-ui-public/freeform'
 
 import { CalloutId, type RequestCalloutPlugin } from './types'
 import type { SelectItem } from '@kong/kongponents'

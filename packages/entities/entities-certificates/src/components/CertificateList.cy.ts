@@ -6,7 +6,7 @@ import {
   paginate,
   certificate,
   certificate100,
-  certificateVaultRef,
+  certificateVaultRefCert,
 } from '../../fixtures/mockData'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
@@ -441,6 +441,7 @@ describe('<CertificateList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(CertificateList, {
         props: {
           cacheIdentifier,
@@ -451,8 +452,6 @@ describe('<CertificateList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getCertificateMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="certificate-1"]`).should('exist')
@@ -507,7 +506,7 @@ describe('<CertificateList />', () => {
       cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
-      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
+      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRefCert)
     })
   })
 
@@ -748,6 +747,7 @@ describe('<CertificateList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(CertificateList, {
         props: {
           cacheIdentifier,
@@ -758,8 +758,6 @@ describe('<CertificateList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getCertificateMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="certificate-1"]`).should('exist')
@@ -814,7 +812,7 @@ describe('<CertificateList />', () => {
       cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
-      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
+      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRefCert)
     })
   })
 

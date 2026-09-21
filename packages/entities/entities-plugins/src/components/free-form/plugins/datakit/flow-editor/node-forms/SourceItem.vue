@@ -2,8 +2,8 @@
   <span class="dk-source-item">
     <component
       :is="getNodeVisual(item.type as NodeType).icon"
-      :color="KUI_COLOR_TEXT_NEUTRAL"
-      :size="KUI_ICON_SIZE_40"
+      :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+      :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
     />
     {{ item.label }}
   </span>

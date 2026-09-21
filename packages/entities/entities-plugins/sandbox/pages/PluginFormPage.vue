@@ -1,6 +1,6 @@
 <template>
-  <div class="plugin-form-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Plugin Form">
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -10,51 +10,75 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
-    </div>
+
+      <!-- One switch per feature flag — choose which to open/close; any change remounts the forms. -->
+      <KCollapse
+        class="feature-flags-collapse"
+        trigger-label="Feature flags"
+      >
+        <div class="feature-flags-list">
+          <KInputSwitch
+            v-for="flagKey in Object.keys(featureFlags)"
+            :key="flagKey"
+            v-model="featureFlags[flagKey]"
+            :label="flagKey"
+          />
+        </div>
+      </KCollapse>
+    </template>
 
     <div
       id="plugin-form-page-actions"
       class="actions"
     />
 
-    <h2>Konnect API</h2>
-    <PluginForm
-      :config="konnectConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      use-custom-names-for-plugin
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
+    <!-- Keyed on the whole flag map so flipping any switch remounts the forms and re-runs `provide`. -->
+    <FeatureFlagProvider
+      :key="JSON.stringify(featureFlags)"
+      :flags="featureFlags"
+    >
+      <h2>Konnect API</h2>
+      <PluginForm
+        :config="konnectConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        use-custom-names-for-plugin
+        @click:create-entity="onCreateEntity"
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
 
-    <h2>Kong Manager API</h2>
-    <PluginForm
-      :config="kongManagerConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
-  </div>
+      <h2>Kong Manager API</h2>
+      <PluginForm
+        :config="kongManagerConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
+    </FeatureFlagProvider>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue'
+import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
+import SandboxPage from '../SandboxPage.vue'
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
+import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
-import type { GlobalAction } from '../../src/components/free-form/shared/types'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
+import type { GlobalAction } from '@kong-ui-public/freeform'
 
 const toaster = new ToastManager()
 
@@ -75,39 +99,141 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
-provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
-provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
-provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
-provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
+// All feature flags provided to the plugin forms, editable at runtime via the sandbox switches.
+// `provide` captures a plain value once, so to flip any flag live we re-provide on change: the
+// generic FeatureFlagProvider re-runs `provide` in its setup whenever it remounts, and we force
+// that remount by keying it on the whole flag map — so toggling any flag updates the forms.
+const featureFlags = ref<Record<string, boolean>>({
+  [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+  [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+  [FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES]: true,
+  [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+  [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+  [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+  [FEATURE_FLAGS.KM_3034_FEATURES_316]: true,
+})
+
+const FeatureFlagProvider = defineComponent({
+  name: 'FeatureFlagProvider',
+  props: {
+    flags: { type: Object as PropType<Record<string, boolean>>, default: () => ({}) },
+  },
+  setup(props, { slots }) {
+    for (const [key, value] of Object.entries(props.flags)) {
+      provide(key, value)
+    }
+    return () => slots.default?.()
+  },
+})
+
+provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
-  'service-protection',
-  'prometheus',
-  'metering-and-billing',
+  'ace',
+  'acl',
+  'acme',
+  'ai-a2a-proxy',
+  'ai-azure-content-safety',
+  'ai-gcp-model-armor',
+  'ai-lakera-guard',
+  'ai-llm-as-judge',
+  'ai-mcp-oauth2',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
+  'ai-prompt-template',
+  'ai-proxy-advanced',
+  'ai-proxy',
+  'ai-rag-injector',
+  'ai-rate-limiting-advanced',
+  'ai-request-transformer',
+  'ai-response-transformer',
+  'ai-sanitizer',
+  'ai-semantic-cache',
+  'ai-semantic-prompt-guard',
+  'ai-semantic-response-guard',
+  'app-dynamics',
   'aws-lambda',
+  'azure-functions',
+  'basic-auth',
+  'bot-detection',
+  'canary',
+  'confluent-consume',
+  'confluent',
+  'correlation-id',
+  'cors',
+  'datadog',
+  'degraphql',
+  'entitlement-enforcement',
   'exit-transformer',
   'file-log',
+  'forward-proxy',
+  'graphql-proxy-cache-advanced',
+  'graphql-rate-limiting-advanced',
+  'grpc-gateway',
+  'grpc-web',
+  'header-cert-auth',
+  'hmac-auth',
   'http-log',
+  'injection-protection',
+  'ip-restriction',
+  'jq',
+  'json-threat-protection',
+  'jwe-decrypt',
+  'kafka-consume',
+  'kafka-log',
+  'kafka-upstream',
+  'key-auth-enc',
+  'key-auth',
+  'ldap-auth-advanced',
+  'ldap-auth',
+  'loggly',
+  'metering-and-billing',
+  'mocking',
+  'mtls-auth',
+  'oas-validation',
+  'oauth2-introspection',
+  'oauth2',
+  'opa',
+  'openid-connect',
+  'opentelemetry',
+  'openwhisk',
+  'post-function',
+  'pre-function',
+  'prometheus',
+  'proxy-cache-advanced',
+  'proxy-cache',
+  'rate-limiting-advanced',
+  'rate-limiting',
+  'redirect',
+  'request-size-limiting',
+  'request-termination',
   'request-transformer-advanced',
-  'response-transformer',
+  'request-transformer',
+  'request-validator',
+  'response-ratelimiting',
   'response-transformer-advanced',
-  'correlation-id',
+  'response-transformer',
+  'route-by-header',
+  'saml',
+  'service-protection',
+  'session',
   'solace-consume',
   'solace-log',
   'solace-upstream',
-  'opentelemetry',
-  'acl',
-  'request-transformer',
+  'standard-webhooks',
+  'statsd',
+  'syslog',
+  'tcp-log',
+  'tls-handshake-modifier',
+  'tls-metadata-headers',
+  'udp-log',
   'upstream-oauth',
-  'cors',
-  'proxy-cache',
-  'proxy-cache-advanced',
-  'header-cert-auth',
-  'session',
-  'oauth2',
-  'jwe-decrypt',
-  'mtls-auth',
+  'upstream-timeout',
+  'vault-auth',
+  'websocket-size-limit',
+  'websocket-validator',
+  'xml-threat-protection',
+  'zipkin',
 ])
 
 const enableDeckConfigCustomization = ref(false)
@@ -130,6 +256,8 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  // isKongIdentityAuthServersAvailable: false,
+  canCreateAuthServer: false,
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {
@@ -140,6 +268,14 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
       },
     },
     calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugin-form-deck-callout-sandbox' : undefined,
+  },
+  dataPlaneVersions: ['3.14.0.1', '3.15.0.0'], // For testing the Kong Identity principals DP version alert
+  principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
+  principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
+  metering: {
+    // Endpoint the Entitlement Enforcement FeatureSelectField fetches the OpenMeter features list from
+    featuresEndpoint: '/us/kong-api/v3/openmeter/features',
+    // canListFeatures: false,
   },
 }))
 
@@ -157,12 +293,18 @@ const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
+  // Entitlement Enforcement isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
 }))
 
 const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
   router.push({ name: 'list-plugin' })
+}
+
+// Host app owns create-entity flows (e.g. the Entitlement Enforcement "Create feature" action)
+const onCreateEntity = (payload: EntityCreateEvent) => {
+  console.log('create entity', payload)
 }
 
 const handleGlobalAction = (action: GlobalAction, payload: any) => {
@@ -173,24 +315,19 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-sandbox {
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.feature-flags-collapse {
+  margin: 0;
+}
+
+.feature-flags-list {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-
-  * {
-    box-sizing: border-box;
-  }
-
-  .actions {
-    align-self: flex-end;
-  }
-
-  .sandbox-controls {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
+  gap: 12px;
+  padding-top: 12px;
 }
 </style>

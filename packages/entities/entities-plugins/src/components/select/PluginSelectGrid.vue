@@ -24,7 +24,9 @@
     <PluginSelectGroup
       v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
       v-model="isHighlightedPluginsCollapsed"
+      :can-delete-cloned-plugin="canDeleteClonedPlugin"
       :can-delete-custom-plugin="canDeleteCustomPlugin"
+      :can-edit-cloned-plugin="canEditClonedPlugin"
       :can-edit-custom-plugin="canEditCustomPlugin"
       :config="config"
       :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
@@ -41,7 +43,9 @@
       >
         <PluginSelectGroup
           v-model="shouldCollapsed[group]"
+          :can-delete-cloned-plugin="canDeleteClonedPlugin"
           :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-cloned-plugin="canEditClonedPlugin"
           :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :name="group"
@@ -98,7 +102,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },

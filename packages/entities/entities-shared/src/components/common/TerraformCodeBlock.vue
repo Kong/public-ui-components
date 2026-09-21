@@ -7,6 +7,7 @@
       :copy-code="unredactedTerraformContent"
       data-dd-privacy="mask"
       language="terraform"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -14,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { type PropType, computed } from 'vue'
 import { EventGatewayTypesArray, SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'

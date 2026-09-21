@@ -385,6 +385,7 @@ describe('<SniList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
@@ -395,8 +396,6 @@ describe('<SniList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getSnisMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="sni-1"]`).should('exist')
@@ -681,6 +680,7 @@ describe('<SniList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(SniList, {
         props: {
           cacheIdentifier,
@@ -691,8 +691,6 @@ describe('<SniList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getSnisMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="sni-1"]`).should('exist')

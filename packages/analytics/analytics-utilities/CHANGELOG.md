@@ -3,6 +3,582 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.44.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.43.0...%40kong-ui-public%2Fanalytics-utilities%4012.44.0) (2026-09-21)
+
+### Features
+
+* **analytics:** consistent colors for identical dimensions/metrics on all charts [MA-5427] ([#3849](https://github.com/Kong/public-ui-components/issues/3849)) ([77054ff](https://github.com/Kong/public-ui-components/commit/77054fffca34e71525b9679eab48417ff30e8311))
+
+
+# [12.43.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.42.0...%40kong-ui-public%2Fanalytics-utilities%4012.43.0) (2026-09-17)
+
+### Features
+
+* **analytics:** allow metric mapping to x axis of scatter charts [MA-5493] ([#3844](https://github.com/Kong/public-ui-components/issues/3844)) ([a016a13](https://github.com/Kong/public-ui-components/commit/a016a13df45e3dc94be9c3114d7dfeef10d9d59b))
+* **analytics:** topn cell icon and metric bar [MA-5424] ([#3845](https://github.com/Kong/public-ui-components/issues/3845)) ([e9a92de](https://github.com/Kong/public-ui-components/commit/e9a92de4a37d3d0caa521f260fb9a7fd9145095f))
+
+
+# [12.42.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.41.0...%40kong-ui-public%2Fanalytics-utilities%4012.42.0) (2026-09-14)
+
+### Features
+
+* add share of requests / cost [MA-5454] ([#3836](https://github.com/Kong/public-ui-components/issues/3836)) ([89c3384](https://github.com/Kong/public-ui-components/commit/89c338403c8b571cd3e9a6f13cc1cab4c426308b))
+
+
+# [12.41.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.2...%40kong-ui-public%2Fanalytics-utilities%4012.41.0) (2026-09-11)
+
+### Features
+
+* add active_agents to llm usage datasource ([#3834](https://github.com/Kong/public-ui-components/issues/3834)) ([ea579b5](https://github.com/Kong/public-ui-components/commit/ea579b5411e922738953c475eb35482fe3f1067f))
+
+
+## [12.40.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.1...%40kong-ui-public%2Fanalytics-utilities%4012.40.2) (2026-09-11)
+
+### Bug Fixes
+
+* **analytics:** remove splitting of outliers and add percentile plugin [MA-5465] ([#3822](https://github.com/Kong/public-ui-components/issues/3822)) ([9179182](https://github.com/Kong/public-ui-components/commit/91791828bc623dacedc120157815566fa3b510fa))
+
+
+## [12.40.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.0...%40kong-ui-public%2Fanalytics-utilities%4012.40.1) (2026-09-10)
+
+### Bug Fixes
+
+* **analytics:** improve single value display [MA-5423] ([#3826](https://github.com/Kong/public-ui-components/issues/3826)) ([0d50b10](https://github.com/Kong/public-ui-components/commit/0d50b1096e824d4bdb5a74b139a3cf306bb568e6))
+
+
+# [12.40.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.39.0...%40kong-ui-public%2Fanalytics-utilities%4012.40.0) (2026-09-10)
+
+### Features
+
+* add a2a_task_state ([#3827](https://github.com/Kong/public-ui-components/issues/3827)) ([07b4f27](https://github.com/Kong/public-ui-components/commit/07b4f274aee3c46f530cf69f3549bddacd537b85))
+
+
+# [12.39.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.38.0...%40kong-ui-public%2Fanalytics-utilities%4012.39.0) (2026-09-10)
+
+### Features
+
+* **analytics:** support grouped multi-metric time series ([#3824](https://github.com/Kong/public-ui-components/issues/3824)) ([eb0bedf](https://github.com/Kong/public-ui-components/commit/eb0bedf14b3b155507f6a557de5d3471a5ed942c))
+
+
+# [12.38.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.37.0...%40kong-ui-public%2Fanalytics-utilities%4012.38.0) (2026-09-10)
+
+### Features
+
+* **analytics-utilities:** add ai_consumer_group for AIGW2 [MA-5390] ([#3811](https://github.com/Kong/public-ui-components/issues/3811)) ([984cd50](https://github.com/Kong/public-ui-components/commit/984cd50d3e645abf0461734b5413e46d6d5f4667))
+
+
+# [12.37.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.36.0...%40kong-ui-public%2Fanalytics-utilities%4012.37.0) (2026-09-10)
+
+### Features
+
+* add cost_per_request and active_agents ([#3823](https://github.com/Kong/public-ui-components/issues/3823)) ([fbee1fb](https://github.com/Kong/public-ui-components/commit/fbee1fb9d4c181ec0f2baec0b494f0f9eabde130))
+
+
+# [12.36.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.35.0...%40kong-ui-public%2Fanalytics-utilities%4012.36.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter chart to dashboard schema [MA-5465] ([#3820](https://github.com/Kong/public-ui-components/issues/3820)) ([6d39b49](https://github.com/Kong/public-ui-components/commit/6d39b49fd80247f880d65b0655a8d1bb4b00afa5))
+
+
+# [12.35.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.34.0...%40kong-ui-public%2Fanalytics-utilities%4012.35.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter plot chart type [MA-5431] ([#3812](https://github.com/Kong/public-ui-components/issues/3812)) ([b6f01f1](https://github.com/Kong/public-ui-components/commit/b6f01f1f51674086ac522043986c3471cfbaf74d))
+
+
+# [12.34.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.33.1...%40kong-ui-public%2Fanalytics-utilities%4012.34.0) (2026-09-09)
+
+### Features
+
+* add AI percentile metrics ([#3801](https://github.com/Kong/public-ui-components/issues/3801)) ([60f1ede](https://github.com/Kong/public-ui-components/commit/60f1eded5b3fb4155caf5389cfa9c2fcbaa1e10d))
+
+
+## [12.33.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.33.0...%40kong-ui-public%2Fanalytics-utilities%4012.33.1) (2026-09-09)
+
+### Bug Fixes
+
+* **analytics:** rename requests datasource [MA-5440] ([#3809](https://github.com/Kong/public-ui-components/issues/3809)) ([bc2230e](https://github.com/Kong/public-ui-components/commit/bc2230ebb0d440dda53881ef01c173e602431e6f))
+
+
+# [12.33.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.32.1...%40kong-ui-public%2Fanalytics-utilities%4012.33.0) (2026-09-09)
+
+### Features
+
+* **analytics:** add api-requests to query bridge [MA-5440] ([#3781](https://github.com/Kong/public-ui-components/issues/3781)) ([fbb1217](https://github.com/Kong/public-ui-components/commit/fbb12173fd1b3b817394f196e308c4aedbe53cf2))
+
+
+## [12.32.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.32.0...%40kong-ui-public%2Fanalytics-utilities%4012.32.1) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+# [12.32.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.2...%40kong-ui-public%2Fanalytics-utilities%4012.32.0) (2026-09-03)
+
+### Features
+
+* add tokens per minute metric [MA-5407] ([#3770](https://github.com/Kong/public-ui-components/issues/3770)) ([6a9adcd](https://github.com/Kong/public-ui-components/commit/6a9adcdfe5fd8d8f23c0cdd46604e7cc63555d27))
+
+
+## [12.31.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.1...%40kong-ui-public%2Fanalytics-utilities%4012.31.2) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.31.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.1) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
+# [12.31.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.30.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.0) (2026-08-25)
+
+### Features
+
+* add AI entities to API usage ([#3745](https://github.com/Kong/public-ui-components/issues/3745)) ([d84faa9](https://github.com/Kong/public-ui-components/commit/d84faa97684c402195267ba55b460d41d11076dc))
+
+
+# [12.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.29.0...%40kong-ui-public%2Fanalytics-utilities%4012.30.0) (2026-08-24)
+
+### Features
+
+* add time_per_token metric ([#3743](https://github.com/Kong/public-ui-components/issues/3743)) ([1fb62f4](https://github.com/Kong/public-ui-components/commit/1fb62f497339eda36f91a376522ae3859cf25cca))
+
+
+# [12.29.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.2...%40kong-ui-public%2Fanalytics-utilities%4012.29.0) (2026-08-24)
+
+### Features
+
+* add cache_status to LLM usage and API Request wildcard filters ([#3719](https://github.com/Kong/public-ui-components/issues/3719)) ([d1c8d21](https://github.com/Kong/public-ui-components/commit/d1c8d211bb746acb9b5ebd7721bc8b977207c883))
+
+
+## [12.28.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.1...%40kong-ui-public%2Fanalytics-utilities%4012.28.2) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.0...%40kong-ui-public%2Fanalytics-utilities%4012.28.1) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+# [12.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.27.1...%40kong-ui-public%2Fanalytics-utilities%4012.28.0) (2026-08-21)
+
+### Features
+
+* add AI GW entities to agentic datasource MA-5365 ([#3729](https://github.com/Kong/public-ui-components/issues/3729)) ([8c7d9ef](https://github.com/Kong/public-ui-components/commit/8c7d9ef54e804d3d48033e06a77e9a3e1dd14695))
+
+
+## [12.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.27.0...@kong-ui-public/analytics-utilities@12.27.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* correct field names for AIGW entities [MA-5267] ([#3716](https://github.com/Kong/public-ui-components/issues/3716)) ([a0cb942](https://github.com/Kong/public-ui-components/commit/a0cb9423f65a7d5840478adef744978f1d33e326))
+
+
+
+
+
+# [12.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.26.1...@kong-ui-public/analytics-utilities@12.27.0) (2026-08-18)
+
+
+### Features
+
+* add new AI fields [MA-5267] ([#3705](https://github.com/Kong/public-ui-components/issues/3705)) ([1bb2e92](https://github.com/Kong/public-ui-components/commit/1bb2e92a9a81e16d1a1ba339d76af511251d4fde))
+
+
+
+
+
+## [12.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.26.0...@kong-ui-public/analytics-utilities@12.26.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* rename authenticated_entity -> oidc_credential ([#3708](https://github.com/Kong/public-ui-components/issues/3708)) ([9bd3e6a](https://github.com/Kong/public-ui-components/commit/9bd3e6aec572540fc9999dd4d6e827b848811da2))
+
+
+
+
+
+# [12.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.7...@kong-ui-public/analytics-utilities@12.26.0) (2026-08-17)
+
+
+### Features
+
+* **analytics-utilities:** add authenticated entity fields [MA-5279] ([#3704](https://github.com/Kong/public-ui-components/issues/3704)) ([c4d6eaa](https://github.com/Kong/public-ui-components/commit/c4d6eaaf11b4f72da0167317e45ec7dc8cf08357))
+
+
+
+
+
+## [12.25.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.6...@kong-ui-public/analytics-utilities@12.25.7) (2026-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.25.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.5...@kong-ui-public/analytics-utilities@12.25.6) (2026-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.25.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.4...@kong-ui-public/analytics-utilities@12.25.5) (2026-08-07)
+
+
+### Bug Fixes
+
+* rename region -> provider_region MA-5169 ([#3673](https://github.com/Kong/public-ui-components/issues/3673)) ([6a5782f](https://github.com/Kong/public-ui-components/commit/6a5782f85ec8696aaddb867b884966b9d197ac11))
+
+
+
+
+
+## [12.25.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.3...@kong-ui-public/analytics-utilities@12.25.4) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [12.25.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.2...@kong-ui-public/analytics-utilities@12.25.3) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.1...@kong-ui-public/analytics-utilities@12.25.2) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.0...@kong-ui-public/analytics-utilities@12.25.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
+# [12.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.2...@kong-ui-public/analytics-utilities@12.25.0) (2026-07-30)
+
+
+### Features
+
+* cache-status MA-5131 ([#3630](https://github.com/Kong/public-ui-components/issues/3630)) ([272469d](https://github.com/Kong/public-ui-components/commit/272469d8344b030170c775494c7ff6919120c45f))
+
+
+
+
+
+## [12.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.1...@kong-ui-public/analytics-utilities@12.24.2) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.0...@kong-ui-public/analytics-utilities@12.24.1) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+# [12.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.23.3...@kong-ui-public/analytics-utilities@12.24.0) (2026-07-28)
+
+
+### Features
+
+* managed cache datasource MA-5168 ([#3616](https://github.com/Kong/public-ui-components/issues/3616)) ([5d2a45f](https://github.com/Kong/public-ui-components/commit/5d2a45fe4ed152f697497087964c819efe4de4cf))
+
+
+
+
+
+## [12.23.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.23.2...@kong-ui-public/analytics-utilities@12.23.3) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.23.1...@kong-ui-public/analytics-utilities@12.23.2) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.23.0...@kong-ui-public/analytics-utilities@12.23.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+# [12.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.22.0...@kong-ui-public/analytics-utilities@12.23.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [12.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.21.0...@kong-ui-public/analytics-utilities@12.22.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+# [12.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.20.2...@kong-ui-public/analytics-utilities@12.21.0) (2026-07-14)
+
+
+### Features
+
+* **analytics:** export dashboard to pdf [MA-5195] ([#3055](https://github.com/Kong/public-ui-components/issues/3055)) ([61f57ab](https://github.com/Kong/public-ui-components/commit/61f57ab7d6f3d01ba02d3b338049cfed8a08cf1d))
+* spike consumer_group dimension ([#3558](https://github.com/Kong/public-ui-components/issues/3558)) ([37902e9](https://github.com/Kong/public-ui-components/commit/37902e9ed43aef73c0459bae11d4d92f7f47b3d1))
+
+
+
+
+
+## [12.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.20.1...@kong-ui-public/analytics-utilities@12.20.2) (2026-07-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.5...@kong-ui-public/analytics-utilities@12.20.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* allow platform and platform_usage for datasource [MA-5024] ([#3547](https://github.com/Kong/public-ui-components/issues/3547)) ([df92c45](https://github.com/Kong/public-ui-components/commit/df92c45b1765c58f0a6aace683a4b15c652d032a))
+
+
+
+
+
+## [12.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.4...@kong-ui-public/analytics-utilities@12.19.5) (2026-06-30)
+
+
+### Bug Fixes
+
+* table tiles encoded as chart tile types ([#3502](https://github.com/Kong/public-ui-components/issues/3502)) ([c6d9749](https://github.com/Kong/public-ui-components/commit/c6d97495a4467e2cce7627c4238d9953be44610f))
+
+
+
+
+
+## [12.19.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.3...@kong-ui-public/analytics-utilities@12.19.4) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [12.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.2...@kong-ui-public/analytics-utilities@12.19.3) (2026-06-25)
+
+
+### Bug Fixes
+
+* Allow platform preset filters ([#3498](https://github.com/Kong/public-ui-components/issues/3498)) ([d24309b](https://github.com/Kong/public-ui-components/commit/d24309b4a3b827eb040c6bfab66df82dfbe9df48))
+
+
+
+
+
+## [12.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.1...@kong-ui-public/analytics-utilities@12.19.2) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [12.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.0...@kong-ui-public/analytics-utilities@12.19.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+# [12.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.18.0...@kong-ui-public/analytics-utilities@12.19.0) (2026-06-22)
+
+
+### Features
+
+* **dashboard-renderer:** render table tiles ([#3462](https://github.com/Kong/public-ui-components/issues/3462)) ([5e8a32f](https://github.com/Kong/public-ui-components/commit/5e8a32f4c9c265d4f5d1b2e79f7de222fc757962))
+
+
+
+
+
+# [12.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.2...@kong-ui-public/analytics-utilities@12.18.0) (2026-06-16)
+
+
+### Features
+
+* **analytics-utilities:** add table tile schema contract ([#3449](https://github.com/Kong/public-ui-components/issues/3449)) ([c602b7c](https://github.com/Kong/public-ui-components/commit/c602b7ced7066d2697caed5d99fb6661dd909dc8))
+
+
+
+
+
+## [12.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.1...@kong-ui-public/analytics-utilities@12.17.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [12.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.0...@kong-ui-public/analytics-utilities@12.17.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+# [12.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.3...@kong-ui-public/analytics-utilities@12.17.0) (2026-06-03)
+
+
+### Features
+
+* Support TopN entity link mappings ([#3409](https://github.com/Kong/public-ui-components/issues/3409)) ([5dd2dba](https://github.com/Kong/public-ui-components/commit/5dd2dbaf8eee4c9a5e2623b525839f6e8957b22b))
+
+
+
+
+
+## [12.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.2...@kong-ui-public/analytics-utilities@12.16.3) (2026-06-02)
+
+
+### Bug Fixes
+
+* add datasource to explore result meta ([#3400](https://github.com/Kong/public-ui-components/issues/3400)) ([9d36f5c](https://github.com/Kong/public-ui-components/commit/9d36f5c0850eb1d097dd28eabdc54e6405dd9bd0))
+
+
+
+
+
+## [12.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.1...@kong-ui-public/analytics-utilities@12.16.2) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.0...@kong-ui-public/analytics-utilities@12.16.1) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
+# [12.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.15.0...@kong-ui-public/analytics-utilities@12.16.0) (2026-05-15)
+
+
+### Features
+
+* add new principal and internal latency fields ([#3258](https://github.com/Kong/public-ui-components/issues/3258)) ([f354d97](https://github.com/Kong/public-ui-components/commit/f354d9782885d38c8b2303e5c28c3756360d076b))
+
+
+
+
+
+# [12.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.1...@kong-ui-public/analytics-utilities@12.15.0) (2026-05-14)
+
+
+### Features
+
+* **dashboard-renderer:** add configurable cols to DashboardConfig ([#3256](https://github.com/Kong/public-ui-components/issues/3256)) ([c8f9eab](https://github.com/Kong/public-ui-components/commit/c8f9eab0431ec0a9ba2ba9e9dc6b8cbd167ef5e7))
+
+
+
+
+
+## [12.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.0...@kong-ui-public/analytics-utilities@12.14.1) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
 # [12.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.8...@kong-ui-public/analytics-utilities@12.14.0) (2026-05-11)
 
 

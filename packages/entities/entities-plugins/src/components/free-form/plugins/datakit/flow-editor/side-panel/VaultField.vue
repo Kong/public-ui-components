@@ -25,7 +25,7 @@
         >
           <div class="vault-list-item-key">
             <KeyIcon
-              :color="KUI_COLOR_TEXT_NEUTRAL"
+              :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
               :size="16"
             />
             <div class="vault-list-item-key-text">
@@ -37,7 +37,7 @@
               appearance="tertiary"
               icon
             >
-              <MoreIcon :color="KUI_COLOR_TEXT" />
+              <MoreIcon :color="`var(--kui-color-text, ${KUI_COLOR_TEXT})`" />
             </KButton>
 
             <template #items>
@@ -79,9 +79,8 @@ import {
   KUI_COLOR_TEXT,
 } from '@kong/design-tokens'
 import type { FieldName } from '../../types'
-import { useMapField, useField } from '../../../../shared/composables'
-import type { KeyId } from '../../../../shared/composables/key-id-map'
-import type { BaseFieldProps } from 'src/components/free-form/shared/types'
+import { useMapField, useField } from '@kong-ui-public/freeform'
+import type { KeyId, BaseFieldProps } from '@kong-ui-public/freeform'
 
 interface Emits {
   'update': [name: FieldName, value: string, oldName?: FieldName]

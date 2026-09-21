@@ -1,3 +1,4 @@
+import type { RouteLocationRaw } from 'vue-router'
 import type { DeckConfigOptions } from './deck'
 import type { KonnectConfig, KongManagerConfig } from './index'
 
@@ -42,6 +43,11 @@ export enum SupportedEntityType {
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
   Other = 'other',
+  // Custom plugin variants — used only for slideout deck YAML key generation.
+  // Values map directly to decK YAML collection keys via `entityType + 's'`.
+  PluginSchema = 'plugin_schema',
+  CustomPlugin = 'custom_plugin',
+  ClonedPlugin = 'cloned_plugin',
 }
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
@@ -55,6 +61,9 @@ export const SupportedEntityDeckArray = [
   SupportedEntityType.Key,
   SupportedEntityType.KeySet,
   SupportedEntityType.Plugin,
+  SupportedEntityType.PluginSchema,
+  SupportedEntityType.CustomPlugin,
+  SupportedEntityType.ClonedPlugin,
   SupportedEntityType.Route,
   SupportedEntityType.Upstream,
   SupportedEntityType.Target,
@@ -153,6 +162,12 @@ export interface PolicyConfigurationSchema extends PluginConfigurationSchema { }
 export interface RecordItem extends ConfigurationSchemaItem {
   key: string
   value: any
+  /** When set, InternalLinkItem renders a real router-link instead of an emit-only button. */
+  to?: RouteLocationRaw
+  /** When set, InternalLinkItem renders this as a second line below the link/button text. */
+  subtitle?: string
+  /** When true, InternalLinkItem renders a loading indicator in place of the subtitle. */
+  subtitleLoading?: boolean
 }
 
 export interface DefaultCommonFieldsConfigurationSchema {
@@ -162,6 +177,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  labels: ConfigurationSchemaItem
   partials: ConfigurationSchemaItem
 }
 

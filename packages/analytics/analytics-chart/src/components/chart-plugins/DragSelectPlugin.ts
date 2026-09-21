@@ -1,8 +1,8 @@
 import type { Chart, Plugin } from 'chart.js'
 
 export interface DragSelectEventDetail {
-  xStart: number | undefined
-  xEnd: number | undefined
+  xStart: number
+  xEnd: number
 }
 
 const drawSelectionBorder = (chart: Chart, startX: number, endX: number) => {
@@ -27,18 +27,24 @@ const drawSelectionArea = (chart: Chart, startX: number, endX: number) => {
   ctx.restore()
 }
 
-const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSelectPlugin) => {
+const selectionRange = (chart: Chart, pluginInstance: DragSelectPlugin): DragSelectEventDetail | undefined => {
   const xStartValue = chart.scales.x.getValueForPixel(pluginInstance.startX)
   const xEndValue = chart.scales.x.getValueForPixel(pluginInstance.endX)
 
-  if (xStartValue && xEndValue) {
-    chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
-      detail: {
-        xStart: Math.min(xStartValue, xEndValue),
-        xEnd: Math.max(xStartValue, xEndValue),
-      },
-    }))
+  if (xStartValue === undefined || xEndValue === undefined) {
+    return undefined
   }
+
+  return {
+    xStart: Math.min(xStartValue, xEndValue),
+    xEnd: Math.max(xStartValue, xEndValue),
+  }
+}
+
+const dispatchEvent = (eventName: string, chart: Chart, range: DragSelectEventDetail) => {
+  chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
+    detail: range,
+  }))
 }
 
 export class DragSelectPlugin implements Plugin {
@@ -75,6 +81,7 @@ export class DragSelectPlugin implements Plugin {
         this._clearSelectionArea = false
         dragInitiated = true
         this._startX = event.clientX - rect.left
+        this._endX = this._startX
       }, 150)
     }
 
@@ -82,7 +89,11 @@ export class DragSelectPlugin implements Plugin {
       const rect = canvas.getBoundingClientRect()
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left
-        dispatchEvent('dragSelectMove', chart, this)
+        const range = selectionRange(chart, this)
+
+        if (range) {
+          dispatchEvent('dragSelectMove', chart, range)
+        }
       }
     }
 
@@ -91,9 +102,16 @@ export class DragSelectPlugin implements Plugin {
       clearTimeout(this._dragTimeout)
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left
-        dispatchEvent('dragSelect', chart, this)
         dragInitiated = false
         this._isDragging = false
+
+        const range = selectionRange(chart, this)
+
+        if (range) {
+          dispatchEvent('dragSelect', chart, range)
+        } else {
+          this.clearSelectionArea()
+        }
       }
     }
 

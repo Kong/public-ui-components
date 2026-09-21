@@ -20,13 +20,14 @@
       </template>
     </KAlert>
     <MonacoEditor
+      :key="activeColorMode"
       ref="editor"
       v-model="code"
       appearance="standalone"
       class="editor"
       language="yaml"
       :options="monacoOptions"
-      theme="light"
+      :theme="activeColorMode"
       @ready="handleEditorReady"
     />
 
@@ -43,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
+import { computed, inject, shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { dump, load, JSON_SCHEMA } from 'js-yaml'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
@@ -54,13 +55,17 @@ import { useErrors } from '@kong-ui-public/entities-shared'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../../locales/en.json'
-import { useFormShared } from '../../shared/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
 import examples from './examples'
 import { extractors } from './config-extractors'
+import { orderNodeFields } from './order-node-fields'
 
+import type { ComputedRef } from 'vue'
 import type { YAMLException } from 'js-yaml'
 import type { DatakitPluginData } from './types'
 import type { DatakitExample } from './examples'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { t } = createI18n<typeof english>('en-us', english)
 type TranslationKey = Parameters<typeof t>[0]
@@ -83,9 +88,9 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 function dumpYaml(config: unknown): string {
-  return yaml.dump(toRaw(config), {
+  return dump(orderNodeFields(toRaw(config)), {
     schema: JSON_SCHEMA,
-    noArrayIndent: true,
+    seqNoIndent: true,
   })
 }
 
@@ -100,6 +105,10 @@ const monacoOptions = {
   },
   autoIndent: 'keep',
   editContext: false,
+  guides: {
+    indentation: true,
+    highlightActiveIndentation: true,
+  },
 } as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
 
 function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -112,7 +121,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
   editor.onDidChangeModelContent(() => {
     try {
-      const config = yaml.load(editor.getValue() || '', {
+      const config = load(editor.getValue() || '', {
         schema: JSON_SCHEMA,
         json: true,
       })
@@ -200,12 +209,12 @@ function setExampleCode(example: DatakitExample) {
   const newCode = example.code
 
   try {
-    const config = yaml.load(code.value, {
+    const config = load(code.value, {
       schema: JSON_SCHEMA,
       json: true,
     }) as any
 
-    const exampleConfigJson = yaml.load(newCode, {
+    const exampleConfigJson = load(newCode, {
       schema: JSON_SCHEMA,
       json: true,
     }) as any
@@ -256,6 +265,15 @@ defineExpose({
   .editor {
     height: 684px;
     width: 100%;
+
+    // The bundled Shiki themes use very similar colors for active and inactive guides.
+    :deep(.core-guide-indent) {
+      box-shadow: 1px 0 0 0 var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker) inset;
+    }
+
+    :deep(.core-guide-indent.indent-active) {
+      box-shadow: 1px 0 0 0 var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak) inset;
+    }
   }
 }
 </style>

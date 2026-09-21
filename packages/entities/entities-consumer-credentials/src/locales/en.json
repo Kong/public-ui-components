@@ -69,31 +69,31 @@
       },
       "empty_state": {
         "acls": {
-          "title": "Configure a New ACL credential",
+          "title": "Configure a new ACL credential",
           "cta": "New ACL credential"
         },
         "basic-auth": {
-          "title": "Configure a New Basic Auth credential",
+          "title": "Configure a new Basic Auth credential",
           "cta": "New Basic Auth credential"
         },
         "key-auth": {
-          "title": "Configure a New Key Auth credential",
+          "title": "Configure a new Key Auth credential",
           "cta": "New Key Auth credential"
         },
         "key-auth-enc": {
-          "title": "Configure a New Key Auth Encrypted credential",
+          "title": "Configure a new Key Auth Encrypted credential",
           "cta": "New Key Auth Encrypted credential"
         },
         "oauth2": {
-          "title": "Configure a New OAuth 2.0 credential",
+          "title": "Configure a new OAuth 2.0 credential",
           "cta": "New OAuth 2.0 credential"
         },
         "hmac-auth": {
-          "title": "Configure a New HMAC credential",
+          "title": "Configure a new HMAC credential",
           "cta": "New HMAC credential"
         },
         "jwt": {
-          "title": "Configure a New JWT credential",
+          "title": "Configure a new JWT credential",
           "cta": "New JWT credential"
         }
       }

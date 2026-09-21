@@ -1,6 +1,8 @@
 // Cypress component test spec file
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
+import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -90,6 +92,32 @@ const selectChartArea = () => {
   })
 }
 
+const DRAG_WAIT = 300
+
+const pressAndHoldChartArea = ({ x, y }: { x: number, y: number }) => {
+  const selector = '.chart-container > canvas'
+
+  cy.get(selector).trigger('mousedown', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(DRAG_WAIT)
+  cy.get(selector).trigger('mouseup', x, y)
+}
+
+const dragChartAreaAndReturn = ({ x, y }: { x: number, y: number }) => {
+  const selector = '.chart-container > canvas'
+
+  cy.get(selector).trigger('mousedown', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(DRAG_WAIT)
+  cy.get(selector).trigger('mousemove', x + 100, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(100)
+  cy.get(selector).trigger('mousemove', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(100)
+  cy.get(selector).trigger('mouseup', x, y)
+}
+
 const mockQueryProvider = {
   evaluateFeatureFlagFn: () => true,
 }
@@ -161,13 +189,41 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '907K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '907K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '910K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '910K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '378K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '378K')
+  })
+
+  it('renders the platform datasource timestamp axis title', () => {
+    mount({
+      chartData: {
+        ...exploreResult,
+        meta: {
+          ...exploreResult.meta,
+          datasource: 'platform',
+        },
+      },
+    }).then(({ wrapper }) => {
+      expect(wrapper.findComponent(TimeSeriesChart).props('dimensionAxesTitle')).to.eq('@timestamp created at')
+    })
+  })
+
+  it('renders the platform_usage datasource timestamp axis title', () => {
+    mount({
+      chartData: {
+        ...exploreResult,
+        meta: {
+          ...exploreResult.meta,
+          datasource: 'platform_usage',
+        },
+      },
+    }).then(({ wrapper }) => {
+      expect(wrapper.findComponent(TimeSeriesChart).props('dimensionAxesTitle')).to.eq('@timestamp created at')
+    })
   })
 
   it('shows the empty state with no data', () => {
@@ -195,7 +251,7 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="time-series-bar-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').should('have.length', 1)
     cy.get(':nth-child(1) > .label-container > .label').should('include.text', '200')
-    cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M requests')
+    cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M')
     cy.get("[role='tooltip']").should(
       'include.text',
       'Grouped value limit exceeded, showing the top 50',
@@ -243,13 +299,13 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 20)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '882K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '882K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '885K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '885K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '367K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '367K')
   })
 
   it('renders a donut chart with multi dimension data', () => {
@@ -283,13 +339,13 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '42K requests')
+    cy.get('.sub-label').eq(0).should('include.text', '42K')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '31K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '31K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '30K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '30K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '12K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '12K')
   })
 
   it('renders an empty state with default title and description text', () => {
@@ -578,5 +634,125 @@ describe('<AnalyticsChart />', () => {
       cy.get('body').trigger('pointerup', { button: 0 })
       cy.get('body').should('not.have.class', 'no-select')
     })
+
+    describe('invalid selections', () => {
+      const mountWithAllActions = () => mount({
+        timeseriesZoom: true,
+        exploreLink: { href: '#explore' },
+        requestsLink: { href: '#requests' },
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+        onZoomTimeRange: cy.spy().as('onZoomTimeRange'),
+      })
+
+      const expectNoZoomActions = () => {
+        cy.get('.zoom-actions-container').should('not.exist')
+        cy.getTestId('zoom-action-item-zoom-in').should('not.exist')
+        cy.getTestId('zoom-action-item-explore').should('not.exist')
+        cy.getTestId('zoom-action-item-view-requests').should('not.exist')
+        cy.get('@onSelectChartRange').should('not.have.been.called')
+        cy.get('@onZoomTimeRange').should('not.have.been.called')
+      }
+
+      it('offers no zoom actions when pressing and holding on a single point', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        pressAndHoldChartArea({ x: 400, y: 50 })
+
+        expectNoZoomActions()
+      })
+
+      it('offers no zoom actions when a drag returns to its origin', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        dragChartAreaAndReturn({ x: 400, y: 50 })
+
+        expectNoZoomActions()
+      })
+
+      it('does not reuse the previous selection when pressing and holding afterwards', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        selectChartArea()
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.getTestId('zoom-action-item-zoom-in').should('exist')
+
+        cy.get('.zoom-actions-close-icon').click()
+        cy.get('.zoom-actions-container').should('not.exist')
+
+        pressAndHoldChartArea({ x: 400, y: 50 })
+
+        cy.get('.zoom-actions-container').should('not.exist')
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.get('@onZoomTimeRange').should('not.have.been.called')
+      })
+
+      it('still offers zoom actions for a valid selection', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        selectChartArea()
+
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.getTestId('zoom-action-item-zoom-in').should('exist')
+        cy.getTestId('zoom-action-item-explore').should('exist')
+        cy.getTestId('zoom-action-item-view-requests').should('exist')
+      })
+    })
+  })
+})
+
+describe('<AnalyticsChart /> scatter with a metric on x', () => {
+  const START = '2024-06-16T00:00:00.000Z'
+  const END = '2024-06-16T06:00:00.000Z'
+
+  const exploreData = {
+    data: Array.from({ length: 6 }, (_, i) => ({
+      timestamp: new Date(new Date(START).valueOf() + i * 60 * 60 * 1000).toISOString(),
+      event: { ai_request_count: (i + 1) * 10, cost: i + 1.5, ai_gateway_model: 'gpt' },
+    })),
+    meta: {
+      start: START,
+      end: END,
+      granularity_ms: 60 * 60 * 1000,
+      display: { ai_gateway_model: { gpt: { name: 'GPT' } } },
+      metric_names: ['ai_request_count', 'cost'],
+      metric_units: { ai_request_count: 'count', cost: 'usd' },
+      query_id: '',
+    },
+  } as unknown as ExploreResultV4
+
+  beforeEach(() => {
+    cy.viewport(800, 500)
+    cy.mount(AnalyticsChart, {
+      props: {
+        chartData: exploreData,
+        chartOptions: { type: 'scatter' },
+        tooltipTitle: 'Requests vs cost',
+      },
+    })
+  })
+
+  it.only('titles the tooltip with the point time and lists the x metric', () => {
+    cy.get('[data-testid="scatter-chart"]').should('be.visible')
+
+    for (let step = 0; step <= 5; step++) {
+      cy.get('.chart-container > canvas').trigger('mousemove', 200 + step * 40, 60)
+    }
+
+    cy.get('.tooltip-container .context').should('contain.text', '2024')
+    cy.get('.tooltip-container .display-label').first().should('have.text', 'GPT')
+    cy.get('.tooltip-container .display-value').first().should('contain.text', '$')
+    cy.get('.tooltip-container .extra-row .display-label').should('have.text', 'Request count')
   })
 })

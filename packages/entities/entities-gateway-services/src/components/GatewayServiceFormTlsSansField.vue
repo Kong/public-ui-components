@@ -28,7 +28,7 @@
           icon
           @click="removeItem(index)"
         >
-          <TrashIcon :color="KUI_COLOR_TEXT_DANGER" />
+          <TrashIcon :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`" />
         </KButton>
         <KButton
           appearance="tertiary"

@@ -13,7 +13,6 @@ A Kong UI dynamic page header component.
 
 - Reactive updates based on `prop` value changes :rocket:
 - Slottable areas for displaying custom content, icons, etc.
-- Built-in support for rendering breadcrumbs (optional)
 
 ## Requirements
 
@@ -36,23 +35,7 @@ A Kong UI dynamic page header component.
 
 The title text of the page.
 
-#### `breadcrumbs`
-
-- type: Array as PropType<BreadcrumbItem[]>
-- required: `false`
-- default: `[]`
-
-Breadcrumb object to be passed into `KBreadcrumb`.
-
 ### Slots
-
-#### `${breadcrumb.key}-icon`
-
-We surface `KBreadcrumb`'s [icon slots](https://kongponents.konghq.com/components/breadcrumbs.html#icon-key).
-
-#### `title-before`
-
-Content displayed before the title text, typically an icon.
 
 #### `title-after`
 

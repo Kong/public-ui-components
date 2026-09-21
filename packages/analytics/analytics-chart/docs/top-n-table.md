@@ -70,7 +70,9 @@ HTML element you want title to be rendered as. Defaults to `h2`.
 
 #### name
 
-Content to override the display for each row item's first column. The `id`, `name`, and `dimension` of the row item will be provided in the slot params. If not provided, the `name` will be displayed in plain text.
+Content to override the display for each row item's first dimension column. The `id`, `name`, `deleted`, `dimension`, and `dimensions` of the row item will be provided in the slot params. Each item in `dimensions` contains `dimension`, `id`, `name`, and `deleted`. If not provided, the `name` will be displayed in plain text.
+
+When the response contains a single display dimension, the first column header is `Name`. When the response contains multiple display dimensions, up to three dimensions are rendered as columns with translated dimension labels when available.
 
 ### Usage example
 

@@ -25,6 +25,14 @@ A form component for Plugins.
 
 ### Props
 
+#### `useSecretInput`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `true`, generic encrypted free-form plugin fields use `SecretInput`. This opt-in preserves compatibility for the generic renderer; purpose-specific password forms are intentionally migrated directly. The default preserves the legacy password input.
+
 #### `config`
 
 - type: `Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>`

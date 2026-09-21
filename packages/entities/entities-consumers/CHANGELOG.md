@@ -3,6 +3,694 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.35](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.34...%40kong-ui-public%2Fentities-consumers%404.7.35) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.34](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.33...%40kong-ui-public%2Fentities-consumers%404.7.34) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.33](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.32...%40kong-ui-public%2Fentities-consumers%404.7.33) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.32](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.31...%40kong-ui-public%2Fentities-consumers%404.7.32) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.31](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.30...%40kong-ui-public%2Fentities-consumers%404.7.31) (2026-09-09)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3790](https://github.com/Kong/public-ui-components/issues/3790)) ([aecf1ae](https://github.com/Kong/public-ui-components/commit/aecf1ae1184b73032c10eb89ddc6b9505ba20e63))
+
+
+## [4.7.30](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.29...%40kong-ui-public%2Fentities-consumers%404.7.30) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.29](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.28...%40kong-ui-public%2Fentities-consumers%404.7.29) (2026-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.28](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.27...%40kong-ui-public%2Fentities-consumers%404.7.28) (2026-08-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.27](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.26...%40kong-ui-public%2Fentities-consumers%404.7.27) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
+## [4.7.26](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.25...%40kong-ui-public%2Fentities-consumers%404.7.26) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.25](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.24...%40kong-ui-public%2Fentities-consumers%404.7.25) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.24](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.23...%40kong-ui-public%2Fentities-consumers%404.7.24) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.23](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.22...%40kong-ui-public%2Fentities-consumers%404.7.23) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [4.7.22](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.21...%40kong-ui-public%2Fentities-consumers%404.7.22) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.21](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.7.20...%40kong-ui-public%2Fentities-consumers%404.7.21) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+## [4.7.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.19...@kong-ui-public/entities-consumers@4.7.20) (2026-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.18...@kong-ui-public/entities-consumers@4.7.19) (2026-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.17...@kong-ui-public/entities-consumers@4.7.18) (2026-08-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.16...@kong-ui-public/entities-consumers@4.7.17) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
+## [4.7.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.15...@kong-ui-public/entities-consumers@4.7.16) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.14...@kong-ui-public/entities-consumers@4.7.15) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [4.7.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.13...@kong-ui-public/entities-consumers@4.7.14) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [4.7.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.12...@kong-ui-public/entities-consumers@4.7.13) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.11...@kong-ui-public/entities-consumers@4.7.12) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.10...@kong-ui-public/entities-consumers@4.7.11) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.9...@kong-ui-public/entities-consumers@4.7.10) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.8...@kong-ui-public/entities-consumers@4.7.9) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.7...@kong-ui-public/entities-consumers@4.7.8) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.6...@kong-ui-public/entities-consumers@4.7.7) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.5...@kong-ui-public/entities-consumers@4.7.6) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.62.0 ([#3625](https://github.com/Kong/public-ui-components/issues/3625)) ([3c35427](https://github.com/Kong/public-ui-components/commit/3c3542730cdc90bd9ee4e6dfc52b51df4b4f50c2))
+
+
+
+
+
+## [4.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.4...@kong-ui-public/entities-consumers@4.7.5) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.3...@kong-ui-public/entities-consumers@4.7.4) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [4.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.2...@kong-ui-public/entities-consumers@4.7.3) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.1...@kong-ui-public/entities-consumers@4.7.2) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.7.0...@kong-ui-public/entities-consumers@4.7.1) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.3...@kong-ui-public/entities-consumers@4.7.0) (2026-07-24)
+
+
+### Features
+
+* **entities-*:** add search in workspace for routes, services and consumers ([#3600](https://github.com/Kong/public-ui-components/issues/3600)) ([9ae6133](https://github.com/Kong/public-ui-components/commit/9ae6133d43bb098f261f1186b0f089069ced389a))
+
+
+
+
+
+## [4.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.2...@kong-ui-public/entities-consumers@4.6.3) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.1...@kong-ui-public/entities-consumers@4.6.2) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.0...@kong-ui-public/entities-consumers@4.6.1) (2026-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.5.0...@kong-ui-public/entities-consumers@4.6.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.42...@kong-ui-public/entities-consumers@4.5.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [4.4.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.41...@kong-ui-public/entities-consumers@4.4.42) (2026-07-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.40...@kong-ui-public/entities-consumers@4.4.41) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.39...@kong-ui-public/entities-consumers@4.4.40) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.38...@kong-ui-public/entities-consumers@4.4.39) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.37...@kong-ui-public/entities-consumers@4.4.38) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.36...@kong-ui-public/entities-consumers@4.4.37) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.35...@kong-ui-public/entities-consumers@4.4.36) (2026-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.34...@kong-ui-public/entities-consumers@4.4.35) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.33...@kong-ui-public/entities-consumers@4.4.34) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.32...@kong-ui-public/entities-consumers@4.4.33) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [4.4.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.31...@kong-ui-public/entities-consumers@4.4.32) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [4.4.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.30...@kong-ui-public/entities-consumers@4.4.31) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.29...@kong-ui-public/entities-consumers@4.4.30) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.28...@kong-ui-public/entities-consumers@4.4.29) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [4.4.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.27...@kong-ui-public/entities-consumers@4.4.28) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.26...@kong-ui-public/entities-consumers@4.4.27) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [4.4.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.25...@kong-ui-public/entities-consumers@4.4.26) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [4.4.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.24...@kong-ui-public/entities-consumers@4.4.25) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.23...@kong-ui-public/entities-consumers@4.4.24) (2026-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.22...@kong-ui-public/entities-consumers@4.4.23) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.21...@kong-ui-public/entities-consumers@4.4.22) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [4.4.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.20...@kong-ui-public/entities-consumers@4.4.21) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [4.4.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.19...@kong-ui-public/entities-consumers@4.4.20) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [4.4.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.18...@kong-ui-public/entities-consumers@4.4.19) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.17...@kong-ui-public/entities-consumers@4.4.18) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [4.4.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.16...@kong-ui-public/entities-consumers@4.4.17) (2026-06-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.15...@kong-ui-public/entities-consumers@4.4.16) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
+## [4.4.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.14...@kong-ui-public/entities-consumers@4.4.15) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.13...@kong-ui-public/entities-consumers@4.4.14) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.12...@kong-ui-public/entities-consumers@4.4.13) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
+## [4.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.11...@kong-ui-public/entities-consumers@4.4.12) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3192](https://github.com/Kong/public-ui-components/issues/3192)) ([547be23](https://github.com/Kong/public-ui-components/commit/547be23b721f0be6c81b2753dd03d945b071881d))
+
+
+
+
+
+## [4.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.10...@kong-ui-public/entities-consumers@4.4.11) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.9...@kong-ui-public/entities-consumers@4.4.10) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.8...@kong-ui-public/entities-consumers@4.4.9) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.7...@kong-ui-public/entities-consumers@4.4.8) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.6...@kong-ui-public/entities-consumers@4.4.7) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.5...@kong-ui-public/entities-consumers@4.4.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.4...@kong-ui-public/entities-consumers@4.4.5) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
 ## [4.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.4.3...@kong-ui-public/entities-consumers@4.4.4) (2026-05-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers

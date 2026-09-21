@@ -9,7 +9,7 @@
     :geo-api-server-url="props.app === 'konnect' ? props.geoApiServerUrl : undefined"
     :kong-admin-api-url="props.app === 'kongManager' ? props.kongAdminApiUrl : undefined"
     :unredacted-record="props.unredactedRecord"
-    :workspace="props.app === 'kongManager' ? props.workspace : undefined"
+    :workspace="props.workspace || undefined"
   />
 
   <KModal
@@ -33,7 +33,7 @@
       is-customizing
       :kong-admin-api-url="props.app === 'kongManager' ? props.kongAdminApiUrl : undefined"
       :unredacted-record="props.unredactedRecord"
-      :workspace="props.app === 'kongManager' ? props.workspace : undefined"
+      :workspace="props.workspace || undefined"
     />
   </KModal>
 </template>

@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import type { MetricUnits } from '@kong-ui-public/analytics-geo-map'
 import type { ChoroplethMapOptions, ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 
 import { ref, computed } from 'vue'
 import QueryDataProvider from './QueryDataProvider.vue'
@@ -30,7 +30,7 @@ import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/
 import { COUNTRIES, type ExploreEmptyFilterV2 } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-geo-map/dist/style.css'
 
-const props = defineProps<RendererProps<ChoroplethMapOptions>>()
+const props = defineProps<ChartRendererProps<ChoroplethMapOptions>>()
 
 const chartDataRaw = ref<ExploreResultV4 | undefined>(undefined)
 

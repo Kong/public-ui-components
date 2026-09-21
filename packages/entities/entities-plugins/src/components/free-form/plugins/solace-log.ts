@@ -1,5 +1,5 @@
-import { definePluginConfig } from '../shared/define-plugin-config'
-import MapField from '../shared/MapField.vue'
+import { definePluginConfig } from '../define-plugin-config'
+import { MapField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
   experimental: true,

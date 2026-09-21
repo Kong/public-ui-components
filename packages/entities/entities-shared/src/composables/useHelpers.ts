@@ -1,3 +1,5 @@
+import { ConfigurationSchemaType, type ConfigurationSchema } from '../types'
+
 export default function useHelpers() {
   /**
    * propName could be 'rowValue' or 'row'
@@ -93,10 +95,136 @@ export default function useHelpers() {
     return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(str)
   }
 
+  const REDACTED_MASK = '********'
+  /**
+   * Check if the value is an object record (not an array)
+   * @param value the value to check
+   * @returns true if the value is an object record, false otherwise
+   */
+  const isObjectRecord = (value: unknown): value is Record<string, any> =>
+    Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+
+  /**
+   * Get the field schema by key from the fields of the schema
+   * @param fields the fields of the schema
+   * @param key the key of the field
+   * @returns the field schema or undefined
+   */
+  const getApiSchemaField = (fields: Array<Record<string, any>> | undefined, key: string): Record<string, any> | undefined => {
+    const entry = fields?.find((field: Record<string, any>) => Object.keys(field)?.[0] === key)
+    return entry?.[key]
+  }
+
+  /**
+   * Redact the record entries by the API schema (schema comes from BE).
+   * Expects schema to have `encrypted: true` for entries that should be redacted.
+   *
+   * @param value the record to redact entries for
+   * @param fieldSchema the field schema for the record
+   * @returns the redacted record
+   */
+  const redactByApiSchema = (value: unknown, fieldSchema?: Record<string, any>): unknown => {
+    if (!fieldSchema || value === null || value === undefined) {
+      return value
+    }
+
+    if (fieldSchema.type === 'string') {
+      return fieldSchema.encrypted ? REDACTED_MASK : value
+    }
+
+    if (fieldSchema.type === 'record' || fieldSchema.type === 'map') {
+      if (!isObjectRecord(value)) {
+        return value
+      }
+
+      if (fieldSchema.type === 'map' && !fieldSchema.values) {
+        return { ...value }
+      }
+
+      // recursively redact child fields
+      const output: Record<string, any> = {}
+      for (const key in value) {
+        if (fieldSchema.type === 'record') {
+          const childFieldSchema = getApiSchemaField(fieldSchema.fields, key)
+          output[key] = childFieldSchema ? redactByApiSchema(value[key], childFieldSchema) : value[key]
+        } else if (fieldSchema.type === 'map') {
+          const valueSchema = fieldSchema.values
+          output[key] = redactByApiSchema(value[key], {
+            ...valueSchema,
+            encrypted: Boolean(fieldSchema.encrypted || valueSchema.encrypted),
+          })
+        }
+      }
+
+      return output
+    }
+
+    if ((fieldSchema.type === 'array' || fieldSchema.type === 'set') && Array.isArray(value)) {
+      const elementSchema = fieldSchema.elements
+
+      if (!elementSchema) {
+        return value.slice()
+      }
+
+      // recursively redact array values
+      return value.map((item: unknown) => redactByApiSchema(item, {
+        ...elementSchema,
+        // encryption set if either parent or child is encrypted
+        encrypted: Boolean(fieldSchema.encrypted || elementSchema.encrypted),
+      }))
+    }
+
+    return value
+  }
+
+  /**
+   * Redact the record entries by the config schema (schema comes from FE).
+   * Expects config schema to have `type: ConfigurationSchemaType.Redacted` for entries that should be redacted.
+   *
+   * @param value the record to redact entries for
+   * @param configSchema the config schema for the record
+   * @returns the redacted record
+   */
+  const redactByConfigSchema = (value: unknown, configSchema: ConfigurationSchema): unknown => {
+    // recursively redact arrays of records
+    if (Array.isArray(value)) {
+      return value.map((item: unknown) => redactByConfigSchema(item, configSchema))
+    }
+
+    if (!isObjectRecord(value)) { // catch non-records
+      return value
+    }
+
+    // redact record child fields
+    const output: Record<string, any> = {}
+    for (const key in value) {
+      // regular string field redaction
+      if (configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
+        output[key] = REDACTED_MASK
+        continue
+      }
+
+      // array field redaction
+      if (configSchema[key]?.type === ConfigurationSchemaType.RedactedArray && Array.isArray(value[key])) {
+        output[key] = value[key].map(() => REDACTED_MASK)
+        continue
+      }
+
+      // recursive redaction for nested record fields
+      output[key] = redactByConfigSchema(value[key], configSchema)
+    }
+
+    return output
+  }
+
   return {
     getPropValue,
     objectsAreEqual,
     sortAlpha,
     isValidUuid,
+    isObjectRecord,
+    getApiSchemaField,
+    redactByApiSchema,
+    redactByConfigSchema,
   }
 }

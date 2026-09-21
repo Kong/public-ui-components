@@ -347,6 +347,7 @@ describe('<ConsumerList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerList, {
         props: {
           cacheIdentifier,
@@ -357,8 +358,6 @@ describe('<ConsumerList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getConsumersMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="consumer.1"]`).should('exist')
@@ -964,6 +963,7 @@ describe('<ConsumerList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerList, {
         props: {
           cacheIdentifier,
@@ -974,8 +974,6 @@ describe('<ConsumerList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getConsumersMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="consumer.1"]`).should('exist')
@@ -1296,6 +1294,44 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getWithWorkspace')
       cy.get('.kong-ui-entities-consumers-list').should('be.visible')
+    })
+
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumers*`,
+        },
+        (req) => {
+          if (!req.url.includes('/consumers/search')) {
+            req.reply({ statusCode: 200, body: { data: consumers5, total: consumers5.length } })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumers/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(ConsumerList, {
+        props: {
+          cacheIdentifier: `consumer-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('consumer.1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/consumers/search')
     })
 
     it('uses non-default workspace name in fetch URL', () => {

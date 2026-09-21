@@ -83,6 +83,7 @@ export function useMonacoEditor<T extends HTMLElement>(
     hasContent: false,
     theme: options.theme || 'light',
     currentLanguage: options.language || '',
+    readOnly: options.readOnly || false,
   })
 
   /** Replace the editor content. */
@@ -223,7 +224,7 @@ export function useMonacoEditor<T extends HTMLElement>(
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'catppuccin-mocha',
+        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'material-theme-darker',
         model,
         editContext: false,
         ...options.monacoOptions,
@@ -233,10 +234,18 @@ export function useMonacoEditor<T extends HTMLElement>(
       editorStates.editorStatus = 'ready'
       editorStates.hasContent = !!options.code.value
       editorStates.currentLanguage = model.getLanguageId()
+      editorStates.readOnly = !!editor.value.getOption(monaco.editor.EditorOption.readOnly)
 
       // Track language changes on the model
       model.onDidChangeLanguage((e) => {
         editorStates.currentLanguage = e.newLanguage
+      })
+
+      // Track read-only changes, whether triggered via props, updateOptions, or setReadOnly
+      editor.value.onDidChangeConfiguration((e) => {
+        if (e.hasChanged(monaco.editor.EditorOption.readOnly)) {
+          editorStates.readOnly = !!editor.value!.getOption(monaco.editor.EditorOption.readOnly)
+        }
       })
 
       // Watch content changes and trigger callbacks efficiently

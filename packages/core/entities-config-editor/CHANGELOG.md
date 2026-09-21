@@ -3,6 +3,269 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.17...%40kong-ui-public%2Fentities-config-editor%400.5.18) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.16...%40kong-ui-public%2Fentities-config-editor%400.5.17) (2026-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.15...%40kong-ui-public%2Fentities-config-editor%400.5.16) (2026-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.14...%40kong-ui-public%2Fentities-config-editor%400.5.15) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
+## [0.5.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.13...%40kong-ui-public%2Fentities-config-editor%400.5.14) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-config-editor%400.5.12...%40kong-ui-public%2Fentities-config-editor%400.5.13) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+## [0.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.11...@kong-ui-public/entities-config-editor@0.5.12) (2026-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.10...@kong-ui-public/entities-config-editor@0.5.11) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [0.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.9...@kong-ui-public/entities-config-editor@0.5.10) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.8...@kong-ui-public/entities-config-editor@0.5.9) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.7...@kong-ui-public/entities-config-editor@0.5.8) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.6...@kong-ui-public/entities-config-editor@0.5.7) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [0.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.5...@kong-ui-public/entities-config-editor@0.5.6) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.4...@kong-ui-public/entities-config-editor@0.5.5) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.3...@kong-ui-public/entities-config-editor@0.5.4) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.2...@kong-ui-public/entities-config-editor@0.5.3) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.1...@kong-ui-public/entities-config-editor@0.5.2) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.5.0...@kong-ui-public/entities-config-editor@0.5.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.4.0...@kong-ui-public/entities-config-editor@0.5.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.38...@kong-ui-public/entities-config-editor@0.4.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [0.3.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.37...@kong-ui-public/entities-config-editor@0.3.38) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.3.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.36...@kong-ui-public/entities-config-editor@0.3.37) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [0.3.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.35...@kong-ui-public/entities-config-editor@0.3.36) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [0.3.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.34...@kong-ui-public/entities-config-editor@0.3.35) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [0.3.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.33...@kong-ui-public/entities-config-editor@0.3.34) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [0.3.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.32...@kong-ui-public/entities-config-editor@0.3.33) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [0.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.31...@kong-ui-public/entities-config-editor@0.3.32) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [0.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.30...@kong-ui-public/entities-config-editor@0.3.31) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.29...@kong-ui-public/entities-config-editor@0.3.30) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
 ## [0.3.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.28...@kong-ui-public/entities-config-editor@0.3.29) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-config-editor

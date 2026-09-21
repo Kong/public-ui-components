@@ -347,6 +347,7 @@ describe('<ConsumerGroupList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerGroupList, {
         props: {
           cacheIdentifier,
@@ -357,8 +358,6 @@ describe('<ConsumerGroupList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
@@ -948,6 +947,7 @@ describe('<ConsumerGroupList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerGroupList, {
         props: {
           cacheIdentifier,
@@ -958,8 +958,6 @@ describe('<ConsumerGroupList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')

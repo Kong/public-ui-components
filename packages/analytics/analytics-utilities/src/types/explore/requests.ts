@@ -18,14 +18,19 @@ export const queryableRequestDimensions = [
   'bot_info_ja4_fingerprint',
   'bot_info_ban_type',
   'bot_info_header_names',
+  'cache_status',
   'client_ip',
   'consumer',
+  'ai_gateway_consumer',
   'consumer_group',
+  'ai_gateway_consumer_group',
   'control_plane',
   'control_plane_group',
+  'ai_gateway',
   'country_code',
   'data_plane_node',
   'data_plane_node_version',
+  'ai_gateway_data_plane_node',
   'gateway_service',
   'header_host',
   'header_user_agent',
@@ -34,7 +39,9 @@ export const queryableRequestDimensions = [
   'mcp_method',
   'mcp_session_id',
   'mcp_tool_name',
+  'oidc_credential',
   'portal',
+  'principal',
   'realm',
   'request_id',
   'request_uri',
@@ -60,11 +67,13 @@ export type FilterableRequestDimensions = typeof filterableRequestDimensions[num
 
 export const queryableRequestWildcardDimensions = [
   'auth_type',
+  'cache_status',
   'client_ip',
   'data_plane_node_version',
   'header_host',
   'header_user_agent',
   'http_method',
+  'oidc_credential',
   'request_id',
   'request_uri',
   'response_header_content_type',
@@ -86,6 +95,7 @@ export const queryableRequestMetrics = [
   'latencies_response_ms',
   'latencies_upstream_ms',
   'latencies_kong_gateway_ms',
+  'latencies_kong_internal_ms',
   'request_body_size',
   'response_body_size',
   'response_header_content_length',
@@ -159,4 +169,26 @@ export interface RequestQuery {
   limit?: number
   classified?: boolean
   cursor?: string
+}
+
+export const API_REQUESTS_MAX_PAGE_SIZE = 1000
+
+export interface RequestRecord {
+  [field: string]: unknown
+}
+
+export interface ApiRequestsResultMeta {
+  query_id: string
+  time_range: {
+    start: string
+    end: string
+  }
+  size: number
+  offset?: number
+  cursor?: string
+}
+
+export interface ApiRequestsResult {
+  results: RequestRecord[]
+  meta: ApiRequestsResultMeta
 }

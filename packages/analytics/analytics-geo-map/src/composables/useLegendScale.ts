@@ -1,6 +1,5 @@
 import { computed, type Ref } from 'vue'
 import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
-import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 import type { MetricUnits } from '../types'
 import composables from '.'
 
@@ -50,10 +49,12 @@ export default function useLegendScale({
   countryMetrics,
   metric,
   unit,
+  emptyCountryFill,
 }: {
   countryMetrics: Readonly<Ref<Record<string, number>>>
   metric: Readonly<Ref<ExploreAggregations>>
   unit: Readonly<Ref<MetricUnits>>
+  emptyCountryFill: Readonly<Ref<string>>
 }) {
 
   const { formatMetric, formatMetricRange } = composables.useMetricFormat({ unit })
@@ -137,14 +138,14 @@ export default function useLegendScale({
 
   const getColor = (value: number) => {
     if (value === 0) {
-      return KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
+      return emptyCountryFill.value
     }
 
     const idx = scale.value.findIndex((interval) => value >= interval)
     if (idx === -1) {
       return colors[colors.length - 1]
     }
-    return colors[idx] ?? KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
+    return colors[idx] ?? emptyCountryFill.value
   }
 
   return {

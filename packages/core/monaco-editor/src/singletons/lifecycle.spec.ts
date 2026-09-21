@@ -71,11 +71,17 @@ describe('lifecycle singleton', () => {
   it('allows re-scoping the same disposable and cleans up the old scope', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
-
     const disposable = mockDisposable()
+    const consoleMock = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     trackDisposableForEditor(editorScope.source as editor.ICodeEditor, disposable)
     trackDisposableForModel(modelScope.source as editor.ITextModel, disposable)
+
+    expect(consoleMock).toHaveBeenCalledWith(
+      expect.stringMatching('Re-scoping a tracked disposable from'),
+      expect.anything(), 'to', expect.anything(), expect.anything(), expect.anything())
+
+    consoleMock.mockRestore()
 
     editorScope.source.dispose()
     expect(disposable.dispose).not.toHaveBeenCalled()
@@ -89,14 +95,19 @@ describe('lifecycle singleton', () => {
   it('re-scopes when tracking a decorated disposable into another scope', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
-
     const disposable = mockDisposable()
+    const consoleMock = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     const decorated = trackDisposableForEditor(editorScope.source as editor.ICodeEditor, disposable)
     const decoratedAgain = trackDisposableForModel(modelScope.source as editor.ITextModel, decorated)
 
     // Should reuse the decorated disposable without creating new ones
     expect(decoratedAgain).toBe(decorated)
+
+    expect(consoleMock).toHaveBeenCalledWith(
+      expect.stringMatching('Re-scoping a tracked disposable from'),
+      expect.anything(), 'to', expect.anything(), expect.anything(), expect.anything())
+    consoleMock.mockRestore()
 
     // Last tracking wins: No-op here
     editorScope.source.dispose()

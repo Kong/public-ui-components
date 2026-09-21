@@ -43,6 +43,10 @@ const { i18n: { t }, i18nT } = composables.useI18n()
     color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
 
+    &:not(.disabled) {
+      text-decoration: underline;
+    }
+
     &.disabled {
       color: var(--kui-color-text-disabled, $kui-color-text-disabled);
       cursor: not-allowed;

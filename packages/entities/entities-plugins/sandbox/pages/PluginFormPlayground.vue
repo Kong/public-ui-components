@@ -1,6 +1,6 @@
 <template>
-  <div class="plugin-form-playground-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Plugin Form Playground">
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -10,7 +10,7 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
-    </div>
+    </template>
 
     <KSlideout
       :close-on-blur="false"
@@ -55,6 +55,7 @@
       <PluginForm
         :key="formKey"
         :config="konnectConfig"
+        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -66,6 +67,7 @@
       <PluginForm
         :key="formKey"
         :config="kongManagerConfig"
+        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -76,7 +78,7 @@
       v-else
       class="error"
     >{{ renderError }}</pre>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
@@ -89,12 +91,19 @@ import {
   watch,
 } from 'vue'
 import { useRouter } from 'vue-router'
+import SandboxPage from '../SandboxPage.vue'
 import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
 } from '../../src'
-import { PluginForm } from '../../src'
+import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
+
+// Opt experimental free-form plugins into rendering in the playground so they
+// can be previewed with a hand-pasted schema (no backend required).
+useProvideExperimentalFreeForms([
+  'governance',
+])
 
 function save(type: 'pluginType' | 'schema', value: unknown) {
   localStorage.setItem(`plugin-form-playground:${type}`, JSON.stringify(value))
@@ -225,12 +234,6 @@ onErrorCaptured((error) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-playground-sandbox {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-}
-
 .controls {
   position: fixed;
   right: 55%;

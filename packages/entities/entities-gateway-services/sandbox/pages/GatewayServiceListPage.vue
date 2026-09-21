@@ -16,6 +16,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    enable-force-delete-confirmation
     use-action-outside
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"

@@ -208,6 +208,7 @@ import type {
 
 import composables from '../composables'
 import endpoints from '../vaults-endpoints'
+import { fromAiGatewayVault } from '../ai-gateway-mappers'
 
 import type {
   KongManagerVaultListConfig,
@@ -236,6 +237,7 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (!config.createRoute || !config.getViewRoute || !config.getEditRoute) return false
       if (config.app === 'kongManager' && !config.isExactMatch && !config.filterSchema) return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -278,6 +280,10 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
+const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
+const endpointKey = computed<'konnect' | 'kongManager' | 'aiGateway'>(() => isAiGateway.value ? 'aiGateway' : props.config.app)
+const withAiGatewayId = (url: string): string => url.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // Current empty state logic is only for Konnect, KM will pick up at GA.
@@ -297,19 +303,31 @@ const fields: BaseTableHeaders = {
   description: { label: t('vaults.list.table_headers.description'), sortable: false },
   tags: { label: t('vaults.list.table_headers.tags'), sortable: false },
 }
-const tableHeaders: BaseTableHeaders = fields
+// AI Gateway uses labels (not exposed this version) instead of tags, so hide the column.
+// AI Gateway also uses field-name-accurate labels: prefix→Name, name→Type.
+const tableHeaders = computed<BaseTableHeaders>(() => {
+  if (isAiGateway.value) {
+    const { description, name, prefix } = fields
+    return {
+      prefix: { ...prefix, label: t('vaults.list.table_headers.prefix_ai_gateway') },
+      name,
+      description,
+    }
+  }
+  return fields
+})
 
 /**
  * Fetcher & Filtering
  */
 const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].getAll}`
+  let url = `${props.config.apiBaseUrl}${endpoints.list[endpointKey.value].getAll}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  return url
+  return withAiGatewayId(url)
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 })
 
@@ -335,10 +353,19 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const {
-  fetcher,
+  fetcher: rawFetcher,
   fetcherState,
   fetcherCacheKey,
 } = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+
+// AI Gateway returns vaults in a different shape (type/name/renamed hcv fields);
+// normalize each row to the gateway shape so the table/columns render unchanged.
+const fetcher: typeof rawFetcher = isAiGateway.value
+  ? async (params) => {
+    const response = await rawFetcher(params)
+    return { ...response, data: (response.data ?? []).map(fromAiGatewayVault) }
+  }
+  : rawFetcher
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -454,8 +481,9 @@ const hideDeleteModal = (): void => {
 }
 
 const deleteAssociatedConfigStore = async (configStoreId: string): Promise<void> => {
-  const { apiBaseUrl, app, controlPlaneId } = (props.config as KonnectVaultListConfig)
-  const url = `${apiBaseUrl}${endpoints.list[app].deleteConfigStore}`
+  const { apiBaseUrl, controlPlaneId } = (props.config as KonnectVaultListConfig)
+  // The config store only exists for the konnect provider (konnect / AI Gateway apps).
+  const url = withAiGatewayId(`${apiBaseUrl}${endpoints.list[isAiGateway.value ? 'aiGateway' : 'konnect'].deleteConfigStore}`)
     .replace(/{controlPlaneId}/gi, controlPlaneId || '')
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, configStoreId)

@@ -42,7 +42,7 @@
     },
     "consumers": {
       "add": {
-        "title": "Add To consumer groups",
+        "title": "Add to consumer groups",
         "ctaText": "Add this consumer to consumer groups",
         "consumer_groups_label": "Consumer groups",
         "consumer_group_placeholder": "Add to consumer groups",

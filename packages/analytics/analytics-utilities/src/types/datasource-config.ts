@@ -37,6 +37,7 @@ export interface Field {
   filter?: FieldFilter | null
   metricGroup?: string
   supportedDimensions?: string[]
+  entityAttributes?: string[]
 }
 
 export interface DatasourceConfig {

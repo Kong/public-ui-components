@@ -39,6 +39,14 @@ describe('fetchManagedCacheAddOnById', () => {
 
     expect(await fetchManagedCacheAddOnById(axiosInstance, 'https://cg.example', 'addon-1', 'cp-1')).toBeNull()
   })
+
+  it('returns null on 404', async () => {
+    const axiosInstance = {
+      get: vi.fn(async () => ({ status: 404, data: {} })),
+    }
+
+    expect(await fetchManagedCacheAddOnById(axiosInstance, 'https://cg.example', 'addon-1', 'cp-1')).toBeNull()
+  })
 })
 
 describe('fetchAllManagedCacheAddOns', () => {

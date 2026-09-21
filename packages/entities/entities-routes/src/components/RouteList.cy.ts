@@ -589,6 +589,7 @@ describe('<RouteList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(RouteList, {
         props: {
           cacheIdentifier,
@@ -599,8 +600,6 @@ describe('<RouteList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getRoutesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="route-1"]`).should('exist')
@@ -889,6 +888,7 @@ describe('<RouteList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(RouteList, {
         props: {
           cacheIdentifier,
@@ -899,8 +899,6 @@ describe('<RouteList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getRoutesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="route-1"]`).should('exist')
@@ -950,6 +948,44 @@ describe('<RouteList />', () => {
 
       cy.wait('@getWithWorkspace')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
+    })
+
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes*`,
+        },
+        (req) => {
+          if (!req.url.includes('/routes/search')) {
+            req.reply({ statusCode: 200, body: routes })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('route-1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/routes/search')
     })
 
     it('uses non-default workspace name in fetch URL', () => {

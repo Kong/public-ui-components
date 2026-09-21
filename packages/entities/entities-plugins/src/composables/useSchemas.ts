@@ -40,13 +40,13 @@ import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
-import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
+import type { UnionFieldSchema } from '@kong-ui-public/freeform'
 import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
-import { shouldUseFreeForm } from '../components/free-form/shared/plugin-registry'
+import { shouldUseFreeForm } from '../components/free-form/plugin-registry'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -725,7 +725,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       // This can be overridden in the field schema
     }
 
-    return convertToDotNotation(capitalize(schema.label || fieldName.replace(/_/g, ' ')))
+    return convertToDotNotation(schema.label || fieldName.replace(/_/g, ' '))
   }
 
   const fieldSchemaHandler = (schema: Record<string, any>, formModel: Record<string, any>) => {

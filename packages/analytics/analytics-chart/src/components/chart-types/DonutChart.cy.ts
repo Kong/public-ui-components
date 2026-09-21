@@ -41,32 +41,32 @@ describe('<DonutChart />', () => {
     })
 
     it('does not show center metric when showCenterMetric is true but unit is non-summable', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'ms' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'ms', metricName: 'response_latency_p99' })
       cy.get('.chart-center-metric').should('not.exist')
     })
 
     it('does not show center metric for bytes unit', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'bytes' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'bytes', metricName: 'response_size_average' })
       cy.get('.chart-center-metric').should('not.exist')
     })
 
     it('shows center metric when showCenterMetric is true and unit is count', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'count' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'count', metricName: 'request_count' })
       cy.get('.chart-center-metric').should('be.visible')
     })
 
     it('shows center metric for requests unit', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'requests' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'count', metricName: 'request_count' })
       cy.get('.chart-center-metric').should('be.visible')
     })
 
     it('shows center metric for usd unit', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'usd' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'usd', metricName: 'llm_embeddings_cost' })
       cy.get('.chart-center-metric').should('be.visible')
     })
 
     it('shows center metric for token count unit', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'token count' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'token count', metricName: 'total_tokens' })
       cy.get('.chart-center-metric').should('be.visible')
     })
   })
@@ -74,22 +74,22 @@ describe('<DonutChart />', () => {
   describe('grand total value', () => {
     it('sums all dataset values', () => {
       // datasets: [52428 + 38020] + [12897 + 9100] = 112445 → approx "112K"
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'count' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'count', metricName: 'request_count' })
       cy.get('.chart-center-total').should('be.visible').and('contain', 'K')
     })
 
     it('formats usd values with currency symbol', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'usd' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'usd', metricName: 'llm_embeddings_cost' })
       cy.get('.chart-center-total').should('contain', '$')
     })
 
     it('does not include unit text in the number for count', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'count' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'count', metricName: 'request_count' })
       cy.get('.chart-center-total').invoke('text').should('not.match', /requests/i)
     })
 
     it('does not include unit text in the number for token count', () => {
-      mountDonutChart({ showCenterMetric: true, metricUnit: 'token count' })
+      mountDonutChart({ showCenterMetric: true, metricUnit: 'token count', metricName: 'total_tokens' })
       cy.get('.chart-center-total').invoke('text').should('not.match', /token/i)
     })
   })
@@ -99,6 +99,7 @@ describe('<DonutChart />', () => {
       mountDonutChart({
         showCenterMetric: true,
         metricUnit: 'count',
+        metricName: 'request_count',
         tooltipMetricDisplay: 'Request count',
       })
       cy.get('.chart-center-unit').should('contain', 'Request count')
@@ -108,6 +109,7 @@ describe('<DonutChart />', () => {
       mountDonutChart({
         showCenterMetric: true,
         metricUnit: 'usd',
+        metricName: 'llm_embeddings_cost',
         tooltipMetricDisplay: 'Costs',
       })
       cy.get('.chart-center-unit').should('contain', 'Costs')
@@ -117,6 +119,7 @@ describe('<DonutChart />', () => {
       mountDonutChart({
         showCenterMetric: true,
         metricUnit: 'count',
+        metricName: 'request_count',
         tooltipMetricDisplay: '',
       })
       cy.get('.chart-center-unit').should('not.exist')

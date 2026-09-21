@@ -56,6 +56,9 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        :use-secret-input="useSecretInput"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
@@ -164,7 +167,7 @@
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
             :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
-            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            :workspace="config.workspace || undefined"
             @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
@@ -191,6 +194,7 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
+import DOMPurify from 'dompurify'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -213,12 +217,15 @@ import {
   type PluginOrdering,
   type CustomSchemas,
   type PluginValidityChangeEvent,
+  type EntityCreateEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
-import type { GlobalAction } from './free-form/shared/types'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/const'
+import { EXPRESSIONS_FIELD } from '@kong-ui-public/freeform'
+import type { GlobalAction } from '@kong-ui-public/freeform'
+import { BEFORE_SAVE_KEY } from './const'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
@@ -248,6 +255,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
+  (e: 'click:learn-more', entity: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -338,6 +347,12 @@ const props = defineProps({
     default: false,
   },
 
+  /** Opt in to SecretInput for generic encrypted free-form fields; purpose-specific password forms migrate directly. */
+  useSecretInput: {
+    type: Boolean,
+    default: false,
+  },
+
   /**
    * Custom loaded schema for the plugin
    */
@@ -424,10 +439,21 @@ const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   return 'freeform'
 })
 
+const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
+})
+
+const beforeSaveCallbacks: Array<() => boolean> = []
+provide(BEFORE_SAVE_KEY, (cb: () => boolean) => {
+  beforeSaveCallbacks.push(cb)
+  return () => {
+    const i = beforeSaveCallbacks.indexOf(cb)
+    if (i !== -1) beforeSaveCallbacks.splice(i, 1)
+  }
 })
 
 const isDeckCustomizationVisible = ref(false)
@@ -717,11 +743,20 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
   // alphabetically sort the schema keys and handle specific configuration for each field type
   Object.keys(schema).sort().forEach(key => {
+    // The root `expressions` record holds the expression twin of every field the
+    // Gateway marks `expressible`. Freeform renders each twin inline beside the
+    // field it overrides (see `StringField`/`NumberField`); VFG has no such
+    // affordance, and the generic record walk below would flatten the record
+    // into a row of stray `expressions-*` inputs, so skip it entirely.
+    if (!parentKey && key === EXPRESSIONS_FIELD) {
+      return
+    }
+
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, realEngine.value) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -807,7 +842,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // KAG-3347: Add /config-.*/ to cover deep fields like `config.redis.*` in the rate-limiting-advanced plugin
     if (parentKey === 'config' || parentKey.startsWith('config-')) {
       if (schema[key]?.description) {
-        initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
+        initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions) as string)
       }
     }
 
@@ -916,7 +951,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     if (scheme.hint) {
-      initialFormSchema[field].hint = scheme.hint
+      initialFormSchema[field].hint = DOMPurify.sanitize(scheme.hint)
     }
 
     // Custom frontend schema override
@@ -930,7 +965,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
-            initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
+            initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       })
@@ -953,7 +988,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           // Only replace the help text when it is not defined because it may have already been
           // overridden by the previous step
           if (itemField.help === undefined && typeof description === 'string') {
-            itemField.help = marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions)
+            itemField.help = DOMPurify.sanitize(marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       }
@@ -1113,12 +1148,13 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const pluginType = isClonedPlugin.value && clonedSourcePlugin.value ? clonedSourcePlugin.value : props.pluginType
+  const supportServiceScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
-    : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+    : (PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
   // check whether the plugin is scoped
   const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
   const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
@@ -1463,6 +1499,11 @@ const viewConfigurationRecord = computed(() => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  // Run before-save guards; any callback returning false blocks submission
+  if (!beforeSaveCallbacks.every(cb => cb())) {
+    return
+  }
+
   if (form.clientErrorMessage) {
     // if there are still client errors, don't submit the form
     return
@@ -1480,7 +1521,7 @@ const saveFormData = async (): Promise<void> => {
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
     const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-    if (typeof customSchema?.shamefullyTransformPayload === 'function') {
+    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
         model: form.fields,

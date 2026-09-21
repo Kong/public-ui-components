@@ -12,7 +12,7 @@
         v-if="!hideTitleIcon"
         class="metricscard-icon"
         :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-        :size="KUI_ICON_SIZE_30"
+        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
       />
       <component :is="titleTag">
         {{ title }}
@@ -25,7 +25,7 @@
       >
         <InfoIcon
           :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-          :size="KUI_ICON_SIZE_30"
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
         />
       </KTooltip>
     </div>
@@ -44,7 +44,7 @@
       >
         <WarningIcon
           :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
         />
         <div>&nbsp;{{ errorMessage }}</div>
       </div>
@@ -72,13 +72,13 @@
             :is="trendIcon"
             v-if="changePolarity !== 0"
             :color="colorAttribute(changePolarity)"
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
           <!-- No change icon -->
           <EqualIcon
             v-else
             :color="`var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`"
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
           <div data-testid="metric-trend-change">
             {{ metricChange }}

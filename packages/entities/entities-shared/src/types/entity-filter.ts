@@ -32,6 +32,8 @@ export interface FilterSchema {
     filterFunction?: (params: SelectFilterFunctionParams<string | number>) => SelectItem[]
     /** Options for the select input, only used if type is 'select' */
     values?: string[] | SelectItem[]
+    /** Allow users to create custom items in the select input, only used if type is 'select' */
+    enableItemCreation?: boolean
   }
 }
 

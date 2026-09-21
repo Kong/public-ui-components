@@ -6,6 +6,9 @@ export const REDIS_PARTIAL_FETCHER_KEY = 'redis-partial-list-fetcher-key'
 
 export const REDIS_PARTIAL_INFO = 'redis-partial-info'
 
+// Provided by PluginEntityForm - Redis create slideout
+export const REDIS_CREATE_SLIDEOUT = 'redis-create-slideout'
+
 /** Used by `template` and `slot` */
 export const AUTOFILL_SLOT_NAME = 'autofill'
 

@@ -75,6 +75,12 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the Cloud Authentication fields.
 
+  - `oauthCloudAuthAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether to show the OAuth option in the Cloud Authentication provider selector.
+
   - `isKonnectManagedRedisEnabled`
     - type: `boolean`
     - required: `false`

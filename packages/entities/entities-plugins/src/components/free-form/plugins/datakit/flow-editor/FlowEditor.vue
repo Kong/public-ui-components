@@ -29,7 +29,7 @@ import { ExpandIcon } from '@kong/icons'
 import { watch } from 'vue'
 
 import english from '../../../../../locales/en.json'
-import { useFormShared } from '../../../shared/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
 import { provideEditorStore, useLeaveConfirmation } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
@@ -65,7 +65,8 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
     nextFormData.partials = [{ id: partialId }]
   } else if (nextFormData.partials) {
     // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
-    // so undefined won't clear existing partials
+    // so undefined won't clear existing partials. Intentionally NOT
+    // `FormConfig.emptyFieldValue`-aware, for the same reason.
     nextFormData.partials = null
   }
   setValue(nextFormData)

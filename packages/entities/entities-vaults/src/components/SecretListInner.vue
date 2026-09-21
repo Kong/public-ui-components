@@ -134,6 +134,7 @@ const props = defineProps({
     validator: (config: KonnectSecretListConfig): boolean => {
       if (!config || config?.app !== 'konnect') return false
       if (!config.createRoute || !config.getEditRoute) return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -188,8 +189,13 @@ const rowAttrs = (row: Record<string, any>) => ({
 /**
  * Fetcher & Filtering
  */
+const listEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
+  ? endpoints.list.aiGateway
+  : endpoints.list[props.config.app])
+
 const fetcherBaseUrl = computed<string>(() => {
-  return `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
+  return `${props.config.apiBaseUrl}${listEndpoint.value}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.configStoreId || '')

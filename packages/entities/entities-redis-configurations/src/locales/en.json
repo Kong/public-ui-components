@@ -56,21 +56,9 @@
       "cache_configuration": "Cache configuration",
       "partial_configuration": "Partial configuration"
     },
-    "collapse": {
-      "show_partial": "Show partial configuration",
-      "hide_partial": "Hide partial configuration"
-    },
-    "partial": {
-      "format_label": "Format:",
-      "format_structured": "Structured",
-      "format_json": "JSON",
-      "format_terraform": "Terraform",
-      "provisioning_value": "Provisioning cache...",
-      "terminating_value": "Terminating cache..."
-    },
     "managed_state": {
-      "initializing_alert": "We're provisioning your instance. The partial configuration will update when provisioning is complete. This can take up to 20 minutes.",
-      "terminating_alert": "This instance is being deleted and all data will be lost. This can take up to 20 minutes."
+      "initializing_tooltip": "We're provisioning your instance. The partial configuration will update when provisioning is complete. This can take up to 20 minutes.",
+      "terminating_tooltip": "This instance is being deleted and all data will be lost. This can take up to 20 minutes."
     },
     "managed_dpg": {
       "entry_heading": "Data plane group {n}"
@@ -96,6 +84,7 @@
     "actions": {
       "save": "Save",
       "cancel": "Cancel",
+      "remove": "Remove",
       "view_configuration": "View configuration"
     },
     "managed_layout": {
@@ -191,6 +180,73 @@
           "tooltip": "Azure tenant ID to be used for authentication when `auth_provider` is set to `azure`."
         }
       },
+      "oauth": {
+        "key_placeholder": "Key",
+        "value_placeholder": "Value",
+        "token_endpoint": {
+          "label": "Token endpoint",
+          "tooltip": "OAuth 2.0 token endpoint URL used to request access tokens."
+        },
+        "auth_method": {
+          "label": "Auth method",
+          "tooltip": "Client authentication method used against the token endpoint."
+        },
+        "grant_type": {
+          "label": "Grant type",
+          "tooltip": "OAuth 2.0 grant type used to request access tokens."
+        },
+        "client_secret_jwt_alg": {
+          "label": "Client secret JWT algorithm",
+          "tooltip": "Signing algorithm used for `client_secret_jwt` client authentication."
+        },
+        "client_id": {
+          "label": "Client ID",
+          "tooltip": "OAuth 2.0 client ID."
+        },
+        "client_secret": {
+          "label": "Client secret",
+          "tooltip": "OAuth 2.0 client secret."
+        },
+        "password": {
+          "label": "Password",
+          "tooltip": "Resource owner password, used with the `password` grant type."
+        },
+        "username": {
+          "label": "Username",
+          "tooltip": "Resource owner username, used with the `password` grant type."
+        },
+        "redis_username": {
+          "label": "Redis username",
+          "tooltip": "Static Redis ACL username sent with `AUTH <username> <token>`."
+        },
+        "redis_username_claim": {
+          "label": "Redis username claim",
+          "tooltip": "JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID)."
+        },
+        "scopes": {
+          "label": "Scopes",
+          "tooltip": "OAuth 2.0 scopes to request.",
+          "add_button": "Add scope"
+        },
+        "token_headers": {
+          "label": "Token headers",
+          "tooltip": "Additional HTTP headers to send with the token request.",
+          "add_button": "Add header"
+        },
+        "token_post_args": {
+          "label": "Token POST arguments",
+          "tooltip": "Additional POST body arguments to send with the token request.",
+          "add_button": "Add argument"
+        },
+        "timeout": {
+          "label": "Timeout",
+          "tooltip": "Timeout, in milliseconds, for requests to the token endpoint."
+        },
+        "ssl_verify": {
+          "label": "Verify token endpoint certificate",
+          "tooltip": "Whether to verify the TLS certificate of the token endpoint."
+        }
+      },
       "type": {
         "label": "Redis type"
       },
@@ -202,7 +258,7 @@
         "label": "Tags",
         "placeholder": "Enter a list of tags separated by comma",
         "help": "e.g. tag1, tag2, tag3",
-        "tooltip": "An optional set of strings associated with the Route for grouping and filtering."
+        "tooltip": "An optional set of strings associated with the redis configuration for grouping and filtering."
       },
       "host": {
         "label": "Host",
@@ -230,7 +286,7 @@
         "tooltip": "If set to true, uses SSL to connect to Redis."
       },
       "ssl_verify": {
-        "label": "SSL Verify",
+        "label": "SSL verify",
         "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly.",
         "tooltip": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong.conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ssl_verify_depth accordingly."
       },
@@ -317,7 +373,23 @@
       "auth_provider": {
         "aws": "AWS",
         "azure": "Azure",
-        "gcp": "GCP"
+        "gcp": "GCP",
+        "oauth": "OAuth"
+      },
+      "oauth": {
+        "auth_method": {
+          "client_secret_basic": "Client secret basic",
+          "client_secret_jwt": "Client secret JWT",
+          "client_secret_post": "Client secret post"
+        },
+        "grant_type": {
+          "client_credentials": "Client credentials",
+          "password": "Password"
+        },
+        "client_secret_jwt_alg": {
+          "HS256": "HS256",
+          "HS512": "HS512"
+        }
       },
       "type": {
         "host_port": "Host/Port",
@@ -383,6 +455,14 @@
       "feature_2": {
         "title": "Sync across plugins",
         "description": "Edits to your configuration will be cascaded automatically to all associated plugins."
+      },
+      "feature_3": {
+        "title": "Deploy Konnect Managed Cache",
+        "description": "Configure and deploy managed Redis instances alongside your data planes for seamless plugin integration."
+      },
+      "feature_4": {
+        "title": "Share Redis configuration",
+        "description": "Share Redis configuration settings across multiple data planes and regions."
       }
     }
   }

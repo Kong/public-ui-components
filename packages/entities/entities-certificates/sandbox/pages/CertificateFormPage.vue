@@ -42,6 +42,7 @@ const konnectConfig = ref<KonnectCertificateFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: 'certificate-list' },
+  azureCertsVaultAvailable: true,
 })
 
 const kongManagerConfig = ref<KongManagerCertificateFormConfig>({
@@ -50,6 +51,7 @@ const kongManagerConfig = ref<KongManagerCertificateFormConfig>({
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'certificate-list' },
   sniListRoute: { name: 'sni-list' },
+  azureCertsVaultAvailable: true,
 })
 
 const onError = (error: AxiosError) => {

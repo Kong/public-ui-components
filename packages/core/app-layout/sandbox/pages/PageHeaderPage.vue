@@ -1,16 +1,6 @@
 <template>
   <div class="sandbox-container">
-    <AppPageHeader
-      :breadcrumbs="breadcrumbs"
-      :konnect-navigation-next="konnectNavigationNextEnabled"
-      title="Cats are Cool"
-    >
-      <template #icon-app-layout>
-        <KongIcon :color="KUI_COLOR_TEXT_DECORATIVE_AQUA" />
-      </template>
-      <template #title-before>
-        <TeamIcon class="title-icon" />
-      </template>
+    <AppPageHeader title="Cats are Cool">
       <template #title-after>
         <KBadge appearance="neutral">
           TRUTH
@@ -19,11 +9,6 @@
 
       <template #actions>
         <div class="actions-wrapper">
-          <KInputSwitch
-            v-model="konnectNavigationNextEnabled"
-            label="Konnect navigation next"
-            label-before
-          />
           <KButton appearance="primary">
             <AddIcon />
             Do Things
@@ -103,42 +88,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import { AppAboutSection, AppPageHeader } from '../../src'
-import { EditIcon, KongIcon, TeamIcon, AddIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
-
-const breadcrumbs = computed(() => {
-  return [
-    {
-      key: 'app-layout',
-      to: { name: 'home' },
-      text: 'App Layout',
-    },
-    {
-      key: 'app-page-header',
-      to: { name: 'page-header' },
-      text: 'App Page Header',
-    },
-  ]
-})
-const konnectNavigationNextEnabled = ref<boolean>(false)
+import { EditIcon, AddIcon } from '@kong/icons'
 </script>
 
 <style lang="scss" scoped>
 .sandbox-container {
   padding: 16px;
-}
-
-.home-breadcrumb-icon {
-  align-self: center;
-  display: inline-flex;
-  margin-right: 8px;
-}
-
-.title-icon {
-  display: inline-flex;
 }
 
 .mr-3 {
@@ -148,7 +105,7 @@ const konnectNavigationNextEnabled = ref<boolean>(false)
 .actions-wrapper {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
 }
 
 .about-action-button {

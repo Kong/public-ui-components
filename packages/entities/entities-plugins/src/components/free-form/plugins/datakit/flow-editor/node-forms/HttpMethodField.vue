@@ -6,8 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import EnumField from '../../../../shared/EnumField.vue'
-import { toSelectItems } from '../../../../shared/utils'
+import { EnumField, toSelectItems } from '@kong-ui-public/freeform'
 import { HTTP_METHODS } from '../../constants'
 
 defineProps<{

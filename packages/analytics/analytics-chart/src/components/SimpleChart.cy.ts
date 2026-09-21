@@ -8,25 +8,20 @@ const exploreResultTruncated = {
     {
       timestamp: '2023-05-30T13:09:00.987Z',
       event: {
-        StatusCode: '200',
         TotalRequests: 255.49999999999997,
       },
     },
     {
-      timestamp: '2023-05-30T13:09:00.987Z',
+      timestamp: '2023-05-30T14:09:00.987Z',
       event: {
-        StatusCode: '300',
         TotalRequests: 182.5,
       },
     },
   ],
   meta: {
     start: '2023-05-30T13:09:00.987Z',
-    end: '2023-05-30T19:09:00.987Z',
+    end: '2023-05-30T15:09:00.987Z',
     query_id: '12346',
-    display: {
-      StatusCode: { 200: { name: '200' }, 300: { name: '300' } },
-    },
     metric_names: ['TotalRequests'],
     metric_units: {
       TotalRequests: 'requests',
@@ -113,6 +108,66 @@ describe('<SimpleChart />', () => {
 
     const value = parseFloat(exploreResultTruncated.data[0].event.TotalRequests.toFixed(2))
 
+    cy.getTestId('single-value-chart').should('be.visible')
+    cy.getTestId('single-value-chart').contains(value)
+  })
+
+  it('renders Single Value chart with a trend', () => {
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: exploreResultTruncated,
+        chartOptions: {
+          type: 'single_value',
+          showTrend: true,
+        },
+      },
+    })
+
+    const value = parseFloat(exploreResultTruncated.data[1].event.TotalRequests.toFixed(2))
+
+    cy.getTestId('single-value-chart').should('be.visible')
+    cy.getTestId('single-value-chart').contains(value)
+  })
+
+  it('renders Single Value chart with a trend with only previous datapoint', () => {
+    const oneResult = {
+      ...exploreResultTruncated,
+      data: [
+        exploreResultTruncated.data[0],
+      ],
+    }
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: oneResult,
+        chartOptions: {
+          type: 'single_value',
+          showTrend: true,
+        },
+      },
+    })
+
+    cy.getTestId('single-value-chart').should('be.visible')
+    cy.getTestId('single-value-chart').contains('-')
+  })
+
+  it('renders Single Value chart with a trend with only current datapoint', () => {
+    const oneResult = {
+      ...exploreResultTruncated,
+      data: [
+        exploreResultTruncated.data[1],
+      ],
+    }
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: oneResult,
+        chartOptions: {
+          type: 'single_value',
+          showTrend: true,
+        },
+      },
+    })
+
+    const value = parseFloat(exploreResultTruncated.data[1].event.TotalRequests.toFixed(2))
     cy.getTestId('single-value-chart').should('be.visible')
     cy.getTestId('single-value-chart').contains(value)
   })

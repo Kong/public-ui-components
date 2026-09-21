@@ -44,8 +44,21 @@ export interface BasePluginListConfig {
   getToggleDisabledTooltip?: (plugin: EntityRow) => string | null
 }
 
+/** Konnect-only: independently toggleable pieces of the plugin list improvement epic. Each defaults to false/undefined = current behavior. `sorting` and `bulkActions` only take effect when `filtering` is also on, since they build on the redesigned table layout it introduces. */
+export interface PluginTableImprovementFlags {
+  /** Enables the redesigned table (search API, Name/Scope/Status/Ordering columns, KFilterGroup toolbar). */
+  filtering?: boolean
+  /** Enables column sorting on the redesigned table. Requires `filtering`. */
+  sorting?: boolean
+  /** Enables bulk row selection/actions on the redesigned table. Requires `filtering`. */
+  bulkActions?: boolean
+}
+
 /** Konnect plugin list config */
-export interface KonnectPluginListConfig extends KonnectBaseTableConfig, BasePluginListConfig {}
+export interface KonnectPluginListConfig extends KonnectBaseTableConfig, BasePluginListConfig {
+  /** Konnect-only: flags for the plugin list improvement, rolled out incrementally. */
+  pluginTableImprovements?: PluginTableImprovementFlags
+}
 
 /** Kong Manager plugin list config */
 export interface KongManagerPluginListConfig extends KongManagerBaseTableConfig, BasePluginListConfig {

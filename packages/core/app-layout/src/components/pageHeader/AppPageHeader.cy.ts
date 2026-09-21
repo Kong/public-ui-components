@@ -5,31 +5,20 @@ import AppPageHeader from './AppPageHeader.vue'
 describe('<AppPageHeader />', () => {
   it('should correctly render content when using props', () => {
     const title = 'Cats are Cool'
-    const breadcrumbTitle = 'Home'
 
     cy.mount(AppPageHeader, {
       props: {
         title,
-        breadcrumbs: [{
-          key: 'home',
-          to: { name: 'home' },
-          text: breadcrumbTitle,
-          icon: 'kong',
-        }],
       },
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
-    cy.getTestId('page-header-breadcrumbs').should('be.visible')
-    cy.get('.breadcrumbs-text').should('contain.text', breadcrumbTitle)
     cy.getTestId('page-header-title').should('be.visible')
     cy.getTestId('page-header-title').should('contain.text', title)
   })
 
   it('should correctly render content when use slots', () => {
     const title = 'Cats are Cool'
-    const breadcrumbIcon = 'home-breadcrumb-icon'
-    const iconText = 'title-icons-are-cool'
     const badgeText = 'title-badges-are-cool'
     const actionsText = 'actions-are-cool'
     const belowText = 'Cats are the key to a happy life.'
@@ -37,15 +26,8 @@ describe('<AppPageHeader />', () => {
     cy.mount(AppPageHeader, {
       props: {
         title,
-        breadcrumbs: [{
-          key: 'home',
-          to: { name: 'home' },
-          text: 'Home',
-        }],
       },
       slots: {
-        'icon-home': breadcrumbIcon,
-        'title-before': iconText,
         'title-after': badgeText,
         actions: actionsText,
         below: belowText,
@@ -53,10 +35,6 @@ describe('<AppPageHeader />', () => {
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
-    cy.get('.breadcrumbs-icon-container').should('be.visible')
-    cy.get('.breadcrumbs-icon-container').should('contain.text', breadcrumbIcon)
-    cy.getTestId('page-header-title-before').should('be.visible')
-    cy.getTestId('page-header-title-before').should('contain.text', iconText)
     cy.getTestId('page-header-title-after').should('be.visible')
     cy.getTestId('page-header-title-after').should('contain.text', badgeText)
     cy.getTestId('page-header-actions').should('be.visible')
@@ -75,33 +53,8 @@ describe('<AppPageHeader />', () => {
     })
 
     cy.get('.kong-ui-app-page-header').should('exist')
-    cy.getTestId('page-header-breadcrumbs').should('not.exist')
-    cy.getTestId('page-header-title-before').should('not.exist')
     cy.getTestId('page-header-title-after').should('not.exist')
     cy.getTestId('page-header-actions').should('not.exist')
     cy.getTestId('page-header-section-below').should('not.exist')
-  })
-
-  it('omits breadcrumbs and title-before when konnectNavigationNext is true', () => {
-    const iconText = 'title-icons-are-cool'
-
-    cy.mount(AppPageHeader, {
-      props: {
-        title: 'Cats are Cool',
-        breadcrumbs: [{
-          key: 'home',
-          to: { name: 'home' },
-          text: 'Home',
-        }],
-        konnectNavigationNext: true,
-      },
-      slots: {
-        'title-before': iconText,
-      },
-    })
-
-    cy.get('.kong-ui-app-page-header').should('exist')
-    cy.getTestId('page-header-breadcrumbs').should('not.exist')
-    cy.getTestId('page-header-title-before').should('not.exist')
   })
 })

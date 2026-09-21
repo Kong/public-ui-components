@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { inferRedisPartialManagedSource, isKonnectManagedRedisEnabled } from './helpers'
-import { REDIS_CONFIGURATION_SOURCE } from './types'
+import { inferRedisPartialManagedSource, isKonnectManagedRedisEnabled, pickCloudAuthFields } from './helpers'
+import { AuthProvider, REDIS_CONFIGURATION_SOURCE } from './types'
 
 describe('Infer Partial Source', () => {
   it('treats empty tags as self-managed', () => {
@@ -64,5 +64,49 @@ describe('isKonnectManagedRedisEnabled', () => {
         isCloudGateway: false,
       }),
     ).toBe(false)
+  })
+})
+
+describe('pickCloudAuthFields', () => {
+  it('returns null when no auth provider is selected', () => {
+    expect(pickCloudAuthFields(undefined)).toBeNull()
+    expect(pickCloudAuthFields({ aws_is_serverless: false })).toBeNull()
+  })
+
+  it('whitelists only AWS fields for the aws provider', () => {
+    const picked = pickCloudAuthFields({
+      auth_provider: AuthProvider.AWS,
+      aws_cache_name: 'cache',
+      aws_is_serverless: true,
+      azure_client_id: 'should-be-dropped',
+    })
+    expect(picked).toEqual({
+      auth_provider: AuthProvider.AWS,
+      aws_cache_name: 'cache',
+      aws_region: undefined,
+      aws_is_serverless: true,
+      aws_access_key_id: undefined,
+      aws_secret_access_key: undefined,
+      aws_assume_role_arn: undefined,
+      aws_role_session_name: undefined,
+    })
+  })
+
+  it('returns only the auth provider for the oauth provider (oauth record is standardized separately)', () => {
+    const picked = pickCloudAuthFields({
+      auth_provider: AuthProvider.OAUTH,
+      aws_is_serverless: false,
+      oauth: {
+        auth_method: undefined,
+        grant_type: undefined,
+        client_secret_jwt_alg: undefined,
+        ssl_verify: true,
+        scopes: [],
+        token_headers: {},
+        token_post_args: {},
+        token_endpoint: 'https://example.com/token',
+      } as any,
+    })
+    expect(picked).toEqual({ auth_provider: AuthProvider.OAUTH })
   })
 })

@@ -69,11 +69,7 @@
 import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
-import Form from '../../../../shared/Form.vue'
-import EnumField from '../../../../shared/EnumField.vue'
-import NumberField from '../../../../shared/NumberField.vue'
-import StringField from '../../../../shared/StringField.vue'
-import MapField from '../../../../shared/MapField.vue'
+import { Form, EnumField, NumberField, StringField, MapField } from '@kong-ui-public/freeform'
 import useI18n from '../../../../../../composables/useI18n'
 import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'

@@ -27,16 +27,14 @@
           class="sensitive-fields-checkbox"
           data-testid="sensitive-fields-checkbox"
           :label="t('baseConfigCard.actions.sensitive_fields')"
+          :label-attributes="{
+            info: t('baseConfigCard.actions.sensitive_fields_tooltip'),
+            tooltipAttributes: {
+              maxWidth: '200',
+              placement: 'top',
+            },
+          }"
         />
-
-        <KButton
-          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
-          appearance="secondary"
-          class="button-customize-deck"
-          @click="isDeckCustomizationVisible = true"
-        >
-          {{ t('baseConfigCard.actions.deck_customize') }}
-        </KButton>
 
         <div class="row">
           <KLabel
@@ -54,6 +52,16 @@
         </div>
 
         <KButton
+          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
+          appearance="secondary"
+          class="button-customize-deck"
+          data-testid="config-deck-customize-button"
+          @click="isDeckCustomizationVisible = true"
+        >
+          {{ t('baseConfigCard.actions.deck_customize') }}
+        </KButton>
+
+        <KButton
           v-if="configCardDoc"
           appearance="tertiary"
           class="book-icon"
@@ -65,7 +73,7 @@
             target="_blank"
           >
             <BookIcon
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
           </a>
         </KButton>
@@ -92,53 +100,46 @@
     </KEmptyState>
 
     <!-- Properties Content -->
-    <template v-else>
-      <div class="config-card-details-section">
-        <ConfigCardDisplay
-          :code-block-record="codeBlockRecordFromApi"
-          :code-block-record-formatter="codeBlockRecordFormatter"
-          :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
-          :config="config"
-          :entity-type="entityType"
-          :fetcher-url="fetcherUrl"
-          :format="configFormat"
-          :is-deck-customization-visible="isDeckCustomizationVisible"
-          :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
-          :prop-list-types="propListTypes"
-          :property-collections="propertyLists"
-          :record="record"
-          :sub-entity-type="subEntityType"
-          @deck-customization:close="isDeckCustomizationVisible = false"
-          @request-deck-format="configFormat = 'deck'"
-        >
-          <!-- Pass through slots except `after-fields` -->
-          <template
-            v-for="slotKey in configCardDisplaySlotKeys"
-            :key="slotKey"
-            #[slotKey]="slotProps"
-          >
-            <slot
-              :name="slotKey"
-              :record="record"
-              v-bind="slotProps"
-            />
-          </template>
-        </ConfigCardDisplay>
-      </div>
-      <!-- Pairs with `config-card-details-section`; optional block below the property grid (`#after-fields`) -->
-      <div
-        v-if="hasAfterFieldsSlot"
-        class="config-card-details-after"
+    <div
+      v-else
+      class="config-card-details-section"
+    >
+      <ConfigCardDisplay
+        :code-block-record="codeBlockRecordFromApi"
+        :code-block-record-formatter="codeBlockRecordFormatter"
+        :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
+        :config="config"
+        :entity-type="entityType"
+        :fetcher-url="fetcherUrl"
+        :format="configFormat"
+        :is-deck-customization-visible="isDeckCustomizationVisible"
+        :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
+        :prop-list-types="propListTypes"
+        :property-collections="propertyLists"
+        :record="record"
+        :sub-entity-type="subEntityType"
+        @deck-customization:close="isDeckCustomizationVisible = false"
+        @request-deck-format="configFormat = 'deck'"
       >
-        <slot name="after-fields" />
-      </div>
-    </template>
+        <template
+          v-for="slotKey in Object.keys($slots)"
+          :key="slotKey"
+          #[slotKey]="slotProps"
+        >
+          <slot
+            :name="slotKey"
+            :record="record"
+            v-bind="slotProps"
+          />
+        </template>
+      </ConfigCardDisplay>
+    </div>
   </KCard>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, onMounted, useSlots } from 'vue'
+import { computed, ref, onBeforeMount, watch, onMounted } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   KonnectBaseEntityConfig,
@@ -174,7 +175,6 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
@@ -316,27 +316,16 @@ const props = defineProps({
   },
 })
 
-// If a parent passes `#after-fields`, dont forward that name to ConfigCardDisplay (its not a field slot)
-const RESERVED_ENTITY_CONFIG_CARD_SLOTS = new Set(['after-fields'])
-
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
+const schema = composables.useSchema()
 
 composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
 
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
-const slots = useSlots()
-
 const isDeckCustomizationVisible = ref(false)
-
-/** Every dynamic slot (title, type etc) oter than `after-fields` is passed through to ConfigCardDisplay */
-const configCardDisplaySlotKeys = computed(() =>
-  Object.keys(slots).filter((name) => !RESERVED_ENTITY_CONFIG_CARD_SLOTS.has(name)),
-)
-
-const hasAfterFieldsSlot = computed((): boolean => Boolean(slots['after-fields']))
 
 const {
   isDeckEnabled,
@@ -455,6 +444,11 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
     order: -1, // the last property displayed
     section: ConfigurationSchemaSection.Basic,
   },
+  labels: {
+    type: ConfigurationSchemaType.BadgeTag,
+    order: -1, // the last property displayed
+    section: ConfigurationSchemaSection.Basic,
+  },
   partials: {
     type: ConfigurationSchemaType.LinkInternal,
     label: t('baseConfigCard.commonFields.partial_label'),
@@ -480,14 +474,23 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
 
 // redact sensitive fields by default
 const showSensitiveFields = ref(false)
-const redactedCodeBlockRecord = computed((): Record<string, any> => {
-  const rec = { ...(codeBlockRecordFromApi.value || record.value) }
 
-  for (const key in rec) {
-    if (props.configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
-      rec[key] = '********'
+const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaField } = composables.useHelpers()
+
+const redactedCodeBlockRecord = computed((): Record<string, any> => {
+  const source = codeBlockRecordFromApi.value || record.value
+  let rec = source
+
+  if (isObjectRecord(source) && Array.isArray(schema?.value?.fields)) {
+    const schemaRedactedRecord: Record<string, any> = {}
+    for (const key in source) {
+      const fieldSchema = getApiSchemaField(schema?.value?.fields, key)
+      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : source[key]
     }
+    rec = schemaRedactedRecord
   }
+
+  rec = redactByConfigSchema(rec, props.configSchema) as Record<string, any>
 
   return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
 })
@@ -739,7 +742,6 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
-/* If `#after-fields` exists, keep a bottom border on the last property row so extra block aligns with grid */
 .kong-ui-entity-base-config-card {
   .config-card-actions {
     align-items: center;
@@ -773,16 +775,8 @@ onBeforeMount(async () => {
     margin-top: var(--kui-space-110, $kui-space-110);
   }
 
-  /* No `#after-fields`- hide last row’s bottom border */
-  &:not(:has(.config-card-details-after)) {
-    :deep(.config-card-details-row:last-of-type) {
-      border-bottom: none;
-    }
-  }
-
-  /* When `config-card-details-after` exists, keep border so that grid meets the next block */
-  .config-card-details-after {
-    padding-top: var(--kui-space-60, $kui-space-60);
+  :deep(.config-card-details-row:last-of-type) {
+    border-bottom: none;
   }
 
   .book-icon {

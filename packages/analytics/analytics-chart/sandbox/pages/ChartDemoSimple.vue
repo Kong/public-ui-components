@@ -132,6 +132,13 @@
               label="Number of metrics"
             />
           </div>
+          <div>
+            <KSelect
+              v-model="topNDimensionCount"
+              :items="dimensionItems"
+              label="Number of dimensions"
+            />
+          </div>
 
           <br>
           <KLabel>Top&nbsp;N metric</KLabel>
@@ -199,16 +206,16 @@
               :label="showTrend ? 'Show Trend' : 'Hide Trend'"
             />
           </div>
+          <KSelect
+            v-model="alignX"
+            :items="alignXOptions"
+            label="Align X"
+            placeholder="Select alignment"
+          />
           <div v-if="showTrend">
             <KInputSwitch
               v-model="increaseIsBad"
               :label="increaseIsBad ? 'Increase Is Bad' : 'Increase Is Good'"
-            />
-            <KSelect
-              v-model="alignX"
-              :items="alignXOptions"
-              label="Align X"
-              placeholder="Select alignment"
             />
           </div>
         </div>
@@ -253,6 +260,12 @@
       class="simple-chart-sandbox"
       :class="{ 'single-value-sandbox': isSingleValue }"
     >
+      <div
+        v-if="isSingleValue"
+        class="single-value-preview-header"
+      >
+        Requests
+      </div>
       <SimpleChart
         :chart-data="exploreResult"
         :chart-options="simpleChartOptions"
@@ -269,7 +282,13 @@
         title="Top 5 Routes"
       >
         <template #name="{ record }">
-          <a href="#">{{ record.name }}</a>
+          <a
+            v-if="record.name !== 'empty'"
+            href="#"
+          >
+            {{ record.name }}
+          </a>
+          <span v-else><i>{{ record.name }}</i></span>
         </template>
       </TopNTable>
     </div>
@@ -302,13 +321,13 @@
 </template>
 
 <script setup lang="ts">
-import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { SelectItem } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { AlignX, AnalyticsChartColors, SimpleChartType, SimpleChartOptions, SimpleChartMetricDisplay } from '../../src'
 
 import { computed, ref, inject } from 'vue'
-import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData, generateData } from '@kong-ui-public/analytics-utilities'
 import { SimpleChart, TopNTable } from '../../src'
 
 type TopNMetricKind = 'count' | 'ms' | 'bytes' | 'usd' | 'rpm' | 'fallback'
@@ -320,6 +339,64 @@ type MetricScenario = {
   unit: string
   values: number[]
 }
+
+const topNRouteDisplay = {
+  'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': { name: 'GetMeAKongDefault (secondaryRuntime)', deleted: false },
+  'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
+  'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
+  'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
+  'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': { name: 'dp-mock-msg-per-sec-us-dev (default)', deleted: false },
+  'empty': { name: 'empty', deleted: false },
+}
+
+const topNGatewayServiceDisplay = {
+  'gateway-service-1': { name: 'Gateway service 1', deleted: false },
+  'gateway-service-2': { name: 'Gateway service 2', deleted: false },
+  'gateway-service-3': { name: 'Gateway service 3', deleted: false },
+}
+
+const topNConsumerDisplay = {
+  'consumer-1': { name: 'Consumer 1', deleted: false },
+  'consumer-2': { name: 'Consumer 2', deleted: false },
+  'consumer-3': { name: 'Consumer 3', deleted: false },
+}
+
+const topNMetricScenarios: MetricScenario[] = [
+  {
+    kind: 'count',
+    metricKey: 'request_count',
+    unit: 'count',
+    values: [9_483, 5_587, 5_583, 1_485, 309, 9_001],
+  },
+  {
+    kind: 'ms',
+    metricKey: 'response_latency_average',
+    unit: 'ms',
+    values: [12.345, 9.8, 7.23, 3.456, 1.001, 9.001],
+  },
+  {
+    kind: 'bytes',
+    metricKey: 'response_size_average',
+    unit: 'bytes',
+    values: [1_048_576, 512_000, 2_048, 128, 1, 9_001],
+  },
+  {
+    kind: 'usd',
+    metricKey: 'cost',
+    unit: 'usd',
+    values: [12.3, 3.99, 0.00005, 0.42, 0.1, 90.01],
+  },
+  {
+    kind: 'rpm',
+    metricKey: 'requests_per_minute',
+    unit: 'count/minute',
+    values: [98_765, 43_210, 2_100, 987, 12, 9_001],
+  },
+]
+
+const topNRouteIds = Object.keys(topNRouteDisplay)
+const topNGatewayServiceIds = Object.keys(topNGatewayServiceDisplay)
+const topNConsumerIds = Object.keys(topNConsumerDisplay)
 
 const alignXOptions: Array<{
   label: string
@@ -344,11 +421,19 @@ const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
 const showTrend = ref(false)
 const increaseIsBad = ref(false)
-const alignX = ref<AlignX>('evenly')
+const alignX = ref<AlignX>('left')
 
 const statusCodeDimensionValues = ref(new Set(['200', '300']))
 const topNMetric = ref<TopNMetricKind>('count')
 const topNMetricCount = ref(1)
+const topNDimensionCount = ref(1)
+
+const createSingleValueData = (): ExploreResultV4 => generateData({
+  metrics: [{ name: 'request_count', unit: 'count' }],
+  timeSeries: true,
+})
+
+const singleValueData = ref<ExploreResultV4>(createSingleValueData())
 
 const metricItems = computed<SelectItem[]>(() => {
   let out = []
@@ -365,9 +450,43 @@ const metricItems = computed<SelectItem[]>(() => {
   return out
 })
 
+const dimensionItems = computed<SelectItem[]>(() => {
+  let out = []
+
+  for (let i = 0; i <= 3; i++) {
+    if (i === 0) {
+      out.push({
+        label: `${i}`,
+        value: `${i}`,
+        key: 'no_dimensions',
+      })
+    } else {
+      out.push({
+        label: `${i}`,
+        value: `${i}`,
+        key: `dimension_${i}`,
+        selected: i === 1,
+      })
+    }
+  }
+
+  return out
+})
+
 const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
     return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
+  }
+
+  if (chartType.value === 'single_value') {
+    const data = singleValueData.value.data
+
+    return {
+      ...singleValueData.value,
+      data: showTrend.value
+        ? [data[0], data[data.length - 1]]
+        : [data[data.length - 1]],
+    }
   }
 
   return generateCrossSectionalData([{
@@ -377,110 +496,114 @@ const exploreResult = computed<ExploreResultV4>(() => {
 })
 
 const randomizeData = () => {
-  // Randomize the data
+  if (chartType.value === 'single_value') {
+    singleValueData.value = createSingleValueData()
+    return
+  }
+
   statusCodeDimensionValues.value = new Set([Math.floor(Math.random() * 1000).toString(), Math.floor(Math.random() * 1000).toString()])
 }
-const topNTableData = computed<ExploreResultV4>(() => {
-  if (emptyState.value) {
+
+const getTopNDisplay = (dimensionCount: number): DisplayBlob => {
+  if (dimensionCount < 1) {
+    return {}
+  }
+  const display: DisplayBlob = {
+    route: topNRouteDisplay,
+  }
+
+  if (dimensionCount > 1) {
+    display.gateway_service = topNGatewayServiceDisplay
+  }
+
+  if (dimensionCount > 2) {
+    display.consumer = topNConsumerDisplay
+  }
+
+  return display
+}
+
+const getTopNDimensionEvent = (
+  routeId: string,
+  idx: number,
+  dimensionCount: number,
+): Record<string, string> => {
+
+  if (dimensionCount < 1) {
+    return {}
+  }
+
+  const event = {
+    route: routeId,
+  }
+
+  if (dimensionCount > 1) {
+    event.gateway_service = topNGatewayServiceIds[idx % topNGatewayServiceIds.length]
+  }
+
+  if (dimensionCount > 2) {
+    event.consumer = topNConsumerIds[idx % topNConsumerIds.length]
+  }
+
+  return event
+}
+
+const getTopNBaseMeta = (
+  display: DisplayBlob,
+  metricNames: string[],
+): QueryResponseMeta => {
+  return {
+    display,
+    end: '2023-08-17T18:00:53.000Z',
+    granularity_ms: 300000,
+    limit: 50,
+    metric_names: metricNames,
+    query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+    start: '2023-08-17T17:55:53.000Z',
+  } as unknown as QueryResponseMeta
+}
+
+const getTopNFallbackTableData = (
+  display: DisplayBlob,
+  dimensionCount: number,
+): ExploreResultV4 => {
+  const scenario = {
+    metricKey: 'request_count',
+    values: [5_583, 1_485, 309, 42, 1],
+  }
+
+  const rows: AnalyticsExploreRecord[] = topNRouteIds.map((routeId, idx) => {
     return {
-      meta: {} as QueryResponseMeta,
-      data: [] as AnalyticsExploreRecord[],
-    }
-  }
-
-  const display = {
-    route: {
-      'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6': { name: 'GetMeAKongDefault (secondaryRuntime)', deleted: false },
-      'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
-      'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
-      'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
-      'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': { name: 'dp-mock-msg-per-sec-us-dev (default)', deleted: false },
-    },
-  }
-
-  // Keep the "fallback" case as a single-metric scenario so it still
-  // demonstrates the behavior where metric_units is not provided.
-  if (topNMetric.value === 'fallback') {
-    const scenario = {
-      metricKey: 'request_count',
-      values: [5_583, 1_485, 309, 42, 1],
-    }
-
-    const meta: QueryResponseMeta = {
-      display,
-      end: '2023-08-17T18:00:53.000Z',
-      granularity_ms: 300000,
-      limit: 50,
-      metric_names: [scenario.metricKey],
-      query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-      start: '2023-08-17T17:55:53.000Z',
-    } as unknown as QueryResponseMeta
-
-    const routeIds = Object.keys(display.route)
-    const rows: AnalyticsExploreRecord[] = routeIds.map((routeId, idx) => {
-      return {
-        event: {
-          [scenario.metricKey]: scenario.values[idx] ?? 0,
-          route: routeId,
-        },
-        timestamp: '2023-08-17T17:55:53.000Z',
-      } as AnalyticsExploreRecord
-    })
-
-    return {
-      meta,
-      data: rows,
-    } as ExploreResultV4
-  }
-
-  // Multi-metric scenarios for all non-fallback kinds
-  const metricScenarios: MetricScenario[] = [
-    {
-      kind: 'count',
-      metricKey: 'request_count',
-      unit: 'count',
-      values: [9_483, 5_587, 5_583, 1_485, 309],
-    },
-    {
-      kind: 'ms',
-      metricKey: 'response_latency_average',
-      unit: 'ms',
-      values: [12.345, 9.8, 7.23, 3.456, 1.001],
-    },
-    {
-      kind: 'bytes',
-      metricKey: 'response_size_average',
-      unit: 'bytes',
-      values: [1_048_576, 512_000, 2_048, 128, 1],
-    },
-    {
-      kind: 'usd',
-      metricKey: 'cost',
-      unit: 'usd',
-      values: [12.3, 3.99, 0.00005, 0.42, 0.1],
-    },
-    {
-      kind: 'rpm',
-      metricKey: 'requests_per_minute',
-      unit: 'count/minute',
-      values: [98_765, 43_210, 2_100, 987, 12],
-    },
-  ]
-
-  let primaryScenario = metricScenarios.find((scenario) => {
-    return scenario.kind === topNMetric.value
+      event: {
+        [scenario.metricKey]: scenario.values[idx] ?? 0,
+        ...getTopNDimensionEvent(routeId, idx, dimensionCount),
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    } as AnalyticsExploreRecord
   })
 
-  if (!primaryScenario) {
-    primaryScenario = metricScenarios[0]
-  }
+  return {
+    meta: getTopNBaseMeta(display, [scenario.metricKey]),
+    data: dimensionCount === 0 ? rows.slice(0, 1) : rows,
+  } as ExploreResultV4
+}
 
-  const otherScenarios = metricScenarios.filter((scenario) => {
+const getTopNMetricTableData = (
+  display: DisplayBlob,
+  primaryMetric: TopNMetricKind,
+  metricCount: number,
+  dimensionCount: number,
+): ExploreResultV4 => {
+  const primaryScenario = topNMetricScenarios.find((scenario) => {
+    return scenario.kind === primaryMetric
+  }) || topNMetricScenarios[0]
+
+  const otherScenarios = topNMetricScenarios.filter((scenario) => {
     return scenario.kind !== primaryScenario.kind
   })
 
   const maxMetrics = Math.min(
-    topNMetricCount.value,
+    metricCount,
     1 + otherScenarios.length,
   )
 
@@ -489,17 +612,9 @@ const topNTableData = computed<ExploreResultV4>(() => {
     ...otherScenarios,
   ].slice(0, maxMetrics)
 
-  const meta: QueryResponseMeta = {
-    display,
-    end: '2023-08-17T18:00:53.000Z',
-    granularity_ms: 300000,
-    limit: 50,
-    metric_names: selectedScenarios.map((scenario) => {
-      return scenario.metricKey
-    }),
-    query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-    start: '2023-08-17T17:55:53.000Z',
-  } as unknown as QueryResponseMeta
+  const meta = getTopNBaseMeta(display, selectedScenarios.map((scenario) => {
+    return scenario.metricKey
+  }))
 
   const metricUnits: Record<string, string> = {}
 
@@ -511,10 +626,9 @@ const topNTableData = computed<ExploreResultV4>(() => {
     meta.metric_units = metricUnits
   }
 
-  const routeIds = Object.keys(display.route)
-  const rows: AnalyticsExploreRecord[] = routeIds.map((routeId, idx) => {
+  const rows: AnalyticsExploreRecord[] = topNRouteIds.map((routeId, idx) => {
     const event: Record<string, number | string> = {
-      route: routeId,
+      ...getTopNDimensionEvent(routeId, idx, dimensionCount),
     }
 
     selectedScenarios.forEach((scenario) => {
@@ -529,8 +643,31 @@ const topNTableData = computed<ExploreResultV4>(() => {
 
   return {
     meta,
-    data: rows,
+    data: dimensionCount === 0 ? rows.slice(0, 1) : rows,
   } as ExploreResultV4
+}
+
+const topNTableData = computed<ExploreResultV4>(() => {
+  if (emptyState.value) {
+    return {
+      meta: {} as QueryResponseMeta,
+      data: [] as AnalyticsExploreRecord[],
+    }
+  }
+
+  const dimensionCount = Number(topNDimensionCount.value)
+  const display = getTopNDisplay(dimensionCount)
+
+  if (topNMetric.value === 'fallback') {
+    return getTopNFallbackTableData(display, dimensionCount)
+  }
+
+  return getTopNMetricTableData(
+    display,
+    topNMetric.value,
+    Number(topNMetricCount.value),
+    dimensionCount,
+  )
 })
 
 const twoColorPalette = ref<AnalyticsChartColors>({
@@ -547,7 +684,7 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   numerator: gaugeNumerator.value,
   showTrend: showTrend.value,
   increaseIsBad: showTrend.value ? increaseIsBad.value : false,
-  alignX: showTrend.value ? alignX.value : 'evenly',
+  alignX: alignX.value,
 }))
 
 const dataCode = computed(() => {
@@ -576,9 +713,27 @@ const isSingleValue = computed<boolean>(() => {
 
 .simple-chart-sandbox {
   &.single-value-sandbox {
+    background-color: var(--kui-color-background, #fff);
+    border: 1px solid var(--kui-color-border-neutral, #d9d9d9);
+    border-radius: var(--kui-border-radius-20, 4px);
     max-width: 100%;
-    overflow-x: auto;
-    resize: horizontal;
+    min-height: 160px;
+    min-width: 240px;
+    overflow: auto;
+    resize: both;
+    width: min(100%, 320px);
+
+    .single-value-preview-header {
+      font-size: var(--kui-font-size-40, 16px);
+      font-weight: var(--kui-font-weight-bold, 700);
+      line-height: 24px;
+      padding: var(--kui-space-40, 8px) var(--kui-space-50, 12px) 0;
+    }
+
+    :deep(.simple-chart-shell) {
+      box-sizing: border-box;
+      padding: 0 var(--kui-space-50, 12px) var(--kui-space-50, 12px);
+    }
   }
 }
 

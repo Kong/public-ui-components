@@ -52,9 +52,32 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   conjurVaultProviderAvailable?: boolean
 
   /**
+   * Show/hide File system (fs) option - mostly for Konnect to pass feature flag value
+   */
+  fsVaultProviderAvailable?: boolean
+
+  /**
+   * Show/hide Azure Key Vault Certificates option
+   */
+  azureCertsVaultProviderAvailable?: boolean
+
+  /**
    * Show/hide Base64 field (added since 3.11)
    */
   base64FieldAvailable?: boolean
+
+  /**
+   * Which vault API the component targets.
+   * - 'gateway' (default): Kong API Gateway vault API (Konnect / Kong Manager)
+   * - 'aiGateway': Kong AI Gateway vault API (/v1/ai-gateways/{aiGatewayId}/vaults)
+   */
+  apiType?: 'gateway' | 'aiGateway'
+
+  /**
+   * The AI Gateway id. Required when apiType is 'aiGateway'; used to build
+   * the /v1/ai-gateways/{aiGatewayId}/vaults URLs.
+   */
+  aiGatewayId?: string
 }
 
 /** Konnect Vault form config */
@@ -69,8 +92,10 @@ export enum VaultProviders {
   HCV = 'hcv',
   ENV = 'env',
   AZURE = 'azure',
+  AZURE_CERTS = 'azure-certs',
   KONNECT = 'konnect',
   CONJUR = 'conjur',
+  FS = 'fs',
 }
 
 export enum VaultAuthMethods {
@@ -174,12 +199,30 @@ export interface AzureVaultConfig {
   base64_decode?: boolean
 }
 
+export interface AzureCertsVaultConfig {
+  vault_uri: string
+  credentials_prefix: string
+  client_id?: string
+  tenant_id?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+}
+
 export interface ConjurVaultConfig {
   endpoint_url: string
   auth_method: 'api_key'
   login?: string
   account?: string
   api_key?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+  base64_decode?: boolean
+}
+
+export interface FSVaultConfig {
+  prefix: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
@@ -202,6 +245,13 @@ export interface AzureVaultConfigPayload extends Omit<AzureVaultConfig, 'client_
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
 // in case it's an empty string, it will be treated as a value and must have length > 0
+export interface AzureCertsVaultConfigPayload extends Omit<AzureCertsVaultConfig, 'client_id' | 'tenant_id'> {
+  client_id?: string | null
+  tenant_id?: string | null
+}
+
+// allow for nullish values in payload because Kong Admin API treats null as an empty value
+// in case it's an empty string, it will be treated as a value and must have length > 0
 export interface AWSVaultConfigPayload extends Omit<AWSVaultConfig, 'endpoint_url' | 'assume_role_arn'> {
   endpoint_url?: string | null
   assume_role_arn?: string | null
@@ -212,13 +262,75 @@ export interface VaultPayload {
   prefix: string
   description: string | null
   tags: string[]
-  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
+  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload | ConjurVaultConfig | FSVaultConfig | AzureCertsVaultConfigPayload
+}
+
+/* ----------------------------------------------------------------------------
+ * Kong AI Gateway vault payloads
+ *
+ * The AI Gateway vault API differs from the Kong API Gateway vault API only at
+ * the request/response boundary: the provider lives in `type` (not `name`), the
+ * identifier in `name` (not `prefix`), there are no `tags`, and the HashiCorp
+ * config fields are renamed per auth method. The form keeps using the
+ * gateway-shaped internal model (above); the mapper layer in
+ * `ai-gateway-mappers.ts` converts to/from these shapes at the boundary.
+ * -------------------------------------------------------------------------- */
+
+export interface AiHcvCommonConfig {
+  protocol: string
+  host: string
+  port: number
+  mount: string
+  kv: string
+  namespace?: string | null
+  ssl_verify?: boolean
+  auth_method: string
+  base64_decode?: boolean
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+}
+
+export interface AiHcvTokenConfig { token?: string | null }
+export interface AiHcvCertConfig { cert?: string, key?: string, role_name?: string }
+export interface AiHcvOauth2Config { role?: string, token_endpoint?: string, client_id?: string, client_secret?: string, audiences?: string | null }
+export interface AiHcvAppRoleConfig { path?: string, response_wrapping?: boolean, role_id?: string, secret_id?: string, secret_id_file?: string }
+export interface AiHcvKubernetesConfig { role?: string, path?: string, api_token_file?: string }
+export interface AiHcvGcpIamConfig { role?: string, service_account?: string, jwt_exp?: number, login_path?: string }
+export interface AiHcvGcpGceConfig { role?: string, login_path?: string }
+export interface AiHcvAwsIamConfig { role?: string, region?: string, login_path?: string, access_key_id?: string, secret_access_key?: string, sts_endpoint_url?: string, assume_role_arn?: string, role_session_name?: string }
+export interface AiHcvAwsEc2Config { role?: string, nonce?: string, login_path?: string }
+export interface AiHcvAzureConfig { role?: string, login_path?: string }
+
+export type AiHcvConfigPayload = AiHcvCommonConfig & (
+  AiHcvTokenConfig | AiHcvCertConfig | AiHcvOauth2Config | AiHcvAppRoleConfig |
+  AiHcvKubernetesConfig | AiHcvGcpIamConfig | AiHcvGcpGceConfig |
+  AiHcvAwsIamConfig | AiHcvAwsEc2Config | AiHcvAzureConfig
+)
+
+/** A single label key-value pair used in the form's internal state. Compatible with Label from @kong-ui/labels. */
+export interface VaultLabelItem {
+  id: number | string
+  key: string
+  value: string
+}
+
+/** Kong AI Gateway vault request body (create/update). */
+export interface AiVaultPayload {
+  type: VaultProviders
+  name: string
+  // AI Gateway `description` is a non-nullable string; sent as '' when empty.
+  description: string
+  config: Record<string, any>
+  labels?: Record<string, string>
 }
 
 export interface VaultStateFields {
   prefix: string
   description: string
   tags: string
+  /** AI Gateway only: list of label key-value pairs. */
+  labelList: VaultLabelItem[]
 }
 
 export interface VaultState {

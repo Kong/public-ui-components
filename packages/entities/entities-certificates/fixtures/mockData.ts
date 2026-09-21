@@ -6,6 +6,8 @@ export interface FetcherRawResponse {
 }
 
 export const certificateVaultRef = '{vault://some-vault/cert-1}'
+export const certificateVaultRefCert = '{vault://some-vault/cert-1/cert}'
+export const certificateVaultRefKey = '{vault://some-vault/cert-1/key}'
 
 export const certificate1 = {
   id: '1',
@@ -22,7 +24,8 @@ export const certificate1 = {
 
 export const certificate3 = {
   id: '3',
-  cert: certificateVaultRef,
+  cert: certificateVaultRefCert,
+  key: certificateVaultRefKey,
   name: 'certificate-3',
   tags: ['test', 'prod', 'vault'],
 }

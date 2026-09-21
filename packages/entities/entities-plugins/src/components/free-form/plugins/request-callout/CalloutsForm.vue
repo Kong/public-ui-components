@@ -18,8 +18,7 @@
 
 <script setup lang="ts">
 import { getCalloutId } from './utils'
-import { useFormShared } from '../../shared/composables'
-import ArrayField from '../../shared/ArrayField.vue'
+import { useFormShared, ArrayField } from '@kong-ui-public/freeform'
 import CalloutForm from './CalloutForm.vue'
 
 import { type RequestCalloutPlugin, type Callout, CalloutId } from './types'

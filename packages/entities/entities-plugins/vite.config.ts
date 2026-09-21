@@ -1,4 +1,5 @@
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import monaco from '@kong-ui-public/monaco-editor/vite-plugin'
@@ -17,8 +18,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
+      entry: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
@@ -34,6 +36,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/monaco-editor',
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
         '@kong-ui-public/forms',
+        '@kong-ui-public/forms/dist/style.css',
+        '@kong-ui-public/freeform',
+        '@kong-ui-public/freeform/style.css',
         '@vue-flow/background',
         '@vue-flow/controls',
         '@vue-flow/controls/dist/style.css',
@@ -43,6 +48,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vueuse/core',
         '@vueuse/integrations',
         'marked',
+        'dompurify',
         'monaco-editor',
         '@kong-ui-public/entities-plugins-icon',
         'zod',

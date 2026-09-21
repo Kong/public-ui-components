@@ -500,6 +500,7 @@ describe('<ConsumerCredentialList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerCredentialList, {
         props: {
           cacheIdentifier,
@@ -510,8 +511,6 @@ describe('<ConsumerCredentialList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getCredentialsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-rowid="1"]`).should('exist')
@@ -794,6 +793,7 @@ describe('<ConsumerCredentialList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(ConsumerCredentialList, {
         props: {
           cacheIdentifier,
@@ -803,8 +803,6 @@ describe('<ConsumerCredentialList />', () => {
           canDelete: () => false,
         },
       })
-
-      cy.wait('@getCredentialsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-rowid="1"]`).should('exist')

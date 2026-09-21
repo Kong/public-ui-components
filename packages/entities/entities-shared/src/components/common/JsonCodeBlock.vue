@@ -11,6 +11,7 @@
         id="json-endpoint-codeblock"
         :code="fetcherUrl"
         language="plaintext"
+        :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
         single-line
         theme="dark"
       />
@@ -23,6 +24,7 @@
       :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
       data-dd-privacy="mask"
       language="json"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -30,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
@@ -90,12 +93,13 @@ const displayedCharLength = computed((): number => {
 
 .json-endpoint {
   align-items: baseline;
-  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  background-color: var(--kui-color-background, $kui-color-background);
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
   border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  gap: var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   .k-code-block {
     flex: auto;

@@ -1,5 +1,5 @@
-import { definePluginConfig } from '../shared/define-plugin-config'
-import StringField from '../shared/StringField.vue'
+import { definePluginConfig } from '../define-plugin-config'
+import { StringField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
   experimental: true,

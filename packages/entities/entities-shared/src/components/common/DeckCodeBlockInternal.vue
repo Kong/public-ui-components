@@ -64,6 +64,7 @@
     >
       <KButton
         appearance="secondary"
+        data-testid="generate-konnect-pat-button"
         @click="isGeneratePatModalVisible = true"
       >
         {{ t('deckCodeBlock.customization.generate_pat') }}
@@ -83,6 +84,7 @@
       :copy-code="unredactedDeckCommand"
       data-dd-privacy="mask"
       :language="shell"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       :theme="isCustomizing ? 'light' : 'dark'"
       @code-block-render="highlightCodeBlock"
     />
@@ -120,9 +122,10 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { InfoIcon, LanguageBashIcon, LanguageShellIcon } from '@kong/icons'
 import { KExternalLink } from '@kong/kongponents'
-import yaml from 'js-yaml'
+import { dump } from 'js-yaml'
 import { computed, inject, ref, watchEffect } from 'vue'
 
 import composables from '../../composables'
@@ -178,7 +181,8 @@ const baseObject = computed(() => {
     obj._konnect = {
       control_plane_name: props.controlPlaneName,
     }
-  } else if (props.workspace) {
+  }
+  if (props.workspace) {
     obj._workspace = props.workspace
   }
   return obj
@@ -216,7 +220,7 @@ const buildYaml = (record: Record<string, any>): string => {
     [entityKey]: [filteredRecord],
   }
 
-  return yaml.dump(fullRecord, { quotingType: '"' }).trim()
+  return dump(fullRecord, { quoteStyle: 'double' }).trim()
 }
 
 const yamlContent = computed((): string => {

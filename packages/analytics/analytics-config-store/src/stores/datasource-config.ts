@@ -112,29 +112,34 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     return ({
       datasource,
       filters,
+      queryFields = undefined,
       metrics = undefined,
     }: {
       datasource: string
       filters: AllFilters[]
+      queryFields?: readonly string[]
+      /** @deprecated Use queryFields instead. */
       metrics?: readonly string[]
     }): AllFilters[] => {
       const filtered = filters.filter(filter => isFilterValidForDatasource.value({ datasource, filter }))
+      const fields = queryFields ?? metrics
 
-      if (!metrics?.length) {
+      if (!fields?.length) {
         return filtered
       }
 
-      // If metrics are provided, further filter the dimensions based on which dimensions are supported by the metric
+      // If query fields are provided, further filter dimensions based on which dimensions they support.
+      // `metrics` is the deprecated name for the same query field restriction.
       const datasourceConfigEntry = datasourceConfigMap.value[datasource]
       if (!datasourceConfigEntry) {
         return filtered
       }
 
-      const metricFields = metrics
-        .map(metric => datasourceConfigEntry.fieldsMap[metric])
+      const configuredFields = fields
+        .map(field => datasourceConfigEntry.fieldsMap[field])
         .filter((field) => field !== undefined)
 
-      const fieldsWithSupportedDimensions = metricFields.filter((field) => {
+      const fieldsWithSupportedDimensions = configuredFields.filter((field) => {
         return field.supportedDimensions !== undefined
       })
 

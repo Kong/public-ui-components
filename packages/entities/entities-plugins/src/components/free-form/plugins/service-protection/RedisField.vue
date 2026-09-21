@@ -11,11 +11,10 @@
 import { computed, inject, watchEffect } from 'vue'
 
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import RedisSelector from '../../shared/RedisSelector.vue'
-import { useFormShared } from '../../shared/composables'
-import SlideTransition from '../../shared/SlideTransition.vue'
+import RedisSelector from '../../components/RedisSelector.vue'
+import { useFormShared, SlideTransition } from '@kong-ui-public/freeform'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import { REDIS_PARTIAL_INFO } from '../../shared/const'
+import { REDIS_PARTIAL_INFO } from '../../const'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 const { formData } = useFormShared<FreeFormPluginData>()
@@ -36,6 +35,10 @@ watchEffect(() => {
   if (formData.config) {
     // reset partials if strategy not redis
     if (formData.config.strategy !== 'redis') {
+      // Intentionally NOT `FormConfig.emptyFieldValue`-aware: the plugin entity
+      // form *merges* free-form data with VFG data, so `undefined` wouldn't
+      // clear an existing `partials` value — only `null` does. `undefined` is
+      // safe on create, since there's nothing to override yet.
       formData.partials = isFormEditing ? null : undefined
     }
   }

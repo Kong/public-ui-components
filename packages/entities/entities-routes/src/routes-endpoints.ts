@@ -6,6 +6,7 @@ export default {
     konnect: {
       all: `${konnectBaseApiUrl}/routes`,
       forGatewayService: `${konnectBaseApiUrl}/services/{serviceId}/routes`,
+      search: `${konnectBaseApiUrl}/routes/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/routes`,

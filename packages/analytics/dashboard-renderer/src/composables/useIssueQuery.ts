@@ -1,30 +1,36 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
-  type TimeRangeV4,
-  type ValidDashboardQuery,
+  isPlatformDatasource, requestFilterTypeEmptyV2, type TimeRangeV4,
+  type ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { storeToRefs } from 'pinia'
+import { limitTimeRange } from '../utils/time-range-support'
 
 export default function useIssueQuery() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
   const datasourceConfigStore = useDatasourceConfigStore()
-  const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
+  const { datasourceConfigMap, stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 
-  // Ensure that any pending requests are canceled on unmount.
-  const abortController = new AbortController()
+  // Ensure that any pending requests are canceled when superseded or on unmount.
+  let abortController: AbortController | null = null
 
   onUnmounted(() => {
-    abortController.abort()
+    abortController?.abort()
   })
 
-  const issueQuery = async (query: ValidDashboardQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
+  const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContext, limitOverride?: number) => {
     if (!queryBridge) {
       throw new Error('Query bridge is not defined')
     }
+
+    // This will abort any previous query and pass a new controller to the bridge.
+    abortController?.abort()
+    const controller = new AbortController()
+    abortController = controller
 
     await datasourceConfigStore.isReady()
 
@@ -35,6 +41,7 @@ export default function useIssueQuery() {
     } = query
 
     const datasource = originalDatasource || 'basic'
+    const isPlatformQuery = isPlatformDatasource(datasource)
 
     const mergedFilters = stripUnknownFilters.value({
       datasource,
@@ -42,24 +49,29 @@ export default function useIssueQuery() {
         ...(query.filters ?? []) as AllFilters[],
         ...context.filters,
       ],
-      metrics: query.metrics,
+      queryFields: query.metrics,
     })
+      // TODO(MA-5255): Remove this temporary frontend shim when platform aggregation queries
+      // support `empty` and `not_empty` filters.
+      .filter(({ operator }) => !isPlatformQuery || !requestFilterTypeEmptyV2.some(emptyOperator => emptyOperator === operator))
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
     let time_range = query.time_range as TimeRangeV4 | undefined
 
-    if (!time_range) {
+    if (!time_range && context.timeSpec) {
       time_range = {
         ...context.timeSpec,
         tz: context.tz,
       }
-    } else if (!time_range.tz) {
+    } else if (time_range && !time_range.tz) {
       time_range = {
         ...time_range,
         tz: context.tz,
       }
     }
+
+    time_range = limitTimeRange(time_range, datasourceConfigMap.value[datasource]?.timeRangeOptions)
 
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries
@@ -74,7 +86,7 @@ export default function useIssueQuery() {
       },
     } as DatasourceAwareQuery
 
-    return queryBridge.queryFn(mergedQuery, abortController)
+    return queryBridge.queryFn(mergedQuery, controller)
   }
 
   return { issueQuery }

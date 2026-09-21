@@ -71,6 +71,8 @@ describe('useAnalyticsConfigStore', () => {
   })
 
   it('isReady resolves even if the config fetch fails', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
     const store = useStore({
       hasPercentiles: true,
       reject: true,
@@ -85,6 +87,9 @@ describe('useAnalyticsConfigStore', () => {
     expect(store.loading).toBe(false)
     expect(store.analytics).toBe(false)
     expect(store.percentiles).toBe(false)
+
+    expect(warnSpy).toHaveBeenCalledTimes(2)
+    warnSpy.mockRestore()
   })
 })
 

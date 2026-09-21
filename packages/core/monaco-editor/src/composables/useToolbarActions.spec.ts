@@ -4,6 +4,14 @@ import type { MonacoEditorToolbarOptions } from '../types'
 import { CleaningIcon } from '@kong/icons'
 import { ref } from 'vue'
 
+vi.mock('./useI18n', () => ({
+  default: () => ({
+    i18n: {
+      t: vi.fn((key: string) => key),
+    },
+  }),
+}))
+
 // Mock built-in actions
 vi.mock('../actions', () => ({
   BUILT_IN_TOOLBAR_ACTIONS: {

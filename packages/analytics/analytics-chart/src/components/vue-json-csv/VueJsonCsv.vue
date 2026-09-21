@@ -1,3 +1,4 @@
+<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div
     :id="idName"
@@ -14,8 +15,7 @@ import { ValidType } from '../../types'
 import type { CsvData, CsvKeyValuePair } from '../../types'
 import type { ComputedRef, PropType } from 'vue'
 
-import mapKeys from 'lodash.mapkeys'
-import pick from 'lodash.pick'
+import { mapKeys, pick } from 'lodash'
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 

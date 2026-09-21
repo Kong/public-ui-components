@@ -1,6 +1,7 @@
 <template>
   <div class="form-field-wrapper">
-    <KInput
+    <component
+      :is="inputType === 'password' ? SecretInput : KInput"
       v-bind="$attrs"
       :id="getFieldID(schema)"
       :autocomplete="schema.autocomplete"
@@ -17,8 +18,7 @@
       :placeholder="schema.placeholder"
       :readonly="schema.readonly"
       :required="schema.required"
-      :show-password-mask-toggle="inputType === 'password'"
-      :type="inputType"
+      :type="inputType === 'password' ? undefined : inputType"
       :width="schema.width"
       @blur="onBlur"
       @update:model-value="onInput"
@@ -36,6 +36,9 @@
 
 <script lang="ts" setup>
 import { computed, inject, onBeforeMount, onMounted, ref, toRefs, type PropType } from 'vue'
+import { KInput } from '@kong/kongponents'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import fecha from 'fecha'
 import type { DebouncedFunc } from 'lodash-es'
 import type { AutofillSlot } from '../../types'
@@ -247,10 +250,6 @@ onBeforeMount((): void => {
 
   :deep(input[type="range"]) {
     padding: var(--kui-space-0, $kui-space-0);
-  }
-
-  :deep(input[type="password"]::-ms-reveal) {
-    display: none;
   }
 }
 </style>

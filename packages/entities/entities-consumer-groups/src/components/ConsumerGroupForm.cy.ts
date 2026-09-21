@@ -882,13 +882,9 @@ describe('<ConsumerGroupForm />', () => {
         { statusCode: 200, body: { data: [], total: 0 } },
       )
       cy.intercept(
-        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}?list_consumers=false` },
-        { statusCode: 200, body: { item: { id: groupId, name: 'test', tags: [] } } },
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}` },
+        { statusCode: 200, body: { item: { id: groupId, name: 'test', tags: [] }, consumers: [] } },
       ).as('getGroupWithWorkspace')
-      cy.intercept(
-        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}/consumers*` },
-        { statusCode: 200, body: { data: [], total: 0 } },
-      ).as('getConsumersWithWorkspace')
       cy.intercept(
         {
           method: 'PUT',
@@ -902,7 +898,6 @@ describe('<ConsumerGroupForm />', () => {
       }).then(({ wrapper }) => wrapper).as('vueWrapper')
 
       cy.wait('@getGroupWithWorkspace')
-      cy.wait('@getConsumersWithWorkspace')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
       cy.wait('@updateGroupWithWorkspace')

@@ -6,6 +6,8 @@ import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 import { colors } from './useLegendScale'
 import type { MetricUnits } from '../types'
 
+const emptyCountryFill = ref(KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER)
+
 describe('useLegendScale', () => {
   it.each([
     [[10], 1],
@@ -28,6 +30,7 @@ describe('useLegendScale', () => {
       countryMetrics,
       metric,
       unit,
+      emptyCountryFill,
     })
     expect(scale.value.length).toBe(expectedScaleLength)
   })
@@ -43,6 +46,7 @@ describe('useLegendScale', () => {
       countryMetrics,
       metric,
       unit,
+      emptyCountryFill,
     })
 
     const expectedLegendData = [
@@ -71,6 +75,7 @@ describe('useLegendScale', () => {
       countryMetrics,
       metric,
       unit,
+      emptyCountryFill,
     })
 
     const expectedLegendData = [
@@ -105,6 +110,7 @@ describe('useLegendScale', () => {
       countryMetrics,
       metric,
       unit,
+      emptyCountryFill,
     })
 
     // Will generate just one legend item since the other two country codes are invalid and will be ignored

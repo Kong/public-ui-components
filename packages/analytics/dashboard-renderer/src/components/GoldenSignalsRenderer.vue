@@ -1,7 +1,7 @@
 <template>
   <div
     class="metric-card-tile-wrapper"
-    :class="{ 'titled': !!props.chartOptions.chart_title }"
+    :class="{ 'titled': hasTitleBar }"
   >
     <MetricsProvider v-bind="options">
       <MetricsConsumer />
@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed } from 'vue'
@@ -19,7 +19,7 @@ import type { ExploreFilterAll } from '@kong-ui-public/analytics-utilities'
 // in a convenient interface.
 type ProviderProps = InstanceType<typeof MetricsProvider>['$props']
 
-const props = defineProps<RendererProps<MetricCardOptions>>()
+const props = defineProps<ChartRendererProps<MetricCardOptions>>()
 
 const options = computed<ProviderProps>(() => {
   const datasource = props.query?.datasource
@@ -37,19 +37,26 @@ const options = computed<ProviderProps>(() => {
     refreshCounter: props.refreshCounter,
   }
 })
+
+const hasTitleBar = computed(() => {
+  return Boolean(props.chartOptions.chart_title || props.headerDescription)
+})
 </script>
 
 <style scoped lang="scss">
 .metric-card-tile-wrapper {
+  padding: var(--kui-space-60, $kui-space-60);
+
+  &.titled {
+    // this is always true, regardless of breakpoint
+    padding-top: 0;
+  }
+
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
     height: 100%;
     padding: var(--kui-space-60, $kui-space-60);
-  }
-
-  &.titled {
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
   }
 }
 </style>

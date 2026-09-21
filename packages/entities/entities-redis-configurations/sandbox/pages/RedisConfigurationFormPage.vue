@@ -54,6 +54,7 @@ const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   isHostReferenceable: true,
   isServerNameReferenceable: true,
   isCEFieldsReferenceable: true,
+  oauthCloudAuthAvailable: true,
   cancelRoute: { name: 'redis-configuration-list' },
 }
 

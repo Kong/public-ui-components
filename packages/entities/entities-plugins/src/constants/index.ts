@@ -1,3 +1,5 @@
+export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
+
 export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PROVIDER')
 
 export const FEATURE_FLAGS = {
@@ -6,8 +8,8 @@ export const FEATURE_FLAGS = {
   KM_2446_DATAKIT_JWT_NODES: 'KM-2446-Datakit-JWT-nodes',
   KM_2503_CUSTOM_PLUGIN_FREEFORM: 'KM-2503-custom-plugin-freeform',
   KM_2485_CLONED_PLUGINS: 'KM-2485-cloned-plugins',
+  KHCP_20393_IDENTITY_PRINCIPALS_UI: 'khcp-20393-identity-principals-ui',
+  KM_3034_FEATURES_316: 'KM-3034-features-316',
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')
-
-export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'

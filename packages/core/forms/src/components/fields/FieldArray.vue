@@ -203,6 +203,20 @@ export default {
       if (schema) {
         copy = JSON.parse(JSON.stringify(schema))
 
+        // Restore function properties (e.g., `visible`) that JSON.parse/stringify strips
+        if (schema.schema?.fields) {
+          copy.schema?.fields?.forEach?.((field, i) => {
+            const originalField = schema.schema.fields[i]
+            if (originalField) {
+              Object.keys(originalField).forEach(key => {
+                if (typeof originalField[key] === 'function') {
+                  field[key] = originalField[key]
+                }
+              })
+            }
+          })
+        }
+
         copy.schema?.fields?.map?.(field => {
           field.id = `${field.id || field.model}-${index}`
           return field

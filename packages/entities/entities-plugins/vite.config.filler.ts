@@ -1,4 +1,5 @@
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
@@ -7,17 +8,16 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: {
-        'cypress/index': resolve(__dirname, './src/components/free-form/filler/cypress/index.ts'),
-        'playwright/index': resolve(__dirname, './src/components/free-form/filler/playwright/index.ts'),
+        'cypress/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/filler/cypress/index.ts'),
+        'playwright/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/filler/playwright/index.ts'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
       external: [
-        'cypress',
-        '@playwright/test',
-        'lodash-es',
+        '@kong-ui-public/freeform/filler/cypress',
+        '@kong-ui-public/freeform/filler/playwright',
       ],
     },
   },

@@ -89,4 +89,74 @@ describe('<VaultConfigCard/>', () => {
       cy.getTestId('api_key-plain-text').should('contain.text', '************')
     })
   })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const aiGatewayCardConfig = {
+      ...konnectCardConfig,
+      apiType: 'aiGateway' as const,
+      aiGatewayId,
+    }
+    // AI Gateway hcv vault with renamed fields; reverse-mapped to gateway names for display.
+    const aiHcvVault = {
+      id: '1234',
+      type: 'hcv',
+      name: 'hcv-1',
+      description: 'HashiCorp Vault',
+      config: {
+        protocol: 'https',
+        host: '127.0.0.1',
+        port: 8200,
+        mount: 'secret',
+        kv: 'v1',
+        auth_method: 'token',
+        token: 'super-secret',
+      },
+    }
+
+    it('renders labels as key:value badges', () => {
+      const vaultWithLabels = {
+        ...aiHcvVault,
+        labels: { env: 'prod', team: 'platform' },
+      }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${aiGatewayCardConfig.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/*`,
+        },
+        { statusCode: 200, body: vaultWithLabels },
+      ).as('getAiVaultWithLabels')
+
+      cy.mount(VaultConfigCard, {
+        props: { config: aiGatewayCardConfig },
+      })
+
+      cy.wait('@getAiVaultWithLabels')
+
+      cy.getTestId('labels-badge-tag-0').should('contain.text', 'env: prod')
+      cy.getTestId('labels-badge-tag-1').should('contain.text', 'team: platform')
+    })
+
+    it('fetches from the AI Gateway URL, shows mapped fields, and masks secrets', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${aiGatewayCardConfig.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/*`,
+        },
+        { statusCode: 200, body: aiHcvVault },
+      ).as('getAiVault')
+
+      cy.mount(VaultConfigCard, {
+        props: { config: aiGatewayCardConfig },
+      })
+
+      cy.wait('@getAiVault')
+
+      // identifier (API `name`) rendered as the prefix
+      cy.get('.kong-ui-vault-entity-config-card').should('contain.text', 'hcv-1')
+      // token is a sensitive key and should be masked
+      cy.getTestId('token-plain-text').should('contain.text', '************')
+    })
+  })
 })

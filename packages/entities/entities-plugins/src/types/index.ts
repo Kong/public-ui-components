@@ -1,4 +1,5 @@
 export * from './custom-plugin-form'
+export * from './onboarding'
 export * from './plugin-config-card'
 export * from './plugin-form'
 export * from './plugin-list'

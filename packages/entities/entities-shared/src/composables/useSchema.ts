@@ -9,6 +9,10 @@ export const useSchemaProvider = (schema: Ref<Schema>) => {
   provide(providerKey, schema)
 }
 
+export const useSchema = (): Readonly<Ref<Schema | undefined>> => {
+  return inject<Ref<Schema> | undefined>(providerKey, undefined) as Readonly<Ref<Schema | undefined>>
+}
+
 /**
  * find the sub schema by key and provide it as the parent schema for the children
  * @param subSchemaKey the key of the sub schema

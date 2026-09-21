@@ -267,7 +267,50 @@
                 v-if="showTlsFields"
                 class="gateway-service-form-margin-bottom"
               >
+                <KSelect
+                  v-if="isCertificateSelectEnabled"
+                  v-model="form.fields.client_certificate"
+                  clearable
+                  data-testid="gateway-service-clientCert-select"
+                  enable-filtering
+                  :error="!!form.formFieldErrors.client_certificate"
+                  :filter-function="() => true"
+                  :items="displayedCertificates"
+                  :label="t('gateway_services.form.fields.client_certificate.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.client_certificate.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  :loading="certificateLoading"
+                  name="clientCert"
+                  :placeholder="t('gateway_services.form.fields.client_certificate.select_placeholder')"
+                  :readonly="form.isReadonly"
+                  width="100%"
+                  @query-change="debouncedCertificateCall"
+                  @update:model-value="handleValidateAdvancedFields('client_certificate')"
+                >
+                  <template #item-template="{ item }">
+                    <div class="certificate-select-item">
+                      <span class="certificate-select-item-id">{{ item.value }}</span>
+                      <div
+                        v-if="getCertificateTags(item.value).length"
+                        class="certificate-select-item-tags"
+                      >
+                        <KBadge
+                          v-for="tag in getCertificateTags(item.value)"
+                          :key="tag"
+                          appearance="info"
+                          max-width="150"
+                          truncation-tooltip
+                        >
+                          {{ tag }}
+                        </KBadge>
+                      </div>
+                    </div>
+                  </template>
+                </KSelect>
                 <KInput
+                  v-else
                   v-model.trim="form.fields.client_certificate"
                   autocomplete="off"
                   data-testid="gateway-service-clientCert-input"
@@ -319,8 +362,65 @@
                 v-if="showCaCertField"
                 class="gateway-service-form-margin-bottom"
               >
+                <KMultiselect
+                  v-if="isCertificateSelectEnabled"
+                  v-model="form.fields.ca_certificates"
+                  autosuggest
+                  data-testid="gateway-service-ca-certs-select"
+                  :error="!!form.formFieldErrors.ca_certificates"
+                  :items="displayedCaCertificates"
+                  :label="t('gateway_services.form.fields.ca_certificates.label')"
+                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+                  :loading="caCertificateLoading"
+                  :placeholder="t('gateway_services.form.fields.ca_certificates.select_placeholder')"
+                  :readonly="form.isReadonly"
+                  width="100%"
+                  @query-change="debouncedCaCertificateCall"
+                  @update:model-value="handleValidateAdvancedFields('ca_certificates')"
+                >
+                  <template #item-template="{ item }">
+                    <div class="certificate-select-item certificate-select-item--stacked">
+                      <div class="certificate-select-item-header">
+                        <span class="certificate-select-item-id">{{ item.value }}</span>
+                        <div
+                          v-if="getCaCertificateTags(item.value).length"
+                          class="certificate-select-item-tags"
+                        >
+                          <KBadge
+                            v-for="tag in getCaCertificateTags(item.value)"
+                            :key="tag"
+                            appearance="info"
+                            max-width="150"
+                            truncation-tooltip
+                          >
+                            {{ tag }}
+                          </KBadge>
+                        </div>
+                      </div>
+                      <span
+                        v-if="getCaCertificateIssuer(item.value)"
+                        class="certificate-select-item-issuer"
+                        :title="getCaCertificateIssuer(item.value)"
+                      >{{ getCaCertificateIssuer(item.value) }}</span>
+                    </div>
+                  </template>
+                  <template #label-tooltip>
+                    <i18nT
+                      keypath="gateway_services.form.fields.ca_certificates.tooltip"
+                      scope="global"
+                    >
+                      <template #code1>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
+                      </template>
+                      <template #code2>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
+                      </template>
+                    </i18nT>
+                  </template>
+                </KMultiselect>
                 <KInput
-                  v-model.trim="form.fields.ca_certificates"
+                  v-else
+                  v-model.trim="caCertificatesText"
                   autocomplete="off"
                   data-testid="gateway-service-ca-certs-input"
                   :error="!!form.formFieldErrors.ca_certificates"
@@ -474,6 +574,7 @@ import type { PropType } from 'vue'
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosResponse } from 'axios'
+import type * as X509 from '@peculiar/x509'
 import type {
   KonnectGatewayServiceFormConfig,
   KongManagerGatewayServiceFormConfig,
@@ -488,13 +589,14 @@ import {
   useErrors,
   useGatewayFeatureSupported,
   useValidators,
+  useDebouncedFilter,
   EntityFormSection,
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
   useHelpers,
 } from '@kong-ui-public/entities-shared'
-import type { SelectItem } from '@kong/kongponents'
+import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { KongAirService } from '../constants'
 import GatewayServiceFormTlsSansField from './GatewayServiceFormTlsSansField.vue'
@@ -547,6 +649,17 @@ const props = defineProps({
     required: false,
     default: true,
   },
+  /**
+   * Feature-flag guard for the client/CA certificate select controls.
+   * When `false` (default), the original free-text inputs are shown instead of
+   * the certificate select / multiselect. Host apps should pass the resolved
+   * feature-flag value here.
+   */
+  isCertificateSelectEnabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const isCollapsed = ref(true)
@@ -557,6 +670,141 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 const { validateHost, validatePath, validatePort, validateProtocol } = composables.useUrlValidators()
 const { objectsAreEqual } = useHelpers()
+
+const {
+  debouncedQueryChange: debouncedCertificateCall,
+  loading: certificateLoading,
+  loadItems: loadCertificates,
+  results: certificateResults,
+} = useDebouncedFilter(props.config, endpoints.form[props.config.app].getCertificates)
+
+// Map of certificate ID -> tags, rebuilt only when the fetched list changes, so
+// per-item template lookups are O(1) instead of scanning the whole list
+const certificateTagsById = computed<Map<string, string[]>>(() =>
+  new Map((certificateResults.value ?? []).map((cert) => [String(cert.id), cert.tags ?? []])))
+
+// Return the tags for a fetched certificate by its ID (empty if not loaded)
+const getCertificateTags = (id: string | number): string[] =>
+  certificateTagsById.value.get(String(id)) ?? []
+
+const displayedCertificates = computed<SelectItem[]>(() => {
+  const items = (certificateResults.value ?? []).map((cert) => ({
+    label: cert.id,
+    value: cert.id,
+  }))
+
+  // Ensure the currently-selected certificate is always present as an option
+  // (e.g. in edit mode, or when it has been filtered out of the fetched results)
+  const selectedId = form.fields.client_certificate
+  if (selectedId && !items.some((item) => item.value === selectedId)) {
+    items.unshift({ label: selectedId, value: selectedId })
+  }
+
+  return items
+})
+
+const {
+  debouncedQueryChange: debouncedCaCertificateCall,
+  loading: caCertificateLoading,
+  loadItems: loadCaCertificates,
+  results: caCertificateResults,
+} = useDebouncedFilter(props.config, endpoints.form[props.config.app].getCaCertificates)
+
+// Map of CA certificate ID -> tags, rebuilt only when the fetched list changes,
+// so per-item template lookups are O(1) instead of scanning the whole list
+const caCertificateTagsById = computed<Map<string, string[]>>(() =>
+  new Map((caCertificateResults.value ?? []).map((cert) => [String(cert.id), cert.tags ?? []])))
+
+// Return the tags for a fetched CA certificate by its ID (empty if not loaded)
+const getCaCertificateTags = (id: string | number): string[] =>
+  caCertificateTagsById.value.get(String(id)) ?? []
+
+// CA certificate issuers, resolved lazily and cached by id, shown as the item
+// description. Konnect returns `metadata.issuer` directly; Kong Manager only
+// returns the certificate PEM, so we parse it with x509 — imported on demand so
+// the (~100KB) library is code-split into a lazy chunk and never loaded for
+// Konnect at all.
+const caCertificateIssuers = ref<Record<string, string>>({})
+
+let x509ModulePromise: Promise<typeof X509> | null = null
+const loadX509 = () => {
+  if (!x509ModulePromise) {
+    x509ModulePromise = (async () => {
+      await import('reflect-metadata')
+      return import('@peculiar/x509')
+    })()
+  }
+  return x509ModulePromise
+}
+
+const resolveCaCertificateIssuers = async (certs: Array<Record<string, any>>): Promise<void> => {
+  // Skip certs whose issuer is already resolved
+  const pending = certs.filter((cert) => !(String(cert.id) in caCertificateIssuers.value))
+  if (!pending.length) {
+    return
+  }
+
+  // The x509 parser is only needed for PEM-only certs (Kong Manager); load it at
+  // most once per batch and only when a cert actually requires parsing
+  let x509: typeof X509 | null = null
+  for (const cert of pending) {
+    const id = String(cert.id)
+    // Konnect provides the issuer directly via metadata — no parsing needed
+    if (cert.metadata?.issuer) {
+      caCertificateIssuers.value[id] = cert.metadata.issuer
+      continue
+    }
+    // Kong Manager: parse the certificate PEM on demand
+    if (!cert.cert) {
+      caCertificateIssuers.value[id] = ''
+      continue
+    }
+    try {
+      x509 ??= await loadX509()
+      caCertificateIssuers.value[id] = new x509.X509Certificate(cert.cert).issuer
+    } catch {
+      caCertificateIssuers.value[id] = ''
+    }
+  }
+}
+
+// Resolve issuers whenever the fetched CA certificates change
+watch(caCertificateResults, (results) => {
+  resolveCaCertificateIssuers(results ?? [])
+}, { immediate: true })
+
+// Return the (cached) issuer for a CA certificate by its ID (empty until resolved)
+const getCaCertificateIssuer = (id: string | number): string =>
+  caCertificateIssuers.value[String(id)] ?? ''
+
+const displayedCaCertificates = computed<MultiselectItem[]>(() => {
+  const items: MultiselectItem[] = (caCertificateResults.value ?? []).map((cert) => ({
+    label: cert.id,
+    value: cert.id,
+    selected: form.fields.ca_certificates.includes(cert.id),
+  }))
+
+  // Ensure any already-selected CA certificates are always present as options
+  // (e.g. in edit mode, or when filtered out of the fetched results)
+  form.fields.ca_certificates.forEach((id) => {
+    if (!items.some((item) => item.value === id)) {
+      items.unshift({ label: id, value: id, selected: true })
+    }
+  })
+
+  return items
+})
+
+// Comma-separated view of `ca_certificates` for the fallback free-text input
+// (used when the certificate select feature is disabled). Splitting with no
+// filtering keeps the round-trip stable while typing; empty entries are dropped
+// later in the request payload.
+const caCertificatesText = computed<string>({
+  get: () => form.fields.ca_certificates.join(','),
+  set: (val: string) => {
+    form.fields.ca_certificates = val.split(',')
+  },
+})
 
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
@@ -582,7 +830,7 @@ const form = reactive<GatewayServiceFormState>({
     read_timeout: 60000,
     client_certificate: '',
     tls_sans: { dnsnames: [''], uris: [''] },
-    ca_certificates: '',
+    ca_certificates: [],
     tls_verify_enabled: false,
     tls_verify_value: false,
     tags: '',
@@ -623,7 +871,7 @@ const formFieldsOriginal = reactive<GatewayServiceFormFields>({
   read_timeout: 60000,
   client_certificate: '',
   tls_sans: { dnsnames: [''], uris: [''] },
-  ca_certificates: '',
+  ca_certificates: [],
   tls_verify_enabled: false,
   tls_verify_value: false,
   tags: '',
@@ -727,7 +975,7 @@ const initFieldDefaultValues = (): void => {
     dnsnames: [...formFieldsOriginal.tls_sans.dnsnames],
     uris: [...formFieldsOriginal.tls_sans.uris],
   }
-  form.fields.ca_certificates = formFieldsOriginal.ca_certificates
+  form.fields.ca_certificates = [...formFieldsOriginal.ca_certificates]
   form.fields.tls_verify_enabled = formFieldsOriginal.tls_verify_enabled
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
   form.fields.enabled = formFieldsOriginal.enabled
@@ -957,7 +1205,7 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.connect_timeout = (data?.connect_timeout || data?.connect_timeout === 0) ? data?.connect_timeout : 60000
   form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
   form.fields.tls_verify_value = data?.tls_verify ? data?.tls_verify : false
-  form.fields.ca_certificates = data?.ca_certificates?.join(',') || ''
+  form.fields.ca_certificates = data?.ca_certificates ? [...data.ca_certificates] : []
   form.fields.client_certificate = data?.client_certificate?.id || ''
   form.fields.tls_sans = {
     dnsnames: data?.tls_sans?.dnsnames ?? [''],
@@ -972,6 +1220,7 @@ const initForm = (data: Record<string, any>): void => {
     dnsnames: [...form.fields.tls_sans.dnsnames],
     uris: [...form.fields.tls_sans.uris],
   }
+  formFieldsOriginal.ca_certificates = [...form.fields.ca_certificates]
 }
 
 const handleClickCancel = (): void => {
@@ -1016,6 +1265,9 @@ const tlsSansPayload = computed(() => {
 })
 
 const getPayload = computed((): Record<string, any> => {
+  // Drop empty entries (the free-text fallback input splits on commas and may
+  // yield blanks); the select/multiselect never produces empties
+  const caCertificates = form.fields.ca_certificates.filter((caCert) => caCert.trim() !== '')
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
     tags: form.fields.tags ? form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') : null,
@@ -1025,7 +1277,7 @@ const getPayload = computed((): Record<string, any> => {
     retries: form.fields.retries,
     host: form.fields.host,
     connect_timeout: form.fields.connect_timeout,
-    ca_certificates: form.fields.ca_certificates ? form.fields.ca_certificates?.split(',').filter(caCert => caCert !== '') : null,
+    ca_certificates: caCertificates.length ? caCertificates : null,
     client_certificate: form.fields.client_certificate ? { id: form.fields.client_certificate } : null,
     tls_sans: tlsSansPayload.value,
     write_timeout: form.fields.write_timeout,
@@ -1103,7 +1355,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
         dnsnames: data?.tls_sans?.dnsnames ?? [],
         uris: data?.tls_sans?.uris ?? [],
       }
-      form.fields.ca_certificates = data?.ca_certificates?.length ? data?.ca_certificates.join(',') : ''
+      form.fields.ca_certificates = data?.ca_certificates?.length ? [...data.ca_certificates] : []
       form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
       form.fields.tls_verify_value = form.fields.tls_verify_enabled && data?.tls_verify
       form.fields.tags = data?.tags?.length ? data.tags.join(', ') : ''
@@ -1114,6 +1366,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
         dnsnames: [...form.fields.tls_sans.dnsnames],
         uris: [...form.fields.tls_sans.uris],
       }
+      formFieldsOriginal.ca_certificates = [...form.fields.ca_certificates]
       // Emit an update event for the host app to respond to
       emit('update', response?.data)
     }
@@ -1164,6 +1417,13 @@ onMounted(() => {
   if (!isEditing.value) {
     form.fields.name = generateServiceName()
   }
+  // Only fetch certificates when the select controls are enabled
+  if (props.isCertificateSelectEnabled) {
+    // Load certificates to populate the client certificate select
+    loadCertificates()
+    // Load CA certificates to populate the CA certificates multiselect
+    loadCaCertificates()
+  }
 })
 
 defineExpose({
@@ -1195,6 +1455,47 @@ defineExpose({
     list-style-type: disc;
     margin: var(--kui-space-0, $kui-space-0);
     padding-left: var(--kui-space-60, $kui-space-60);
+  }
+
+  .certificate-select-item {
+    align-items: center;
+    display: flex;
+    gap: var(--kui-space-40, $kui-space-40);
+    width: 100%;
+
+    .certificate-select-item-id {
+      flex-shrink: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .certificate-select-item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--kui-space-20, $kui-space-20);
+    }
+
+    // CA certificate items stack the id + tags row above an issuer description
+    &.certificate-select-item--stacked {
+      align-items: stretch;
+      flex-direction: column;
+      gap: var(--kui-space-10, $kui-space-10);
+
+      .certificate-select-item-header {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-40, $kui-space-40);
+      }
+
+      .certificate-select-item-issuer {
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
 
   .gateway-service-form-margin-top {

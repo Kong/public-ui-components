@@ -35,4 +35,5 @@
   "i18n-ally.localesPaths": [
     "packages/**/src/locales",
   ],
+  "scssFormatter.printWidth": 220
 }

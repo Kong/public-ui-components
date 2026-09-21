@@ -1,4 +1,4 @@
-import yaml from 'js-yaml'
+import { load } from 'js-yaml'
 
 export interface ConfigExtractor {
   name: string
@@ -13,7 +13,7 @@ export const deckExtractor: ConfigExtractor = {
   name: 'decK',
   extract(content: string): unknown | null {
     try {
-      const parsed = yaml.load(content)
+      const parsed = load(content)
       if (isObject(parsed) && Array.isArray(parsed.plugins)) {
         const plugin = parsed.plugins.find(
           (p: unknown) => isObject(p) && p.name === 'datakit',
@@ -40,7 +40,7 @@ export const kicExtractor: ConfigExtractor = {
     }
 
     try {
-      const parsed = yaml.load(yamlContent)
+      const parsed = load(yamlContent)
       if (!isObject(parsed)) return null
 
       const metadata = isObject(parsed.metadata) ? parsed.metadata : {}

@@ -40,6 +40,29 @@ const buildExploreResult = ({
 })
 
 describe('<SingleValue />', () => {
+  it('left-aligns the value and trend by default and responds to alignment changes', () => {
+    cy.mount(SingleValue, {
+      props: {
+        data: buildExploreResult(),
+        showTrend: true,
+      },
+    }).then(({ wrapper }) => {
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-start')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'flex-start')
+      cy.get('.single-value-trend').should('have.css', 'justify-content', 'flex-start')
+
+      cy.then(() => wrapper.setProps({ alignX: 'right' }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-end')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'flex-end')
+      cy.get('.single-value-trend').should('have.css', 'justify-content', 'flex-end')
+
+      cy.then(() => wrapper.setProps({ alignX: 'center', showTrend: false }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'center')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'center')
+      cy.getTestId('single-value-trend').should('not.exist')
+    })
+  })
+
   it('renders the value from the first bucket when trend is disabled', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
@@ -82,6 +105,60 @@ describe('<SingleValue />', () => {
     cy.getTestId('single-value-trend').should('be.visible')
   })
 
+  it('when showing trend and only have a current result, displays that value and show indeterminate change', () => {
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
+    const resultOneValue = {
+      ...exploreResult,
+      data: [
+        exploreResult.data[1], // the current data
+      ],
+    }
+
+    cy.mount(SingleValue, {
+      props: {
+        data: resultOneValue,
+        showTrend: true,
+      },
+    })
+
+    const expected = parseFloat(
+      exploreResult.data[1].event.request_per_minute.toFixed(2),
+    )
+
+    cy.getTestId('single-value-chart')
+      .should('be.visible')
+      .contains(expected)
+
+    cy.getTestId('single-value-trend').should('be.visible')
+    cy.get('.trend-change').should('have.class', 'neutral').and('have.text', 'Not available')
+    cy.get('.trend-change .indeterminate-small-icon').should('exist')
+  })
+
+  it('when showing trend and only have a previous result, display - and show -100% change', () => {
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
+    const resultOneValue = {
+      ...exploreResult,
+      data: [
+        exploreResult.data[0], // the previous data
+      ],
+    }
+
+    cy.mount(SingleValue, {
+      props: {
+        data: resultOneValue,
+        showTrend: true,
+      },
+    })
+
+    cy.getTestId('single-value-chart')
+      .should('be.visible')
+      .contains('-')
+
+    cy.getTestId('single-value-trend').should('be.visible')
+    cy.get('.trend-change').should('have.class', 'negative').and('have.text', '100.00%')
+    cy.get('.trend-change .trend-down-icon').should('exist')
+  })
+
   it('treats a non-numeric value as empty and shows the error state', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
     // @ts-expect-error - this is intentionally invalid for the test
@@ -119,6 +196,7 @@ describe('<SingleValue />', () => {
       props: {
         data: exploreResult,
         leftAlign: true,
+        alignX: 'right',
       },
     })
 
@@ -138,10 +216,35 @@ describe('<SingleValue />', () => {
       .should('have.class', 'align-center')
   })
 
+  const tileCases = [
+    { width: 240, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 240, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 240, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+    { width: 480, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 480, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 480, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+  ]
+
+  tileCases.forEach(({ width, ...sample }) => {
+    it(`keeps ${sample.metricUnit} values and trends within a ${width}px tile`, () => {
+      cy.mount(SingleValue, {
+        props: { data: buildExploreResult(sample), showTrend: true },
+        attrs: { style: { width: `${width}px` } },
+      })
+
+      cy.getTestId('single-value-parent').should(($parent) => {
+        const parent = $parent[0]
+        expect(parent.scrollWidth).to.be.at.most(parent.clientWidth)
+      })
+      cy.getTestId('single-value-chart').should('be.visible')
+      cy.getTestId('single-value-trend').should('be.visible')
+    })
+  })
+
   it('applies positive/negative classes based on increaseIsBad', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
-    // increase is good (default)
+    // increase is good (default): green color, arrow still points up
     cy.mount(SingleValue, {
       props: {
         data: exploreResult,
@@ -151,8 +254,9 @@ describe('<SingleValue />', () => {
     })
 
     cy.get('.trend-change').should('have.class', 'positive')
+    cy.get('.trend-change .trend-up-icon').should('exist')
 
-    // increase is bad
+    // increase is bad: red color, but arrow should still point up
     cy.mount(SingleValue, {
       props: {
         data: exploreResult,
@@ -162,6 +266,7 @@ describe('<SingleValue />', () => {
     })
 
     cy.get('.trend-change').should('have.class', 'negative')
+    cy.get('.trend-change .trend-up-icon').should('exist')
   })
 
   it('renders value and unit on the same horizontal line', () => {
@@ -207,6 +312,12 @@ describe('<SingleValue />', () => {
     cy.get('.single-value-unit').should('have.html', ' &nbsp;rpm')
   })
 
+  it('renders expected unit for total_tokens_per_minute', () => {
+    const exploreResult = buildExploreResult({ metricName: 'total_tokens_per_minute', metricUnit: 'tokens/minute' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('have.html', ' &nbsp;tpm')
+  })
+
   it('renders expected unit for _latency_ measures', () => {
     const exploreResult = buildExploreResult({ metricName: 'response_latency_avg', metricUnit: 'ms' })
     cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
@@ -245,6 +356,12 @@ describe('<SingleValue />', () => {
     cy.get('.single-value-unit').should('not.exist')
   })
 
+  it('formats bytes values when metric_units is bytes', () => {
+    const exploreResult = buildExploreResult({ metricName: 'response_size_average', metricUnit: 'bytes', previous: 1500000, current: 1500000 })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.getTestId('single-value-chart').should('contain.text', 'MB')
+    cy.get('.single-value-unit').should('not.exist')
+  })
 
   it('renders a non-empty trend range when trend is enabled', () => {
     const exploreResultWithMeta = {

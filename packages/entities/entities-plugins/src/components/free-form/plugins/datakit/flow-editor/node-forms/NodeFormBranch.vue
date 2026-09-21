@@ -19,7 +19,7 @@
       :items="branchOptions"
       multiple
       name="then"
-      @update="(value) => onBranchChange('then', value)"
+      @update="(value) => onBranchChange('then', value as string | string[] | null)"
     >
       <template #item-label="item">
         <SourceItem :item="item" />
@@ -31,7 +31,7 @@
       :items="branchOptions"
       multiple
       name="else"
-      @update="(value) => onBranchChange('else', value)"
+      @update="(value) => onBranchChange('else', value as string | string[] | null)"
     >
       <template #item-label="item">
         <SourceItem :item="item" />
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import Form from '../../../../shared/Form.vue'
+import { Form, EnumField } from '@kong-ui-public/freeform'
 import NameField from './NameField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
@@ -63,7 +63,6 @@ import useI18n from '../../../../../../composables/useI18n'
 import { useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useBranchNodeForm } from '../composables/useBranchNodeForm'
 import type { BranchName, NodeId } from '../../types'
-import EnumField from '../../../../shared/EnumField.vue'
 import SourceItem from './SourceItem.vue'
 
 type BranchFormData = BaseFormData & Record<string, unknown>

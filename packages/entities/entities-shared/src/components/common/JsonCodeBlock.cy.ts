@@ -1,4 +1,5 @@
 import JsonCodeBlock from './JsonCodeBlock.vue'
+import { SHIKI_MAX_HIGHLIGHT_LENGTH } from '../../constants'
 
 const record = {
   destinations: [{ ip: '255.255.255.255', port: 123 }],
@@ -45,6 +46,28 @@ describe('<JsonCodeBlock />', () => {
       cy.get('.json-endpoint').should('contain.text', 'get')
       cy.get('.json-endpoint').should('contain.text', fetcherUrl)
       cy.get('.json-endpoint').should('contain.text', 'Copy')
+    })
+
+    it('syntax highlights JSON content within the shiki size limit', () => {
+      cy.mount(JsonCodeBlock, {
+        props: {
+          entityRecord: record,
+        },
+      })
+
+      cy.get('#json-codeblock .highlighted-code-block code span').should('exist')
+    })
+
+    it('skips syntax highlighting and still renders plain text for content over the shiki size limit', () => {
+      const largeRecord = { note: 'a'.repeat(SHIKI_MAX_HIGHLIGHT_LENGTH) }
+      cy.mount(JsonCodeBlock, {
+        props: {
+          entityRecord: largeRecord,
+        },
+      })
+
+      cy.get('#json-codeblock .highlighted-code-block code span').should('not.exist')
+      cy.get('#json-codeblock .highlighted-code-block code').should('contain.text', largeRecord.note)
     })
   })
 })

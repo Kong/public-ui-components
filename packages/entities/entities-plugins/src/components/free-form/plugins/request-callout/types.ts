@@ -88,7 +88,7 @@ export interface RedisClusterNode {
  *                    Callout                   *
  ************************************************/
 
-export const CalloutId: unique symbol = Symbol()
+export const CalloutId = '_callout_id' as const
 
 export interface Callout {
   [CalloutId]?: string // used as key, will be removed from final data

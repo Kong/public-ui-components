@@ -1,3 +1,5 @@
+import FlowCanvas from './components/free-form/plugins/datakit/flow-editor/FlowCanvas.vue'
+import NodeBadge from './components/free-form/plugins/datakit/flow-editor/node/NodeBadge.vue'
 import CustomPluginForm from './components/CustomPluginForm.vue'
 import PluginForm from './components/PluginForm.vue'
 import PluginList from './components/PluginList.vue'
@@ -6,12 +8,20 @@ import PluginCatalog from './components/PluginCatalog.vue'
 import PluginSelectGrid from './components/select/PluginSelectGrid.vue'
 import PluginSelectCard from './components/select/PluginSelectCard.vue'
 import PluginConfigCard from './components/PluginConfigCard.vue'
+import AuthPluginOnboardingCard from './components/AuthPluginOnboardingCard.vue'
+import CreateConsumerCredentialForm from './components/CreateConsumerCredentialForm.vue'
+import AddCredentialToConsumerForm from './components/AddCredentialToConsumerForm.vue'
+import CommonForm from './components/free-form/components/CommonForm.vue'
+import DynamicLayout from './components/free-form/layout/DynamicLayout.vue'
+import PluginConfigurationForm from './components/free-form/components/PluginConfigurationForm.vue'
 import composables from './composables'
 import pluginEndpoints from './plugins-endpoints'
 
 const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
 
 export {
+  FlowCanvas,
+  NodeBadge,
   CustomPluginForm,
   PluginForm,
   PluginList,
@@ -20,9 +30,49 @@ export {
   PluginSelectGrid,
   PluginSelectCard,
   PluginConfigCard,
+  AuthPluginOnboardingCard,
+  CreateConsumerCredentialForm,
+  AddCredentialToConsumerForm,
+  CommonForm,
+  DynamicLayout,
+  PluginConfigurationForm,
   usePluginMetaData,
   useProvideExperimentalFreeForms,
 }
+
+export {
+  useProvideFreeFormPluginLayout,
+} from './components/free-form/layout/provider'
+
+export type {
+  PluginConfigurationBaseProps,
+  PluginFormLayoutComponent,
+  PluginFormLayoutProps,
+} from './components/free-form/layout/provider'
+
+export {
+  pluginConfigRegistry,
+} from './components/free-form/plugin-registry'
+
+export type {
+  ResolvedPluginFormConfig,
+} from './components/free-form/plugin-registry'
+
+export {
+  providePluginContext,
+  usePluginContext,
+} from './components/free-form/plugin-context'
+
+export type {
+  PluginContextRegistry,
+  PluginName as PluginContextName,
+} from './components/free-form/plugin-context'
+
+export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
+
+export type { DatakitPluginData, NodeInstance, NodePhase } from './components/free-form/plugins/datakit/types'
+
+export type { AuthMode } from './components/fields/kong-identity/types'
 
 export * from './types'
 
@@ -35,3 +85,5 @@ export * from './constants'
  * Please import PluginIcon and getPluginIconURL from '@kong-ui-public/entities-plugins-icon' directly.
  */
 export { getPluginIconURL, PluginIcon } from '@kong-ui-public/entities-plugins-icon'
+
+export * from './freeform'

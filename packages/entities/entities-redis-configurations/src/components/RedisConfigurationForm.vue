@@ -117,6 +117,12 @@
             :config="props.config"
             :readonly="form.readonly"
           />
+          <OauthFields
+            v-if="form.fields.config.cloud_authentication!.auth_provider === AuthProvider.OAUTH"
+            v-model="form.fields.config.cloud_authentication!.oauth!"
+            :config="props.config"
+            :readonly="form.readonly"
+          />
         </EntityFormSection>
 
         <!-- sentinel configuration section -->
@@ -170,7 +176,7 @@
             :value="form.fields.config.sentinel_username"
             @open="(value, update) => setUpVaultSecretPicker(value, update)"
           />
-          <KInput
+          <SecretInput
             v-model.trim="form.fields.config.sentinel_password"
             :label="t('form.fields.sentinel_password.label')"
             :label-attributes="{
@@ -178,8 +184,6 @@
               tooltipAttributes: { maxWidth: '400' },
             }"
             :readonly="form.readonly"
-            show-password-mask-toggle
-            type="password"
           />
           <VaultSecretPickerProvider
             class="secret-picker-provider"
@@ -314,7 +318,7 @@
             :value="form.fields.config.username"
             @open="(value, update) => setUpVaultSecretPicker(value, update)"
           />
-          <KInput
+          <SecretInput
             v-model.trim="form.fields.config.password"
             data-testid="redis-password-input"
             :label="t('form.fields.password.label')"
@@ -323,8 +327,6 @@
               tooltipAttributes: { maxWidth: '400' },
             }"
             :readonly="form.readonly"
-            show-password-mask-toggle
-            type="password"
           />
           <VaultSecretPickerProvider
             class="secret-picker-provider"
@@ -522,6 +524,8 @@
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormBlock, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
@@ -533,6 +537,7 @@ import composables from '../composables'
 import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'
 import SentinelNodes from './SentinelNodes.vue'
 import CloudAuthFields from './CloudAuthFields.vue'
+import OauthFields from './OauthFields.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import { mapRedisTypeToPartialType } from '../helpers'
@@ -670,7 +675,7 @@ const typeOptions = computed<SelectItem[]>(() => {
 })
 
 const cloudAuthOptions = computed<SelectItem[]>(() => {
-  return [
+  const options: SelectItem[] = [
     {
       label: t('form.options.auth_provider.aws'),
       value: AuthProvider.AWS,
@@ -684,6 +689,15 @@ const cloudAuthOptions = computed<SelectItem[]>(() => {
       value: AuthProvider.AZURE,
     },
   ]
+
+  if (props.config.oauthCloudAuthAvailable) {
+    options.push({
+      label: t('form.options.auth_provider.oauth'),
+      value: AuthProvider.OAUTH,
+    })
+  }
+
+  return options
 })
 
 const sentinelRoleOptions = [
@@ -842,9 +856,12 @@ onBeforeMount(async () => {
     row-gap: var(--kui-space-40, $kui-space-40);
   }
 
-  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info) {
+  // Keep section headers non-sticky in column layout so descriptions don't cover fields
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info),
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info.sticky) {
     max-width: none;
-    position: static;
+    position: static !important;
+    top: auto;
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section:not(:last-child) .form-section-wrapper) {

@@ -7,13 +7,16 @@ import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueDevTools from 'vite-plugin-vue-devtools'
-import dns from 'dns'
-import path from 'path'
+import dns from 'node:dns'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 // You can set dns.setDefaultResultOrder('verbatim') to disable the reordering behavior. Vite will then print the address as localhost
 // https://vitejs.dev/config/server-options.html#server-host
 dns.setDefaultResultOrder('verbatim')
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Include the rollup-plugin-visualizer if the BUILD_VISUALIZER env var is set to "true"
 const buildVisualizerPlugin = process.env.BUILD_VISUALIZER
@@ -45,7 +48,10 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    VueDevTools(),
+    // Skip Vue DevTools under Cypress component testing: it registers a global devtools hook that
+    // Cypress's bundled @vue/test-utils wraps on every `cy.mount()` without ever unwrapping, so
+    // `wrapper.emitted()` records each real event once per accumulated wrapper layer across the spec.
+    process.env.CYPRESS ? undefined : VueDevTools(),
   ],
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
@@ -57,7 +63,6 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         additionalData: '@use "@kong/design-tokens/tokens/scss/variables" as *;',
       },
@@ -78,6 +83,8 @@ export default defineConfig({
         '@kong/icons',
         '@kong-ui-public/i18n',
         '@kong-ui-public/entities-shared',
+        '@kong-ui-public/misc-widgets',
+        '@kong-ui-public/misc-widgets/dist/style.css',
         'axios',
       ],
       output: {
@@ -89,6 +96,7 @@ export default defineConfig({
           '@kong/kongponents': 'Kongponents',
           '@kong/icons': 'KongIcons',
           '@kong-ui-public/entities-shared': 'kong-ui-public-entities-shared',
+          '@kong-ui-public/misc-widgets': 'kong-ui-public-misc-widgets',
           axios: 'axios',
         },
         exports: 'named',

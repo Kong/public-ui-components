@@ -55,7 +55,7 @@
       },
       "general_info": {
         "title": "General information",
-        "help": "General information will help identify and manage this Upstream."
+        "help": "General information will help identify and manage this upstream."
       },
       "load_balancing": {
         "title": "Load balancing",
@@ -127,7 +127,7 @@
           "round_robin": "round-robin",
           "consistent_hashing": "consistent-hashing"
         },
-        "tags": "An optional set of strings associated with the Upstream for grouping and filtering.",
+        "tags": "An optional set of strings associated with the upstream for grouping and filtering.",
         "hash_fallback": {
           "text": "What to use as hashing input if the primary {hash_on} does not return a hash (eg. header is missing, or no Consumer identified). Not available if {hash_on} is set to {cookie}",
           "hash_on": "hash_on",

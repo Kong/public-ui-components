@@ -71,9 +71,9 @@
                       :is="isCollapsed ? ChevronRightIcon : ChevronDownIcon"
                       v-if="isGroupCollapsible(groupName)"
                       class="level-primary-group-collapse-icon"
-                      :color="KUI_NAVIGATION_COLOR_TEXT"
+                      :color="`var(--kui-navigation-color-text, ${KUI_NAVIGATION_COLOR_TEXT})`"
                       data-testid="level-primary-group-collapse-icon"
-                      :size="KUI_ICON_SIZE_30"
+                      :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                     />
                   </component>
                 </template>
@@ -620,7 +620,7 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-level-divider {
-  /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+  /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
   background-color: var(--kui-navigation-color-border-divider, $kui-navigation-color-border-divider);
   height: 1px;
   margin: var(--kui-space-80, $kui-space-80) auto;

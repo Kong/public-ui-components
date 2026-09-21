@@ -1,4 +1,4 @@
-import { PartialType, AuthProvider, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
+import { PartialType, AuthProvider, OauthAuthMethod, OauthClientSecretJwtAlg, OauthGrantType, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
 import { v4 as uuid } from 'uuid'
 
 export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
@@ -195,6 +195,73 @@ export const redisConfigurationSentinel: Readonly<RedisConfigurationResponse> = 
     ssl: false,
     username: '',
     cloud_authentication: null,
+  },
+}
+
+export const redisConfigurationOauth: Readonly<RedisConfigurationResponse> = {
+  created_at: '2025-02-07T00:00:00Z',
+  updated_at: '2025-02-07T00:00:00Z',
+  tags: [],
+  // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
+  get id() {
+    return uuid()
+  },
+  name: 'redis-config-oauth',
+  type: PartialType.REDIS_EE,
+  config: {
+    cluster_max_redirections: 0,
+    cluster_nodes: [],
+    connect_timeout: 2000,
+    connection_is_proxied: false,
+    database: 0,
+    host: 'localhost',
+    keepalive_backlog: 0,
+    keepalive_pool_size: 0,
+    password: '',
+    port: 6379,
+    timeout: 2000,
+    read_timeout: 0,
+    send_timeout: 0,
+    sentinel_master: '',
+    sentinel_nodes: [],
+    sentinel_password: '',
+    sentinel_role: '',
+    sentinel_username: '',
+    server_name: '',
+    ssl_verify: false,
+    ssl: false,
+    username: '',
+    cloud_authentication: {
+      auth_provider: AuthProvider.OAUTH,
+      aws_cache_name: null,
+      aws_region: null,
+      aws_is_serverless: null,
+      aws_access_key_id: null,
+      aws_secret_access_key: null,
+      aws_assume_role_arn: null,
+      aws_role_session_name: null,
+      gcp_service_account_json: null,
+      azure_client_id: null,
+      azure_client_secret: null,
+      azure_tenant_id: null,
+      oauth: {
+        auth_method: OauthAuthMethod.CLIENT_SECRET_POST,
+        client_id: 'my-client',
+        client_secret: 'shhh',
+        client_secret_jwt_alg: OauthClientSecretJwtAlg.HS512,
+        grant_type: OauthGrantType.CLIENT_CREDENTIALS,
+        password: null,
+        redis_username: null,
+        redis_username_claim: null,
+        scopes: ['read', 'write'],
+        ssl_verify: true,
+        timeout: 10000,
+        token_endpoint: 'https://idp.example.com/token',
+        token_headers: { 'X-Env': 'prod' },
+        token_post_args: {},
+        username: null,
+      },
+    },
   },
 }
 

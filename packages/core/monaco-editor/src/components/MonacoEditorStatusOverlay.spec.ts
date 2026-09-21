@@ -1,11 +1,8 @@
 import { mount } from '@vue/test-utils'
+import { markRaw } from 'vue'
 import { describe, it, expect } from 'vitest'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
-import { KEmptyState } from '@kong/kongponents'
-
-const stubs = {
-  KEmptyState,
-}
+import Kongponents from '@kong/kongponents'
 
 const props = {
   title: 'My Title',
@@ -17,7 +14,7 @@ describe('MonacoEditorStatusOverlay', () => {
     const wrapper = mount(MonacoEditorStatusOverlay, {
       props,
       global: {
-        stubs,
+        plugins: [Kongponents],
       },
     })
 
@@ -26,9 +23,9 @@ describe('MonacoEditorStatusOverlay', () => {
   })
 
   it('should render icon component', () => {
-    const TestIcon = {
+    const TestIcon = markRaw({
       template: '<svg class="test-icon"></svg>',
-    }
+    })
 
     const wrapper = mount(MonacoEditorStatusOverlay, {
       props: {
@@ -36,7 +33,7 @@ describe('MonacoEditorStatusOverlay', () => {
         icon: TestIcon,
       },
       global: {
-        stubs,
+        plugins: [Kongponents],
       },
     })
 
@@ -48,6 +45,9 @@ describe('MonacoEditorStatusOverlay', () => {
       props: {
         title: 'Empty',
         message: 'Nothing here',
+      },
+      global: {
+        plugins: [Kongponents],
       },
     })
 

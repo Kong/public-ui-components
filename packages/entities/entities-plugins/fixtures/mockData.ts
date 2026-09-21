@@ -20,6 +20,7 @@ export const plugins: FetcherRawResponse = {
       ordering: { 'before': { 'access': ['acl'] } },
       instance_name: 'instance-1',
       created_at: 1610617600,
+      updated_at: 1700000000,
       consumer_group: { id: 'consumer-group-1' },
       consumer: { id: 'consumer-1' },
       route: { id: 'route-1' },
@@ -545,6 +546,12 @@ export const konnectStreamingCustomPlugins = {
   data: [
     { id: '3e26ba5a-9c6b-4e79-9501-0e0bd9ade0ad', name: 'plugin-1', schema: 'schema text', handler: 'handler text' },
     { id: '3e26ba5a-9c6b-4e79-9501-0e0bd9ade0ae', name: 'plugin-2', schema: 'schema text', handler: 'handler text' },
+  ],
+}
+
+export const konnectClonedCustomPlugins = {
+  data: [
+    { id: '4e26ba5a-9c6b-4e79-9501-0e0bd9ade0ad', name: 'rate-limiting-clone', ref: 'rate-limiting', priority: null, tags: null },
   ],
 }
 

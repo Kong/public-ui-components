@@ -1,6 +1,7 @@
 <template>
   <Teleport
     v-if="formConfig.app === 'konnect'"
+    defer
     :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
@@ -27,16 +28,35 @@
     </KSegmentedControl>
   </Teleport>
 
-  <StandardLayout
-    v-bind="props"
+  <DynamicLayout
+    v-bind="{ ...attrs, ...props }"
     class="dk-form"
+    :config-sections="configSections"
     :editor-mode="layoutEditorMode"
+    hide-editor-mode-switcher
   >
-    <FlowEditor
-      v-if="realEditorMode === 'flow'"
-      :is-editing="props.isEditing"
-      @change="handleFlowChange"
-    />
+    <template #section-plugin-config>
+      <FlowEditor
+        v-if="realEditorMode === 'flow'"
+        :is-editing="props.isEditing"
+        @change="handleFlowChange"
+      />
+    </template>
+
+    <template
+      v-if="enableCaCertificates"
+      #section-advanced
+    >
+      <KCollapse
+        v-model="advancedCollapsed"
+        data-testid="dk-advanced-configuration-collapse"
+        :trigger-label="advancedCollapsed
+          ? t('plugins.free-form.datakit.advanced_configuration.show_label')
+          : t('plugins.free-form.datakit.advanced_configuration.hide_label')"
+      >
+        <CaCertificatesField name="$.config.ca_certificates" />
+      </KCollapse>
+    </template>
 
     <template #code-editor>
       <CodeEditor
@@ -46,16 +66,7 @@
         @error="handleCodeError"
       />
     </template>
-
-    <template #plugin-config-title>
-      {{ t('plugins.free-form.datakit.flow_editor.mode') }}
-    </template>
-
-    <template #plugin-config-description>
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="description" />
-    </template>
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -63,19 +74,22 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../layout/provider'
+import type { ConfigSection } from '../../types'
 import type { EditorMode, DatakitPluginData } from './types'
 
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'
 import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
-import { KSegmentedControl, KTooltip } from '@kong/kongponents'
+import { KCollapse, KSegmentedControl, KTooltip } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 import english from '../../../../locales/en.json'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import { FEATURE_FLAGS } from '../../../../constants'
+import DynamicLayout from '../../layout/DynamicLayout.vue'
+import CaCertificatesField from './CaCertificatesField.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
@@ -84,9 +98,12 @@ import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
 } from './schema/compat'
 
+defineOptions({ inheritAttrs: false })
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<DatakitPluginData>>()
+const attrs = useAttrs()
 
 // provided by consumer apps
 const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
@@ -140,15 +157,28 @@ const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
   return modes
 })
 
-const description = computed(() => {
-  switch (realEditorMode.value) {
-    case 'code':
-      return t('plugins.free-form.datakit.description_code')
-    case 'flow':
-      return t('plugins.free-form.datakit.description_flow')
-    default:
-      return ''
+// Advanced configuration section (ca_certificates), gated behind KM-3034-features-316.
+const enableCaCertificates = inject<boolean>(FEATURE_FLAGS.KM_3034_FEATURES_316, false)
+
+const advancedCollapsed = ref(!(props.isEditing && !!props.model?.config?.ca_certificates?.length))
+
+const configSections = computed<ConfigSection[]>(() => {
+  const sections: ConfigSection[] = [
+    {
+      name: 'plugin-config',
+      title: t('plugins.free-form.datakit.flow_editor.mode'),
+      description: t('plugins.free-form.datakit.description_flow'),
+    },
+  ]
+
+  if (enableCaCertificates) {
+    sections.push({
+      name: 'advanced',
+      title: t('plugins.free-form.datakit.advanced_configuration.title'),
+    })
   }
+
+  return sections
 })
 
 const flowDisabledTooltip = computed(() => {

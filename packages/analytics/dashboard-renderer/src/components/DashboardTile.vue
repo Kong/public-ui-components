@@ -8,24 +8,38 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
-      v-if="hasTileHeader && definition.chart.type !== 'slottable'"
+      v-if="hasTileHeader && !isSlottableTile"
       class="tile-header"
     >
       <KTooltip
         class="title-tooltip"
         :disabled="!isTitleTruncated"
         max-width="500"
-        :text="definition.chart.chart_title"
+        :text="tileTitle"
       >
         <div
           ref="titleRef"
           class="title"
         >
-          {{ definition.chart.chart_title }}
+          {{ tileTitle }}
         </div>
       </KTooltip>
 
       <div class="badge-container">
+        <KBadge
+          v-if="rangeUnsupported"
+          appearance="warning"
+          data-testid="unsupported-time-range-badge"
+          :tooltip="i18n.t('unsupported_time_range_warning')"
+          :tooltip-attributes="{ maxWidth: '320px' }"
+        >
+          <template #icon>
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+          </template>
+          <span class="badge-text">
+            {{ i18n.t('unsupported_time_range_badge') }}
+          </span>
+        </KBadge>
         <KBadge
           v-if="badgeData"
           data-testid="time-range-badge"
@@ -36,12 +50,24 @@
             v-if="isAgedOutQuery"
             #icon
           >
-            <WarningIcon :size="KUI_ICON_SIZE_20" />
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           </template>
           <span class="badge-text">
             {{ badgeData }}
           </span>
         </KBadge>
+      </div>
+
+      <div
+        v-if="showMetricSelector"
+        class="metric-selector-wrapper"
+      >
+        <KSegmentedControl
+          v-model="activeMetric"
+          class="metric-selector"
+          data-testid="metric-selector"
+          :options="metricOptions"
+        />
       </div>
 
       <div v-if="showRefresh">
@@ -57,42 +83,50 @@
           <ProgressIcon
             v-if="loadingChartData"
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
           <RefreshIcon
             v-else
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
         </KButton>
       </div>
 
       <div
-        v-if="canShowTitleActions"
+        v-if="tileDescription"
+        class="header-description"
+        :data-testid="`tile-description-${tileId}`"
+      >
+        {{ tileDescription }}
+      </div>
+
+      <div
+        v-if="canShowHeaderActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
         <EditIcon
-          v-if="canShowKebabMenu && context.editable && !isFullscreen"
+          v-if="canShowHeaderActions && context.editable && !isFullscreen"
           class="edit-icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :data-testid="`edit-tile-${tileId}`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           @click="editTile"
         />
         <KDropdown
-          v-if="canShowKebabMenu && kebabMenuHasItems && !isFullscreen"
+          v-if="canShowHeaderActions && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
         >
           <MoreIcon
             class="kebab-action-menu"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
             :data-testid="`kebab-action-menu-${tileId}`"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
           <template #items>
             <KDropdownItem
@@ -101,12 +135,12 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!!requestsLinkKebabMenu"
+              v-if="!isTableChartDefinition(definition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
+              v-if="canExportCsv"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv"
@@ -135,13 +169,6 @@
           </template>
         </KDropdown>
       </div>
-      <div
-        v-else-if="'description' in definition.chart"
-        class="header-description"
-        :data-testid="`tile-description-${tileId}`"
-      >
-        {{ definition.chart.description }}
-      </div>
       <CsvExportModal
         v-if="exportModalVisible"
         :data-testid="`csv-export-modal-${tileId}`"
@@ -152,7 +179,7 @@
     </div>
     <div
       class="tile-content"
-      :class="`type-${definition.chart.type}`"
+      :class="`type-${tileType}-${chart.type}`"
       :data-testid="`tile-content-${tileId}`"
     >
       <component
@@ -161,62 +188,85 @@
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
+        @query-complete="onQueryComplete"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContextInternal, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
   AnalyticsBridge,
+  AllAggregations,
   ExploreExportState,
   DashboardTileType,
   ExploreQuery,
   ExploreResultV4,
   AllFilters,
+  TileConfig,
   TileDefinition,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
-import { formatTime, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
-import { CsvExportModal } from '@kong-ui-public/analytics-chart'
+import { formatTime, isPlatformDatasource, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import CsvExportModal from './CsvExportModal.vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
+import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
+import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
+import { KSegmentedControl } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
-const props = withDefaults(defineProps<{
-  context: DashboardRendererContextInternal
+const {
+  context,
+  definition,
+  height = DEFAULT_TILE_HEIGHT,
+  hideActions = false,
+  isFullscreen,
+  preview = false,
+  queryReady,
+  showRefresh = false,
+  tileId,
+  tileType = 'chart',
+} = defineProps<{
+  context: DashboardRendererContext
   definition: TileDefinition
   height?: number
-  isFullscreen?: boolean
   hideActions?: boolean
-  hideZoomActions?: boolean
+  isFullscreen?: boolean
+  preview?: boolean
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
-}>(), {
-  height: DEFAULT_TILE_HEIGHT,
-  hideActions: false,
-  hideZoomActions: false,
-  showRefresh: false,
+  tileType?: TileConfig['type']
+}>()
+
+const { zoomConfiguration } = composables.useDashboardContext({
+  context: computed(() => context),
+  preview: computed(() => preview),
 })
 
 const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
@@ -227,6 +277,7 @@ const refresh = () => {
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
+  (e: 'tile-loaded'): void
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
@@ -237,7 +288,7 @@ const emit = defineEmits<{
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
-const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
+const { datasourceConfigMap, stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -245,6 +296,20 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
+
+const chart = computed(() => definition.chart)
+const tileTitle = computed<string | undefined>(() => {
+  return 'chart_title' in chart.value ? chart.value.chart_title : undefined
+})
+const tileDescription = computed<string | undefined>(() => definition.header_description)
+const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
+const canExportCsv = computed<boolean>(() => {
+  if (isTableChartDefinition(definition) || isRequestsChartDefinition(definition)) {
+    return false
+  }
+
+  return !('allow_csv_export' in chart.value) || chart.value.allow_csv_export !== false
+})
 
 const {
   exploreLinkKebabMenu,
@@ -261,13 +326,13 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: readonly(toRef(props, 'definition')),
-  context: readonly(toRef(props, 'context')),
+  definition: toRef(() => definition),
+  context: readonly(toRef(() => context)),
 })
 
 const { issueQuery } = composables.useIssueQuery()
 
-watch(() => props.definition, async (newValue, oldValue) => {
+watch(() => definition, async (newValue, oldValue) => {
   await nextTick()
 
   if (titleRef.value) {
@@ -286,19 +351,23 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const canShowTitleActions = computed((): boolean => canShowKebabMenu.value && !props.hideActions && (kebabMenuHasItems.value || props.context.editable))
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || !!context.editable)
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
+// The shared header action container is hidden when tile actions are globally disabled.
+const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
+const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !isFullscreen)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
+  'scatter': ScatterChartRenderer,
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
   'choropleth_map': GeoMapRendererAsync,
@@ -308,43 +377,60 @@ const componentEventHandlers = computed(() => ({
   ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
   ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
   ...(componentData.value?.rendererEvents.supportsBounds ? { 'bounds-change': onBoundsChange } : {}),
+  ...(componentData.value?.rendererEvents.supportsLoadingChange ? { 'loading-change': onLoadingChange } : {}),
 }))
 
 const componentData = computed(() => {
+  const component = rendererLookup[definition.chart.type]
+  const isTableChart = isTableChartDefinition(definition)
+
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const component = rendererLookup[props.definition.chart.type]
-
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
-  const supportsBounds = props.definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
+  const rendererProps = {
+    query: definition.query,
+    context: context,
+    queryReady: queryReady,
+    height: height - PADDING_SIZE * 2,
+    refreshCounter: refreshCounter.value,
+    zoomConfiguration: zoomConfiguration.value,
+  }
+  const chartRendererProps = {
+    chartOptions: definition.chart,
+    activeMetric: activeMetric.value,
+    headerDescription: tileDescription.value,
+    requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
+  }
 
   return component && {
     component,
     rendererProps: {
-      query: props.definition.query,
-      context: props.context,
-      queryReady: props.queryReady,
-      chartOptions: props.definition.chart,
-      height: props.height - PADDING_SIZE * 2,
-      refreshCounter: refreshCounter.value,
-      requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
-      exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+      ...rendererProps,
+      ...(!isTableChart ? chartRendererProps : {}),
     },
     rendererEvents: {
       supportsRequests,
       supportsZoom,
       supportsBounds,
+      supportsLoadingChange,
     },
   }
 })
 
 const badgeData = computed<string | null>(() => {
-  const query = props.definition.query
+  if (isTableChartDefinition(definition)) {
+    return null
+  }
+
+  const query = definition.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
-  if (query?.datasource === 'platform' && !query.dimensions?.includes('time')) {
+  if (isPlatformDatasource(query?.datasource) && !query.dimensions?.includes('time')) {
     return i18n.t('renderer.as_of_today')
   }
 
@@ -366,23 +452,30 @@ const badgeData = computed<string | null>(() => {
   return null
 })
 
+const rangeUnsupported = computed(() => {
+  const query = definition.query
+  const datasource = query?.datasource
+  const supportedTimeRanges = datasource ? datasourceConfigMap.value[datasource]?.timeRangeOptions : undefined
+  const tileTimeRange = query && 'time_range' in query ? query.time_range : undefined
+  const timeRange = tileTimeRange ?? context.timeSpec
+
+  return isTimeRangeUnsupported(timeRange as TimeRangeV4 | undefined, supportedTimeRanges)
+})
+
 const hasTileHeader = computed<boolean>(() => {
-  if (props.definition.chart.type === 'slottable') {
+  if (isSlottableTile.value) {
     return false
   }
 
-  // @ts-ignore this is erroring because of slottable
-  const hasTitle = Boolean(props.definition.chart.chart_title)
-
-  const hasSignalsDescription = props.definition.chart.type === 'golden_signals' && Boolean(props.definition.chart.description)
-
-  const hasRefresh = props.showRefresh
-
-  const hasMenu = canShowTitleActions.value && kebabMenuHasItems.value && !props.isFullscreen
-
-  const hasBadge = Boolean(badgeData.value)
-
-  return hasTitle || hasMenu || hasBadge || hasSignalsDescription || hasRefresh
+  return [
+    Boolean(tileTitle.value),
+    hasHeaderActions.value,
+    Boolean(badgeData.value),
+    rangeUnsupported.value,
+    Boolean(tileDescription.value),
+    showRefresh,
+    showMetricSelector.value,
+  ].some(Boolean)
 })
 
 const chartDataGranularity = computed(() => {
@@ -390,15 +483,42 @@ const chartDataGranularity = computed(() => {
 })
 
 const isTimeSeriesChart = computed(() => {
-  return ['timeseries_line', 'timeseries_bar'].includes(props.definition.chart.type)
+  return ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
+const metricNames = computed<AllAggregations[]>(() => chartData.value?.meta.metric_names ?? [])
+
+const activeMetric = ref<AllAggregations>()
+
+watch(metricNames, metrics => {
+  if (!activeMetric.value || !metrics.includes(activeMetric.value)) {
+    activeMetric.value = metrics[0]
+  }
+}, { immediate: true })
+
+const showMetricSelector = computed(() => (
+  isTimeSeriesChart.value
+  && (chartData.value?.data.length ?? 0) > 0
+  && metricNames.value.length > 1
+  && Object.keys(chartData.value?.meta.display ?? {}).length > 0
+))
+
+const isChartLabel = (name: string): name is keyof typeof english.chartLabels => Object.hasOwn(english.chartLabels, name)
+
+const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
+  value,
+  label: isChartLabel(value)
+    ? i18n.t(`chartLabels.${value}`)
+    : value,
+})))
+
 const isAgedOutQuery = computed(() => {
-  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  if (!isExploreChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = props.definition?.query?.granularity
+  const savedGranularity = definition.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -409,7 +529,8 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  const savedGranularity = props.definition?.query?.granularity ?? 'unknown'
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  const savedGranularity = isExploreChartDefinition(definition) ? definition.query.granularity ?? 'unknown' : 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -419,38 +540,54 @@ const agedOutWarning = computed(() => {
 
 /**
  * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ * This is used only for chart range-selection zoom action links. Table fetching and kebab Explore
+ * links apply their own filter handling outside this component helper.
  *
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
-  const metrics = props.definition.query.metrics
+  const filters = [...context.filters, ...definition.query.filters ?? []] as AllFilters[]
+  const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
-  const datasource = props.definition?.query?.datasource ?? 'api_usage'
+  const datasource = definition.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
     filters,
-    metrics,
+    queryFields: metrics,
   })
 })
 
 const editTile = () => {
-  emit('edit-tile', props.definition)
+  emit('edit-tile', definition)
 }
 
 const duplicateTile = () => {
-  emit('duplicate-tile', props.definition)
+  emit('duplicate-tile', definition)
 }
 
 const removeTile = () => {
-  emit('remove-tile', props.definition)
+  emit('remove-tile', definition)
 }
 
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
   emit('chart-data', data)
+  emit('tile-loaded')
+}
+
+const onQueryComplete = () => {
+  loadingChartData.value = false
+  emit('tile-loaded')
+}
+
+const onLoadingChange = (isLoading: boolean) => {
+  loadingChartData.value = isLoading
+
+  if (!isLoading) {
+    emit('tile-loaded')
+  }
 }
 
 const hideExportModal = () => {
@@ -458,15 +595,19 @@ const hideExportModal = () => {
 }
 
 const getExportData = (): Promise<ExploreResultV4> => {
+  if (isRequestsChartDefinition(definition)) {
+    throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
+  }
+
   // goap datasources don't allow limit increases
-  const isGoapDatasource = props.definition.query.datasource?.startsWith('goap')
+  const isGoapDatasource = definition.query.datasource?.startsWith('goap')
 
   // we intentionally default to true if unset
   const queryBridgeIncreases = queryBridge?.staticConfig?.increaseCsvExportLimit !== false
 
   if (queryBridgeIncreases && !isGoapDatasource) {
     // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-    return issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT)
+    return issueQuery(definition.query, context, EXPORT_RECORD_LIMIT)
   } else if (chartData.value) {
     // If we're not allowed to increase the limit, and results are available, use them.
     return Promise.resolve(chartData.value)
@@ -497,7 +638,7 @@ const exportCsv = async () => {
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   const zoomEvent: TileZoomEvent = {
-    tileId: props.tileId.toString(),
+    tileId: tileId.toString(),
     timeRange: newTimeRange,
   }
   emit('tile-time-range-zoom', zoomEvent)
@@ -505,7 +646,7 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 
 const onBoundsChange = (e: Array<[number, number]>) => {
   const boundsEvent: TileBoundsChangeEvent = {
-    tileId: props.tileId.toString(),
+    tileId: tileId.toString(),
     bounds: e,
   }
   emit('tile-bounds-change', boundsEvent)
@@ -538,6 +679,7 @@ defineExpose({ getExportData })
   .badge-container {
     display: flex;
     flex-grow: 1;
+    gap: var(--kui-space-30, $kui-space-30);
     justify-content: flex-end;
   }
 
@@ -562,6 +704,22 @@ defineExpose({ getExportData })
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .metric-selector-wrapper {
+      flex-shrink: 1;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      z-index: 0;
+
+      .metric-selector {
+        width: max-content;
+
+        :deep(.k-segmented-control) {
+          margin: 0;
+        }
+      }
     }
 
     .tile-actions {
@@ -619,7 +777,17 @@ defineExpose({ getExportData })
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-    &.type-golden_signals {
+    &.type-chart-single_value {
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70) var(--kui-space-50, $kui-space-50);
+    }
+
+    &.type-chart-table {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    &.type-chart-golden_signals {
       padding: 0;
     }
   }
@@ -632,7 +800,7 @@ defineExpose({ getExportData })
     .tile-content {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-      &.type-golden_signals {
+      &.type-chart-golden_signals {
         padding: 0;
       }
     }

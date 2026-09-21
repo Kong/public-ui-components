@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import '@kong-ui-public/sandbox-layout/dist/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -11,9 +12,12 @@ const init = async () => {
     history: createWebHistory(),
     routes: [
       {
+        // `SandboxLayout`'s mobile title link and this sandbox's "cancel/back"
+        // routes point at `home` — keep the name resolvable and just redirect
+        // it to the plugin list, which now doubles as this sandbox's home page.
         path: '/',
         name: 'home',
-        component: () => import('./pages/HomePage.vue'),
+        redirect: { name: 'list-plugin' },
       },
       {
         path: '/plugin',
@@ -65,6 +69,23 @@ const init = async () => {
         component: () => import('./pages/PluginFormPlayground.vue'),
       },
       {
+        path: '/onboarding/auth-plugin',
+        name: 'auth-plugin-onboarding-card',
+        component: () => import('./pages/AuthPluginOnboardingCardPage.vue'),
+      },
+      {
+        path: '/onboarding/auth-plugin/:plugin/create-consumer',
+        name: 'create-consumer-credential-form',
+        props: true,
+        component: () => import('./pages/CreateConsumerCredentialFormPage.vue'),
+      },
+      {
+        path: '/onboarding/auth-plugin/:plugin/add-credential',
+        name: 'add-credential-to-consumer-form',
+        props: true,
+        component: () => import('./pages/AddCredentialToConsumerFormPage.vue'),
+      },
+      {
         path: '/service/:id',
         name: 'view-service',
         component: () => import('./pages/FallbackPage.vue'),
@@ -93,11 +114,6 @@ const init = async () => {
         path: '/plugin/:id/configure-dynamic-ordering',
         name: 'configure-dynamic-ordering',
         component: () => import('./pages/FallbackPage.vue'),
-      },
-      {
-        path: '/free-form/mocking',
-        name: 'free-form',
-        component: () => import('./pages/FreeFormPage.vue'),
       },
     ],
   })

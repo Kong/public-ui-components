@@ -1,5 +1,5 @@
 import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import { describe, it, expect, vitest } from 'vitest'
+import { describe, it, expect, vitest, vi } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import {
@@ -241,6 +241,44 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
     )
+  })
+
+  it('keeps grouped metrics separate, preserving sparse, null and zero values', () => {
+    const result = useExploreResultToTimeDataset({ fill: false }, computed<ExploreResultV4>(() => ({
+      data: [
+        { timestamp: '2026-09-09T15:00:00Z', event: { ai_gateway: 'empty', response_latency_average: 38.36, response_latency_p99: 341 } },
+        { timestamp: '2026-09-09T16:00:00Z', event: { ai_gateway: 'empty', response_latency_average: 572.05, response_latency_p99: 10736 } },
+        { timestamp: '2026-09-09T16:00:00Z', event: { ai_gateway: 'gateway-id', response_latency_average: null, response_latency_p99: 0 } },
+        { timestamp: '2026-09-09T17:00:00Z', event: { ai_gateway: 'gateway-id', response_latency_average: 12.3456, response_latency_p99: 25 } },
+      ],
+      meta: {
+        start: '2026-09-09T15:00:00Z', end: '2026-09-09T18:00:00Z', granularity_ms: 3600000,
+        metric_names: ['response_latency_average', 'response_latency_p99'],
+        metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' }, query_id: '',
+        display: { ai_gateway: { 'gateway-id': { name: 'DP Mock AIGW' }, empty: { name: 'empty' } } },
+      },
+    })))
+
+    expect(result.value.datasets).toHaveLength(4)
+    const timestamps = ['15', '16', '17'].map(hour => Date.parse(`2026-09-09T${hour}:00:00Z`))
+    for (const [metric, dimension, label, values] of [
+      ['response_latency_average', 'empty', 'empty — Response latency (avg)', [38.36, 572.05, 0]],
+      ['response_latency_p99', 'empty', 'empty — Response latency (p99)', [341, 10736, 0]],
+      ['response_latency_average', 'DP Mock AIGW', 'DP Mock AIGW — Response latency (avg)', [0, 0, 12.346]],
+      ['response_latency_p99', 'DP Mock AIGW', 'DP Mock AIGW — Response latency (p99)', [0, 0, 25]],
+    ] as const) {
+      const dataset = result.value.datasets.find(ds => ds.rawMetric === metric && ds.rawDimension === dimension)
+      expect(dataset).toMatchObject({
+        label,
+        isSegmentEmpty: dimension === 'empty',
+        data: values.map((y, index) => ({ x: timestamps[index], y })),
+      })
+    }
+    const emptyDatasets = result.value.datasets.filter(ds => ds.isSegmentEmpty)
+    expect(emptyDatasets[0].borderColor).toBe(emptyDatasets[1].borderColor)
+    expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_average')).toMatchObject({ borderDash: [] })
+    expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ borderDash: [4, 2] })
+    expect(_consoleErrorSpy).not.toHaveBeenCalled()
   })
 
   it('handles multi-metric/no dimension query', () => {
@@ -488,54 +526,54 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value.datasets).toEqual(
       [
-        {
-          rawDimension: 'metric1',
-          rawMetric: 'metric1',
-          label: 'metric1',
-          borderColor: '#a86cd5',
-          backgroundColor: '#a86cd5',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 1,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 3,
-            },
-          ],
-          total: 4,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
-        {
-          rawDimension: 'metric2',
-          rawMetric: 'metric2',
-          label: 'metric2',
-          borderColor: '#6a86d2',
-          backgroundColor: '#6a86d2',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 2,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 4,
-            },
-          ],
-          total: 6,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
+        expect.objectContaining(
+          {
+            rawDimension: 'metric1',
+            rawMetric: 'metric1',
+            label: 'metric1',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 1,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 3,
+              },
+            ],
+            total: 4,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
+        expect.objectContaining(
+          {
+            rawDimension: 'metric2',
+            rawMetric: 'metric2',
+            label: 'metric2',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 2,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 4,
+              },
+            ],
+            total: 6,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
       ],
     )
 
@@ -598,54 +636,54 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value.datasets).toEqual(
       [
-        {
-          rawDimension: 'ID',
-          rawMetric: 'request_count',
-          label: 'ID',
-          borderColor: '#6a86d2',
-          backgroundColor: '#6a86d2',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 1,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 3,
-            },
-          ],
-          total: 4,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: false,
-        },
-        {
-          rawDimension: 'emptyConsumer',
-          rawMetric: 'request_count',
-          label: 'emptyConsumer',
-          borderColor: '#afb7c5',
-          backgroundColor: '#afb7c5',
-          data: [
-            {
-              x: START_FOR_DAILY_QUERY.getTime(),
-              y: 2,
-            },
-            {
-              x: END_FOR_DAILY_QUERY.getTime(),
-              y: 4,
-            },
-          ],
-          total: 6,
-          lineTension: 0,
-          borderWidth: BORDER_WIDTH,
-          pointBorderWidth: 1.2,
-          borderJoinStyle: 'round',
-          fill: false,
-          isSegmentEmpty: true,
-        },
+        expect.objectContaining(
+          {
+            rawDimension: 'ID',
+            rawMetric: 'request_count',
+            label: 'ID',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 1,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 3,
+              },
+            ],
+            total: 4,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: false,
+          },
+        ),
+        expect.objectContaining(
+          {
+            rawDimension: 'emptyConsumer',
+            rawMetric: 'request_count',
+            label: 'emptyConsumer',
+            data: [
+              {
+                x: START_FOR_DAILY_QUERY.getTime(),
+                y: 2,
+              },
+              {
+                x: END_FOR_DAILY_QUERY.getTime(),
+                y: 4,
+              },
+            ],
+            total: 6,
+            lineTension: 0,
+            borderWidth: BORDER_WIDTH,
+            pointBorderWidth: 1.2,
+            borderJoinStyle: 'round',
+            fill: false,
+            isSegmentEmpty: true,
+          },
+        ),
       ],
     )
   })

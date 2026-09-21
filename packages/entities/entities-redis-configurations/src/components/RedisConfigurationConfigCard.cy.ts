@@ -5,6 +5,7 @@ import {
   redisConfigurationHostPortEE,
   redisConfigurationCluster,
   redisConfigurationSentinel,
+  redisConfigurationOauth,
 } from '../../fixtures/mockData'
 
 /** Cypress `mount` / `findComponent` overloads do not match vue-tsc’s script-setup SFC type */
@@ -338,6 +339,28 @@ describe('<RedisConfigurationConfigCard/>', {
           fieldsShouldNotExist.forEach((field) => {
             cy.getTestId(field).should('not.exist')
           })
+        })
+
+        it('renders the whole oauth record as a code block', () => {
+          interceptGetRedisConfiguration({ body: redisConfigurationOauth })
+
+          cy.mount(MountableRedisConfigurationConfigCard, {
+            props: {
+              config: app === 'Konnect' ? konnectConfig : kmConfig,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          // auth_provider stays a flat row; the nested oauth record is shown as a single JSON code block
+          cy.getTestId('auth_provider-label').should('exist')
+          cy.getTestId('oauth-json-code').should('exist')
+          cy.getTestId('oauth-json-code').should('contain.text', 'token_endpoint')
+          cy.getTestId('oauth-json-code').should('contain.text', 'https://idp.example.com/token')
+
+          // oauth sub-fields are NOT flattened into their own rows
+          cy.getTestId('token_endpoint-label').should('not.exist')
+          cy.getTestId('auth_method-label').should('not.exist')
         })
       })
     })

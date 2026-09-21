@@ -1,4 +1,4 @@
-import type { FormSchema } from '../../../../../../types/plugins/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 export const ServiceRequestSchema: FormSchema = {
   'fields': [

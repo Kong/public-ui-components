@@ -61,6 +61,35 @@
         @proceed="useKongManagerSecretRef"
       />
     </div>
+
+    <div>
+      <h3>Kong AI Gateway API</h3>
+
+      <KInput
+        v-model.trim="aiGatewaySecretRef"
+        autocomplete="off"
+        label="Token"
+        placeholder="Raw token or secret reference"
+        type="text"
+      />
+
+      <div class="look-up-key">
+        Look up
+        <span
+          class="look-up-key-action"
+          @click="() => aiGatewaySecretPickerSetup = aiGatewaySecretRef"
+        >
+          Key on Vault
+        </span>
+      </div>
+
+      <VaultSecretPicker
+        :config="aiGatewayConfig"
+        :setup="aiGatewaySecretPickerSetup"
+        @cancel="() => aiGatewaySecretPickerSetup = false"
+        @proceed="useAiGatewaySecretRef"
+      />
+    </div>
   </div>
 </template>
 
@@ -84,11 +113,23 @@ const kongManagerConfig = ref<KongManagerBaseFormConfig>({
   apiBaseUrl: '/kong-manager',
 })
 
+const aiGatewayId = import.meta.env.VITE_KONNECT_AI_GATEWAY_ID || 'demo-ai-gateway-id'
+
+const aiGatewayConfig = ref<KonnectBaseFormConfig & { apiType: 'aiGateway', aiGatewayId: string }>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+})
+
 const konnectSecretPickerSetup = ref<string | false>(false)
 const kongManagerSecretPickerSetup = ref<string | false>(false)
+const aiGatewaySecretPickerSetup = ref<string | false>(false)
 
 const konnectSecretRef = ref('{vault://kv-1/password/aaa}')
 const kongManagerSecretRef = ref('{vault://env-1/password/aaa}')
+const aiGatewaySecretRef = ref('{vault://kv-1/password/aaa}')
 
 const useKonnectSecretRef = (secretRef: string) => {
   konnectSecretRef.value = secretRef
@@ -99,15 +140,20 @@ const useKongManagerSecretRef = (secretRef: string) => {
   kongManagerSecretRef.value = secretRef
   kongManagerSecretPickerSetup.value = false
 }
+
+const useAiGatewaySecretRef = (secretRef: string) => {
+  aiGatewaySecretRef.value = secretRef
+  aiGatewaySecretPickerSetup.value = false
+}
 </script>
 
 <style lang="scss" scoped>
 .look-up-key {
-  font-size: $kui-font-size-20;
-  margin: $kui-space-40 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  margin: var(--kui-space-40, $kui-space-40) 0;
 
   &-action {
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
   }
 }

@@ -3,14 +3,18 @@ import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
 import useRequestQueue from './useRequestQueue'
 import useContextLinks from './useContextLinks'
 import useIssueQuery from './useIssueQuery'
-import useDashboardInternalContext from './useDashboardInternalContext'
+import useIssueRequestsQuery from './useIssueRequestsQuery'
+import useDashboardContext from './useDashboardContext'
+import useExportPdf from './useExportPdf'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
   useContextLinks,
-  useDashboardInternalContext,
+  useDashboardContext,
   useEvaluateFeatureFlag,
+  useExportPdf,
   useI18n,
   useIssueQuery,
+  useIssueRequestsQuery,
   useRequestQueue,
 }

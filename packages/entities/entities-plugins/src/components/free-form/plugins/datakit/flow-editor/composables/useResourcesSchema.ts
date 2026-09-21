@@ -1,6 +1,6 @@
 import { computed } from 'vue'
-import { useFormShared } from '../../../../shared/composables'
-import type { RecordFieldSchema } from '../../../../../../types/plugins/form-schema'
+import { useFormShared } from '@kong-ui-public/freeform'
+import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import { clone } from '../store/helpers'
 
 export function useResourcesSchema() {

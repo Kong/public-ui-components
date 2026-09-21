@@ -20,12 +20,13 @@
       ref="dashboard-tile"
       v-model:refresh-counter="refreshCounter"
       :context="{
-        ...internalContext,
+        ...enrichedContext,
         editable: false,
       }"
       :definition="definition"
       :height="height"
       hide-actions
+      :preview="preview"
       :query-ready="queryReady"
       show-refresh
       :tile-id="randomId"
@@ -47,6 +48,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
+import { isTableChartDefinition } from '../utils/tile-definition'
 
 const root = useTemplateRef('root')
 const tileRef = useTemplateRef('dashboard-tile')
@@ -83,14 +85,20 @@ const onBoundsChange = (e: TileBoundsChangeEvent) => {
 }
 
 const { i18n } = composables.useI18n()
-const { internalContext, queryReady } = composables.useDashboardInternalContext({
+const { enrichedContext, queryReady } = composables.useDashboardContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
   preview: computed(() => preview),
 })
 
+const isTableDefinition = computed((): boolean => isTableChartDefinition(definition))
+
 const chartNotConfigured = computed(() => {
-  return !definition?.query?.metrics || definition.query.metrics.length === 0
+  if (isTableDefinition.value) {
+    return 'columns' in definition.query && !definition.query.columns?.length
+  }
+
+  return !('metrics' in definition.query) || !definition.query.metrics || definition.query.metrics.length === 0
 })
 
 const height = ref<number>(DEFAULT_TILE_HEIGHT)

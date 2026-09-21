@@ -1,0 +1,346 @@
+<template>
+  <div class="plugin-filter">
+    <KInput
+      ref="search-input"
+      v-model="searchText"
+      autocomplete="off"
+      class="plugin-search-input"
+      data-testid="search-input"
+      :placeholder="t('search.placeholder.search')"
+    >
+      <template #before>
+        <SearchIcon decorative />
+      </template>
+      <template #after>
+        <CloseIcon
+          v-show="searchText !== ''"
+          class="plugin-search-clear"
+          role="button"
+          tabindex="0"
+          @click="clearSearchText"
+          @keydown.enter.prevent="clearSearchText"
+          @keydown.space.prevent="clearSearchText"
+        />
+      </template>
+    </KInput>
+    <KFilterGroup
+      v-model="filterGroupSelection"
+      :filters="pluginFilterGroupFilters"
+      @apply="onFilterApply"
+    >
+      <template #filter-tags="{ value, setValue }">
+        <div class="plugin-tags-filter">
+          <KInput
+            ref="tags-input"
+            v-model="tagInputText"
+            autocomplete="off"
+            data-testid="tags-filter-input"
+            :error="!!tagInputError"
+            :error-message="tagInputError"
+            :placeholder="t('search.placeholder.tags_filter')"
+            @keydown.enter.prevent="addPendingTag(value as string[], setValue)"
+          >
+            <template #after>
+              <ArrowTopLeftIcon
+                class="plugin-tags-filter-add"
+                data-testid="tags-filter-add"
+                role="button"
+                tabindex="0"
+                @click="addPendingTag(value as string[], setValue)"
+                @keydown.enter.prevent="addPendingTag(value as string[], setValue)"
+                @keydown.space.prevent="addPendingTag(value as string[], setValue)"
+              />
+            </template>
+          </KInput>
+          <div
+            class="plugin-tags-filter-badges"
+          >
+            <KBadge
+              v-for="tag in value"
+              :key="tag"
+              :icon-before="false"
+            >
+              {{ tag }}
+              <template #icon>
+                <CloseIcon
+                  data-testid="tags-filter-remove-tag"
+                  role="button"
+                  tabindex="0"
+                  @click="removePendingTag(tag, value as string[], setValue)"
+                  @keydown.enter.prevent="removePendingTag(tag, value as string[], setValue)"
+                  @keydown.space.prevent="removePendingTag(tag, value as string[], setValue)"
+                />
+              </template>
+            </KBadge>
+          </div>
+        </div>
+      </template>
+      <template #filter-scope="{ value, setValue, options }">
+        <KMultiselect
+          data-testid="scope-filter-select"
+          :items="options"
+          :model-value="(value as string[])"
+          :placeholder="t('search.placeholder.scope_filter')"
+          @update:model-value="setValue($event, valuesToText($event, options!))"
+        />
+      </template>
+      <template #filter-status="{ value, setValue, options }">
+        <div class="plugin-status-filter">
+          <KRadio
+            v-for="option in options"
+            :key="option.value"
+            data-testid="status-filter-radio"
+            :label="option.label"
+            :model-value="(value as string)"
+            :selected-value="option.value"
+            @update:model-value="setValue($event, option.label)"
+          />
+        </div>
+      </template>
+    </KFilterGroup>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref, useTemplateRef, watch } from 'vue'
+import type { FilterGroupFilters, FilterGroupSelection, FilterOption } from '@kong/kongponents'
+import { ArrowTopLeftIcon, CloseIcon, SearchIcon } from '@kong/icons'
+import composables from '../composables'
+import { PluginScope } from '../types'
+import type { EntityType } from '../types'
+
+const { i18n: { t } } = composables.useI18n()
+
+// Maps a nested entity page's `entityType` to the search API's singular scope filter key
+const ENTITY_TYPE_TO_SCOPE_FILTER_KEY: Partial<Record<EntityType, PluginScope>> = {
+  routes: PluginScope.ROUTE,
+  services: PluginScope.SERVICE,
+  consumers: PluginScope.CONSUMER,
+  consumer_groups: PluginScope.CONSUMER_GROUP,
+}
+
+const { entityType, entityId } = defineProps<{
+  /**
+   * Set when this list is nested under a Route/Service/Consumer/Consumer-Group detail page - the
+   * scope is then implied by the page, so the Scope pill is hidden and every request is forced
+   * server-side to that one entity instead of being user-selectable.
+   */
+  entityType?: EntityType
+  entityId?: string
+}>()
+
+const nestedScopeFilterKey = computed(() => (
+  entityType && entityId ? ENTITY_TYPE_TO_SCOPE_FILTER_KEY[entityType] : undefined
+))
+
+/**
+ * The `/plugins/search` request's raw, wire-ready query string (bracket-notation `filter[field][operator]`
+ * params + top-level `tags`) - same idea as EntityFilter's fuzzy-match mode, which serializes straight
+ * into the params Kong Manager's API accepts natively, with no decode step needed downstream.
+ */
+const modelValue = defineModel<string>({ required: true })
+
+const searchText = ref('')
+const filterGroupSelection = ref<FilterGroupSelection>({})
+const searchInput = useTemplateRef('search-input')
+const tagsInput = useTemplateRef('tags-input')
+
+const valuesToText = (values: string[], options: FilterOption[]): string => {
+  return values
+    .map((value) => options.find((option) => option.value === value)!.label)
+    .join(', ')
+}
+
+const tagInputText = ref('')
+
+// Tag validation: unicode letters/numbers and most ASCII symbols are allowed,
+// but no commas (used as the tag-list delimiter), slashes, control characters,
+// or leading/trailing spaces. Interior spaces between characters are fine.
+const TAG_PATTERN = /^(?:[\x21-\x2B\x2D\x2E\x30-\x7E\p{N}\p{L}]+(?: *[\x21-\x2B\x2D\x2E\x30-\x7E\p{N}\p{L}])*)?$/u
+
+const tagInputError = computed(() => (
+  tagInputText.value && !TAG_PATTERN.test(tagInputText.value)
+    ? t('search.filter.tags_invalid')
+    : ''
+))
+
+const focusSearchInput = () => {
+  searchInput.value?.input?.focus()
+}
+
+const focusTagsInput = () => {
+  tagsInput.value?.input?.focus()
+}
+
+const clearSearchText = () => {
+  searchText.value = ''
+  focusSearchInput()
+}
+
+const addPendingTag = (value: string[], setValue: (value: string[], text: string) => void) => {
+  const tag = tagInputText.value
+  if (!tag || !TAG_PATTERN.test(tag)) {
+    focusTagsInput()
+    return
+  }
+  if (!value) {
+    value = []
+  }
+  if (!value.includes(tag)) {
+    value.push(tag)
+  }
+  tagInputText.value = ''
+  focusTagsInput()
+  setValue(value, value.join(', '))
+}
+
+const removePendingTag = (tag: string, value: string[], setValue: (value: string[], text: string) => void) => {
+  const newValue = value.filter((pendingTag) => pendingTag !== tag)
+  setValue(newValue, newValue.join(', '))
+}
+
+const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
+  const scopeFilter: FilterGroupFilters = nestedScopeFilterKey.value
+    ? {}
+    : {
+      scope: {
+        label: t('plugins.list.table_headers.scope'),
+        operators: ['eq'],
+        pinned: true,
+        multiple: true,
+        options: [
+          { label: t('plugins.list.table_headers.applied_to_badges.route'), value: PluginScope.ROUTE },
+          { label: t('plugins.list.table_headers.applied_to_badges.service'), value: PluginScope.SERVICE },
+          { label: t('plugins.list.table_headers.applied_to_badges.consumer'), value: PluginScope.CONSUMER },
+          { label: t('plugins.list.table_headers.applied_to_badges.consumer_group'), value: PluginScope.CONSUMER_GROUP },
+          { label: t('plugins.list.table_headers.applied_to_badges.global'), value: PluginScope.GLOBAL },
+        ],
+      },
+    }
+
+  const filters: FilterGroupFilters = {
+    ...scopeFilter,
+    status: {
+      label: t('plugins.list.table_headers.status'),
+      operators: ['eq'],
+      pinned: true,
+      maxWidth: 350,
+      options: [
+        { value: 'true', label: t('actions.enabled') },
+        { value: 'false', label: t('actions.disabled') },
+      ],
+    },
+    tags: {
+      label: t('plugins.list.table_headers.tags'),
+      operators: ['eq'],
+      pinned: true,
+      multiple: true,
+    },
+  }
+
+  return filters
+})
+
+// Build the actual wire-format query string directly - no intermediate encoding for a consumer
+// to decode later. PluginList.vue's fetcher (via useFetcher/useFetchUrlBuilder with
+// isExactMatch: false) appends this straight onto the /plugins/search request.
+const serializedQuery = computed<string>(() => {
+  const params = new URLSearchParams()
+
+  if (searchText.value) {
+    params.set('filter[name][contains]', searchText.value)
+  }
+
+  if (!nestedScopeFilterKey.value) {
+    const scopeSelection = filterGroupSelection.value.scope
+    const scopeValues = Array.isArray(scopeSelection?.value)
+      ? scopeSelection.value
+      : typeof scopeSelection?.value === 'string' && scopeSelection.value
+        ? [scopeSelection.value]
+        : []
+    if (scopeValues.length) {
+      params.set('filter[scope][oeq]', scopeValues.join(','))
+    }
+  }
+
+  const statusSelection = filterGroupSelection.value.status
+  if (statusSelection?.value) {
+    params.set('filter[enabled]', statusSelection.value === 'true' ? 'true' : 'false')
+  }
+
+  const tagsSelection = filterGroupSelection.value.tags
+  const tagsValues = Array.isArray(tagsSelection?.value) ? tagsSelection.value : []
+  if (tagsValues.length) {
+    // Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
+    params.set('tags', tagsValues.join('/'))
+  }
+
+  // On a nested entity page, only scope to that one entity once the user has actually triggered a
+  // search/filter - an otherwise-unfiltered load should keep hitting the plain, already
+  // entity-scoped (by URL path) list endpoint instead of switching to /plugins/search.
+  if (nestedScopeFilterKey.value && entityId && params.toString()) {
+    params.set(`filter[${nestedScopeFilterKey.value}][eq]`, entityId)
+  }
+
+  return params.toString()
+})
+
+watch(serializedQuery, (value) => {
+  modelValue.value = value
+})
+
+// Empty internal state when the external modelValue is cleared
+watch(modelValue, (value) => {
+  if (!value) {
+    searchText.value = ''
+    filterGroupSelection.value = {}
+    tagInputText.value = ''
+  }
+})
+
+const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection) => {
+  const appliedFilter = selection[appliedFilterKey]
+  if (appliedFilter) {
+    appliedFilter.operatorDelimiter = ': '
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.plugin-filter {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-70, $kui-space-70);
+
+  .plugin-search-input {
+    width: 320px;
+  }
+
+  .plugin-search-clear {
+    cursor: pointer;
+  }
+}
+
+.plugin-tags-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-60, $kui-space-60);
+
+  .plugin-tags-filter-add {
+    cursor: pointer;
+    transform: scaleY(-1);
+  }
+
+  .plugin-tags-filter-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kui-space-40, $kui-space-40);
+  }
+}
+
+.plugin-status-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-40, $kui-space-40);
+}
+</style>

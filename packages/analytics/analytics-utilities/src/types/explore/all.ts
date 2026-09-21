@@ -2,22 +2,23 @@ import { type BasicExploreAggregations, type BasicExploreFilterAll, type Filtera
 import { type AiExploreAggregations, type AiExploreFilterAll, type FilterableAiExploreDimensions, filterableAiExploreDimensions } from './ai'
 import { type ExploreAggregations, type ExploreFilterAll, type FilterableExploreDimensions, filterableExploreDimensions } from './advanced'
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
-import { filterableMcpExploreDimensions, type FilterableMcpExploreDimensions, type McpExploreAggregations, type McpExploreFilterAll } from './mcp'
 import { type PlatformExploreFilterAll } from './platform'
-import type { AgenticExploreAggregations, AgenticExploreFilterAll, FilterableAgenticExploreDimensions } from './agentic'
+import { filterableAgenticExploreDimensions, type AgenticExploreAggregations, type AgenticExploreFilterAll, type FilterableAgenticExploreDimensions } from './agentic'
+import { filterableManagedCacheExploreDimensions, type FilterableManagedCacheExploreDimensions, type ManagedCacheExploreAggregations, type ManagedCacheExploreFilterAll } from './managed-cache'
 
-export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | McpExploreAggregations | AgenticExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations | ManagedCacheExploreAggregations
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll | ManagedCacheExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
-  | FilterableMcpExploreDimensions
   | FilterableAgenticExploreDimensions
+  | FilterableManagedCacheExploreDimensions
   | FilterableRequestDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
 
-export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage', 'platform'] as const
+// 'platform' is deprecated; use 'platform_usage'.
+export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', 'managed_cache_usage'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -27,8 +28,11 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   basic: BasicExploreFilterAll
   api_usage: ExploreFilterAll
   llm_usage: AiExploreFilterAll
-  agentic_usage: McpExploreFilterAll
+  agentic_usage: AgenticExploreFilterAll
+  /** @deprecated Use `platform_usage`. */
   platform: PlatformExploreFilterAll
+  platform_usage: PlatformExploreFilterAll
+  managed_cache_usage: ManagedCacheExploreFilterAll
 }
 
 /**
@@ -55,8 +59,11 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   basic: new Set(filterableBasicExploreDimensions),
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
-  agentic_usage: new Set(filterableMcpExploreDimensions),
+  agentic_usage: new Set(filterableAgenticExploreDimensions),
+  /** @deprecated Use `platform_usage`. */
   platform: new Set(),
+  platform_usage: new Set(),
+  managed_cache_usage: new Set(filterableManagedCacheExploreDimensions),
 } as const
 
 /**
@@ -69,7 +76,7 @@ export const stripUnknownFilters = <K extends keyof typeof datasourceToFilterabl
     return filters as any
   }
 
-  if (datasource === 'platform') {
+  if (datasource === 'platform' || datasource === 'platform_usage') {
     return filters as Array<FilterTypeMap[K]>
   }
 

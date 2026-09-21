@@ -418,8 +418,8 @@ const tableHeaders: BaseTableHeaders = fields
 /**
  * Fetcher & Filtering
  */
-const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app][props.config.serviceId ? 'forGatewayService' : 'all']}`
+const buildFetcherUrl = (endpoint: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
@@ -428,6 +428,19 @@ const fetcherBaseUrl = computed<string>(() => {
   return url
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{serviceId}/gi, props.config?.serviceId || '')
+}
+
+const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(
+  endpoints.list[props.config.app][props.config.serviceId ? 'forGatewayService' : 'all'],
+))
+
+const activeFetcherUrl = computed<string>(() => {
+  // Only hit the search endpoint once the user is actually searching in workspace
+  if (props.config.app === 'konnect' && props.config.workspace && filterQuery.value) {
+    return buildFetcherUrl(endpoints.list.konnect.search)
+  }
+
+  return fetcherBaseUrl.value
 })
 
 const filterQuery = ref<string>('')
@@ -458,7 +471,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), activeFetcherUrl)
 
 const getCellAttrs = (params: Record<string, any>): Record<string, any> => {
   if (params.headerKey === 'expression') {

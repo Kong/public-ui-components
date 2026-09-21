@@ -7,8 +7,16 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  apiRequestsQuerySchema,
+  validDashboardChartQuery,
   validDashboardQuery,
+  validDashboardTableQuery,
   platformQuerySchema,
+  filterablePlatformPresetFilterDimensions,
+  slottableSchema,
+  slottableTileConfigSchema,
+  singleValueSchema,
+  topNTableSchema,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -20,6 +28,7 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableManagedCacheExploreDimensions,
   queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
@@ -28,13 +37,17 @@ import {
 } from './types'
 
 const ajv = new Ajv({ allowUnionTypes: true })
+const validateValidDashboardChartQuery = ajv.compile(validDashboardChartQuery)
 const validateValidDashboardQuery = ajv.compile(validDashboardQuery)
+const validateValidDashboardTableQuery = ajv.compile(validDashboardTableQuery)
 const validatePlatformQuerySchema = ajv.compile(platformQuerySchema)
 const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
 const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
 const validateBasicQuerySchema = ajv.compile(basicQuerySchema)
 const validateLlmUsageQuerySchema = ajv.compile(llmUsageSchema)
 const validateAgenticUsageQuerySchema = ajv.compile(agenticUsageSchema)
+const validateSlottableTileSchema = ajv.compile(slottableTileConfigSchema)
+const validateSingleValueSchema = ajv.compile(singleValueSchema)
 
 describe('dashboardSchema.v2', () => {
   const sharedPresetFilterableDimensions = [
@@ -46,7 +59,15 @@ describe('dashboardSchema.v2', () => {
     ]),
   ]
 
-  const platformQuery = {
+  const presetFilterableDimensions = [
+    ...new Set([
+      ...sharedPresetFilterableDimensions,
+      ...filterablePlatformPresetFilterDimensions,
+      ...filterableManagedCacheExploreDimensions,
+    ]),
+  ]
+
+  const platformChartQuery = {
     datasource: 'platform',
     metrics: ['custom_metric_name'],
     dimensions: ['custom_dimension_name'],
@@ -65,7 +86,7 @@ describe('dashboardSchema.v2', () => {
         type: 'chart',
         definition: {
           query: {
-            ...platformQuery,
+            ...platformChartQuery,
           },
           chart: {
             type: 'horizontal_bar',
@@ -142,11 +163,309 @@ describe('dashboardSchema.v2', () => {
     ],
   }
 
+  const tableChartTile = {
+    type: 'chart',
+    id: 'routes-table',
+    definition: {
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+        filters: [
+          {
+            field: 'control_plane',
+            operator: 'in',
+            value: ['16add929-6b9f-4e65-9285-7dfb6f0153d2'],
+          },
+          {
+            field: 'env',
+            operator: 'in',
+            value: ['prod'],
+          },
+        ],
+        cursor: 'eyJh',
+        page_size: 50,
+      },
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
+      },
+    },
+    layout: {
+      position: {
+        col: 1,
+        row: 1,
+      },
+      size: {
+        cols: 2,
+        rows: 2,
+      },
+    },
+  }
+
   it('accepts platform queries with arbitrary strings at runtime', () => {
-    expect(validatePlatformQuerySchema(platformQuery)).toBe(true)
-    expect(validateValidDashboardQuery(platformQuery)).toBe(true)
+    expect(validatePlatformQuerySchema(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformChartQuery)).toBe(true)
     expect(validateDashboardConfigSchema(dashboardConfig)).toBe(true)
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
+  })
+
+  it('accepts platform_usage as a datasource for chart queries', () => {
+    const platformUsageChartQuery = { ...platformChartQuery, datasource: 'platform_usage' }
+    expect(validatePlatformQuerySchema(platformUsageChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformUsageChartQuery)).toBe(true)
+    expect(validateDashboardConfigSchema({
+      ...dashboardConfig,
+      tiles: [{ ...dashboardConfig.tiles[0], definition: { ...dashboardConfig.tiles[0].definition, query: platformUsageChartQuery } }],
+    })).toBe(true)
+  })
+
+  it('accepts platform_usage as a datasource for tabular queries', () => {
+    expect(validateValidDashboardTableQuery({ ...tableChartTile.definition.query, datasource: 'platform_usage' })).toBe(true)
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: { datasource: 'platform_usage' },
+            chart: { type: 'table' },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('accepts table chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableChartTile.definition.query)).toBe(false)
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        tableChartTile,
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects non-table chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          type: 'chart',
+          definition: {
+            query: tableChartTile.definition.query,
+            chart: {
+              type: 'horizontal_bar',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table chart tiles with chart query shape', () => {
+    expect(validateValidDashboardChartQuery(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: platformChartQuery,
+            chart: {
+              type: 'table',
+              chart_title: 'Routes',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('accepts table chart tiles with only the platform datasource', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: {
+              datasource: 'platform',
+            },
+            chart: {
+              type: 'table',
+            },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects table chart tiles with a top-level query', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          query: {
+            entity: 'route',
+            columns: ['name', 'control_plane'],
+            page_size: 50,
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it.each([
+    ['invalid entity', { entity: 1 }],
+    ['missing datasource', { datasource: undefined }],
+    ['invalid datasource', { datasource: 'api_usage' }],
+    ['empty columns', { columns: [] }],
+    ['invalid columns', { columns: ['name', 1] }],
+    ['invalid page size', { page_size: '50' }],
+    ['invalid cursor', { cursor: 50 }],
+    ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
+  ])('rejects table chart tiles with %s', (_description, queryOverrides) => {
+    expect(validateValidDashboardTableQuery({
+      ...tableChartTile.definition.query,
+      ...queryOverrides,
+    })).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            chart: tableChartTile.definition.chart,
+            query: {
+              ...tableChartTile.definition.query,
+              ...queryOverrides,
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table tile definitions without chart definitions', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: tableChartTile.definition.query,
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('accepts top_n entity link mappings', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_link: 'https://example.com/routes/{entity-id}',
+              entity_links: {
+                route: 'https://example.com/routes/{entity-id}',
+                gateway_service: 'https://example.com/services/{entity-id}',
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(true)
+  })
+
+  it('accepts dashboard queries with three dimensions', () => {
+    const topNThreeDimensionConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: {
+              ...strictQuery,
+              dimensions: ['route', 'gateway_service', 'consumer'],
+            },
+            chart: {
+              type: 'top_n',
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateValidDashboardQuery(topNThreeDimensionConfig.tiles[0].definition.query)).toBe(true)
+    expect(validateDashboardConfigSchema(topNThreeDimensionConfig)).toBe(true)
+  })
+
+  it('rejects top_n entity link mappings with non-string values', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_links: {
+                route: 1,
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(false)
+  })
+
+  describe('top_n column options', () => {
+    const withColumnOptions = (columnOptions: unknown) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              column_options: columnOptions,
+            },
+          },
+        },
+      ],
+    })
+
+    it('accepts column options keyed by metric or dimension', () => {
+      expect(validateDashboardConfigSchema(withColumnOptions({
+        request_count: { label: 'Share of requests', value: 'relative', bar: 'relative' },
+        response_latency_p95: { bar: 'max', thresholds: [{ type: 'warning', value: 100 }, { type: 'error', value: 500 }] },
+        ai_provider: { icon_set: 'ai_provider' },
+      }))).toBe(true)
+    })
+
+    it.each([
+      ['an unknown value mode', { request_count: { value: 'percent' } }],
+      ['an unknown bar scale', { request_count: { bar: 'min' } }],
+      ['an unknown icon set', { route: { icon_set: 'routes' } }],
+      ['a neutral threshold', { request_count: { thresholds: [{ type: 'neutral', value: 1 }] } }],
+      ['a threshold without a value', { request_count: { thresholds: [{ type: 'error' }] } }],
+      ['an unknown property', { request_count: { color: 'red' } }],
+    ])('rejects column options with %s', (_, columnOptions) => {
+      expect(validateDashboardConfigSchema(withColumnOptions(columnOptions))).toBe(false)
+    })
   })
 
   it.each([
@@ -162,8 +481,89 @@ describe('dashboardSchema.v2', () => {
     expect(schema.properties.filters.items.oneOf[1].properties.field.enum).toEqual(expectedFilterableDimensions)
   })
 
+  it('leaves the api-requests metric and dimension open', () => {
+    expect(apiRequestsQuerySchema.properties.datasource.enum).toEqual(['requests'])
+    expect(apiRequestsQuerySchema.properties.metric).toMatchObject({ type: 'string' })
+    expect(apiRequestsQuerySchema.properties.dimension).toMatchObject({ type: 'string' })
+    expect('enum' in apiRequestsQuerySchema.properties.metric).toBe(false)
+    expect('enum' in apiRequestsQuerySchema.properties.dimension).toBe(false)
+  })
+
+  it('accepts a scatter query naming a nested field the schema never listed', () => {
+    const validate = new Ajv({ strict: false }).compile(apiRequestsQuerySchema)
+
+    expect(validate({ datasource: 'requests', metric: 'ai.cost', dimension: 'ai.pluginName' })).toBe(true)
+    expect(validate({ datasource: 'requests', metric: 'ai.somethingAddedLater' })).toBe(true)
+    expect(validate({ datasource: 'explore', metric: 'ai.cost' })).toBe(false)
+  })
+
+  it('accepts an unrolled query annotating its points', () => {
+    const validate = new Ajv({ strict: false }).compile(apiRequestsQuerySchema)
+
+    expect(validate({
+      datasource: 'requests',
+      metric: 'cost',
+      unroll: 'ai',
+      extra_fields: [
+        { field: 'totalTokens', label: 'Tokens', unit: 'token count' },
+        { field: 'responseModel' },
+      ],
+    })).toBe(true)
+
+    // `field` is the one thing an annotation can't do without
+    expect(validate({ datasource: 'requests', metric: 'cost', extra_fields: [{ label: 'Tokens' }] })).toBe(false)
+    expect(validate({ datasource: 'requests', metric: 'cost', unroll: ['ai'] })).toBe(false)
+  })
+
+  describe('scatter tiles', () => {
+    const scatterTile = (query: Record<string, unknown>) => ({
+      tiles: [{
+        type: 'chart',
+        id: 'request-cost-distribution',
+        layout: { position: { col: 0, row: 0 }, size: { cols: 2, rows: 2 } },
+        definition: {
+          query,
+          chart: {
+            type: 'scatter',
+            percentile_lines: [{ percentile: 50 }, { percentile: 95 }],
+            outlier_percentile: 95,
+          },
+        },
+      }],
+      tile_height: 400,
+      columns: 2,
+    })
+
+    it('persists a scatter tile backed by raw request records', () => {
+      expect(validateDashboardConfigSchema(scatterTile({
+        datasource: 'requests',
+        metric: 'cost',
+        dimension: 'providerName',
+        max_records: 5000,
+      }))).toBe(true)
+    })
+
+    it('persists an unrolled scatter tile with annotated points', () => {
+      expect(validateDashboardConfigSchema(scatterTile({
+        datasource: 'requests',
+        metric: 'cost',
+        unroll: 'ai',
+        extra_fields: [{ field: 'totalTokens', label: 'Tokens', unit: 'token count' }],
+      }))).toBe(true)
+    })
+
+    it('keeps the api-requests query away from other chart types', () => {
+      const tile = scatterTile({ datasource: 'requests', metric: 'cost' })
+      tile.tiles[0].definition.chart = { type: 'donut' } as never
+
+      expect(validateDashboardConfigSchema(tile)).toBe(false)
+    })
+  })
+
   it('loosens only the platform branch', () => {
-    expect(platformQuerySchema.properties.datasource.enum).toEqual(['platform'])
+    expect(platformQuerySchema.properties.datasource.oneOf).toHaveLength(2)
+    expect(platformQuerySchema.properties.datasource.oneOf?.[0]).toMatchObject({ const: 'platform_usage' })
+    expect(platformQuerySchema.properties.datasource.oneOf?.[1]).toMatchObject({ const: 'platform', deprecated: true })
     expect(platformQuerySchema.properties.metrics.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.dimensions.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.filters.items.oneOf[0].properties.field.enum).toBeUndefined()
@@ -172,10 +572,13 @@ describe('dashboardSchema.v2', () => {
     expect(platformQuerySchema.properties.filters.items.oneOf[1].properties.operator.enum).toBeUndefined()
   })
 
-  it('keeps shared preset filters strict and operator enums intact', () => {
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
+  it('includes platform fields in the strict preset filter enum and preserves operator enums', () => {
+    // oneOf[0] is the value-bearing filter shape: { field, operator, value }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.operator.enum).toEqual(exploreFilterTypesV2)
+
+    // oneOf[1] is the no-value filter shape: { field, operator }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.operator.enum).toEqual(requestFilterTypeEmptyV2)
     expect(barChartSchema.properties.type.enum).toEqual(['horizontal_bar', 'vertical_bar'])
   })
@@ -207,5 +610,150 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
+  })
+
+  it.each(['left', 'center', 'right'])('accepts %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(true)
+  })
+
+  it('accepts a single value without optional alignment', () => {
+    expect(validateSingleValueSchema({ type: 'single_value' })).toBe(true)
+  })
+
+  it.each(['between', 'LEFT', 1, null])('rejects %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(false)
+  })
+})
+
+describe('slottable tile config', () => {
+  const slottableTile = {
+    id: 'slot-1',
+    type: 'slottable',
+    layout: {
+      position: {
+        col: 0,
+        row: 0,
+      },
+      size: {
+        cols: 1,
+        rows: 1,
+      },
+    },
+  }
+
+  const legacyChartSlottableTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'slottable',
+        id: 'slot-1',
+      },
+      query: {
+        datasource: 'basic',
+      },
+    },
+    layout: slottableTile.layout,
+  }
+
+  it('accepts a top-level slottable tile shape', () => {
+    expect(validateSlottableTileSchema(slottableTile)).toBe(true)
+    expect(validateDashboardConfigSchema({ tiles: [slottableTile] })).toBe(true)
+  })
+
+  it('rejects a top-level slottable tile with a definition present', () => {
+    const invalidTile = { ...slottableTile, definition: legacyChartSlottableTile.definition }
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile missing an id', () => {
+    const { id, ...invalidTile } = slottableTile
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile missing a layout', () => {
+    const { layout, ...invalidTile } = slottableTile
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile with an unknown property', () => {
+    const invalidTile = { ...slottableTile, foo: 'bar' }
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('validates the legacy chart-based slottable shape', () => {
+    expect(validateDashboardConfigSchema({ tiles: [legacyChartSlottableTile] })).toBe(true)
+  })
+
+  it('marks the legacy chart-level slottable schema as deprecated', () => {
+    expect(slottableSchema.deprecated).toBe(true)
+  })
+
+  const headerDescriptionChartTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'top_n',
+        chart_title: 'Top N',
+      },
+      query: {
+        datasource: 'basic',
+        metrics: ['request_count'],
+        dimensions: ['route'],
+      },
+      header_description: '{timeframe}',
+    },
+    layout: slottableTile.layout,
+  }
+
+  const headerDescriptionTableTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'table',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['route'],
+      },
+      header_description: 'Static text',
+    },
+    layout: slottableTile.layout,
+  }
+
+  it('accepts a tile header_description on a chart tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionChartTile] })).toBe(true)
+  })
+
+  it('accepts a tile header_description on a table tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionTableTile] })).toBe(true)
+  })
+
+  it('rejects a non-string header_description', () => {
+    const invalidTile = {
+      ...headerDescriptionChartTile,
+      definition: { ...headerDescriptionChartTile.definition, header_description: 42 },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('still accepts the deprecated chart-level description', () => {
+    const topN = {
+      ...headerDescriptionChartTile,
+      definition: {
+        ...headerDescriptionChartTile.definition,
+        chart: { type: 'top_n', chart_title: 'Top N', description: '{timeframe}' },
+        header_description: undefined,
+      },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [topN] })).toBe(true)
+  })
+
+  it('marks the chart-level description as deprecated on top_n', () => {
+    expect(topNTableSchema.properties.description.deprecated).toBe(true)
   })
 })

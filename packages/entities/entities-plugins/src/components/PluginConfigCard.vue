@@ -33,7 +33,7 @@
       :plugin-config-schema="pluginConfigSchema"
       :record-resolver="resolveRecord"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="(entity: any) => $emit('fetch:success', entity)"
+      @fetch:success="handleFetchSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
       <template #name="slotProps">
@@ -52,12 +52,8 @@
       <template #consumer="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          v-else-if="showNameAsLink"
+          :item="referenceLinkItem('consumer', getPropValue('rowValue', slotProps).id, config.getConsumerViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
         <KCopy
@@ -71,12 +67,8 @@
       <template #route="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          v-else-if="showNameAsLink"
+          :item="referenceLinkItem('route', getPropValue('rowValue', slotProps).id, config.getRouteViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
         />
         <KCopy
@@ -89,12 +81,8 @@
       <template #service="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          v-else-if="showNameAsLink"
+          :item="referenceLinkItem('service', getPropValue('rowValue', slotProps).id, config.getServiceViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
         />
         <KCopy
@@ -107,12 +95,8 @@
       <template #consumer_group="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          v-else-if="showNameAsLink"
+          :item="referenceLinkItem('consumer_group', getPropValue('rowValue', slotProps).id, config.getConsumerGroupViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
         />
         <KCopy
@@ -125,7 +109,7 @@
       <template #partials="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps)?.[0]?.id,
             value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
@@ -177,12 +161,15 @@ import DatakitConfigCardCanvas from './free-form/plugins/datakit/DatakitConfigCa
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
+import type { ReferenceField } from '../composables/useReferenceEntityNames'
 import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
+  RecordItem,
 } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { PropType } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
 
 import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '../types'
 
@@ -219,7 +206,7 @@ const props = defineProps({
     default: '',
     required: false,
   },
-  showIdAsLink: {
+  showNameAsLink: {
     type: Boolean,
     default: false,
   },
@@ -268,6 +255,12 @@ const fetchUrl = computed<string>(() => {
   return url
 })
 
+/**
+ * KM-2996 rollout gate — see `showScopeName` on the config. Read through a computed so a host
+ * that flips it once its flag service resolves re-renders the rows.
+ */
+const scopeNameEnabled = computed<boolean>(() => !!props.config.showScopeName)
+
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
   const customSchema: ConfigurationSchema = {}
@@ -287,22 +280,22 @@ const configSchema = computed((): ConfigurationSchema => {
       order: 1.5,
     },
     consumer: {
-      label: t('plugins.fields.consumer'),
+      label: scopeNameEnabled.value ? t('plugins.fields.consumer') : t('plugins.fields.consumer_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     route: {
-      label: t('plugins.fields.route'),
+      label: scopeNameEnabled.value ? t('plugins.fields.route') : t('plugins.fields.route_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     service: {
-      label: t('plugins.fields.service'),
+      label: scopeNameEnabled.value ? t('plugins.fields.service') : t('plugins.fields.service_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     consumer_group: {
-      label: t('plugins.fields.consumer_group'),
+      label: scopeNameEnabled.value ? t('plugins.fields.consumer_group') : t('plugins.fields.consumer_group_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
@@ -388,6 +381,37 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
 
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = composables.useReferenceEntityNames({
+  config: props.config,
+  axiosInstance,
+  onError: (err: AxiosError) => emit('fetch:error', err),
+})
+
+/**
+ * With `showScopeName` on, the resolved name surfaces as a router-link with the id underneath for
+ * reference, falling back to the bare id until (or unless) a name is available.
+ * With it off, we keep the pre-KM-2996 behavior: the bare id as an emit-only button, no name lookup.
+ */
+const referenceLinkItem = (field: ReferenceField, id: string, getViewRoute?: (id: string) => RouteLocationRaw): RecordItem => ({
+  key: id,
+  value: scopeNameEnabled.value ? getReferenceName(field) || id : id,
+  to: scopeNameEnabled.value ? getViewRoute?.(id) : undefined,
+  subtitle: scopeNameEnabled.value && getReferenceName(field) ? id : undefined,
+  subtitleLoading: scopeNameEnabled.value && isReferenceNameLoading(field),
+  type: ConfigurationSchemaType.LinkInternal,
+})
+
+const handleFetchSuccess = (entity: Record<string, any>) => {
+  emit('fetch:success', entity)
+
+  // Names are only ever displayed via InternalLinkItem, so skip the lookups entirely otherwise.
+  // Reads the flag at fetch time: a host that flips `showScopeName` after this point relabels the
+  // rows and renders links, but shows ids until the card refetches.
+  if (scopeNameEnabled.value && props.showNameAsLink) {
+    resolveReferenceNames(entity)
+  }
+}
 
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`

@@ -5,19 +5,38 @@
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty } in (items as any[])"
-      :key="text"
-      @click="handleLegendItemClick(datasetIndex, index)"
+      v-for="({ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash }, listIndex) in (items as any[])"
+      :key="legendItemKey({ datasetIndex, index, isKey }, listIndex)"
+      :class="{ 'legend-key': isKey }"
+      @click="isKey ? undefined : handleLegendItemClick(datasetIndex, index)"
     >
+      <svg
+        v-if="lineDash?.length"
+        aria-hidden="true"
+        class="line-marker"
+        height="2"
+        width="16"
+      >
+        <line
+          :stroke="strokeStyle"
+          :stroke-dasharray="lineDash.join(' ')"
+          stroke-width="2"
+          x1="0"
+          x2="16"
+          y1="1"
+          y2="1"
+        />
+      </svg>
       <div
+        v-else
         class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
       <KTooltip>
         <div
           class="label-container"
-          :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
-          :title="value && showValues ? `${text}: ${value.formatted}` : text"
+          :class="{ 'strike-through': !isKey && !isDatasetVisible(datasetIndex, index), 'inline-value': isKey }"
+          :title="value && (showValues || isKey) ? `${text}: ${value.formatted}` : text"
         >
           <div
             class="label truncate-label"
@@ -25,10 +44,10 @@
             {{ text }}
           </div>
           <div
-            v-if="value && showValues"
+            v-if="value && (showValues || isKey)"
             class="sub-label"
           >
-            {{ value.formatted }}
+            <span v-if="isKey">-</span> {{ value.formatted }}
           </div>
         </div>
         <template
@@ -71,6 +90,17 @@ const { i18n } = composables.useI18n()
 const showValues = inject('showLegendValues', false)
 const position = inject('legendPosition', ref(ChartLegendPosition.Bottom))
 
+const legendItemKey = (
+  { datasetIndex, index, isKey }: Pick<EnhancedLegendItem, 'datasetIndex' | 'index' | 'isKey'>,
+  listIndex: number,
+): string => {
+  if (isKey) {
+    return `key-${listIndex}`
+  }
+
+  return `dataset-${datasetIndex ?? 0}-${index ?? 0}`
+}
+
 const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
   if (props.chartInstance === null) {
     // https://konghq.atlassian.net/browse/KHCP-4679
@@ -79,8 +109,14 @@ const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): 
 
   const chart = (props.chartInstance instanceof Chart) ? props.chartInstance : props.chartInstance.chart
   const visible = isDatasetVisible(datasetIndex, segmentIndex)
+  const meta = chart.getDatasetMeta(datasetIndex)
 
-  if (visible) {
+  if (!meta.dataset && segmentIndex !== undefined) {
+    // Donut charts have exactly 1 dataset, so the datasetIndex is irrelevant here. The visibility
+    // of this "segment" is stored in a different place in chart.js, which is why the `toggleDataVisibility`
+    // method works here. https://www.chartjs.org/docs/latest/developers/api.html#toggledatavisibility-index
+    chart.toggleDataVisibility(segmentIndex)
+  } else if (visible) {
     chart.hide(datasetIndex, segmentIndex)
   } else {
     chart.show(datasetIndex, segmentIndex)
@@ -103,7 +139,7 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
   if (datasetMeta.dataset || segmentIndex === undefined) {
     return chart.isDatasetVisible(datasetIndex)
   } else {
-    return !(datasetMeta.data.length && datasetMeta.data[segmentIndex].hidden)
+    return chart.getDataVisibility(segmentIndex)
   }
 }
 </script>
@@ -138,6 +174,22 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     display: flex;
     line-height: 1;
     margin: 0;
+
+    // A key shows a value that is not a dataset, thus it cannot be toggled.
+    &.legend-key {
+      cursor: default;
+    }
+
+    .line-marker {
+      margin-right: var(--kui-space-30, $kui-space-30);
+      overflow: visible;
+    }
+
+    .label-container.inline-value {
+      align-items: center;
+      display: flex;
+      gap: var(--kui-space-20, $kui-space-20);
+    }
 
     // Color bar preceding label
     .square-marker {

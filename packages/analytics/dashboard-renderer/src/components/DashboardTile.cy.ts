@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -211,7 +211,7 @@ describe('<DashboardTile />', () => {
     } as unknown as TileDefinition
   }
 
-  const mockContext: DashboardRendererContextInternal = {
+  const mockContext: DashboardRendererContext = {
     filters: [],
     timeSpec: {
       type: 'relative',
@@ -220,7 +220,6 @@ describe('<DashboardTile />', () => {
     editable: true,
     tz: '',
     refreshInterval: 0,
-    zoomable: false,
   }
 
   const mockQueryProvider = {
@@ -244,7 +243,7 @@ describe('<DashboardTile />', () => {
     onRemoveTile?: sinon.SinonSpy
     onDuplicateTile?: sinon.SinonSpy
     definition?: TileDefinition
-    context?: DashboardRendererContextInternal
+    context?: DashboardRendererContext
     extraProps?: Record<string, any>
     isFullscreen?: boolean
   }
@@ -300,6 +299,48 @@ describe('<DashboardTile />', () => {
     mount()
     cy.getTestId('tile-1').should('be.visible')
     cy.get('.title').should('contain.text', 'Test Chart')
+  })
+
+  describe('header description', () => {
+    it('renders the header description alongside the header actions', () => {
+      mount({
+        definition: {
+          ...mockTileDefinition,
+          header_description: 'Last 7-day summary',
+        },
+      })
+
+      cy.getTestId('tile-actions-1').should('be.visible')
+      cy.getTestId('tile-description-1').should('be.visible').and('have.text', 'Last 7-day summary')
+    })
+
+    it('renders the tile header for a description with no other header content', () => {
+      mount({
+        definition: {
+          chart: {
+            type: 'top_n',
+          },
+          query: {
+            datasource: 'api_usage',
+            metrics: [],
+            filters: [],
+          },
+          header_description: 'Last 7-day summary',
+        },
+        context: { ...mockContext, editable: false },
+        extraProps: { hideActions: true },
+      })
+
+      cy.get('.tile-header').should('exist')
+      cy.get('.title').should('have.text', '')
+      cy.getTestId('tile-actions-1').should('not.exist')
+      cy.getTestId('tile-description-1').should('be.visible').and('have.text', 'Last 7-day summary')
+    })
+
+    it('does not render a header description when none is configured', () => {
+      mount()
+      cy.getTestId('tile-description-1').should('not.exist')
+    })
   })
 
   it('should emit chart-data when query resolves', () => {
@@ -450,7 +491,7 @@ describe('<DashboardTile />', () => {
 
   it('jump to explore link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
@@ -477,7 +518,7 @@ describe('<DashboardTile />', () => {
 
   it('excludes irrelevant context filters from the jump to explore URL', () => {
     // Passes an llm_usage filter into an api_usage tile
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'ai_response_model', operator: 'in', value: ['my-model'] }],
     }
@@ -510,7 +551,7 @@ describe('<DashboardTile />', () => {
   })
 
   it('retains unknown goap context filters in zoom drilldown links', () => {
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'goap_only_field', operator: 'in', value: ['value'] }],
     }
@@ -565,7 +606,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('exist')
   })
 
   it('should not show aged out warning when query granularity matches granularity', () => {
@@ -580,7 +621,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('should not show aged out warning when query is not ready', () => {
@@ -598,7 +639,7 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('should not show aged out warning when saved granularity is missing', () => {
@@ -617,12 +658,12 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('time-range-badge').should('exist')
-    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+    cy.getTestId('time-range-badge').findTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
   it('jump to requests link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
@@ -1143,16 +1184,15 @@ describe('<DashboardTile />', () => {
       })
     })
 
-    it('getExportData rejects when queryFn fails', () => {
-      const queryFn = cy.stub().as('queryFn').callsFake(() => {
-        return Promise.resolve(
-          generateSingleMetricTimeSeriesData(
-            { name: 'TotalRequests', unit: 'count' },
-            { status_code: ['request_count'] as string[] },
-            { start, end },
-          ) as ExploreResultV4,
-        )
-      })
+    it('shows the export error state when the expanded export query fails', () => {
+      const result = generateSingleMetricTimeSeriesData(
+        { name: 'TotalRequests', unit: 'count' },
+        { status_code: ['request_count'] as string[] },
+        { start, end },
+      ) as ExploreResultV4
+      const queryFn = cy.stub().as('queryFn')
+      queryFn.onFirstCall().resolves(result)
+      queryFn.onSecondCall().rejects(new Error('export failed'))
 
       cy.mount(DashboardTile, {
         props: {
@@ -1167,15 +1207,14 @@ describe('<DashboardTile />', () => {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
         },
-      }).then(({ wrapper }) => {
-        wrapper.vm.getExportData().then(() => {
-          throw new Error('should have rejected')
-        },
-        (err: Error) => err,
-        ).then((err: any) => {
-          expect(err).to.be.instanceOf(Error)
-          expect(err.message).to.equal('export failed')
-        })
+      })
+
+      cy.get('@queryFn').should('have.been.calledOnce').then(() => {
+        cy.getTestId('kebab-action-menu-1').click()
+        cy.getTestId('chart-csv-export-1').click()
+        cy.getTestId('csv-export-modal').should('contain.text', 'Error loading data')
+        cy.getTestId('csv-download-button').should('be.disabled')
+        cy.get('@queryFn').should('have.been.calledTwice')
       })
     })
 

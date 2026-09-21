@@ -405,4 +405,64 @@ describe('<EntityBaseForm />', () => {
       cy.getTestId('form-fetch-error').should('not.exist')
     })
   })
+
+  describe('tabsToHide', () => {
+    it('drops listed tabs from the configuration slideout', () => {
+      cy.mount(EntityBaseForm, {
+        props: {
+          config,
+          formFields: route,
+          entityType,
+          canSubmit: true,
+          tabsToHide: ['yaml'],
+        },
+      })
+
+      cy.getTestId(`${entityType}-create-form-view-configuration`).click()
+
+      cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
+      cy.getTestId('yaml-tab').should('not.exist')
+      cy.getTestId('json-tab').should('exist')
+      cy.getTestId('terraform-tab').should('exist')
+      cy.getTestId('deck-tab').should('exist')
+    })
+
+    it('can hide several tabs at once', () => {
+      cy.mount(EntityBaseForm, {
+        props: {
+          config,
+          formFields: route,
+          entityType,
+          canSubmit: true,
+          tabsToHide: ['yaml', 'deck'],
+        },
+      })
+
+      cy.getTestId(`${entityType}-create-form-view-configuration`).click()
+
+      cy.getTestId('yaml-tab').should('not.exist')
+      cy.getTestId('deck-tab').should('not.exist')
+      cy.getTestId('json-tab').should('exist')
+      cy.getTestId('terraform-tab').should('exist')
+    })
+
+    it('falls back to the first available tab when the default tab is hidden', () => {
+      cy.mount(EntityBaseForm, {
+        props: {
+          config,
+          formFields: route,
+          entityType,
+          canSubmit: true,
+          tabsToHide: ['json'],
+        },
+      })
+
+      cy.getTestId(`${entityType}-create-form-view-configuration`).click()
+
+      cy.getTestId('json-tab').should('not.exist')
+      // The first remaining tab (terraform) becomes active and renders its panel
+      cy.getTestId('terraform-tab').should('exist')
+      cy.get('.terraform-config').should('exist')
+    })
+  })
 })

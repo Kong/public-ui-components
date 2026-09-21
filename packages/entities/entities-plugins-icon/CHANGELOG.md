@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-icon%401.8.1...%40kong-ui-public%2Fentities-plugins-icon%401.8.2) (2026-09-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins-icon
+
+
+
+
+
+## [1.8.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-icon%401.8.0...%40kong-ui-public%2Fentities-plugins-icon%401.8.1) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-icon%401.7.2...%40kong-ui-public%2Fentities-plugins-icon%401.8.0) (2026-08-24)
+
+### Features
+
+* **entities-plugins:** rename governance to entitlement enforcement ([#3703](https://github.com/Kong/public-ui-components/issues/3703)) ([b7ab8d4](https://github.com/Kong/public-ui-components/commit/b7ab8d46dfd074e82311404c8d9b9c520785e80e))
+
+
+## [1.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.7.1...@kong-ui-public/entities-plugins-icon@1.7.2) (2026-08-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins-icon
+
+
+
+
+
+## [1.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.7.0...@kong-ui-public/entities-plugins-icon@1.7.1) (2026-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins-icon
+
+
+
+
+
+# [1.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.6.7...@kong-ui-public/entities-plugins-icon@1.7.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [1.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.6.6...@kong-ui-public/entities-plugins-icon@1.6.7) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [1.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.6.5...@kong-ui-public/entities-plugins-icon@1.6.6) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
 ## [1.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.6.4...@kong-ui-public/entities-plugins-icon@1.6.5) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins-icon

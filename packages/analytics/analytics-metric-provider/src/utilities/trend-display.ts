@@ -6,6 +6,11 @@ import {
 import type {
   IndeterminateSmallIcon as GenericIcon,
 } from '@kong/icons'
+import { DEFAULT_KEY, ERROR_RATE_DIMENSION } from '../constants'
+import type { ChronologicalMappedMetrics } from '../types'
+import type {
+  ExploreResultV4,
+} from '@kong-ui-public/analytics-utilities'
 
 // Used to render a percentage display (eg: 30.97%)
 export const DECIMAL_DISPLAY = 2
@@ -71,3 +76,68 @@ export const defineIcon = (polarity: number, thisIsBad: boolean = false): typeof
       ? TrendDownIcon
       : IndeterminateSmallIcon
 }
+
+const setMetric = (result: ChronologicalMappedMetrics, time: 'previous' | 'current', topLevelKey: string | typeof DEFAULT_KEY, secondLevelKey: string | typeof DEFAULT_KEY, metricValue: number) => {
+  if (!result[time][topLevelKey]) {
+    result[time][topLevelKey] = {} as Record<string | typeof DEFAULT_KEY, number>
+  }
+  result[time][topLevelKey][secondLevelKey] = metricValue
+}
+
+export function buildDeltaMapping(result: ExploreResultV4, withTrend: boolean, {
+  topLevelKey = DEFAULT_KEY,
+  secondLevelKey = DEFAULT_KEY,
+}: {
+  topLevelKey?: string | typeof DEFAULT_KEY
+  secondLevelKey?: string | typeof DEFAULT_KEY
+} = {}): ChronologicalMappedMetrics {
+  // We should always have metric names in the result; if they're not present, just pick something that won't crash.
+  const metricName = result.meta.metric_names?.[0] || ''
+
+  // Figure out the first expected timestamp.
+  const queriedStartTime = new Date(result.meta.start).getTime()
+
+  // We only ever have 2 dimensions in the response if the second dimension is STATUS_CODE_GROUPED.
+  // TIME doesn't show up in the response.
+  // Assert that this is the case; raise a reportable error if not.
+  const dimensionNames = Object.keys(result.meta.display || {})
+  const hasErrorRateDimension = !!dimensionNames.find(k => k === ERROR_RATE_DIMENSION)
+  const keyDimension = dimensionNames.find(k => k !== ERROR_RATE_DIMENSION)
+
+  if (dimensionNames.length > 2 || (dimensionNames.length > 1 && !hasErrorRateDimension)) {
+    console.error("Don't know how to work with provided dimensions:", dimensionNames)
+    return {
+      previous: { [topLevelKey]: { [secondLevelKey]: 0 } },
+      current: { [topLevelKey]: { [secondLevelKey]: 0 } },
+    } as ChronologicalMappedMetrics
+  }
+
+  // Go through each record and add it to the correct group.
+  // Explore always returns results sorted in ascending order by time.
+  return result.data.reduce<ChronologicalMappedMetrics>((result, record) => {
+    const metricValue = record.event[metricName] as number
+
+    // If we have dimensions, then index the results based on the dimension name.
+    // If we don't have dimensions, insert a synthetic key (DEFAULT_KEY).
+    const newTopLevelKey = keyDimension ? record.event[keyDimension] as string : topLevelKey
+
+    // If we have the error rate key, then index the 2nd level results based on that.
+    // Otherwise, insert a synthetic key (DEFAULT_KEY).
+    const newSecondLevelKey = hasErrorRateDimension ? record.event[ERROR_RATE_DIMENSION] as string : secondLevelKey
+
+    // The records are in ascending order, so the first record is the earliest.
+    // If the timestamp of the current record is the same as the query start date, it belongs to
+    // the previous group, otherwise it belongs to the current group.
+    if (new Date(record.timestamp).getTime() === queriedStartTime && withTrend) {
+      setMetric(result, 'previous', newTopLevelKey, newSecondLevelKey, metricValue)
+    } else {
+      setMetric(result, 'current', newTopLevelKey, newSecondLevelKey, metricValue)
+    }
+
+    return result
+  }, {
+    previous: {},
+    current: {},
+  } as ChronologicalMappedMetrics)
+}
+

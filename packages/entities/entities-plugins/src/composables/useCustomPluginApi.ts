@@ -21,6 +21,7 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
+  // Workspace is supported in this composable, but the entry in Konnect will not include workspace for now.
   workspace?: string
 }
 
@@ -104,7 +105,6 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
-
     if (options.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
@@ -164,8 +164,9 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
 
   const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
     const { aliasName: alias, priority, sourcePlugin: ref } = body
-    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
-    const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create)
+    const { data } = await axiosInstance.post<ClonedPluginResponse>(url, {
+      name: alias,
       ref,
       priority,
     })
@@ -175,7 +176,8 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const updateClonedPlugin = async (originName: string, body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
     const { aliasName: alias, priority, sourcePlugin: ref } = body
     const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, originName)
-    const { data } = await axiosInstance.patch<ClonedPluginResponse>(url, {
+    const method = options.app === 'konnect' ? 'put' : 'patch'
+    const { data } = await axiosInstance[method]<ClonedPluginResponse>(url, {
       ref,
       priority,
       name: alias,

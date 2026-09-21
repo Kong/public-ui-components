@@ -100,4 +100,43 @@ describe('<EntityDeleteModal />', () => {
     cy.get('.modal-header').should('contain.text', title)
     cy.get('.kong-ui-entity-delete-modal .description').should('contain.text', description)
   })
+
+  it('should show extra slot content', () => {
+    const extraContent = 'Force delete all entities'
+
+    cy.mount(EntityDeleteModalMount, {
+      props: {
+        visible: true,
+        entityType,
+      },
+      slots: {
+        extra: h('span', extraContent),
+      },
+    })
+
+    cy.get('.kong-ui-entity-delete-modal .extra').should('contain.text', extraContent)
+  })
+
+  it('should not render extra container when extra slot is not used', () => {
+    cy.mount(EntityDeleteModalMount, {
+      props: {
+        visible: true,
+        entityType,
+      },
+    })
+
+    cy.get('.kong-ui-entity-delete-modal .extra').should('not.exist')
+  })
+
+  it('should disable action button when confirmDisabled is true', () => {
+    cy.mount(EntityDeleteModalMount, {
+      props: {
+        visible: true,
+        entityType,
+        confirmDisabled: true,
+      },
+    })
+
+    cy.getTestId('modal-action-button').should('be.disabled')
+  })
 })

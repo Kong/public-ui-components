@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.5.25",
+  "version": "1.9.38",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -40,12 +40,12 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.20.1",
-    "@kong/kongponents": "9.53.2",
+    "@kong/design-tokens": "3.3.1",
+    "@kong/kongponents": "9.64.18",
     "@types/geobuf": "^3.0.4",
     "@types/geojson": "^7946.0.16",
-    "maplibre-gl": "^5.23.0",
-    "vue": "^3.5.33"
+    "maplibre-gl": "^6.0.0",
+    "vue": "^3.5.41"
   },
   "repository": {
     "type": "git",
@@ -66,13 +66,13 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.53.2",
+    "@kong/kongponents": "9.64.18",
     "maplibre-gl": "workspace:^",
-    "vue": "^3.5.33"
+    "vue": "^3.5.35"
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.62.1",
     "geobuf": "^3.0.2"
   }
 }

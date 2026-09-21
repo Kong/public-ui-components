@@ -301,6 +301,42 @@ describe('<RedisConfigurationList />', () => {
     cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'New configuration')
   })
 
+  it('should show managed Konnect empty state feature cards when useKonnectManagedRedisUi is enabled', () => {
+    interceptList({ app: 'Konnect', body: [] })
+    interceptLinkedPlugins({ app: 'Konnect' })
+
+    cy.mount(RedisConfigurationList, {
+      props: {
+        config: {
+          ...baseConfigKonnect,
+          isKonnectManagedRedisEnabled: true,
+          isCloudGateway: true,
+        },
+        cacheIdentifier: uuidv4(),
+      },
+    })
+
+    cy.wait('@getRedisConfigurations')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Deploy Konnect Managed Cache')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Share Redis configuration')
+  })
+
+  it('should not show managed Konnect empty state feature cards when useKonnectManagedRedisUi is disabled', () => {
+    interceptList({ app: 'Konnect', body: [] })
+    interceptLinkedPlugins({ app: 'Konnect' })
+
+    cy.mount(RedisConfigurationList, {
+      props: {
+        config: baseConfigKonnect,
+        cacheIdentifier: uuidv4(),
+      },
+    })
+
+    cy.wait('@getRedisConfigurations')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Store your Redis configurations')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'Deploy Konnect Managed Cache')
+  })
+
   describe('combined list (partials + add-ons when isKonnectManagedRedisEnabled)', () => {
     const combinedListPartials = {
       data: [

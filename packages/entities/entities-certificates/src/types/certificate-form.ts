@@ -7,6 +7,8 @@ export interface KonnectCertificateFormConfig extends KonnectBaseFormConfig {
   cancelRoute: RouteLocationRaw
   /** Route of listing SNIs */
   sniListRoute?: RouteLocationRaw
+  /** Show vault reference tab for cert/key fields (azure-certs vault integration) */
+  azureCertsVaultAvailable?: boolean
 }
 
 /** Kong Manager certificate form config */
@@ -15,6 +17,8 @@ export interface KongManagerCertificateFormConfig extends KongManagerBaseFormCon
   cancelRoute: RouteLocationRaw
   /** Route of listing SNIs */
   sniListRoute?: RouteLocationRaw
+  /** Show vault reference tab for cert/key fields (azure-certs vault integration) */
+  azureCertsVaultAvailable?: boolean
 }
 
 export interface CertificateFormFields {
@@ -22,6 +26,8 @@ export interface CertificateFormFields {
   key: string
   certAlt: string
   keyAlt: string
+  vault: string
+  vaultAlt: string
   snis: string[]
   tags: string
 }

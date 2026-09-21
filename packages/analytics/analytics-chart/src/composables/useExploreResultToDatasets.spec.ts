@@ -59,14 +59,13 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value).toEqual({
       datasets: [
-        {
-          backgroundColor: '#a86cd5',
+        expect.objectContaining({
           data: [
             null,
           ],
           label: 'dimension',
           isSegmentEmpty: false,
-        },
+        }),
       ],
       labels: [
         'dimension',
@@ -116,10 +115,60 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['dimension1'],
         datasets: [
-          { label: 'dimension1', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
+          expect.objectContaining({ label: 'dimension1', data: [1], isSegmentEmpty: false }),
         ],
         isMultiDimension: false,
         isLabelEmpty: [false],
+      },
+    )
+  })
+
+  it('keeps entities with the same name but different ids as separate datasets', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: '2022-01-01T01:01:02Z',
+          event: {
+            request_count: 100,
+            principal: '019e1df4-fb64-7566-8552-de6ea6bb9425',
+          },
+        },
+        {
+          timestamp: '2022-01-01T01:01:02Z',
+          event: {
+            request_count: 50,
+            principal: '019f4222-3849-7d7c-92f5-f42e47fdbe25',
+          },
+        },
+      ],
+      meta: {
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
+        granularity_ms: 8000,
+        display: {
+          principal: {
+            '019e1df4-fb64-7566-8552-de6ea6bb9425': { name: 'dp-mock-principal' },
+            '019f4222-3849-7d7c-92f5-f42e47fdbe25': { name: 'dp-mock-principal' },
+          },
+        },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
+        truncated: false,
+        limit: 15,
+      },
+    }))
+    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+    expect(result.value).toEqual(
+      {
+        labels: ['dp-mock-principal', 'dp-mock-principal'],
+        datasets: [
+          expect.objectContaining({ label: 'dp-mock-principal', data: [100, null], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'dp-mock-principal', data: [null, 50], isSegmentEmpty: false }),
+        ],
+        isMultiDimension: false,
+        isLabelEmpty: [false, false],
       },
     )
   })
@@ -181,10 +230,10 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['GroupBy2', 'GroupBy1'],
         datasets: [
-          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100], isSegmentEmpty: false },
-          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [null, 150], isSegmentEmpty: false },
-          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [200, null], isSegmentEmpty: false },
-          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [250, null], isSegmentEmpty: false },
+          expect.objectContaining({ label: 'ThenBy1', data: [null, 100], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy2', data: [null, 150], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy3', data: [200, null], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy4', data: [250, null], isSegmentEmpty: false }),
         ],
         isLabelEmpty: [false, false],
         isMultiDimension: true,
@@ -249,10 +298,10 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['GroupBy2', 'GroupBy1'],
         datasets: [
-          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100], isSegmentEmpty: false },
-          { label: 'ThenBy3', backgroundColor: '#6a86d2', data: [200, null], isSegmentEmpty: false },
-          { label: 'ThenBy4', backgroundColor: '#00bbf9', data: [250, null], isSegmentEmpty: false },
-          { label: 'ThenBy2', backgroundColor: '#afb7c5', data: [null, 150], isSegmentEmpty: true },
+          expect.objectContaining({ label: 'ThenBy1', data: [null, 100], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy3', data: [200, null], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy4', data: [250, null], isSegmentEmpty: false }),
+          expect.objectContaining({ label: 'ThenBy2', data: [null, 150], isSegmentEmpty: true }),
         ],
         isLabelEmpty: [false, true],
         isMultiDimension: true,
@@ -288,7 +337,7 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['Request count'],
         datasets: [
-          { label: 'Request count', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
+          expect.objectContaining({ label: 'Request count', data: [1], isSegmentEmpty: false }),
         ],
         isLabelEmpty: [false],
         isMultiDimension: false,
@@ -328,8 +377,8 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['metric1', 'metric2'],
         datasets: [
-          { label: 'metric1', backgroundColor: '#a86cd5', data: [1, null] },
-          { label: 'metric2', backgroundColor: '#6a86d2', data: [null, 2] },
+          expect.objectContaining({ label: 'metric1', data: [1, null] }),
+          expect.objectContaining({ label: 'metric2', data: [null, 2] }),
         ],
         isLabelEmpty: [false, false],
         isMultiDimension: false,
@@ -383,8 +432,8 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['service2', 'service1'],
         datasets: [
-          { label: 'metric1', backgroundColor: '#a86cd5', data: [3, 1] },
-          { label: 'metric2', backgroundColor: '#6a86d2', data: [4, 2] },
+          expect.objectContaining({ label: 'metric1', data: [3, 1] }),
+          expect.objectContaining({ label: 'metric2', data: [4, 2] }),
         ],
         isLabelEmpty: [false, false],
         isMultiDimension: false,

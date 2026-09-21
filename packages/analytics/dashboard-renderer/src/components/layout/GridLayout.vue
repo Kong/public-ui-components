@@ -33,6 +33,11 @@ const props = defineProps({
     required: false,
     default: () => DEFAULT_TILE_HEIGHT,
   },
+  columns: {
+    type: Number,
+    required: false,
+    default: () => DASHBOARD_COLS,
+  },
   tiles: {
     type: Array as PropType<Array<GridTile<T>>>,
     required: true,
@@ -93,8 +98,8 @@ const gridCells = computed<Array<Cell<T>>>(() => {
 <style lang="scss" scoped>
 .kong-ui-public-grid-layout {
   display: grid;
-  gap: var(--kui-space-70, $kui-space-70);
-  grid-template-columns: repeat(v-bind('DASHBOARD_COLS'), 1fr);
+  gap: var(--kui-space-50, $kui-space-50);
+  grid-template-columns: repeat(v-bind('props.columns'), 1fr);
   grid-template-rows: v-bind('rowDefinition');
   width: 100%;
 }

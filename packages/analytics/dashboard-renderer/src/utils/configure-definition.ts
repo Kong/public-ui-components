@@ -4,6 +4,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 
 import { DASHBOARD_COLS } from '../constants'
+import { isTableChartDefinition } from './tile-definition'
 
 /**
  * Filters out `api_usage` datasource tiles for `basic` analytics.
@@ -12,6 +13,10 @@ import { DASHBOARD_COLS } from '../constants'
  * @returns The updated tile configuration object.
  */
 const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
+  if (tile.type !== 'chart') {
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {
@@ -34,6 +39,15 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
+  if (tile.type !== 'chart') {
+    return tile
+  }
+
+  if (isTableChartDefinition(tile.definition)) {
+    // Table chart queries use the platform tabular API, so leave their datasource unchanged.
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {
@@ -59,9 +73,10 @@ const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
  * The algorithm lays out tiles row by row based on their widths (cols) and heights (rows).
  *
  * @param tiles - The array of tile configuration objects.
+ * @param columns - The number of grid columns (default: DASHBOARD_COLS).
  * @returns The updated array of tile configuration objects.
  */
-const repositionTiles = (tiles: TileConfig[]): TileConfig[] => {
+const repositionTiles = (tiles: TileConfig[], columns: number = DASHBOARD_COLS): TileConfig[] => {
   if (!tiles.length) {
     return []
   }
@@ -78,7 +93,7 @@ const repositionTiles = (tiles: TileConfig[]): TileConfig[] => {
     const rowSpan = tile.layout?.size?.rows ?? 1
 
     // If the tile won't fit on the current row, move to next row
-    if (currentCol + colSpan > DASHBOARD_COLS) {
+    if (currentCol + colSpan > columns) {
       currentRow += rowHeight
       currentCol = 0
       rowHeight = 0
@@ -130,7 +145,7 @@ export const configureAllowedDefinition = (
     .map(processTileForBasicTier)
     .filter((tile) => tile !== undefined)
 
-  const repositionedTiles = repositionTiles(processedTiles)
+  const repositionedTiles = repositionTiles(processedTiles, config.columns)
 
   return {
     ...config,

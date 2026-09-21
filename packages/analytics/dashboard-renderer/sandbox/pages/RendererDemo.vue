@@ -21,6 +21,13 @@
         >
           Toggle fullscreen
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="exportPdf"
+        >
+          Export as PDF
+        </KButton>
         <KInputSwitch
           v-model="isToggled"
           :label="isToggled ? 'Custom styling' : 'Normal styling'"
@@ -65,14 +72,12 @@ import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
-  ExploreAggregations,
   TileConfig,
 } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { Threshold } from '@kong-ui-public/analytics-chart'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -90,8 +95,8 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'golden_signals',
           chart_title: 'Analytics Golden Signals',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'basic',
         },
@@ -111,10 +116,42 @@ const dashboardConfig = ref<DashboardConfig>({
       type: 'chart',
       definition: {
         chart: {
+          type: 'table',
+          chart_title: 'Platform routes',
+        },
+        query: {
+          datasource: 'platform',
+          entity: 'route',
+          columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+          filters: [
+            {
+              field: 'env',
+              operator: 'in',
+              value: ['prod'],
+            },
+          ],
+          page_size: 25,
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 6,
+          rows: 3,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'basic',
           limit: 1,
@@ -123,7 +160,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 1,
+          row: 4,
         },
         size: {
           cols: 3,
@@ -138,7 +175,7 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
+          description: 'Description', // Deprecated: use the tile.definition.header_description instead.
         },
         query: {
           datasource: 'basic',
@@ -152,7 +189,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 1,
+          row: 4,
         },
         size: {
           cols: 3,
@@ -182,7 +219,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 2,
+          row: 5,
         },
         size: {
           cols: 3,
@@ -217,7 +254,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 2,
+          row: 5,
         },
         size: {
           cols: 3,
@@ -241,7 +278,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 1,
@@ -250,20 +287,12 @@ const dashboardConfig = ref<DashboardConfig>({
       },
     } satisfies TileConfig,
     {
-      type: 'chart',
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-1',
-        },
-        query: {
-          datasource: 'basic',
-        },
-      },
+      id: 'slot-1',
+      type: 'slottable',
       layout: {
         position: {
           col: 1,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 1,
@@ -272,20 +301,12 @@ const dashboardConfig = ref<DashboardConfig>({
       },
     } satisfies TileConfig,
     {
-      type: 'chart',
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-2',
-        },
-        query: {
-          datasource: 'basic',
-        },
-      },
+      id: 'slot-2',
+      type: 'slottable',
       layout: {
         position: {
           col: 2,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 3,
@@ -309,7 +330,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 5,
+          row: 8,
         },
         size: {
           cols: 3,
@@ -331,7 +352,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 5,
+          row: 8,
         },
         size: {
           cols: 2,
@@ -345,9 +366,9 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
           entity_link: 'https://cloud.konghq.tech/us/analytics/entities/{id}',
         },
+        header_description: 'Description',
         query: {
           datasource: 'basic',
           limit: 3,
@@ -361,7 +382,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 7,
+          row: 10,
         },
         size: {
           cols: 3,
@@ -375,20 +396,22 @@ const dashboardConfig = ref<DashboardConfig>({
       definition: {
         chart: {
           type: 'single_value',
-          chart_title: 'Single Value chart of mock data',
+          chart_title: 'Requests',
         },
         query: {
           datasource: 'basic',
-          limit: 1,
+          dimensions: ['time'],
+          granularity: 'trend',
+          metrics: ['request_count'],
         },
       },
       layout: {
         position: {
           col: 3,
-          row: 7,
+          row: 11,
         },
         size: {
-          cols: 3,
+          cols: 2,
           rows: 1,
           fit_to_content: true,
         },
@@ -409,12 +432,61 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 8,
+          row: 11,
         },
         size: {
           cols: 1,
           rows: 2,
         },
+      },
+    } satisfies TileConfig,
+    {
+      id: 'grouped-multi-metric-timeseries',
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chart_title: 'Response latency by status code',
+          stacked: false,
+        },
+        query: {
+          datasource: 'api_usage',
+          dimensions: ['time', 'status_code'],
+          metrics: ['response_latency_average', 'response_latency_p99'],
+          time_range: { type: 'relative', time_range: '6h' },
+          granularity: 'hourly',
+        },
+      },
+      layout: {
+        position: { col: 0, row: 13 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Cost by provider',
+          column_options: {
+            ai_provider: { label: 'Provider', icon_set: 'ai_provider' },
+            cost: { label: 'Share of spend', value: 'relative', bar: 'relative' },
+            ai_request_count: { label: 'Share of requests', value: 'relative' },
+            error_rate: { label: 'Failure rate', bar: 'max', thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 15 }] },
+            time_to_first_token_p95: { label: 'P95 TTFT', thresholds: [{ type: 'warning', value: 10_000 }, { type: 'error', value: 20_000 }] },
+          },
+        },
+        header_description: 'Where spend concentrates vs where request volume concentrates.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_provider'],
+          metrics: ['cost', 'ai_request_count', 'error_rate', 'time_to_first_token_p95'],
+          time_range: { type: 'relative', time_range: '24h' },
+        },
+      },
+      layout: {
+        position: { col: 0, row: 15 },
+        size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
   ],
@@ -432,6 +504,13 @@ const refresh = () => {
 const toggleFullscreen = () => {
   dashboardRendererRef.value?.toggleFullscreen()
 }
+
+const exportPdf = () => {
+  dashboardRendererRef.value?.exportPdf({
+    title: 'Sandbox Dashboard',
+    dashboardUrl: 'https://cloud.konghq.com/analytics/dashboards?utm_source=pdf',
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -440,9 +519,9 @@ h2 {
 }
 
 .controls {
-  align-itmes: center;
+  align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   margin: 10px 0;
 }
 
