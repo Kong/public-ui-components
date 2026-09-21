@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import Form from './Form.vue'
 import EnumField from './EnumField.vue'
-import type { FormSchema } from '../form-schema'
+import type { FormSchema, StringFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
 const FIELD_NAME = 'protocols'
@@ -146,6 +146,116 @@ describe('EnumField', () => {
       removeSelectedValue('grpc')
 
       assertLastChange({ [FIELD_NAME]: [] })
+    })
+  })
+
+  describe('version compatibility', () => {
+    const VERSION_FIELD_NAME = 'auth_type'
+
+    function getVersionCompatibilitySchema(fieldOverrides: Partial<StringFieldSchema> = {}): FormSchema {
+      return {
+        type: 'record',
+        fields: [
+          {
+            [VERSION_FIELD_NAME]: {
+              type: 'string',
+              one_of: ['consumer', 'credential', 'service'],
+              enum_min_versions: [
+                { min_ai_gateway_version: '2.1', value: 'credential' },
+                { min_ai_gateway_version: '2.1', value: 'service' },
+              ],
+              ...fieldOverrides,
+            },
+          },
+        ],
+      }
+    }
+
+    function mountVersionCompatibilityForm(options: {
+      config?: FormConfig
+      fieldOverrides?: Partial<StringFieldSchema>
+    } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: getVersionCompatibilitySchema(options.fieldOverrides),
+          data: { [VERSION_FIELD_NAME]: 'consumer' },
+          config: options.config,
+        },
+      })
+    }
+
+    function openDropdown() {
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).click()
+    }
+
+    it('disables one_of options below minRuntimeVersion and shows a version tooltip on them', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.0' } })
+      openDropdown()
+
+      cy.getTestId('select-item-consumer').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-credential').find('button').should('be.disabled')
+      cy.getTestId('select-item-service').find('button').should('be.disabled')
+      cy.getTestId('ff-version-tooltip-item-credential')
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('does not disable options, and shows no version tooltip, when minRuntimeVersion satisfies the requirement', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.1' } })
+      openDropdown()
+
+      cy.getTestId('select-item-credential').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-service').find('button').should('not.be.disabled')
+      cy.getTestId('ff-version-tooltip-item-credential').should('not.exist')
+    })
+
+    it('fails open (no option disabled) when minRuntimeVersion is not provided', () => {
+      mountVersionCompatibilityForm()
+      openDropdown()
+
+      cy.getTestId('select-item-credential').find('button').should('not.be.disabled')
+      cy.getTestId('select-item-service').find('button').should('not.be.disabled')
+    })
+
+    it('disables the whole field and shows a version tooltip when the field itself is version-incompatible', () => {
+      mountVersionCompatibilityForm({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: { min_ai_gateway_version: '2.1', enum_min_versions: undefined },
+      })
+
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).should('be.disabled')
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`).find('[data-testid="kui-icon-wrapper-info-icon"]').should('exist')
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`)
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('does not disable the field, and shows no version tooltip, when minRuntimeVersion satisfies the field-level requirement', () => {
+      mountVersionCompatibilityForm({
+        config: { minRuntimeVersion: '2.1' },
+        fieldOverrides: { min_ai_gateway_version: '2.1', enum_min_versions: undefined },
+      })
+
+      cy.getTestId(`ff-${VERSION_FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`).find('[data-testid="kui-icon-wrapper-info-icon"]').should('not.exist')
+    })
+
+    it('shows the version note before the field description, with both merged into the same tooltip', () => {
+      mountVersionCompatibilityForm({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: {
+          min_ai_gateway_version: '2.1',
+          enum_min_versions: undefined,
+          description: 'Pick an identifier strategy.',
+        },
+      })
+
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`).find('.ff-version-compatibility-note')
+        .should('contain.text', 'minimum runtime version')
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`).find('.ff-label-tooltip-info')
+        .should('contain.text', 'Pick an identifier strategy')
+      cy.getTestId(`ff-label-${VERSION_FIELD_NAME}`)
+        .find('.ff-version-compatibility-note, .ff-label-tooltip-info')
+        .first()
+        .should('have.class', 'ff-version-compatibility-note')
     })
   })
 })

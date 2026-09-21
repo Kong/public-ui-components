@@ -18,6 +18,7 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
+      :disabled="isDisabled"
       :error="error"
       :error-message="errorMessage"
       :help="(multiline && error) ? errorMessage : help"
@@ -30,12 +31,18 @@
       @update:model-value="handleUpdate"
     >
       <template
-        v-if="fieldAttrs.labelAttributes?.info"
+        v-if="fieldAttrs.labelAttributes?.info || fieldVersionInfo"
         #label-tooltip
       >
         <slot name="tooltip">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="fieldAttrs.labelAttributes.info" />
+          <p
+            v-if="fieldVersionInfo"
+            class="ff-version-compatibility-note"
+          >
+            {{ fieldVersionInfo.tooltip }}
+          </p>
+          <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+          <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
       <template
@@ -94,7 +101,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import { USE_SECRET_INPUT_KEY } from '../constants'
 
 import * as utils from '../utils'
-import { useField, useFieldAttrs } from '../composables'
+import { useField, useFieldAttrs, useFormShared } from '../composables'
 
 import type { StringFieldSchema } from '../form-schema'
 import type { BaseFieldProps, EmptyValue } from '../types'
@@ -129,8 +136,12 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | EmptyValue]
 }>()
 
+const { getFieldVersionInfo } = useFormShared()
 const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
+
+const fieldVersionInfo = computed(() => field.path ? getFieldVersionInfo(field.path.value) : undefined)
+const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!fieldVersionInfo.value)
 
 function handleUpdate(value: string) {
   fieldValue!.value = value === '' ? field.emptyValue!.value : value
@@ -169,6 +180,12 @@ const is1pIgnore = computed(() => {
 .ff-string-field {
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
