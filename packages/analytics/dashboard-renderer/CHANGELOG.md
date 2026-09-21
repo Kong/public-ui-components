@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.29.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.28.1...%40kong-ui-public%2Fdashboard-renderer%408.29.0) (2026-09-21)
+
+### Features
+
+* **analytics:** consistent colors for identical dimensions/metrics on all charts [MA-5427] ([#3849](https://github.com/Kong/public-ui-components/issues/3849)) ([77054ff](https://github.com/Kong/public-ui-components/commit/77054fffca34e71525b9679eab48417ff30e8311))
+
+
 ## [8.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.28.0...%40kong-ui-public%2Fdashboard-renderer%408.28.1) (2026-09-17)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

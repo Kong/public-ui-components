@@ -1,5 +1,6 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
+import { color } from '@kong-ui-public/analytics-utilities'
 import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
@@ -16,15 +17,20 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
     pivotRecords,
     rowLabels,
     colorPalette,
+    seriesDimension,
   } = dataSetGenerationParams
   const { i18n } = composables.useI18n()
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   if (isMultiMetric) {
     return metricNames.map((metric) => {
       return {
         // @ts-ignore - dynamic i18n key
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
-        backgroundColor: lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
+        backgroundColor: useColors
+          ? color({ metric })
+          : lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
         data: rowLabels.map((rowPosition, i) => {
           return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
         }),
@@ -32,27 +38,28 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
     })
   }
 
-  const datasets = Array.from(barSegmentLabels).flatMap((dimension, i) => {
+  return Array.from(barSegmentLabels).flatMap((dimension, i) => {
     if (!dimension) {
       return []
     }
-
-    const baseColor = determineBaseColor(i, dimension.name, dimension.id === 'empty', colorPalette)
 
     // The label here matters for the title in the tooltip and legend.  It doesn't impact axes.
     return {
       // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
-      backgroundColor: baseColor,
+      backgroundColor: useColors
+        ? color({
+          dimension: seriesDimension,
+          dimensionValue: dimension.id,
+        })
+        : determineBaseColor(i, dimension.name, dimension.id === 'empty', colorPalette ?? datavisPalette),
       data: rowLabels.map(rowPosition => {
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
       isSegmentEmpty: dimension.id === 'empty',
     } as Dataset
   })
-
-  return datasets
 }
 
 export default function useExploreResultToDatasets(
@@ -148,6 +155,7 @@ export default function useExploreResultToDatasets(
           barSegmentLabels,
           pivotRecords,
           rowLabels,
+          seriesDimension: secondaryDimension,
           colorPalette: deps.colorPalette || datavisPalette,
         })
 

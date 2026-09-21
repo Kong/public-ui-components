@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import type { ScriptableContext } from 'chart.js'
 import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
+import { color } from '@kong-ui-public/analytics-utilities'
 
 import { computed } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'
@@ -36,7 +37,7 @@ export const jitter = (jitterMs: number, seed: number): number => {
 }
 
 /**
- * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension.
+ * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension value.
  *
  * Percentiles are computed over the points actually supplied, so they are only really
  * meaningful when the input is not truncated.
@@ -46,6 +47,8 @@ export default function useScatterDatasets(
   scatterData: Ref<ScatterChartData | undefined>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -136,7 +139,9 @@ export default function useScatterDatasets(
       Array.from(grouped.entries()).forEach(([groupId, points], i) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
-        const baseColor = determineBaseColor(i, name, isSegmentEmpty, colorPalette)
+        const baseColor = useColors
+          ? color({ dimension, dimensionValue: groupId })
+          : determineBaseColor(i, name, isSegmentEmpty, colorPalette)
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 

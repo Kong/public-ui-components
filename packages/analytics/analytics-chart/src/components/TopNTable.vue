@@ -82,6 +82,7 @@
               <span class="table-header-label">
                 {{ header.label }}
               </span>
+              <div class="top-n-table-header-cell-border" />
             </th>
           </tr>
         </thead>
@@ -634,16 +635,20 @@ const translateChartUnit = (unit: string, value: number): string => {
       table-layout: auto;
     }
 
-    &-header-row {
-      background-color: var(--kui-color-background, $kui-color-background);
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      position: sticky;
-      top: 0;
-    }
-
     &-header-cell {
-      padding: 0 var(--kui-space-80, $kui-space-80) var(--kui-space-50, $kui-space-50) 0;
+      background-color: var(--kui-color-background, $kui-color-background);
+      padding: 0 var(--kui-space-80, $kui-space-80) var(--kui-space-20, $kui-space-20) 0;
+      position: sticky;
       text-align: left;
+      top: 0;
+
+      &-border {
+        border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+      }
 
       &:last-child {
         padding-right: 0;

@@ -711,6 +711,7 @@ defineExpose({ getExportData })
       max-width: 100%;
       min-width: 0;
       overflow-x: auto;
+      z-index: 0;
 
       .metric-selector {
         width: max-content;
