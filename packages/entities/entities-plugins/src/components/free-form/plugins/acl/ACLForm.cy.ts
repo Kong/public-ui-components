@@ -161,6 +161,22 @@ describe('<ACLForm /> - version gating', () => {
     cy.getTestId('ff-acl-mode-allow_when').should('be.disabled')
     cy.getTestId('ff-acl-mode-deny_when').should('be.disabled')
     cy.getTestId('ff-version-tooltip-allow_when').should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+
+    // The VersionGateTooltip wrapper (gated modes only) must not change the
+    // card's size relative to its ungated siblings — the wrapper participates
+    // in the row as a plain flex item, same as a bare KRadio.
+    cy.getTestId('ff-acl-mode-allow').then(($allow) => {
+      const { height, width } = $allow[0].getBoundingClientRect()
+
+      cy.getTestId('ff-acl-mode-allow_when')
+        .should(($gated) => {
+          const box = $gated[0].getBoundingClientRect()
+          expect(box.height).to.eq(height)
+          // Widths are content-based; the wrapped card must shrink with the row
+          // like its siblings instead of holding its max-content width.
+          expect(box.width).to.be.at.most(width * 1.2)
+        })
+    })
   })
 
   it('keeps all modes selectable when minRuntimeVersion satisfies the requirement', () => {
