@@ -12,6 +12,7 @@ minimumReleaseAgeExclude:
   - '@kong/*'
   - '@kong-ui/*'
   - '@kong-ui-public/*'
+  - '@types/geobuf@4.0.0'
 # When set to no-downgrade, pnpm will fail if a package's trust level has decreased compared to previous releases
 trustPolicy: no-downgrade
 # Ignore policy if published at least 12 days (17280 minutes)
