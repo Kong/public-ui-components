@@ -59,6 +59,8 @@ interface ScatterChartProps {
   chartData?: KChartData
   tooltipTitle: string
   metricUnit?: string
+  xMetric?: string
+  xMetricUnit?: string
   granularity: GranularityValues
   timeRangeMs?: number
   metricAxesTitle?: string
@@ -76,6 +78,8 @@ const props = withDefaults(
   {
     chartData: undefined,
     metricUnit: '',
+    xMetric: undefined,
+    xMetricUnit: undefined,
     timeRangeMs: undefined,
     metricAxesTitle: undefined,
     dimensionAxesTitle: undefined,
@@ -196,6 +200,8 @@ const { options } = composables.useScatterChartOptions({
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
   metricUnit: toRef(props, 'metricUnit'),
+  xMetric: toRef(props, 'xMetric'),
+  xMetricUnit: toRef(props, 'xMetricUnit'),
   outlierValue: outlierBandValue,
   referenceLines,
   themeColors: toRef(props, 'themeColors'),

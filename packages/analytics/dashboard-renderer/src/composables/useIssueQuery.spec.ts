@@ -57,7 +57,6 @@ describe('useIssueQuery', () => {
     editable: false,
     tz: 'UTC',
     refreshInterval: 0,
-    zoomable: false,
   }
 
   beforeEach(() => {

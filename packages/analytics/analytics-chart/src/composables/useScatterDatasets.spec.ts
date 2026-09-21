@@ -250,6 +250,64 @@ describe('useScatterDatasets', () => {
   })
 })
 
+describe('useScatterDatasets with a metric on x', () => {
+  const measureVsMeasure = (pairs: Array<[number, number]>): ComputedRef<ScatterChartData> => computed(() => ({
+    points: pairs.map(([x, value], i) => ({
+      timestamp: new Date(START).valueOf() + i * 1000,
+      x,
+      value,
+    })),
+    metric: 'cost',
+    xMetric: 'ai_request_count',
+    start: START,
+    end: END,
+  }))
+
+  it('plots the metric on x and keeps the timestamp', () => {
+    const { datasets } = useScatterDatasets({}, measureVsMeasure([[10, 1], [20, 2]])).value
+
+    expect(datasets[0].data).toEqual([
+      expect.objectContaining({ x: 10, y: 1, timestamp: new Date(START).valueOf() }),
+      expect.objectContaining({ x: 20, y: 2, timestamp: new Date(START).valueOf() + 1000 }),
+    ])
+  })
+
+  it('lists the x value first in the tooltip extras', () => {
+    const data = computed<ScatterChartData>(() => ({
+      points: [{ timestamp: new Date(START).valueOf(), x: 10, value: 1, extras: [{ label: 'Model', value: 'gpt' }] }],
+      metric: 'cost',
+      xMetric: 'ai_request_count',
+      xMetricUnit: 'count',
+      start: START,
+      end: END,
+    }))
+    const { datasets } = useScatterDatasets({}, data).value
+
+    expect((datasets[0].data[0] as { extras?: unknown[] }).extras).toEqual([
+      { label: 'Request count', value: 10, unit: 'count' },
+      { label: 'Model', value: 'gpt' },
+    ])
+  })
+
+  it('does not jitter a metric x value', () => {
+    const { datasets } = useScatterDatasets(
+      { scatter: { jitterMs: 500 } },
+      measureVsMeasure([[10, 1]]),
+    ).value
+
+    expect((datasets[0].data[0] as { x: number }).x).toBe(10)
+  })
+
+  it('computes percentiles from the y values', () => {
+    const { referenceLines } = useScatterDatasets(
+      { scatter: { percentileLines: [{ percentile: 50 }] } },
+      measureVsMeasure([[1000, 1], [2000, 2], [3000, 3]]),
+    ).value
+
+    expect(referenceLines?.[0].value).toBe(2)
+  })
+})
+
 describe('useScatterDatasets theming', () => {
   const setToken = (name: string, value: string) =>
     document.documentElement.style.setProperty(name, value)

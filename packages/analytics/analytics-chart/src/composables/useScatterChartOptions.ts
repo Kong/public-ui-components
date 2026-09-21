@@ -1,4 +1,5 @@
 import type { ChartType, TooltipPositionerFunction, TooltipXAlignment, TooltipYAlignment } from 'chart.js'
+import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ExternalTooltipContext, ScatterChartOptions } from '../types'
 
 import { computed, onUnmounted } from 'vue'
@@ -9,6 +10,7 @@ import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 import {
   formatChartTicksByGranularity,
+  formatTooltipTimestampByGranularity,
   horizontalTooltipPositioning,
   lineChartTooltipBehavior,
   verticalTooltipPositioning,
@@ -23,9 +25,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
   const { i18n } = composables.useI18n()
   const { formatUnit } = unitFormatter({ i18n })
 
-  const formatMetricTick = (value: number): string | number => {
-    const unit = chartOptions.metricUnit?.value
-
+  const formatMetricTick = (value: number, unit: string | undefined): string | number => {
     if (!unit || !AXIS_FORMATTED_UNITS.includes(unit)) {
       return value
     }
@@ -45,7 +45,37 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
     return millisecondsToHours(timeRange) > 24 || start.getDate() !== now.getDate()
   })
 
-  const xAxesOptions = computed(() => ({
+  const xAxisTitle = computed(() => ({
+    display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
+    text: chartOptions.dimensionAxesTitle?.value,
+    padding: { top: 3 },
+    font: {
+      weight: 'bold',
+    },
+  }))
+
+  const metricXAxisOptions = computed(() => ({
+    type: 'linear',
+    display: true,
+    beginAtZero: true,
+    grid: {
+      display: true,
+      drawOnChartArea: false,
+      drawTicks: true,
+      drawBorder: false,
+    },
+    ticks: {
+      maxRotation: 0,
+      maxTicksLimit: 7,
+      callback: (value: number) => formatMetricTick(value, chartOptions.xMetricUnit?.value),
+    },
+    title: xAxisTitle.value,
+    border: {
+      display: false,
+    },
+  }))
+
+  const timeXAxisOptions = computed(() => ({
     // `time`, **NOT** `timeseries`: a scatter plots raw records at irregular timestamps, and
     // the `timeseries` scale spaces data points evenly regardless of when they occurred
     type: 'time',
@@ -67,14 +97,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
         dayBoundaryCrossed: dayBoundaryCrossed.value,
       }),
     },
-    title: {
-      display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
-      text: chartOptions.dimensionAxesTitle?.value,
-      padding: { top: 3 },
-      font: {
-        weight: 'bold',
-      },
-    },
+    title: xAxisTitle.value,
     border: {
       display: false,
     },
@@ -91,7 +114,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
     },
     ticks: {
       maxTicksLimit: 5,
-      callback: (value: number) => formatMetricTick(value),
+      callback: (value: number) => formatMetricTick(value, chartOptions.metricUnit?.value),
     },
     grid: {
       drawBorder: false,
@@ -102,6 +125,16 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
       display: false,
     },
   }))
+
+  const formatPointTimestamp = (_x: number, granularity: GranularityValues, raw: unknown): string => {
+    const timestamp = (raw as { timestamp?: number } | undefined)?.timestamp
+
+    if (timestamp === undefined) {
+      return ''
+    }
+
+    return formatTooltipTimestampByGranularity({ tickValue: new Date(timestamp), granularity })
+  }
 
   const chartID = chartOptions.tooltipState.chartID
   const positionKey = `scatterChartTooltipPosition-${chartID}`
@@ -152,7 +185,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
       easing: 'linear',
     },
     scales: {
-      x: xAxesOptions.value,
+      x: chartOptions.xMetric?.value ? metricXAxisOptions.value : timeXAxisOptions.value,
       y: yAxesOptions.value,
     },
     responsive: true,
@@ -169,7 +202,9 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
         enabled: false,
         position: positionKey,
         external: (context: ExternalTooltipContext) => {
-          lineChartTooltipBehavior(chartOptions.tooltipState, context, chartOptions.granularity.value)
+          lineChartTooltipBehavior(chartOptions.tooltipState, context, chartOptions.granularity.value, {
+            ...(chartOptions.xMetric?.value ? { contextFormatter: formatPointTimestamp } : {}),
+          })
         },
       },
       outlierBandPlugin: {
