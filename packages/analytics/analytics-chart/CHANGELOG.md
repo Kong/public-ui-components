@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.34.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.34.1...%40kong-ui-public%2Fanalytics-chart%4010.34.2) (2026-09-21)
+
+### Bug Fixes
+
+* **analytics:** fall back when the query bridge has no feature-flag evaluator ([#3855](https://github.com/Kong/public-ui-components/issues/3855)) ([69800b9](https://github.com/Kong/public-ui-components/commit/69800b9409fe95b26a9908be3666ecc7f1d78e5e)), closes [Kong/public-ui-components#3849](https://github.com/Kong/public-ui-components/issues/3849) [#3849](https://github.com/Kong/public-ui-components/issues/3849)
+
+
 ## [10.34.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.34.0...%40kong-ui-public%2Fanalytics-chart%4010.34.1) (2026-09-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
