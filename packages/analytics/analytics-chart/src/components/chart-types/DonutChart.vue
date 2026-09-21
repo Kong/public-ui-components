@@ -52,15 +52,12 @@ import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
-import {
-  datavisPalette,
-  isSummableMetric,
-} from '../../utils'
+import { isSummableMetric } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
 import { color } from 'chart.js/helpers'
 import composables from '../../composables'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
+import type { KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import type { DonutChartData, LegendValues } from '../../types/chart-data'
@@ -73,7 +70,6 @@ const props = withDefaults(defineProps<{
   legendPosition?: `${ChartLegendPosition}`
   legendValues?: LegendValues
   syntheticsDataKey?: string
-  datasetColors?: AnalyticsChartColors | string[]
   tooltipDimensionDisplay?: string
   tooltipMetricDisplay?: string
   showCenterMetric?: boolean
@@ -83,7 +79,6 @@ const props = withDefaults(defineProps<{
   legendPosition: ChartLegendPosition.Bottom,
   legendValues: undefined,
   syntheticsDataKey: '',
-  datasetColors: () => datavisPalette,
   tooltipDimensionDisplay: '',
   tooltipMetricDisplay: '',
   showCenterMetric: true,
