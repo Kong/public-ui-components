@@ -228,13 +228,10 @@ function handleModeChange() {
     display: flex;
     gap: var(--kui-space-50, $kui-space-50);
 
-    // VersionGateTooltip stretches its root to 100% (its fix for block/flex
-    // collapse in field contexts); here that would stretch each wrapper to the
-    // whole row. Re-content-size the wrapper so radios keep their card width.
-    :deep(.k-popover.ff-version-gate-tooltip) {
-      flex: 0 0 auto;
-      width: auto;
-    }
+    // No wrapper sizing overrides here: the VersionGateTooltip's own
+    // `width: 100%` gives the gated card's popover wrapper the same flex
+    // footprint (flex-basis = full row) as the bare KRadio cards, so it
+    // participates in the row's shrink distribution identically.
   }
 }
 
