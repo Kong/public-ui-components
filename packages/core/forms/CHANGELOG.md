@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.35.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.9...%40kong-ui-public%2Fforms%404.35.0) (2026-09-22)
+
+### Features
+
+* **freeform:** version compatibility (part 2) ([#3857](https://github.com/Kong/public-ui-components/issues/3857)) ([59f211b](https://github.com/Kong/public-ui-components/commit/59f211b6f10637c9c7883382bf3e97dfd5972196))
+
+
 ## [4.34.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.8...%40kong-ui-public%2Fforms%404.34.9) (2026-09-22)
 
 **Note:** Version bump only for package @kong-ui-public/forms
