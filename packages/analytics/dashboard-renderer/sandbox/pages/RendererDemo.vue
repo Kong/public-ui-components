@@ -469,7 +469,7 @@ const dashboardConfig = ref<DashboardConfig>({
           type: 'top_n',
           chart_title: 'Cost by provider',
           column_options: {
-            ai_provider: { label: 'Provider', icon_set: 'ai_provider' },
+            ai_provider: { label: 'Provider' },
             cost: { label: 'Share of spend', value: 'relative', bar: 'relative' },
             ai_request_count: { label: 'Share of requests', value: 'relative' },
             error_rate: { label: 'Failure rate', bar: 'max', thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 15 }] },
@@ -488,6 +488,27 @@ const dashboardConfig = ref<DashboardConfig>({
         position: { col: 0, row: 15 },
         size: { cols: 6, rows: 2 },
       },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Top 40 services by requests',
+          entity_links: { gateway_service: 'https://example.com/services/{entity-id}' },
+          column_options: {
+            gateway_service: { label: 'Gateway service' },
+            request_count: { label: 'Requests', value: 'relative', bar: 'relative' },
+            response_latency_p95: { label: 'P95 latency', bar: 'max', thresholds: [{ type: 'warning', value: 250 }] },
+          },
+        },
+        header_description: 'Complete mock result in a fixed-height tile. Scroll to service 40 without another query.',
+        query: {
+          datasource: 'basic', dimensions: ['gateway_service', 'status_code'],
+          metrics: ['request_count', 'response_latency_p95'], limit: 40,
+        },
+      },
+      layout: { position: { col: 0, row: 17 }, size: { cols: 6, rows: 3 } },
     } satisfies TileConfig,
   ],
 })

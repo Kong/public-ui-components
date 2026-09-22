@@ -1,9 +1,15 @@
 import AnalyticsChart from './components/AnalyticsChart.vue'
 import SimpleChart from './components/SimpleChart.vue'
-import TopNTable from './components/TopNTable.vue'
 import SparklineChart from './components/SparklineChart.vue'
 
-export { AnalyticsChart, SimpleChart, TopNTable, SparklineChart }
+export { AnalyticsChart, SimpleChart, SparklineChart }
+
+/**
+ * @deprecated Use dashboard-renderer for dashboard TopN tiles, or TableDataGrid
+ * from '@kong-ui-public/table-data-grid' for new standalone tables.
+ * Retained for existing consumers; removal will be handled separately.
+ */
+export { default as TopNTable } from './components/TopNTable.vue'
 
 /**
  * @deprecated Import CsvExportModal from '@kong-ui-public/dashboard-renderer' instead.

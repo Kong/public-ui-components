@@ -13,6 +13,7 @@
       :style="cell.style"
     >
       <slot
+        :fit-to-content="rowDefinitions[cell.tile.layout.position.row] === 'auto'"
         name="tile"
         :style="cell.style"
         :tile="cell.tile"
@@ -72,11 +73,8 @@ onUnmounted(() => {
   }
 })
 
-const rowDefinition = computed<string>(() => {
-  const rowDefs = calculateRowDefs(props.tileHeight, props.tiles)
-
-  return rowDefs.join(' ')
-})
+const rowDefinitions = computed(() => calculateRowDefs(props.tileHeight, props.tiles))
+const rowDefinition = computed(() => rowDefinitions.value.join(' '))
 
 const gridCells = computed<Array<Cell<T>>>(() => {
   return props.tiles.map((tile, i) => {

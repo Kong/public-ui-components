@@ -185,6 +185,7 @@
       <component
         :is="componentData.component"
         v-if="componentData"
+        :key="componentData.rendererKey"
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
@@ -222,7 +223,6 @@ import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -243,6 +243,7 @@ const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 const {
   context,
   definition,
+  fitToContent = false,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
   isFullscreen,
@@ -254,6 +255,7 @@ const {
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
+  fitToContent?: boolean
   height?: number
   hideActions?: boolean
   isFullscreen?: boolean
@@ -366,7 +368,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'gauge': SimpleChartRenderer,
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
-  'top_n': TopNTableRenderer,
+  'top_n': TableDataGridRenderer,
   'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
@@ -408,9 +410,12 @@ const componentData = computed(() => {
 
   return component && {
     component,
+    rendererKey: isTableChart || definition.chart.type === 'top_n' ? definition.chart.type : undefined,
     rendererProps: {
       ...rendererProps,
+      ...(isTableChart || definition.chart.type === 'top_n' ? { chartType: definition.chart.type } : {}),
       ...(!isTableChart ? chartRendererProps : {}),
+      ...(!isTableChart && definition.chart.type === 'top_n' ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,

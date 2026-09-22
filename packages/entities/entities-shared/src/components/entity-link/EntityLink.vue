@@ -19,7 +19,9 @@
       :href="externalLink"
       :target="newWindow ? '_blank' : '_self'"
     >
+      <!-- Render outside containers such as grid cells that clip overflowing content. -->
       <KTooltip
+        target="body"
         :text="isTruncated && entityLinkData.label || ''"
       >
         <span

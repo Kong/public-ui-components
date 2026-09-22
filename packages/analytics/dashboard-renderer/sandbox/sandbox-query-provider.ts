@@ -107,6 +107,27 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     return await delayedResponse(singleValueTrendExploreResponse)
   }
 
+  // Complete TopN result: deliberately larger than the infinite grid block size.
+  if (query.query.dimensions?.some(dimension => dimension === 'gateway_service') && query.query.dimensions.some(dimension => dimension === 'status_code')) {
+    const data = Array.from({ length: 40 }, (_, index) => ({
+      timestamp: '2026-09-21T00:00:00Z',
+      event: { gateway_service: `service-${index + 1}`, status_code: index % 5 === 0 ? '500' : '200', request_count: (40 - index) * 100, response_latency_p95: (index + 1) * 10 },
+    }))
+    return await delayedResponse({
+      data,
+      meta: {
+        start: '2026-09-20T00:00:00Z', end: '2026-09-21T00:00:00Z', granularity_ms: 0,
+        query_id: 'topn-complete-result', truncated: false,
+        display: {
+          gateway_service: Object.fromEntries(data.map(({ event }) => [event.gateway_service, { name: `Gateway service ${event.gateway_service.split('-')[1]}` }])),
+          status_code: { 200: { name: '200' }, 500: { name: '500' } },
+        },
+        metric_names: ['request_count', 'response_latency_p95'],
+        metric_units: { request_count: 'count', response_latency_p95: 'ms' },
+      },
+    })
+  }
+
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
     if (query.query.metrics?.includes('response_latency_average') && query.query.metrics.includes('response_latency_p99')) {
       return await delayedResponse(generateData({
