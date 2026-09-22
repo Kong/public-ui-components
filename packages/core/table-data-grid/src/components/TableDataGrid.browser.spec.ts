@@ -134,6 +134,34 @@ const expectOverflowTooltip = async (value: string) => {
 }
 
 describe('<TableDataGrid /> in Browser Mode', () => {
+  it('replaces the infinite fetcher without a refresh key and ignores its pending result', async () => {
+    let resolvePending!: (result: Awaited<ReturnType<TableDataGridFetcher<TestRow>>>) => void
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(() => new Promise((resolve) => {
+      resolvePending = resolve
+    }))
+    const replacementFetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockResolvedValue({
+      data: [rows[1]],
+      hasMore: false,
+    })
+    const table = mountTestTableDataGrid({ fetcher, headers })
+
+    await waitForCallCount(() => fetcher.mock.calls.length, 1)
+    await table.setProps({ fetcher: replacementFetcher })
+    await expect.element(page.getByText('Portal app', { exact: true })).toBeVisible()
+    expect(replacementFetcher).toHaveBeenCalledTimes(1)
+    expect(replacementFetcher).toHaveBeenCalledWith(expect.objectContaining({
+      mode: 'infinite',
+      pageSize: 25,
+      cursor: undefined,
+    }))
+
+    resolvePending({ data: [rows[0]], hasMore: false })
+    await nextTick()
+    await expect.element(page.getByText('Portal app', { exact: true })).toBeVisible()
+    expect(cell(0, 'name').textContent).not.toContain('Gateway service')
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
   it('renders complete unpaginated results and state transitions without refetching', async () => {
     const completeResultRows = createRows(1, 30).map((row, index) => ({
       ...row,
