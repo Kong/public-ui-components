@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.27.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-routes%403.26.32...%40kong-ui-public%2Fentities-routes%403.27.0) (2026-09-22)
+
+### Features
+
+* **entities:** surface managed_by in entity lists and config cards [KM-3018] ([#3740](https://github.com/Kong/public-ui-components/issues/3740)) ([29bc496](https://github.com/Kong/public-ui-components/commit/29bc4968cacfa25a1d33b53a404a6e94a6b8e9a0))
+
+
 ## [3.26.32](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-routes%403.26.31...%40kong-ui-public%2Fentities-routes%403.26.32) (2026-09-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
