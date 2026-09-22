@@ -48,10 +48,10 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    // Skip Vue DevTools under Cypress component testing: it registers a global devtools hook that
+    // Skip Vue DevTools in tests: it registers a global devtools hook that
     // Cypress's bundled @vue/test-utils wraps on every `cy.mount()` without ever unwrapping, so
     // `wrapper.emitted()` records each real event once per accumulated wrapper layer across the spec.
-    process.env.CYPRESS ? undefined : VueDevTools(),
+    process.env.CYPRESS || process.env.VITEST ? undefined : VueDevTools(),
   ],
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
@@ -136,6 +136,7 @@ export default defineConfig({
     },
     include: ['**/src/**/*.spec.ts'],
     exclude: [
+      '**/*.browser.spec.ts',
       '**/dist/**',
       '**/__template__/**',
       '**/node_modules/**',
