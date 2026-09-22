@@ -23,7 +23,10 @@ const result: ExploreResultV4 = {
 
 let container: HTMLDivElement
 
-afterEach(() => container?.remove())
+afterEach(() => {
+  vi.restoreAllMocks()
+  container?.remove()
+})
 
 const mountRenderer = ({ data = result, chartOptions }: { data?: ExploreResultV4, chartOptions?: Omit<TopNTableOptions, 'type'> } = {}) => {
   setupPiniaTestStore()
@@ -79,6 +82,81 @@ const expectOverflowTooltip = async (label: HTMLElement, name: string) => {
 }
 
 describe('TableDataGridRenderer grid integration', () => {
+  it.each([
+    { name: 'fetches the expanded export result', increaseCsvExportLimit: undefined },
+    { name: 'reuses the loaded result when limit increases are disabled', increaseCsvExportLimit: false },
+  ])('downloads TopN CSV and $name', async ({ increaseCsvExportLimit }) => {
+    setupPiniaTestStore()
+    container = document.createElement('div')
+    document.body.append(container)
+    const expandedResult: ExploreResultV4 = {
+      data: [...result.data, { timestamp: result.data[0].timestamp, event: { gateway_service: 'export-only', request_count: 0 } }],
+      meta: {
+        ...result.meta,
+        display: { gateway_service: { ...result.meta.display.gateway_service, 'export-only': { name: 'Export-only, "service"' } } },
+      },
+    }
+    const queryFn = vi.fn<AnalyticsBridge['queryFn']>()
+      .mockResolvedValueOnce(result)
+      .mockResolvedValueOnce(expandedResult)
+    mount(DashboardTile, {
+      attachTo: container,
+      props: {
+        context: { filters: [], tz: 'UTC', editable: false, showTileActions: true, refreshInterval: 0 },
+        definition: {
+          chart: { type: 'top_n' },
+          query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'], limit: 40 },
+        },
+        queryReady: true, tileId: 'csv', height: 320,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            queryFn, datasourceConfigFn: async () => [],
+            configFn: async () => ({ analytics: { percentiles: true }, requests: null }),
+            staticConfig: { increaseCsvExportLimit },
+          },
+        },
+      },
+    })
+    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
+    expect(queryFn).toHaveBeenCalledOnce()
+    expect(queryFn.mock.calls[0][0].query).toMatchObject({ limit: 40 })
+    await page.getByTestId('kebab-action-menu-csv').click()
+    await page.getByTestId('chart-csv-export-csv').click()
+    await expect.element(page.getByTestId('csv-download-button')).toBeEnabled()
+
+    // Observe the real browser download boundary without replacing CSV serialization or FileSaver.
+    const createObjectURL = vi.spyOn(URL, 'createObjectURL')
+    const dispatchEvent = vi.spyOn(HTMLAnchorElement.prototype, 'dispatchEvent')
+    const filename = `chart-export-${new Date().toISOString().slice(0, 10)}.csv`
+    await page.getByTestId('csv-download-button').click()
+    expect(createObjectURL).toHaveBeenCalledOnce()
+    await expect.poll(() => dispatchEvent.mock.contexts.some((anchor, index) => (
+      anchor instanceof HTMLAnchorElement
+      && anchor.download === filename
+      && anchor.href === createObjectURL.mock.results[0].value
+      && dispatchEvent.mock.calls[index][0].type === 'click'
+    ))).toBe(true)
+    const blob = createObjectURL.mock.calls[0][0]
+    expect(blob).toBeInstanceOf(Blob)
+    if (!(blob instanceof Blob)) {
+      throw new Error('CSV download did not create a Blob')
+    }
+    expect(blob.type).toBe('text/csv;charset=utf-8')
+    const expectedRows = Array.from({ length: 40 }, (_, index) => `Service ${index + 1},${40 - index}`)
+    if (increaseCsvExportLimit !== false) {
+      expectedRows.push('"Export-only, ""service""",0')
+      const initialRequest = queryFn.mock.calls[0][0]
+      expect(queryFn.mock.calls[1][0]).toEqual({
+        ...initialRequest,
+        query: { ...initialRequest.query, limit: 1000 },
+      })
+    }
+    expect(await blob.text()).toBe(['Gateway service,Request count', ...expectedRows].join('\r\n'))
+    expect(queryFn).toHaveBeenCalledTimes(increaseCsvExportLimit === false ? 1 : 2)
+  })
+
   it('switches table types without retaining pending requests, rows, or completion events', async () => {
     setupPiniaTestStore()
     container = document.createElement('div')
