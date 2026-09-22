@@ -53,4 +53,20 @@ describe('useEmitState', () => {
 
     expect(emitState).not.toHaveBeenCalled()
   })
+
+  it('emits initial loading when the unpaginated request has already started', () => {
+    const emitState = vi.fn()
+
+    useEmitState({
+      emitState,
+      emitInitialState: true,
+      fetchLifecycleState: ref(fetchState.LOADING),
+      hasData: ref(false),
+    })
+
+    expect(emitState).toHaveBeenCalledExactlyOnceWith({
+      hasData: false,
+      state: 'loading',
+    })
+  })
 })

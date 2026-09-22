@@ -32,15 +32,17 @@
 
     <AgGridVue
       v-else
-      :cache-block-size="activePageSize"
+      :key="mode"
+      :cache-block-size="mode === 'infinite' ? activePageSize : undefined"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
       :context="gridContext"
-      :datasource="datasource"
+      :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
-      :infinite-initial-row-count="1"
+      :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
-      row-model-type="infinite"
+      :row-data="mode === 'unpaginated' ? rowData : undefined"
+      :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
       :suppress-multi-sort="true"
       :theme="themeQuartz"
@@ -57,8 +59,7 @@ import type {
   TableDataGridCellClickPayload,
   TableDataGridCellSlotProps,
   TableDataGridConfig,
-  TableDataGridFetcher,
-  TableDataGridHeader,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
@@ -71,6 +72,7 @@ import type {
 import { AgGridVue } from 'ag-grid-vue3'
 import {
   AllCommunityModule,
+  ClientSideRowModelModule,
   InfiniteRowModelModule,
   ModuleRegistry,
   themeQuartz,
@@ -78,6 +80,7 @@ import {
 import { computed, shallowRef, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
+import { useFetchUnpaginated } from '../composables/useFetchUnpaginated'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
 import { useTableDataGridConfig } from '../composables/useTableDataGridConfig'
 import { useTableDataGridInteractions } from '../composables/useTableDataGridInteractions'
@@ -85,23 +88,15 @@ import { useTableDataGridSort } from '../composables/useTableDataGridSort'
 import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule])
 
-const {
-  error: hostError = false,
-  fetcher,
-  headers,
-  pageSize = 25,
-  refreshKey,
-  tableConfig,
-} = defineProps<{
-  headers: Array<TableDataGridHeader<Row>>
-  fetcher: TableDataGridFetcher<Row>
-  error?: boolean
-  pageSize?: number
-  refreshKey?: string | number | boolean
-  tableConfig?: TableDataGridConfig
-}>()
+const props = defineProps<TableDataGridProps<Row>>()
+const mode = props.mode ?? 'infinite'
+const headers = toRef(props, 'headers')
+const hostError = computed(() => props.error ?? false)
+const pageSize = computed(() => props.pageSize ?? 25)
+const refreshKey = toRef(props, 'refreshKey')
+const tableConfig = toRef(props, 'tableConfig')
 
 defineSlots<{
   'empty-state': () => unknown
@@ -125,9 +120,9 @@ const slots = useSlots()
 const gridApi = shallowRef<GridApi<Row>>()
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
-  headers: toRef(() => headers),
-  pageSize: toRef(() => pageSize),
-  tableConfig: toRef(() => tableConfig),
+  headers,
+  pageSize,
+  tableConfig,
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   onExternalConfigChange: (config) => {
     if (!gridApi.value) {
@@ -146,15 +141,9 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   patchTableConfig,
 })
 
-const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
-  headers: toRef(() => headers),
-  slots,
-  initialSort: activeSort.value,
-})
-
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
-  headers: toRef(() => headers),
+  headers,
   rowClick: (row, event) => emit('row:click', row, event),
 })
 
@@ -164,30 +153,49 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
-const resetKey = computed(() => [
-  fetcher,
-  activePageSize.value,
-  refreshKey,
-  activeTableConfig.value.sortColumnKey,
-  activeTableConfig.value.sortColumnOrder,
-])
+// Presentation-only config changes must not invalidate the fetch request.
+const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
+const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
+const resetKey = computed(() => mode === 'unpaginated'
+  ? [props.fetcher, refreshKey.value]
+  : [
+    props.fetcher,
+    activePageSize.value,
+    refreshKey.value,
+    sortColumnKey.value,
+    sortColumnOrder.value,
+  ])
+
+const fetchResult = props.mode === 'unpaginated'
+  ? useFetchUnpaginated({
+    fetcher: toRef(() => props.fetcher),
+    resetKey,
+  })
+  : useFetchInfinite({
+    fetcher: props.fetcher,
+    resetKey,
+    sort: activeSort,
+  })
 
 const {
   data,
-  datasource,
   error: fetchError,
   isFetching,
-} = useFetchInfinite({
-  fetcher,
-  resetKey,
-  sort: activeSort,
+} = fetchResult
+const { datasource } = fetchResult
+const rowData = computed(() => data.value ? Array.from(data.value) : undefined)
+
+const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
+  headers,
+  slots,
+  initialSort: activeSort.value,
 })
 
 const {
   fetchState,
   hasData,
   state: fetchLifecycleState,
-} = useFetchState(data, fetchError, isFetching)
+} = useFetchState(data, fetchError, isFetching, undefined, mode === 'unpaginated')
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS
@@ -196,6 +204,7 @@ const shouldShowEmptyState = computed<boolean>(() => (
 
 useEmitState({
   emitState: payload => emit('state', payload),
+  emitInitialState: mode === 'unpaginated',
   fetchLifecycleState,
   hasData,
 })
@@ -217,6 +226,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   min-height: 0;
   overflow: hidden;
   width: 100%;
+
 }
 
 .table-data-grid-grid {

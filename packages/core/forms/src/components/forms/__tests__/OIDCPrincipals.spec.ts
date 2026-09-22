@@ -92,7 +92,8 @@ describe('OIDCPrincipals', () => {
   })
 
   describe('mode toggle data changes', () => {
-    it('switching to External turns principal lookup off (opt-in)', async () => {
+    // The first full component mount can exceed 5s when CI runs all packages concurrently.
+    it('switching to External turns principal lookup off (opt-in)', { timeout: 10_000 }, async () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({}, { onModelUpdated })
       const formModel = wrapper.props('formModel')

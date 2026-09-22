@@ -2,8 +2,9 @@
 
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
-This package currently supports AG Grid infinite row loading with a cursor-first
-fetcher contract, basic column definitions, single-column sorting, empty/error
+This package supports AG Grid infinite row loading with a cursor-first fetcher
+contract and complete-result loading through its client-side row model. It also
+provides basic column definitions, single-column sorting, empty/error
 presentation states, and state lifecycle emits.
 
 ## Peer Dependencies
@@ -113,10 +114,11 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | Prop | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
-| `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called by the AG Grid infinite datasource. |
+| `fetcher` | `TableDataGridFetcher<Row> \| TableDataGridUnpaginatedFetcher<Row>` | Yes | - | Async row loader for the selected mode. |
+| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects the fetcher contract and AG Grid row model. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
 | `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
-| `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that rebuilds the datasource from the beginning. |
+| `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that reloads the current result. |
 | `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort and page size. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
@@ -161,11 +163,36 @@ the public fetcher contract.
 is omitted, `hasMore: false` or a response shorter than `pageSize` marks the last
 loaded row as the end of the dataset.
 
+For a complete result that must be loaded once and rendered without pagination,
+set `mode="unpaginated"`. The fetcher receives no page size, cursor, sort, or
+other pagination values, and its complete result is passed to AG Grid's internal
+client-side row model. Changing `refreshKey` or the fetcher starts one new
+request; scrolling through the result does not call the fetcher again.
+
+```vue
+<TableDataGrid
+  mode="unpaginated"
+  :fetcher="fetchTopRows"
+  :headers="headers"
+  :refresh-key="refreshKey"
+/>
+
+<script setup lang="ts">
+import type { TableDataGridUnpaginatedFetcher } from '@kong-ui-public/table-data-grid'
+
+const fetchTopRows: TableDataGridUnpaginatedFetcher<Row> = async () => ({
+  data: await loadAllRows(),
+})
+</script>
+```
+
 ## Refresh Behavior
 
 `refreshKey` is a parent-owned invalidation signal. Changing it rebuilds the
 infinite datasource, clears stored cursors, and starts again from the first
-block with `cursor: undefined`.
+block with `cursor: undefined`. In `unpaginated` mode it starts one new
+complete-result request instead and keeps the previous rows visible while that
+request is pending.
 
 This reset is required for cursor APIs because cursor values are only valid
 relative to the response and query chain that produced them. Reusing a later
@@ -275,7 +302,7 @@ Columns without a matching slot render their raw `rowValue`.
 | `row` | `Row` | The full row record backing this cell. |
 | `rowValue` | `unknown` | `row[header.key]`. |
 | `column` | `TableDataGridHeader<Row>` | The header definition for this column. |
-| `rowIndex` | `number` | The row's index in the currently loaded block. |
+| `rowIndex` | `number` | The row's index in the currently loaded result. |
 | `selected` | `boolean` | Whether the row is currently selected. |
 | `refreshCell` | `() => void` | Forces AG Grid to re-render this cell. |
 
@@ -284,7 +311,7 @@ Columns without a matching slot render their raw `rowValue`.
 | Event | Payload | When it fires |
 | --- | --- | --- |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready. |
-| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. |
+| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after fetching starts. |
 | `row:click` | `(row: TableDataGridRowClickPayload<Row>, event: RowClickedEvent<Row>)` | A row is clicked, unless the click landed in a `disableRowClick` column. |
 | `cell:click` | `TableDataGridCellClickPayload<Row>` | Any cell is clicked, including cells in `disableRowClick` columns. |
 | `sort` | `TableDataGridSort` | The current single-column sort changes. Fires before `update:tableConfig`. |
@@ -294,7 +321,7 @@ Columns without a matching slot render their raw `rowValue`.
 
 | Slot | Purpose |
 | --- | --- |
-| `empty-state` | Replaces the default empty state after a successful empty first block. |
+| `empty-state` | Replaces the default empty state after a successful empty result. |
 | `error-state` | Replaces the default visible error state when `error` is true. |
 | `[columnKey]` | Renders custom cell content for the column matching `header.key`. See [Custom Cell Content](#custom-cell-content). |
 
@@ -308,9 +335,13 @@ Columns without a matching slot render their raw `rowValue`.
 - `TableDataGridCellClickPayload`
 - `TableDataGridCellSlotProps`
 - `TableDataGridHeader`
+- `TableDataGridProps`
 - `TableDataGridInfiniteFetcherParams`
+- `TableDataGridUnpaginatedFetcherParams`
 - `TableDataGridFetcherResult`
 - `TableDataGridFetcher`
+- `TableDataGridUnpaginatedFetcherResult`
+- `TableDataGridUnpaginatedFetcher`
 - `TableDataGridReadyPayload`
 - `TableDataGridSortDirection`
 - `TableDataGridSort`

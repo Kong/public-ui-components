@@ -1,6 +1,6 @@
 import type { GridApi } from 'ag-grid-community'
 
-export type TableDataGridMode = 'infinite'
+export type TableDataGridMode = 'infinite' | 'unpaginated'
 export type TableDataGridRow = Record<string, unknown>
 export type TableDataGridState = 'loading' | 'success' | 'error'
 
@@ -60,11 +60,32 @@ export type TableDataGridConfig = TableDataGridSort & {
   pageSize?: number
 }
 
+export type TableDataGridProps<Row extends object = TableDataGridRow> = {
+  headers: Array<TableDataGridHeader<Row>>
+  error?: boolean
+  pageSize?: number
+  refreshKey?: string | number | boolean
+  tableConfig?: TableDataGridConfig
+} & (
+  | {
+    fetcher: TableDataGridFetcher<Row>
+    mode?: 'infinite'
+  }
+  | {
+    fetcher: TableDataGridUnpaginatedFetcher<Row>
+    mode: 'unpaginated'
+  }
+)
+
 export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
   sort?: TableDataGridSort
+}
+
+export interface TableDataGridUnpaginatedFetcherParams {
+  mode: 'unpaginated'
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {
@@ -77,5 +98,13 @@ export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = 
 export type TableDataGridFetcher<Row extends object = TableDataGridRow> = (
   params: TableDataGridInfiniteFetcherParams,
 ) => Promise<TableDataGridFetcherResult<Row>>
+
+export type TableDataGridUnpaginatedFetcherResult<Row extends object = TableDataGridRow> = {
+  data: Row[]
+}
+
+export type TableDataGridUnpaginatedFetcher<Row extends object = TableDataGridRow> = (
+  params: TableDataGridUnpaginatedFetcherParams,
+) => Promise<TableDataGridUnpaginatedFetcherResult<Row>>
 
 export type TableDataGridReadyPayload<Row extends object = TableDataGridRow> = GridApi<Row>
