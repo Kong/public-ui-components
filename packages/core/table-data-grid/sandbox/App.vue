@@ -77,6 +77,34 @@
         </TableDataGrid>
       </section>
 
+      <section class="unpaginated-section">
+        <div class="unpaginated-header">
+          <div>
+            <h2>Unpaginated rows</h2>
+            <p>Loads all 40 rows once; scrolling does not fetch again.</p>
+          </div>
+          <KButton
+            appearance="secondary"
+            size="small"
+            @click="refreshUnpaginated"
+          >
+            Refresh unpaginated
+          </KButton>
+        </div>
+        <p class="unpaginated-fetch-count">
+          Fetch count: {{ unpaginatedFetchCount }}
+        </p>
+        <div class="unpaginated-table">
+          <TableDataGrid
+            :key="tableResetKey"
+            :fetcher="fetchUnpaginatedRows"
+            :headers="unpaginatedHeaders"
+            mode="unpaginated"
+            :refresh-key="unpaginatedRefreshKey"
+          />
+        </div>
+      </section>
+
       <section class="event-log-section">
         <div class="event-log-header">
           <h2>Event log</h2>
@@ -259,6 +287,7 @@ import type {
   TableDataGridInfiniteFetcherParams,
   TableDataGridSort,
   TableDataGridStatePayload,
+  TableDataGridUnpaginatedFetcher,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
 import type { BadgeAppearance } from '@kong/kongponents'
@@ -272,6 +301,7 @@ type SandboxRow = {
   name: string
   status: string
   latency: number
+  requests: number
   region: string
 }
 
@@ -314,6 +344,8 @@ const refreshKey = ref(0)
 const tableResetKey = ref(0)
 const tableConfig = ref<TableDataGridConfig>()
 const fetchCount = ref(0)
+const unpaginatedFetchCount = ref(0)
+const unpaginatedRefreshKey = ref(0)
 const lastRequest = ref<TableDataGridInfiniteFetcherParams>()
 const lastResponseCursor = ref<unknown>()
 const fetchHistory = ref<FetchHistoryEntry[]>([])
@@ -346,10 +378,28 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
     id: `row-${rowNumber}`,
     latency: 35 + ((index * 29) % 800),
     name: `Service ${rowNumber}`,
+    requests: 25 + ((index * 37) % 180),
     region: ['us', 'eu', 'au', 'me'][index % 4] ?? 'us',
     status: ['Active', 'Deploying', 'Inactive'][index % 3] ?? 'Active',
   }
 })
+
+const unpaginatedRows = generatedRows.slice(0, 40)
+const unpaginatedHeaders: Array<TableDataGridHeader<SandboxRow>> = [
+  { key: 'name', label: 'Name', minWidth: 220 },
+  { key: 'status', label: 'Status', minWidth: 140 },
+  { key: 'latency', label: 'Latency', minWidth: 140 },
+  {
+    bar: 'relative',
+    dataType: 'number',
+    key: 'requests',
+    label: 'Requests',
+    minWidth: 180,
+    showPercentage: true,
+    thresholds: [{ type: 'warning', value: 150 }],
+  },
+  { key: 'region', label: 'Region', minWidth: 140 },
+]
 
 const activeRows = computed<SandboxRow[]>(() => (
   datasetMode.value === 'empty'
@@ -412,6 +462,10 @@ const refreshRows = () => {
   logEvent('refreshKey:change', { refreshKey: refreshKey.value })
 }
 
+const refreshUnpaginated = () => {
+  unpaginatedRefreshKey.value += 1
+}
+
 const resetSandbox = () => {
   pageSize.value = defaultPageSize
   fetchDelayMs.value = defaultFetchDelayMs
@@ -420,6 +474,8 @@ const resetSandbox = () => {
   refreshKey.value = 0
   tableResetKey.value += 1
   tableConfig.value = undefined
+  unpaginatedFetchCount.value = 0
+  unpaginatedRefreshKey.value = 0
   clearFetchHistory()
   clearEventLog()
 }
@@ -504,6 +560,14 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
     cursor: responseCursor,
     data,
     hasMore,
+  }
+}
+
+const fetchUnpaginatedRows: TableDataGridUnpaginatedFetcher<SandboxRow> = async () => {
+  unpaginatedFetchCount.value += 1
+
+  return {
+    data: unpaginatedRows,
   }
 }
 
@@ -650,6 +714,49 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   :deep(.kong-ui-public-table-data-grid) {
     flex: 1 1 auto;
     height: 760px;
+    min-height: 0;
+    width: 100%;
+  }
+}
+
+.unpaginated-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-30, $kui-space-30);
+  min-width: 0;
+}
+
+.unpaginated-header {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-50, $kui-space-50);
+  justify-content: space-between;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  p {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    margin-top: var(--kui-space-10, $kui-space-10);
+  }
+}
+
+.unpaginated-fetch-count {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  margin: 0;
+}
+
+.unpaginated-table {
+  min-width: 0;
+
+  :deep(.kong-ui-public-table-data-grid) {
+    height: 360px;
     min-height: 0;
     width: 100%;
   }

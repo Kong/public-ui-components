@@ -1,6 +1,6 @@
 import type { TableDataGridHeader } from '../types'
-import { describe, expect, it } from 'vitest'
-import { ref } from 'vue'
+import { describe, expect, it, vi } from 'vitest'
+import { nextTick, ref } from 'vue'
 import { useTableDataGridColumnDefs } from './useTableDataGridColumnDefs'
 
 type TestRow = {
@@ -63,4 +63,68 @@ describe('useTableDataGridColumnDefs', () => {
     expect(columnDefs.value[0]).not.toHaveProperty('initialSort')
     expect(columnDefs.value[0]).not.toHaveProperty('initialSortIndex')
   })
+
+  it('exposes complete-result presentation stats and formatted values to the grid', () => {
+    const headers: Array<TableDataGridHeader<{ value: number }>> = [{
+      dataType: 'number',
+      key: 'value',
+      label: 'Value',
+      showPercentage: true,
+      valueFormatter: value => `${value} requests`,
+    }]
+    const rows = ref([{ value: 25 }, { value: 75 }])
+    const { gridContext } = useTableDataGridColumnDefs({
+      headers: ref(headers),
+      mode: 'unpaginated',
+      rows,
+      slots: {},
+    })
+
+    expect(gridContext.value.presentation.stats.value).toEqual({ sum: 100, max: 75 })
+  })
+
+  it.each([
+    ['infinite', 'unpaginated mode'],
+    ['unpaginated', 'dataType'],
+  ] as const)('warns once for %s numeric presentation', (testMode, expectedMessage) => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    try {
+      useTableDataGridColumnDefs({
+        headers: ref<Array<TableDataGridHeader<TestRow>>>([{
+          bar: testMode === 'infinite' ? 'relative' : 'absolute',
+          key: 'name',
+          label: 'Name',
+          showPercentage: true,
+        }]),
+        mode: testMode === 'infinite' ? undefined : testMode,
+        slots: {},
+      })
+
+      expect(warn).toHaveBeenCalledOnce()
+      expect(warn.mock.calls[0][0]).to.contain(expectedMessage)
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('warns once for nonnumeric values and excludes them from the column total', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const rows = ref([{ value: true }, { value: 25 }])
+    const { gridContext } = useTableDataGridColumnDefs({
+      headers: ref<Array<TableDataGridHeader<{ value: unknown }>>>([{
+        key: 'value', label: 'Value', dataType: 'number', showPercentage: true,
+      }]),
+      mode: 'unpaginated', rows, slots: {},
+    })
+
+    expect(warn).toHaveBeenCalledOnce()
+    expect(warn.mock.calls[0][0]).toContain('non-finite or nonnumeric')
+    expect(gridContext.value.presentation.stats.value.sum).toBe(25)
+    rows.value = [{ value: false }, { value: 50 }]
+    await nextTick()
+    expect(warn).toHaveBeenCalledOnce()
+    warn.mockRestore()
+  })
+
 })

@@ -116,7 +116,8 @@ const emit = defineEmits<{
   (e: 'update:tableConfig', payload: TableDataGridConfig): void
 }>()
 
-const { i18n: { t } } = useI18n()
+const { i18n } = useI18n()
+const { t } = i18n
 
 const slots = useSlots()
 
@@ -189,6 +190,9 @@ const rowData = computed(() => data.value ? Array.from(data.value) : undefined)
 
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
+  locale: computed(() => i18n.locale),
+  mode,
+  rows: rowData,
   slots,
   initialSort: activeSort.value,
 })

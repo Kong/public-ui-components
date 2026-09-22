@@ -1,4 +1,5 @@
 import type { GridApi } from 'ag-grid-community'
+import type { Component } from 'vue'
 
 export type TableDataGridMode = 'infinite' | 'unpaginated'
 export type TableDataGridRow = Record<string, unknown>
@@ -27,6 +28,16 @@ export type TableDataGridCellSlotProps<Row extends object = TableDataGridRow> = 
   refreshCell: () => void
 }
 
+export type TableDataGridIconMapping = {
+  pattern: RegExp
+  icon: Component
+}
+
+export type TableDataGridThreshold = {
+  value: number
+  type: 'warning' | 'error'
+}
+
 export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   key: Extract<keyof Row, string>
   label: string
@@ -47,6 +58,23 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
    * when `sortable` is true.
    */
   showSortIcon?: boolean
+  /**
+   * Marks a column as numeric for aggregate percentage, bar, and threshold
+   * presentation. These options are only applied in unpaginated mode.
+   */
+  dataType?: 'number'
+  /** Formats the raw cell value for display and icon matching. */
+  valueFormatter?: (value: unknown, row: Row) => string
+  /** Shows the row's share of the full returned column total. */
+  showPercentage?: boolean
+  /** Formats percentage points, e.g. 50 for a 50% share (not the 0–1 ratio). */
+  percentageFormatter?: (percentage: number) => string
+  /** Renders a bar using the column total or maximum as its denominator. */
+  bar?: 'relative' | 'absolute'
+  /** Applies warning/error presentation at or above the crossed threshold. */
+  thresholds?: TableDataGridThreshold[]
+  /** Matches raw or formatted cell text and renders the first matching icon. */
+  icons?: TableDataGridIconMapping[]
 }
 
 export type TableDataGridSortDirection = 'asc' | 'desc'

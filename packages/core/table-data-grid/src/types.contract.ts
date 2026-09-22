@@ -46,3 +46,22 @@ const invalidModeChecks: [
 
 void validProps
 void invalidModeChecks
+
+const numericHeader: TableDataGridHeader<{ count: number }> = {
+  key: 'count',
+  label: 'Requests',
+  dataType: 'number',
+  showPercentage: true,
+  bar: 'absolute',
+  thresholds: [{ value: 100, type: 'warning' }],
+  valueFormatter: (_value, row) => `${row.count} requests`,
+  percentageFormatter: percentage => `${percentage}%`,
+  icons: [{ pattern: /openai/i, icon: { render: () => null } }],
+}
+type RejectUnknownBar = Expect<'max' extends NonNullable<TableDataGridHeader['bar']> ? false : true>
+type RejectStringPattern = Expect<string extends NonNullable<TableDataGridHeader['icons']>[number]['pattern'] ? false : true>
+const rejectUnknownBar: RejectUnknownBar = true
+const rejectStringPattern: RejectStringPattern = true
+void numericHeader
+void rejectUnknownBar
+void rejectStringPattern

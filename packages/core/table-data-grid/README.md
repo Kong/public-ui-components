@@ -252,6 +252,25 @@ should opt out of the default flexible fill behavior.
 | `disableRowClick` | `boolean` | No | Suppresses `row:click` for clicks landing in this column's cells, e.g. an actions column. `cell:click` still fires. |
 | `sortable` | `boolean` | No | Enables sorting on this column via AG Grid's built-in header sort control. Only one column can be sorted at a time. |
 | `showSortIcon` | `boolean` | No | Shows the unsorted sort icon on this column even when it isn't the active sort, instead of only on hover or once sorted. Only relevant when `sortable` is true. |
+| `dataType` | `'number'` | No | Enables numeric presentation options for this column. Aggregate options are applied only in unpaginated mode. |
+| `valueFormatter` | `(value, row) => string` | No | Formats a raw value for display and built-in icon matching. A custom cell slot still receives the original `rowValue`. |
+| `showPercentage` | `boolean` | No | In unpaginated numeric columns, shows the row's percentage of the complete returned column sum. |
+| `percentageFormatter` | `(percentage) => string` | No | Optional formatter for the percentage points (50 means 50%) shown by `showPercentage`. The default uses the grid locale, up to two decimal places, and `< 0.01 %` for small positive values. |
+| `bar` | `'relative' \| 'absolute'` | No | In unpaginated numeric columns, renders a bar. `relative` uses `value / sum`; `absolute` uses `value / maximum`, matching the TopN scales. |
+| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Applies threshold text/bar colors at or above the highest crossed threshold. Numeric finite values only. |
+| `icons` | `Array<{ pattern: RegExp, icon: Component }>` | No | Renders the first matching icon beside the value. Matching checks raw and formatted text and preserves regular-expression state. Built-in provider mappings are always checked after custom mappings. |
+
+Numeric presentation is intentionally derived from the complete successful result
+in unpaginated mode. Infinite mode does not calculate aggregate values; supplying
+numeric presentation options there, or on a header without `dataType: 'number'`,
+emits a console warning and omits those adornments. Nonnumeric or non-finite
+values also warn once per column and keep their ordinary content without numeric
+adornments. Missing values retain an empty bar track when a bar is configured.
+Bars clamp to 0–100%; percentage labels are omitted when the column total is not positive.
+
+The grid includes case-insensitive built-in provider mappings for common AI
+provider names such as `OpenAI`, `Anthropic`, `Bedrock`, and `Vertex`. Hosts can
+add mappings for other values through `icons`.
 
 ## Sorting
 
@@ -284,7 +303,13 @@ under one sort order is not valid under another.
 ## Custom Cell Content
 
 Columns render custom cell content through a slot named after `header.key`.
-Columns without a matching slot render their raw `rowValue`.
+Columns without a matching slot render `valueFormatter(rowValue, row)` when
+configured, otherwise their raw `rowValue`. Icons, percentages, and bars decorate
+both default values and slot content. For translated slot content, provide the
+same display text through `valueFormatter` so icon matching can inspect it.
+When a named slot renders no content, the grid falls back to the formatted
+default value with ellipsis and an overflow tooltip; non-empty slot content
+remains host-owned.
 
 ```vue
 <TableDataGrid
