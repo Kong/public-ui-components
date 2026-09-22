@@ -60,6 +60,7 @@
         <component
           :is="autofillSlot"
           v-if="autofillSlot && realShowVaultSecretPicker"
+          :disabled="isDisabled"
           :schema="schema"
           :update="handleUpdate"
           :value="fieldValue ?? ''"
@@ -78,6 +79,7 @@
       <component
         :is="autofillSlot"
         v-if="autofillSlot && realShowVaultSecretPicker"
+        :disabled="isDisabled"
         :schema="schema"
         :update="handleUpdate"
         :value="fieldValue ?? ''"

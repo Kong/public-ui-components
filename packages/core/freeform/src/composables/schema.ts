@@ -214,11 +214,13 @@ export function useSchemaHelpers(
   function createFieldDefault(path: string, force: boolean = false): any {
     const schema = getSchema(path)
     if (!schema) {
-      return null
+      return resolveEmptyValue()
     }
 
-    // Use explicit default if provided
-    if (schema.default !== undefined) {
+    // Use explicit default if provided — unless this field is version-locked,
+    // in which case the default names a value that doesn't exist at the
+    // configured runtime version and shouldn't be silently initialized.
+    if (schema.default !== undefined && !getFieldVersionInfo(path)) {
       return schema.default
     }
 
@@ -299,16 +301,28 @@ export function useSchemaHelpers(
 
   /**
    * Version info for a field whose `min_ai_gateway_version` exceeds
-   * `FormConfig.minRuntimeVersion` — `undefined` when the field has no
-   * version requirement, or the requirement is met.
+   * `FormConfig.minRuntimeVersion` — `undefined` when neither the field nor
+   * any of its ancestors declares a version requirement, or every
+   * requirement in the chain is met. A field nested inside a version-locked
+   * container (array/map/record) inherits the container's lock, since
+   * there's no separate way to disable "everything under this container".
    */
   function getFieldVersionInfo(fieldPath: string): VersionInfo | undefined {
-    const schema = getSchema(fieldPath)
-    const minVersion = schema?.min_ai_gateway_version
-    if (!minVersion || isVersionSupported(toValue(config)?.minRuntimeVersion, minVersion)) {
-      return undefined
+    const runtimeVersion = toValue(config)?.minRuntimeVersion
+
+    let currentPath: string | undefined = fieldPath
+    while (currentPath) {
+      const minVersion = getSchema(currentPath)?.min_ai_gateway_version
+      if (minVersion && !isVersionSupported(runtimeVersion, minVersion)) {
+        return buildVersionInfo(minVersion)
+      }
+
+      const parts = utils.toArray(currentPath)
+      parts.pop()
+      currentPath = parts.length ? utils.resolve(...parts) : undefined
     }
-    return buildVersionInfo(minVersion)
+
+    return undefined
   }
 
   function getSelectItems(fieldPath: string): SelectItem[] {

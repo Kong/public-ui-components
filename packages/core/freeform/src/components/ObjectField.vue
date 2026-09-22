@@ -35,7 +35,7 @@
     v-else
     v-show="!hide"
     class="ff-object-field"
-    :class="{ 'ff-object-field-collapsed': !expanded }"
+    :class="{ 'ff-object-field-collapsed': !effectiveExpanded }"
     :data-testid="`ff-object-${field.path.value}`"
     v-bind="$attrs"
   >
@@ -47,17 +47,17 @@
         <!-- Collapse toggle -->
         <button
           :aria-controls="contentId"
-          :aria-expanded="expanded"
+          :aria-expanded="effectiveExpanded"
           :aria-label="fieldAttrs.label"
           class="ff-object-field-toggle-btn"
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
-          :disabled="!added"
+          :disabled="!added || isLocked"
           type="button"
           @click.prevent.stop="toggleDisplay"
         >
           <ChevronRightIcon
             class="ff-object-field-toggle-btn-trigger-icon"
-            :class="{ 'collapse-expanded': expanded }"
+            :class="{ 'collapse-expanded': effectiveExpanded }"
             :data-testid="`ff-object-toggle-trigger-icon-${field.path.value}`"
             decorative
             :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
@@ -76,12 +76,18 @@
         >
           {{ fieldAttrs.label }}
           <template
-            v-if="fieldAttrs.labelAttributes?.info"
+            v-if="fieldAttrs.labelAttributes?.info || versionInfo"
             #tooltip
           >
             <slot name="tooltip">
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <div v-html="fieldAttrs.labelAttributes.info" />
+              <p
+                v-if="versionInfo"
+                class="ff-version-compatibility-note"
+              >
+                {{ versionInfo.tooltip }}
+              </p>
+              <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+              <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
             </slot>
           </template>
         </KLabel>
@@ -91,6 +97,8 @@
       <KInputSwitch
         v-if="!fieldAttrs.required"
         :data-testid="`ff-object-switch-${field.path.value}`"
+        :disabled="isLocked"
+        :disabled-tooltip-text="versionInfo?.tooltip"
         :model-value="added as boolean"
         @update:model-value="(value: boolean) => { added = value; handleToggleSwitch() }"
       />
@@ -98,7 +106,7 @@
 
     <SlideTransition>
       <div
-        v-if="expanded"
+        v-if="effectiveExpanded"
         class="ff-object-field-content"
         :data-testid="`ff-object-content-${field.path.value}`"
       >
@@ -117,7 +125,7 @@
     </SlideTransition>
 
     <div
-      v-if="expanded"
+      v-if="effectiveExpanded"
       class="indent-guide"
     />
   </div>
@@ -163,7 +171,7 @@ const {
   renderRules?: RenderRules
 }>()
 
-const { value: fieldValue, hide, ...field } = useField(toRef(props, 'name'))
+const { value: fieldValue, hide, versionInfo, ...field } = useField(toRef(props, 'name'))
 const {
   getSchema,
   getDefault,
@@ -179,6 +187,13 @@ const currentRenderRules = useCurrentRenderRules({
 const added = defineModel<boolean>('added')
 
 const expanded = defineModel<boolean>('expanded')
+
+const isLocked = computed(() => !!versionInfo?.value)
+
+// Rendering-only override — a locked object stays visually collapsed without
+// mutating `expanded` itself, so the real state comes back once unlocked
+// (e.g. the host raises `minRuntimeVersion`).
+const effectiveExpanded = computed(() => !isLocked.value && !!expanded.value)
 
 // Determines if the current field is a child element of an array field
 const isChildOfArray = computed(() => {
@@ -345,6 +360,12 @@ $indent-guide-top-offset: 20px;
 
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   &-toggle-btn {

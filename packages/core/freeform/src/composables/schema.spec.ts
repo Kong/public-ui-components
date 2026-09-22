@@ -164,4 +164,96 @@ describe('useSchemaHelpers', () => {
       expect(getUndefinedEmptyValue()).toBeUndefined()
     })
   })
+
+  describe('getFieldVersionInfo', () => {
+    const schema: FormSchema = {
+      type: 'record',
+      fields: [
+        {
+          legacy_config: {
+            type: 'record',
+            min_ai_gateway_version: '2.2',
+            fields: [
+              { host: { type: 'string' } },
+              { protocol: { type: 'string', min_ai_gateway_version: '2.1' } },
+            ],
+          },
+        },
+      ],
+    }
+
+    it('locks a field with no version requirement of its own when an ancestor is locked', () => {
+      const { getFieldVersionInfo } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.1' }))
+
+      // `legacy_config` requires 2.2, above the configured 2.1 — `host` has
+      // no requirement of its own but inherits the container's lock.
+      expect(getFieldVersionInfo('legacy_config')?.tooltip).toContain('2.2')
+      expect(getFieldVersionInfo('legacy_config.host')?.tooltip).toContain('2.2')
+    })
+
+    it("reports the field's own requirement when it is stricter than an unlocked ancestor", () => {
+      const { getFieldVersionInfo } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.1' }))
+
+      // `legacy_config` itself is locked at this runtime version too, so this
+      // mostly documents that a deeper, still-unmet requirement is also found.
+      expect(getFieldVersionInfo('legacy_config.protocol')?.tooltip).toContain('2.2')
+    })
+
+    it('is undefined throughout once minRuntimeVersion satisfies every requirement in the chain', () => {
+      const { getFieldVersionInfo } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.2' }))
+
+      expect(getFieldVersionInfo('legacy_config')).toBeUndefined()
+      expect(getFieldVersionInfo('legacy_config.host')).toBeUndefined()
+      expect(getFieldVersionInfo('legacy_config.protocol')).toBeUndefined()
+    })
+
+    it('fails open (undefined) when minRuntimeVersion is not provided', () => {
+      const { getFieldVersionInfo } = useSchemaHelpers(schema)
+
+      expect(getFieldVersionInfo('legacy_config')).toBeUndefined()
+      expect(getFieldVersionInfo('legacy_config.host')).toBeUndefined()
+    })
+  })
+
+  describe('getDefault with a version-locked field', () => {
+    const schema: FormSchema = {
+      type: 'record',
+      fields: [
+        { gated_field: { type: 'string', min_ai_gateway_version: '2.1', default: 'preset' } },
+        {
+          gated_container: {
+            type: 'record',
+            min_ai_gateway_version: '2.1',
+            fields: [
+              { nested: { type: 'string', default: 'nested-preset' } },
+            ],
+          },
+        },
+      ],
+    }
+
+    it("skips a locked field's own default, instead of initializing it with an unreachable value", () => {
+      const { getDefault } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.0' }))
+
+      expect(getDefault('gated_field')).toBeNull()
+    })
+
+    it('keeps the default once minRuntimeVersion satisfies the requirement', () => {
+      const { getDefault } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.1' }))
+
+      expect(getDefault('gated_field')).toBe('preset')
+    })
+
+    it('fails open (keeps the default) when minRuntimeVersion is not provided', () => {
+      const { getDefault } = useSchemaHelpers(schema)
+
+      expect(getDefault('gated_field')).toBe('preset')
+    })
+
+    it("skips a nested field's default when it inherits a lock from its container", () => {
+      const { getDefault } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.0' }))
+
+      expect(getDefault('gated_container.nested')).toBeNull()
+    })
+  })
 })

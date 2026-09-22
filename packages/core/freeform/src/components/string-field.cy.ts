@@ -1,3 +1,5 @@
+import { h } from 'vue'
+import { AUTOFILL_SLOT } from '@kong-ui-public/forms'
 import Form from './Form.vue'
 import type { FormSchema, StringFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
@@ -162,6 +164,55 @@ describe('StringField', () => {
         .find('.ff-version-compatibility-note, .ff-label-tooltip-info')
         .first()
         .should('have.class', 'ff-version-compatibility-note')
+    })
+  })
+
+  describe('vault picker', () => {
+    const fakePicker = (props: any) => h('div', {
+      'data-disabled': String(!!props.disabled),
+      'data-testid': 'fake-vault-picker',
+    }, 'picker')
+
+    function mountWithVaultPicker(options: {
+      config?: FormConfig
+      fieldOverrides?: Partial<StringFieldSchema>
+    } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: {
+            type: 'record',
+            fields: [{
+              [FIELD_NAME]: {
+                type: 'string',
+                referenceable: true,
+                ...options.fieldOverrides,
+              },
+            }],
+          },
+          data: { [FIELD_NAME]: 'alpha' },
+          config: options.config,
+        },
+        global: {
+          provide: {
+            [AUTOFILL_SLOT]: fakePicker,
+          },
+        },
+      })
+    }
+
+    it('disables the vault picker when the field is version-locked', () => {
+      mountWithVaultPicker({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: { min_ai_gateway_version: '2.1' },
+      })
+
+      cy.getTestId('fake-vault-picker').should('have.attr', 'data-disabled', 'true')
+    })
+
+    it('leaves the vault picker enabled when there is no version lock', () => {
+      mountWithVaultPicker({ config: { minRuntimeVersion: '2.1' }, fieldOverrides: { min_ai_gateway_version: '2.1' } })
+
+      cy.getTestId('fake-vault-picker').should('have.attr', 'data-disabled', 'false')
     })
   })
 })

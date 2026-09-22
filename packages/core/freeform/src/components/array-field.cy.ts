@@ -142,4 +142,53 @@ describe('ArrayField', () => {
       assertLastChange({ [FIELD_NAME]: [] })
     })
   })
+
+  describe('version compatibility', () => {
+    function mountVersionCompatibilityForm(options: { config?: FormConfig } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: {
+            type: 'record',
+            fields: [{
+              [FIELD_NAME]: {
+                type: 'array',
+                description: 'Custom upstream hosts.',
+                min_ai_gateway_version: '2.1',
+                elements: { type: 'string' },
+              },
+            }],
+          } as FormSchema,
+          data: { [FIELD_NAME]: ['alpha'] },
+          config: options.config,
+        },
+      })
+    }
+
+    it('disables add/remove buttons and cascades disabling down to existing items when locked', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.0' } })
+
+      cy.getTestId(`ff-add-item-btn-${FIELD_NAME}`).should('be.disabled')
+      cy.getTestId(`ff-array-remove-item-btn-${FIELD_NAME}.0`).should('be.disabled')
+      // The item's own field has no `min_ai_gateway_version` of its own — it
+      // inherits the lock from its array ancestor.
+      cy.getTestId(`ff-${FIELD_NAME}.0`).should('be.disabled')
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('leaves add/remove buttons and items usable when minRuntimeVersion satisfies the requirement', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.1' } })
+
+      cy.getTestId(`ff-add-item-btn-${FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-array-remove-item-btn-${FIELD_NAME}.0`).should('not.be.disabled')
+      cy.getTestId(`ff-${FIELD_NAME}.0`).should('not.be.disabled')
+    })
+
+    it('fails open when minRuntimeVersion is not provided', () => {
+      mountVersionCompatibilityForm()
+
+      cy.getTestId(`ff-add-item-btn-${FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-${FIELD_NAME}.0`).should('not.be.disabled')
+    })
+  })
 })
