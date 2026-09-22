@@ -90,13 +90,16 @@ import useFetchState from '../composables/useFetchState'
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule])
 
-const props = defineProps<TableDataGridProps<Row>>()
-const mode = props.mode ?? 'infinite'
-const headers = toRef(props, 'headers')
-const hostError = computed(() => props.error ?? false)
-const pageSize = computed(() => props.pageSize ?? 25)
-const refreshKey = toRef(props, 'refreshKey')
-const tableConfig = toRef(props, 'tableConfig')
+const {
+  fetcher,
+  mode: providedMode,
+  headers,
+  error: hostError = false,
+  pageSize = 25,
+  refreshKey,
+  tableConfig,
+} = defineProps<TableDataGridProps<Row>>()
+const mode = providedMode ?? 'infinite'
 
 defineSlots<{
   'empty-state': () => unknown
@@ -120,9 +123,9 @@ const slots = useSlots()
 const gridApi = shallowRef<GridApi<Row>>()
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
-  headers,
-  pageSize,
-  tableConfig,
+  headers: toRef(() => headers),
+  pageSize: toRef(() => pageSize),
+  tableConfig: toRef(() => tableConfig),
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   onExternalConfigChange: (config) => {
     if (!gridApi.value) {
@@ -143,7 +146,7 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
 
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
-  headers,
+  headers: toRef(() => headers),
   rowClick: (row, event) => emit('row:click', row, event),
 })
 
@@ -157,22 +160,21 @@ const defaultColDef: ColDef<Row> = {
 const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
 const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
 const resetKey = computed(() => mode === 'unpaginated'
-  ? [props.fetcher, refreshKey.value]
+  ? [refreshKey]
   : [
-    props.fetcher,
     activePageSize.value,
-    refreshKey.value,
+    refreshKey,
     sortColumnKey.value,
     sortColumnOrder.value,
   ])
 
-const fetchResult = props.mode === 'unpaginated'
+const fetchResult = providedMode === 'unpaginated'
   ? useFetchUnpaginated({
-    fetcher: toRef(() => props.fetcher),
+    fetcher: toRef(() => fetcher),
     resetKey,
   })
   : useFetchInfinite({
-    fetcher: props.fetcher,
+    fetcher: toRef(() => fetcher),
     resetKey,
     sort: activeSort,
   })
@@ -186,7 +188,7 @@ const { datasource } = fetchResult
 const rowData = computed(() => data.value ? Array.from(data.value) : undefined)
 
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
-  headers,
+  headers: toRef(() => headers),
   slots,
   initialSort: activeSort.value,
 })

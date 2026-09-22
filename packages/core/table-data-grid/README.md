@@ -192,7 +192,9 @@ const fetchTopRows: TableDataGridUnpaginatedFetcher<Row> = async () => ({
 infinite datasource, clears stored cursors, and starts again from the first
 block with `cursor: undefined`. In `unpaginated` mode it starts one new
 complete-result request instead and keeps the previous rows visible while that
-request is pending.
+request is pending. Replacing `fetcher` triggers the same reset in either mode;
+subsequent requests use the new function and superseded responses cannot update
+current rows or error state.
 
 This reset is required for cursor APIs because cursor values are only valid
 relative to the response and query chain that produced them. Reusing a later
