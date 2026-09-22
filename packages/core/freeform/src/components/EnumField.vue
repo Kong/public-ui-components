@@ -15,28 +15,43 @@
     :clearable="!fieldAttrs.required"
     :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
+    :disabled="isDisabled"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
     @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
   >
     <template
-      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info"
+      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info || versionInfo"
       #label-tooltip
     >
       <slot name="tooltip">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="fieldAttrs.labelAttributes.info" />
+        <p
+          v-if="versionInfo"
+          class="ff-version-compatibility-note"
+        >
+          {{ versionInfo.tooltip }}
+        </p>
+        <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+        <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
       </slot>
     </template>
 
     <template
-      v-if="$slots['item-label']"
+      v-if="$slots['item-label'] || hasVersionIncompatibleItems"
       #item-template="{ item }"
     >
       <slot
         name="item-label"
         v-bind="item"
-      />
+      >
+        <KTooltip
+          :kpop-attributes="{ 'data-testid': `ff-version-tooltip-item-${item.value}` }"
+          max-width="400px"
+          :text="item.versionInfo?.tooltip ?? ''"
+        >
+          {{ item.label }}
+        </KTooltip>
+      </slot>
     </template>
 
     <template
@@ -51,6 +66,7 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
 import {
+  KTooltip,
   KSelect,
   KMultiselect,
   type LabelAttributes,
@@ -83,10 +99,14 @@ const {
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<EnumValue>(
+const { value: fieldValue, hide, versionInfo, ...field } = useField<EnumValue>(
   toRef(() => name),
 )
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+// `disabled` is only on `SelectProps`, not `MultiselectProps` (KMultiselect reads it off
+// fallthrough attrs instead) — read it loosely so both branches of `EnumFieldProps` work.
+const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!versionInfo?.value)
 
 function normalizeValue(value: EnumValue): EnumValue {
   // Required fields are already correctly shaped here (`[]` for a cleared
@@ -117,6 +137,8 @@ const realItems = computed<SelectItem[]>(() => {
   return []
 })
 
+const hasVersionIncompatibleItems = computed(() => realItems.value.some(item => item.versionInfo))
+
 const isMultiple = computed(() => {
   if (multiple !== undefined) {
     return multiple
@@ -134,6 +156,12 @@ const SelectComponent = computed(() => {
 .ff-enum-field {
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

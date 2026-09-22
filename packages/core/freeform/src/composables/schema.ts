@@ -2,6 +2,8 @@ import { computed, toValue } from 'vue'
 import { marked } from 'marked'
 import * as utils from '../utils'
 import DOMPurify from 'dompurify'
+import useI18n from './useI18n'
+import { isVersionSupported } from '../version'
 
 const SHARED_LABEL_ATTRIBUTES = {
   tooltipAttributes: {
@@ -149,11 +151,22 @@ export function generalizePath(p: string, schemaMap: Record<string, UnionFieldSc
   return utils.resolve(...result)
 }
 
+export interface VersionInfo {
+  tooltip: string
+}
+
 export function useSchemaHelpers(
   schema: MaybeRefOrGetter<FormSchema | UnionFieldSchema>,
   config?: MaybeRefOrGetter<FormConfig<any> | undefined>,
 ) {
   const schemaValue = toValue(schema)
+  const { i18n } = useI18n()
+
+  function buildVersionInfo(minVersion: string): VersionInfo {
+    return {
+      tooltip: i18n.t('version_compatibility.tooltip', { version: minVersion }),
+    }
+  }
 
   /**
    * The sentinel written for an "empty" field (a non-required field with no
@@ -284,9 +297,45 @@ export function useSchemaHelpers(
     }
   }
 
+  /**
+   * Version info for a field whose `min_ai_gateway_version` exceeds
+   * `FormConfig.minRuntimeVersion` — `undefined` when the field has no
+   * version requirement, or the requirement is met.
+   */
+  function getFieldVersionInfo(fieldPath: string): VersionInfo | undefined {
+    const schema = getSchema(fieldPath)
+    const minVersion = schema?.min_ai_gateway_version
+    if (!minVersion || isVersionSupported(toValue(config)?.minRuntimeVersion, minVersion)) {
+      return undefined
+    }
+    return buildVersionInfo(minVersion)
+  }
+
   function getSelectItems(fieldPath: string): SelectItem[] {
     const schema = getSchema(fieldPath)
-    return utils.toSelectItems((schema?.one_of || (schema as ArrayLikeFieldSchema).elements?.one_of || []))
+    const oneOf = schema?.one_of || (schema as ArrayLikeFieldSchema).elements?.one_of || []
+    const enumMinVersions = (schema as StringFieldSchema)?.enum_min_versions
+      || ((schema as ArrayLikeFieldSchema).elements as StringFieldSchema)?.enum_min_versions
+    const items = utils.toSelectItems(oneOf)
+
+    if (!enumMinVersions?.length) {
+      return items
+    }
+
+    const runtimeVersion = toValue(config)?.minRuntimeVersion
+    const minVersionByValue = new Map(enumMinVersions.map(entry => [entry.value, entry.min_ai_gateway_version]))
+
+    return items.map((item) => {
+      const minVersion = minVersionByValue.get(item.value)
+      if (!minVersion || isVersionSupported(runtimeVersion, minVersion)) {
+        return item
+      }
+      return {
+        ...item,
+        disabled: true,
+        versionInfo: buildVersionInfo(minVersion),
+      }
+    })
   }
 
   function getPlaceholder(fieldPath: string): string | null {
@@ -330,6 +379,7 @@ export function useSchemaHelpers(
     getDefault,
     getSelectItems,
     getLabelAttributes,
+    getFieldVersionInfo,
     getPlaceholder,
     getEmptyOrDefault,
     /**

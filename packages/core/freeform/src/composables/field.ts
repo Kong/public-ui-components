@@ -23,13 +23,18 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue } = useFormShared()
+  const { getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
+  /**
+   * Set when this field's `min_ai_gateway_version` exceeds `FormConfig.minRuntimeVersion`
+   * — `undefined` when the field has no version requirement, or the requirement is met.
+   */
+  const versionInfo = computed(() => getFieldVersionInfo(fieldPath.value))
   /**
    * The default for this field, forcing required-field structure/defaults
    * back in. Use only for initialization (new array item, new map entry,
@@ -61,6 +66,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
      * Hide the field but keep its state.
      */
     hide,
+    versionInfo,
     emptyOrDefaultValue,
     emptyValue,
     error: null,

@@ -15,6 +15,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('./pages/FreeFormDemo.vue'),
     },
+    {
+      path: '/version-compatibility',
+      name: 'version-compatibility',
+      component: () => import('./pages/VersionCompatibilityDemo.vue'),
+    },
   ],
 })
 
