@@ -22,7 +22,7 @@
       <template #[FIELD_RENDERERS]>
         <FieldRenderer
           v-slot="fieldProps"
-          :match="({ path }) => path === 'prompt_template'"
+          :match="({ path }) => path === 'prompt_template_min_v21'"
         >
           <StringField
             v-bind="fieldProps"
@@ -54,7 +54,7 @@ const schema: FormSchema = {
   type: 'record',
   fields: [
     {
-      identifier: {
+      identifier_opts_min_v21: {
         type: 'string',
         description: 'Mirrors a real AI Gateway rate-limiting-advanced field: some identifier '
           + 'strategies were only added in AI Gateway 2.1.',
@@ -76,7 +76,7 @@ const schema: FormSchema = {
       },
     },
     {
-      semantic_cache_strategy: {
+      semantic_cache_strategy_min_v22: {
         type: 'string',
         description: 'A whole field that only exists as of AI Gateway 2.2 — the field itself '
           + 'is disabled (not hidden) below that version.',
@@ -85,7 +85,7 @@ const schema: FormSchema = {
       },
     },
     {
-      webhook_secret: {
+      webhook_secret_min_v21: {
         type: 'string',
         description: 'A plain StringField (no one_of/enum) with the same version compatibility '
           + 'check — hover the disabled input to see why.',
@@ -94,11 +94,84 @@ const schema: FormSchema = {
       },
     },
     {
-      prompt_template: {
+      prompt_template_min_v21: {
         type: 'string',
         description: 'Same version compatibility check on a multiline StringField (rendered as '
           + 'a textarea via the field-renderers slot).',
         min_ai_gateway_version: '2.1',
+      },
+    },
+    {
+      upstream_servers: {
+        type: 'array',
+        description: 'An array of records — the version compatibility check also works on a '
+          + 'StringField nested inside each item.',
+        elements: {
+          type: 'record',
+          fields: [
+            {
+              host_min_v21: {
+                type: 'string',
+                description: 'Custom per-server load-balancing hosts were only added in AI '
+                  + 'Gateway 2.1.',
+                min_ai_gateway_version: '2.1',
+              },
+            },
+            {
+              protocol_opts_min_v21: {
+                type: 'string',
+                description: 'Individual options are gated too, same as the top-level '
+                  + 'Identifier field — grpc/grpcs were only added in AI Gateway 2.1.',
+                one_of: ['http', 'https', 'grpc', 'grpcs'],
+                enum_min_versions: [
+                  { min_ai_gateway_version: '2.1', value: 'grpc' },
+                  { min_ai_gateway_version: '2.1', value: 'grpcs' },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      custom_headers_values_min_v21: {
+        type: 'map',
+        description: 'A simple map — the check is on the value schema, so every entry\'s value '
+          + 'input is disabled the same way.',
+        keys: { type: 'string' },
+        values: {
+          type: 'string',
+          min_ai_gateway_version: '2.1',
+        },
+      },
+    },
+    {
+      provider_configs: {
+        type: 'map',
+        description: 'A complex nested map — provider name → config record → a further nested '
+          + 'per-model override map. The check still reaches the innermost value.',
+        keys: { type: 'string' },
+        values: {
+          type: 'record',
+          fields: [
+            {
+              model: {
+                type: 'string',
+              },
+            },
+            {
+              overrides_values_min_v21: {
+                type: 'map',
+                description: 'Per-model overrides were only added in AI Gateway 2.1.',
+                keys: { type: 'string' },
+                values: {
+                  type: 'string',
+                  min_ai_gateway_version: '2.1',
+                },
+              },
+            },
+          ],
+        },
       },
     },
   ],
