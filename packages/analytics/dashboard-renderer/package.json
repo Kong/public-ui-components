@@ -36,7 +36,8 @@
     "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
-    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
+    "test:browser": "vitest run --config ../../../vitest.browser.config.ts"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
