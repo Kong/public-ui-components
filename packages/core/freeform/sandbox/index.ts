@@ -15,6 +15,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('./pages/FreeFormDemo.vue'),
     },
+    {
+      path: '/version-gating',
+      name: 'version-gating',
+      component: () => import('./pages/VersionGatingDemo.vue'),
+    },
   ],
 })
 

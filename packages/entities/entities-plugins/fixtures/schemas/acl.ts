@@ -125,3 +125,30 @@ export const aclSchemaWithoutWhenModes: FormSchema = {
     }
   }),
 }
+
+// AI Manager (AI Gateway) serves its own ACL schema: unlike the API Gateway
+// schema above, the two CEL modes carry `min_ai_gateway_version`, which the
+// form gates against `FormConfig.minRuntimeVersion`.
+export const aclSchemaWithVersionGates: FormSchema = {
+  ...aclSchema,
+  fields: aclSchema.fields.map((field) => {
+    if (!('config' in field)) return field
+
+    return {
+      config: {
+        ...field.config,
+        fields: field.config.fields.map((configField) => {
+          const key = 'allow_when' in configField
+            ? 'allow_when'
+            : 'deny_when' in configField
+              ? 'deny_when'
+              : undefined
+
+          return key
+            ? { [key]: { ...configField[key], min_ai_gateway_version: '2.1' } }
+            : configField
+        }),
+      },
+    }
+  }),
+}

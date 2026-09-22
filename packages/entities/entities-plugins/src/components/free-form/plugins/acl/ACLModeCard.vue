@@ -8,18 +8,24 @@
       {{ t('plugins.free-form.acl.mode.title.label') }}
     </KLabel>
     <div class="ff-acl-mode-options">
-      <KRadio
+      <VersionGateTooltip
         v-for="item in MODES"
         :key="item"
-        v-model="mode"
-        card
-        card-orientation="horizontal"
-        :data-testid="`ff-acl-mode-${item}`"
-        :description="t(`plugins.free-form.acl.mode.${item}.description`)"
-        :label="t(`plugins.free-form.acl.mode.${item}.label`)"
-        :selected-value="item"
-        @update:model-value="handleModeChange"
-      />
+        :data-testid="`ff-version-tooltip-${item}`"
+        :version-info="versionInfoByMode[item]"
+      >
+        <KRadio
+          v-model="mode"
+          card
+          card-orientation="horizontal"
+          :data-testid="`ff-acl-mode-${item}`"
+          :description="t(`plugins.free-form.acl.mode.${item}.description`)"
+          :disabled="!!versionInfoByMode[item]"
+          :label="t(`plugins.free-form.acl.mode.${item}.label`)"
+          :selected-value="item"
+          @update:model-value="handleModeChange"
+        />
+      </VersionGateTooltip>
     </div>
   </div>
 
@@ -75,7 +81,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared, ArrayField, StringField } from '@kong-ui-public/freeform'
+import { useFormShared, ArrayField, StringField, VersionGateTooltip } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
@@ -100,13 +106,20 @@ const ALL_MODES: AclMode[] = ['allow', 'deny', 'allow_when', 'deny_when']
 // textarea instead of the single-line input the schema type would otherwise get.
 const EXPRESSION_MODES: AclMode[] = ['allow_when', 'deny_when']
 
-const { formData, getLabelAttributes, getSchema, getEmptyValue, getDefault } = useFormShared<FreeFormPluginData<AclConfig>>()
+const { formData, getLabelAttributes, getSchema, getEmptyValue, getDefault, getFieldVersionInfo } = useFormShared<FreeFormPluginData<AclConfig>>()
 const { i18n: { t }, i18nT } = useI18n()
 
 // allow_when/deny_when are newer additions to the ACL plugin's schema; a Gateway
 // version that predates them simply won't declare the fields, so hide those modes
 // instead of offering a selection that has nowhere to write its data.
 const MODES = computed(() => ALL_MODES.filter((m) => !!getSchema(`config.${m}`)))
+
+// A mode whose `min_ai_gateway_version` exceeds `FormConfig.minRuntimeVersion`
+// (e.g. the CEL modes on a pre-2.1 runtime) stays visible but unselectable,
+// with a tooltip explaining the version floor. Undefined = not gated.
+const versionInfoByMode = computed(() => Object.fromEntries(
+  MODES.value.map((m) => [m, getFieldVersionInfo(`config.${m}`)]),
+) as Record<AclMode, ReturnType<typeof getFieldVersionInfo>>)
 
 const mode = ref<AclMode>('allow')
 const isExpressionMode = computed(() => EXPRESSION_MODES.includes(mode.value))
@@ -214,6 +227,11 @@ function handleModeChange() {
   &-options {
     display: flex;
     gap: var(--kui-space-50, $kui-space-50);
+
+    // No wrapper sizing overrides here: the VersionGateTooltip's own
+    // `width: 100%` gives the gated card's popover wrapper the same flex
+    // footprint (flex-basis = full row) as the bare KRadio cards, so it
+    // participates in the row's shrink distribution identically.
   }
 }
 

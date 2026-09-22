@@ -52,6 +52,7 @@
     "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
   },
   "dependencies": {
+    "compare-versions": "^6.1.1",
     "dompurify": "^3.4.14",
     "lodash-es": "^4.18.1",
     "marked": "^18.0.11"
