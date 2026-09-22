@@ -11,9 +11,6 @@ on:
       - labeled
     branches:
       - main
-      # Temporary: enable CI/previews for the MA-5503 stack.
-      # Removed in the final browser-test stack PR.
-      - workbench/ma-5503-*
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
