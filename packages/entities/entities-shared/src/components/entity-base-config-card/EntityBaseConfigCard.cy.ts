@@ -1,4 +1,5 @@
-import { h, type DefineComponent } from 'vue'
+import { h, type App, type DefineComponent } from 'vue'
+import { ENTITIES_FEATURE_FLAGS } from '../../constants'
 import type {
   KonnectBaseEntityConfig,
   ConfigurationSchema,
@@ -841,4 +842,60 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('select-item-terraform').should('exist')
     })
   })
+
+  describe('managed_by field', () => {
+    /** The API returns `managed_by` on the record whether or not the host has enabled it. */
+    const recordWithManagedBy = {
+      ...gatewayServiceRecord,
+      managed_by: { service: 'gw-manager' },
+    }
+
+    const interceptFetchWithManagedBy = (): void => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${config.apiBaseUrl}/v2/control-planes/${config.controlPlaneId}/core-entities/services/${entityId}`,
+        },
+        {
+          statusCode: 200,
+          body: recordWithManagedBy,
+        },
+      )
+    }
+
+    const mountConfigCard = (managedByEnabled = false): void => {
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+        global: managedByEnabled
+          ? {
+            plugins: [{
+              install: (app: App) => app.provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, true),
+            }],
+          }
+          : undefined,
+      })
+    }
+
+    it('keeps managed_by out of the structured view entirely while the flag is off', () => {
+      interceptFetchWithManagedBy()
+      mountConfigCard()
+
+      // The row must not appear at all - not even as the raw JSON object
+      cy.getTestId('managed_by-managed-by').should('not.exist')
+    })
+
+    it('renders the managed_by label in the structured view when the flag is on', () => {
+      interceptFetchWithManagedBy()
+      mountConfigCard(true)
+
+      cy.getTestId('managed_by-managed-by').should('be.visible')
+      cy.getTestId('managed_by-managed-by').should('contain.text', 'Konnect UI')
+    })
+  })
+
 })

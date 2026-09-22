@@ -1,6 +1,6 @@
 // Cypress component test spec file
-import { mockTableHeaders, mockTableData } from '../../../fixtures/mockData'
 import EntityBaseTable from './EntityBaseTable.vue'
+import { mockTableHeaders, mockTableData } from '../../../fixtures/mockData'
 
 describe('<EntityBaseTable />', () => {
   beforeEach(() => {
@@ -142,5 +142,92 @@ describe('<EntityBaseTable />', () => {
 
     cy.get('.kong-ui-entity-base-table .empty-state-title').should('contain.text', errorMessage.title)
     cy.get('.kong-ui-entity-base-table .empty-state-message').should('contain.text', errorMessage.message)
+  })
+
+  describe('default table preferences resolution', () => {
+    /**
+     * Seed a stored-preferences entry for a table, mimicking a user who loaded the table
+     * before a column (and its visibility default) existed.
+     */
+    const seedStoredPreferences = (cacheId: string, preferences: { pageSize?: number, columnVisibility?: Record<string, boolean> }): void => {
+      localStorage.setItem('khcp-user-table-preferences', JSON.stringify({
+        [cacheId]: preferences,
+      }))
+    }
+
+    it('should fall back to the defaults without losing the core pageSize when nothing is stored', () => {
+      const cacheId = `entity-base-table-${crypto.randomUUID()}`
+      localStorage.removeItem('khcp-user-table-preferences')
+      // Enough rows that KTable keeps its pagination controls rendered
+      const manyRows = {
+        ...mockTableData,
+        total: 45,
+        data: Array.from({ length: 45 }, (_, i) => ({
+          ...mockTableData.data[0],
+          id: `entity-base-table-row-${i}`,
+        })),
+      }
+
+      cy.mount(EntityBaseTable, {
+        props: {
+          tableHeaders: mockTableHeaders,
+          fetcher: () => manyRows,
+          cacheIdentifier: cacheId,
+          defaultTablePreferences: {
+            columnVisibility: {
+              hosts: false,
+            },
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entity-base-table thead th').should('not.contain.text', mockTableHeaders.hosts.label)
+      cy.getTestId('page-size-dropdown').contains('30 items per page')
+    })
+
+    it('should apply the default columnVisibility for keys the user has never decided on', () => {
+      const cacheId = `entity-base-table-${crypto.randomUUID()}`
+      seedStoredPreferences(cacheId, { pageSize: 15 })
+
+      cy.mount(EntityBaseTable, {
+        props: {
+          tableHeaders: mockTableHeaders,
+          fetcher: () => mockTableData,
+          cacheIdentifier: cacheId,
+          defaultTablePreferences: {
+            columnVisibility: {
+              hosts: false,
+            },
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entity-base-table thead th').should('not.contain.text', mockTableHeaders.hosts.label)
+      cy.get('.kong-ui-entity-base-table thead th').should('contain.text', mockTableHeaders.name.label)
+    })
+
+    it('should let a stored columnVisibility choice win over the default', () => {
+      const cacheId = `entity-base-table-${crypto.randomUUID()}`
+      seedStoredPreferences(cacheId, {
+        columnVisibility: {
+          hosts: true,
+        },
+      })
+
+      cy.mount(EntityBaseTable, {
+        props: {
+          tableHeaders: mockTableHeaders,
+          fetcher: () => mockTableData,
+          cacheIdentifier: cacheId,
+          defaultTablePreferences: {
+            columnVisibility: {
+              hosts: false,
+            },
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entity-base-table thead th').should('contain.text', mockTableHeaders.hosts.label)
+    })
   })
 })

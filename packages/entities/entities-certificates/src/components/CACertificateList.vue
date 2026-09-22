@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-ca-certificates-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -132,6 +133,9 @@
       <template #tags="{ row }">
         <TableTags :tags="row?.tags" />
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -222,6 +226,8 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerCertificateListConfig,
@@ -320,7 +326,10 @@ const fields: BaseTableHeaders = {
   expiry: { label: t('ca-certificates.list.table_headers.expiry') },
   tags: { label: t('ca-certificates.list.table_headers.tags'), sortable: true },
 }
-const tableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 
 /**
  * Fetcher & Filtering

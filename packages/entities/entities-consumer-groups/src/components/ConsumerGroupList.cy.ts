@@ -1,4 +1,5 @@
 // Cypress component test spec file
+import type { App } from 'vue'
 import type { ConsumerGroup } from '../../fixtures/mockData'
 import {
   consumerGroups100,
@@ -10,6 +11,7 @@ import type {
   KonnectConsumerGroupListConfig,
 } from '../types'
 import { v4 as uuidv4 } from 'uuid'
+import { ENTITIES_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import ConsumerGroupList from './ConsumerGroupList.vue'
 import AddToGroupModal from './AddToGroupModal.vue'
 
@@ -1312,5 +1314,88 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
     })
+  })
+})
+
+describe('<ConsumerGroupList /> - managed_by column', () => {
+  const managedByColumnClass = '.kong-ui-entities-consumer-groups-list'
+
+  const baseConfigKonnect: KonnectConsumerGroupListConfig = {
+    app: 'konnect',
+    controlPlaneId: '1234-abcd-ilove-cats',
+    apiBaseUrl: '/us/kong-api',
+    createRoute: 'create-consumer-group',
+    getViewRoute: () => 'view-consumer-group',
+    getEditRoute: () => 'edit-consumer-group',
+  }
+
+  const consumerGroupsWithManagedBy = consumerGroups5.map(row => ({
+    ...row,
+    managed_by: { service: 'gw-manager' },
+  }))
+
+  const mountList = (options: { managedByEnabled?: boolean } = {}) => {
+    cy.mount(ConsumerGroupList, {
+      props: {
+        cacheIdentifier: `consumer-group-list-managed-by-${uuidv4()}`,
+        config: baseConfigKonnect,
+        canCreate: () => false,
+        canEdit: () => false,
+        canDelete: () => false,
+        canRetrieve: () => false,
+      },
+      global: options.managedByEnabled
+        ? {
+          plugins: [{
+            install: (app: App) => app.provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, true),
+          }],
+        }
+        : undefined,
+    })
+  }
+
+  beforeEach(() => {
+    cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop limit exceeded'))
+    cy.intercept(
+      {
+        method: 'GET',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumer_groups*`,
+      },
+      {
+        statusCode: 200,
+        body: {
+          data: consumerGroupsWithManagedBy,
+          total: consumerGroupsWithManagedBy.length,
+        },
+      },
+    )
+  })
+
+  it('omits the managed_by column entirely while the flag is off', () => {
+    mountList()
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Name')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('not.exist')
+  })
+
+  it('offers managed_by in the visibility menu but keeps it hidden while the flag is on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Name')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('exist').and('contain.text', 'Managed By')
+  })
+
+  it('shows the managed_by label once the column is toggled on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').click()
+    cy.getTestId('apply-button').click()
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Managed By')
+    cy.getTestId('managed_by').should('contain.text', 'Konnect UI')
   })
 })

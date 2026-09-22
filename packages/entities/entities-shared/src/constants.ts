@@ -38,3 +38,22 @@ export const CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT = '50vh'
  * keep the plain-text rendering that KCodeBlock already produces via `v-html`.
  */
 export const SHIKI_MAX_HIGHLIGHT_LENGTH = 200_000
+
+/**
+ * Feature flags shared across the entity packages.
+ *
+ * These use plain string keys (rather than symbols) so a host app can provide them from a
+ * flag service without importing anything, matching the convention in entities-plugins.
+ *
+ * Usage:
+ * ```ts
+ * // In the host app
+ * import { provide } from 'vue'
+ * import { ENTITIES_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+ * provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, isManagedByEnabled) // boolean or Ref<boolean>
+ * ```
+ */
+export const ENTITIES_FEATURE_FLAGS = {
+  /** Surfaces the `managed_by` ownership field in entity lists and detail cards. */
+  MANAGED_BY: 'KM-3018-entity-managed-by',
+} as const

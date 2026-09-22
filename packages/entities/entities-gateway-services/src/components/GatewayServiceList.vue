@@ -166,6 +166,9 @@
       <template #updated_at="{ row, rowValue }">
         {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -300,6 +303,8 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -409,12 +414,9 @@ const fields: BaseTableHeaders = {
   created_at: { label: t('gateway_services.list.table_headers.created_at'), sortable: true },
 }
 
-const defaultTablePreferences = {
-  columnVisibility: {
-    created_at: false,
-  },
-}
-const tableHeaders: BaseTableHeaders = fields
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields, { created_at: false })
 
 /**
  * Fetcher & Filtering

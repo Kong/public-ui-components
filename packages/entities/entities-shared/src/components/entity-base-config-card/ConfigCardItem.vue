@@ -145,6 +145,7 @@ import type { BadgeMethodAppearance } from '@kong/kongponents'
 import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
+import { getManagedByLabel } from '../../utils/managed-by'
 
 const props = defineProps({
   item: {
@@ -293,6 +294,17 @@ const componentAttrsData = computed((): ComponentAttrsData => {
           href: props.item.value,
         },
         text: props.item.value,
+      }
+
+    case ConfigurationSchemaType.ManagedBy:
+      // The API returns an object (owner plus version/repository/etc); only the owner is
+      // meaningful here. The full object stays visible in the JSON/YAML tabs.
+      return {
+        tag: 'div',
+        attrs: {
+          'data-testid': `${props.item.key}-managed-by`,
+        },
+        text: getManagedByLabel(props.item.value) ?? '–',
       }
 
     case ConfigurationSchemaType.Json:
