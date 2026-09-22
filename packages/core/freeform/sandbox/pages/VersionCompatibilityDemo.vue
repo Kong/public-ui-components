@@ -334,9 +334,10 @@ const schema: FormSchema = {
                 {
                   api_key: {
                     type: 'string',
-                    description: 'Has a schema default, which is skipped while this container '
-                      + 'is locked — see the console log for the actual initial value.',
-                    default: 'unreachable-default-key',
+                    description: 'Has a schema default, which is kept even while this '
+                      + 'container is locked — the field is already disabled/read-only, so '
+                      + 'there\'s no separate value to hide.',
+                    default: 'preset-api-key',
                   },
                 },
               ],

@@ -232,10 +232,10 @@ describe('useSchemaHelpers', () => {
       ],
     }
 
-    it("skips a locked field's own default, instead of initializing it with an unreachable value", () => {
+    it("keeps a locked field's own default — the field is already disabled/read-only", () => {
       const { getDefault } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.0' }))
 
-      expect(getDefault('gated_field')).toBeNull()
+      expect(getDefault('gated_field')).toBe('preset')
     })
 
     it('keeps the default once minRuntimeVersion satisfies the requirement', () => {
@@ -250,10 +250,10 @@ describe('useSchemaHelpers', () => {
       expect(getDefault('gated_field')).toBe('preset')
     })
 
-    it("skips a nested field's default when it inherits a lock from its container", () => {
+    it("keeps a nested field's default even when it inherits a lock from its container", () => {
       const { getDefault } = useSchemaHelpers(schema, () => ({ minRuntimeVersion: '2.0' }))
 
-      expect(getDefault('gated_container.nested')).toBeNull()
+      expect(getDefault('gated_container.nested')).toBe('nested-preset')
     })
   })
 })

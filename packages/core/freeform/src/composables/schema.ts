@@ -217,10 +217,10 @@ export function useSchemaHelpers(
       return resolveEmptyValue()
     }
 
-    // Use explicit default if provided — unless this field is version-locked,
-    // in which case the default names a value that doesn't exist at the
-    // configured runtime version and shouldn't be silently initialized.
-    if (schema.default !== undefined && !getFieldVersionInfo(path)) {
+    // Use explicit default if provided. A version-locked field keeps its
+    // default too — the field itself is already disabled/read-only, so
+    // there's no separate value to hide.
+    if (schema.default !== undefined) {
       return schema.default
     }
 
