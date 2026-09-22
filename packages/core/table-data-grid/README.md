@@ -119,7 +119,7 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
 | `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
 | `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that reloads the current result. |
-| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort and page size. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
+| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort, page size, and optional content-height sizing. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
 
@@ -168,6 +168,12 @@ set `mode="unpaginated"`. The fetcher receives no page size, cursor, sort, or
 other pagination values, and its complete result is passed to AG Grid's internal
 client-side row model. Changing `refreshKey` or the fetcher starts one new
 request; scrolling through the result does not call the fetcher again.
+
+For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
+leave the host height unconstrained. The grid fits its header and all returned
+rows, retains horizontal scrolling, and resizes when the result changes. This
+option defaults to `false` and is ignored in infinite mode. Otherwise, give the
+host a height and the grid scrolls within it.
 
 ```vue
 <TableDataGrid
