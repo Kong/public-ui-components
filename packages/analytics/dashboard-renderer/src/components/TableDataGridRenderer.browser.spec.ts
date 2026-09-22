@@ -23,7 +23,10 @@ const result: ExploreResultV4 = {
 
 let container: HTMLDivElement
 
-afterEach(() => {
+afterEach(async () => {
+  if (document.fullscreenElement) {
+    await document.exitFullscreen()
+  }
   vi.restoreAllMocks()
   container?.remove()
 })
@@ -267,6 +270,65 @@ describe('TableDataGridRenderer grid integration', () => {
     const visibleElement = document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2)
     expect(visibleElement !== null && tooltip.contains(visibleElement)).toBe(true)
     expect(document.querySelector('a[href="https://example.com/services/service-2"]')).not.toBeNull()
+  })
+
+  it('keeps long entity tooltips visible and interactive inside native fullscreen', async () => {
+    const name = `app_${'c0bec4c0-76bd-4908-92c8-ea5f488fd0a1'.repeat(4)}`
+    const { wrapper } = mountRenderer({ data: {
+      ...result,
+      data: result.data.slice(0, 2),
+      meta: { ...result.meta, display: { gateway_service: { 'service-1': { name: 'Short name' }, 'service-2': { name } } } },
+    } })
+    await expect.poll(() => cell(1, 'gateway_service').textContent).toContain(name)
+    const label = element('[row-index="1"] .entity-link-label')
+    const fullscreenButton = document.createElement('button')
+    fullscreenButton.textContent = 'Enter fullscreen'
+    fullscreenButton.addEventListener('click', () => {
+      void container.requestFullscreen()
+    })
+    container.append(fullscreenButton)
+
+    try {
+      await expect.poll(() => label.scrollWidth > label.clientWidth).toBe(true)
+      await page.elementLocator(label).hover()
+      await expect.poll(() => element('.popover').textContent).toContain(name)
+      await expect.element(page.elementLocator(element('.popover'))).toBeVisible()
+      expect(element('.popover').closest('.ag-cell')).toBeNull()
+
+      // Playwright's click supplies the user activation required by the native fullscreen API.
+      await page.elementLocator(fullscreenButton).click()
+      await expect.poll(() => document.fullscreenElement).toBe(container)
+      await page.elementLocator(label).hover()
+      await expect.poll(() => element('.popover').textContent).toContain(name)
+      await expect.element(page.elementLocator(element('.popover'))).toBeVisible()
+
+      const fullscreenTooltip = element('.popover')
+      expect(container.contains(fullscreenTooltip)).toBe(true)
+      const fullscreenBounds = fullscreenTooltip.getBoundingClientRect()
+      const fullscreenHit = document.elementFromPoint(
+        fullscreenBounds.left + fullscreenBounds.width / 2,
+        fullscreenBounds.top + fullscreenBounds.height / 2,
+      )
+      expect(fullscreenHit !== null && container.contains(fullscreenHit) && fullscreenTooltip.contains(fullscreenHit)).toBe(true)
+
+      await document.exitFullscreen()
+      await expect.poll(() => document.fullscreenElement).toBeNull()
+      await page.elementLocator(label).hover()
+      await expect.poll(() => element('.popover').textContent).toContain(name)
+      await expect.element(page.elementLocator(element('.popover'))).toBeVisible()
+      const normalTooltip = element('.popover')
+      const normalBounds = normalTooltip.getBoundingClientRect()
+      const normalHit = document.elementFromPoint(
+        normalBounds.left + normalBounds.width / 2,
+        normalBounds.top + normalBounds.height / 2,
+      )
+      expect(normalHit !== null && normalTooltip.contains(normalHit)).toBe(true)
+    } finally {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+      }
+      wrapper.unmount()
+    }
   })
 
   it('uses default truncation and tooltips for plain dimensions while preserving empty values', async () => {
