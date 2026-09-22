@@ -111,6 +111,7 @@ const mountRenderer = ({
   queryReady?: boolean
 } = {}) => mount(TableDataGridRenderer, {
   props: {
+    chartType: 'table',
     context,
     ...(omitHeight ? {} : { height }),
     query: queryOverride ?? query,

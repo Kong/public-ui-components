@@ -1,4 +1,7 @@
 import type { DashboardRendererContext } from '../types'
+import type useIssueQuery from '../composables/useIssueQuery'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { createTopNGridRows, type TopNGridRow } from './topn-columns'
 import type {
   AllFilters,
   AnalyticsBridge,
@@ -14,6 +17,36 @@ import type {
 
 type TableDataGridRow = Record<string, unknown>
 type StripUnknownFilters = ReturnType<typeof useDatasourceConfigStore>['stripUnknownFilters']
+type IssueQuery = ReturnType<typeof useIssueQuery>['issueQuery']
+
+type TopNTableDataGridFetcherResult = {
+  data: TopNGridRow[]
+  response: ExploreResultV4
+}
+
+/**
+ * Fetches and maps one complete Explore result for an unpaginated TopN grid.
+ *
+ * The original response is returned alongside grid rows so dashboard-renderer
+ * can preserve Explore metadata and chart lifecycle events without widening the
+ * generic TableDataGrid fetcher contract.
+ */
+export const topNTableDataGridFetcher = async ({
+  issueQuery,
+  query,
+  context,
+}: {
+  issueQuery: IssueQuery
+  query: Parameters<IssueQuery>[0]
+  context: Parameters<IssueQuery>[1]
+}): Promise<TopNTableDataGridFetcherResult> => {
+  const response = await issueQuery(query, context)
+
+  return {
+    data: createTopNGridRows(response),
+    response,
+  }
+}
 
 /**
  * Converts the platform tabular response shape into rows that TableDataGrid can render.

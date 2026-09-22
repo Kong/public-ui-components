@@ -7,6 +7,7 @@ Dynamic chart component for kong analytics.
 - [Install](#install)
 - [AnalyticsChart](#AnalyticsChart)
   - [Usage Example](#usage-example-analyticschart)
+- [TopNTable (deprecated)](#topntable-deprecated)
 - [SimpleChart](#SimpleChart)
   - [Usage Example](#usage-example-simplechart)
 
@@ -326,3 +327,21 @@ export default defineComponent({
 ```ts
 import { CsvExportModal } from '@kong-ui-public/dashboard-renderer'
 ```
+
+## TopNTable (deprecated)
+
+`TopNTable` is deprecated and remains exported for existing standalone consumers.
+Its implementation and props are unchanged; removal will be handled separately.
+
+Dashboard `top_n` tiles now use `TableDataGrid` through
+[`@kong-ui-public/dashboard-renderer`](../dashboard-renderer/README.md), without
+changing dashboard definitions. For new standalone tables, use
+[`@kong-ui-public/table-data-grid`](../../core/table-data-grid/README.md).
+`TableDataGrid` accepts a fetcher and column headers, so it is not a drop-in
+replacement for `TopNTable`'s Explore response props.
+
+The internal helpers and types in [`src/utils/topn-columns.ts`](src/utils/topn-columns.ts)
+are also deprecated and retained for `TopNTable`. Dashboard TopN mapping now lives
+in dashboard-renderer, and generic cell presentation lives in table-data-grid.
+Use those components for new integrations; these helpers are not package-level
+exports. Their implementations remain unchanged until the legacy component is removed.
