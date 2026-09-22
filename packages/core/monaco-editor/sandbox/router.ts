@@ -41,6 +41,11 @@ const routes = [
     name: 'Code Lenses',
     component: () => import('./pages/CodeLensesPage.vue'),
   },
+  {
+    path: '/diff',
+    name: 'Diff',
+    component: () => import('./pages/DiffPage.vue'),
+  },
 ]
 
 export const router = createRouter({

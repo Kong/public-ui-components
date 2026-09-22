@@ -7,16 +7,32 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
 - [Usage](#usage)
   - [Install](#install)
   - [Register](#register)
-  - [MonacoEditor Component](#monacoeditor-component)
-    - [Props](#props)
-    - [v-model](#v-model)
-    - [Slots](#slots)
-    - [Usage Example](#usage-example)
-  - [MonacoEditorStatusOverlay Component](#monacoeditorstatusoverlay-component)
-    - [Props](#props-1)
-    - [Usage Example](#usage-example-1)
-  - [useMonacoEditor Composable](#usemonacoeditor-composable)
-  - [Vite Plugin](#vite-plugin)
+- [MonacoEditor Component](#monacoeditor-component)
+  - [Props](#props)
+  - [Events](#events)
+  - [v-model](#v-model)
+  - [Slots](#slots)
+  - [Usage Example](#usage-example)
+- [MonacoDiffEditor Component](#monacodiffeditor-component)
+  - [Props](#props-1)
+  - [Events](#events-1)
+  - [Slots](#slots-1)
+  - [Usage Example](#usage-example-1)
+- [MonacoEditorStatusOverlay Component](#monacoeditorstatusoverlay-component)
+  - [Props](#props-2)
+  - [Usage Example](#usage-example-2)
+- [useMonacoEditor Composable](#usemonacoeditor-composable)
+  - [Editor States](#editor-states)
+  - [Example with Custom Actions](#example-with-custom-actions)
+  - [Example with Keyboard Commands](#example-with-keyboard-commands)
+- [useMonacoDiffEditor Composable](#usemonacodiffeditor-composable)
+- [Vite Plugin](#vite-plugin)
+- [API Reference](#api-reference)
+  - [Exported Components](#exported-components)
+  - [Exported Composables](#exported-composables)
+  - [Common Monaco Commands](#common-monaco-commands)
+  - [Quick Reference: Toolbar Configuration](#quick-reference-toolbar-configuration)
+  - [Tips \& Best Practices](#tips--best-practices)
 
 ## Features
 
@@ -32,6 +48,7 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
 - Loading and empty states with customizable slots
 - Composable API for advanced use cases
 - Vite plugin for optimized builds
+- Read-only, inline (unified) diff view via `MonacoDiffEditor`
 
 ## Requirements
 
@@ -548,6 +565,136 @@ const isDark = ref(false)
 </style>
 ```
 
+## MonacoDiffEditor Component
+
+Renders Monaco's inline diff view - the original and modified content in a single column, with red/green line markers - styled with Kong design tokens. This component is a diff **viewer**, not an editable comparison tool.
+
+### Props
+
+#### `original`
+
+- type: `string`
+- required: `true`
+
+The original content shown in the diff. An empty string (`original=""`) is valid and diffs against "everything is new" - only `undefined` is not accepted, since the prop is required.
+
+#### `modified`
+
+- type: `string`
+- required: `true`
+
+The modified content shown in the diff.
+
+#### `appearance`
+
+- type: `'embedded' | 'standalone'`
+- required: `false`
+- default: `'embedded'`
+
+Same meaning as [`MonacoEditor`'s `appearance` prop](#appearance).
+
+#### `theme`
+
+- type: `'light' | 'dark'`
+- required: `false`
+- default: `'light'`
+
+The theme of the diff editor instance.
+
+> [!NOTE]
+> Monaco's standalone theme is a **global**, page-wide setting. If a `MonacoEditor` and a `MonacoDiffEditor` with different `theme` values are both mounted, whichever is created last wins. Force a remount on theme changes with `:key`, the same way the existing `MonacoEditor` consumers in this repo do (`:key="activeColorMode"`).
+
+#### `language`
+
+- type: `string`
+- required: `false`
+- default: `'markdown'`
+
+The programming language for syntax highlighting, applied to both sides.
+
+#### `options`
+
+- type: `Partial<editor.IStandaloneDiffEditorConstructionOptions>`
+- required: `false`
+- default: `undefined`
+
+Additional Monaco diff editor options. See [Monaco's diff editor options](https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IDiffEditorBaseOptions.html) for the full list. Notable defaults set by this component:
+
+| Option | Default | Notes |
+| --- | --- | --- |
+| `renderSideBySide` | `false` | The inline/unified view. Pass `true` to opt into Monaco's default side-by-side view instead. |
+| `readOnly` | `true` | Both sides are read-only. |
+| `ignoreTrimWhitespace` | `false` | Monaco's own default is `true`, which silently hides whitespace-only changes. |
+| `renderIndicators` | `true` | The `+`/`-` gutter glyphs. |
+| `renderOverviewRuler` | `false` | Monaco's diff overview ruler paints from its **theme colours directly to a canvas** - it cannot be restyled with the `--vscode-*` CSS variables this package uses elsewhere, so it is disabled by default rather than shown in the wrong palette. |
+| `renderGutterMenu` | `false` | The hunk/revert menu - out of scope for a read-only viewer. |
+| `diffCodeLens` | `false` | Monaco's own default. See the warning below. |
+
+> [!WARNING]
+> Code lenses are disabled inside a diff editor unless you explicitly pass `options: { diffCodeLens: true }`. This means this package's own code lens providers (`collectCodeLensProviders`, etc.) render nothing when registered against a `MonacoDiffEditor`'s models.
+
+#### `loading`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Same meaning as [`MonacoEditor`'s `loading` prop](#loading).
+
+#### `showLoadingState`
+
+- type: `boolean`
+- required: `false`
+- default: `true`
+
+Controls whether the loading state overlay is rendered.
+
+### Events
+
+#### `ready`
+
+Emitted when the Monaco diff editor instance has finished initializing.
+
+**Payload:**
+
+- `diffEditor`: The Monaco `IStandaloneDiffEditor` instance. Use `diffEditor.getOriginalEditor()` / `diffEditor.getModifiedEditor()` to reach either side's `IStandaloneCodeEditor`, or `diffEditor.goToDiff('next' | 'previous')` / `diffEditor.onDidUpdateDiff` / `diffEditor.getLineChanges()` to build custom diff navigation - there is no built-in next/previous change control in this release.
+
+### Slots
+
+#### `state-loading`
+
+Slot for customizing the loading state overlay. Receives `isLoading` as a slot prop. See [`MonacoEditor`'s `state-loading` slot](#state-loading) for the same pattern.
+
+### Usage Example
+
+```vue
+<template>
+  <div class="diff-wrapper">
+    <MonacoDiffEditor
+      :original="deployedConfig"
+      :modified="pendingConfig"
+      language="yaml"
+      appearance="standalone"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MonacoDiffEditor } from '@kong-ui-public/monaco-editor'
+
+const deployedConfig = ref('name: my-service\nversion: 1.0.0\n')
+const pendingConfig = ref('name: my-service\nversion: 1.1.0\n')
+</script>
+
+<style scoped>
+.diff-wrapper {
+  height: 500px;
+  width: 100%;
+}
+</style>
+```
+
 ## MonacoEditorStatusOverlay Component
 
 The `MonacoEditorStatusOverlay` component displays a centered overlay message within the Monaco Editor, typically used for status messages like loading, empty states, or error messages.
@@ -769,6 +916,39 @@ function showSearchWidget() {
 }
 ```
 
+## useMonacoDiffEditor Composable
+
+For advanced use cases, you can use the `useMonacoDiffEditor` composable directly. It returns a smaller surface than `useMonacoEditor`, as read-only:
+
+```typescript
+import { ref } from 'vue'
+import { useMonacoDiffEditor } from '@kong-ui-public/monaco-editor'
+
+const editorRef = ref<HTMLElement | null>(null)
+const originalRef = ref('name: my-service\nversion: 1.0.0\n')
+const modifiedRef = ref('name: my-service\nversion: 1.1.0\n')
+
+const monacoDiffEditor = useMonacoDiffEditor(editorRef, {
+  language: 'yaml',
+  original: originalRef,
+  modified: modifiedRef,
+  theme: 'light',
+})
+
+// Access editor states
+console.log(monacoDiffEditor.editorStates.currentLanguage) // e.g. 'yaml'
+
+// Access diff editor methods
+monacoDiffEditor.setLanguage('json')
+
+// Diff navigation and change detection are not wrapped by this composable -
+// reach for the underlying Monaco API via the exposed `diffEditor` ref instead
+monacoDiffEditor.diffEditor.value?.goToDiff('next')
+monacoDiffEditor.diffEditor.value?.onDidUpdateDiff(() => {
+  console.log(monacoDiffEditor.diffEditor.value?.getLineChanges())
+})
+```
+
 ## Vite Plugin
 
 This package includes a Vite plugin for optimized builds. The plugin reduces bundle size by allowing you to selectively include only the languages and features you need.
@@ -800,6 +980,7 @@ For more details on configuration options, see the [Vite Plugin README](https://
 ```typescript
 import {
   MonacoEditor,              // Main editor component
+  MonacoDiffEditor,          // Read-only, inline diff viewer component
   MonacoEditorStatusOverlay, // Status overlay component for loading/empty states
 } from '@kong-ui-public/monaco-editor'
 ```
@@ -809,6 +990,7 @@ import {
 ```typescript
 import {
   useMonacoEditor,           // Core editor composable
+  useMonacoDiffEditor,       // Core diff editor composable
 } from '@kong-ui-public/monaco-editor'
 ```
 
