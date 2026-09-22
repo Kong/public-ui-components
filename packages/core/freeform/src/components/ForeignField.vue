@@ -6,6 +6,7 @@
     :data-1p-ignore="is1pIgnore"
     :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
+    :disabled="isDisabled"
     :error="error"
     :error-message="errorMessage"
     :help="help"
@@ -14,12 +15,18 @@
     @update:model-value="handleUpdate"
   >
     <template
-      v-if="fieldAttrs.labelAttributes?.info"
+      v-if="fieldAttrs.labelAttributes?.info || versionInfo"
       #label-tooltip
     >
       <slot name="tooltip">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="fieldAttrs.labelAttributes.info" />
+        <p
+          v-if="versionInfo"
+          class="ff-version-compatibility-note"
+        >
+          {{ versionInfo.tooltip }}
+        </p>
+        <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+        <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
       </slot>
     </template>
   </EnhancedInput>
@@ -59,13 +66,15 @@ const emit = defineEmits<{
   'update:modelValue': [value: ForeignFieldValue]
 }>()
 
-const { value: fieldValue, hide, ...field } = useField<ForeignFieldValue, ForeignFieldSchema>(toRef(() => name))
+const { value: fieldValue, hide, versionInfo, ...field } = useField<ForeignFieldValue, ForeignFieldSchema>(toRef(() => name))
 
 if (field.error) {
   throw new Error(field.error.message)
 }
 
 const fieldAttrs = useFieldAttrs(field.path, toRef({ ...props, ...attrs }))
+
+const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!versionInfo?.value)
 const initialValue = fieldValue!.value ? fieldValue!.value.id : null
 const placeholder = computed(() => {
   if (fieldAttrs.value.placeholder) {
@@ -95,6 +104,12 @@ const is1pIgnore = computed(() => {
 .ff-foreign-field {
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

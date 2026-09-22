@@ -14,6 +14,8 @@
   >
     <KInputSwitch
       v-bind="fieldAttrs"
+      :disabled="isDisabled"
+      :disabled-tooltip-text="versionInfo?.tooltip"
       :model-value="!!(fieldValue == null ? (emptyOrDefaultValue || false) : fieldValue)"
       @update:model-value="handleUpdate"
     >
@@ -27,7 +29,7 @@
 <script setup lang="ts">
 import { KInputSwitch, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from '../composables'
-import { toRef } from 'vue'
+import { computed, toRef } from 'vue'
 import type { BaseFieldProps } from '../types'
 import useI18n from '../composables/useI18n'
 
@@ -35,15 +37,18 @@ interface SwitchFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
   enabledText?: string
   disabledText?: string
+  disabled?: boolean
 }
 
 const { i18n: { t } } = useI18n()
 
 const { name, enabledText, disabledText, ...props } = defineProps<SwitchFieldProps>()
-const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))
+const { value: fieldValue, hide, emptyOrDefaultValue, versionInfo, ...field } = useField<boolean>(toRef(() => name))
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
+
+const isDisabled = computed(() => !!props.disabled || !!versionInfo?.value)
 
 const handleUpdate = (v: boolean) => {
   fieldValue!.value = v
