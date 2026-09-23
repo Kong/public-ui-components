@@ -402,6 +402,39 @@ describe('useFetchInfinite', () => {
     expect(sortedBlock1.rows).toEqual(createRows('sorted-block-1', 15))
   })
 
+  it('rejects an old-sort response settled before the sort watcher runs', async () => {
+    const oldResponse = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
+    const fetcher = vi.fn()
+      .mockReturnValueOnce(oldResponse.promise)
+      .mockResolvedValue({ data: createRows('sorted', 15), hasMore: false })
+    const sort = ref<TableDataGridSort | undefined>({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    const { data, datasource } = createInfiniteFetch(fetcher, sort)
+    const activeDatasource = expectDatasource(datasource.value)
+    const successCallback = vi.fn()
+    const failCallback = vi.fn()
+    const pending = activeDatasource.getRows(createGetRowsParams({
+      startRow: 0,
+      endRow: 15,
+      successCallback,
+      failCallback,
+    })) as Promise<void>
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
+
+    oldResponse.resolve({ data: createRows('old', 15), cursor: 'old-cursor', hasMore: true })
+    sort.value = { sortColumnKey: 'id', sortColumnOrder: 'asc' }
+    await pending
+
+    expect(successCallback).not.toHaveBeenCalled()
+    expect(failCallback).toHaveBeenCalledOnce()
+    expect(data.value).toBeUndefined()
+    const sortedBlock = await getDatasourceRows(activeDatasource, {
+      startRow: 0,
+      endRow: 15,
+      sortModel: [{ colId: 'id', sort: 'asc' }],
+    })
+    expect(sortedBlock.rows).toEqual(createRows('sorted', 15))
+  })
+
   // Regression test: block 0 always bypasses the staleness check in
   // waitForPreviousBlockCompletion, so a stale generation's datasource object
   // can still be asked for block 0 well after a newer generation exists and
