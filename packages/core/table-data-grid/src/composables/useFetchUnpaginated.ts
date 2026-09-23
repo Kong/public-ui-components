@@ -42,31 +42,35 @@ export const useFetchUnpaginated = <Row extends object = TableDataGridRow>({
     }
 
     const requestId = ++latestRequestId
+    const requestFetcher = fetcher.value
+    const requestResetKey = resetKey?.value
+    const isCurrent = () => requestId === latestRequestId
+      && requestFetcher === fetcher.value
+      && requestResetKey === resetKey?.value
     isFetching.value = true
     error.value = undefined
 
     try {
-      const result = await fetcher.value({ mode: 'unpaginated' })
+      const result = await requestFetcher({ mode: 'unpaginated' })
 
-      if (requestId !== latestRequestId) {
+      if (!isCurrent()) {
         return
       }
 
       data.value = result.data
     } catch (fetchError) {
-      if (requestId === latestRequestId) {
+      if (isCurrent()) {
         error.value = fetchError
       }
     } finally {
-      if (requestId === latestRequestId) {
+      if (isCurrent()) {
         isFetching.value = false
       }
     }
   }
 
   const invalidate = () => {
-    // Invalidate the current request synchronously so a promise settled in the
-    // same turn cannot install rows from the old query context.
+    // Invalidate the current request before starting its replacement.
     latestRequestId += 1
     isFetching.value = true
     error.value = undefined
@@ -89,7 +93,6 @@ export const useFetchUnpaginated = <Row extends object = TableDataGridRow>({
       fetcher,
     ],
     invalidate,
-    { flush: 'sync' },
   )
   void fetchRows()
 
