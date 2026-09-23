@@ -31,18 +31,31 @@ afterEach(async () => {
   container?.remove()
 })
 
-const mountRenderer = ({ data = result, chartOptions }: { data?: ExploreResultV4, chartOptions?: Omit<TopNTableOptions, 'type'> } = {}) => {
+const mountRenderer = ({
+  data = result,
+  chartOptions,
+  firstQueryResponse,
+  refreshInterval = 0,
+}: {
+  data?: ExploreResultV4
+  chartOptions?: Omit<TopNTableOptions, 'type'>
+  firstQueryResponse?: Promise<ExploreResultV4>
+  refreshInterval?: number
+} = {}) => {
   setupPiniaTestStore()
   container = document.createElement('div')
   document.body.append(container)
   const queryFn = vi.fn().mockResolvedValue(data)
+  if (firstQueryResponse) {
+    queryFn.mockReturnValueOnce(firstQueryResponse)
+  }
   const chartData = vi.fn()
   const queryComplete = vi.fn()
   const wrapper = mount(TableDataGridRenderer, {
     attachTo: container,
     props: {
       chartType: 'top_n',
-      context: { filters: [], tz: 'UTC', editable: false, refreshInterval: 0 },
+      context: { filters: [], tz: 'UTC', editable: false, refreshInterval },
       query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'], limit: 40 },
       queryReady: true, refreshCounter: 0, height: 280,
       chartOptions: { type: 'top_n', ...(chartOptions ?? {
@@ -85,6 +98,25 @@ const expectOverflowTooltip = async (label: HTMLElement, name: string) => {
 }
 
 describe('TableDataGridRenderer grid integration', () => {
+  it('replaces an in-flight TopN query on interval refresh', async () => {
+    let resolveFirst!: (data: ExploreResultV4) => void
+    const firstQueryResponse = new Promise<ExploreResultV4>((resolve) => {
+      resolveFirst = resolve
+    })
+    const { wrapper, queryFn, chartData } = mountRenderer({ firstQueryResponse, refreshInterval: 200 })
+
+    await expect.poll(() => queryFn.mock.calls.length).toBeGreaterThan(1)
+    expect(queryFn.mock.calls[0][1].signal.aborted).toBe(true)
+    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
+
+    resolveFirst({ ...result, data: result.data.slice(1) })
+    await flushPromises()
+    expect(cell(0, 'gateway_service').textContent).toContain('Service 1')
+    expect(chartData).toHaveBeenCalledWith(result)
+    expect(chartData.mock.calls.every(([data]) => data === result)).toBe(true)
+    wrapper.unmount()
+  })
+
   it.each([
     { name: 'fetches the expanded export result', increaseCsvExportLimit: undefined },
     { name: 'reuses the loaded result when limit increases are disabled', increaseCsvExportLimit: false },
