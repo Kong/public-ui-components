@@ -1,13 +1,35 @@
 import type {
   AllAggregations,
   AnalyticsExploreRecord,
+  ColumnIconSet,
   ExploreResultV4,
   TopNColumnOptions,
 } from '@kong-ui-public/analytics-utilities'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import type { IntlShapeEx } from '@kong-ui-public/i18n'
 import type english from '../locales/en.json'
-import type { TableDataGridHeader } from '@kong-ui-public/table-data-grid'
+import type { TableDataGridHeader, TableDataGridIconMapping } from '@kong-ui-public/table-data-grid'
+import type { Component } from 'vue'
+import {
+  AmazonBedrockIcon,
+  AnthropicIcon,
+  AzureIcon,
+  CerebrasIcon,
+  CohereIcon,
+  DatabricksIcon,
+  DeepseekIcon,
+  GeminiIcon,
+  GoogleVertexIcon,
+  GrokIcon,
+  HuggingFaceIcon,
+  KimiIcon,
+  MetaLlamaIcon,
+  MistralIcon,
+  NvidiaIcon,
+  OllamaIcon,
+  OpenAiIcon,
+  VllmIcon,
+} from '@kong/icons'
 
 export type TopNColumnOptionsMap = Record<string, TopNColumnOptions>
 
@@ -33,6 +55,35 @@ export type TopNPresentation = {
 }
 
 const MAX_DIMENSIONS = 3
+
+const aiProviderIcons: Readonly<Record<string, Component>> = {
+  anthropic: AnthropicIcon,
+  azure: AzureIcon,
+  bedrock: AmazonBedrockIcon,
+  cerebras: CerebrasIcon,
+  cohere: CohereIcon,
+  databricks: DatabricksIcon,
+  deepseek: DeepseekIcon,
+  gemini: GeminiIcon,
+  huggingface: HuggingFaceIcon,
+  llama2: MetaLlamaIcon,
+  mistral: MistralIcon,
+  moonshot: KimiIcon,
+  nvidia: NvidiaIcon,
+  ollama: OllamaIcon,
+  openai: OpenAiIcon,
+  vertex: GoogleVertexIcon,
+  vllm: VllmIcon,
+  xai: GrokIcon,
+}
+
+// Provider ids match case-insensitively and exactly, as the legacy TopN table did.
+const iconSetMappings: Readonly<Record<ColumnIconSet, readonly TableDataGridIconMapping[]>> = {
+  ai_provider: Object.entries(aiProviderIcons).map(([id, icon]) => ({
+    icon,
+    pattern: new RegExp(`^${id}$`, 'i'),
+  })),
+}
 
 /**
  * Prefer an exact option key, falling back to case-insensitive dashboard keys.
@@ -74,6 +125,9 @@ export const toNumber = (value: unknown): number | null => {
 
   return Number.isFinite(num) ? num : null
 }
+
+const getIconMappings = (iconSet: ColumnIconSet | undefined): TableDataGridIconMapping[] | undefined =>
+  iconSet ? [...iconSetMappings[iconSet]] : undefined
 
 const isNoSuffixMetric = (unit: string): boolean =>
   unit.toLocaleLowerCase().endsWith('count')
@@ -213,6 +267,7 @@ export const createTopNPresentation = ({
     ),
     type: 'dimension',
     valueFormatter: (_value, row) => getDimension(row, key).label,
+    icons: getIconMappings(getColumnOptions(columnOptions, key)?.icon_set),
     sortable: false,
   }))
 

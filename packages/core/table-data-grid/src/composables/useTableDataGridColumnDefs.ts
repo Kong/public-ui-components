@@ -20,6 +20,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   mode,
   rows,
   locale,
+  tooltipTarget,
 }: {
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   slots: Slots
@@ -27,6 +28,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   mode?: 'infinite' | 'unpaginated'
   rows?: Readonly<Ref<readonly object[] | undefined>>
   locale?: Readonly<Ref<string>>
+  tooltipTarget?: Readonly<Ref<string | HTMLElement>>
 }) => {
   const activeMode = mode ?? 'infinite'
   const warnedOptions = new Set<string>()
@@ -85,7 +87,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
 
   // AG Grid's generic passthrough object, copied onto every cell/header renderer.
   const gridContext = computed(() => ({
-    cells: { slots },
+    cells: { slots, tooltipTarget },
     presentation: {
       mode: activeMode,
       locale: locale?.value ?? 'en-US',
