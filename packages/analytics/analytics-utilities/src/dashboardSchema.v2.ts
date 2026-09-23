@@ -371,6 +371,60 @@ export const topNTableSchema = {
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
+const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions?: T) => ({
+  type: 'array',
+  description: 'A list of filters to apply to the query',
+  items: {
+    oneOf: [
+      {
+        type: 'object',
+        description: 'In filter',
+        properties: {
+          field: {
+            type: 'string',
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
+          },
+          operator: {
+            type: 'string',
+            enum: exploreFilterTypesV2,
+          },
+          value: {
+            type: 'array',
+            items: {
+              type: ['string', 'number', 'null'],
+            },
+          },
+        },
+        required: [
+          'field',
+          'operator',
+          'value',
+        ],
+        additionalProperties: false,
+      },
+      {
+        type: 'object',
+        description: 'Empty filter',
+        properties: {
+          field: {
+            type: 'string',
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
+          },
+          operator: {
+            type: 'string',
+            enum: requestFilterTypeEmptyV2,
+          },
+        },
+        required: [
+          'field',
+          'operator',
+        ],
+        additionalProperties: false,
+      },
+    ],
+  },
+} as const satisfies JSONSchema)
+
 const topTalkersColumnSchema = {
   type: 'object',
   properties: {
@@ -381,6 +435,10 @@ const topTalkersColumnSchema = {
     label: {
       type: 'string',
       description: 'Column heading, defaults to the translated dimension name.',
+    },
+    filters: {
+      ...filtersFn(),
+      description: 'Filters applied to this column only, in addition to the query filters.',
     },
   },
   required: ['dimension'],
@@ -615,60 +673,6 @@ const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) =
   items: {
     type: 'string',
     ...(dimensions ? { enum: dimensions } : {}),
-  },
-} as const satisfies JSONSchema)
-
-const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions?: T) => ({
-  type: 'array',
-  description: 'A list of filters to apply to the query',
-  items: {
-    oneOf: [
-      {
-        type: 'object',
-        description: 'In filter',
-        properties: {
-          field: {
-            type: 'string',
-            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
-          },
-          operator: {
-            type: 'string',
-            enum: exploreFilterTypesV2,
-          },
-          value: {
-            type: 'array',
-            items: {
-              type: ['string', 'number', 'null'],
-            },
-          },
-        },
-        required: [
-          'field',
-          'operator',
-          'value',
-        ],
-        additionalProperties: false,
-      },
-      {
-        type: 'object',
-        description: 'Empty filter',
-        properties: {
-          field: {
-            type: 'string',
-            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
-          },
-          operator: {
-            type: 'string',
-            enum: requestFilterTypeEmptyV2,
-          },
-        },
-        required: [
-          'field',
-          'operator',
-        ],
-        additionalProperties: false,
-      },
-    ],
   },
 } as const satisfies JSONSchema)
 

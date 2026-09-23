@@ -77,8 +77,8 @@ const hasData = computed((): boolean => {
       data-testid="top-talkers-grid"
     >
       <slot
-        v-for="column in columns"
-        :key="column.dimension"
+        v-for="(column, index) in columns"
+        :key="`${column.dimension}-${index}`"
         :column="column"
         name="column"
       >

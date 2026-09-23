@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TopTalkersGridColumn } from '@kong-ui-public/analytics-chart'
-import type { TopTalkersOptions, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
+import type { TopTalkersColumnDefinition, TopTalkersOptions, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
 import type { ChartRendererProps } from '../types'
 
 import { computed } from 'vue'
@@ -17,12 +17,18 @@ const columns = computed((): TopTalkersGridColumn[] => {
   }))
 })
 
-const queryForDimension = (dimension: string): ValidDashboardChartQuery => {
+const queryForColumn = (column: TopTalkersColumnDefinition): ValidDashboardChartQuery => {
   return {
     ...props.query,
-    dimensions: [dimension],
+    dimensions: [column.dimension],
+    // The query filters apply to every column, and the column filters narrow them further.
+    filters: [...(props.query.filters ?? []), ...(column.filters ?? [])],
   } as ValidDashboardChartQuery
 }
+
+const columnQueries = computed((): Map<TopTalkersGridColumn, ValidDashboardChartQuery> => {
+  return new Map(columns.value.map((column, index) => [column, queryForColumn(props.chartOptions.columns[index])]))
+})
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const queryForDimension = (dimension: string): ValidDashboardChartQuery => {
       <QueryDataProvider
         v-slot="{ data }"
         :context="context"
-        :query="queryForDimension(column.dimension)"
+        :query="columnQueries.get(column)!"
         :query-ready="queryReady"
         :refresh-counter="refreshCounter"
       >

@@ -60,4 +60,35 @@ describe('top_talkers schema', () => {
   it('rejects unknown column options', () => {
     expect(validateTopTalkers({ type: 'top_talkers', columns: [{ dimension: 'ai_provider', filterable: false }] })).toBe(false)
   })
+
+  it('accepts per-column filters', () => {
+    const ok = validateTopTalkers({
+      type: 'top_talkers',
+      columns: [
+        {
+          dimension: 'ai_gateway_model',
+          filters: [
+            { field: 'ai_provider', operator: 'in', value: ['openai'] },
+            { field: 'ai_gateway_consumer', operator: 'not_empty' },
+          ],
+        },
+        { dimension: 'ai_provider' },
+      ],
+    })
+
+    expect(validateTopTalkers.errors ?? []).toEqual([])
+    expect(ok).toBe(true)
+  })
+
+  it('rejects a column filter with an unknown operator', () => {
+    const column = { dimension: 'ai_gateway_model', filters: [{ field: 'ai_provider', operator: 'bogus', value: ['openai'] }] }
+
+    expect(validateTopTalkers({ type: 'top_talkers', columns: [column] })).toBe(false)
+  })
+
+  it('rejects a column filter without a field', () => {
+    const column = { dimension: 'ai_gateway_model', filters: [{ operator: 'in', value: ['openai'] }] }
+
+    expect(validateTopTalkers({ type: 'top_talkers', columns: [column] })).toBe(false)
+  })
 })

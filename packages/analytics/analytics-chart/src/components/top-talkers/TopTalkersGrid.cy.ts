@@ -114,6 +114,25 @@ describe('<TopTalkersGrid />', () => {
     })
   })
 
+  it('renders columns that share a dimension, e.g. with different per-column filters', () => {
+    const sharedColumns = [
+      { dimension: 'llm_model', label: 'OpenAI models', data: makeResult('llm_model', [['gpt-4o-mini', 1983]]) },
+      { dimension: 'llm_model', label: 'Anthropic models', data: makeResult('llm_model', [['claude-sonnet-4', 2160]]) },
+      columns[1],
+    ]
+    const labels = () => cy.get('[data-testid="top-talkers-column-label"]').then(($els) => [...$els].map((el) => el.textContent))
+
+    cy.mount(TopTalkersGrid, {
+      props: { columns: sharedColumns, sizeMetric: 'ai_request_count' },
+    }).then(({ wrapper }) => {
+      labels().should('deep.equal', ['OpenAI models', 'Anthropic models', 'Providers'])
+
+      // Keyed by dimension alone, a reorder like this one duplicated a column.
+      cy.then(() => wrapper.setProps({ columns: [...sharedColumns].reverse() }))
+      labels().should('deep.equal', ['Providers', 'Anthropic models', 'OpenAI models'])
+    })
+  })
+
   it('shows the empty state when no column has data', () => {
     cy.mount(TopTalkersGrid, {
       props: { columns: [{ dimension: 'llm_model', label: 'Models' }], sizeMetric: 'ai_request_count' },
