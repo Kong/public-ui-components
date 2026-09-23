@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="rootElement"
     class="kong-ui-public-table-data-grid"
     :class="{ 'fit-to-content': fitToContent }"
     data-testid="table-data-grid"
@@ -42,7 +43,7 @@
       :default-col-def="defaultColDef"
       :dom-layout="fitToContent ? 'autoHeight' : 'normal'"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
-      :loading="isFetching"
+      :loading="showLoadingOverlay"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
       :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
@@ -79,7 +80,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, shallowRef, toRef, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useFetchUnpaginated } from '../composables/useFetchUnpaginated'
@@ -124,6 +125,25 @@ const { t } = i18n
 const slots = useSlots()
 
 const gridApi = shallowRef<GridApi<Row>>()
+const rootElement = shallowRef<HTMLElement>()
+
+// Tooltips teleported to body are hidden while an ancestor is in native fullscreen.
+const tooltipTarget = shallowRef<string | HTMLElement>('body')
+const updateTooltipTarget = () => {
+  const fullscreenElement = document.fullscreenElement
+  tooltipTarget.value = fullscreenElement instanceof HTMLElement && fullscreenElement.contains(rootElement.value ?? null)
+    ? fullscreenElement
+    : 'body'
+}
+
+onMounted(() => {
+  updateTooltipTarget()
+  document.addEventListener('fullscreenchange', updateTooltipTarget)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', updateTooltipTarget)
+})
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
   headers: toRef(() => headers),
@@ -198,6 +218,7 @@ const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   mode,
   rows: rowData,
   slots,
+  tooltipTarget,
   initialSort: activeSort.value,
 })
 
@@ -206,6 +227,11 @@ const {
   hasData,
   state: fetchLifecycleState,
 } = useFetchState(data, fetchError, isFetching, undefined, mode === 'unpaginated')
+
+// Unpaginated refreshes keep the previous complete result visible until the replacement arrives.
+const showLoadingOverlay = computed<boolean>(() => (
+  isFetching.value && !(mode === 'unpaginated' && hasData.value)
+))
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS

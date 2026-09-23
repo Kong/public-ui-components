@@ -7,8 +7,11 @@ import {
   getThresholdType,
   toFiniteNumber,
 } from './tableDataGridPresentation'
-import { AnthropicIcon, OpenAiIcon } from '@kong/icons'
 import { describe, expect, it } from 'vitest'
+import type { Component } from 'vue'
+
+const OpenAiIcon: Component = { name: 'OpenAiIcon', render: () => null }
+const AnthropicIcon: Component = { name: 'AnthropicIcon', render: () => null }
 
 type TestRow = {
   name: string
@@ -54,19 +57,21 @@ describe('table-data-grid presentation helpers', () => {
     ])).to.equal('error')
   })
 
-  it('matches the first custom or built-in icon without mutating regexp state', () => {
+  it('matches only configured icons against the raw value without mutating regexp state', () => {
     const pattern = /openai/gi
     pattern.lastIndex = 2
 
     expect(getCellIcon({
-      displayValue: 'OpenAI',
       icons: [{ icon: OpenAiIcon, pattern }],
       rawValue: 'openai',
     })).to.equal(OpenAiIcon)
     expect(pattern.lastIndex).to.equal(2)
-    expect(getCellIcon({ displayValue: 'OPENAI', rawValue: 'openai' })).to.equal(OpenAiIcon)
+    expect(getCellIcon({ rawValue: 'openai' })).to.equal(undefined)
     expect(getCellIcon({
-      displayValue: 'OpenAI',
+      icons: [{ icon: OpenAiIcon, pattern: /^openai$/ }],
+      rawValue: 'route-1',
+    })).to.equal(undefined)
+    expect(getCellIcon({
       icons: [
         { icon: AnthropicIcon, pattern: /open/i },
         { icon: OpenAiIcon, pattern: /openai/i },
