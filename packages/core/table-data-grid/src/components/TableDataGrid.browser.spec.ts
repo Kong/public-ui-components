@@ -10,6 +10,7 @@ import type { GridApi } from 'ag-grid-community'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { mount } from '@vue/test-utils'
+import type { Component } from 'vue'
 import { Comment, h, nextTick } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
@@ -49,6 +50,8 @@ const createRows = (startIndex: number, count: number): TestRow[] => (
     }
   })
 )
+
+const TestProviderIcon: Component = { name: 'TestProviderIcon', render: () => h('svg') }
 
 const mountedContainers: HTMLElement[] = []
 
@@ -201,7 +204,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
-  it('renders unpaginated percentages, preserved bar scales, thresholds, and provider icons', async () => {
+  it('renders unpaginated percentages, preserved bar scales, thresholds, and configured icons', async () => {
     const presentationRows = [
       { ...rows[0], name: 'OpenAI', value: 25 },
       { ...rows[1], name: 'Anthropic', value: 75 },
@@ -213,7 +216,8 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     mountTestTableDataGrid({
       fetcher,
       headers: [
-        { key: 'name', label: 'Provider' },
+        { key: 'name', label: 'Provider', icons: [{ pattern: /^openai$/i, icon: TestProviderIcon }] },
+        { key: 'status', label: 'Status' },
         {
           bar: 'absolute',
           dataType: 'number',
@@ -238,6 +242,52 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     )?.style.width ?? '')).toBe(100)
     expect(element('[row-index="1"] [col-id="value"] [data-testid="table-data-grid-cell-bar"]').dataset.threshold).toBe('warning')
     await expect.element(page.elementLocator(element('[row-index="0"] [col-id="name"] [data-testid="table-data-grid-cell-icon"]'))).toBeVisible()
+    expect(cell(1, 'name').querySelector('[data-testid="table-data-grid-cell-icon"]')).toBeNull()
+    expect(document.querySelector('[col-id="status"] [data-testid="table-data-grid-cell-icon"]')).toBeNull()
+  })
+
+  it('keeps retained unpaginated rows uncovered while a refresh is pending', async () => {
+    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>()
+      .mockResolvedValueOnce({ data: rows })
+      .mockReturnValueOnce(new Promise(() => {}))
+    const table = mountTestTableDataGrid({ fetcher, headers, mode: 'unpaginated', refreshKey: 0 })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    await table.setProps({ refreshKey: 1 })
+    await waitForCallCount(() => fetcher.mock.calls.length, 2)
+    await nextTick()
+
+    expect(cell(0, 'name').textContent).toContain('Gateway service')
+    const overlay = document.querySelector<HTMLElement>('.ag-overlay-loading-wrapper')
+    expect(overlay === null || overlay.getBoundingClientRect().height === 0).toBe(true)
+  })
+
+  it('shows cell overflow tooltips inside a native fullscreen ancestor', async () => {
+    const longName = 'Long gateway service name '.repeat(10)
+    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
+      data: [{ ...rows[0], name: longName }],
+    })
+    mountTestTableDataGrid({ fetcher, headers, mode: 'unpaginated' })
+    const container = element('[data-testid="table-data-grid-test-parent"]')
+    const fullscreenButton = document.createElement('button')
+    fullscreenButton.textContent = 'Enter fullscreen'
+    fullscreenButton.addEventListener('click', () => {
+      void container.requestFullscreen()
+    })
+    container.append(fullscreenButton)
+
+    try {
+      await expect.poll(() => cell(0, 'name').textContent).toContain('Long gateway')
+      // Playwright's click supplies the user activation required by the native fullscreen API.
+      await page.elementLocator(fullscreenButton).click()
+      await expect.poll(() => document.fullscreenElement).toBe(container)
+      await expectOverflowTooltip(longName)
+      expect(container.contains(element('.popover'))).toBe(true)
+    } finally {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+      }
+    }
   })
 
   it('keeps generic adornments around custom cell slot content', async () => {
