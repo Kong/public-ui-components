@@ -410,18 +410,18 @@ describe('TableDataGridRenderer grid integration', () => {
     expect(cell(0, 'error_rate').textContent).toContain('< 0.01 %')
   })
 
-  it('keeps three dimensions and multiple metrics aligned with labels, provider icons, and thresholds', async () => {
+  it('keeps three dimensions and multiple metrics aligned with labels, opt-in provider icons, and thresholds', async () => {
     mountRenderer({
       data: {
         data: [
-          { timestamp: '', event: { ai_provider: 'provider-1', ai_model: 'gpt', status_code: '200', request_count: 10, error_rate: 20 } },
-          { timestamp: '', event: { ai_provider: 'Anthropic', ai_model: 'gpt', status_code: '200', request_count: 10, error_rate: 10 } },
+          { timestamp: '', event: { ai_provider: 'OpenAI', ai_model: 'azure', status_code: '200', request_count: 10, error_rate: 20 } },
+          { timestamp: '', event: { ai_provider: 'provider-2', ai_model: 'azure', status_code: '200', request_count: 10, error_rate: 10 } },
         ],
         meta: {
           ...result.meta,
           display: {
-            ai_provider: { 'provider-1': { name: 'OpenAI' }, Anthropic: { name: 'Translated provider' } },
-            ai_model: { gpt: { name: 'GPT' } },
+            ai_provider: { OpenAI: { name: 'OpenAI' }, 'provider-2': { name: 'Anthropic' } },
+            ai_model: { azure: { name: 'GPT' } },
             status_code: { 200: { name: '200' } },
           },
           metric_names: ['request_count', 'error_rate'],
@@ -429,17 +429,18 @@ describe('TableDataGridRenderer grid integration', () => {
         },
       },
       chartOptions: { column_options: {
-        ai_provider: { label: 'Provider' }, ai_model: { label: 'Model' }, status_code: { label: 'Status' },
+        ai_provider: { label: 'Provider', icon_set: 'ai_provider' }, ai_model: { label: 'Model' }, status_code: { label: 'Status' },
         request_count: { label: 'Requests', value: 'relative', bar: 'relative' },
         error_rate: { label: 'Errors', bar: 'max', thresholds: [{ type: 'error', value: 15 }] },
       } },
     })
     await expect.poll(headers).toEqual(['Provider', 'Model', 'Status', 'Requests', 'Errors'])
     await expect.poll(() => cell(0, 'ai_provider').textContent).toContain('OpenAI')
-    expect(cell(1, 'ai_provider').textContent).toContain('Translated provider')
-    for (const index of [0, 1]) {
-      await expect.element(page.elementLocator(element(`[row-index="${index}"] [col-id="ai_provider"] [data-testid="table-data-grid-cell-icon"]`))).toBeVisible()
-    }
+    expect(cell(1, 'ai_provider').textContent).toContain('Anthropic')
+    // Icons match the raw provider id only, and only for columns with icon_set.
+    await expect.element(page.elementLocator(element('[row-index="0"] [col-id="ai_provider"] [data-testid="table-data-grid-cell-icon"]'))).toBeVisible()
+    expect(cell(1, 'ai_provider').querySelector('[data-testid="table-data-grid-cell-icon"]')).toBeNull()
+    expect(document.querySelector('[col-id="ai_model"] [data-testid="table-data-grid-cell-icon"]')).toBeNull()
     expect(cell(0, 'ai_model').textContent).toContain('GPT')
     expect(cell(0, 'status_code').textContent).toContain('200')
     expect(cell(0, 'request_count').textContent).toContain('10')
