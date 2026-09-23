@@ -8,7 +8,7 @@ import { KSkeleton } from '@kong/kongponents'
 import composables from '../../composables'
 import TopTalkersCell from './TopTalkersCell.vue'
 
-const props = defineProps<{
+const { dimension, label, data, sizeMetric, columnOptions, isLoading } = defineProps<{
   dimension: string
   label?: string
   data?: ExploreResultV4
@@ -20,13 +20,13 @@ const props = defineProps<{
 const { i18n } = composables.useI18n()
 
 const { column } = composables.useTopTalkersData(
-  toRef(props, 'data'),
-  toRef(props, 'dimension'),
-  toRef(props, 'sizeMetric'),
-  toRef(props, 'columnOptions'),
+  toRef(() => data),
+  toRef(() => dimension),
+  toRef(() => sizeMetric),
+  toRef(() => columnOptions),
 )
 
-const heading = computed((): string => props.label || column.value.label)
+const heading = computed((): string => label || column.value.label)
 const totalLabel = computed((): string => i18n.t('topTalkers.total', { value: column.value.total }))
 </script>
 

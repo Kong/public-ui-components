@@ -3,12 +3,16 @@ import type { TopTalkersGridColumn } from '@kong-ui-public/analytics-chart'
 import type { TopTalkersColumnDefinition, TopTalkersOptions, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
 import type { ChartRendererProps } from '../types'
 
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { TopTalkersColumn, TopTalkersGrid } from '@kong-ui-public/analytics-chart'
 
 import QueryDataProvider from './QueryDataProvider.vue'
 
 const props = defineProps<ChartRendererProps<TopTalkersOptions>>()
+
+const emit = defineEmits<{
+  (e: 'query-complete'): void
+}>()
 
 const columns = computed((): TopTalkersGridColumn[] => {
   return props.chartOptions.columns.map((column) => ({
@@ -29,6 +33,19 @@ const queryForColumn = (column: TopTalkersColumnDefinition): ValidDashboardChart
 const columnQueries = computed((): Map<TopTalkersGridColumn, ValidDashboardChartQuery> => {
   return new Map(columns.value.map((column, index) => [column, queryForColumn(props.chartOptions.columns[index])]))
 })
+
+const completedColumns = new Set<TopTalkersGridColumn>()
+
+const onColumnQueryComplete = (column: TopTalkersGridColumn) => {
+  completedColumns.add(column)
+
+  if (completedColumns.size === columns.value.length) {
+    completedColumns.clear()
+    emit('query-complete')
+  }
+}
+
+watch([columnQueries, () => props.refreshCounter], () => completedColumns.clear())
 </script>
 
 <template>
@@ -44,6 +61,7 @@ const columnQueries = computed((): Map<TopTalkersGridColumn, ValidDashboardChart
         :query="columnQueries.get(column)!"
         :query-ready="queryReady"
         :refresh-counter="refreshCounter"
+        @query-complete="onColumnQueryComplete(column)"
       >
         <TopTalkersColumn
           :column-options="chartOptions.column_options"
