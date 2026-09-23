@@ -354,7 +354,7 @@ const headers: Array<TableDataGridHeader<SandboxRow>> = [
     dataType: 'number',
     key: 'requests',
     label: 'Requests',
-    minWidth: 180,
+    minWidth: 240,
     showPercentage: true,
     thresholds: [{ type: 'warning', value: 150 }],
   },
