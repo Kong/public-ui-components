@@ -40,7 +40,7 @@
       :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
-      :loading="isFetching"
+      :loading="showLoadingOverlay"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
       :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
@@ -202,6 +202,11 @@ const {
   hasData,
   state: fetchLifecycleState,
 } = useFetchState(data, fetchError, isFetching, undefined, mode === 'unpaginated')
+
+// Unpaginated refreshes keep the previous complete result visible until the replacement arrives.
+const showLoadingOverlay = computed<boolean>(() => (
+  isFetching.value && !(mode === 'unpaginated' && hasData.value)
+))
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS

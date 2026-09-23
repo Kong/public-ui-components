@@ -3,7 +3,7 @@ import type {
   TableDataGridUnpaginatedFetcher,
 } from '../types'
 import type { Ref } from 'vue'
-import { getCurrentScope, onScopeDispose, readonly, ref, shallowRef, watch } from 'vue'
+import { getCurrentScope, onScopeDispose, readonly, ref, shallowReadonly, shallowRef, watch } from 'vue'
 
 interface UseFetchUnpaginatedOptions<Row extends object = TableDataGridRow> {
   /** Public fetcher supplied by the host. */
@@ -103,7 +103,8 @@ export const useFetchUnpaginated = <Row extends object = TableDataGridRow>({
   }
 
   return {
-    data: readonly(data),
+    // AG Grid and host callbacks must receive the fetcher's row objects, not deep readonly proxies.
+    data: shallowReadonly(data),
     // The client-side row model has no AG Grid datasource. Keeping this
     // explicit lets the component bind one common fetch-result shape without
     // creating the infinite cursor machinery for this mode.
