@@ -39,14 +39,15 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
  *
  * Callers provide the public fetcher and an optional reset key, then observe
  * readonly fetch state and pass the returned datasource to AG Grid. Cursor maps,
- * block completion gates, pending counts, and stale datasource guards stay
+ * block completion gates, pending counts, and stale request guards stay
  * private to this composable so component code cannot mutate fetch lifecycle
  * state directly.
  *
  * @param fetcher Host-supplied fetcher that uses TableDataGrid's cursor-first
  * infinite mode contract.
  * @param resetKey Optional reactive invalidation key that rebuilds the
- * datasource and restarts the cursor chain.
+ * datasource and restarts the cursor chain. Sort changes reset the chain
+ * without replacing the datasource.
  * @returns Readonly datasource, first-block data, error, and fetching state
  * refs for the active AG Grid infinite datasource.
  */
@@ -60,6 +61,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const cursorMap = new Map<number, unknown>()
   const blockCompletionMap = new Map<number, BlockCompletion>()
   const latestDatasourceId = ref(0)
+  const latestRequestGeneration = ref(0)
   const datasource = shallowRef<IDatasource>()
   const data = shallowRef<Row[] | undefined>()
   const error = shallowRef<unknown>()
@@ -70,8 +72,40 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     datasourceId === latestDatasourceId.value
   )
 
+  const isLatestRequest = (datasourceId: number, requestGeneration: number): boolean => (
+    isLatestDatasource(datasourceId) && requestGeneration === latestRequestGeneration.value
+  )
+
+  const matchesActiveSort = (requestSortModel: IGetRowsParams['sortModel']): boolean => {
+    if (!sort) {
+      return true
+    }
+
+    const activeSort = sort.value
+    if (!activeSort?.sortColumnKey || !activeSort.sortColumnOrder) {
+      return requestSortModel.length === 0
+    }
+
+    return requestSortModel.length === 1
+      && requestSortModel[0].colId === activeSort.sortColumnKey
+      && requestSortModel[0].sort === activeSort.sortColumnOrder
+  }
+
   const syncIsFetching = () => {
     isFetching.value = pendingFetchCount.value > 0
+  }
+
+  const resetRequestState = () => {
+    latestRequestGeneration.value += 1
+    for (const completion of blockCompletionMap.values()) {
+      completion.resolve(false)
+    }
+    cursorMap.clear()
+    blockCompletionMap.clear()
+    data.value = undefined
+    error.value = undefined
+    pendingFetchCount.value = 0
+    syncIsFetching()
   }
 
   const markFetchStarted = () => {
@@ -123,19 +157,21 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * @param blockIndex Current AG Grid block index derived from the row range.
    * @param currentBlockCompletion Completion gate registered for the current
    * block.
-   * @param datasourceId Identifier for the datasource instance that started the
-   * request.
+   * @param datasourceId Identifier for the datasource instance that started the request.
+   * @param requestGeneration Cursor-chain generation that started the request.
    * @returns Whether the current block is ready to fetch, failed dependency
-   * gating, or became stale after a datasource reset.
+   * gating, or became stale after a request reset.
    */
   const waitForPreviousBlockCompletion = async ({
     blockIndex,
     currentBlockCompletion,
     datasourceId,
+    requestGeneration,
   }: {
     blockIndex: number
     currentBlockCompletion: BlockCompletion
     datasourceId: number
+    requestGeneration: number
   }): Promise<InfiniteBlockGateResult> => {
     if (blockIndex === 0) {
       return 'ready'
@@ -151,7 +187,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     }
 
     const previousBlockCompleted = await previousBlockCompletion.promise
-    if (!isLatestDatasource(datasourceId)) {
+    if (!isLatestRequest(datasourceId, requestGeneration)) {
       rejectBlockCompletion(blockIndex, currentBlockCompletion)
       return 'stale'
     }
@@ -259,19 +295,18 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const buildDatasource = (): IDatasource => {
     const datasourceId = latestDatasourceId.value + 1
     latestDatasourceId.value = datasourceId
-    cursorMap.clear()
-    blockCompletionMap.clear()
-    data.value = undefined
-    error.value = undefined
-    pendingFetchCount.value = 0
-    syncIsFetching()
+    resetRequestState()
 
     return {
       async getRows(getRowsParams) {
-        if (!isLatestDatasource(datasourceId)) {
+        // AG Grid can queue getRows with an old sortModel before a cache reset,
+        // then call this same datasource after the reset. Reject that block
+        // before it can join the new generation or invoke the host fetcher.
+        if (!isLatestDatasource(datasourceId) || !matchesActiveSort(getRowsParams.sortModel)) {
           getRowsParams.failCallback()
           return
         }
+        const requestGeneration = latestRequestGeneration.value
 
         // AG Grid owns block scheduling and supplies zero-based row ranges.
         // This layer converts those ranges into cursor-chain blocks before
@@ -291,10 +326,11 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           blockIndex,
           currentBlockCompletion,
           datasourceId,
+          requestGeneration,
         })
 
-        if (blockGateResult !== 'ready' || !isLatestDatasource(datasourceId)) {
-          // Complete obsolete requests without invoking the replacement fetcher.
+        if (blockGateResult !== 'ready' || !isLatestRequest(datasourceId, requestGeneration)) {
+          // Complete obsolete requests without invoking the fetcher.
           getRowsParams.failCallback()
           rejectBlockCompletion(blockIndex, currentBlockCompletion)
           return
@@ -319,9 +355,8 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             sort: sort?.value,
           })
 
-          if (!isLatestDatasource(datasourceId)) {
-            // A reset replaced the datasource while this request was in flight.
-            // Do not call callbacks on the old datasource or mutate current state.
+          if (!isLatestRequest(datasourceId, requestGeneration)) {
+            // A reset superseded this cursor chain while the request was in flight.
 
             // Signals AG Grid that this block's request has completed (as a failure).
             getRowsParams.failCallback()
@@ -338,7 +373,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             result,
           })
         } catch (fetchError) {
-          if (!isLatestDatasource(datasourceId)) {
+          if (!isLatestRequest(datasourceId, requestGeneration)) {
             // Signals AG Grid that this block's request has completed (as a failure).
             getRowsParams.failCallback()
 
@@ -353,7 +388,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             getRowsParams,
           })
         } finally {
-          if (isLatestDatasource(datasourceId)) {
+          if (isLatestRequest(datasourceId, requestGeneration)) {
             markFetchFinished()
           }
         }
@@ -375,6 +410,12 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
       resetDatasource()
     },
     { immediate: true, flush: 'sync' },
+  )
+
+  watch(
+    [() => sort?.value?.sortColumnKey, () => sort?.value?.sortColumnOrder],
+    () => resetRequestState(),
+    { flush: 'sync' },
   )
 
   return {

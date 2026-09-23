@@ -161,16 +161,13 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
+// AG Grid reloads infinite blocks on sort; the composable resets its cursor chain.
 // Presentation-only config changes must not invalidate the fetch request.
-const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
-const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
 const resetKey = computed(() => mode === 'unpaginated'
   ? [refreshKey]
   : [
     activePageSize.value,
     refreshKey,
-    sortColumnKey.value,
-    sortColumnOrder.value,
   ])
 
 const fetchResult = providedMode === 'unpaginated'
