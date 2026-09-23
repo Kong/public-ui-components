@@ -11,8 +11,8 @@ import type { TopNGridRow } from '../utils/topn-columns'
 
 /**
  * Adapt Explore queries to a grid-owned fetcher, retaining the last response during refresh.
- * Context changes cancel pending queries; only the current request may publish metadata or events.
- * Interval refresh waits for completion before scheduling the next invalidation.
+ * Replacement queries cancel pending requests; only the current request may publish metadata or events.
+ * Interval refresh replaces any query still in flight.
  *
  * @param options - Renderer inputs and lifecycle callbacks.
  * @param options.props - Reactive query, readiness, context, and refresh inputs.
@@ -44,26 +44,24 @@ export default function useTopNQuery({
     intervalRefresh.value,
   ]))
 
-  // Invalidate before the next grid render, including when readiness removes it.
-  watch(requestKey, () => {
-    generation++
-    clearRefreshTimer()
-    cancelQuery()
-  }, { flush: 'sync' })
+  watch(() => props.queryReady, (ready) => {
+    if (!ready) {
+      generation++
+      cancelQuery()
+    }
+  })
 
-  let refreshTimer: ReturnType<typeof setTimeout> | undefined
+  let refreshTimer: ReturnType<typeof setInterval> | undefined
   const clearRefreshTimer = () => {
-    clearTimeout(refreshTimer)
+    clearInterval(refreshTimer)
     refreshTimer = undefined
   }
-  const scheduleRefresh = () => {
+  watch(() => props.queryReady ? props.context.refreshInterval : 0, (interval) => {
     clearRefreshTimer()
-    const interval = props.context.refreshInterval
-    if (disposed || !props.queryReady || !interval || interval <= 0) {
-      return
+    if (interval && interval > 0) {
+      refreshTimer = setInterval(() => intervalRefresh.value++, interval)
     }
-    refreshTimer = setTimeout(() => intervalRefresh.value++, interval)
-  }
+  }, { immediate: true })
 
   const fetcher = computed<TableDataGridUnpaginatedFetcher<TopNGridRow>>(() => {
     const key = requestKey.value
@@ -74,7 +72,6 @@ export default function useTopNQuery({
       const current = ++generation
       const isCurrent = () => !disposed && current === generation && key === requestKey.value
       queryError.value = null
-      clearRefreshTimer()
 
       try {
         const result = await topNTableDataGridFetcher({
@@ -96,7 +93,6 @@ export default function useTopNQuery({
       } finally {
         if (isCurrent()) {
           queryComplete()
-          scheduleRefresh()
         }
       }
     }

@@ -90,6 +90,7 @@ describe('useTopNQuery', () => {
     const request = test.fetch().catch(() => undefined)
     await flushPromises()
     test.props.queryReady = false
+    await flushPromises()
     expect(test.queryFn.mock.calls[0][1].signal.aborted).toBe(true)
     pending.resolve(response('old'))
     await request
@@ -129,27 +130,25 @@ describe('useTopNQuery', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  it('waits for a slow query to settle before scheduling interval refresh', async () => {
+  it('lets an interval refresh replace a slow query', async () => {
     vi.useFakeTimers()
     const pending = deferred()
-    const test = setup(vi.fn().mockReturnValue(pending.promise))
+    const test = setup(vi.fn().mockReturnValueOnce(pending.promise).mockResolvedValue(response('new')))
     test.props.context.refreshInterval = 1000
-    const request = test.fetch()
-    await vi.advanceTimersByTimeAsync(3000)
-    expect(test.queryFn.mock.calls[0][1].signal.aborted).toBe(false)
-    expect(test.chartData).not.toHaveBeenCalled()
+    const request = test.fetch().catch(() => undefined)
+    const firstFetcher = test.wrapper.vm.fetcher
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(test.wrapper.vm.fetcher).not.toBe(firstFetcher)
+    await test.fetch()
+    expect(test.queryFn.mock.calls[0][1].signal.aborted).toBe(true)
+    expect(test.chartData).toHaveBeenCalledExactlyOnceWith(response('new'))
     pending.resolve(response('slow'))
     await request
-    const settledFetcher = test.wrapper.vm.fetcher
-    await vi.advanceTimersByTimeAsync(999)
-    expect(test.wrapper.vm.fetcher).toBe(settledFetcher)
-    await vi.advanceTimersByTimeAsync(1)
-    expect(test.wrapper.vm.fetcher).not.toBe(settledFetcher)
-    expect(test.chartData).toHaveBeenCalledExactlyOnceWith(response('slow'))
+    expect(test.chartData).toHaveBeenCalledExactlyOnceWith(response('new'))
     test.wrapper.unmount()
   })
 
-  it('clears the refresh timer while not ready and resumes after the next completed load', async () => {
+  it('pauses interval refresh while not ready and resumes when ready', async () => {
     vi.useFakeTimers()
     const test = setup()
     test.props.context.refreshInterval = 1000
@@ -159,7 +158,7 @@ describe('useTopNQuery', () => {
     await vi.advanceTimersByTimeAsync(2000)
     expect(test.wrapper.vm.fetcher).toBe(notReadyFetcher)
     test.props.queryReady = true
-    await test.fetch()
+    await flushPromises()
     const resumedFetcher = test.wrapper.vm.fetcher
     await vi.advanceTimersByTimeAsync(999)
     expect(test.wrapper.vm.fetcher).toBe(resumedFetcher)
@@ -168,21 +167,21 @@ describe('useTopNQuery', () => {
     test.wrapper.unmount()
   })
 
-  it('uses the changed interval after the replacement load and stops when disabled', async () => {
+  it('uses interval changes without waiting for another query and stops when disabled', async () => {
     vi.useFakeTimers()
     const test = setup()
     test.props.context.refreshInterval = 1000
     await test.fetch()
     await vi.advanceTimersByTimeAsync(500)
     test.props.context.refreshInterval = 2000
-    await test.fetch()
+    await flushPromises()
     const replacementFetcher = test.wrapper.vm.fetcher
     await vi.advanceTimersByTimeAsync(1999)
     expect(test.wrapper.vm.fetcher).toBe(replacementFetcher)
     await vi.advanceTimersByTimeAsync(1)
     expect(test.wrapper.vm.fetcher).not.toBe(replacementFetcher)
     test.props.context.refreshInterval = 0
-    await test.fetch()
+    await flushPromises()
     const disabledFetcher = test.wrapper.vm.fetcher
     await vi.advanceTimersByTimeAsync(3000)
     expect(test.wrapper.vm.fetcher).toBe(disabledFetcher)
