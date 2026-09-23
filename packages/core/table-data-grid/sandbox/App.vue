@@ -4,7 +4,7 @@
     <header class="sandbox-header">
       <div>
         <h1>TableDataGrid</h1>
-        <p>Cursor-first infinite loading playground with refresh, states, and fetch history.</p>
+        <p>Compare infinite loading and complete results with refresh, states, and fetch history.</p>
       </div>
 
       <div class="sandbox-header-actions">
@@ -25,14 +25,20 @@
 
     <main class="sandbox-main">
       <section class="table-section">
+        <div class="table-section-toolbar">
+          <p>{{ fetchMode === 'unpaginated' ? 'All rows load once. Sorting and scrolling do not fetch again.' : 'Scrolling and sorting fetch rows in blocks.' }}</p>
+          <KSegmentedControl
+            aria-label="Fetcher mode"
+            class="fetch-mode-control"
+            :model-value="fetchMode"
+            :options="fetchModeOptions"
+            @update:model-value="handleFetchModeChange"
+          />
+        </div>
+
         <TableDataGrid
+          v-bind="tableProps"
           :key="tableResetKey"
-          :error="showErrorState"
-          :fetcher="fetchRows"
-          :headers="headers"
-          :page-size="pageSize"
-          :refresh-key="refreshKey"
-          :table-config="tableConfig"
           @cell:click="handleCellClick"
           @grid:ready="handleGridReady"
           @row:click="handleRowClick"
@@ -77,35 +83,6 @@
         </TableDataGrid>
       </section>
 
-      <section class="unpaginated-section">
-        <div class="unpaginated-header">
-          <div>
-            <h2>Unpaginated rows</h2>
-            <p>Loads all 40 rows once. Click a column header to sort without increasing the fetch count.</p>
-          </div>
-          <KButton
-            appearance="secondary"
-            size="small"
-            @click="refreshUnpaginated"
-          >
-            Refresh unpaginated
-          </KButton>
-        </div>
-        <p class="unpaginated-fetch-count">
-          Fetch count: {{ unpaginatedFetchCount }}
-        </p>
-        <div class="unpaginated-table">
-          <TableDataGrid
-            :key="tableResetKey"
-            :fetcher="fetchUnpaginatedRows"
-            :headers="unpaginatedHeaders"
-            mode="unpaginated"
-            :refresh-key="unpaginatedRefreshKey"
-            @sort="handleUnpaginatedSort"
-          />
-        </div>
-      </section>
-
       <section class="event-log-section">
         <div class="event-log-header">
           <h2>Event log</h2>
@@ -147,7 +124,7 @@
               </select>
             </label>
 
-            <label>
+            <label v-if="fetchMode === 'infinite'">
               Page size
               <select
                 :value="String(pageSize)"
@@ -231,15 +208,15 @@
                     <dt>Request</dt>
                     <dd>{{ entry.fetchCount }}</dd>
                   </div>
-                  <div>
+                  <div v-if="entry.request.mode === 'infinite'">
                     <dt>Page size</dt>
                     <dd>{{ entry.request.pageSize }}</dd>
                   </div>
-                  <div>
+                  <div v-if="entry.request.mode === 'infinite'">
                     <dt>Request cursor</dt>
                     <dd>{{ formatCursor(entry.request.cursor) }}</dd>
                   </div>
-                  <div>
+                  <div v-if="entry.request.mode === 'infinite'">
                     <dt>Response cursor</dt>
                     <dd>{{ formatCursor(entry.responseCursor) }}</dd>
                   </div>
@@ -286,13 +263,15 @@ import type {
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridInfiniteFetcherParams,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
   TableDataGridUnpaginatedFetcher,
+  TableDataGridUnpaginatedFetcherParams,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
-import type { BadgeAppearance } from '@kong/kongponents'
-import { computed, ref } from 'vue'
+import type { BadgeAppearance, SegmentedControlOption } from '@kong/kongponents'
+import { computed, ref, shallowRef } from 'vue'
 import { TableDataGrid } from '../src'
 
 type SandboxRow = {
@@ -307,12 +286,14 @@ type SandboxRow = {
 }
 
 type DatasetMode = 'generated' | 'empty'
+type FetchMode = 'infinite' | 'unpaginated'
 type SandboxSectionId = 'tableOptions' | 'fetchDebug' | 'headers'
+type FetchRequest = TableDataGridInfiniteFetcherParams | TableDataGridUnpaginatedFetcherParams
 
 type FetchHistoryEntry = {
   fetchCount: number
   id: string
-  request: TableDataGridInfiniteFetcherParams
+  request: FetchRequest
   responseCursor?: unknown
   rowsReturned: number
   title: string
@@ -336,19 +317,23 @@ const datasetModeOptions: Array<{ label: string, value: DatasetMode }> = [
 ]
 const pageSizeOptions = [10, 25, 50, 100]
 const fetchDelayOptions = [0, 150, 350, 800]
+const fetchModeOptions: Array<SegmentedControlOption<FetchMode>> = [
+  { label: 'Infinite', value: 'infinite' },
+  { label: 'All rows', value: 'unpaginated' },
+]
 
 const pageSize = ref(defaultPageSize)
 const fetchDelayMs = ref(defaultFetchDelayMs)
 const datasetMode = ref<DatasetMode>('generated')
+const fetchMode = ref<FetchMode>('infinite')
 const showErrorState = ref(false)
 const refreshKey = ref(0)
 const tableResetKey = ref(0)
 const tableConfig = ref<TableDataGridConfig>()
 const fetchCount = ref(0)
-const unpaginatedFetchCount = ref(0)
-const unpaginatedRefreshKey = ref(0)
-const lastRequest = ref<TableDataGridInfiniteFetcherParams>()
+const lastRequest = shallowRef<FetchRequest>()
 const lastResponseCursor = ref<unknown>()
+const fetchDiagnosticsGeneration = ref(0)
 const fetchHistory = ref<FetchHistoryEntry[]>([])
 const collapsedFetchHistoryItems = ref<Record<string, boolean>>({})
 const eventLog = ref<EventLogEntry[]>([])
@@ -365,6 +350,16 @@ const headers: Array<TableDataGridHeader<SandboxRow>> = [
   { key: 'status', label: 'Status', minWidth: 140, sortable: true },
   // Rendered via the `#latency` slot below instead of the raw column value.
   { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
+  {
+    bar: 'relative',
+    dataType: 'number',
+    key: 'requests',
+    label: 'Requests',
+    minWidth: 180,
+    sortable: true,
+    showPercentage: true,
+    thresholds: [{ type: 'warning', value: 150 }],
+  },
   { key: 'region', label: 'Region', minWidth: 140 },
   // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
   { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
@@ -385,24 +380,6 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   }
 })
 
-const unpaginatedRows = generatedRows.slice(0, 40)
-const unpaginatedHeaders: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
-  { key: 'status', label: 'Status', minWidth: 140, sortable: true },
-  { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
-  {
-    bar: 'relative',
-    dataType: 'number',
-    key: 'requests',
-    label: 'Requests',
-    minWidth: 180,
-    sortable: true,
-    showPercentage: true,
-    thresholds: [{ type: 'warning', value: 150 }],
-  },
-  { key: 'region', label: 'Region', minWidth: 140 },
-]
-
 const activeRows = computed<SandboxRow[]>(() => (
   datasetMode.value === 'empty'
     ? []
@@ -413,9 +390,10 @@ const fetchDebug = computed(() => ({
   datasetMode: datasetMode.value,
   fetchCount: fetchCount.value,
   fetchDelayMs: fetchDelayMs.value,
+  fetchMode: fetchMode.value,
   lastRequest: lastRequest.value,
   lastResponseCursor: lastResponseCursor.value,
-  pageSize: pageSize.value,
+  pageSize: fetchMode.value === 'infinite' ? pageSize.value : undefined,
   refreshKey: refreshKey.value,
   showErrorState: showErrorState.value,
   tableConfig: tableConfig.value,
@@ -451,6 +429,7 @@ const logEvent = (event: string, payload: unknown) => {
 }
 
 const clearFetchHistory = () => {
+  fetchDiagnosticsGeneration.value += 1
   fetchCount.value = 0
   lastRequest.value = undefined
   lastResponseCursor.value = undefined
@@ -464,20 +443,15 @@ const refreshRows = () => {
   logEvent('refreshKey:change', { refreshKey: refreshKey.value })
 }
 
-const refreshUnpaginated = () => {
-  unpaginatedRefreshKey.value += 1
-}
-
 const resetSandbox = () => {
   pageSize.value = defaultPageSize
   fetchDelayMs.value = defaultFetchDelayMs
   datasetMode.value = 'generated'
+  fetchMode.value = 'infinite'
   showErrorState.value = false
   refreshKey.value = 0
   tableResetKey.value += 1
   tableConfig.value = undefined
-  unpaginatedFetchCount.value = 0
-  unpaginatedRefreshKey.value = 0
   clearFetchHistory()
   clearEventLog()
 }
@@ -491,18 +465,21 @@ const recordFetch = ({
   responseCursor,
   rowsReturned,
 }: {
-  request: TableDataGridInfiniteFetcherParams
+  request: FetchRequest
   responseCursor?: unknown
   rowsReturned: number
 }) => {
   const nextFetchCount = fetchCount.value + 1
+  const requestDescription = request.mode === 'infinite'
+    ? `cursor ${formatCursor(request.cursor)}`
+    : 'all rows'
   const entry: FetchHistoryEntry = {
     fetchCount: nextFetchCount,
     id: `fetch-${nextFetchCount}`,
     request,
     responseCursor,
     rowsReturned,
-    title: `Fetch ${nextFetchCount} - cursor ${formatCursor(request.cursor)}`,
+    title: `Fetch ${nextFetchCount} - ${requestDescription}`,
     time: new Date().toLocaleTimeString(),
   }
   const nextFetchHistory = [...fetchHistory.value, entry].slice(-8)
@@ -534,6 +511,7 @@ const sortRows = (rows: SandboxRow[], sort: TableDataGridSort | undefined): Sand
 }
 
 const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, sort }) => {
+  const requestGeneration = fetchDiagnosticsGeneration.value
   const request: TableDataGridInfiniteFetcherParams = {
     cursor,
     mode: 'infinite',
@@ -552,11 +530,13 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
   const hasMore = nextOffset < rows.length
   const responseCursor = hasMore ? createCursor(nextOffset) : undefined
 
-  recordFetch({
-    request,
-    responseCursor,
-    rowsReturned: data.length,
-  })
+  if (requestGeneration === fetchDiagnosticsGeneration.value) {
+    recordFetch({
+      request,
+      responseCursor,
+      rowsReturned: data.length,
+    })
+  }
 
   return {
     cursor: responseCursor,
@@ -565,13 +545,47 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
   }
 }
 
-const fetchUnpaginatedRows: TableDataGridUnpaginatedFetcher<SandboxRow> = async () => {
-  unpaginatedFetchCount.value += 1
+const fetchAllRows: TableDataGridUnpaginatedFetcher<SandboxRow> = async ({ mode }) => {
+  const requestGeneration = fetchDiagnosticsGeneration.value
+  const request: TableDataGridUnpaginatedFetcherParams = { mode }
 
-  return {
-    data: unpaginatedRows,
+  if (fetchDelayMs.value > 0) {
+    await wait(fetchDelayMs.value)
   }
+
+  const data = activeRows.value
+
+  if (requestGeneration === fetchDiagnosticsGeneration.value) {
+    recordFetch({
+      request,
+      rowsReturned: data.length,
+    })
+  }
+
+  return { data }
 }
+
+const tableProps = computed<TableDataGridProps<SandboxRow>>(() => {
+  const commonProps = {
+    error: showErrorState.value,
+    headers,
+    refreshKey: refreshKey.value,
+    tableConfig: tableConfig.value,
+  }
+
+  return fetchMode.value === 'unpaginated'
+    ? {
+      ...commonProps,
+      fetcher: fetchAllRows,
+      mode: 'unpaginated',
+    }
+    : {
+      ...commonProps,
+      fetcher: fetchRows,
+      mode: 'infinite',
+      pageSize: pageSize.value,
+    }
+})
 
 const handleState = (payload: TableDataGridStatePayload) => {
   logEvent('state', payload)
@@ -602,11 +616,7 @@ const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => 
 }
 
 const handleSort = (payload: TableDataGridSort) => {
-  logEvent('sort', payload)
-}
-
-const handleUnpaginatedSort = (payload: TableDataGridSort) => {
-  logEvent('unpaginated:sort', payload)
+  logEvent(fetchMode.value === 'unpaginated' ? 'unpaginated:sort' : 'sort', payload)
 }
 
 const handleTableConfigUpdate = (payload: TableDataGridConfig) => {
@@ -620,6 +630,18 @@ const handleActionClick = (row: SandboxRow) => {
 
 const refreshAfterControlChange = () => {
   refreshRows()
+}
+
+const handleFetchModeChange = (nextMode: FetchMode) => {
+  if (nextMode === fetchMode.value) {
+    return
+  }
+
+  fetchMode.value = nextMode
+  tableConfig.value = undefined
+  tableResetKey.value += 1
+  clearFetchHistory()
+  clearEventLog()
 }
 
 const handleDatasetModeChange = (event: Event) => {
@@ -715,6 +737,8 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 
 .table-section {
   display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-30, $kui-space-30);
   min-width: 0;
 
   :deep(.kong-ui-public-table-data-grid) {
@@ -725,46 +749,21 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   }
 }
 
-.unpaginated-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kui-space-30, $kui-space-30);
-  min-width: 0;
-}
-
-.unpaginated-header {
+.table-section-toolbar {
   align-items: center;
   display: flex;
-  gap: var(--kui-space-50, $kui-space-50);
+  flex-wrap: wrap;
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
-
-  h2,
-  p {
-    margin: 0;
-  }
-
-  h2 {
-    font-size: 16px;
-  }
 
   p {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-    margin-top: var(--kui-space-10, $kui-space-10);
+    margin: 0;
   }
-}
 
-.unpaginated-fetch-count {
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-  margin: 0;
-}
-
-.unpaginated-table {
-  min-width: 0;
-
-  :deep(.kong-ui-public-table-data-grid) {
-    height: 360px;
-    min-height: 0;
-    width: 100%;
+  .fetch-mode-control {
+    margin-left: auto;
+    width: auto;
   }
 }
 
