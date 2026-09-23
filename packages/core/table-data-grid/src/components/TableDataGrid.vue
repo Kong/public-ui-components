@@ -50,6 +50,7 @@
       :theme="gridTheme"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
+      @new-columns-loaded="reconcileGridSort"
       @row-clicked="onRowClick"
       @sort-changed="onSortChanged"
     />
@@ -236,20 +237,24 @@ if (fetchResult) {
 }
 
 // AG Grid discards a sort for columns it has not created yet, and infinite blocks
-// are rejected while its sort model differs from activeSort. Reconcile after
-// column defs reach the grid so both always converge.
-watch([gridApi, activeSort, columnDefs], ([api, sort]) => {
+// are rejected while its sort model differs from activeSort. Reconcile on every
+// active-sort change and whenever AG Grid finishes loading new columns.
+const reconcileGridSort = () => {
+  const api = gridApi.value
   if (!api || api.isDestroyed()) {
     return
   }
 
+  const sort = activeSort.value
   const sortedColumn = api.getColumnState().find(column => column.sort)
   if (sortedColumn?.colId === sort.sortColumnKey && (sortedColumn?.sort ?? undefined) === sort.sortColumnOrder) {
     return
   }
 
   applySortToGrid(api, sort)
-}, { flush: 'post' })
+}
+
+watch([gridApi, activeSort], reconcileGridSort, { flush: 'post' })
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api
