@@ -79,7 +79,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -234,6 +234,22 @@ if (fetchResult) {
     hasData,
   })
 }
+
+// AG Grid discards a sort for columns it has not created yet, and infinite blocks
+// are rejected while its sort model differs from activeSort. Reconcile after
+// column defs reach the grid so both always converge.
+watch([gridApi, activeSort, columnDefs], ([api, sort]) => {
+  if (!api || api.isDestroyed()) {
+    return
+  }
+
+  const sortedColumn = api.getColumnState().find(column => column.sort)
+  if (sortedColumn?.colId === sort.sortColumnKey && (sortedColumn?.sort ?? undefined) === sort.sortColumnOrder) {
+    return
+  }
+
+  applySortToGrid(api, sort)
+}, { flush: 'post' })
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api
