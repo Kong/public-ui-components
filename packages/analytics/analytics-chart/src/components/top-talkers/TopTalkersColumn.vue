@@ -56,6 +56,14 @@ const totalLabel = computed((): string => i18n.t('topTalkers.total', { value: co
     />
 
     <div
+      v-else-if="!column.cells.length"
+      class="top-talkers-column-empty"
+      data-testid="top-talkers-column-empty"
+    >
+      {{ i18n.t('topTalkers.defaultEmptyStateTitle') }}
+    </div>
+
+    <div
       v-else
       class="top-talkers-column-cells"
     >
@@ -94,6 +102,14 @@ const totalLabel = computed((): string => i18n.t('topTalkers.total', { value: co
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     white-space: nowrap;
+  }
+
+  &-empty {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   }
 
   &-cells {
