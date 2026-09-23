@@ -9,7 +9,7 @@ import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
-import type { EmptyValue, FormConfig, MatchMap, RenderRules } from '../types'
+import type { ChangeSource, EmptyValue, FormConfig, MatchMap, RenderRules } from '../types'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
@@ -18,7 +18,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     propsData?: ComputedRef<T>
     propsConfig?: MaybeRefOrGetter<FormConfig<T> | undefined>
     propsRenderRules?: MaybeRefOrGetter<RenderRules | undefined>
-    onChange?: (newData: T) => void
+    onChange?: (newData: T, source: ChangeSource) => void
   }) {
     const {
       schema,
@@ -54,12 +54,33 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       rules: propsRenderRules,
     })
 
+    // The source of the next `innerData` mutation the deep watcher below will
+    // observe. Starts as `'init'` since the form's first flush always
+    // follows initial hydration; the watcher resets it to `'user'` after
+    // each run, since every leaf field writes straight into `innerData` on
+    // its own — `setValue`/`markNonUserChange` are the only ones that tag
+    // their own mutation as `'init'` beforehand.
+    let nextChangeSource: ChangeSource = 'init'
+
     function setValue(newData: T) {
+      nextChangeSource = 'init'
       Object.keys(innerData).forEach((key) => {
         delete (innerData as any)[key]
       })
       keyIdMap.clear()
       Object.assign(innerData, keyIdMap.serialize(newData))
+    }
+
+    /**
+     * Runs `fn`, tagging whatever mutation it makes to `innerData` as
+     * `'init'` rather than `'user'` — for a write that isn't a genuine user
+     * edit even though it goes through the same per-field setter a user
+     * edit would (e.g. an async lookup resetting a stale reference after it
+     * fails to resolve). See `useField().setSilently`.
+     */
+    function markNonUserChange<R>(fn: () => R): R {
+      nextChangeSource = 'init'
+      return fn()
     }
 
     // True whenever the current formData came from schema defaults rather than real given data
@@ -141,9 +162,16 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return keyIdMap.deserialize(nextValue)
     }
 
-    // Emit changes when the inner data changes
+    // Emit changes when the inner data changes. `nextChangeSource` is
+    // consumed (and reset to the `'user'` default) here rather than where
+    // it's set, since this watcher — not the mutation itself — is what
+    // fires `onChange`; Vue batches all synchronous mutations from one
+    // `setValue()`/`markNonUserChange()` call into a single run of this
+    // callback, so the flag is read exactly once per logical change.
     watch(innerData, () => {
-      onChange?.(getValue())
+      const source = nextChangeSource
+      nextChangeSource = 'user'
+      onChange?.(getValue(), source)
     }, { deep: true })
 
     let hasInitialized = false
@@ -183,6 +211,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       config,
       fieldRendererRegistry,
       setValue,
+      markNonUserChange,
       useCurrentRenderRules,
       rootRenderRules,
       createComputedRenderRules,

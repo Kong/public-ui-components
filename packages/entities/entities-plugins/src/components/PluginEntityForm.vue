@@ -150,7 +150,7 @@ import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/components/CommonForm.vue'
-import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
+import type { ChangeSource, GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
@@ -933,25 +933,61 @@ const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
 // `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
 const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
 
+// Writes `source`'s keys into `target`, dropping any of `fields` that `source` no
+// longer provides (mirrors the old delete-then-merge shape, now applied to a
+// persistent object instead of a transient snapshot) — but keeps `target[key]`'s
+// *existing* reference whenever the new value is only deep-equal to it, not merely
+// assigning the new one outright.
+//
+// This matters because `Form`'s `getValue()` (`cloneDeep`) hands back a brand new
+// object/array for every key on every single emission, whether or not that key's
+// content actually changed — e.g. editing `instance_name` still produces a fresh
+// `config` clone. `PluginForm`'s dirty check (`objectsAreEqual(..., true)`) compares
+// each key with `===`, so without this, `config` would look "changed" on every
+// keystroke into an unrelated field, and stay looking changed even after the actual
+// edit is undone. Keeping the old reference when nothing inside a key truly changed
+// is what lets `formModel` and `originalModel` — updated independently below — still
+// read as equal once the edit that touched a *different* key is reverted.
+function assignFreeformKeys(target: Record<string, any>, fields: string[] | undefined, source: Record<string, any>) {
+  for (const field of fields || []) {
+    if (!(field in source)) delete target[field]
+  }
+  for (const key of Object.keys(source)) {
+    if (!(key in target) || !objectsAreEqual(target[key], source[key])) {
+      target[key] = source[key]
+    }
+  }
+}
+
 const freeformData = shallowRef<Record<string, any>>(props.record)
-const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
+const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[], source: ChangeSource = 'user') => {
   const unknownFieldStripped = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
     ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
     : value
 
   freeformData.value = unknownFieldStripped
 
-  const newModel = { ...formModel }
+  // Persist this call's freeform keys into `formModel` itself — mirroring
+  // `updateModel`'s pattern for non-freeform fields — so a later, narrower call (e.g.
+  // `Form`'s own controlled-fields-only hydration, whose `value` is pruned to
+  // `props.controlledFields` and so lacks raw record bookkeeping like `created_at`)
+  // still sees earlier keys through `formModel`, instead of silently dropping them
+  // from the next emitted `model`.
+  assignFreeformKeys(formModel, fields, unknownFieldStripped)
 
-  // remove previous freeform fields from formModel
-  for (const field of fields || []) {
-    delete newModel[field]
+  // A non-user-driven update (initial hydration from `props.record`, or an internal
+  // system-driven correction such as `ScopeEntityField`'s async lookup resetting a
+  // stale reference) must also become the new dirty-check baseline — mirroring what
+  // `updateModel` already does for non-freeform fields — otherwise `PluginForm`'s Save
+  // button reads dirty before the user has actually changed anything.
+  if (source !== 'user') {
+    assignFreeformKeys(originalModel, fields, unknownFieldStripped)
   }
 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...newModel, ...unknownFieldStripped },
+    model: { ...formModel },
     originalModel,
     data: getModel(fields),
   })
@@ -999,7 +1035,7 @@ const initFormModel = (): void => {
       // main plugin configuration
       if (freeformComponent.value) {
         // keep original config from record for freeform plugins
-        handleFreeFormUpdate(props.record)
+        handleFreeFormUpdate(props.record, undefined, 'init')
       } else {
         updateModel(props.record.config, 'config')
       }

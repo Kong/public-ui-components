@@ -10,7 +10,7 @@ import type { FormSchema, UnionFieldSchema } from '../form-schema'
 import type { MaybeRefOrGetter } from 'vue'
 
 export function useFormData<T>(name: MaybeRefOrGetter<string>) {
-  const { formData } = useFormShared()
+  const { formData, markNonUserChange } = useFormShared()
   const fieldPath = useFieldPath(name)
   const value = computed<T>({
     get: () => get(formData, utils.toArray(fieldPath.value)),
@@ -19,6 +19,16 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 
   return {
     value,
+    /**
+     * Write this field's value without it counting as a user edit for the
+     * host's dirty-checking (see `ChangeSource`). Use for a field's own
+     * system-driven correction of its value — e.g. resetting a stale
+     * reference once an async lookup confirms it no longer resolves —
+     * never for a value the user actually chose.
+     */
+    setSilently: (v: T) => markNonUserChange(() => {
+      value.value = v
+    }),
   }
 }
 
@@ -26,7 +36,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
   const { getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
-  const { value } = useFormData<TData>(name)
+  const { value, setSilently } = useFormData<TData>(name)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
@@ -61,6 +71,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     path: fieldPath,
     renderer,
     value,
+    setSilently,
     ancestors: useFieldAncestors(fieldPath),
     /**
      * Hide the field but keep its state.

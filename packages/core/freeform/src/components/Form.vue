@@ -29,7 +29,7 @@ import { useSlots, type Slot, computed, toRaw, toRef } from 'vue'
 import { EXPRESSIONS_FIELD, FIELD_RENDERERS, provideFormShared } from '../composables'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
 import Field from './Field.vue'
-import type { FormConfig, GlobalAction, RenderRules } from '../types'
+import type { ChangeSource, FormConfig, GlobalAction, RenderRules } from '../types'
 import { sortFieldsByBundles, sortFieldsByFieldNames } from '../utils'
 
 defineOptions({ name: 'SchemaForm' })
@@ -44,7 +44,7 @@ defineSlots<
 const { tag = 'form', schema, fieldsOrder, config, data, renderRules } = defineProps<Props<T>>()
 
 const emit = defineEmits<{
-  change: [value: T]
+  change: [value: T, source: ChangeSource]
   'globalAction': [name: GlobalAction, payload: any]
 }>()
 
@@ -55,7 +55,7 @@ const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue 
   propsData: computed(() => data as T),
   propsConfig: () => config as FormConfig,
   propsRenderRules: toRef(() => renderRules),
-  onChange: (value) => emit('change', value as T),
+  onChange: (value, source) => emit('change', value as T, source),
 })
 
 const childFields = computed(() => {

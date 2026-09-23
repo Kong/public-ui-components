@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import Form from '../components/Form.vue'
 import { useField } from './field'
 
 import type { FormSchema } from '../form-schema'
-import type { FormConfig } from '../types'
+import type { ChangeSource, FormConfig } from '../types'
 
 type FieldResult = Extract<ReturnType<typeof useField>, { versionInfo: unknown }>
 
@@ -14,6 +14,7 @@ function mountUseField(options: {
   name: string
   schema: FormSchema
   config?: FormConfig
+  onChange?: (value: unknown, source: ChangeSource) => void
 }): FieldResult {
   let captured: FieldResult | undefined
 
@@ -28,7 +29,7 @@ function mountUseField(options: {
     setup() {
       return () => h(
         Form,
-        { schema: options.schema, config: options.config },
+        { schema: options.schema, config: options.config, onChange: options.onChange },
         { default: () => h(Probe) },
       )
     },
@@ -69,6 +70,45 @@ describe('useField', () => {
       const field = mountUseField({ name: 'plain_field', schema, config: { minRuntimeVersion: '2.0' } })
 
       expect(field.versionInfo.value).toBeUndefined()
+    })
+  })
+
+  describe('setSilently', () => {
+    const schema: FormSchema = {
+      type: 'record',
+      fields: [{ plain_field: { type: 'string' } }],
+    }
+
+    it('writes the value like a normal assignment', () => {
+      const field = mountUseField({ name: 'plain_field', schema })
+
+      field.setSilently!('written silently')
+
+      expect(field.value.value).toBe('written silently')
+    })
+
+    it('tags the resulting `Form` change as `init` rather than `user`', async () => {
+      const onChange = vi.fn()
+      const field = mountUseField({ name: 'plain_field', schema, onChange })
+
+      onChange.mockClear() // drop the initial-hydration call
+
+      field.setSilently!('written silently')
+      await vi.waitFor(() => expect(onChange).toHaveBeenCalledTimes(1))
+
+      expect(onChange).toHaveBeenCalledWith({ plain_field: 'written silently' }, 'init')
+    })
+
+    it('is `user` for an ordinary write to `value`, for comparison', async () => {
+      const onChange = vi.fn()
+      const field = mountUseField({ name: 'plain_field', schema, onChange })
+
+      onChange.mockClear() // drop the initial-hydration call
+
+      field.value.value = 'typed by the user'
+      await vi.waitFor(() => expect(onChange).toHaveBeenCalledTimes(1))
+
+      expect(onChange).toHaveBeenCalledWith({ plain_field: 'typed by the user' }, 'user')
     })
   })
 })

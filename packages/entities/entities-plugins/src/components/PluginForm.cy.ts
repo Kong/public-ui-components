@@ -839,6 +839,52 @@ describe('<PluginForm />', () => {
       })
     })
 
+    it('should correctly handle button state - edit, freeform-rendered plugin', () => {
+      // `plugin1.config.private_network` (true) diverges from the cors schema's own
+      // default for that field (false) — a freeform plugin whose loaded config isn't
+      // just schema defaults, the exact shape that exposed the dirty-check bug where
+      // the Save button read dirty on load before any real edit.
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      interceptKMSchema()
+      interceptKMOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
+      const pluginType = 'cors'
+      const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType! }, pluginType)
+
+      cy.mount(PluginForm, {
+        props: {
+          config,
+          pluginType,
+          pluginId: plugin1.id,
+          engine: 'freeform',
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getPlugin', ...stubbedAliases]).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        // confirm this mount actually rendered via the freeform engine
+        cy.get('[data-testid^="ff-"]').should('exist')
+
+        // Save must stay disabled on load, before any edit
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
+        // enables save when a freeform-controlled field is actually edited
+        cy.getTestId('ff-instance_name').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
+
+        // disables save again once the edit is undone
+        cy.getTestId('ff-instance_name').clear()
+        cy.getTestId('ff-instance_name').type(plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+      })
+    })
+
     it('should handle error state - failed to load schema', () => {
       cy.intercept(
         {
@@ -1762,6 +1808,52 @@ describe('<PluginForm />', () => {
         // disables save when form changes are undone
         cy.get('#instance_name').clear()
         cy.get('#instance_name').type(plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+      })
+    })
+
+    it('should correctly handle button state - edit, freeform-rendered plugin', () => {
+      // `plugin1.config.private_network` (true) diverges from the cors schema's own
+      // default for that field (false) — a freeform plugin whose loaded config isn't
+      // just schema defaults, the exact shape that exposed the dirty-check bug where
+      // the Save button read dirty on load before any real edit.
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      interceptKonnectSchema()
+      interceptKonnectOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
+      const pluginType = 'cors'
+      const stubbedAliases = interceptKonnectScopedEntity({ entityType: config.entityType! }, pluginType)
+
+      cy.mount(PluginForm, {
+        props: {
+          config,
+          pluginType,
+          pluginId: plugin1.id,
+          engine: 'freeform',
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getPlugin', ...stubbedAliases]).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        // confirm this mount actually rendered via the freeform engine
+        cy.get('[data-testid^="ff-"]').should('exist')
+
+        // Save must stay disabled on load, before any edit
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
+        // enables save when a freeform-controlled field is actually edited
+        cy.getTestId('ff-instance_name').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
+
+        // disables save again once the edit is undone
+        cy.getTestId('ff-instance_name').clear()
+        cy.getTestId('ff-instance_name').type(plugin1.instance_name)
         cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })

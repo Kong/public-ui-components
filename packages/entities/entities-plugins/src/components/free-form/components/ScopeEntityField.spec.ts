@@ -34,7 +34,7 @@ const FieldScopedEntitySelectStub = defineComponent({
   template: '<div data-testid="entity-select" />',
 })
 
-function createWrapper(developer?: boolean, apiStatus: 200 | 404 = 404) {
+function createWrapper(developer?: boolean, apiStatus: 200 | 404 = 404, onChange?: (value: unknown, source: string) => void) {
   const mockApi = {
     getOne: vi.fn().mockResolvedValue({
       status: apiStatus,
@@ -48,7 +48,7 @@ function createWrapper(developer?: boolean, apiStatus: 200 | 404 = 404) {
     setup() {
       return () => h(
         Form,
-        { schema, data: { consumer: { id: CONSUMER_ID } } },
+        { schema, data: { consumer: { id: CONSUMER_ID } }, onChange },
         { default: () => h(ScopeEntityField, { name: 'consumer', entity: 'consumers', developer }) },
       )
     },
@@ -92,6 +92,16 @@ describe('ScopeEntityField', () => {
 
     const stub = wrapper.findComponent(FieldScopedEntitySelectStub)
     expect(stub.props('selectedItem')).toEqual({ label: CONSUMER_ID, value: CONSUMER_ID })
+  })
+
+  it('tags the stale-reference reset as `init`, not a user edit', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const onChange = vi.fn()
+    createWrapper(false, 404, onChange)
+    await flushPromises()
+
+    // The mount's own initial hydration fires first; the async reset is the last call.
+    expect(onChange).toHaveBeenLastCalledWith({ consumer: null }, 'init')
   })
 
 })
