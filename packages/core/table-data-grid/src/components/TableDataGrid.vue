@@ -261,7 +261,7 @@ const reconcileGridSort = () => {
   applySortToGrid(api, sort)
 }
 
-watch([gridApi, activeSort], reconcileGridSort, { flush: 'post' })
+watch([gridApi, activeSort], reconcileGridSort)
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api

@@ -69,6 +69,8 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const isFetching = ref(false)
   let datasourceFetcher: TableDataGridFetcher<Row>
   let datasourceResetKey: unknown
+  let requestSortColumnKey = sort?.value?.sortColumnKey
+  let requestSortColumnOrder = sort?.value?.sortColumnOrder
 
   const isLatestDatasource = (datasourceId: number): boolean => (
     datasourceId === latestDatasourceId.value
@@ -77,7 +79,10 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   )
 
   const isLatestRequest = (datasourceId: number, requestGeneration: number): boolean => (
-    isLatestDatasource(datasourceId) && requestGeneration === latestRequestGeneration.value
+    isLatestDatasource(datasourceId)
+    && requestGeneration === latestRequestGeneration.value
+    && requestSortColumnKey === sort?.value?.sortColumnKey
+    && requestSortColumnOrder === sort?.value?.sortColumnOrder
   )
 
   const matchesActiveSort = (requestSortModel: IGetRowsParams['sortModel']): boolean => {
@@ -101,6 +106,8 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
 
   const resetRequestState = () => {
     latestRequestGeneration.value += 1
+    requestSortColumnKey = sort?.value?.sortColumnKey
+    requestSortColumnOrder = sort?.value?.sortColumnOrder
     for (const completion of blockCompletionMap.values()) {
       completion.resolve(false)
     }
@@ -421,7 +428,6 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   watch(
     [() => sort?.value?.sortColumnKey, () => sort?.value?.sortColumnOrder],
     () => resetRequestState(),
-    { flush: 'sync' },
   )
 
   return {
