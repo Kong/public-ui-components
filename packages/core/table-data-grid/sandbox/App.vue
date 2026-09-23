@@ -81,7 +81,7 @@
         <div class="unpaginated-header">
           <div>
             <h2>Unpaginated rows</h2>
-            <p>Loads all 40 rows once; scrolling does not fetch again.</p>
+            <p>Loads all 40 rows once. Click a column header to sort without increasing the fetch count.</p>
           </div>
           <KButton
             appearance="secondary"
@@ -101,6 +101,7 @@
             :headers="unpaginatedHeaders"
             mode="unpaginated"
             :refresh-key="unpaginatedRefreshKey"
+            @sort="handleUnpaginatedSort"
           />
         </div>
       </section>
@@ -386,15 +387,16 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
 
 const unpaginatedRows = generatedRows.slice(0, 40)
 const unpaginatedHeaders: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', minWidth: 220 },
-  { key: 'status', label: 'Status', minWidth: 140 },
-  { key: 'latency', label: 'Latency', minWidth: 140 },
+  { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
+  { key: 'status', label: 'Status', minWidth: 140, sortable: true },
+  { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
   {
     bar: 'relative',
     dataType: 'number',
     key: 'requests',
     label: 'Requests',
     minWidth: 180,
+    sortable: true,
     showPercentage: true,
     thresholds: [{ type: 'warning', value: 150 }],
   },
@@ -601,6 +603,10 @@ const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => 
 
 const handleSort = (payload: TableDataGridSort) => {
   logEvent('sort', payload)
+}
+
+const handleUnpaginatedSort = (payload: TableDataGridSort) => {
+  logEvent('unpaginated:sort', payload)
 }
 
 const handleTableConfigUpdate = (payload: TableDataGridConfig) => {

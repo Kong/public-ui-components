@@ -3,7 +3,9 @@ import type {
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridProps,
+  TableDataGridSort,
   TableDataGridStatePayload,
+  TableDataGridConfig,
   TableDataGridUnpaginatedFetcher,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
@@ -24,7 +26,9 @@ type TestTableDataGridSlots = Record<string, (props: TableDataGridCellSlotProps<
 
 type MountTableOptions = TableDataGridProps<TestRow> & {
   onGridReady?: (api: GridApi<TestRow>) => void
+  onSort?: (sort: TableDataGridSort) => void
   onState?: (payload: TableDataGridStatePayload) => void
+  onUpdateTableConfig?: (config: TableDataGridConfig) => void
   slots?: TestTableDataGridSlots
 }
 
@@ -60,7 +64,9 @@ afterEach(() => {
 
 const mountTestTableDataGrid = ({
   onGridReady,
+  onSort,
   onState,
+  onUpdateTableConfig,
   slots,
   ...gridProps
 }: MountTableOptions) => {
@@ -75,6 +81,8 @@ const mountTestTableDataGrid = ({
 
   const commonProps = {
     'onGrid:ready': onGridReady,
+    'onUpdate:tableConfig': onUpdateTableConfig,
+    onSort,
     onState,
   }
 
@@ -198,6 +206,52 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await expect.element(page.getByText('Service 30', { exact: true })).toBeVisible()
     await expect.poll(() => cell(29, 'value').textContent).toContain('(6.45 %)')
     await expect.poll(() => onState.mock.calls.some(([payload]) => payload.state === 'success' && payload.hasData)).toBe(true)
+    expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+
+  it('animates a client-side sort without reloading complete results', async () => {
+    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
+      data: [rows[1], rows[0]],
+    })
+    const onSort = vi.fn<(sort: TableDataGridSort) => void>()
+    const onUpdateTableConfig = vi.fn<(config: TableDataGridConfig) => void>()
+
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      mode: 'unpaginated',
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
+    const gridRoot = element('.ag-root-wrapper')
+    const startedRowTransitions: string[] = []
+    gridRoot.addEventListener('transitionrun', (event) => {
+      if (event.target instanceof HTMLElement && event.target.classList.contains('ag-row')) {
+        startedRowTransitions.push(event.propertyName)
+      }
+    })
+
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    await expect.poll(() => startedRowTransitions.some(property => property === 'top' || property === 'transform')).toBe(true)
+    expect(element('.ag-root-wrapper')).toBe(gridRoot)
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(onSort).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    expect(onUpdateTableConfig).toHaveBeenCalledWith(expect.objectContaining({
+      sortColumnKey: 'name',
+      sortColumnOrder: 'asc',
+    }))
+
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
+    expect(fetcher).toHaveBeenCalledTimes(1)
+
+    await table.setProps({ tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc' } })
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    expect(element('.ag-root-wrapper')).toBe(gridRoot)
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
 

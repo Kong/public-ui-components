@@ -302,9 +302,27 @@ The current sort lives in `tableConfig` (`sortColumnKey`, `sortColumnOrder`),
 alongside `pageSize`. Pass `tableConfig` to restore a previously-chosen sort
 on mount, or to move the sort after mount without a click; omit it to let the
 component own the sort internally. A sort change emits `sort` (the narrower,
-sort-only payload) and then `update:tableConfig` (the full current config),
-and rebuilds the infinite datasource from the beginning — a cursor produced
-under one sort order is not valid under another.
+sort-only payload) and then `update:tableConfig` (the full current config).
+
+For client-side sorting, use `mode="unpaginated"` and return the complete result
+from the fetcher. AG Grid sorts those rows locally with its built-in row
+animation; changing the sort does not call the fetcher. A `refreshKey` change or
+fetcher replacement still loads the complete result again.
+
+```vue
+<TableDataGrid
+  mode="unpaginated"
+  :fetcher="fetchAllRows"
+  :headers="[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'requests', label: 'Requests', sortable: true },
+  ]"
+/>
+```
+
+In the default infinite mode, sorting rebuilds the datasource from the
+beginning. A cursor produced under one sort order is not valid under another,
+so the fetcher receives the new sort and loads rows again.
 
 ## Custom Cell Content
 
