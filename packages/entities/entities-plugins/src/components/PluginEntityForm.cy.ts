@@ -18,8 +18,8 @@ const baseConfig: KonnectPluginFormConfig = {
 }
 
 // Minimal `props.schema` so `parseSchema` produces `model.name`, which lets
-// `syncFormRenderingMode` resolve the freeform branch. The strip filter itself
-// reads from `props.rawSchema`, not this.
+// `syncFormRenderingMode` resolve the plugin's free-form component. The strip
+// filter itself reads from `props.rawSchema`, not this.
 const buildPropSchema = (pluginName: string) => ({
   name: {
     default: pluginName,
@@ -48,7 +48,6 @@ const mountForm = (opts: {
       schema: buildPropSchema(opts.pluginName),
       rawSchema: opts.rawSchema,
       editing: opts.editing ?? true,
-      engine: 'freeform',
       onModelUpdated: cy.spy().as('modelUpdatedSpy'),
     },
     router: opts.router,
