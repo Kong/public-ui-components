@@ -6,7 +6,7 @@ import type {
 } from '../types'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
-import { readonly, ref, shallowRef, watch } from 'vue'
+import { readonly, ref, shallowReadonly, shallowRef, watch } from 'vue'
 import { getCursorBlock, resolveInfiniteLastRow } from '../utils/fetchers'
 
 type BlockCompletion = {
@@ -379,7 +379,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
 
   return {
     datasource: readonly(datasource),
-    data: readonly(data),
+    data: shallowReadonly(data),
     error: readonly(error),
     isFetching: readonly(isFetching),
   }

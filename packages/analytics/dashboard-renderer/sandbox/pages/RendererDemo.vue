@@ -469,7 +469,7 @@ const dashboardConfig = ref<DashboardConfig>({
           type: 'top_n',
           chart_title: 'Cost by provider',
           column_options: {
-            ai_provider: { label: 'Provider' },
+            ai_provider: { label: 'Provider', icon_set: 'ai_provider' },
             cost: { label: 'Share of spend', value: 'relative', bar: 'relative' },
             ai_request_count: { label: 'Share of requests', value: 'relative' },
             error_rate: { label: 'Failure rate', bar: 'max', thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 15 }] },

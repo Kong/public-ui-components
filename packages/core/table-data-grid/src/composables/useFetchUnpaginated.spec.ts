@@ -51,6 +51,15 @@ describe('useFetchUnpaginated', () => {
     expect(error.value).toBeUndefined()
   })
 
+  it('exposes the host row objects without readonly proxies', async () => {
+    const row = { id: 'one' }
+    const { data } = createFetch(vi.fn().mockResolvedValue({ data: [row] }))
+
+    await flushFetch()
+
+    expect(data.value?.[0]).toBe(row)
+  })
+
   it('invalidates synchronously before a settled stale promise can update rows', async () => {
     const staleFetch = createDeferred<{ data: TestRow[] }>()
     const latestFetch = createDeferred<{ data: TestRow[] }>()

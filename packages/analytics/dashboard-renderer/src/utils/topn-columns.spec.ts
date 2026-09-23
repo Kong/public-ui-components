@@ -1,5 +1,6 @@
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { createI18n } from '@kong-ui-public/i18n'
+import { OpenAiIcon } from '@kong/icons'
 import { describe, expect, it } from 'vitest'
 import english from '../locales/en.json'
 import {
@@ -50,6 +51,24 @@ describe('createTopNPresentation', () => {
       { event: { ROUTE: 'route2', GATEWAY_SERVICE: 'service1', REQUEST_COUNT: 25, '4XX': 1 }, timestamp: '' },
     ],
   }
+
+  it('adds provider icons only to dimensions with the ai_provider icon set', () => {
+    const providerData: ExploreResultV4 = {
+      ...data,
+      meta: { ...data.meta, display: { ai_provider: { openai: { name: 'OpenAI' } }, route: { azure: { name: 'azure' } } } },
+      data: [{ event: { ai_provider: 'openai', route: 'azure', REQUEST_COUNT: 1, '4XX': 0 }, timestamp: '' }],
+    }
+    const { headers } = createTopNPresentation({
+      data: providerData,
+      columnOptions: { AI_PROVIDER: { icon_set: 'ai_provider' } },
+      i18n,
+    })
+    const providerIcons = headers.find(header => header.key === 'ai_provider')?.icons ?? []
+
+    expect(providerIcons.find(mapping => mapping.pattern.test('OpenAI'))?.icon).toBe(OpenAiIcon)
+    expect(providerIcons.some(mapping => mapping.pattern.test('openai-proxy'))).toBe(false)
+    expect(headers.find(header => header.key === 'route')?.icons).toBeUndefined()
+  })
 
   it('preserves dimension/metric order and maps rows against the full result', () => {
     const rows = createTopNGridRows(data)

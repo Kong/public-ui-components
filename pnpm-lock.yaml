@@ -919,9 +919,6 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
-      '@kong/icons':
-        specifier: ^1.62.1
-        version: 1.62.1(vue@3.5.41(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.64.18
         version: 9.64.18(@vue/test-utils@2.5.0(@vue/compiler-dom@3.5.41)(@vue/server-renderer@3.5.41)(vue@3.5.41(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.41(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.51.2)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.41(typescript@5.9.3))
