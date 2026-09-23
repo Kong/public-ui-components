@@ -11,6 +11,7 @@ import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
+  disableCoordination?: boolean
   timeSpec?: TimeRangeV4
   tz?: string
   refreshInterval?: number
