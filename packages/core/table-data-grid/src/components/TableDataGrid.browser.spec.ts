@@ -195,6 +195,60 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(cell(15, 'name').textContent).toContain('Service 116')
   })
 
+  it('keeps loading after the sorted column is removed from an uncontrolled grid', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ sort }) => Promise.resolve({
+      data: sort?.sortColumnKey ? [rows[0]] : createRows(1, 1),
+      hasMore: false,
+    }))
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 1')
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+
+    await table.setProps({ headers: [{ key: 'status', label: 'Status' }] })
+
+    await expect.poll(() => fetcher.mock.lastCall?.[0].sort).toEqual({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    await expect.poll(() => cell(0, 'status').textContent).toContain('Active')
+  })
+
+  it('applies a controlled sort whose header arrives after mount and keeps scrolling', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ cursor, sort }) => Promise.resolve(
+      sort?.sortColumnKey !== 'name'
+        ? { data: createRows(1, 15), cursor: 'unsorted-cursor', hasMore: true }
+        : cursor === undefined
+          ? { data: createRows(101, 15), cursor: 'sorted-cursor', hasMore: true }
+          : { data: createRows(116, 15), hasMore: false },
+    ))
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [],
+      pageSize: 15,
+      tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 15 },
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    await table.setProps({ headers: [{ key: 'name', label: 'Name', sortable: true }] })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 101')
+    expect(gridApi?.getColumnState().find(column => column.colId === 'name')?.sort).toBe('asc')
+    gridApi?.ensureIndexVisible(15)
+    await expect.poll(() => cell(15, 'name').textContent).toContain('Service 116')
+    expect(fetcher).toHaveBeenCalledWith(expect.objectContaining({
+      cursor: 'sorted-cursor',
+      sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+    }))
+  })
+
   it('loads once per controlled sort change and ignores the host config echo', async () => {
     const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ sort }) => Promise.resolve({
       data: sort?.sortColumnOrder === 'asc'
