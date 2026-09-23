@@ -73,7 +73,7 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   bar?: 'relative' | 'absolute'
   /** Applies warning/error presentation at or above the crossed threshold. */
   thresholds?: TableDataGridThreshold[]
-  /** Matches raw or formatted cell text and renders the first matching icon. */
+  /** Matches the raw cell value and renders the first matching icon. */
   icons?: TableDataGridIconMapping[]
 }
 

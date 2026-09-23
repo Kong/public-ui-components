@@ -4,26 +4,6 @@ import type {
   TableDataGridThreshold,
 } from '../types'
 import type { Component } from 'vue'
-import {
-  AmazonBedrockIcon,
-  AnthropicIcon,
-  AzureIcon,
-  CerebrasIcon,
-  CohereIcon,
-  DatabricksIcon,
-  DeepseekIcon,
-  GeminiIcon,
-  GoogleVertexIcon,
-  GrokIcon,
-  HuggingFaceIcon,
-  KimiIcon,
-  MetaLlamaIcon,
-  MistralIcon,
-  NvidiaIcon,
-  OllamaIcon,
-  OpenAiIcon,
-  VllmIcon,
-} from '@kong/icons'
 
 export type TableDataGridColumnStats = {
   sum: number
@@ -35,33 +15,6 @@ export type TableDataGridPresentationContext = {
   locale: string
   stats: Record<string, TableDataGridColumnStats>
 }
-
-const providerIcon = (name: string, icon: Component): TableDataGridIconMapping => ({
-  icon,
-  pattern: new RegExp(`^${name}$`, 'i'),
-})
-
-/** Built-in provider mappings used by cells that contain provider names. */
-const tableDataGridProviderIcons: readonly TableDataGridIconMapping[] = [
-  providerIcon('anthropic', AnthropicIcon),
-  providerIcon('azure', AzureIcon),
-  providerIcon('bedrock', AmazonBedrockIcon),
-  providerIcon('cerebras', CerebrasIcon),
-  providerIcon('cohere', CohereIcon),
-  providerIcon('databricks', DatabricksIcon),
-  providerIcon('deepseek', DeepseekIcon),
-  providerIcon('gemini', GeminiIcon),
-  providerIcon('huggingface', HuggingFaceIcon),
-  providerIcon('llama2', MetaLlamaIcon),
-  providerIcon('mistral', MistralIcon),
-  providerIcon('moonshot', KimiIcon),
-  providerIcon('nvidia', NvidiaIcon),
-  providerIcon('ollama', OllamaIcon),
-  providerIcon('openai', OpenAiIcon),
-  providerIcon('vertex', GoogleVertexIcon),
-  providerIcon('vllm', VllmIcon),
-  providerIcon('xai', GrokIcon),
-]
 
 /**
  * Accept numeric values only; generic grid cells must not coerce strings or booleans.
@@ -116,46 +69,28 @@ const matchesPattern = (pattern: RegExp, value: string): boolean => {
   }
 }
 
-const firstMatchingIcon = (
-  mappings: readonly TableDataGridIconMapping[],
-  values: readonly string[],
-): Component | undefined => {
-  for (const mapping of mappings) {
-    if (values.some(value => matchesPattern(mapping.pattern, value))) {
-      return mapping.icon
-    }
-  }
-
-  return undefined
-}
-
 /**
- * Match raw or formatted content, preferring host mappings over built-in provider icons.
+ * Match the raw cell value against host-configured icon mappings.
  *
- * @param options - Cell content and optional custom icon mappings.
+ * @param options - Cell value and optional icon mappings.
  * @param options.rawValue - Unformatted cell value.
- * @param options.displayValue - Formatted or translated cell text.
- * @param options.icons - Custom mappings checked before built-in mappings.
+ * @param options.icons - Header icon mappings, checked in order.
  * @returns The first matching icon component, or undefined.
  */
 export const getCellIcon = ({
   rawValue,
-  displayValue,
-  icons = [],
+  icons,
 }: {
   rawValue: unknown
-  displayValue: string
   icons?: readonly TableDataGridIconMapping[]
 }): Component | undefined => {
-  const values = [
-    rawValue === null || rawValue === undefined ? '' : String(rawValue),
-    displayValue,
-  ].filter(Boolean)
+  if (!icons?.length || rawValue === null || rawValue === undefined) {
+    return undefined
+  }
 
-  return firstMatchingIcon(
-    [...icons, ...tableDataGridProviderIcons],
-    values,
-  )
+  const value = String(rawValue)
+
+  return icons.find(mapping => matchesPattern(mapping.pattern, value))?.icon
 }
 
 /**

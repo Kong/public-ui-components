@@ -24,7 +24,7 @@
           :kpop-attributes="{ popoverDelay: 400 }"
           max-width="300"
           placement="bottom-start"
-          target="body"
+          :target="tooltipTarget"
           :text="displayValue"
         >
           <span
@@ -60,7 +60,7 @@ import type {
   TableDataGridHeader,
 } from '../types'
 import type { ICellRendererParams } from 'ag-grid-community'
-import type { FunctionalComponent, Slots } from 'vue'
+import type { FunctionalComponent, Ref, Slots } from 'vue'
 import {
   computed,
   h,
@@ -86,7 +86,7 @@ type CellRendererParams = ICellRendererParams<Record<string, unknown>> & {
    * host slot and build its payload without leaking AG Grid's own `column`. */
   headerDef?: TableDataGridHeader
   context?: {
-    cells?: { slots?: Slots }
+    cells?: { slots?: Slots, tooltipTarget?: Readonly<Ref<string | HTMLElement>> }
     presentation?: TableDataGridPresentationContext
   }
 }
@@ -111,6 +111,7 @@ const header = computed<TableDataGridHeader>(() => currentParams.value.headerDef
   label: '',
 })
 const presentation = computed(() => currentParams.value.context?.presentation)
+const tooltipTarget = computed(() => currentParams.value.context?.cells?.tooltipTarget?.value ?? 'body')
 const displayValue = computed(() => {
   const params = currentParams.value
 
@@ -158,7 +159,6 @@ const thresholdType = computed(() => (
     : undefined
 ))
 const matchedIcon = computed(() => getCellIcon({
-  displayValue: displayValue.value,
   icons: header.value.icons,
   rawValue: rawValue.value,
 }))
