@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="rootElement"
     class="kong-ui-public-table-data-grid"
     data-testid="table-data-grid"
   >
@@ -77,7 +78,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, shallowRef, toRef, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useFetchUnpaginated } from '../composables/useFetchUnpaginated'
@@ -122,6 +123,25 @@ const { t } = i18n
 const slots = useSlots()
 
 const gridApi = shallowRef<GridApi<Row>>()
+const rootElement = shallowRef<HTMLElement>()
+
+// Tooltips teleported to body are hidden while an ancestor is in native fullscreen.
+const tooltipTarget = shallowRef<string | HTMLElement>('body')
+const updateTooltipTarget = () => {
+  const fullscreenElement = document.fullscreenElement
+  tooltipTarget.value = fullscreenElement instanceof HTMLElement && fullscreenElement.contains(rootElement.value ?? null)
+    ? fullscreenElement
+    : 'body'
+}
+
+onMounted(() => {
+  updateTooltipTarget()
+  document.addEventListener('fullscreenchange', updateTooltipTarget)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', updateTooltipTarget)
+})
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
   headers: toRef(() => headers),
@@ -194,6 +214,7 @@ const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   mode,
   rows: rowData,
   slots,
+  tooltipTarget,
   initialSort: activeSort.value,
 })
 
