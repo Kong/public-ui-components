@@ -372,6 +372,29 @@ describe('<TableDataGrid />', () => {
     expectOverflowTooltip(longName)
   })
 
+  it('sorts complete rows on header clicks and controlled configuration changes', () => {
+    const onSort = cy.stub()
+    const onUpdateTableConfig = cy.stub()
+    const table = mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: [rows[1], rows[0]],
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.wrap(onSort).should('have.been.calledWith', { sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    cy.wrap(onUpdateTableConfig).should('have.been.calledWithMatch', { sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+    table.setProps({ tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc' } })
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.contains('.ag-header-cell', 'Name').should('have.attr', 'aria-sort', 'ascending')
+  })
+
   it('uses Kong theme text colors for AG Grid headers and cells', () => {
     const fetcher = cy.stub().resolves({
       data: rows,
