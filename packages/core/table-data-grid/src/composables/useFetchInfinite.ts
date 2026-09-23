@@ -65,9 +65,13 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const error = shallowRef<unknown>()
   const pendingFetchCount = ref(0)
   const isFetching = ref(false)
+  let datasourceFetcher: TableDataGridFetcher<Row>
+  let datasourceResetKey: unknown
 
   const isLatestDatasource = (datasourceId: number): boolean => (
     datasourceId === latestDatasourceId.value
+    && datasourceFetcher === fetcher.value
+    && datasourceResetKey === resetKey?.value
   )
 
   const syncIsFetching = () => {
@@ -257,6 +261,8 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * @returns AG Grid datasource for the latest cursor chain.
    */
   const buildDatasource = (): IDatasource => {
+    datasourceFetcher = fetcher.value
+    datasourceResetKey = resetKey?.value
     const datasourceId = latestDatasourceId.value + 1
     latestDatasourceId.value = datasourceId
     cursorMap.clear()
@@ -374,7 +380,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     () => {
       resetDatasource()
     },
-    { immediate: true, flush: 'sync' },
+    { immediate: true },
   )
 
   return {
