@@ -36,7 +36,6 @@ const columnQueries = computed((): Map<TopTalkersGridColumn, ValidDashboardChart
     :column-options="chartOptions.column_options"
     :columns="columns"
     :size-metric="chartOptions.size_metric"
-    :title="chartOptions.chart_title"
   >
     <template #column="{ column }">
       <QueryDataProvider

@@ -47,6 +47,18 @@ const hasData = computed((): boolean => {
     class="kong-ui-public-top-talkers"
     :title-tag="titleTag"
   >
+    <template
+      v-if="title"
+      #title
+    >
+      <span
+        class="top-talkers-card-title"
+        data-testid="top-talkers-card-title"
+      >
+        {{ title }}
+      </span>
+    </template>
+
     <KEmptyState
       v-if="errorMessage"
       :action-button-visible="false"
