@@ -237,6 +237,8 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       },
     })
 
+    // Headers must arrive after grid-ready so AG Grid receives the new columns asynchronously.
+    await expect.poll(() => gridApi).toBeDefined()
     await table.setProps({ headers: [{ key: 'name', label: 'Name', sortable: true }] })
 
     await expect.poll(() => cell(0, 'name').textContent).toContain('Service 101')
