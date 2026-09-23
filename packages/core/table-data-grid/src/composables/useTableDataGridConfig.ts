@@ -63,6 +63,13 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
     emitTableConfigUpdate(next)
   }
 
+  // Uncontrolled sorts must be dropped once their header is removed or no longer sortable.
+  watch(headers, () => {
+    if (!tableConfigProp.value) {
+      patchTableConfig({})
+    }
+  })
+
   // Sort-only view of activeTableConfig.
   const activeSort = computed<TableDataGridSort>(() => ({
     sortColumnKey: activeTableConfig.value.sortColumnKey,
