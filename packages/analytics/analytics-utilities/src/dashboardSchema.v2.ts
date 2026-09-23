@@ -38,6 +38,7 @@ export const dashboardTileTypes = [
   'scatter',
   'golden_signals',
   'top_n',
+  'top_talkers',
   'table',
   'slottable',
   'single_value',
@@ -369,6 +370,60 @@ export const topNTableSchema = {
 } as const
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
+
+const topTalkersColumnSchema = {
+  type: 'object',
+  properties: {
+    dimension: {
+      type: 'string',
+      description: 'Dimension to group this column by.',
+    },
+    label: {
+      type: 'string',
+      description: 'Column heading, defaults to the translated dimension name.',
+    },
+  },
+  required: ['dimension'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopTalkersColumnDefinition = FromSchemaWithOptions<typeof topTalkersColumnSchema>
+
+/**
+ * A grid of ranked, proportionally sized blocks: one column per dimension, each
+ * issuing its own group-by against the tile's shared query. The first metric (or
+ * `size_metric`) sizes each block, the remaining metrics render in its tooltip.
+ */
+export const topTalkersSchema = {
+  type: 'object',
+  properties: {
+    chart_title: chartTitle,
+    synthetics_data_key: syntheticsDataKey,
+    type: {
+      type: 'string',
+      enum: ['top_talkers'],
+    },
+    columns: {
+      type: 'array',
+      minItems: 1,
+      items: topTalkersColumnSchema,
+    },
+    size_metric: {
+      type: 'string',
+      description: 'Metric for computing the block size and the percentage label, defaults to the first entry in the query metrics.',
+    },
+    column_options: {
+      type: 'object',
+      description: 'Per-metric or per-dimension rendering options, keyed by name. Applies to tooltip rows as well as headings.',
+      additionalProperties: topNColumnOptionsSchema,
+    },
+    entity_links: entityLinks,
+  },
+  required: ['type', 'columns'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopTalkersOptions = FromSchemaWithOptions<typeof topTalkersSchema>
 
 export const tableChartSchema = {
   type: 'object',
@@ -941,6 +996,7 @@ const dashboardTileChartSchema = {
     scatterChartSchema,
     metricCardSchema,
     topNTableSchema,
+    topTalkersSchema,
     slottableSchema,
     singleValueSchema,
     choroplethMapSchema,

@@ -223,6 +223,7 @@ import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import TopTalkersRenderer from './TopTalkersRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -367,6 +368,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'top_talkers': TopTalkersRenderer,
   'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
