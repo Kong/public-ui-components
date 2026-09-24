@@ -52,19 +52,34 @@ const data: TreeMapDataNode[] = [
 ]
 ```
 
-Each node can also carry its own `itemStyle` (fill and borders) and `label` tweaks, which override the generated palette-derived styling for that node. This is how a dense dashboard card colors every box from its own scale instead of the categorical group palette:
+### Colors from data
+
+Colors can come with the data: any node can set `itemStyle.color` (and `label.color` for its text), overriding the palette. A node's color wins over its level's, then its parent's, then the palette.
+
+Color a group, and its children take the group's color with varied saturation:
+
+```ts
+const data: TreeMapDataNode[] = [
+  { name: 'openai', itemStyle: { color: '#a86cd5' }, children: [{ name: 'gpt-4o', value: 1200 }] },
+  { name: 'anthropic', itemStyle: { color: '#00c4b0' }, children: [{ name: 'claude-sonnet-4', value: 800 }] },
+]
+```
+
+Or color every box from its own scale instead of the group palette, like a dense dashboard card:
 
 ```ts
 const data: TreeMapDataNode[] = [
   {
     name: 'Data plane nodes',
     children: [
-      { name: 'prod', value: 120, itemStyle: { color: '#e0a3a3' } },
+      { name: 'prod', value: 120, itemStyle: { color: '#e0a3a3' }, label: { color: '#3d443d' } },
       { name: 'staging', value: 40, itemStyle: { color: '#9db8d2' } },
     ],
   },
 ]
 ```
+
+This is also how a dashboard tile colors its groups: the renderer sets `itemStyle.color` while turning the query result into nodes (e.g. from the tile's `chart_dataset_colors`).
 
 Group names are not drawn on the boxes by default (a reserved strip renders empty when a group is too short for the text); they appear in the tooltip instead. Add one with `seriesOption: { levels: [{ upperLabel: { show: true } }] }` on tall charts.
 
@@ -76,7 +91,7 @@ Group names are not drawn on the boxes by default (a reserved strip renders empt
 | `seriesName` | `string` | none | Series name, shown as the tooltip's metric. |
 | `showValues` | `boolean` | none (name only) | Shows each node's value under its name, formatted with `valueFormatter`. |
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip and the node labels. |
-| `colorPalette` | `string[]` | theme tokens | Categorical colors, one per top-level group; cycled if there are more groups than colors. |
+| `colorPalette` | `string[]` | theme tokens | Categorical colors, one per top-level group; cycled if there are more groups than colors. To color specific groups or nodes, see [Colors from data](#colors-from-data). |
 | `drillDown` | `boolean` | `true` | Click a group to zoom into it, with a breadcrumb to go back. `false` makes a static chart that fills the whole area, see [drill-down](#drill-down--breadcrumb). |
 | `leafDepth` | `number` | none (all levels) | Initial depth to show (counted from zero at the view root); deeper levels appear when drilling in. |
 | `tooltipTitle` | `string` | none | Bold title of the shared tooltip, see [Tooltip](#tooltip). |
@@ -113,6 +128,6 @@ For a static card, set `drill-down` to `false`: clicks do nothing, there's no br
 />
 ```
 
-The default colors come from the active theme's design tokens; see [Theming](./theming.md) for how that works and how to override it with `colorPalette`.
+The default colors come from the active theme's design tokens; see [Theming](./theming.md) for how that works. Replace them with a `colorPalette` array, or color specific groups and nodes in the data (see [Colors from data](#colors-from-data)).
 
 For customizing the generated option, see [Custom options](./custom-options.md).

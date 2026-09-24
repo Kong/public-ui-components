@@ -66,6 +66,15 @@ describe('<TreeMapChart />', () => {
     expect(option.series[0].color).toEqual(['#111111', '#222222'])
   })
 
+  it('passes colors set on nodes in data through untouched', () => {
+    const colored: TreeMapDataNode[] = [
+      { name: 'openai', itemStyle: { color: '#a86cd5' }, children: [{ name: 'gpt-4o', value: 1200 }] },
+    ]
+    const option = chartOption(mountChart({ data: colored }))
+
+    expect(option.series[0].data).toEqual(colored)
+  })
+
   it('shows the breadcrumb with neutral item styles', () => {
     const option = chartOption(mountChart({ data }))
 

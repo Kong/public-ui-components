@@ -83,7 +83,10 @@ export interface TreeMapChartProps extends BaseChartProps {
   showValues?: boolean
   /** Formats values in the tooltip and the node labels. */
   valueFormatter?: (value: number) => string
-  /** Categorical colors, one per top-level group; cycled if more groups than colors */
+  /**
+   * Categorical colors, one per top-level group; cycled if more groups than colors.
+   * To color specific groups or nodes, set `itemStyle.color` on them in `data`.
+   */
   colorPalette?: string[]
   /** Click a group to zoom into it, with a breadcrumb at the bottom to go back. Defaults to `true`. */
   drillDown?: boolean
