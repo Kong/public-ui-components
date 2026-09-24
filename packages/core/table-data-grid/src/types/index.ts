@@ -93,17 +93,22 @@ export type TableDataGridConfig = TableDataGridSort & {
 export type TableDataGridProps<Row extends object = TableDataGridRow> = {
   headers: Array<TableDataGridHeader<Row>>
   error?: boolean
-  pageSize?: number
-  refreshKey?: string | number | boolean
   tableConfig?: TableDataGridConfig
 } & (
   | {
     fetcher: TableDataGridFetcher<Row>
     mode?: 'infinite'
+    pageSize?: number
+    refreshKey?: string | number | boolean
+    rows?: never
   }
   | {
-    fetcher: TableDataGridUnpaginatedFetcher<Row>
+    /** Complete host-owned result rendered through AG Grid's client-side row model. */
+    rows: Row[]
     mode: 'unpaginated'
+    fetcher?: never
+    pageSize?: never
+    refreshKey?: never
   }
 )
 
@@ -112,10 +117,6 @@ export interface TableDataGridInfiniteFetcherParams {
   pageSize: number
   cursor?: unknown
   sort?: TableDataGridSort
-}
-
-export interface TableDataGridUnpaginatedFetcherParams {
-  mode: 'unpaginated'
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {
@@ -128,13 +129,5 @@ export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = 
 export type TableDataGridFetcher<Row extends object = TableDataGridRow> = (
   params: TableDataGridInfiniteFetcherParams,
 ) => Promise<TableDataGridFetcherResult<Row>>
-
-export type TableDataGridUnpaginatedFetcherResult<Row extends object = TableDataGridRow> = {
-  data: Row[]
-}
-
-export type TableDataGridUnpaginatedFetcher<Row extends object = TableDataGridRow> = (
-  params: TableDataGridUnpaginatedFetcherParams,
-) => Promise<TableDataGridUnpaginatedFetcherResult<Row>>
 
 export type TableDataGridReadyPayload<Row extends object = TableDataGridRow> = GridApi<Row>

@@ -1,9 +1,8 @@
-// Compile-time checks for valid/default mode-fetcher pairs and rejected incompatible pairs; no runtime test.
+// Compile-time checks for valid/default mode-input pairs and rejected incompatible pairs; no runtime test.
 import type {
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridProps,
-  TableDataGridUnpaginatedFetcher,
 } from './types'
 
 type TestRow = {
@@ -16,33 +15,45 @@ const headers: Array<TableDataGridHeader<TestRow>> = [{ key: 'id', label: 'ID' }
 const infiniteFetcher: TableDataGridFetcher<TestRow> = async ({ mode, pageSize }) => ({
   data: [{ id: `${mode}-${pageSize}` }],
 })
-const unpaginatedFetcher: TableDataGridUnpaginatedFetcher<TestRow> = async ({ mode }) => ({
-  data: [{ id: mode }],
-})
+const rows: TestRow[] = [{ id: 'row' }]
 
 const validProps: Array<TableDataGridProps<TestRow>> = [
   { fetcher: infiniteFetcher, headers },
-  { fetcher: infiniteFetcher, headers, mode: 'infinite' },
-  { fetcher: unpaginatedFetcher, headers, mode: 'unpaginated' },
+  { fetcher: infiniteFetcher, headers, mode: 'infinite', pageSize: 10, refreshKey: 1 },
+  { rows, headers, mode: 'unpaginated' },
 ]
 
 type RejectsInvalidProps<Props> = Props extends TableDataGridProps<TestRow> ? false : true
 const invalidModeChecks: [
-  infiniteFetcherInUnpaginatedMode: Expect<RejectsInvalidProps<{
+  fetcherInUnpaginatedMode: Expect<RejectsInvalidProps<{
     fetcher: TableDataGridFetcher<TestRow>
+    rows: TestRow[]
     headers: typeof headers
     mode: 'unpaginated'
   }>>,
-  unpaginatedFetcherWithoutMode: Expect<RejectsInvalidProps<{
-    fetcher: TableDataGridUnpaginatedFetcher<TestRow>
+  rowsWithoutMode: Expect<RejectsInvalidProps<{
+    rows: TestRow[]
     headers: typeof headers
   }>>,
-  unpaginatedFetcherInInfiniteMode: Expect<RejectsInvalidProps<{
-    fetcher: TableDataGridUnpaginatedFetcher<TestRow>
+  rowsInInfiniteMode: Expect<RejectsInvalidProps<{
+    fetcher: TableDataGridFetcher<TestRow>
+    rows: TestRow[]
     headers: typeof headers
     mode: 'infinite'
   }>>,
-] = [true, true, true]
+  pageSizeInUnpaginatedMode: Expect<RejectsInvalidProps<{
+    rows: TestRow[]
+    headers: typeof headers
+    mode: 'unpaginated'
+    pageSize: number
+  }>>,
+  refreshKeyInUnpaginatedMode: Expect<RejectsInvalidProps<{
+    rows: TestRow[]
+    headers: typeof headers
+    mode: 'unpaginated'
+    refreshKey: number
+  }>>,
+] = [true, true, true, true, true]
 
 void validProps
 void invalidModeChecks
