@@ -896,6 +896,38 @@ describe('<TableDataGrid />', () => {
     cy.getTestId('status-row-value').first().should('contain.text', 'Suspended')
   })
 
+  it('renders a host icon slot beside default and custom cell content', () => {
+    const fetcher = cy.stub().resolves({ data: rows, total: rows.length })
+
+    mountTestTableDataGrid({
+      fetcher,
+      slots: {
+        'cell-icon': ({ column, row }: TableDataGridCellSlotProps<TestRow>) => row.id === 'row-1'
+          ? h('span', { 'data-testid': 'host-cell-icon' }, column.key)
+          : null,
+        status: ({ rowValue }: TableDataGridCellSlotProps<TestRow>) => h(
+          'strong',
+          { 'data-testid': 'custom-status' },
+          String(rowValue),
+        ),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+      .find('[data-testid="host-cell-icon"]').should('contain.text', 'name')
+    cy.get('[row-index="0"] [col-id="status"]').should('contain.text', 'Active')
+      .find('[data-testid="host-cell-icon"]').should('contain.text', 'status')
+    cy.get('[row-index="0"] [col-id="status"] [data-testid="custom-status"]').should('be.visible')
+    cy.get('[row-index="1"] [data-testid="host-cell-icon"]').should('not.exist')
+    cy.get('[row-index="1"] [col-id="name"] .table-data-grid-cell-renderer').should(($renderer) => {
+      const content = $renderer[0].querySelector('.table-data-grid-cell-content')
+      if (!content) {
+        throw new Error('Expected the default cell content')
+      }
+      expect(content.getBoundingClientRect().left - $renderer[0].getBoundingClientRect().left).to.be.lessThan(1)
+    })
+  })
+
   it('emits row:click with the clicked row data and the source event', () => {
     const onRowClick = cy.stub().as('rowClick')
     const fetcher = cy.stub().resolves({

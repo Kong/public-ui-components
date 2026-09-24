@@ -54,7 +54,7 @@ const createRows = (startIndex: number, count: number): TestRow[] => (
   })
 )
 
-const TestProviderIcon: Component = { name: 'TestProviderIcon', render: () => h('svg') }
+const TestProviderIcon: Component = { name: 'TestProviderIcon', render: () => h('svg', { 'data-testid': 'test-provider-icon' }) }
 
 const mountedContainers: HTMLElement[] = []
 
@@ -383,14 +383,14 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(element('.ag-root-wrapper')).toBe(gridRoot)
   })
 
-  it('renders unpaginated percentages, preserved bar scales, thresholds, and configured icons', async () => {
+  it('renders unpaginated percentages, preserved bar scales, thresholds, and host icons', async () => {
     const presentationRows = [
       { ...rows[0], name: 'OpenAI', value: 25 },
       { ...rows[1], name: 'Anthropic', value: 75 },
     ]
     mountTestTableDataGrid({
       headers: [
-        { key: 'name', label: 'Provider', icons: [{ pattern: /^openai$/i, icon: TestProviderIcon }] },
+        { key: 'name', label: 'Provider' },
         { key: 'status', label: 'Status' },
         {
           bar: 'absolute',
@@ -403,6 +403,9 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       ],
       mode: 'unpaginated',
       rows: presentationRows,
+      slots: {
+        'cell-icon': ({ column, rowValue }) => column.key === 'name' && rowValue === 'OpenAI' ? h(TestProviderIcon) : null,
+      },
     })
 
     await expect.poll(() => cell(0, 'value').textContent).toContain('25')
@@ -416,9 +419,9 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       '[row-index="1"] [col-id="value"] [data-testid="table-data-grid-cell-bar-fill"]',
     )?.style.width ?? '')).toBe(100)
     expect(element('[row-index="1"] [col-id="value"] [data-testid="table-data-grid-cell-bar"]').dataset.threshold).toBe('warning')
-    await expect.element(page.elementLocator(element('[row-index="0"] [col-id="name"] [data-testid="table-data-grid-cell-icon"]'))).toBeVisible()
-    expect(cell(1, 'name').querySelector('[data-testid="table-data-grid-cell-icon"]')).toBeNull()
-    expect(document.querySelector('[col-id="status"] [data-testid="table-data-grid-cell-icon"]')).toBeNull()
+    await expect.element(page.elementLocator(element('[row-index="0"] [col-id="name"] [data-testid="test-provider-icon"]'))).toBeVisible()
+    expect(cell(1, 'name').querySelector('[data-testid="test-provider-icon"]')).toBeNull()
+    expect(document.querySelector('[col-id="status"] [data-testid="test-provider-icon"]')).toBeNull()
   })
 
   it('shows cell overflow tooltips inside a native fullscreen ancestor', async () => {
