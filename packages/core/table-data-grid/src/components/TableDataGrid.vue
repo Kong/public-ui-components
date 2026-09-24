@@ -41,7 +41,7 @@
       :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
-      :loading="showLoadingOverlay"
+      :loading="isFetching"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
       :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
@@ -81,7 +81,6 @@ import {
 import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
-import { useFetchUnpaginated } from '../composables/useFetchUnpaginated'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
 import { useTableDataGridConfig } from '../composables/useTableDataGridConfig'
 import { useTableDataGridInteractions } from '../composables/useTableDataGridInteractions'
@@ -94,6 +93,7 @@ ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, In
 const {
   fetcher,
   mode: providedMode,
+  rows,
   headers,
   error: hostError = false,
   pageSize = 25,
@@ -180,33 +180,33 @@ const defaultColDef: ColDef<Row> = {
 // Presentation-only config changes must not invalidate the fetch request.
 const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
 const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
-const resetKey = computed(() => mode === 'unpaginated'
-  ? [refreshKey]
-  : [
-    activePageSize.value,
-    refreshKey,
-    sortColumnKey.value,
-    sortColumnOrder.value,
-  ])
+const resetKey = computed(() => [
+  activePageSize.value,
+  refreshKey,
+  sortColumnKey.value,
+  sortColumnOrder.value,
+])
 
-const fetchResult = providedMode === 'unpaginated'
-  ? useFetchUnpaginated({
-    fetcher: toRef(() => fetcher),
-    resetKey,
-  })
-  : useFetchInfinite({
-    fetcher: toRef(() => fetcher),
+const getFetcher = () => {
+  if (!fetcher) {
+    throw new Error('TableDataGrid requires a fetcher in infinite mode')
+  }
+  return fetcher
+}
+
+// Unpaginated rows are host-owned; only infinite mode fetches.
+const fetchResult = mode === 'infinite'
+  ? useFetchInfinite({
+    fetcher: toRef(getFetcher),
     resetKey,
     sort: activeSort,
   })
+  : undefined
 
-const {
-  data,
-  error: fetchError,
-  isFetching,
-} = fetchResult
-const { datasource } = fetchResult
-const rowData = computed(() => data.value ? Array.from(data.value) : undefined)
+const datasource = fetchResult?.datasource
+const data = computed(() => fetchResult ? fetchResult.data.value : rows)
+const isFetching = computed(() => fetchResult?.isFetching.value ?? false)
+const rowData = computed(() => rows ? Array.from(rows) : undefined)
 
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
@@ -222,24 +222,25 @@ const {
   fetchState,
   hasData,
   state: fetchLifecycleState,
-} = useFetchState(data, fetchError, isFetching, undefined, mode === 'unpaginated')
-
-// Unpaginated refreshes keep the previous complete result visible until the replacement arrives.
-const showLoadingOverlay = computed<boolean>(() => (
-  isFetching.value && !(mode === 'unpaginated' && hasData.value)
-))
+} = useFetchState(
+  data,
+  toRef(() => fetchResult?.error.value),
+  isFetching,
+)
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS
   && !hasData.value
 ))
 
-useEmitState({
-  emitState: payload => emit('state', payload),
-  emitInitialState: mode === 'unpaginated',
-  fetchLifecycleState,
-  hasData,
-})
+// State events describe the internal fetch lifecycle, so unpaginated mode emits none.
+if (fetchResult) {
+  useEmitState({
+    emitState: payload => emit('state', payload),
+    fetchLifecycleState,
+    hasData,
+  })
+}
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api

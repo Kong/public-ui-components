@@ -157,17 +157,6 @@ describe('useFetchState', () => {
     expect(state.value).toBe(fetchState.SUCCESS)
   })
 
-  it('can expose a settled error while retaining rows for non-paginated consumers', () => {
-    const data = ref<TestRow[] | undefined>([{ id: 'old' }])
-    const error = ref<unknown>(new Error('failed'))
-    const isFetching = ref(false)
-
-    const { hasData, state } = useFetchState(data, error, isFetching, undefined, true)
-
-    expect(hasData.value).toBe(true)
-    expect(state.value).toBe(fetchState.ERROR)
-  })
-
   it('exposes readonly derived refs to callers', () => {
     const data = ref<TestRow[] | undefined>(undefined)
     const error = ref<unknown>(undefined)
