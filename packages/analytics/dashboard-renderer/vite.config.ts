@@ -30,8 +30,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/analytics-utilities',
         '@kong-ui-public/analytics-geo-map',
         '@kong-ui-public/table-data-grid',
-        // Keep grid styles tied to the consumer's installed grid version.
-        '@kong-ui-public/table-data-grid/dist/style.css',
         'swrv',
         '@zumer/snapdom',
         'jspdf',
