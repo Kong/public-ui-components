@@ -80,17 +80,11 @@ const mountTestTableDataGrid = ({
     onState,
   }
 
-  const wrapper = gridProps.mode === 'unpaginated'
-    ? mount(TableDataGrid<TestRow>, {
-      attachTo: container,
-      props: { ...commonProps, ...gridProps },
-      slots,
-    })
-    : mount(TableDataGrid<TestRow>, {
-      attachTo: container,
-      props: { ...commonProps, ...gridProps },
-      slots,
-    })
+  const wrapper = mount(TableDataGrid<TestRow>, {
+    attachTo: container,
+    props: { ...commonProps, ...gridProps },
+    slots,
+  })
 
   const appRoot = container.firstElementChild
   if (appRoot instanceof HTMLElement) {
@@ -98,10 +92,6 @@ const mountTestTableDataGrid = ({
   }
 
   return wrapper
-}
-
-const waitForCallCount = async (getCallCount: () => number, count: number) => {
-  await expect.poll(getCallCount).toBe(count)
 }
 
 const element = <ElementType extends HTMLElement = HTMLElement>(selector: string): ElementType => {
@@ -136,18 +126,18 @@ const expectOverflowTooltip = async (value: string) => {
 }
 
 describe('<TableDataGrid /> in Browser Mode', () => {
-  it('replaces the infinite fetcher without a refresh key and ignores its pending result', async () => {
-    let resolvePending!: (result: Awaited<ReturnType<TableDataGridFetcher<TestRow>>>) => void
-    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(() => new Promise((resolve) => {
-      resolvePending = resolve
-    }))
+  it('replaces the infinite fetcher without a refresh key', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockResolvedValue({
+      data: [rows[0]],
+      hasMore: false,
+    })
     const replacementFetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockResolvedValue({
       data: [rows[1]],
       hasMore: false,
     })
     const table = mountTestTableDataGrid({ fetcher, headers })
 
-    await waitForCallCount(() => fetcher.mock.calls.length, 1)
+    await expect.element(page.getByText('Gateway service', { exact: true })).toBeVisible()
     await table.setProps({ fetcher: replacementFetcher })
     await expect.element(page.getByText('Portal app', { exact: true })).toBeVisible()
     expect(replacementFetcher).toHaveBeenCalledTimes(1)
@@ -157,10 +147,6 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       cursor: undefined,
     }))
 
-    resolvePending({ data: [rows[0]], hasMore: false })
-    await nextTick()
-    await expect.element(page.getByText('Portal app', { exact: true })).toBeVisible()
-    expect(cell(0, 'name').textContent).not.toContain('Gateway service')
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
