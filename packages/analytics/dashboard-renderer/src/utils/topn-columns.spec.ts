@@ -79,7 +79,7 @@ describe('createTopNPresentation', () => {
     })
 
     expect(presentation.headers.map((header) => header.key)).toEqual(['ROUTE', 'GATEWAY_SERVICE', 'REQUEST_COUNT', '4XX'])
-    expect(rows.map((row) => row.record.event.ROUTE)).toEqual(['route1', 'route2'])
+    expect(rows.map(row => row.ROUTE)).toEqual(['route1', 'route2'])
     expect(presentation.getDimension(rows[1], 'ROUTE')).toEqual({
       id: 'route2',
       label: 'Deleted route',
