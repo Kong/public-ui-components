@@ -1,29 +1,10 @@
 # Custom options
 
-Every chart wrapper component in this package accepts an `option` prop that lets you customize or completely take over the generated ECharts configuration.
-
-## Passing only `option`
-
-When you pass `option` without any data props (e.g. `data` on `HeatmapChart`), it is forwarded to the underlying ECharts instance untouched. Use this when the generated config doesn't fit your use case and you want full control:
-
-```vue
-<template>
-  <HeatmapChart :option="option" />
-</template>
-
-<script setup lang="ts">
-import { HeatmapChart } from '@kong-ui-public/e-charts'
-import type { EChartsOption } from 'echarts'
-
-const option: EChartsOption = {
-  // ...any valid ECharts option, fully replacing the generated config
-}
-</script>
-```
+Every chart wrapper component in this package accepts an `option` prop that lets you customize the generated ECharts configuration.
 
 ## Overriding the generated config
 
-When you pass `option` alongside data props, your option is deep-merged **over** the component's generated option. Override only what you need:
+`option` is always deep-merged **over** the component's generated option, whether or not you also pass data props. Override only what you need:
 
 ```vue
 <HeatmapChart
@@ -34,13 +15,44 @@ When you pass `option` alongside data props, your option is deep-merged **over**
 />
 ```
 
-Deep-merge behavior:
+Merge behavior (see `mergeChartOption` in `src/utils`):
 
-- Nested plain objects are merged recursively — your values win.
-- Arrays and non-object values (strings, numbers, booleans) are **replaced**, not merged. To replace the `series` array wholesale, provide it fully formed.
-- Null and undefined overrides are ignored.
+- Nested plain objects are merged recursively, your values win.
+- The top-level `series` array is merged by index when both the generated option and your override provide one, so `{ series: [{ label: { show: true } }] }` overrides just that field and keeps the generated series' `data`. Extra entries in your `series` array beyond the generated one are appended as-is.
+- Any other array or non-object value (strings, numbers, booleans) is **replaced**, not merged. For example, `xAxis.data` or `visualMap.inRange.color` in your option replaces the generated array.
+- Because `series` entries merge by index, a key you don't set keeps its generated value. To change the data, set `data` on the entry explicitly.
+- `null`/`undefined` overrides are ignored.
+
+## The base `ECharts` component (escape hatch)
+
+When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied) and `height`, and registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
+
+```vue
+<template>
+  <ECharts
+    :option="option"
+    height="300px"
+  />
+</template>
+
+<script setup lang="ts">
+import { ECharts } from '@kong-ui-public/e-charts'
+import { use } from 'echarts/core'
+import { BarChart } from 'echarts/charts'
+import type { EChartsOption } from 'echarts'
+
+// The renderer, grid and tooltip are already registered by `ECharts`
+use([BarChart])
+
+const option: EChartsOption = {
+  xAxis: { type: 'category', data: ['Mon', 'Tue', 'Wed'] },
+  yAxis: { type: 'value' },
+  series: [{ type: 'bar', data: [10, 20, 30] }],
+}
+</script>
+```
 
 ## Notes
 
-- Chart components register the ECharts modules (renderer, chart type, `GridComponent`, `TooltipComponent`, etc.) they need, so hosts never import ECharts directly.
-- Every `@kong/design-tokens` color token is resolved from CSS custom properties at runtime (see `useChartColors`), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.
+- Chart wrapper components (e.g. `HeatmapChart`) register the ECharts modules they need (chart type, `VisualMapComponent`, etc.) themselves, and the base `ECharts` component registers the renderer, grid and tooltip, so hosts using them never import ECharts directly.
+- Every `@kong/design-tokens` color token is resolved from CSS custom properties at runtime (see [theming](./theming.md)), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.

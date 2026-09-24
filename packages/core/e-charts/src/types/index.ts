@@ -18,15 +18,20 @@ export type ChartColors = {
   readonly [K in keyof typeof designTokens as K extends `KUI_COLOR${string}` ? K : never]: string
 }
 
-export type HeatmapDataPoint = [number, number, number]
+/**
+ * `[column, row, value]` point. `column`/`row` can be either the category's
+ * index in `xAxisLabels`/`yAxisLabels`, or the category name itself.
+ */
+export type HeatmapDataPoint = [string | number, string | number, number]
 
 export type HeatmapTooltipFormatter = (params: TooltipComponentFormatterCallbackParams) => string
 
 interface BaseChartProps {
   /**
-   * Raw echarts option. When data props are also provided, this option is
-   * deep-merged over the generated option; when provided alone, it is passed
-   * through to the underlying chart untouched.
+   * Raw echarts option, always deep-merged over the generated option (see
+   * `mergeChartOption`): nested plain objects merge recursively, the
+   * top-level `series` array merges by index, and any other array or
+   * primitive value replaces the generated one.
    */
   option?: EChartsOption
   /** Chart height. Defaults to `400px`. */
@@ -34,7 +39,7 @@ interface BaseChartProps {
 }
 
 export interface HeatmapChartProps extends BaseChartProps {
-  /** `[column, row, value]` points. Renders an empty chart when omitted (unless `option` is provided). */
+  /** `[column, row, value]` points. Renders an empty chart when omitted. */
   data?: HeatmapDataPoint[]
   /** Category labels for the x-axis (e.g. week labels). */
   xAxisLabels?: string[]
@@ -43,10 +48,12 @@ export interface HeatmapChartProps extends BaseChartProps {
   seriesName?: string
   /** Lower bound of the visual map. Defaults to `0`. */
   min?: number
-  /** Upper bound of the visual map. Defaults to the largest data value. */
+  /** Upper bound of the visual map. Defaults to the largest data value (at least `1`). */
   max?: number
   /** `[low, high]` colors for the visual map. Defaults to theme token colors. */
   colorRange?: [string, string]
-  /** Custom tooltip formatter. */
+  /** Formats values in the tooltip and the visual map labels. */
+  valueFormatter?: (value: number) => string
+  /** Custom tooltip formatter. Defaults to ECharts' built-in tooltip. */
   tooltipFormatter?: HeatmapTooltipFormatter
 }

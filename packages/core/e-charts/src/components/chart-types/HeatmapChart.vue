@@ -8,16 +8,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { use } from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
 import { HeatmapChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent, VisualMapComponent } from 'echarts/components'
+import { VisualMapComponent } from 'echarts/components'
 import ECharts from '../ECharts.vue'
 import { useChartColors } from '../../composables/useChartColors.ts'
-import { deepMerge } from '../../utils/deepMerge.ts'
+import { mergeChartOption } from '../../utils/mergeChartOption.ts'
 import type { EChartsOption } from 'echarts'
 import type { HeatmapChartProps } from '../../types/index.ts'
 
-use([CanvasRenderer, HeatmapChart, GridComponent, TooltipComponent, VisualMapComponent])
+// The renderer, grid and tooltip are registered by the base `ECharts` component
+use([HeatmapChart, VisualMapComponent])
 
 const {
   option,
@@ -29,6 +29,7 @@ const {
   min,
   max,
   colorRange,
+  valueFormatter,
   tooltipFormatter,
 } = defineProps<HeatmapChartProps>()
 
@@ -36,18 +37,23 @@ const colors = useChartColors()
 
 const generatedOption = computed((): EChartsOption => {
   const seriesData = data ?? []
+  const visualMapFormatter = valueFormatter ? (value: unknown) => valueFormatter(Number(value)) : undefined
 
   return {
     tooltip: {
       position: 'top',
-      ...(tooltipFormatter ? { formatter: tooltipFormatter } : {}),
+      formatter: tooltipFormatter,
+      valueFormatter: valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
     },
     grid: {
-      top: 40,
-      left: 50,
+      top: 10,
+      left: 10,
       right: 20,
-      bottom: 100,
-      height: 140,
+      bottom: 70,
+      // Replaces the deprecated `containLabel: true`: shrink the grid so long
+      // y-axis labels aren't clipped, instead of a fixed `left`.
+      outerBoundsMode: 'same',
+      outerBoundsContain: 'axisLabel',
     },
     xAxis: {
       type: 'category',
@@ -55,7 +61,6 @@ const generatedOption = computed((): EChartsOption => {
       splitArea: { show: false },
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { interval: 0 },
     },
     yAxis: {
       type: 'category',
@@ -66,14 +71,15 @@ const generatedOption = computed((): EChartsOption => {
     },
     visualMap: {
       min: min ?? 0,
-      max: max ?? Math.max(1, ...seriesData.map(([, , value]) => value)),
+      max: max ?? seriesData.reduce((acc, [, , value]) => Math.max(acc, value), 1),
       calculable: true,
       orient: 'horizontal',
       left: 'center',
-      bottom: 20,
+      bottom: 0,
       inRange: {
         color: colorRange ?? [colors.value.KUI_COLOR_BACKGROUND_INFO_WEAKEST, colors.value.KUI_COLOR_BACKGROUND_INFO_STRONG],
       },
+      formatter: visualMapFormatter,
     },
     series: [
       {
@@ -97,9 +103,6 @@ const generatedOption = computed((): EChartsOption => {
   }
 })
 
-const mergedOption = computed(() => (
-  option
-    ? (data ? deepMerge(generatedOption.value, option) : option)
-    : generatedOption.value
-))
+// `option` always deep-merges over the generated option, with `series` merged by index
+const mergedOption = computed(() => mergeChartOption(generatedOption.value, option))
 </script>

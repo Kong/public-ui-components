@@ -44,8 +44,8 @@ export const chartColors = (): ChartColors => {
 }
 
 /**
- * Reactive `chartColors`: re-resolves when `trigger` changes, or when the
- * theme (the `data-kui-theme` attribute on `<html>`) changes.
+ * Reactive `chartColors`: re-resolves when `trigger` changes, and whenever
+ * the theme (the `data-kui-theme` attribute on `<html>`) changes.
  */
 export const useChartColors = (trigger?: Ref<unknown>): Ref<ChartColors> => {
   const colors = ref<ChartColors>(chartColors())
@@ -54,7 +54,9 @@ export const useChartColors = (trigger?: Ref<unknown>): Ref<ChartColors> => {
     watch(trigger, () => {
       colors.value = chartColors()
     })
-  } else if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  }
+
+  if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
     const observer = new MutationObserver(() => {
       colors.value = chartColors()
     })

@@ -81,4 +81,17 @@ describe('useChartColors', () => {
 
     expect(colors.value.KUI_COLOR_BACKGROUND_ACCENT).toBe('#abcdef')
   })
+
+  it('still re-resolves colors on data-kui-theme changes when a trigger ref is also provided', async () => {
+    const trigger = ref(0)
+    const colors = useChartColors(trigger)
+
+    expect(colors.value.KUI_COLOR_BACKGROUND_ACCENT).toBe(KUI_COLOR_BACKGROUND_ACCENT)
+
+    mockComputedStyle({ '--kui-color-background-accent': '#abcdef' })
+    document.documentElement.setAttribute('data-kui-theme', 'classic-night')
+    await nextTick()
+
+    expect(colors.value.KUI_COLOR_BACKGROUND_ACCENT).toBe('#abcdef')
+  })
 })

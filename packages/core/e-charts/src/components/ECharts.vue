@@ -4,6 +4,7 @@
       :autoresize="true"
       class="chart"
       :option="option"
+      :theme="theme"
       v-bind="$attrs"
     />
   </div>
@@ -13,8 +14,9 @@
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { BarChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent } from 'echarts/components'
+import { useChartColors } from '../composables/useChartColors.ts'
+import { useChartTheme } from '../composables/useChartTheme.ts'
 import type { EChartsOption } from 'echarts'
 
 defineOptions({
@@ -23,12 +25,15 @@ defineOptions({
   inheritAttrs: false,
 })
 
-use([CanvasRenderer, BarChart, GridComponent, TooltipComponent])
+use([CanvasRenderer, GridComponent, TooltipComponent])
 
 const { option, height = '400px' } = defineProps<{
   option?: EChartsOption
   height?: string
 }>()
+
+const colors = useChartColors()
+const theme = useChartTheme(colors)
 </script>
 
 <style lang="scss" scoped>

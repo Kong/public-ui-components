@@ -32,14 +32,19 @@ describe('<HeatmapChart />', () => {
     })
     const option = chartOption(wrapper)
 
-    expect(option.tooltip).toEqual({ position: 'top' })
+    expect(option.tooltip.position).toBe('top')
+    expect(option.tooltip.formatter).toBeUndefined()
+    expect(option.grid).toMatchObject({ outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' })
+    expect(option.grid.left).toBe(10)
+    expect(option.grid).not.toHaveProperty('height')
     expect(option.xAxis).toMatchObject({ type: 'category', data: ['May', ''] })
+    expect(option.xAxis.axisLabel).toBeUndefined()
     expect(option.yAxis).toMatchObject({ type: 'category', data: ['Mon', 'Tue'] })
     expect(option.series[0]).toMatchObject({ type: 'heatmap', name: 'Token usage', data })
     expect(option.series[0].itemStyle.borderColor).toBe(KUI_COLOR_BACKGROUND)
   })
 
-  it('derives the visual map max from the data by default', () => {
+  it('derives the visual map bounds from the data by default', () => {
     const wrapper = mountChart({ data, xAxisLabels: [], yAxisLabels: [] })
     const option = chartOption(wrapper)
 
@@ -67,11 +72,22 @@ describe('<HeatmapChart />', () => {
     expect(option.tooltip).toEqual({ position: 'top', formatter: tooltipFormatter })
   })
 
-  it('passes the raw option through untouched when no data is provided', () => {
-    const option = { series: [{ type: 'heatmap', data: [] }] }
-    const wrapper = mountChart({ option })
+  it('uses valueFormatter for the tooltip value and the visual map labels', () => {
+    const valueFormatter = (value: number) => `${value}%`
+    const wrapper = mountChart({ data, xAxisLabels: [], yAxisLabels: [], valueFormatter })
+    const option = chartOption(wrapper)
 
-    expect(chart(wrapper).props('option')).toStrictEqual(option)
+    expect(option.tooltip.valueFormatter(42)).toBe('42%')
+    expect(option.visualMap.formatter(42)).toBe('42%')
+  })
+
+  it('always merges the option over the generated option, even without data', () => {
+    const wrapper = mountChart({ option: { series: [{ label: { show: true } }] } })
+    const option = chartOption(wrapper)
+
+    expect(option.xAxis).toMatchObject({ type: 'category', data: [] })
+    expect(option.grid).toMatchObject({ outerBoundsMode: 'same' })
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data: [], label: { show: true } })
   })
 
   it('deep-merges the option over the generated option when both are provided', () => {
@@ -85,5 +101,17 @@ describe('<HeatmapChart />', () => {
 
     expect(option.visualMap).toMatchObject({ min: 0, max: 500 })
     expect(option.series[0]).toMatchObject({ type: 'heatmap', data })
+  })
+
+  it('merges a series override by index, keeping the generated series data', () => {
+    const wrapper = mountChart({
+      data,
+      xAxisLabels: ['May'],
+      yAxisLabels: ['Mon'],
+      option: { series: [{ label: { show: true } }] },
+    })
+    const option = chartOption(wrapper)
+
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data, label: { show: true } })
   })
 })
