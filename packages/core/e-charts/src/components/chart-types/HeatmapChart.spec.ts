@@ -1,0 +1,106 @@
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import HeatmapChart from './HeatmapChart.vue'
+import ECharts from '../ECharts.vue'
+import {
+  KUI_COLOR_BACKGROUND,
+  KUI_COLOR_BACKGROUND_INFO_STRONG,
+  KUI_COLOR_BACKGROUND_INFO_WEAKEST,
+} from '@kong/design-tokens'
+
+const mountChart = (props: Record<string, unknown> = {}) => mount(HeatmapChart, {
+  props,
+  global: { stubs: { ECharts: true } },
+})
+
+const chart = (wrapper: ReturnType<typeof mountChart>) => wrapper.getComponent(ECharts)
+
+const chartOption = (wrapper: ReturnType<typeof mountChart>) => chart(wrapper).props('option') as any
+
+const data: Array<[number, number, number]> = [
+  [0, 0, 100],
+  [1, 2, 900],
+]
+
+describe('<HeatmapChart />', () => {
+  it('builds the option from data props', () => {
+    const wrapper = mountChart({
+      data,
+      xAxisLabels: ['May', ''],
+      yAxisLabels: ['Mon', 'Tue'],
+      seriesName: 'Token usage',
+    })
+    const option = chartOption(wrapper)
+
+    expect(option.tooltip.position).toBe('top')
+    expect(option.grid).toMatchObject({ outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' })
+    expect(option.grid.left).toBe(10)
+    expect(option.grid).not.toHaveProperty('height')
+    expect(option.xAxis).toMatchObject({ type: 'category', data: ['May', ''] })
+    expect(option.xAxis.axisLabel).toBeUndefined()
+    expect(option.yAxis).toMatchObject({ type: 'category', data: ['Mon', 'Tue'], inverse: true, axisLabel: { overflow: 'truncate' } })
+    expect(option.series[0].label.show).toBe(false)
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', name: 'Token usage', data })
+    expect(option.series[0].itemStyle.borderColor).toBe(KUI_COLOR_BACKGROUND)
+  })
+
+  it('derives the visual map bounds from the data by default', () => {
+    const wrapper = mountChart({ data, xAxisLabels: [], yAxisLabels: [] })
+    const option = chartOption(wrapper)
+
+    expect(option.visualMap).toMatchObject({
+      min: 0,
+      max: 900,
+      inRange: { color: [KUI_COLOR_BACKGROUND_INFO_WEAKEST, KUI_COLOR_BACKGROUND_INFO_STRONG] },
+    })
+  })
+
+  it('supports explicit bounds and color range', () => {
+    const wrapper = mountChart({
+      data,
+      xAxisLabels: [],
+      yAxisLabels: [],
+      min: 5,
+      max: 1000,
+      colorRange: ['#111111', '#222222'],
+    })
+    const option = chartOption(wrapper)
+
+    expect(option.visualMap).toMatchObject({ min: 5, max: 1000, inRange: { color: ['#111111', '#222222'] } })
+  })
+
+  it('supports more than two gradient colors', () => {
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], colorRange: ['#111', '#222', '#333'] }))
+
+    expect(option.visualMap.inRange.color).toEqual(['#111', '#222', '#333'])
+  })
+
+  it('always merges the option over the generated option, even without data', () => {
+    const wrapper = mountChart({ option: { grid: { top: 30 } } })
+    const option = chartOption(wrapper)
+
+    expect(option.xAxis).toMatchObject({ type: 'category', data: [] })
+    expect(option.grid).toMatchObject({ top: 30, outerBoundsMode: 'same' })
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data: [] })
+  })
+
+  it('deep-merges the option over the generated option when both are provided', () => {
+    const wrapper = mountChart({
+      data,
+      xAxisLabels: ['May'],
+      yAxisLabels: ['Mon'],
+      option: { visualMap: { max: 500 } },
+    })
+    const option = chartOption(wrapper)
+
+    expect(option.visualMap).toMatchObject({ min: 0, max: 500 })
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data })
+  })
+
+  it('replaces the generated series when option.series is provided', () => {
+    const series = [{ type: 'heatmap', data: [[0, 0, 1]] }]
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { series } }))
+
+    expect(option.series).toEqual(series)
+  })
+})
