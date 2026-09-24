@@ -17,6 +17,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('./pages/HeatmapDemo.vue'),
     },
+    {
+      path: '/treemap',
+      name: 'treemap',
+      component: () => import('./pages/TreeMapDemo.vue'),
+    },
   ],
 })
 

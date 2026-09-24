@@ -1,8 +1,8 @@
 import type * as designTokens from '@kong/design-tokens'
-import type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams } from 'echarts'
+import type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption } from 'echarts'
 
 // Re-export echarts option types for consumer convenience
-export type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams }
+export type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption }
 
 /**
  * Color token values resolved at runtime, keyed by the design token names
@@ -63,6 +63,36 @@ interface BaseChartProps {
   height?: string
   /** Bold title of the shared tooltip, like `tooltipTitle` in `@kong-ui-public/analytics-chart`. Empty by default. */
   tooltipTitle?: string
+}
+
+/** A node in the treemap's hierarchical data: a named value with optional children. */
+export interface TreeMapDataNode {
+  name: string
+  value?: number
+  children?: TreeMapDataNode[]
+  /** Per-node fill and borders, overriding the palette; see the [treemap data docs](../docs/treemap-chart.md#data). */
+  itemStyle?: { color?: string, borderColor?: string, borderWidth?: number, gapWidth?: number }
+  /** Per-node label tweaks, e.g. `{ offset: [0, 9] }` to leave room for an overlaid icon. */
+  label?: { color?: string, offset?: [number, number] }
+}
+
+export interface TreeMapChartProps extends BaseChartProps {
+  /** Hierarchical data: top-level groups with nested children. Renders an empty chart when omitted. */
+  data?: TreeMapDataNode[]
+  seriesName?: string
+  /** Shows each node's value (formatted with `valueFormatter`) under its name. */
+  showValues?: boolean
+  /** Formats values in the tooltip and the node labels. */
+  valueFormatter?: (value: number) => string
+  /** Categorical colors, one per top-level group; cycled if more groups than colors */
+  colorPalette?: string[]
+  /** Enables drill-down mode with the breadcrumb */
+  leafDepth?: number
+  /**
+   * Deep-merged into the generated treemap series, e.g. to change node borders
+   * or label styles. The series `data` still comes from `data`.
+   */
+  seriesOption?: TreemapSeriesOption
 }
 
 export interface HeatmapChartProps extends BaseChartProps {
