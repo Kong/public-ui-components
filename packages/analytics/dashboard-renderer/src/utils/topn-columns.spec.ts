@@ -31,8 +31,6 @@ describe('TopN column calculations', () => {
   ])('converts %s to %s', (input, expected) => {
     expect(toNumber(input)).toBe(expected)
   })
-
-
 })
 
 describe('createTopNPresentation', () => {
