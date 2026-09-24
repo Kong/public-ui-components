@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
@@ -68,9 +69,6 @@ vi.mock('./TableDataGridRenderer.vue', () => ({
   default: defineComponent({
     name: 'TableDataGridRenderer',
     props: {
-      chartType: { type: String, required: true },
-      chartOptions: { type: Object, default: undefined },
-      fitToContent: { type: Boolean, default: false },
       context: {
         type: Object,
         required: true,
@@ -92,7 +90,7 @@ vi.mock('./TableDataGridRenderer.vue', () => ({
         required: true,
       },
     },
-    emits: ['loading-change', 'chart-data', 'query-complete'],
+    emits: ['loading-change'],
     setup() {
       return () => h('div', {
         'data-testid': 'table-data-grid-renderer-stub',
@@ -515,14 +513,10 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
   })
 
-  it('uses the shared grid renderer for TopN and remounts when switching table types', async () => {
+  it('passes fitToContent to TopN tiles', () => {
     const topNDefinition: TileDefinition = {
       chart: { type: 'top_n', entity_link: '/services/{entity-id}' },
       query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'] },
-    }
-    const tableDefinition: TileDefinition = {
-      chart: { type: 'table' },
-      query: { datasource: 'platform_usage', entity: 'route', columns: ['name'] },
     }
     const wrapper = mount(DashboardTile, {
       props: {
@@ -533,31 +527,14 @@ describe('<DashboardTile /> table tiles', () => {
       global: {
         plugins: [Kongponents],
         provide: { [INJECT_QUERY_PROVIDER]: mockQueryProvider },
-        stubs: { TableDataGridRenderer: false },
       },
     })
-    const topN = wrapper.findComponent(TableDataGridRenderer)
-    expect(topN.props()).toMatchObject({
-      chartType: 'top_n', chartOptions: topNDefinition.chart,
-      query: topNDefinition.query, fitToContent: true,
+
+    expect(wrapper.findComponent(TopNTableRenderer).props()).toMatchObject({
+      chartOptions: topNDefinition.chart,
+      fitToContent: true,
+      query: topNDefinition.query,
     })
-    const data = { data: [], meta: { start: '', end: '', granularity_ms: 0 } }
-    topN.vm.$emit('chart-data', data)
-    topN.vm.$emit('query-complete')
-    expect(wrapper.emitted('chart-data')).toEqual([[data]])
-    expect(wrapper.emitted('tile-loaded')).toHaveLength(2)
-
-    await wrapper.setProps({ definition: tableDefinition })
-    const table = wrapper.findComponent(TableDataGridRenderer)
-    expect(table.vm).not.toBe(topN.vm)
-    expect(table.props()).toMatchObject({ chartType: 'table', query: tableDefinition.query })
-    table.vm.$emit('loading-change', true)
-    table.vm.$emit('loading-change', false)
-    expect(wrapper.emitted('tile-loaded')).toHaveLength(3)
-
-    await wrapper.setProps({ definition: topNDefinition })
-    expect(wrapper.findComponent(TableDataGridRenderer).vm).not.toBe(table.vm)
-    wrapper.unmount()
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {
