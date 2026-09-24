@@ -39,7 +39,8 @@ describe('<HeatmapChart />', () => {
     expect(option.grid).not.toHaveProperty('height')
     expect(option.xAxis).toMatchObject({ type: 'category', data: ['May', ''] })
     expect(option.xAxis.axisLabel).toBeUndefined()
-    expect(option.yAxis).toMatchObject({ type: 'category', data: ['Mon', 'Tue'] })
+    expect(option.yAxis).toMatchObject({ type: 'category', data: ['Mon', 'Tue'], inverse: true, axisLabel: { overflow: 'truncate' } })
+    expect(option.series[0].label.show).toBe(false)
     expect(option.series[0]).toMatchObject({ type: 'heatmap', name: 'Token usage', data })
     expect(option.series[0].itemStyle.borderColor).toBe(KUI_COLOR_BACKGROUND)
   })
@@ -81,13 +82,55 @@ describe('<HeatmapChart />', () => {
     expect(option.visualMap.formatter(42)).toBe('42%')
   })
 
+  it('has no zoom controls by default', () => {
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [] }))
+
+    expect(option).not.toHaveProperty('dataZoom')
+    expect(option.grid).toMatchObject({ right: 20, bottom: 70 })
+  })
+
+  it('supports more than two gradient colors', () => {
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], colorRange: ['#111', '#222', '#333'] }))
+
+    expect(option.visualMap.inRange.color).toEqual(['#111', '#222', '#333'])
+  })
+
+  it('shows formatted values in the cells with showValues', () => {
+    const option = chartOption(mountChart({
+      data,
+      xAxisLabels: [],
+      yAxisLabels: [],
+      showValues: true,
+      valueFormatter: (value: number) => `${value.toFixed(1)}%`,
+    }))
+
+    expect(option.series[0].label.show).toBe(true)
+    expect(option.series[0].label.formatter({ value: [0, 0, 12.34] })).toBe('12.3%')
+  })
+
+  it('adds a locked scrollbar window when there are more rows than visibleRows', () => {
+    const yAxisLabels = ['a', 'b', 'c', 'd', 'e']
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels, visibleRows: 3 }))
+
+    expect(option.dataZoom).toEqual([
+      expect.objectContaining({ type: 'slider', yAxisIndex: 0, zoomLock: true, startValue: 0, endValue: 2, width: 8 }),
+    ])
+    expect(option.grid.right).toBe(30)
+  })
+
+  it('skips the scrollbar when all rows fit in visibleRows', () => {
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: ['a', 'b'], visibleRows: 3 }))
+
+    expect(option).not.toHaveProperty('dataZoom')
+  })
+
   it('always merges the option over the generated option, even without data', () => {
-    const wrapper = mountChart({ option: { series: [{ label: { show: true } }] } })
+    const wrapper = mountChart({ option: { grid: { top: 30 } } })
     const option = chartOption(wrapper)
 
     expect(option.xAxis).toMatchObject({ type: 'category', data: [] })
-    expect(option.grid).toMatchObject({ outerBoundsMode: 'same' })
-    expect(option.series[0]).toMatchObject({ type: 'heatmap', data: [], label: { show: true } })
+    expect(option.grid).toMatchObject({ top: 30, outerBoundsMode: 'same' })
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data: [] })
   })
 
   it('deep-merges the option over the generated option when both are provided', () => {
@@ -103,15 +146,22 @@ describe('<HeatmapChart />', () => {
     expect(option.series[0]).toMatchObject({ type: 'heatmap', data })
   })
 
-  it('merges a series override by index, keeping the generated series data', () => {
+  it('deep-merges seriesOption into the generated series, keeping its data', () => {
     const wrapper = mountChart({
       data,
       xAxisLabels: ['May'],
       yAxisLabels: ['Mon'],
-      option: { series: [{ label: { show: true } }] },
+      seriesOption: { itemStyle: { borderRadius: 0 } },
     })
     const option = chartOption(wrapper)
 
-    expect(option.series[0]).toMatchObject({ type: 'heatmap', data, label: { show: true } })
+    expect(option.series[0]).toMatchObject({ type: 'heatmap', data, itemStyle: { borderRadius: 0, borderWidth: 2 } })
+  })
+
+  it('replaces the generated series when option.series is provided', () => {
+    const series = [{ type: 'heatmap', data: [[0, 0, 1]] }]
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { series } }))
+
+    expect(option.series).toEqual(series)
   })
 })

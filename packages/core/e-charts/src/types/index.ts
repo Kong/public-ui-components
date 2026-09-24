@@ -1,8 +1,8 @@
 import type * as designTokens from '@kong/design-tokens'
-import type { EChartsOption, TooltipComponentFormatterCallbackParams } from 'echarts'
+import type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams } from 'echarts'
 
 // Re-export echarts option types for consumer convenience
-export type { EChartsOption, TooltipComponentFormatterCallbackParams }
+export type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams }
 
 /**
  * Color token values resolved at runtime, keyed by the design token names
@@ -28,10 +28,10 @@ export type HeatmapTooltipFormatter = (params: TooltipComponentFormatterCallback
 
 interface BaseChartProps {
   /**
-   * Raw echarts option, always deep-merged over the generated option (see
-   * `mergeChartOption`): nested plain objects merge recursively, the
-   * top-level `series` array merges by index, and any other array or
-   * primitive value replaces the generated one.
+   * Raw echarts option, always deep-merged over the generated option: nested
+   * plain objects merge recursively, arrays and primitive values replace the
+   * generated ones. Passing `series` here replaces the generated series, so
+   * use the chart's `seriesOption` prop to tweak it instead.
    */
   option?: EChartsOption
   /** Chart height. Defaults to `400px`. */
@@ -50,10 +50,22 @@ export interface HeatmapChartProps extends BaseChartProps {
   min?: number
   /** Upper bound of the visual map. Defaults to the largest data value (at least `1`). */
   max?: number
-  /** `[low, high]` colors for the visual map. Defaults to theme token colors. */
-  colorRange?: [string, string]
+  /** Gradient colors for the visual map, from low to high (two or more). Defaults to theme token colors. */
+  colorRange?: string[]
   /** Formats values in the tooltip and the visual map labels. */
   valueFormatter?: (value: number) => string
   /** Custom tooltip formatter. Defaults to ECharts' built-in tooltip. */
   tooltipFormatter?: HeatmapTooltipFormatter
+  /**
+   * Show at most this many rows, with a scrollbar on the right to scroll
+   * through the rest.
+   */
+  visibleRows?: number
+  /** Show each cell's value (formatted with `valueFormatter`) inside the cell. */
+  showValues?: boolean
+  /**
+   * Deep-merged into the generated heatmap series, e.g. to change cell
+   * borders or label styles. The series `data` still comes from `data`.
+   */
+  seriesOption?: HeatmapSeriesOption
 }

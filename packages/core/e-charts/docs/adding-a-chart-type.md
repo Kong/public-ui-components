@@ -6,7 +6,7 @@ Checklist for adding a new chart wrapper component (using `HeatmapChart` as the 
 2. **Register the echarts modules it needs** with `use()` from `echarts/core`: the chart type itself, plus any extra components (e.g. `VisualMapComponent`). The canvas renderer, `GridComponent` and `TooltipComponent` are already registered by the base `ECharts` component, so don't register them again.
 3. **Extend `BaseChartProps`** in `src/types/index.ts` with the props specific to your chart (data shape, labels, formatters, etc.), and export any new data types (e.g. `XDataPoint`).
 4. **Build the generated option** in a `computed` inside the component. Pull theme colors from `useChartColors()` for any color defaults (gradients, borders, etc.), the same way `HeatmapChart` uses `colors.value.KUI_COLOR_*`.
-5. **Merge with `mergeChartOption`** (from `src/utils`) so the `option` prop always deep-merges over your generated option, with the top-level `series` array merged by index. Don't add a "pass option through untouched" branch: `option` always merges.
+5. **Merge with `deepMerge`** (from `src/utils`): merge the `seriesOption` prop into your generated series (typed with the matching ECharts series type, e.g. `HeatmapSeriesOption`), then merge the `option` prop over the whole generated option. Don't add a "pass option through untouched" branch: `option` always merges.
 6. **Render through the base `ECharts` component**, passing your merged option and `height`, so the shared theme (colors, fonts) is applied consistently.
 7. **Export the component** from `src/index.ts`.
 8. **Add tests**:
