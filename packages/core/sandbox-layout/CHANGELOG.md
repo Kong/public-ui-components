@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.6...%40kong-ui-public%2Fsandbox-layout%402.7.7) (2026-09-24)
+
+### Bug Fixes
+
+* text color ([#3880](https://github.com/Kong/public-ui-components/issues/3880)) ([2244f66](https://github.com/Kong/public-ui-components/commit/2244f664658ded0f2bc214adae24c1a45ffe8030))
+
+
 ## [2.7.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.5...%40kong-ui-public%2Fsandbox-layout%402.7.6) (2026-09-24)
 
 ### Bug Fixes
