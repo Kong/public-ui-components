@@ -7,6 +7,7 @@ import {
   createTopNGridRows,
   createTopNPresentation,
   getColumnOptions,
+  getTopNProviderIcon,
   toNumber,
 } from './topn-columns'
 
@@ -50,22 +51,12 @@ describe('createTopNPresentation', () => {
     ],
   }
 
-  it('adds provider icons only to dimensions with the ai_provider icon set', () => {
-    const providerData: ExploreResultV4 = {
-      ...data,
-      meta: { ...data.meta, display: { ai_provider: { openai: { name: 'OpenAI' } }, route: { azure: { name: 'azure' } } } },
-      data: [{ event: { ai_provider: 'openai', route: 'azure', REQUEST_COUNT: 1, '4XX': 0 }, timestamp: '' }],
-    }
-    const { headers } = createTopNPresentation({
-      data: providerData,
-      columnOptions: { AI_PROVIDER: { icon_set: 'ai_provider' } },
-      i18n,
-    })
-    const providerIcons = headers.find(header => header.key === 'ai_provider')?.icons ?? []
+  it('selects provider icons from opted-in raw ids only', () => {
+    const columnOptions = { AI_PROVIDER: { icon_set: 'ai_provider' as const } }
 
-    expect(providerIcons.find(mapping => mapping.pattern.test('OpenAI'))?.icon).toBe(OpenAiIcon)
-    expect(providerIcons.some(mapping => mapping.pattern.test('openai-proxy'))).toBe(false)
-    expect(headers.find(header => header.key === 'route')?.icons).toBeUndefined()
+    expect(getTopNProviderIcon({ columnOptions, columnKey: 'ai_provider', rawValue: 'OpenAI' })).toBe(OpenAiIcon)
+    expect(getTopNProviderIcon({ columnOptions, columnKey: 'ai_provider', rawValue: 'openai-proxy' })).toBeUndefined()
+    expect(getTopNProviderIcon({ columnOptions, columnKey: 'route', rawValue: 'openai' })).toBeUndefined()
   })
 
   it('preserves dimension/metric order and maps rows against the full result', () => {
