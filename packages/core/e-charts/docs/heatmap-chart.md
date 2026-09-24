@@ -53,12 +53,6 @@ const data: HeatmapDataPoint[] = [
 | `max` | `number` | largest data value (at least `1`) | Upper bound of the visual map. |
 | `colorRange` | `string[]` | theme tokens | Gradient colors from low to high (two or more). |
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip (ECharts' `tooltip.valueFormatter`) and the visual map labels. |
-| `tooltipFormatter` | `HeatmapTooltipFormatter` | shared tooltip | Raw ECharts `tooltip.formatter`. Replaces the shared tooltip, see [Tooltip](#tooltip). |
-| `showValues` | `boolean` | `false` | Shows each cell's value inside the cell, formatted with `valueFormatter`. The text color adapts to the cell color. |
-| `visibleRows` | `number` | none (all rows) | Shows at most this many rows, with a scrollbar to scroll through the rest, see [Scrolling rows](#scrolling-rows). |
-| `seriesOption` | `HeatmapSeriesOption` | none | Deep-merged into the generated heatmap series, e.g. `{ itemStyle: { borderRadius: 0 } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
-| `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip (ECharts' `tooltip.valueFormatter`) and the visual map labels. |
-| `tooltipFormatter` | `HeatmapTooltipFormatter` | ECharts default | Custom tooltip formatter (ECharts' `tooltip.formatter`). |
 | `showValues` | `boolean` | `false` | Shows each cell's value inside the cell, formatted with `valueFormatter`. The text color adapts to the cell color. |
 | `visibleRows` | `number` | none (all rows) | Shows at most this many rows, with a scrollbar to scroll through the rest, see [Scrolling rows](#scrolling-rows). |
 | `seriesOption` | `HeatmapSeriesOption` | none | Deep-merged into the generated heatmap series, e.g. `{ itemStyle: { borderRadius: 0 } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
@@ -69,7 +63,7 @@ const data: HeatmapDataPoint[] = [
 
 Hovering a cell shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips): the column as the title, `seriesName` as the metric, and a row with the cell color, the row name and the value formatted with `valueFormatter`.
 
-To show something else entirely, pass a raw ECharts `tooltipFormatter`. It replaces the shared tooltip.
+To show something else entirely, pass a formatter through `option`: `:option="{ tooltip: { formatter } }"`. It replaces the shared tooltip.
 
 ## Rows
 

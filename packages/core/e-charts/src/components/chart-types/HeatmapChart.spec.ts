@@ -75,7 +75,7 @@ describe('<HeatmapChart />', () => {
     const formatter = () => 'formatted'
     const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { tooltip: { formatter } } }))
 
-    expect(option.tooltip).toMatchObject({ position: 'top', formatter })
+    expect(option.tooltip.formatter).toBe(formatter)
   })
 
   it('uses valueFormatter for the tooltip value and the visual map labels', () => {
@@ -101,29 +101,6 @@ describe('<HeatmapChart />', () => {
       title: 'May',
       rows: [{ label: 'Tue', value: '3' }],
     })
-  })
-
-  it('has no zoom controls by default', () => {
-    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [] }))
-
-    expect(option).not.toHaveProperty('dataZoom')
-    expect(option.grid).toMatchObject({ right: 20, bottom: 70 })
-  })
-
-  it('customizes the tooltip through option.tooltip.formatter', () => {
-    const formatter = () => 'formatted'
-    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { tooltip: { formatter } } }))
-
-    expect(option.tooltip).toMatchObject({ position: 'top', formatter })
-  })
-
-  it('uses valueFormatter for the tooltip value and the visual map labels', () => {
-    const valueFormatter = (value: number) => `${value}%`
-    const wrapper = mountChart({ data, xAxisLabels: [], yAxisLabels: [], valueFormatter })
-    const option = chartOption(wrapper)
-
-    expect(option.tooltip.valueFormatter(42)).toBe('42%')
-    expect(option.visualMap.formatter(42)).toBe('42%')
   })
 
   it('has no zoom controls by default', () => {
