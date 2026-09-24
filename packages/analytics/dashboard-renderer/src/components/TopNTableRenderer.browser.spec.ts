@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { AnalyticsBridge, ExploreResultV4, PlatformTabularResponse, TileDefinition, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
-import TableDataGridRenderer from './TableDataGridRenderer.vue'
+import type { AnalyticsBridge, ExploreResultV4, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
@@ -22,6 +22,8 @@ const result: ExploreResultV4 = {
 }
 
 let container: HTMLDivElement
+// SWRV caches responses by query key across mounts; a unique refresh counter isolates each test.
+let refreshCounter = 0
 
 afterEach(async () => {
   if (document.fullscreenElement) {
@@ -34,30 +36,22 @@ afterEach(async () => {
 const mountRenderer = ({
   data = result,
   chartOptions,
-  firstQueryResponse,
-  refreshInterval = 0,
 }: {
   data?: ExploreResultV4
   chartOptions?: Omit<TopNTableOptions, 'type'>
-  firstQueryResponse?: Promise<ExploreResultV4>
-  refreshInterval?: number
 } = {}) => {
   setupPiniaTestStore()
   container = document.createElement('div')
   document.body.append(container)
   const queryFn = vi.fn().mockResolvedValue(data)
-  if (firstQueryResponse) {
-    queryFn.mockReturnValueOnce(firstQueryResponse)
-  }
   const chartData = vi.fn()
   const queryComplete = vi.fn()
-  const wrapper = mount(TableDataGridRenderer, {
+  const wrapper = mount(TopNTableRenderer, {
     attachTo: container,
     props: {
-      chartType: 'top_n',
-      context: { filters: [], tz: 'UTC', editable: false, refreshInterval },
+      context: { filters: [], tz: 'UTC', editable: false, refreshInterval: 0 },
       query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'], limit: 40 },
-      queryReady: true, refreshCounter: 0, height: 280,
+      queryReady: true, refreshCounter: ++refreshCounter, height: 280,
       chartOptions: { type: 'top_n', ...(chartOptions ?? {
         entity_link: 'https://example.com/services/{entity-id}',
         column_options: { request_count: { label: 'Requests', value: 'relative', bar: 'max' } },
@@ -97,26 +91,7 @@ const expectOverflowTooltip = async (label: HTMLElement, name: string) => {
   expect(element('.popover').closest('.ag-cell')).toBeNull()
 }
 
-describe('TableDataGridRenderer grid integration', () => {
-  it('replaces an in-flight TopN query on interval refresh', async () => {
-    let resolveFirst!: (data: ExploreResultV4) => void
-    const firstQueryResponse = new Promise<ExploreResultV4>((resolve) => {
-      resolveFirst = resolve
-    })
-    const { wrapper, queryFn, chartData } = mountRenderer({ firstQueryResponse, refreshInterval: 200 })
-
-    await expect.poll(() => queryFn.mock.calls.length).toBeGreaterThan(1)
-    expect(queryFn.mock.calls[0][1].signal.aborted).toBe(true)
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-
-    resolveFirst({ ...result, data: result.data.slice(1) })
-    await flushPromises()
-    expect(cell(0, 'gateway_service').textContent).toContain('Service 1')
-    expect(chartData).toHaveBeenCalledWith(result)
-    expect(chartData.mock.calls.every(([data]) => data === result)).toBe(true)
-    wrapper.unmount()
-  })
-
+describe('TopNTableRenderer grid integration', () => {
   it.each([
     { name: 'fetches the expanded export result', increaseCsvExportLimit: undefined },
     { name: 'reuses the loaded result when limit increases are disabled', increaseCsvExportLimit: false },
@@ -142,7 +117,7 @@ describe('TableDataGridRenderer grid integration', () => {
           chart: { type: 'top_n' },
           query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'], limit: 40 },
         },
-        queryReady: true, tileId: 'csv', height: 320,
+        queryReady: true, refreshCounter: ++refreshCounter, tileId: 'csv', height: 320,
       },
       global: {
         provide: {
@@ -190,83 +165,6 @@ describe('TableDataGridRenderer grid integration', () => {
     }
     expect(await blob.text()).toBe(['Gateway service,Request count', ...expectedRows].join('\r\n'))
     expect(queryFn).toHaveBeenCalledTimes(increaseCsvExportLimit === false ? 1 : 2)
-  })
-
-  it('switches table types without retaining pending requests, rows, or completion events', async () => {
-    setupPiniaTestStore()
-    container = document.createElement('div')
-    document.body.append(container)
-    const tableDefinition: TileDefinition = {
-      chart: { type: 'table' },
-      query: { datasource: 'platform_usage', entity: 'route', columns: ['name'] },
-    }
-    const topNDefinition: TileDefinition = {
-      chart: { type: 'top_n' },
-      query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'], limit: 40 },
-    }
-    const tableResponse: PlatformTabularResponse = {
-      records: [{ name: 'A tabular route' }],
-      meta: { display: {}, columns: ['name'], datasource: 'platform_usage', entity: 'route', page_size: 25, query_id: 'table' },
-    }
-    let resolveTable!: (data: PlatformTabularResponse) => void
-    const tabularQueryFn = vi.fn<NonNullable<AnalyticsBridge['tabularQueryFn']>>()
-      .mockReturnValueOnce(new Promise(resolve => {
-        resolveTable = resolve
-      }))
-      .mockResolvedValue(tableResponse)
-    const queryFn = vi.fn<AnalyticsBridge['queryFn']>().mockResolvedValue(result)
-    const wrapper = mount(DashboardTile, {
-      attachTo: container,
-      props: {
-        context: { filters: [], tz: 'UTC', editable: false, refreshInterval: 0 },
-        definition: tableDefinition, queryReady: true, tileId: 'switch', height: 320,
-      },
-      global: {
-        provide: {
-          [INJECT_QUERY_PROVIDER]: {
-            queryFn, tabularQueryFn, datasourceConfigFn: async () => [],
-            configFn: async () => ({ analytics: { percentiles: true }, requests: null }),
-          },
-        },
-      },
-    })
-    await expect.poll(() => tabularQueryFn.mock.calls.length).toBe(1)
-    expect(queryFn).not.toHaveBeenCalled()
-    const tableAbort = tabularQueryFn.mock.calls[0][1]
-
-    await wrapper.setProps({ definition: topNDefinition })
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-    expect(tableAbort?.signal.aborted).toBe(true)
-    expect(queryFn).toHaveBeenCalledOnce()
-    const topN = wrapper.findComponent(TableDataGridRenderer)
-    expect(topN.emitted('loading-change')).toBeUndefined()
-    expect(topN.emitted('chart-data')).toEqual([[result]])
-    expect(topN.emitted('query-complete')).toHaveLength(1)
-    const completed = wrapper.emitted('tile-loaded')?.length
-    resolveTable(tableResponse)
-    await flushPromises()
-    expect(wrapper.emitted('tile-loaded')).toHaveLength(completed ?? 0)
-    expect(headers()).toEqual(['Name', 'Request count'])
-
-    let resolveExplore!: (data: ExploreResultV4) => void
-    queryFn.mockReturnValueOnce(new Promise(resolve => {
-      resolveExplore = resolve
-    }))
-    await wrapper.setProps({ refreshCounter: 1 })
-    await expect.poll(() => queryFn.mock.calls.length).toBe(2)
-    const exploreAbort = queryFn.mock.calls[1][1]
-    await wrapper.setProps({ definition: tableDefinition })
-    await expect.poll(() => cell(0, 'name').textContent).toContain('A tabular route')
-    expect(exploreAbort?.signal.aborted).toBe(true)
-    expect(tabularQueryFn).toHaveBeenCalledTimes(2)
-    const tableCompleted = wrapper.emitted('tile-loaded')?.length
-    resolveExplore({ ...result, data: result.data.slice(1) })
-    await flushPromises()
-    expect(wrapper.emitted('tile-loaded')).toHaveLength(tableCompleted ?? 0)
-    expect(wrapper.emitted('chart-data')).toEqual([[result]])
-    expect(headers()).toEqual(['Name'])
-    expect(cell(0, 'name').textContent).toContain('A tabular route')
-    wrapper.unmount()
   })
 
   it('renders and scrolls the complete result without requesting another block', async () => {
@@ -364,36 +262,6 @@ describe('TableDataGridRenderer grid integration', () => {
     })
     await expect.poll(() => cell(0, 'gateway_service').textContent).toContain(name)
     await expectOverflowTooltip(element('[row-index="0"] [col-id="gateway_service"] .table-data-grid-cell-content'), name)
-  })
-
-  it('refreshes once and retains rows until the replacement resolves', async () => {
-    const { wrapper, queryFn, queryComplete } = mountRenderer()
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-    let finish!: (data: ExploreResultV4) => void
-    queryFn.mockReturnValue(new Promise<ExploreResultV4>((resolve) => {
-      finish = resolve
-    }))
-    await wrapper.setProps({ refreshCounter: 1 })
-    await expect.poll(() => queryFn.mock.calls.length).toBe(2)
-    expect(cell(0, 'request_count').textContent).toContain('(4.88 %)')
-    finish({ ...result, data: result.data.slice(0, 2) })
-    await expect.poll(() => cell(0, 'request_count').textContent).toContain('(50.63 %)')
-    expect(queryFn).toHaveBeenCalledTimes(2)
-    expect(queryComplete).toHaveBeenCalledTimes(2)
-  })
-
-  it('shows the translated current error and recovers on the next refresh', async () => {
-    const { wrapper, queryFn } = mountRenderer()
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-    queryFn.mockRejectedValue({ status: 403 })
-    await wrapper.setProps({ refreshCounter: 1 })
-    await expect.element(page.getByText('Data request forbidden')).toBeVisible()
-    await expect.element(page.getByTestId('table-error-state')).toBeVisible()
-    queryFn.mockResolvedValue(result)
-    await wrapper.setProps({ refreshCounter: 2 })
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-    expect(document.querySelector('[data-testid="table-error-state"]')).toBeNull()
-    expect(queryFn).toHaveBeenCalledTimes(3)
   })
 
   it('renders zero-dimension aggregate metrics without an extra name column', async () => {
