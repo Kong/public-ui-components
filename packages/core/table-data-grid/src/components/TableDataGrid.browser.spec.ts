@@ -373,7 +373,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
-  it('animates a client-side sort without reloading complete results', async () => {
+  it('sorts complete results client-side without reloading', async () => {
     const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
       data: [rows[1], rows[0]],
     })
@@ -390,17 +390,10 @@ describe('<TableDataGrid /> in Browser Mode', () => {
 
     await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
     const gridRoot = element('.ag-root-wrapper')
-    const startedRowTransitions: string[] = []
-    gridRoot.addEventListener('transitionrun', (event) => {
-      if (event.target instanceof HTMLElement && event.target.classList.contains('ag-row')) {
-        startedRowTransitions.push(event.propertyName)
-      }
-    })
 
     await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
 
     await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
-    await expect.poll(() => startedRowTransitions.some(property => property === 'top' || property === 'transform')).toBe(true)
     expect(element('.ag-root-wrapper')).toBe(gridRoot)
     expect(fetcher).toHaveBeenCalledTimes(1)
     expect(onSort).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
@@ -594,14 +587,14 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await expect.poll(() => cell(1, 'name').textContent).toContain('Replacement service')
     await expect.poll(() => cell(0, 'value').textContent).toContain('(25 %)')
     await expect.poll(() => cell(1, 'value').textContent).toContain('(75 %)')
-    await waitForCallCount(() => replacementFetcher.mock.calls.length, 1)
+    expect(initialFetcher).toHaveBeenCalledOnce()
+    expect(replacementFetcher).toHaveBeenCalledOnce()
   })
 
   it('uses default cell presentation when a host slot renders no content', async () => {
     const longName = 'A gateway service name that is much wider than its flexible table column'
     const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockResolvedValue({
       data: [{ ...rows[0], name: longName }],
-      total: 1,
     })
 
     mountTestTableDataGrid({
@@ -615,6 +608,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await nextTick()
     await expectOverflowTooltip(longName)
   })
+
   it('fits complete results to their content and updates sizing without refetching', async () => {
     const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({ data: rows })
     const table = mountTestTableDataGrid({

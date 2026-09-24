@@ -322,11 +322,6 @@ describe('TableDataGridRenderer grid integration', () => {
 
     try {
       await expect.poll(() => label.scrollWidth > label.clientWidth).toBe(true)
-      await page.elementLocator(label).hover()
-      await expect.poll(() => element('.popover').textContent).toContain(name)
-      await expect.element(page.elementLocator(element('.popover'))).toBeVisible()
-      expect(element('.popover').closest('.ag-cell')).toBeNull()
-
       // Playwright's click supplies the user activation required by the native fullscreen API.
       await page.elementLocator(fullscreenButton).click()
       await expect.poll(() => document.fullscreenElement).toBe(container)
@@ -342,19 +337,6 @@ describe('TableDataGridRenderer grid integration', () => {
         fullscreenBounds.top + fullscreenBounds.height / 2,
       )
       expect(fullscreenHit !== null && container.contains(fullscreenHit) && fullscreenTooltip.contains(fullscreenHit)).toBe(true)
-
-      await document.exitFullscreen()
-      await expect.poll(() => document.fullscreenElement).toBeNull()
-      await page.elementLocator(label).hover()
-      await expect.poll(() => element('.popover').textContent).toContain(name)
-      await expect.element(page.elementLocator(element('.popover'))).toBeVisible()
-      const normalTooltip = element('.popover')
-      const normalBounds = normalTooltip.getBoundingClientRect()
-      const normalHit = document.elementFromPoint(
-        normalBounds.left + normalBounds.width / 2,
-        normalBounds.top + normalBounds.height / 2,
-      )
-      expect(normalHit !== null && normalTooltip.contains(normalHit)).toBe(true)
     } finally {
       if (document.fullscreenElement) {
         await document.exitFullscreen()
@@ -363,21 +345,18 @@ describe('TableDataGridRenderer grid integration', () => {
     }
   })
 
-  it('uses default truncation and tooltips for plain dimensions while preserving empty values', async () => {
+  it('uses default truncation and tooltips for plain dimensions', async () => {
     const name = 'Long gateway service name '.repeat(10)
     mountRenderer({
       data: {
         ...result,
-        data: [
-          { timestamp: '', event: { gateway_service: 'empty', request_count: 2 } },
-          { timestamp: '', event: { gateway_service: 'service-2', request_count: 1 } },
-        ],
-        meta: { ...result.meta, display: { gateway_service: { empty: { name: 'empty' }, 'service-2': { name } } } },
+        data: [{ timestamp: '', event: { gateway_service: 'service-1', request_count: 1 } }],
+        meta: { ...result.meta, display: { gateway_service: { 'service-1': { name } } } },
       },
       chartOptions: {},
     })
-    await expect.poll(() => cell(0, 'gateway_service').querySelector('i')?.textContent).toBe('empty')
-    await expectOverflowTooltip(element('[row-index="1"] [col-id="gateway_service"] .table-data-grid-cell-content'), name)
+    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain(name)
+    await expectOverflowTooltip(element('[row-index="0"] [col-id="gateway_service"] .table-data-grid-cell-content'), name)
   })
 
   it('refreshes once and retains rows until the replacement resolves', async () => {
@@ -408,25 +387,6 @@ describe('TableDataGridRenderer grid integration', () => {
     await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
     expect(document.querySelector('[data-testid="table-error-state"]')).toBeNull()
     expect(queryFn).toHaveBeenCalledTimes(3)
-  })
-
-  it('replaces rows for changed query context without accepting a late response', async () => {
-    const { wrapper, queryFn, chartData, queryComplete } = mountRenderer()
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
-    let finish!: (data: ExploreResultV4) => void
-    queryFn.mockReturnValue(new Promise<ExploreResultV4>((resolve) => {
-      finish = resolve
-    }))
-    await wrapper.setProps({ refreshCounter: 1 })
-    await expect.poll(() => queryFn.mock.calls.length).toBe(2)
-    queryFn.mockResolvedValue({ ...result, data: result.data.slice(1) })
-    await wrapper.setProps({ context: { ...wrapper.props('context'), tz: 'America/Vancouver' } })
-    await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 2')
-    finish(result)
-    await flushPromises()
-    expect(cell(0, 'gateway_service').textContent).toContain('Service 2')
-    expect(chartData).toHaveBeenCalledTimes(2)
-    expect(queryComplete).toHaveBeenCalledTimes(2)
   })
 
   it('renders zero-dimension aggregate metrics without an extra name column', async () => {

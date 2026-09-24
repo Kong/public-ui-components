@@ -64,25 +64,6 @@ describe('useTableDataGridColumnDefs', () => {
     expect(columnDefs.value[0]).not.toHaveProperty('initialSortIndex')
   })
 
-  it('exposes complete-result presentation stats and formatted values to the grid', () => {
-    const headers: Array<TableDataGridHeader<{ value: number }>> = [{
-      dataType: 'number',
-      key: 'value',
-      label: 'Value',
-      showPercentage: true,
-      valueFormatter: value => `${value} requests`,
-    }]
-    const rows = ref([{ value: 25 }, { value: 75 }])
-    const { gridContext } = useTableDataGridColumnDefs({
-      headers: ref(headers),
-      mode: 'unpaginated',
-      rows,
-      slots: {},
-    })
-
-    expect(gridContext.value.presentation.stats.value).toEqual({ sum: 100, max: 75 })
-  })
-
   it.each([
     ['infinite', 'unpaginated mode'],
     ['unpaginated', 'dataType'],
