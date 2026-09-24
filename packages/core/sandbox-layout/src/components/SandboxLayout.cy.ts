@@ -78,7 +78,7 @@ describe('<SandboxLayout />', () => {
       })
     })
 
-    describe('themePicker', () => {
+    describe('applyTheming', () => {
       it('renders the theme picker by default', () => {
         cy.mount(SandboxLayout, {
           slots: {
@@ -95,7 +95,7 @@ describe('<SandboxLayout />', () => {
             default: () => h('div', 'This is the content'),
           },
           props: {
-            themePicker: false,
+            applyTheming: false,
           },
         })
 

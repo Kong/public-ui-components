@@ -19,7 +19,7 @@
                 @close="toggleMobileNav"
               >
                 <div
-                  v-if="themePicker"
+                  v-if="applyTheming"
                   class="nav-theme-picker"
                 >
                   <SandboxThemePicker />
@@ -71,7 +71,7 @@
     <div class="layout">
       <div class="desktop-nav-container">
         <div
-          v-if="themePicker"
+          v-if="applyTheming"
           class="nav-theme-picker"
         >
           <SandboxThemePicker />
@@ -118,8 +118,8 @@ const props = defineProps({
     type: Number,
     default: 240,
   },
-  /** Whether to render the built-in theme picker in the sandbox navigation. Set to `false` to leave the sandbox un-themed. */
-  themePicker: {
+  /** Whether to apply a Kong theme to the sandbox and render the theme picker in the navigation. Set to `false` to leave the sandbox un-themed. */
+  applyTheming: {
     type: Boolean,
     default: true,
   },
