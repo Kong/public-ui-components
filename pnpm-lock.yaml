@@ -419,6 +419,9 @@ importers:
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^
         version: link:../analytics-utilities
+      '@kong-ui-public/e-charts':
+        specifier: workspace:^
+        version: link:../../core/e-charts
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../../entities/entities-shared
