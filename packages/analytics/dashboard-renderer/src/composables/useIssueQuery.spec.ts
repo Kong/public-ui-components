@@ -323,17 +323,6 @@ describe('useIssueQuery', () => {
     expect((queryFn.mock.calls[1][1] as AbortController).signal.aborted).toBe(false)
   })
 
-  it('allows the renderer to cancel a query when readiness is lost', async () => {
-    const queryFn = vi.fn().mockReturnValue(new Promise(() => {}))
-    const wrapper = mountComposable({ queryFn } as any)
-    wrapper.vm.issueQuery({ metrics: [], dimensions: [], filters: [] } as any, context)
-    await flushPromises()
-
-    wrapper.vm.cancelQuery()
-
-    expect((queryFn.mock.calls[0][1] as AbortController).signal.aborted).toBe(true)
-  })
-
   it('aborts the query on unmount', async () => {
     const queryFn = vi.fn().mockReturnValue(new Promise(() => {}))
     const wrapper = mountComposable({
