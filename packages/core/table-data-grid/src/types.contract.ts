@@ -27,6 +27,7 @@ type RejectsInvalidProps<Props> = Props extends TableDataGridProps<TestRow> ? fa
 const invalidModeChecks: [
   fetcherInUnpaginatedMode: Expect<RejectsInvalidProps<{
     fetcher: TableDataGridFetcher<TestRow>
+    rows: TestRow[]
     headers: typeof headers
     mode: 'unpaginated'
   }>>,
@@ -35,6 +36,7 @@ const invalidModeChecks: [
     headers: typeof headers
   }>>,
   rowsInInfiniteMode: Expect<RejectsInvalidProps<{
+    fetcher: TableDataGridFetcher<TestRow>
     rows: TestRow[]
     headers: typeof headers
     mode: 'infinite'
@@ -45,7 +47,13 @@ const invalidModeChecks: [
     mode: 'unpaginated'
     pageSize: number
   }>>,
-] = [true, true, true, true]
+  refreshKeyInUnpaginatedMode: Expect<RejectsInvalidProps<{
+    rows: TestRow[]
+    headers: typeof headers
+    mode: 'unpaginated'
+    refreshKey: number
+  }>>,
+] = [true, true, true, true, true]
 
 void validProps
 void invalidModeChecks

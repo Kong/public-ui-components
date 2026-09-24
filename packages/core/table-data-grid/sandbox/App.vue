@@ -15,6 +15,7 @@
           Clear log
         </KButton>
         <KButton
+          v-if="fetchMode === 'infinite'"
           appearance="primary"
           @click="refreshRows"
         >
@@ -139,7 +140,7 @@
               </select>
             </label>
 
-            <label>
+            <label v-if="fetchMode === 'infinite'">
               Fetch delay
               <select
                 :value="String(fetchDelayMs)"
@@ -165,6 +166,7 @@
 
           <div class="sandbox-panel-actions">
             <KButton
+              v-if="fetchMode === 'infinite'"
               appearance="secondary"
               size="small"
               @click="refreshRows"
