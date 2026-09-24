@@ -4,7 +4,6 @@ import type {
   TableDataGridHeader,
   TableDataGridProps,
   TableDataGridStatePayload,
-  TableDataGridUnpaginatedFetcher,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -165,17 +164,15 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
 
-  it('renders complete unpaginated results and state transitions without refetching', async () => {
+  it('renders complete unpaginated rows without state events', async () => {
     const completeResultRows = createRows(1, 30).map((row, index) => ({
       ...row,
       value: index + 1,
     }))
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({ data: completeResultRows })
     let gridApi: GridApi<TestRow> | undefined
     const onState = vi.fn<(payload: TableDataGridStatePayload) => void>()
 
     mountTestTableDataGrid({
-      fetcher,
       headers: [
         ...headers,
         {
@@ -190,18 +187,15 @@ describe('<TableDataGrid /> in Browser Mode', () => {
         gridApi = api
       },
       onState,
+      rows: completeResultRows,
     })
 
-    await waitForCallCount(() => fetcher.mock.calls.length, 1)
-    expect(fetcher).toHaveBeenCalledWith({ mode: 'unpaginated' })
     await expect.element(page.getByText('Service 1', { exact: true })).toBeVisible()
     await expect.poll(() => cell(0, 'value').textContent).toContain('(0.22 %)')
-    await expect.poll(() => onState.mock.calls.some(([payload]) => payload.state === 'loading' && !payload.hasData)).toBe(true)
     gridApi?.ensureIndexVisible(29, 'bottom')
     await expect.element(page.getByText('Service 30', { exact: true })).toBeVisible()
     await expect.poll(() => cell(29, 'value').textContent).toContain('(6.45 %)')
-    await expect.poll(() => onState.mock.calls.some(([payload]) => payload.state === 'success' && payload.hasData)).toBe(true)
-    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(onState).not.toHaveBeenCalled()
   })
 
   it('renders unpaginated percentages, preserved bar scales, thresholds, and configured icons', async () => {
@@ -209,12 +203,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       { ...rows[0], name: 'OpenAI', value: 25 },
       { ...rows[1], name: 'Anthropic', value: 75 },
     ]
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: presentationRows,
-    })
-
     mountTestTableDataGrid({
-      fetcher,
       headers: [
         { key: 'name', label: 'Provider', icons: [{ pattern: /^openai$/i, icon: TestProviderIcon }] },
         { key: 'status', label: 'Status' },
@@ -228,6 +217,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
         },
       ],
       mode: 'unpaginated',
+      rows: presentationRows,
     })
 
     await expect.poll(() => cell(0, 'value').textContent).toContain('25')
@@ -246,28 +236,9 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(document.querySelector('[col-id="status"] [data-testid="table-data-grid-cell-icon"]')).toBeNull()
   })
 
-  it('keeps retained unpaginated rows uncovered while a refresh is pending', async () => {
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>()
-      .mockResolvedValueOnce({ data: rows })
-      .mockReturnValueOnce(new Promise(() => {}))
-    const table = mountTestTableDataGrid({ fetcher, headers, mode: 'unpaginated', refreshKey: 0 })
-
-    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
-    await table.setProps({ refreshKey: 1 })
-    await waitForCallCount(() => fetcher.mock.calls.length, 2)
-    await nextTick()
-
-    expect(cell(0, 'name').textContent).toContain('Gateway service')
-    const overlay = document.querySelector<HTMLElement>('.ag-overlay-loading-wrapper')
-    expect(overlay === null || overlay.getBoundingClientRect().height === 0).toBe(true)
-  })
-
   it('shows cell overflow tooltips inside a native fullscreen ancestor', async () => {
     const longName = 'Long gateway service name '.repeat(10)
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: [{ ...rows[0], name: longName }],
-    })
-    mountTestTableDataGrid({ fetcher, headers, mode: 'unpaginated' })
+    mountTestTableDataGrid({ headers, mode: 'unpaginated', rows: [{ ...rows[0], name: longName }] })
     const container = element('[data-testid="table-data-grid-test-parent"]')
     const fullscreenButton = document.createElement('button')
     fullscreenButton.textContent = 'Enter fullscreen'
@@ -291,12 +262,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
   })
 
   it('keeps generic adornments around custom cell slot content', async () => {
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: [{ ...rows[0], value: 50 }, { ...rows[1], value: 50 }],
-    })
-
     mountTestTableDataGrid({
-      fetcher,
       headers: [{
         bar: 'relative',
         dataType: 'number',
@@ -305,6 +271,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
         showPercentage: true,
       }],
       mode: 'unpaginated',
+      rows: [{ ...rows[0], value: 50 }, { ...rows[1], value: 50 }],
       slots: {
         value: ({ rowValue }) => h('span', { 'data-testid': 'custom-value' }, `value:${rowValue}`),
       },
@@ -332,17 +299,13 @@ describe('<TableDataGrid /> in Browser Mode', () => {
   })
 
   it('skips invalid numeric values while preserving missing-value bar tracks', async () => {
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: [
+    mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: [
         { ...rows[0], value: true },
         { ...rows[1], value: null },
         { id: 'valid', name: 'Valid', status: 'Active', value: 50 },
       ],
-    })
-
-    mountTestTableDataGrid({
-      mode: 'unpaginated',
-      fetcher,
       headers: [{ key: 'value', label: 'Value', dataType: 'number', showPercentage: true, bar: 'relative' }],
     })
 
@@ -354,33 +317,23 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await expect.poll(() => cell(2, 'value').textContent).toContain('(100 %)')
   })
 
-  it('coalesces fetcher/context changes and recalculates percentages with unchanged headers', async () => {
-    const initialFetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: [{ ...rows[0], value: 50 }, { ...rows[1], value: 50 }],
-    })
-    const replacementFetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: [
-        { ...rows[0], value: 50 },
-        { ...rows[1], name: 'Replacement service', value: 150 },
-      ],
-    })
+  it('recalculates percentages when rows change with unchanged headers', async () => {
     const tableDataGrid = mountTestTableDataGrid({
-      fetcher: initialFetcher,
       headers: [...headers, { key: 'value', label: 'Value', dataType: 'number', showPercentage: true }],
       mode: 'unpaginated',
-      refreshKey: 0,
+      rows: [{ ...rows[0], value: 50 }, { ...rows[1], value: 50 }],
     })
 
     await expect.poll(() => cell(0, 'value').textContent).toContain('(50 %)')
     await tableDataGrid.setProps({
-      fetcher: replacementFetcher,
-      refreshKey: 1,
+      rows: [
+        { ...rows[0], value: 50 },
+        { ...rows[1], name: 'Replacement service', value: 150 },
+      ],
     })
     await expect.poll(() => cell(1, 'name').textContent).toContain('Replacement service')
     await expect.poll(() => cell(0, 'value').textContent).toContain('(25 %)')
     await expect.poll(() => cell(1, 'value').textContent).toContain('(75 %)')
-    expect(initialFetcher).toHaveBeenCalledOnce()
-    expect(replacementFetcher).toHaveBeenCalledOnce()
   })
 
   it('uses default cell presentation when a host slot renders no content', async () => {
@@ -401,12 +354,11 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await expectOverflowTooltip(longName)
   })
 
-  it('fits complete results to their content and updates sizing without refetching', async () => {
-    const fetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({ data: rows })
+  it('fits complete results to their content and resizes when rows change', async () => {
     const table = mountTestTableDataGrid({
-      fetcher,
       headers: [{ key: 'name', label: 'Name', minWidth: 800 }],
       mode: 'unpaginated',
+      rows,
     })
     const root = element('[data-testid="table-data-grid"]')
     root.style.height = ''
@@ -419,15 +371,10 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     expect(initialHeight).toBeGreaterThan(0)
     const horizontalViewport = element('.ag-body-horizontal-scroll-viewport')
     await expect.poll(() => horizontalViewport.scrollWidth).toBeGreaterThan(horizontalViewport.clientWidth)
-    expect(fetcher).toHaveBeenCalledTimes(1)
 
-    const replacementFetcher = vi.fn<TableDataGridUnpaginatedFetcher<TestRow>>().mockResolvedValue({
-      data: createRows(1, 8),
-    })
-    await table.setProps({ fetcher: replacementFetcher })
+    await table.setProps({ rows: createRows(1, 8) })
     await expect.element(page.getByText('Service 8', { exact: true })).toBeVisible()
     await expect.poll(() => root.getBoundingClientRect().height).toBeGreaterThan(initialHeight)
-    expect(replacementFetcher).toHaveBeenCalledTimes(1)
   })
 
   it('keeps infinite grids at the host height when fitToContent is requested', async () => {
