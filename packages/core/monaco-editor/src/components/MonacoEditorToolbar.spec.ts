@@ -82,7 +82,7 @@ describe('MonacoEditorToolbar', () => {
     it('should render the toolbar container', () => {
       const wrapper = mountToolbar()
       expect(wrapper.findTestId('monaco-editor-toolbar').exists()).toBe(true)
-    }, 15_000)
+    })
 
     it('should render left, centre, and right sections', () => {
       const wrapper = mountToolbar()
