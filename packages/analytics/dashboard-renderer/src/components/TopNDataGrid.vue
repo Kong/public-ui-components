@@ -30,6 +30,15 @@
           :title="i18n.t('topNTable.defaultEmptyStateTitle')"
         />
       </template>
+      <template #cell-icon="{ column, rowValue }">
+        <component
+          :is="getProviderIconForCell(column.key, rowValue)"
+          class="top-n-provider-icon"
+          data-testid="top-n-provider-icon"
+          decorative
+          size="var(--kui-icon-size-30, 16px)"
+        />
+      </template>
       <template
         v-for="header in dimensionHeaders"
         :key="header.key"
@@ -56,7 +65,7 @@ import '@kong-ui-public/table-data-grid/dist/style.css'
 import { WarningOutlineIcon } from '@kong/icons'
 import composables from '../composables'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
-import { createTopNGridRows, createTopNPresentation, type TopNGridRow } from '../utils/topn-columns'
+import { createTopNGridRows, createTopNPresentation, getTopNProviderIcon, type TopNGridRow } from '../utils/topn-columns'
 import FallbackEntityLink from './FallbackEntityLink.vue'
 
 const { chartOptions, data, fitToContent = false, height } = defineProps<{
@@ -85,6 +94,11 @@ const tableConfig = computed<TableDataGridConfig>(() => ({ fitToContent }))
 const gridStyle = computed(() => fitToContent
   ? { height: 'auto' }
   : height === undefined ? undefined : { height: `${height}px` })
+const getProviderIconForCell = (columnKey: string, rawValue: unknown) => getTopNProviderIcon({
+  columnOptions: chartOptions.column_options,
+  columnKey,
+  rawValue,
+})
 
 // EntityLink is an optional component -- it might be available, or it might not be.
 // Attempt to fetch it from the analytics bridge.
@@ -152,5 +166,11 @@ const parseLink = (row: TopNGridRow, dimension: string) => {
   :deep(.entity-link-label) {
     max-width: 100%;
   }
+}
+
+.top-n-provider-icon {
+  flex: 0 0 auto;
+  height: var(--kui-icon-size-30, 16px);
+  width: var(--kui-icon-size-30, 16px);
 }
 </style>
