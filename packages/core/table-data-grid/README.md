@@ -252,7 +252,7 @@ should opt out of the default flexible fill behavior.
 | `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Applies threshold text/bar colors at or above the highest crossed threshold. Numeric finite values only. |
 | `icons` | `Array<{ pattern: RegExp, icon: Component }>` | No | Renders the first matching icon beside the value. Mappings are checked in order against the raw cell value, and regular-expression state is preserved. The grid has no built-in mappings. |
 
-Numeric presentation is intentionally derived from the complete successful result
+Numeric presentation is intentionally derived from the complete `rows` result
 in unpaginated mode. Infinite mode does not calculate aggregate values; supplying
 numeric presentation options there, or on a header without `dataType: 'number'`,
 emits a console warning and omits those adornments. Nonnumeric or non-finite
