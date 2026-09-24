@@ -2,6 +2,7 @@
   <ECharts
     :height="height"
     :option="mergedOption"
+    :tooltip-content="tooltipContent"
   />
 </template>
 
@@ -14,7 +15,7 @@ import ECharts from '../ECharts.vue'
 import { useChartColors } from '../../composables/useChartColors.ts'
 import { deepMerge } from '../../utils/deepMerge.ts'
 import type { DataZoomComponentOption, EChartsOption, HeatmapSeriesOption } from 'echarts'
-import type { HeatmapChartProps, HeatmapDataPoint } from '../../types/index.ts'
+import type { ChartTooltipContent, HeatmapChartProps, HeatmapDataPoint } from '../../types/index.ts'
 
 // The renderer, grid and tooltip are registered by the base `ECharts` component
 use([HeatmapChart, VisualMapComponent, DataZoomSliderComponent])
@@ -36,6 +37,27 @@ const {
 } = defineProps<HeatmapChartProps>()
 
 const colors = useChartColors()
+
+/** Axis values can be an index into the labels or the category name itself (see `HeatmapDataPoint`). */
+const categoryLabel = (value: string | number, labels?: string[]): string => (
+  typeof value === 'number' ? labels?.[value] ?? String(value) : value
+)
+
+/** Tooltip content: the column as title, the series name as metric, and a row for the cell. */
+const tooltipContent: ChartTooltipContent = (params) => {
+  const point = Array.isArray(params) ? params[0] : params
+  const [x, y, value] = (point?.value ?? []) as HeatmapDataPoint
+
+  return {
+    title: categoryLabel(x, xAxisLabels),
+    metric: seriesName,
+    rows: [{
+      color: String(point?.color ?? ''),
+      label: categoryLabel(y, yAxisLabels),
+      value: valueFormatter ? valueFormatter(value) : String(value),
+    }],
+  }
+}
 
 /**
  * Scrollbar for `visibleRows`: a slider locked to a fixed-size window of rows,

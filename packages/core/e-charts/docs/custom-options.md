@@ -37,7 +37,7 @@ Merge behavior (see `deepMerge` in `src/utils`):
 
 ## The base `ECharts` component (escape hatch)
 
-When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied) and `height`, and registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
+When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied), `height`, and an optional `tooltipContent` for the shared tooltip (see below). It registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
 
 ```vue
 <template>
@@ -63,6 +63,26 @@ const option: EChartsOption = {
 }
 </script>
 ```
+
+### Shared tooltip
+
+Pass `tooltipContent` to show the same tooltip as the other charts. It maps the hovered item's ECharts tooltip params to a title, an optional subtitle (`context` on the left, `metric` on the right) and rows with a color marker, label and formatted value:
+
+```ts
+import type { ChartTooltipContent } from '@kong-ui-public/e-charts'
+
+const tooltipContent: ChartTooltipContent = (params) => {
+  const point = Array.isArray(params) ? params[0] : params
+
+  return {
+    title: String(point.name),
+    metric: 'Requests',
+    rows: [{ color: String(point.color), label: point.seriesName ?? '', value: String(point.value) }],
+  }
+}
+```
+
+A `tooltip.formatter` in `option` replaces the shared tooltip.
 
 ## Notes
 

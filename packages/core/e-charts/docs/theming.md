@@ -6,7 +6,7 @@ ECharts renders to a `<canvas>`, so chart colors and fonts can't consume `var(--
 
 - `chartColors()` (and the reactive `useChartColors()`) resolve every `@kong/design-tokens` color token (`KUI_COLOR_*`) from the corresponding CSS custom property on `<html>` (e.g. `KUI_COLOR_TEXT` from `--kui-color-text`), falling back to the token's static value from `@kong/design-tokens` when the custom property isn't set (e.g. in tests, or SSR).
 - The font family is resolved from `--kui-font-family-text`, falling back to the static `KUI_FONT_FAMILY_TEXT` token.
-- The base `ECharts` component (which every chart wrapper renders through) builds a small ECharts theme object from these resolved values (see `useChartTheme`) and passes it to the underlying chart's `theme` prop, covering text color/font, category/value axis labels and lines, tooltip background/border/text, `visualMap` text, and legend text.
+- The base `ECharts` component (which every chart wrapper renders through) builds a small ECharts theme object from these resolved values (see `useChartTheme`) and passes it to the underlying chart's `theme` prop, covering text color/font, category/value axis labels and lines, the tooltip box (background and shadow, matching `@kong-ui-public/analytics-chart`), `visualMap` text, and legend text.
 - Chart-specific colors (e.g. `HeatmapChart`'s `colorRange`) are resolved the same way, and can always be overridden via props or `option`.
 
 ## Reactivity

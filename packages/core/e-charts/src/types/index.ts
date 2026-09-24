@@ -24,6 +24,29 @@ export type ChartColors = {
  */
 export type HeatmapDataPoint = [string | number, string | number, number]
 
+export interface ChartTooltipRow {
+  /** Marker color, e.g. the series or cell color. */
+  color: string
+  label: string
+  /** Already formatted value. */
+  value: string
+}
+
+export interface ChartTooltipProps {
+  title?: string
+  /** Left side of the subtitle, e.g. the hovered dimension. */
+  context?: string
+  /** Right side of the subtitle, e.g. the metric name. */
+  metric?: string
+  rows?: ChartTooltipRow[]
+}
+
+/**
+ * Maps the hovered item's ECharts tooltip params to `ChartTooltip` content.
+ * Every chart uses the same tooltip; chart types only decide what's in it.
+ */
+export type ChartTooltipContent = (params: TooltipComponentFormatterCallbackParams) => ChartTooltipProps
+
 interface BaseChartProps {
   /**
    * Raw echarts option, always deep-merged over the generated option: nested

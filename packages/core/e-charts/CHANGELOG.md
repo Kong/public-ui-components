@@ -3,13 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.2.0...%40kong-ui-public%2Fe-charts%400.3.0) (2026-09-24)
-
-### Features
-
-* **e-charts:** add chart theming and heatmap customization ([#3869](https://github.com/Kong/public-ui-components/issues/3869)) ([d2f8291](https://github.com/Kong/public-ui-components/commit/d2f8291350667115a188602ee8afa27b89108999))
-
-
 # [0.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.1.1...%40kong-ui-public%2Fe-charts%400.2.0) (2026-09-24)
 
 ### Features

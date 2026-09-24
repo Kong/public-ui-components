@@ -61,4 +61,26 @@ describe('<ECharts />', () => {
 
     expect(theme.textStyle.color).toBe(KUI_COLOR_TEXT)
   })
+
+  it('renders the shared tooltip when tooltipContent is given', () => {
+    const wrapper = mount(ECharts, {
+      props: { option: { tooltip: { confine: true } }, tooltipContent: () => ({ title: 'Jun 16' }) },
+      global: { stubs: { VChart: true } },
+    })
+    const option = wrapper.getComponent(VChart).props('option') as { tooltip: { confine: boolean, formatter: unknown } }
+
+    expect(option.tooltip.confine).toBe(true)
+    expect(typeof option.tooltip.formatter).toBe('function')
+  })
+
+  it('keeps a tooltip.formatter from the option over the shared tooltip', () => {
+    const formatter = () => 'custom'
+    const wrapper = mount(ECharts, {
+      props: { option: { tooltip: { formatter } }, tooltipContent: () => ({ title: 'Jun 16' }) },
+      global: { stubs: { VChart: true } },
+    })
+    const option = wrapper.getComponent(VChart).props('option') as { tooltip: { formatter: unknown } }
+
+    expect(option.tooltip.formatter).toBe(formatter)
+  })
 })

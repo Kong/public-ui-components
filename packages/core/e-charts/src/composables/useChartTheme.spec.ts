@@ -26,9 +26,12 @@ describe('chartTheme', () => {
       splitLine: { lineStyle: { color: KUI_COLOR_BORDER } },
     })
     expect(theme.valueAxis).toEqual(theme.categoryAxis)
+    // Box for the shared ChartTooltip: no border or padding, kept inside the chart
     expect(theme.tooltip).toMatchObject({
       backgroundColor: KUI_COLOR_BACKGROUND,
-      borderColor: KUI_COLOR_BORDER,
+      borderWidth: 0,
+      padding: 0,
+      confine: true,
       textStyle: { color: KUI_COLOR_TEXT },
     })
     expect(theme.visualMap).toMatchObject({ textStyle: { color: KUI_COLOR_TEXT_NEUTRAL } })
