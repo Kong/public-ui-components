@@ -78,6 +78,31 @@ describe('<SandboxLayout />', () => {
       })
     })
 
+    describe('themePicker', () => {
+      it('renders the theme picker by default', () => {
+        cy.mount(SandboxLayout, {
+          slots: {
+            default: () => h('div', 'This is the content'),
+          },
+        })
+
+        cy.get('.kong-ui-sandbox-theme-picker').should('be.visible')
+      })
+
+      it('does not render the theme picker when disabled', () => {
+        cy.mount(SandboxLayout, {
+          slots: {
+            default: () => h('div', 'This is the content'),
+          },
+          props: {
+            themePicker: false,
+          },
+        })
+
+        cy.get('.kong-ui-sandbox-theme-picker').should('not.exist')
+      })
+    })
+
     describe('links', () => {
       it('renders links', () => {
         const slotText = 'This is the content'

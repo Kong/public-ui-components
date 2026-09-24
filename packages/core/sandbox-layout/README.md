@@ -62,6 +62,22 @@ A string to display as the title
 
 The minimum width of the `controls` sidebar. A `number` that is converted to pixels. Defaults to `240`
 
+#### `themePicker`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+Whether to render the built-in theme picker (day/night and high contrast) above the navigation links, in both the desktop sidebar and the mobile menu. The selected theme is applied to the document root via `data-kui-theme` and persisted in `localStorage`.
+
+Set to `false` to opt out; the sandbox then renders un-themed, as it did before the theme picker existed.
+
+```html
+<SandboxLayout :links="links" :theme-picker="false" title="My sandbox">
+  <!-- ... -->
+</SandboxLayout>
+```
+
 ### Slots
 
 #### `default`

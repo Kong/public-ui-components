@@ -18,7 +18,10 @@
                 :visible="mobileNavIsToggled.value"
                 @close="toggleMobileNav"
               >
-                <div class="nav-theme-picker">
+                <div
+                  v-if="themePicker"
+                  class="nav-theme-picker"
+                >
                   <SandboxThemePicker />
                 </div>
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
@@ -67,7 +70,10 @@
     </header>
     <div class="layout">
       <div class="desktop-nav-container">
-        <div class="nav-theme-picker">
+        <div
+          v-if="themePicker"
+          class="nav-theme-picker"
+        >
           <SandboxThemePicker />
         </div>
         <SandboxNavigation />
@@ -111,6 +117,11 @@ const props = defineProps({
   controlsMinWidth: {
     type: Number,
     default: 240,
+  },
+  /** Whether to render the built-in theme picker in the sandbox navigation. Set to `false` to leave the sandbox un-themed. */
+  themePicker: {
+    type: Boolean,
+    default: true,
   },
 })
 
