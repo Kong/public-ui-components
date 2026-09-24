@@ -42,7 +42,8 @@ export const lineChartTooltipBehavior = (
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = p.parsed[valueAxis]
-      const value = formatUnit(rawValue ?? 0, tooltipData.units, { translateUnit: tooltipData.translateUnit })
+      const unit = (p.dataset as Dataset).unit ?? tooltipData.units
+      const value = formatUnit(rawValue ?? 0, unit, { translateUnit: tooltipData.translateUnit })
 
       const tooltipLabel = (p.raw as LabeledDataPoint)?.tooltipLabel || p.dataset.label
 

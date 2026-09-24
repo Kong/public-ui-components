@@ -159,4 +159,19 @@ describe('useChartLegendValues', () => {
     })
   })
 
+  it('formats each dataset with its own unit when one is set', () => {
+    const mixedUnitData = computed<KChartData>(() => ({
+      datasets: [
+        { ...lineChartDataWithTotal.value.datasets[0], unit: 'oranges' },
+        lineChartDataWithTotal.value.datasets[1],
+      ],
+    }))
+    const { legendValues } = useChartLegendValues(mixedUnitData, 'timeseries_line', computed(() => 'apples'))
+
+    expect(legendValues.value).toEqual({
+      test1: { raw: 100, formatted: '100 oranges' },
+      test2: { raw: 100, formatted: '100 apples' },
+    })
+  })
+
 })

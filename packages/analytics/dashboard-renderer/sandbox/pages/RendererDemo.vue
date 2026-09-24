@@ -493,6 +493,27 @@ const dashboardConfig = ref<DashboardConfig>({
       type: 'chart',
       definition: {
         chart: {
+          type: 'timeseries_line',
+          chart_title: 'Traffic vs latency (dual y axis)',
+          metric_axis_map: { request_count: 'left', response_latency_p99: 'right' },
+          y_axes: { left: { show_grid: true }, right: { show_grid: false } },
+          threshold: { response_latency_p99: [{ type: 'warning', value: 10, highlightIntersections: true }] },
+        },
+        query: {
+          datasource: 'api_usage',
+          metrics: ['request_count', 'response_latency_p99'],
+          dimensions: ['time'],
+        },
+      },
+      layout: {
+        position: { col: 0, row: 17 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
           type: 'top_n',
           chart_title: 'Top 40 services by requests',
           entity_links: { gateway_service: 'https://example.com/services/{entity-id}' },
@@ -508,7 +529,7 @@ const dashboardConfig = ref<DashboardConfig>({
           metrics: ['request_count', 'response_latency_p95'], limit: 40,
         },
       },
-      layout: { position: { col: 0, row: 17 }, size: { cols: 6, rows: 3 } },
+      layout: { position: { col: 0, row: 19 }, size: { cols: 6, rows: 3 } },
     } satisfies TileConfig,
   ],
 })

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.47.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.1) (2026-09-24)
+
+### Bug Fixes
+
+* **analytics:** update chart color palette (MA-5517) ([#3875](https://github.com/Kong/public-ui-components/issues/3875)) ([8d14ee0](https://github.com/Kong/public-ui-components/commit/8d14ee0e0a8995c30b7b02e19159c4002aed0e28))
+
+
+# [12.47.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.46.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.0) (2026-09-24)
+
+### Features
+
+* **analytics:** top talkers grid and renderer [MA-5428] ([#3865](https://github.com/Kong/public-ui-components/issues/3865)) ([310fd2b](https://github.com/Kong/public-ui-components/commit/310fd2b8409ab6ae79cece53a4613d01f9afd64e))
+
+
+# [12.46.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.45.0...%40kong-ui-public%2Fanalytics-utilities%4012.46.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dual y axis metrics in timeseries charts [MA-5442] ([#3851](https://github.com/Kong/public-ui-components/issues/3851)) ([2c9966c](https://github.com/Kong/public-ui-components/commit/2c9966ca9d27363ba94a66d523282cc20c7171c4))
+
+
+# [12.45.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.44.0...%40kong-ui-public%2Fanalytics-utilities%4012.45.0) (2026-09-24)
+
+### Features
+
+* add a2a_task_state to api requests ([#3872](https://github.com/Kong/public-ui-components/issues/3872)) ([2ebe897](https://github.com/Kong/public-ui-components/commit/2ebe897f37bac1ac659811638d19cc367961dd47))
+
+
 # [12.44.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.43.0...%40kong-ui-public%2Fanalytics-utilities%4012.44.0) (2026-09-21)
 
 ### Features
