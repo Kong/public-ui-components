@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.47.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.1) (2026-09-24)
+
+### Bug Fixes
+
+* **analytics:** update chart color palette (MA-5517) ([#3875](https://github.com/Kong/public-ui-components/issues/3875)) ([8d14ee0](https://github.com/Kong/public-ui-components/commit/8d14ee0e0a8995c30b7b02e19159c4002aed0e28))
+
+
 # [12.47.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.46.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.0) (2026-09-24)
 
 ### Features
