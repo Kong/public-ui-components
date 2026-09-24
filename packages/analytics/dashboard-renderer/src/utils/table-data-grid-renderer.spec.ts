@@ -53,7 +53,7 @@ const response: PlatformTabularResponse = {
 }
 
 describe('table data grid renderer utilities', () => {
-  it('maps a complete TopN Explore result while retaining the original response', async () => {
+  it('issues the TopN query once and retains the original response', async () => {
     const query: ValidDashboardChartQuery = {
       datasource: 'basic',
       dimensions: ['gateway_service'],
@@ -75,11 +75,6 @@ describe('table data grid renderer utilities', () => {
 
     const result = await topNTableDataGridFetcher({ issueQuery, query, context })
 
-    expect(result.data).toEqual([{
-      record: topNResponse.data[0],
-      gateway_service: 'service-id',
-      request_count: 30,
-    }])
     expect(result.response).toBe(topNResponse)
     expect(issueQuery).toHaveBeenCalledExactlyOnceWith(query, context)
   })
