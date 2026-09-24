@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.48.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.1...%40kong-ui-public%2Fanalytics-utilities%4012.48.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dashboard coordination [MA-5427] ([#3868](https://github.com/Kong/public-ui-components/issues/3868)) ([a34b6db](https://github.com/Kong/public-ui-components/commit/a34b6db99d242fb5a4ad8935a840e81330f9930c))
+
+
 ## [12.47.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.1) (2026-09-24)
 
 ### Bug Fixes
