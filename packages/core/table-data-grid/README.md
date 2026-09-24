@@ -116,7 +116,7 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Infinite mode | - | Async row loader called by the AG Grid infinite datasource. |
 | `rows` | `Row[]` | Unpaginated mode | - | Complete host-owned result. The grid does not fetch in this mode. |
-| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model. |
+| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model when mounted. Remount to change modes. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
 | `pageSize` | `number` | No | `25` | Infinite mode only. AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
 | `refreshKey` | `string \| number \| boolean` | No | - | Infinite mode only. Parent invalidation signal that rebuilds the datasource from the beginning. |
@@ -171,6 +171,9 @@ and pass `rows`. The rows go to AG Grid's client-side row model. The grid does
 not fetch, show a loading overlay, or emit `state` events in this mode. The host
 owns loading, refresh, and error handling, and replaces `rows` when its result
 changes. An empty `rows` array shows the empty state.
+
+The row model is selected when `TableDataGrid` mounts. To switch between
+`infinite` and `unpaginated`, key the component by mode so Vue remounts it.
 
 For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
 leave the host height unconstrained. The grid fits its header and all returned
