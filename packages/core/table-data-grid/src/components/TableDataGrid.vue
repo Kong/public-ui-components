@@ -187,17 +187,10 @@ const resetKey = computed(() => [
   sortColumnOrder.value,
 ])
 
-const getFetcher = () => {
-  if (!fetcher) {
-    throw new Error('TableDataGrid requires a fetcher in infinite mode')
-  }
-  return fetcher
-}
-
 // Unpaginated rows are host-owned; only infinite mode fetches.
 const fetchResult = mode === 'infinite'
   ? useFetchInfinite({
-    fetcher: toRef(getFetcher),
+    fetcher: toRef(() => fetcher),
     resetKey,
     sort: activeSort,
   })
