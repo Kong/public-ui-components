@@ -105,6 +105,7 @@ const mode = providedMode ?? 'infinite'
 defineSlots<{
   'empty-state': () => unknown
   'error-state': () => unknown
+  'cell-icon': (props: TableDataGridCellSlotProps<Row>) => unknown
   [columnKey: string]: (props: TableDataGridCellSlotProps<Row>) => unknown
 }>()
 

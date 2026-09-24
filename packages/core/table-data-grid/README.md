@@ -253,7 +253,6 @@ should opt out of the default flexible fill behavior.
 | `percentageFormatter` | `(percentage) => string` | No | Optional formatter for the percentage points (50 means 50%) shown by `showPercentage`. The default uses the grid locale, up to two decimal places, and `< 0.01 %` for small positive values. |
 | `bar` | `'relative' \| 'absolute'` | No | In unpaginated numeric columns, renders a bar. `relative` uses `value / sum`; `absolute` uses `value / maximum`, matching the TopN scales. |
 | `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Applies threshold text/bar colors at or above the highest crossed threshold. Numeric finite values only. |
-| `icons` | `Array<{ pattern: RegExp, icon: Component }>` | No | Renders the first matching icon beside the value. Mappings are checked in order against the raw cell value, and regular-expression state is preserved. The grid has no built-in mappings. |
 
 Numeric presentation is intentionally derived from the complete `rows` result
 in unpaginated mode. Infinite mode does not calculate aggregate values; supplying
@@ -263,8 +262,8 @@ values also warn once per column and keep their ordinary content without numeric
 adornments. Missing values retain an empty bar track when a bar is configured.
 Bars clamp to 0–100%; percentage labels are omitted when the column total is not positive.
 
-Icons render only for columns whose header configures `icons`. Domain-specific
-mappings, such as analytics provider icons, belong to the host.
+Hosts render optional icons through the `cell-icon` slot. The grid places slot
+content beside the cell value without replacing its default or custom content.
 
 ## Sorting
 
@@ -298,11 +297,12 @@ under one sort order is not valid under another.
 
 Columns render custom cell content through a slot named after `header.key`.
 Columns without a matching slot render `valueFormatter(rowValue, row)` when
-configured, otherwise their raw `rowValue`. Icons, percentages, and bars decorate
-both default values and slot content.
+configured, otherwise their raw `rowValue`. The `cell-icon` slot, percentages,
+and bars decorate both default values and slot content.
 When a named slot renders no content, the grid falls back to the formatted
 default value with ellipsis and an overflow tooltip; non-empty slot content
 remains host-owned.
+`cell-icon` is reserved for icon content and cannot name a column content slot.
 
 ```vue
 <TableDataGrid
@@ -313,6 +313,9 @@ remains host-owned.
     <KBadge :appearance="rowValue === 'active' ? 'success' : 'neutral'">
       {{ rowValue }}
     </KBadge>
+  </template>
+  <template #cell-icon="{ column, rowValue }">
+    <ProviderIcon v-if="column.key === 'provider' && rowValue === 'openai'" />
   </template>
 </TableDataGrid>
 ```
@@ -343,6 +346,7 @@ remains host-owned.
 | --- | --- |
 | `empty-state` | Replaces the default empty state after a successful empty result. |
 | `error-state` | Replaces the default visible error state when `error` is true. |
+| `cell-icon` | Adds optional host-rendered content before each cell's default value or column slot. Uses the same cell slot props; render nothing for cells without an icon. |
 | `[columnKey]` | Renders custom cell content for the column matching `header.key`. See [Custom Cell Content](#custom-cell-content). |
 
 ## Exports
