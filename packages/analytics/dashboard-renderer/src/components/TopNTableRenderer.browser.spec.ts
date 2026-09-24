@@ -167,23 +167,28 @@ describe('TopNTableRenderer grid integration', () => {
     expect(queryFn).toHaveBeenCalledTimes(increaseCsvExportLimit === false ? 1 : 2)
   })
 
-  it('renders and scrolls the complete result without requesting another block', async () => {
-    const { queryFn, chartData, queryComplete } = mountRenderer()
+  it('keeps backend row order while scrolling and clicking the metric header without another query', async () => {
+    const backendOrderedResult: ExploreResultV4 = {
+      ...result,
+      data: [result.data[0], result.data[39], ...result.data.slice(1, 39)],
+    }
+    const { queryFn, chartData, queryComplete } = mountRenderer({ data: backendOrderedResult })
     await expect.poll(() => cell(0, 'gateway_service').textContent).toContain('Service 1')
     await expect.element(page.getByTestId('table-data-grid')).toBeVisible()
     expect(headers()).toEqual(['Name', 'Requests'])
     expect(document.querySelector('a[href="https://example.com/services/service-1"]')).not.toBeNull()
     const label = element('.entity-link-label')
     expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth)
+    expect(cell(1, 'gateway_service').textContent).toContain('Service 40')
+    await page.elementLocator(element('.ag-header-cell[col-id="request_count"]')).click()
+    expect(cell(0, 'gateway_service').textContent).toContain('Service 1')
+    expect(cell(1, 'gateway_service').textContent).toContain('Service 40')
     const viewport = element('.ag-grid-viewport')
     viewport.scrollTo({ top: viewport.scrollHeight })
-    await expect.element(page.getByText('Service 40', { exact: true })).toBeVisible()
+    await expect.element(page.getByText('Service 39', { exact: true })).toBeVisible()
     expect(queryFn).toHaveBeenCalledOnce()
-    expect(chartData).toHaveBeenCalledExactlyOnceWith(result)
+    expect(chartData).toHaveBeenCalledExactlyOnceWith(backendOrderedResult)
     expect(queryComplete).toHaveBeenCalledOnce()
-    for (const indicator of document.querySelectorAll<HTMLElement>('.ag-sort-indicator-container')) {
-      await expect.element(page.elementLocator(indicator)).not.toBeVisible()
-    }
   })
 
   it('truncates long entity links with an ellipsis and shows the full label on hover', async () => {
