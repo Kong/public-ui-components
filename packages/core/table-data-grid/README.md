@@ -3,7 +3,7 @@
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
 This package supports AG Grid infinite row loading with a cursor-first fetcher
-contract and complete-result loading through its client-side row model. It also
+contract and host-supplied complete results through its client-side row model. It also
 provides basic column definitions, single-column sorting, empty/error
 presentation states, and state lifecycle emits.
 
@@ -114,11 +114,12 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | Prop | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
-| `fetcher` | `TableDataGridFetcher<Row> \| TableDataGridUnpaginatedFetcher<Row>` | Yes | - | Async row loader for the selected mode. |
-| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects the fetcher contract and AG Grid row model. |
+| `fetcher` | `TableDataGridFetcher<Row>` | Infinite mode | - | Async row loader called by the AG Grid infinite datasource. |
+| `rows` | `Row[]` | Unpaginated mode | - | Complete host-owned result. The grid does not fetch in this mode. |
+| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
-| `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
-| `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that reloads the current result. |
+| `pageSize` | `number` | No | `25` | Infinite mode only. AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
+| `refreshKey` | `string \| number \| boolean` | No | - | Infinite mode only. Parent invalidation signal that rebuilds the datasource from the beginning. |
 | `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort, page size, and optional content-height sizing. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
@@ -163,11 +164,13 @@ the public fetcher contract.
 is omitted, `hasMore: false` or a response shorter than `pageSize` marks the last
 loaded row as the end of the dataset.
 
-For a complete result that must be loaded once and rendered without pagination,
-set `mode="unpaginated"`. The fetcher receives no page size, cursor, sort, or
-other pagination values, and its complete result is passed to AG Grid's internal
-client-side row model. Changing `refreshKey` or the fetcher starts one new
-request; scrolling through the result does not call the fetcher again.
+## Complete Results
+
+For a complete result that the host already loaded, set `mode="unpaginated"`
+and pass `rows`. The rows go to AG Grid's client-side row model. The grid does
+not fetch, show a loading overlay, or emit `state` events in this mode. The host
+owns loading, refresh, and error handling, and replaces `rows` when its result
+changes. An empty `rows` array shows the empty state.
 
 For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
 leave the host height unconstrained. The grid fits its header and all returned
@@ -178,27 +181,16 @@ host a height and the grid scrolls within it.
 ```vue
 <TableDataGrid
   mode="unpaginated"
-  :fetcher="fetchTopRows"
   :headers="headers"
-  :refresh-key="refreshKey"
+  :rows="rows"
 />
-
-<script setup lang="ts">
-import type { TableDataGridUnpaginatedFetcher } from '@kong-ui-public/table-data-grid'
-
-const fetchTopRows: TableDataGridUnpaginatedFetcher<Row> = async () => ({
-  data: await loadAllRows(),
-})
-</script>
 ```
 
 ## Refresh Behavior
 
 `refreshKey` is a parent-owned invalidation signal. Changing it rebuilds the
 infinite datasource, clears stored cursors, and starts again from the first
-block with `cursor: undefined`. In `unpaginated` mode it starts one new
-complete-result request instead and keeps the previous rows visible while that
-request is pending. Replacing `fetcher` triggers the same reset in either mode;
+block with `cursor: undefined`. Replacing `fetcher` triggers the same reset;
 subsequent requests use the new function and superseded responses cannot update
 current rows or error state.
 
@@ -266,7 +258,7 @@ should opt out of the default flexible fill behavior.
 | `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Applies threshold text/bar colors at or above the highest crossed threshold. Numeric finite values only. |
 | `icons` | `Array<{ pattern: RegExp, icon: Component }>` | No | Renders the first matching icon beside the value. Mappings are checked in order against the raw cell value, and regular-expression state is preserved. The grid has no built-in mappings. |
 
-Numeric presentation is intentionally derived from the complete successful result
+Numeric presentation is intentionally derived from the complete `rows` result
 in unpaginated mode. Infinite mode does not calculate aggregate values; supplying
 numeric presentation options there, or on a header without `dataType: 'number'`,
 emits a console warning and omits those adornments. Nonnumeric or non-finite
@@ -303,15 +295,13 @@ on mount, or to move the sort after mount without a click; omit it to let the
 component own the sort internally. A sort change emits `sort` (the narrower,
 sort-only payload) and then `update:tableConfig` (the full current config).
 
-For client-side sorting, use `mode="unpaginated"` and return the complete result
-from the fetcher. AG Grid sorts those rows locally with its built-in row
-animation; changing the sort does not call the fetcher. A `refreshKey` change or
-fetcher replacement still loads the complete result again.
+For client-side sorting, use `mode="unpaginated"` and pass the complete result
+as `rows`. AG Grid sorts those rows locally with its built-in row animation.
 
 ```vue
 <TableDataGrid
   mode="unpaginated"
-  :fetcher="fetchAllRows"
+  :rows="rows"
   :headers="[
     { key: 'name', label: 'Name', sortable: true },
     { key: 'requests', label: 'Requests', sortable: true },
@@ -360,7 +350,7 @@ remains host-owned.
 | Event | Payload | When it fires |
 | --- | --- | --- |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready. |
-| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after fetching starts. |
+| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. Not emitted in `unpaginated` mode. |
 | `row:click` | `(row: TableDataGridRowClickPayload<Row>, event: RowClickedEvent<Row>)` | A row is clicked, unless the click landed in a `disableRowClick` column. |
 | `cell:click` | `TableDataGridCellClickPayload<Row>` | Any cell is clicked, including cells in `disableRowClick` columns. |
 | `sort` | `TableDataGridSort` | The current single-column sort changes. Fires before `update:tableConfig`. |
@@ -386,11 +376,8 @@ remains host-owned.
 - `TableDataGridHeader`
 - `TableDataGridProps`
 - `TableDataGridInfiniteFetcherParams`
-- `TableDataGridUnpaginatedFetcherParams`
 - `TableDataGridFetcherResult`
 - `TableDataGridFetcher`
-- `TableDataGridUnpaginatedFetcherResult`
-- `TableDataGridUnpaginatedFetcher`
 - `TableDataGridReadyPayload`
 - `TableDataGridSortDirection`
 - `TableDataGridSort`

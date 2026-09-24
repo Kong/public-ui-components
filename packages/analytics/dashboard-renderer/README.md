@@ -567,9 +567,9 @@ Each chart type has its own configuration schema with specific options.
 
 ### TopN tables
 
-Existing `top_n` definitions render through `TableDataGrid` in `unpaginated` mode. The grid invokes an Explore fetcher once for each load or refresh. The query's `limit` controls the complete result; scrolling does not issue another request or add pagination parameters.
+Existing `top_n` definitions render through `TableDataGrid` in `unpaginated` mode. `TopNTableRenderer` loads the Explore result through `QueryDataProvider`, like the other chart tiles, and passes the mapped rows to the grid. The query's `limit` controls the complete result; scrolling does not issue another request or add pagination parameters.
 
-Dashboard-renderer owns Explore query readiness, refresh triggers, cancellation, response metadata, error messages, and analytics-specific labels, metric formatting, and entity links. It forwards the original response through `chart-data` and emits `query-complete` for the current request. Previous rows remain visible during refresh; superseded results and errors are ignored.
+`QueryDataProvider` owns query readiness, refresh, loading, and error states, and emits `chart-data` and `query-complete`. Previous rows remain visible during refresh. Dashboard-renderer owns the analytics-specific labels, metric formatting, and entity links.
 
 Dimension slots render entity links and italic empty values; other cells use the grid's default ellipsis and overflow tooltips. Header formatters supply display names and metric units. TableDataGrid owns icon rendering from header mappings, percentage-of-total values, bars, and threshold styling. Dashboard-renderer maps existing `column_options` to the grid headers: `value: 'relative'` enables `showPercentage`, `bar: 'relative'` scales against the column total, and `bar: 'max'` maps to the grid's `bar: 'absolute'`, scaled against the maximum. Both calculations use every row in the returned result. Interactive sorting is disabled to preserve backend ranking. Existing `column_options` remain compatible; `icon_set: 'ai_provider'` adds provider icons to that dimension column, matched exactly and case-insensitively on the raw provider id. `entity_links` and the primary-dimension `entity_link` fallback retain their existing meanings.
 
@@ -578,8 +578,6 @@ The static dashboard sandbox includes a fixed-height **Top 40 services by reques
 ### Table Chart Configuration
 
 Table visuals are chart tiles with `type: 'chart'` on the tile itself and `definition.chart.type: 'table'`. Their `definition.query` uses the platform tabular query shape and renders through `TableDataGridRenderer`.
-
-`TableDataGridRenderer` also renders `top_n` tiles. It selects infinite loading through `tabularQueryFn` for `table` and unpaginated Explore loading through `useIssueQuery` for `top_n`. Both response adapters live in `utils/table-data-grid-renderer.ts`; TopN retains its own refresh, cancellation, and original-response lifecycle in `useTopNQuery`.
 
 ```typescript
 interface TableChartOptions {

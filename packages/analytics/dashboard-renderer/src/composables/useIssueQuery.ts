@@ -18,10 +18,9 @@ export default function useIssueQuery() {
   // Ensure that any pending requests are canceled when superseded or on unmount.
   let abortController: AbortController | null = null
 
-  // Readiness can be lost without unmounting or issuing a replacement query.
-  const cancelQuery = () => abortController?.abort()
-
-  onUnmounted(cancelQuery)
+  onUnmounted(() => {
+    abortController?.abort()
+  })
 
   const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContext, limitOverride?: number) => {
     if (!queryBridge) {
@@ -90,5 +89,5 @@ export default function useIssueQuery() {
     return queryBridge.queryFn(mergedQuery, controller)
   }
 
-  return { issueQuery, cancelQuery }
+  return { issueQuery }
 }

@@ -26,8 +26,9 @@ type TestTableDataGridSlots = {
 
 type MountTableOptions = {
   containerStyle?: Record<string, string>
-  fetcher: TableDataGridFetcher<TestRow>
+  fetcher?: TableDataGridFetcher<TestRow>
   headers?: Array<TableDataGridHeader<TestRow>>
+  mode?: 'infinite' | 'unpaginated'
   error?: boolean
   onCellClick?: (payload: TableDataGridCellClickPayload<TestRow>) => void
   onGridReady?: (api: GridApi<TestRow>) => void
@@ -37,6 +38,7 @@ type MountTableOptions = {
   onUpdateTableConfig?: (payload: TableDataGridConfig) => void
   pageSize?: number
   refreshKey?: string | number | boolean
+  rows?: TestRow[]
   slots?: TestTableDataGridSlots
   tableConfig?: TableDataGridConfig
 }
@@ -612,6 +614,18 @@ describe('<TableDataGrid />', () => {
       state: 'success',
       hasData: false,
     })
+  })
+
+  it('renders host-owned unpaginated rows without state events', () => {
+    const onState = cy.stub().as('state')
+    const table = mountTestTableDataGrid({ mode: 'unpaginated', onState, rows })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-cell', 'Portal app').should('be.visible')
+
+    table.setProps({ rows: [] })
+    cy.getTestId('table-empty-state').should('be.visible')
+    cy.get('@state').should('not.have.been.called')
   })
 
   it('renders a custom empty state slot', () => {
