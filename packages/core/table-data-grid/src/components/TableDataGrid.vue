@@ -34,7 +34,6 @@
 
     <AgGridVue
       v-else
-      :key="mode"
       :cache-block-size="mode === 'infinite' ? activePageSize : undefined"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
@@ -103,6 +102,7 @@ const {
   refreshKey,
   tableConfig,
 } = defineProps<TableDataGridProps<Row>>()
+// The row model selects setup-time composables; remount the grid to change modes.
 const mode = providedMode ?? 'infinite'
 
 defineSlots<{

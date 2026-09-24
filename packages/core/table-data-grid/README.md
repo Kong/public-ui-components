@@ -116,7 +116,7 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Infinite mode | - | Async row loader called by the AG Grid infinite datasource. |
 | `rows` | `Row[]` | Unpaginated mode | - | Complete host-owned result. The grid does not fetch in this mode. |
-| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model. |
+| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model when mounted. Remount to change modes. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
 | `pageSize` | `number` | No | `25` | Infinite mode only. AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
 | `refreshKey` | `string \| number \| boolean` | No | - | Infinite mode only. Parent invalidation signal that rebuilds the datasource from the beginning. |
@@ -151,10 +151,10 @@ type TableDataGridFetcher<Row> = (
 uses `cursor: undefined`; later requests receive the previous response cursor.
 
 `sort` carries the current single-column sort, with `sortColumnKey` and
-`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
-request-context change like `refreshKey` or `pageSize`: it rebuilds the
-datasource and restarts the cursor chain from the beginning, because a cursor
-produced under one sort order is not valid under another.
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change makes
+AG Grid reload its blocks and restarts the cursor chain from the beginning
+without replacing the datasource, because a cursor produced under one sort
+order is not valid under another.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in
@@ -171,6 +171,9 @@ and pass `rows`. The rows go to AG Grid's client-side row model. The grid does
 not fetch, show a loading overlay, or emit `state` events in this mode. The host
 owns loading, refresh, and error handling, and replaces `rows` when its result
 changes. An empty `rows` array shows the empty state.
+
+The row model is selected when `TableDataGrid` mounts. To switch between
+`infinite` and `unpaginated`, key the component by mode so Vue remounts it.
 
 For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
 leave the host height unconstrained. The grid fits its header and all returned
@@ -309,9 +312,9 @@ as `rows`. AG Grid sorts those rows locally with its built-in row animation.
 />
 ```
 
-In the default infinite mode, sorting rebuilds the datasource from the
-beginning. A cursor produced under one sort order is not valid under another,
-so the fetcher receives the new sort and loads rows again.
+In the default infinite mode, sorting reloads AG Grid's blocks while reusing
+the datasource. The cursor chain starts over, and the fetcher receives the new
+sort as rows load again.
 
 ## Custom Cell Content
 
