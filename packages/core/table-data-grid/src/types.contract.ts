@@ -1,4 +1,5 @@
-// Compile-time checks for valid/default mode-input pairs and rejected incompatible pairs; no runtime test.
+// typecheck:types compiles this file so public prop and header type changes fail CI
+// if they reject valid inputs or accept invalid ones. It is excluded from the package build.
 import type {
   TableDataGridFetcher,
   TableDataGridHeader,
