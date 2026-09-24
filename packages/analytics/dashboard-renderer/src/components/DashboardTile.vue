@@ -185,7 +185,6 @@
       <component
         :is="componentData.component"
         v-if="componentData"
-        :key="componentData.rendererKey"
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
@@ -223,6 +222,7 @@ import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -368,7 +368,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'gauge': SimpleChartRenderer,
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
-  'top_n': TableDataGridRenderer,
+  'top_n': TopNTableRenderer,
   'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
@@ -410,12 +410,10 @@ const componentData = computed(() => {
 
   return component && {
     component,
-    rendererKey: isTableChart || definition.chart.type === 'top_n' ? definition.chart.type : undefined,
     rendererProps: {
       ...rendererProps,
-      ...(isTableChart || definition.chart.type === 'top_n' ? { chartType: definition.chart.type } : {}),
       ...(!isTableChart ? chartRendererProps : {}),
-      ...(!isTableChart && definition.chart.type === 'top_n' ? { fitToContent } : {}),
+      ...(definition.chart.type === 'top_n' ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,

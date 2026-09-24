@@ -5,15 +5,12 @@ import { fetchState } from './useFetchState'
 
 type UseEmitStateOptions = {
   emitState: (payload: TableDataGridStatePayload) => void
-  /** Include loading when fetching has already started during setup. */
-  emitInitialState?: boolean
   fetchLifecycleState: Readonly<Ref<fetchState>>
   hasData: Readonly<Ref<boolean>>
 }
 
 export const useEmitState = ({
   emitState,
-  emitInitialState = false,
   fetchLifecycleState,
   hasData,
 }: UseEmitStateOptions) => {
@@ -50,6 +47,5 @@ export const useEmitState = ({
         state: 'success',
       })
     },
-    { immediate: emitInitialState },
   )
 }

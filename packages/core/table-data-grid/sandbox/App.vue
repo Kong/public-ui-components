@@ -15,6 +15,7 @@
           Clear log
         </KButton>
         <KButton
+          v-if="fetchMode === 'infinite'"
           appearance="primary"
           @click="refreshRows"
         >
@@ -26,9 +27,9 @@
     <main class="sandbox-main">
       <section class="table-section">
         <div class="table-section-toolbar">
-          <p>{{ fetchMode === 'unpaginated' ? 'All rows load once. Sorting and scrolling do not fetch again.' : 'Scrolling and sorting fetch rows in blocks.' }}</p>
+          <p>{{ fetchMode === 'unpaginated' ? 'The host passes all rows. Sorting and scrolling do not fetch.' : 'Scrolling and sorting fetch rows in blocks.' }}</p>
           <KSegmentedControl
-            aria-label="Fetcher mode"
+            aria-label="Data mode"
             class="fetch-mode-control"
             :model-value="fetchMode"
             :options="fetchModeOptions"
@@ -140,7 +141,7 @@
               </select>
             </label>
 
-            <label>
+            <label v-if="fetchMode === 'infinite'">
               Fetch delay
               <select
                 :value="String(fetchDelayMs)"
@@ -166,6 +167,7 @@
 
           <div class="sandbox-panel-actions">
             <KButton
+              v-if="fetchMode === 'infinite'"
               appearance="secondary"
               size="small"
               @click="refreshRows"
@@ -208,15 +210,15 @@
                     <dt>Request</dt>
                     <dd>{{ entry.fetchCount }}</dd>
                   </div>
-                  <div v-if="entry.request.mode === 'infinite'">
+                  <div>
                     <dt>Page size</dt>
                     <dd>{{ entry.request.pageSize }}</dd>
                   </div>
-                  <div v-if="entry.request.mode === 'infinite'">
+                  <div>
                     <dt>Request cursor</dt>
                     <dd>{{ formatCursor(entry.request.cursor) }}</dd>
                   </div>
-                  <div v-if="entry.request.mode === 'infinite'">
+                  <div>
                     <dt>Response cursor</dt>
                     <dd>{{ formatCursor(entry.responseCursor) }}</dd>
                   </div>
@@ -266,8 +268,6 @@ import type {
   TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
-  TableDataGridUnpaginatedFetcher,
-  TableDataGridUnpaginatedFetcherParams,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
 import type { BadgeAppearance, SegmentedControlOption } from '@kong/kongponents'
@@ -288,7 +288,7 @@ type SandboxRow = {
 type DatasetMode = 'generated' | 'empty'
 type FetchMode = 'infinite' | 'unpaginated'
 type SandboxSectionId = 'tableOptions' | 'fetchDebug' | 'headers'
-type FetchRequest = TableDataGridInfiniteFetcherParams | TableDataGridUnpaginatedFetcherParams
+type FetchRequest = TableDataGridInfiniteFetcherParams
 
 type FetchHistoryEntry = {
   fetchCount: number
@@ -470,9 +470,7 @@ const recordFetch = ({
   rowsReturned: number
 }) => {
   const nextFetchCount = fetchCount.value + 1
-  const requestDescription = request.mode === 'infinite'
-    ? `cursor ${formatCursor(request.cursor)}`
-    : 'all rows'
+  const requestDescription = `cursor ${formatCursor(request.cursor)}`
   const entry: FetchHistoryEntry = {
     fetchCount: nextFetchCount,
     id: `fetch-${nextFetchCount}`,
@@ -545,45 +543,25 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
   }
 }
 
-const fetchAllRows: TableDataGridUnpaginatedFetcher<SandboxRow> = async ({ mode }) => {
-  const requestGeneration = fetchDiagnosticsGeneration.value
-  const request: TableDataGridUnpaginatedFetcherParams = { mode }
-
-  if (fetchDelayMs.value > 0) {
-    await wait(fetchDelayMs.value)
-  }
-
-  const data = activeRows.value
-
-  if (requestGeneration === fetchDiagnosticsGeneration.value) {
-    recordFetch({
-      request,
-      rowsReturned: data.length,
-    })
-  }
-
-  return { data }
-}
-
 const tableProps = computed<TableDataGridProps<SandboxRow>>(() => {
   const commonProps = {
     error: showErrorState.value,
     headers,
-    refreshKey: refreshKey.value,
     tableConfig: tableConfig.value,
   }
 
   return fetchMode.value === 'unpaginated'
     ? {
       ...commonProps,
-      fetcher: fetchAllRows,
       mode: 'unpaginated',
+      rows: activeRows.value,
     }
     : {
       ...commonProps,
       fetcher: fetchRows,
       mode: 'infinite',
       pageSize: pageSize.value,
+      refreshKey: refreshKey.value,
     }
 })
 

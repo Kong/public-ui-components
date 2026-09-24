@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { DashboardRendererContext } from '../types'
-import type { ExploreResultV4, PlatformDatasourceTabularQuery, PlatformUsageDatasourceTabularQuery, PlatformTabularResponse, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
+import type { PlatformDatasourceTabularQuery, PlatformUsageDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
-  topNTableDataGridFetcher,
   tableDataGridFetcherByDatasource,
   tableDataGridHeadersByDatasource,
 } from './table-data-grid-renderer'
@@ -53,32 +52,6 @@ const response: PlatformTabularResponse = {
 }
 
 describe('table data grid renderer utilities', () => {
-  it('issues the TopN query once and retains the original response', async () => {
-    const query: ValidDashboardChartQuery = {
-      datasource: 'basic',
-      dimensions: ['gateway_service'],
-      limit: 100,
-      metrics: ['request_count'],
-    }
-    const topNResponse: ExploreResultV4 = {
-      data: [{ timestamp: '2026-09-21T00:00:00Z', event: { gateway_service: 'service-id', request_count: 30 } }],
-      meta: {
-        display: { gateway_service: { 'service-id': { name: 'Service One' } } },
-        metric_names: ['request_count'],
-        granularity_ms: 0,
-        query_id: 'topn-query',
-        start: '',
-        end: '',
-      },
-    }
-    const issueQuery = vi.fn().mockResolvedValue(topNResponse)
-
-    const result = await topNTableDataGridFetcher({ issueQuery, query, context })
-
-    expect(result.response).toBe(topNResponse)
-    expect(issueQuery).toHaveBeenCalledExactlyOnceWith(query, context)
-  })
-
   it('builds translated headers from query columns and falls back to raw labels', () => {
     const translate = (key: string): string => ({
       'chartLabels.control_plane': 'Control plane',
