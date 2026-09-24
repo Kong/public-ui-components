@@ -310,9 +310,9 @@ describe('TopNTableRenderer grid integration', () => {
     await expect.poll(() => cell(0, 'ai_provider').textContent).toContain('OpenAI')
     expect(cell(1, 'ai_provider').textContent).toContain('Anthropic')
     // Icons match the raw provider id only, and only for columns with icon_set.
-    await expect.element(page.elementLocator(element('[row-index="0"] [col-id="ai_provider"] [data-testid="table-data-grid-cell-icon"]'))).toBeVisible()
-    expect(cell(1, 'ai_provider').querySelector('[data-testid="table-data-grid-cell-icon"]')).toBeNull()
-    expect(document.querySelector('[col-id="ai_model"] [data-testid="table-data-grid-cell-icon"]')).toBeNull()
+    await expect.element(page.elementLocator(element('[row-index="0"] [col-id="ai_provider"] [data-testid="top-n-provider-icon"]'))).toBeVisible()
+    expect(cell(1, 'ai_provider').querySelector('[data-testid="top-n-provider-icon"]')).toBeNull()
+    expect(document.querySelector('[col-id="ai_model"] [data-testid="top-n-provider-icon"]')).toBeNull()
     expect(cell(0, 'ai_model').textContent).toContain('GPT')
     expect(cell(0, 'status_code').textContent).toContain('200')
     expect(cell(0, 'request_count').textContent).toContain('10')
