@@ -6,10 +6,10 @@ import type { TopTalkersCellData, TopTalkersColumnData, TopTalkersTooltipRow } f
 type UnpaintedCell = Omit<TopTalkersCellData, 'color' | 'tint'>
 
 import { computed } from 'vue'
-import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { color, unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 import useI18n from './useI18n'
-import { datavisPalette, isNoSuffixMetric } from '../utils'
+import { isNoSuffixMetric } from '../utils'
 import { getColumnOptions, getColumnStats, getRelativeValue, getThresholdType, toNumber } from '../utils/topn-columns'
 import { EMPTY_DIMENSION_ID, OTHER_DIMENSION_ID } from '../constants'
 
@@ -31,7 +31,7 @@ export default function useTopTalkersData(
       // intensity, i.e. with the maximum tint value. This will cap the scale to 0.5
       const scaled = Math.min(cell.ratio, 0.5) / 0.5
 
-      return { ...cell, color: datavisPalette[1], tint: `${MIN_TINT + scaled * (MAX_TINT - MIN_TINT)}%` }
+      return { ...cell, color: color({ metric: sizeMetric.value }), tint: `${MIN_TINT + scaled * (MAX_TINT - MIN_TINT)}%` }
     })
   }
 

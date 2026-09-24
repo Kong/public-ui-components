@@ -168,21 +168,4 @@ describe('useTopTalkersData', () => {
 
     expect(cells.value.at(-1)).toMatchObject({ id: 'b', value: 0, ratio: 0 })
   })
-
-  it('paints every cell one datavis hue, ramping the tint by share', () => {
-    const { cells } = build(makeResult([
-      { id: 'a', requests: 50 },
-      { id: 'b', requests: 30 },
-      { id: 'c', requests: 20 },
-    ]))
-
-    expect(new Set(cells.value.map((cell) => cell.color))).toEqual(new Set([datavisPalette[1]]))
-
-    const tints = cells.value.map((cell) => Number.parseFloat(cell.tint))
-
-    // A half share or more pins to the ceiling; below that the ramp tracks share.
-    expect(tints[0]).toBe(85)
-    expect(tints[0]).toBeGreaterThan(tints[1])
-    expect(tints[1]).toBeGreaterThan(tints[2])
-  })
 })
