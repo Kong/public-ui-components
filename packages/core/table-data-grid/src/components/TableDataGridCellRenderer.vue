@@ -238,7 +238,7 @@ onMounted(() => {
   observeContentElement(contentElement.value)
 })
 
-watch(contentElement, observeContentElement, { flush: 'post' })
+watch(contentElement, observeContentElement)
 
 onUnmounted(() => {
   isUnmounted = true
