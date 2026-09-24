@@ -41,6 +41,7 @@ describe('<HeatmapChart />', () => {
     expect(option.xAxis.axisLabel).toBeUndefined()
     expect(option.yAxis).toMatchObject({ type: 'category', data: ['Mon', 'Tue'], inverse: true, axisLabel: { overflow: 'truncate' } })
     expect(option.series[0].label.show).toBe(false)
+    expect(option.series[0].animation).toBe(false)
     expect(option.series[0]).toMatchObject({ type: 'heatmap', name: 'Token usage', data })
     expect(option.series[0].itemStyle.borderColor).toBe(KUI_COLOR_BACKGROUND)
   })

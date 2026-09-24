@@ -122,6 +122,10 @@ const generatedOption = computed((): EChartsOption => {
         name: seriesName,
         type: 'heatmap',
         data: seriesData,
+        // Prevent flickering of labels by disabling animation
+        // The heatmap redraws every cell on each update (scrolling, data refresh, theme
+        // change), which replays the label fade-in and makes the labels flicker
+        animation: false,
         label: {
           // ECharts picks a light or dark text color for each cell's background
           show: showValues ?? false,
