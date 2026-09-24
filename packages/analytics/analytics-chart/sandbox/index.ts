@@ -43,6 +43,11 @@ const router = createRouter({
       component: () => import('./pages/ScatterChartDemo.vue'),
     },
     {
+      path: '/top-talkers',
+      name: 'top-talkers',
+      component: () => import('./pages/TopTalkersDemo.vue'),
+    },
+    {
       path: '/sparkline',
       name: 'sparkline',
       component: () => import('./pages/SparklineDemo.vue'),
@@ -75,6 +80,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Scatter Chart',
     to: { name: 'scatter-chart' },
+  },
+  {
+    name: 'Top Talkers',
+    to: { name: 'top-talkers' },
   },
   {
     name: 'Sparkline',
