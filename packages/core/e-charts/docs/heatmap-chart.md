@@ -53,12 +53,15 @@ const data: HeatmapDataPoint[] = [
 | `max` | `number` | largest data value (at least `1`) | Upper bound of the visual map. |
 | `colorRange` | `string[]` | theme tokens | Gradient colors from low to high (two or more). |
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip (ECharts' `tooltip.valueFormatter`) and the visual map labels. |
-| `tooltipFormatter` | `HeatmapTooltipFormatter` | ECharts default | Custom tooltip formatter (ECharts' `tooltip.formatter`). |
 | `showValues` | `boolean` | `false` | Shows each cell's value inside the cell, formatted with `valueFormatter`. The text color adapts to the cell color. |
 | `visibleRows` | `number` | none (all rows) | Shows at most this many rows, with a scrollbar to scroll through the rest, see [Scrolling rows](#scrolling-rows). |
 | `seriesOption` | `HeatmapSeriesOption` | none | Deep-merged into the generated heatmap series, e.g. `{ itemStyle: { borderRadius: 0 } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
 | `option` | `EChartsOption` | none | Raw ECharts option, always deep-merged over the generated config, see [custom options](./custom-options.md). |
 | `height` | `string` | `400px` | Chart height, applied via CSS `v-bind`. |
+
+## Tooltip
+
+Hovering a cell shows ECharts' tooltip with `seriesName` and the value formatted with `valueFormatter`. To change it, pass a formatter through `option`: `:option="{ tooltip: { formatter } }"`.
 
 ## Rows
 

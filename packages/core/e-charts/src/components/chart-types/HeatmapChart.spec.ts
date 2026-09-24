@@ -57,8 +57,7 @@ describe('<HeatmapChart />', () => {
     })
   })
 
-  it('supports explicit bounds, color range and tooltip formatter', () => {
-    const tooltipFormatter = () => 'formatted'
+  it('supports explicit bounds and color range', () => {
     const wrapper = mountChart({
       data,
       xAxisLabels: [],
@@ -66,12 +65,17 @@ describe('<HeatmapChart />', () => {
       min: 5,
       max: 1000,
       colorRange: ['#111111', '#222222'],
-      tooltipFormatter,
     })
     const option = chartOption(wrapper)
 
     expect(option.visualMap).toMatchObject({ min: 5, max: 1000, inRange: { color: ['#111111', '#222222'] } })
-    expect(option.tooltip).toEqual({ position: 'top', formatter: tooltipFormatter })
+  })
+
+  it('customizes the tooltip through option.tooltip.formatter', () => {
+    const formatter = () => 'formatted'
+    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { tooltip: { formatter } } }))
+
+    expect(option.tooltip).toMatchObject({ position: 'top', formatter })
   })
 
   it('uses valueFormatter for the tooltip value and the visual map labels', () => {

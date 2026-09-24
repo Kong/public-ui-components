@@ -24,8 +24,6 @@ export type ChartColors = {
  */
 export type HeatmapDataPoint = [string | number, string | number, number]
 
-export type HeatmapTooltipFormatter = (params: TooltipComponentFormatterCallbackParams) => string
-
 interface BaseChartProps {
   /**
    * Raw echarts option, always deep-merged over the generated option: nested
@@ -54,8 +52,6 @@ export interface HeatmapChartProps extends BaseChartProps {
   colorRange?: string[]
   /** Formats values in the tooltip and the visual map labels. */
   valueFormatter?: (value: number) => string
-  /** Custom tooltip formatter. Defaults to ECharts' built-in tooltip. */
-  tooltipFormatter?: HeatmapTooltipFormatter
   /**
    * Show at most this many rows, with a scrollbar on the right to scroll
    * through the rest.

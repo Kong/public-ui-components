@@ -30,7 +30,6 @@ const {
   max,
   colorRange,
   valueFormatter,
-  tooltipFormatter,
   visibleRows,
   showValues,
   seriesOption,
@@ -72,7 +71,6 @@ const generatedOption = computed((): EChartsOption => {
   return {
     tooltip: {
       position: 'top',
-      formatter: tooltipFormatter,
       valueFormatter: valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
     },
     grid: {
