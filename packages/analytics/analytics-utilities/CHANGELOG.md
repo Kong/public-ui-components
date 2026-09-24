@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.45.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.44.0...%40kong-ui-public%2Fanalytics-utilities%4012.45.0) (2026-09-24)
+
+### Features
+
+* add a2a_task_state to api requests ([#3872](https://github.com/Kong/public-ui-components/issues/3872)) ([2ebe897](https://github.com/Kong/public-ui-components/commit/2ebe897f37bac1ac659811638d19cc367961dd47))
+
+
 # [12.44.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.43.0...%40kong-ui-public%2Fanalytics-utilities%4012.44.0) (2026-09-21)
 
 ### Features
