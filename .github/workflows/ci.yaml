@@ -11,8 +11,6 @@ on:
       - labeled
     branches:
       - main
-      # Publish the complete stack preview until the test PR is retargeted to main.
-      - workbench/ma-5503-use-tabledatagrid-for-topn-e6c85af7
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
