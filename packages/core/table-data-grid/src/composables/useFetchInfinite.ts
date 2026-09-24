@@ -21,7 +21,7 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
    * Public row fetcher ref supplied by the host. The composable keeps AG Grid row
    * ranges internal and calls this with the cursor-first TableDataGrid contract.
    */
-  fetcher: Readonly<Ref<TableDataGridFetcher<Row>>>
+  fetcher: Readonly<Ref<TableDataGridFetcher<Row> | undefined>>
   /**
    * Reactive invalidation input from the component layer. Any change rebuilds
    * the datasource and clears cursor/block state back to block 0.
@@ -261,7 +261,11 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * @returns AG Grid datasource for the latest cursor chain.
    */
   const buildDatasource = (): IDatasource => {
-    datasourceFetcher = fetcher.value
+    const currentFetcher = fetcher.value
+    if (!currentFetcher) {
+      throw new Error('TableDataGrid requires a fetcher in infinite mode')
+    }
+    datasourceFetcher = currentFetcher
     datasourceResetKey = resetKey?.value
     const datasourceId = latestDatasourceId.value + 1
     latestDatasourceId.value = datasourceId
@@ -317,7 +321,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
 
-          const result = await fetcher.value({
+          const result = await currentFetcher({
             mode: 'infinite',
             pageSize,
             cursor,
