@@ -2,6 +2,7 @@
   <ECharts
     :height="height"
     :option="mergedOption"
+    :tooltip-content="cellTooltipContent"
   />
 </template>
 
@@ -13,8 +14,9 @@ import { DataZoomSliderComponent, VisualMapComponent } from 'echarts/components'
 import ECharts from '../ECharts.vue'
 import { useChartColors } from '../../composables/useChartColors.ts'
 import { deepMerge } from '../../utils/deepMerge.ts'
+import { categoryLabel, tooltipItems, tooltipRow } from '../../utils/tooltip.ts'
 import type { DataZoomComponentOption, EChartsOption, HeatmapSeriesOption } from 'echarts'
-import type { HeatmapChartProps, HeatmapDataPoint } from '../../types/index.ts'
+import type { ChartTooltipContent, HeatmapChartProps, HeatmapDataPoint } from '../../types/index.ts'
 
 // The renderer, grid and tooltip are registered by the base `ECharts` component
 use([HeatmapChart, VisualMapComponent, DataZoomSliderComponent])
@@ -33,9 +35,23 @@ const {
   visibleRows,
   showValues,
   seriesOption,
+  tooltipTitle,
 } = defineProps<HeatmapChartProps>()
 
 const colors = useChartColors()
+
+/** Tooltip content, like the analytics-chart tooltips: the column and the series name as the subtitle, and a row for the cell. */
+const cellTooltipContent: ChartTooltipContent = (params) => {
+  const [cell] = tooltipItems(params)
+  const [x, y, value] = cell.value as HeatmapDataPoint
+
+  return {
+    title: tooltipTitle,
+    context: categoryLabel(x, xAxisLabels),
+    metric: seriesName,
+    rows: [tooltipRow(cell, categoryLabel(y, yAxisLabels), value, valueFormatter)],
+  }
+}
 
 /**
  * Scrollbar for `visibleRows`: a slider locked to a fixed-size window of rows,
@@ -69,10 +85,6 @@ const generatedOption = computed((): EChartsOption => {
   const visualMapFormatter = valueFormatter ? (value: unknown) => valueFormatter(Number(value)) : undefined
 
   return {
-    tooltip: {
-      position: 'top',
-      valueFormatter: valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
-    },
     grid: {
       top: 10,
       left: 10,

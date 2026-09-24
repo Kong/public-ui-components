@@ -39,9 +39,15 @@ export const chartTheme = (colors: ChartColors): ChartTheme => {
     textStyle,
     categoryAxis: axisCommon,
     valueAxis: axisCommon,
+    // Same box as the analytics-chart tooltip. No padding: `ChartTooltip` has its own spacing
     tooltip: {
       backgroundColor: colors.KUI_COLOR_BACKGROUND,
-      borderColor: colors.KUI_COLOR_BORDER,
+      borderWidth: 0,
+      borderRadius: 4,
+      padding: 0,
+      // Keep the tooltip inside the chart so tiles with `overflow: hidden` don't clip it
+      confine: true,
+      extraCssText: 'box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);',
       textStyle: { color: colors.KUI_COLOR_TEXT, fontFamily },
     },
     visualMap: {

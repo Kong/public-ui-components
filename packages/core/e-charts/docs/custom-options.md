@@ -37,7 +37,7 @@ Merge behavior (see `deepMerge` in `src/utils`):
 
 ## The base `ECharts` component (escape hatch)
 
-When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied) and `height`, and registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
+When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied), `height`, and an optional `tooltipContent` for the shared tooltip (see below). It registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
 
 ```vue
 <template>
@@ -63,6 +63,17 @@ const option: EChartsOption = {
 }
 </script>
 ```
+
+### Shared tooltip
+
+Every chart, including the base `ECharts` component, shows the same tooltip (matching the tooltips in `@kong-ui-public/analytics-chart`), with the same kind of customization:
+
+- `tooltipTitle`: an optional bold title on chart types (e.g. `HeatmapChart`). Empty by default, like the dashboard tooltips in `@kong-ui-public/analytics-chart`.
+- Everything else comes from the chart's data: the hovered time or category and the metric in the subtitle, and a row per value with its color, label and formatted value. Chart types expose props for it, like `seriesName` and `valueFormatter` on `HeatmapChart`.
+
+On the base `ECharts` component the tooltip defaults to the hovered category and each series' color, name and value. Pass `tooltipContent` to fill it from your data instead (see [Adding a chart type](./adding-a-chart-type.md)).
+
+`option.tooltip.formatter` is replaced by the shared tooltip, so every chart keeps the same look. Other `option.tooltip` settings, like `trigger`, still apply.
 
 ## Notes
 

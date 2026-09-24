@@ -6,6 +6,7 @@ ECharts-based chart components for Kong UI, with theme-reactive colors resolved 
 
 - `HeatmapChart`: GitHub-contribution-style intensity grid with theme-token gradient colors
 - `ECharts`: the raw base component, for building custom chart types
+- A shared tooltip for every chart, matching the tooltips in `@kong-ui-public/analytics-chart`
 - `useChartColors`: resolves every `@kong/design-tokens` color token from the active theme's CSS custom properties, since canvas charts can't consume `var()`
 
 ## Requirements

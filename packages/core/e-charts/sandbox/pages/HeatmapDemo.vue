@@ -21,12 +21,13 @@
         :data="errorRates"
         series-name="Error rate"
         show-values
+        tooltip-title="Last 7 days"
         :value-formatter="(value) => `${value.toFixed(1)}%`"
         :visible-rows="10"
         :x-axis-labels="days"
         :y-axis-labels="models"
       />
-      <p>Rows are sorted by error rate, highest first.</p>
+      <p>Rows are sorted by error rate, highest first. The tooltip shows a title set with `tooltip-title`.</p>
     </section>
 
     <section class="example">

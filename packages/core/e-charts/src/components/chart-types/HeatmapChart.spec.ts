@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import HeatmapChart from './HeatmapChart.vue'
 import ECharts from '../ECharts.vue'
+import type { ChartTooltipContent } from '../../types/index.ts'
 import {
   KUI_COLOR_BACKGROUND,
   KUI_COLOR_BACKGROUND_INFO_STRONG,
@@ -32,8 +33,7 @@ describe('<HeatmapChart />', () => {
     })
     const option = chartOption(wrapper)
 
-    expect(option.tooltip.position).toBe('top')
-    expect(option.tooltip.formatter).toBeUndefined()
+    expect(option.tooltip).toBeUndefined()
     expect(option.grid).toMatchObject({ outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' })
     expect(option.grid.left).toBe(10)
     expect(option.grid).not.toHaveProperty('height')
@@ -71,20 +71,36 @@ describe('<HeatmapChart />', () => {
     expect(option.visualMap).toMatchObject({ min: 5, max: 1000, inRange: { color: ['#111111', '#222222'] } })
   })
 
-  it('customizes the tooltip through option.tooltip.formatter', () => {
-    const formatter = () => 'formatted'
-    const option = chartOption(mountChart({ data, xAxisLabels: [], yAxisLabels: [], option: { tooltip: { formatter } } }))
+  it('uses tooltipTitle as the tooltip title', () => {
+    const wrapper = mountChart({ data, xAxisLabels: ['May'], yAxisLabels: ['Mon'], tooltipTitle: 'Last 7 days' })
+    const cellTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(option.tooltip).toMatchObject({ position: 'top', formatter })
+    expect(cellTooltipContent({ value: [0, 0, 1] } as any).title).toBe('Last 7 days')
   })
 
   it('uses valueFormatter for the tooltip value and the visual map labels', () => {
     const valueFormatter = (value: number) => `${value}%`
-    const wrapper = mountChart({ data, xAxisLabels: [], yAxisLabels: [], valueFormatter })
-    const option = chartOption(wrapper)
+    const wrapper = mountChart({ data, xAxisLabels: ['May'], yAxisLabels: ['Mon'], valueFormatter })
+    const cellTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(option.tooltip.valueFormatter(42)).toBe('42%')
-    expect(option.visualMap.formatter(42)).toBe('42%')
+    expect(cellTooltipContent({ value: [0, 0, 42] } as any).rows?.[0]?.value).toBe('42%')
+    expect(chartOption(wrapper).visualMap.formatter(42)).toBe('42%')
+  })
+
+  it('maps the hovered cell to the shared tooltip content', () => {
+    const wrapper = mountChart({ data, xAxisLabels: ['May', 'Jun'], yAxisLabels: ['Mon', 'Tue'], seriesName: 'Token usage' })
+    const cellTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
+
+    expect(cellTooltipContent({ value: [1, 0, 7], color: '#ff0000' } as any)).toEqual({
+      context: 'Jun',
+      metric: 'Token usage',
+      rows: [{ color: '#ff0000', label: 'Mon', value: '7' }],
+    })
+    // Category names are used as-is
+    expect(cellTooltipContent({ value: ['May', 'Tue', 3], color: '#00ff00' } as any)).toMatchObject({
+      context: 'May',
+      rows: [{ label: 'Tue', value: '3' }],
+    })
   })
 
   it('has no zoom controls by default', () => {

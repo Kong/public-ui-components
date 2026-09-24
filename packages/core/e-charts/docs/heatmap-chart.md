@@ -55,13 +55,25 @@ const data: HeatmapDataPoint[] = [
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip (ECharts' `tooltip.valueFormatter`) and the visual map labels. |
 | `showValues` | `boolean` | `false` | Shows each cell's value inside the cell, formatted with `valueFormatter`. The text color adapts to the cell color. |
 | `visibleRows` | `number` | none (all rows) | Shows at most this many rows, with a scrollbar to scroll through the rest, see [Scrolling rows](#scrolling-rows). |
+| `tooltipTitle` | `string` | none | Bold title of the shared tooltip, see [Tooltip](#tooltip). |
 | `seriesOption` | `HeatmapSeriesOption` | none | Deep-merged into the generated heatmap series, e.g. `{ itemStyle: { borderRadius: 0 } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
 | `option` | `EChartsOption` | none | Raw ECharts option, always deep-merged over the generated config, see [custom options](./custom-options.md). |
 | `height` | `string` | `400px` | Chart height, applied via CSS `v-bind`. |
 
 ## Tooltip
 
-Hovering a cell shows ECharts' tooltip with `seriesName` and the value formatted with `valueFormatter`. To change it, pass a formatter through `option`: `:option="{ tooltip: { formatter } }"`.
+Hovering a cell shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips): the column and `seriesName` as the subtitle (left and right), and a row with the cell color, the row name and the value formatted with `valueFormatter`.
+
+Like `@kong-ui-public/analytics-chart`, the content comes from the chart's data: set `seriesName` for the metric and `valueFormatter` for the value. Pass `tooltipTitle` to add a bold title (empty by default):
+
+```vue
+<HeatmapChart
+  :data="data"
+  series-name="Error rate"
+  tooltip-title="Last 7 days"
+  :value-formatter="(value) => `${value.toFixed(1)}%`"
+/>
+```
 
 ## Rows
 
