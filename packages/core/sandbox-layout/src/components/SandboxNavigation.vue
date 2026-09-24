@@ -83,7 +83,7 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
 // Unscoped to control page elements
 html, body {
   background-color: var(--kui-color-background, $kui-color-background);
-  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  color: var(--kui-color-text, $kui-color-text);
   margin: 0;
   min-height: 100%;
   padding: 0;
