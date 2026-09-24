@@ -281,6 +281,70 @@ describe('useVitalsExploreDatasets', () => {
     expect(_consoleErrorSpy).not.toHaveBeenCalled()
   })
 
+  describe('metric axis', () => {
+    const multiMetricResult = (display: DisplayBlob = {}) => computed<ExploreResultV4>(() => ({
+      data: [
+        { timestamp: '2026-09-09T15:00:00Z', event: { status_code: '200', request_count: 10, response_latency_p99: 20 } },
+      ],
+      meta: {
+        start: '2026-09-09T15:00:00Z', end: '2026-09-09T16:00:00Z', granularity_ms: 3600000,
+        metric_names: ['request_count', 'response_latency_p99'],
+        metric_units: { request_count: 'count', response_latency_p99: 'ms' }, query_id: '',
+        display,
+      },
+    }))
+
+    it('does not assign an axis by default', () => {
+      const result = useExploreResultToTimeDataset({ fill: false }, multiMetricResult())
+
+      result.value.datasets.forEach(ds => {
+        expect(ds).not.toHaveProperty('yAxisID')
+        expect(ds).not.toHaveProperty('unit')
+      })
+    })
+
+    it('assigns right-axis metrics to y1 when metrics are the datasets', () => {
+      const result = useExploreResultToTimeDataset(
+        { fill: false, metricAxisMap: { request_count: 'left', response_latency_p99: 'right' } },
+        multiMetricResult(),
+      )
+
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'request_count')).not.toHaveProperty('yAxisID')
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ yAxisID: 'y1' })
+    })
+
+    it('dashes right-axis series when metrics are the datasets', () => {
+      const result = useExploreResultToTimeDataset(
+        { fill: false, metricAxisMap: { response_latency_p99: 'right' } },
+        multiMetricResult(),
+      )
+
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'request_count')).not.toHaveProperty('borderDash')
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ borderDash: [4, 2] })
+    })
+
+    it('carries each metric\'s unit when an axis map is given', () => {
+      const result = useExploreResultToTimeDataset(
+        { fill: false, metricAxisMap: { response_latency_p99: 'right' } },
+        multiMetricResult(),
+      )
+
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'request_count')).toMatchObject({ unit: 'count' })
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ unit: 'ms' })
+    })
+
+    it('assigns every dimension of a right-axis metric to y1', () => {
+      const result = useExploreResultToTimeDataset(
+        { fill: false, metricAxisMap: { response_latency_p99: 'right' } },
+        multiMetricResult({ status_code: { '200': { name: '200' } } }),
+      )
+
+      expect(result.value.datasets).toHaveLength(2)
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'request_count')).not.toHaveProperty('yAxisID')
+      expect(result.value.datasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ yAxisID: 'y1' })
+    })
+  })
+
   it('handles multi-metric/no dimension query', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [

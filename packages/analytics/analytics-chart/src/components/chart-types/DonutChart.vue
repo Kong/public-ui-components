@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
+import { computed, inject, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -56,11 +56,13 @@ import { isSummableMetric } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
 import { color } from 'chart.js/helpers'
 import composables from '../../composables'
-import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { unitFormatter, type InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import type { KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import type { DonutChartData, LegendValues } from '../../types/chart-data'
+import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
+import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 
 const props = withDefaults(defineProps<{
   chartData: KChartData
@@ -91,6 +93,14 @@ const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref([])
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
+const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
+const coordinatorPlugin = new CoordinatorPlugin({
+  coordinator,
+  requiresUpdate: true,
+  triggerOnSelf: false,
+  watchTimestamp: false,
+  watchDimension: true,
+})
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -125,12 +135,19 @@ const htmlLegendPlugin: Plugin = {
   },
 }
 
-const plugins: Ref<Plugin[]> = computed(() => [htmlLegendPlugin])
+const plugins: Ref<Plugin[]> = computed(() => [
+  coordinatorPlugin,
+  htmlLegendPlugin,
+])
 
 // Flatten the datasets into a single element array, since we only want to
 // display a single dataset containing dimension totals in our Donut chart
 const formattedDataset = computed<DonutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
+    // @ts-ignore dimension exists because we add it in
+    acc.dimension = current.dimension
+    // @ts-ignore dimensionValue exists because we add it in
+    acc.dimensionValue.push(current.dimensionValue)
     acc.labels.push(current.label)
     acc.backgroundColor.push(current.backgroundColor)
     acc.hoverBorderColor.push(color(current.backgroundColor as string).saturate(0.5).darken(0.15).hexString())
@@ -138,6 +155,8 @@ const formattedDataset = computed<DonutChartData[]>(() => {
 
     return acc
   }, {
+    dimension: '',
+    dimensionValue: [],
     labels: [],
     backgroundColor: [],
     borderColor: '#ffffff',
