@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.47.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.46.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.0) (2026-09-24)
+
+### Features
+
+* **analytics:** top talkers grid and renderer [MA-5428] ([#3865](https://github.com/Kong/public-ui-components/issues/3865)) ([310fd2b](https://github.com/Kong/public-ui-components/commit/310fd2b8409ab6ae79cece53a4613d01f9afd64e))
+
+
 # [12.46.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.45.0...%40kong-ui-public%2Fanalytics-utilities%4012.46.0) (2026-09-24)
 
 ### Features
