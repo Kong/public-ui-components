@@ -47,7 +47,6 @@ const generatedOption = computed((): EChartsOption => {
       left: 50,
       right: 20,
       bottom: 100,
-      height: 140,
     },
     xAxis: {
       type: 'category',
