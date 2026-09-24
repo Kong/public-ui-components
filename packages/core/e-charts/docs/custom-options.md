@@ -43,4 +43,4 @@ Deep-merge behavior:
 ## Notes
 
 - Chart components register the ECharts modules (renderer, chart type, `GridComponent`, `TooltipComponent`, etc.) they need, so hosts never import ECharts directly.
-- Colors are resolved from `@kong/design-tokens` CSS custom properties at runtime (see `useChartColors`), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.
+- Every `@kong/design-tokens` color token is resolved from CSS custom properties at runtime (see `useChartColors`), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.

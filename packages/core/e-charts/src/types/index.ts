@@ -1,24 +1,21 @@
+import type * as designTokens from '@kong/design-tokens'
 import type { EChartsOption, TooltipComponentFormatterCallbackParams } from 'echarts'
 
 // Re-export echarts option types for consumer convenience
 export type { EChartsOption, TooltipComponentFormatterCallbackParams }
 
 /**
- * Token values resolved at runtime, keyed by the design token names
+ * Color token values resolved at runtime, keyed by the design token names
  * (`KUI_COLOR_TEXT_DISABLED` → `--kui-color-text-disabled`, etc.).
+ * Keyed by exactly the color tokens exported by `@kong/design-tokens`,
+ * derived from its type declarations so no per-token list is maintained
+ * here and no runtime code is pulled in.
+ *
+ * Mapped with an `as` key filter rather than `Record<ColorTokenName, string>`
+ * because only that form preserves the per-token JSDoc on hover.
  */
-export interface ChartColors {
-  KUI_COLOR_BACKGROUND: string
-  KUI_COLOR_BACKGROUND_ACCENT: string
-  KUI_COLOR_BACKGROUND_DANGER: string
-  KUI_COLOR_BACKGROUND_DECORATIVE_PURPLE: string
-  KUI_COLOR_BACKGROUND_INFO_STRONG: string
-  KUI_COLOR_BACKGROUND_INFO_WEAKEST: string
-  KUI_COLOR_BACKGROUND_OVERLAY: string
-  KUI_COLOR_BACKGROUND_SUCCESS_WEAK: string
-  KUI_COLOR_BACKGROUND_WARNING: string
-  KUI_COLOR_BACKGROUND_WARNING_WEAK: string
-  KUI_COLOR_TEXT_DISABLED: string
+export type ChartColors = {
+  readonly [K in keyof typeof designTokens as K extends `KUI_COLOR${string}` ? K : never]: string
 }
 
 export type HeatmapDataPoint = [number, number, number]
