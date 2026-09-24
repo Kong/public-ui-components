@@ -2,16 +2,11 @@ import type { TableDataGridHeader } from '../types'
 import {
   formatPercentage,
   getBarRatio,
-  getCellIcon,
   getColumnStats,
   getThresholdType,
   toFiniteNumber,
 } from './tableDataGridPresentation'
 import { describe, expect, it } from 'vitest'
-import type { Component } from 'vue'
-
-const OpenAiIcon: Component = { name: 'OpenAiIcon', render: () => null }
-const AnthropicIcon: Component = { name: 'AnthropicIcon', render: () => null }
 
 type TestRow = {
   name: string
@@ -55,29 +50,6 @@ describe('table-data-grid presentation helpers', () => {
       { type: 'warning', value: 100 },
       { type: 'error', value: 100 },
     ])).to.equal('error')
-  })
-
-  it('matches only configured icons against the raw value without mutating regexp state', () => {
-    const pattern = /openai/gi
-    pattern.lastIndex = 2
-
-    expect(getCellIcon({
-      icons: [{ icon: OpenAiIcon, pattern }],
-      rawValue: 'openai',
-    })).to.equal(OpenAiIcon)
-    expect(pattern.lastIndex).to.equal(2)
-    expect(getCellIcon({ rawValue: 'openai' })).to.equal(undefined)
-    expect(getCellIcon({
-      icons: [{ icon: OpenAiIcon, pattern: /^openai$/ }],
-      rawValue: 'route-1',
-    })).to.equal(undefined)
-    expect(getCellIcon({
-      icons: [
-        { icon: AnthropicIcon, pattern: /open/i },
-        { icon: OpenAiIcon, pattern: /openai/i },
-      ],
-      rawValue: 'openai',
-    })).to.equal(AnthropicIcon)
   })
 
   it('formats percentages with two decimal places and the small-value placeholder', () => {

@@ -1,14 +1,13 @@
 import type {
   AllAggregations,
   AnalyticsExploreRecord,
-  ColumnIconSet,
   ExploreResultV4,
   TopNColumnOptions,
 } from '@kong-ui-public/analytics-utilities'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import type { IntlShapeEx } from '@kong-ui-public/i18n'
 import type english from '../locales/en.json'
-import type { TableDataGridHeader, TableDataGridIconMapping } from '@kong-ui-public/table-data-grid'
+import type { TableDataGridHeader } from '@kong-ui-public/table-data-grid'
 import type { Component } from 'vue'
 import {
   AmazonBedrockIcon,
@@ -77,14 +76,6 @@ const aiProviderIcons: Readonly<Record<string, Component>> = {
   xai: GrokIcon,
 }
 
-// Provider ids match case-insensitively and exactly, as the legacy TopN table did.
-const iconSetMappings: Readonly<Record<ColumnIconSet, readonly TableDataGridIconMapping[]>> = {
-  ai_provider: Object.entries(aiProviderIcons).map(([id, icon]) => ({
-    icon,
-    pattern: new RegExp(`^${id}$`, 'i'),
-  })),
-}
-
 /**
  * Prefer an exact option key, falling back to case-insensitive dashboard keys.
  *
@@ -110,6 +101,23 @@ export const getColumnOptions = (
   )
 }
 
+/** Resolve only an opted-in provider column's raw id to an icon. */
+export const getTopNProviderIcon = ({
+  columnOptions,
+  columnKey,
+  rawValue,
+}: {
+  columnOptions: TopNColumnOptionsMap | undefined
+  columnKey: string
+  rawValue: unknown
+}): Component | undefined => {
+  if (getColumnOptions(columnOptions, columnKey)?.icon_set !== 'ai_provider' || typeof rawValue !== 'string') {
+    return undefined
+  }
+
+  return aiProviderIcons[rawValue.toLowerCase()]
+}
+
 /**
  * Normalize Explore metric values, treating empty or non-finite values as missing.
  *
@@ -125,9 +133,6 @@ export const toNumber = (value: unknown): number | null => {
 
   return Number.isFinite(num) ? num : null
 }
-
-const getIconMappings = (iconSet: ColumnIconSet | undefined): TableDataGridIconMapping[] | undefined =>
-  iconSet ? [...iconSetMappings[iconSet]] : undefined
 
 const isNoSuffixMetric = (unit: string): boolean =>
   unit.toLocaleLowerCase().endsWith('count')
@@ -267,7 +272,6 @@ export const createTopNPresentation = ({
     ),
     type: 'dimension',
     valueFormatter: (_value, row) => getDimension(row, key).label,
-    icons: getIconMappings(getColumnOptions(columnOptions, key)?.icon_set),
     sortable: false,
   }))
 
