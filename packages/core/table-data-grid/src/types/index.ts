@@ -1,5 +1,4 @@
 import type { GridApi } from 'ag-grid-community'
-import type { Component } from 'vue'
 
 export type TableDataGridMode = 'infinite' | 'unpaginated'
 export type TableDataGridRow = Record<string, unknown>
@@ -26,11 +25,6 @@ export type TableDataGridCellSlotProps<Row extends object = TableDataGridRow> = 
   selected: boolean
   /** Forces AG Grid to re-render this cell. */
   refreshCell: () => void
-}
-
-export type TableDataGridIconMapping = {
-  pattern: RegExp
-  icon: Component
 }
 
 export type TableDataGridThreshold = {
@@ -63,7 +57,7 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
    * presentation. These options are only applied in unpaginated mode.
    */
   dataType?: 'number'
-  /** Formats the raw cell value for display and icon matching. */
+  /** Formats the raw cell value for display. */
   valueFormatter?: (value: unknown, row: Row) => string
   /** Shows the row's share of the full returned column total. */
   showPercentage?: boolean
@@ -73,8 +67,6 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   bar?: 'relative' | 'absolute'
   /** Applies warning/error presentation at or above the crossed threshold. */
   thresholds?: TableDataGridThreshold[]
-  /** Matches the raw cell value and renders the first matching icon. */
-  icons?: TableDataGridIconMapping[]
 }
 
 export type TableDataGridSortDirection = 'asc' | 'desc'

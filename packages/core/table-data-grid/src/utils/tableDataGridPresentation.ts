@@ -1,9 +1,7 @@
 import type {
   TableDataGridHeader,
-  TableDataGridIconMapping,
   TableDataGridThreshold,
 } from '../types'
-import type { Component } from 'vue'
 
 export type TableDataGridColumnStats = {
   sum: number
@@ -55,43 +53,6 @@ export const getColumnStats = (
   },
   { sum: 0, max: 0 },
 )
-
-const matchesPattern = (pattern: RegExp, value: string): boolean => {
-  // Global/sticky regular expressions carry mutable lastIndex state. Matching
-  // always starts at the beginning and restores the caller's state afterwards.
-  const lastIndex = pattern.lastIndex
-  pattern.lastIndex = 0
-
-  try {
-    return pattern.test(value)
-  } finally {
-    pattern.lastIndex = lastIndex
-  }
-}
-
-/**
- * Match the raw cell value against host-configured icon mappings.
- *
- * @param options - Cell value and optional icon mappings.
- * @param options.rawValue - Unformatted cell value.
- * @param options.icons - Header icon mappings, checked in order.
- * @returns The first matching icon component, or undefined.
- */
-export const getCellIcon = ({
-  rawValue,
-  icons,
-}: {
-  rawValue: unknown
-  icons?: readonly TableDataGridIconMapping[]
-}): Component | undefined => {
-  if (!icons?.length || rawValue === null || rawValue === undefined) {
-    return undefined
-  }
-
-  const value = String(rawValue)
-
-  return icons.find(mapping => matchesPattern(mapping.pattern, value))?.icon
-}
 
 /**
  * Preserve TopN threshold precedence: highest crossed value wins, with error winning ties.
