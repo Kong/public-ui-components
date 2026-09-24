@@ -1,6 +1,6 @@
 # Custom options
 
-Every chart wrapper component in this package accepts an `option` prop to customize the generated ECharts configuration, and a `seriesOption` prop to customize its generated series.
+Every chart wrapper component in this package accepts an `option` prop to customize the generated ECharts configuration.
 
 ## Overriding the generated config
 
@@ -19,25 +19,12 @@ Merge behavior (see `deepMerge` in `src/utils`):
 
 - Nested plain objects are merged recursively, your values win.
 - Arrays and non-object values (strings, numbers, booleans) are **replaced**, not merged. For example, `xAxis.data` or `visualMap.inRange.color` in your option replaces the generated value.
-- `series` is an array too, so passing `series` in `option` replaces the generated series entirely, including its `data`. Use `seriesOption` to tweak the generated series instead.
+- `series` is an array too, so passing `series` in `option` replaces the generated series entirely, including its `data`.
 - `null`/`undefined` overrides are ignored.
-
-## Tweaking the generated series
-
-`seriesOption` is deep-merged into the generated series with the same rules. The series `data` still comes from the chart's data props:
-
-```vue
-<HeatmapChart
-  :data="data"
-  :x-axis-labels="months"
-  :y-axis-labels="weekdays"
-  :series-option="{ itemStyle: { borderRadius: 0 } }"
-/>
-```
 
 ## The base `ECharts` component (escape hatch)
 
-When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart, with only the shared theme applied) and `height`, and registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
+When a chart wrapper's generated option doesn't fit your use case at all, use the base `ECharts` component directly. It takes `option` (passed straight to the underlying chart) and `height`, and registers only the canvas renderer, `GridComponent` and `TooltipComponent`, so you register the chart type (and any other components) yourself:
 
 ```vue
 <template>
@@ -67,4 +54,4 @@ const option: EChartsOption = {
 ## Notes
 
 - Chart wrapper components (e.g. `HeatmapChart`) register the ECharts modules they need (chart type, `VisualMapComponent`, etc.) themselves, and the base `ECharts` component registers the renderer, grid and tooltip, so hosts using them never import ECharts directly.
-- Every `@kong/design-tokens` color token is resolved from CSS custom properties at runtime (see [theming](./theming.md)), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.
+- Every `@kong/design-tokens` color token is resolved from CSS custom properties at runtime (see `useChartColors`), because ECharts renders to a canvas that can't consume `var()`. Explicit colors in `option` (or chart-specific props like `colorRange`) override theme defaults.

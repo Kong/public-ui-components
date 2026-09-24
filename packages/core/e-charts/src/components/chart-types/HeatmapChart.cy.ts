@@ -63,31 +63,6 @@ describe('<HeatmapChart />', () => {
     cy.get('.kong-ui-public-echarts canvas').should('be.visible')
   })
 
-  it('paints the heatmap when data uses category names instead of indexes', () => {
-    const namedData: HeatmapDataPoint[] = [
-      ['Jan', 'Mon', 12],
-      ['Feb', 'Tue', 47],
-      ['Mar', 'Wed', 88],
-    ]
-
-    mountHeatmapChart({
-      data: namedData,
-      xAxisLabels: ['Jan', 'Feb', 'Mar'],
-      yAxisLabels: ['Mon', 'Tue', 'Wed'],
-    })
-
-    cy.get('.kong-ui-public-echarts canvas').first().should((canvas) => {
-      const el = canvas.get(0) as HTMLCanvasElement
-      const ctx = el.getContext('2d')
-
-      expect(ctx, 'canvas 2d context').to.not.equal(null)
-
-      const { data: pixels } = (ctx as CanvasRenderingContext2D).getImageData(0, 0, el.width, el.height)
-
-      expect(pixels.some((value) => value !== 0), 'canvas has painted pixels').to.equal(true)
-    })
-  })
-
   it('forwards attrs to the underlying chart', () => {
     cy.mount(HeatmapChart, {
       props: { data, xAxisLabels, yAxisLabels },

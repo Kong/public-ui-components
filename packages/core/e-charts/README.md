@@ -48,7 +48,5 @@ Native `echarts` events (e.g. `click`, `mouseover`, `legendselectchanged`) are f
 
 ### Documentation
 
-- [Theming](./docs/theming.md): how colors and fonts come from design tokens
 - [Custom options](./docs/custom-options.md): how to pass custom ECharts options to any chart wrapper component, and the base `ECharts` escape hatch
 - [HeatmapChart](./docs/heatmap-chart.md): what it does and how to use it
-- [Adding a chart type](./docs/adding-a-chart-type.md): contributor checklist for adding a new chart wrapper
