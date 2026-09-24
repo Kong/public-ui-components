@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.4.1...%40kong-ui-public%2Fe-charts%400.5.0) (2026-09-24)
+
+### Features
+
+* **e-charts:** treemap chart ([#3874](https://github.com/Kong/public-ui-components/issues/3874)) ([1b1388d](https://github.com/Kong/public-ui-components/commit/1b1388d66cfb050ea2e45598bfad3c8572885f59))
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.4.0...%40kong-ui-public%2Fe-charts%400.4.1) (2026-09-24)
 
 **Note:** Version bump only for package @kong-ui-public/e-charts

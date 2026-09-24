@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.32.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.31.2...%40kong-ui-public%2Fdashboard-renderer%408.32.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dashboard coordination [MA-5427] ([#3868](https://github.com/Kong/public-ui-components/issues/3868)) ([a34b6db](https://github.com/Kong/public-ui-components/commit/a34b6db99d242fb5a4ad8935a840e81330f9930c))
+
+
 ## [8.31.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.31.1...%40kong-ui-public%2Fdashboard-renderer%408.31.2) (2026-09-24)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
