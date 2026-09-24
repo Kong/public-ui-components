@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.46.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.45.0...%40kong-ui-public%2Fanalytics-utilities%4012.46.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dual y axis metrics in timeseries charts [MA-5442] ([#3851](https://github.com/Kong/public-ui-components/issues/3851)) ([2c9966c](https://github.com/Kong/public-ui-components/commit/2c9966ca9d27363ba94a66d523282cc20c7171c4))
+
+
 # [12.45.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.44.0...%40kong-ui-public%2Fanalytics-utilities%4012.45.0) (2026-09-24)
 
 ### Features
