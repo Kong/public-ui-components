@@ -42,7 +42,7 @@ import type { ChartTooltipProps } from '../types/index.ts'
 
 // Same look as the analytics-chart tooltip: a title, an optional
 // context/metric subtitle, and a row per value with a color marker
-const { title = '', context, metric, rows = [] } = defineProps<ChartTooltipProps>()
+defineProps<ChartTooltipProps>()
 </script>
 
 <style lang="scss" scoped>

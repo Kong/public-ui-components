@@ -8,18 +8,11 @@
  * slot does) would position the first tooltip as if it were empty.
  */
 
-import { defineComponent, getCurrentScope, h, onScopeDispose, render } from 'vue'
-import type { PropType } from 'vue'
+import { getCurrentScope, h, onScopeDispose, render } from 'vue'
 import ChartTooltip from '../components/ChartTooltip.vue'
 import { tooltipItems, tooltipRow } from '../utils/tooltip.ts'
-import type { ChartTooltipContent, ChartTooltipProps } from '../types'
+import type { ChartTooltipContent } from '../types'
 import type { TooltipComponentFormatterCallbackParams } from 'echarts'
-
-// Defined once so each render patches the previous tooltip instead of remounting it
-const TooltipContent = defineComponent({
-  props: { content: { type: Object as PropType<ChartTooltipProps>, required: true } },
-  setup: (props) => () => h(ChartTooltip, props.content),
-})
 
 /** The last value for multi-dimensional data (e.g. `[x, y, value]`), otherwise the value itself. */
 const lastValue = (value: unknown): unknown => Array.isArray(value) ? value[value.length - 1] : value
@@ -53,7 +46,8 @@ export const useChartTooltip = (getContent: () => ChartTooltipContent | undefine
 
   return (params: TooltipComponentFormatterCallbackParams): HTMLElement => {
     container ??= document.createElement('div')
-    render(h(TooltipContent, { content: (getContent() ?? defaultTooltipContent)(params) }), container)
+    // Rendering the same component into the same container patches it in place
+    render(h(ChartTooltip, (getContent() ?? defaultTooltipContent)(params)), container)
 
     return container
   }

@@ -33,7 +33,7 @@ describe('<HeatmapChart />', () => {
     })
     const option = chartOption(wrapper)
 
-    expect(option.tooltip.formatter).toBeUndefined()
+    expect(option.tooltip).toBeUndefined()
     expect(option.grid).toMatchObject({ outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' })
     expect(option.grid.left).toBe(10)
     expect(option.grid).not.toHaveProperty('height')

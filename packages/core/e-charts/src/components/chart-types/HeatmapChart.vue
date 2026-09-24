@@ -85,8 +85,6 @@ const generatedOption = computed((): EChartsOption => {
   const visualMapFormatter = valueFormatter ? (value: unknown) => valueFormatter(Number(value)) : undefined
 
   return {
-    // Content comes from the shared tooltip (see `cellTooltipContent`)
-    tooltip: {},
     grid: {
       top: 10,
       left: 10,
