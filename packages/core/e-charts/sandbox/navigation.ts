@@ -5,4 +5,8 @@ export const appLinks: SandboxNavigationItem[] = [
     name: 'Heatmap',
     to: { name: 'home' },
   },
+  {
+    name: 'TreeMap',
+    to: { name: 'treemap' },
+  },
 ]
