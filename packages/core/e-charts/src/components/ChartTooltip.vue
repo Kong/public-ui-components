@@ -20,12 +20,17 @@
       <li
         v-for="(row, index) in rows"
         :key="`${row.label}-${index}`"
+        :class="{ 'extra-row': row.isExtra }"
       >
+        <!-- Extra rows keep the marker's space so labels stay aligned -->
         <span
           class="square-marker"
-          :style="{ background: row.color }"
+          :style="row.isExtra ? undefined : { background: row.color }"
         />
-        <span class="display-label">{{ row.label }}</span>
+        <span
+          class="display-label"
+          :class="{ empty: row.isSegmentEmpty }"
+        >{{ row.label }}</span>
         <span class="display-value">{{ row.value }}</span>
       </li>
     </ul>
@@ -97,6 +102,10 @@ const { title = '', context, metric, rows = [] } = defineProps<ChartTooltipProps
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      &.empty {
+        font-style: italic;
+      }
     }
 
     .display-value {
@@ -104,6 +113,11 @@ const { title = '', context, metric, rows = [] } = defineProps<ChartTooltipProps
       margin-left: auto;
       padding-left: var(--kui-space-40, $kui-space-40);
       white-space: nowrap;
+    }
+
+    .extra-row .display-label,
+    .extra-row .display-value {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }
   }
 }

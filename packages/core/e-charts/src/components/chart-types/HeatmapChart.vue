@@ -2,7 +2,7 @@
   <ECharts
     :height="height"
     :option="mergedOption"
-    :tooltip-content="tooltipContent"
+    :tooltip-content="cellTooltipContent"
   />
 </template>
 
@@ -14,6 +14,7 @@ import { DataZoomSliderComponent, VisualMapComponent } from 'echarts/components'
 import ECharts from '../ECharts.vue'
 import { useChartColors } from '../../composables/useChartColors.ts'
 import { deepMerge } from '../../utils/deepMerge.ts'
+import { categoryLabel, tooltipItems, tooltipRow } from '../../utils/tooltip.ts'
 import type { DataZoomComponentOption, EChartsOption, HeatmapSeriesOption } from 'echarts'
 import type { ChartTooltipContent, HeatmapChartProps, HeatmapDataPoint } from '../../types/index.ts'
 
@@ -34,28 +35,21 @@ const {
   visibleRows,
   showValues,
   seriesOption,
+  tooltipTitle,
 } = defineProps<HeatmapChartProps>()
 
 const colors = useChartColors()
 
-/** Axis values can be an index into the labels or the category name itself (see `HeatmapDataPoint`). */
-const categoryLabel = (value: string | number, labels?: string[]): string => (
-  typeof value === 'number' ? labels?.[value] ?? String(value) : value
-)
-
-/** Tooltip content: the column as title, the series name as metric, and a row for the cell. */
-const tooltipContent: ChartTooltipContent = (params) => {
-  const point = Array.isArray(params) ? params[0] : params
-  const [x, y, value] = (point?.value ?? []) as HeatmapDataPoint
+/** Tooltip content, like the analytics-chart tooltips: the column and the series name as the subtitle, and a row for the cell. */
+const cellTooltipContent: ChartTooltipContent = (params) => {
+  const [cell] = tooltipItems(params)
+  const [x, y, value] = cell.value as HeatmapDataPoint
 
   return {
-    title: categoryLabel(x, xAxisLabels),
+    title: tooltipTitle,
+    context: categoryLabel(x, xAxisLabels),
     metric: seriesName,
-    rows: [{
-      color: String(point?.color ?? ''),
-      label: categoryLabel(y, yAxisLabels),
-      value: valueFormatter ? valueFormatter(value) : String(value),
-    }],
+    rows: [tooltipRow(cell, categoryLabel(y, yAxisLabels), value, valueFormatter)],
   }
 }
 
@@ -91,7 +85,7 @@ const generatedOption = computed((): EChartsOption => {
   const visualMapFormatter = valueFormatter ? (value: unknown) => valueFormatter(Number(value)) : undefined
 
   return {
-    // Content comes from the shared tooltip (see `tooltipContent`)
+    // Content comes from the shared tooltip (see `cellTooltipContent`)
     tooltip: {},
     grid: {
       top: 10,

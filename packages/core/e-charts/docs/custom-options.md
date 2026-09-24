@@ -66,23 +66,14 @@ const option: EChartsOption = {
 
 ### Shared tooltip
 
-Pass `tooltipContent` to show the same tooltip as the other charts. It maps the hovered item's ECharts tooltip params to a title, an optional subtitle (`context` on the left, `metric` on the right) and rows with a color marker, label and formatted value:
+Every chart, including the base `ECharts` component, shows the same tooltip (matching the tooltips in `@kong-ui-public/analytics-chart`), with the same kind of customization:
 
-```ts
-import type { ChartTooltipContent } from '@kong-ui-public/e-charts'
+- `tooltipTitle`: an optional bold title on chart types (e.g. `HeatmapChart`). Empty by default, like the dashboard tooltips in `@kong-ui-public/analytics-chart`.
+- Everything else comes from the chart's data: the hovered time or category and the metric in the subtitle, and a row per value with its color, label and formatted value. Chart types expose props for it, like `seriesName` and `valueFormatter` on `HeatmapChart`.
 
-const tooltipContent: ChartTooltipContent = (params) => {
-  const point = Array.isArray(params) ? params[0] : params
+On the base `ECharts` component the tooltip defaults to the hovered category and each series' color, name and value. Pass `tooltipContent` to fill it from your data instead (see [Adding a chart type](./adding-a-chart-type.md)).
 
-  return {
-    title: String(point.name),
-    metric: 'Requests',
-    rows: [{ color: String(point.color), label: point.seriesName ?? '', value: String(point.value) }],
-  }
-}
-```
-
-A `tooltip.formatter` in `option` replaces the shared tooltip.
+`option.tooltip.formatter` is replaced by the shared tooltip, so every chart keeps the same look. Other `option.tooltip` settings, like `trigger`, still apply.
 
 ## Notes
 

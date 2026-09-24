@@ -19,7 +19,7 @@ import { GridComponent, TooltipComponent } from 'echarts/components'
 import { useChartColors } from '../composables/useChartColors.ts'
 import { useChartTheme } from '../composables/useChartTheme.ts'
 import { useChartTooltip } from '../composables/useChartTooltip.ts'
-import type { EChartsOption } from 'echarts'
+import type { EChartsOption, TooltipComponentOption } from 'echarts'
 import type { ChartTooltipContent } from '../types/index.ts'
 
 defineOptions({
@@ -33,25 +33,20 @@ use([CanvasRenderer, GridComponent, TooltipComponent])
 const { option, height = '400px', tooltipContent } = defineProps<{
   option?: EChartsOption
   height?: string
-  /** What to show in the shared `ChartTooltip` for the hovered item. */
+  /** What the shared tooltip shows. Falls back to the hovered category and each series' color, name and value. */
   tooltipContent?: ChartTooltipContent
 }>()
 
 const colors = useChartColors()
 const theme = useChartTheme(colors)
 
+// Every chart uses the shared tooltip (see `useChartTooltip`)
 const tooltipFormatter = useChartTooltip(() => tooltipContent)
 
-// Render the shared tooltip, unless the option brings its own `tooltip.formatter`
-const chartOption = computed((): EChartsOption | undefined => {
-  const tooltip = option?.tooltip
-
-  if (!tooltipContent || Array.isArray(tooltip) || tooltip?.formatter) {
-    return option
-  }
-
-  return { ...option, tooltip: { ...tooltip, formatter: tooltipFormatter } }
-})
+const chartOption = computed((): EChartsOption => ({
+  ...option,
+  tooltip: { ...option?.tooltip as TooltipComponentOption, formatter: tooltipFormatter },
+}))
 </script>
 
 <style lang="scss" scoped>

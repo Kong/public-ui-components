@@ -32,4 +32,21 @@ describe('<ChartTooltip />', () => {
     expect(wrapper.find('.subtitle .context').text()).toBe('Model')
     expect(wrapper.find('.subtitle .metric').text()).toBe('Error rate')
   })
+
+  it('styles extra rows without a marker, and empty segments in italics', () => {
+    const wrapper = mount(ChartTooltip, {
+      props: {
+        title: 'Jun 16',
+        rows: [
+          { color: '#ff0000', label: 'gpt-4o', value: '0%', isSegmentEmpty: true },
+          { label: 'Requests', value: '1,024', isExtra: true },
+        ],
+      },
+    })
+    const [cell, extra] = wrapper.findAll('li')
+
+    expect(cell.find('.display-label').classes()).toContain('empty')
+    expect(extra.classes()).toContain('extra-row')
+    expect(extra.find('.square-marker').attributes('style')).toBeUndefined()
+  })
 })

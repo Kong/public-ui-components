@@ -25,11 +25,15 @@ export type ChartColors = {
 export type HeatmapDataPoint = [string | number, string | number, number]
 
 export interface ChartTooltipRow {
-  /** Marker color, e.g. the series or cell color. */
-  color: string
+  /** Marker color, e.g. the series or cell color. Extra rows have no marker. */
+  color?: string
   label: string
   /** Already formatted value. */
   value: string
+  /** Supporting info (e.g. a total): neutral text and no color marker. */
+  isExtra?: boolean
+  /** Shows the label in italics, e.g. for an empty segment. */
+  isSegmentEmpty?: boolean
 }
 
 export interface ChartTooltipProps {
@@ -42,8 +46,8 @@ export interface ChartTooltipProps {
 }
 
 /**
- * Maps the hovered item's ECharts tooltip params to `ChartTooltip` content.
- * Every chart uses the same tooltip; chart types only decide what's in it.
+ * Builds the shared tooltip's content from the hovered item's ECharts tooltip
+ * params. Chart types provide one; consumers only set the title (`tooltipTitle`).
  */
 export type ChartTooltipContent = (params: TooltipComponentFormatterCallbackParams) => ChartTooltipProps
 
@@ -57,6 +61,8 @@ interface BaseChartProps {
   option?: EChartsOption
   /** Chart height. Defaults to `400px`. */
   height?: string
+  /** Bold title of the shared tooltip, like `tooltipTitle` in `@kong-ui-public/analytics-chart`. Empty by default. */
+  tooltipTitle?: string
 }
 
 export interface HeatmapChartProps extends BaseChartProps {
