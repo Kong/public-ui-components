@@ -2,7 +2,9 @@
 
 import { beforeAll, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import VChart from 'vue-echarts'
 import ECharts from './ECharts.vue'
+import { KUI_COLOR_TEXT } from '@kong/design-tokens'
 
 // jsdom does not implement ResizeObserver
 class ResizeObserver {
@@ -48,5 +50,15 @@ describe('<ECharts />', () => {
     })
 
     expect(wrapper.find('[data-testid="my-chart"]').exists()).toBe(true)
+  })
+
+  it('passes a theme built from resolved design-token colors to the underlying chart', () => {
+    const wrapper = mount(ECharts, {
+      global: { stubs: { VChart: true } },
+    })
+
+    const theme = wrapper.getComponent(VChart).props('theme') as { textStyle: { color: string } }
+
+    expect(theme.textStyle.color).toBe(KUI_COLOR_TEXT)
   })
 })
