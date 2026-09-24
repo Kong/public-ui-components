@@ -2,8 +2,11 @@ import AnalyticsChart from './components/AnalyticsChart.vue'
 import SimpleChart from './components/SimpleChart.vue'
 import TopNTable from './components/TopNTable.vue'
 import SparklineChart from './components/SparklineChart.vue'
+import TopTalkersGrid from './components/top-talkers/TopTalkersGrid.vue'
+import TopTalkersColumn from './components/top-talkers/TopTalkersColumn.vue'
 
-export { AnalyticsChart, SimpleChart, TopNTable, SparklineChart }
+export { AnalyticsChart, SimpleChart, TopNTable, SparklineChart, TopTalkersGrid, TopTalkersColumn }
+export type { TopTalkersGridColumn } from './components/top-talkers/TopTalkersGrid.vue'
 
 /**
  * @deprecated Import CsvExportModal from '@kong-ui-public/dashboard-renderer' instead.
@@ -19,3 +22,5 @@ export { lookupStatusCodeColor } from './utils/customColors'
 export * from './utils/constants'
 export * from './utils/queryError'
 export * from './utils/scatter-adapters'
+export * from './utils/topn-columns'
+export { OTHER_DIMENSION_ID } from './constants'
