@@ -468,6 +468,36 @@ describe('dashboardSchema.v2', () => {
     })
   })
 
+  describe('timeseries y axes', () => {
+    const withTimeseriesChart = (chart: Record<string, unknown>) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: { type: 'timeseries_line', ...chart },
+          },
+        },
+      ],
+    })
+
+    it('accepts a metric axis map and per-axis options', () => {
+      expect(validateDashboardConfigSchema(withTimeseriesChart({
+        metric_axis_map: { request_count: 'left', response_latency_p95: 'right' },
+        y_axes: { left: { show_grid: true, title: 'Requests' }, right: { show_grid: false } },
+      }))).toBe(true)
+    })
+
+    it.each([
+      ['an unknown axis position', { metric_axis_map: { request_count: 'center' } }],
+      ['an unknown axis key', { y_axes: { top: { show_grid: true } } }],
+      ['an unknown axis property', { y_axes: { left: { min: 0 } } }],
+    ])('rejects %s', (_, chart) => {
+      expect(validateDashboardConfigSchema(withTimeseriesChart(chart))).toBe(false)
+    })
+  })
+
   it.each([
     [apiUsageQuerySchema, exploreAggregations, queryableExploreDimensions, filterableExploreDimensions],
     [basicQuerySchema, basicExploreAggregations, queryableBasicExploreDimensions, filterableBasicExploreDimensions],

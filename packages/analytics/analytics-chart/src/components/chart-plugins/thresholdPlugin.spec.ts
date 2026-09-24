@@ -1,5 +1,5 @@
 import { it, expect, describe } from 'vitest'
-import { getThresholdIntersections, mergeThresholdIntersections, type ThresholdIntersection } from './ThresholdPlugin'
+import { getThresholdIntersections, mergeThresholdIntersections, thresholdAxisId, type ThresholdIntersection } from './ThresholdPlugin'
 import type { Threshold } from 'src/types'
 
 describe('thresholdPlugin', () => {
@@ -8,12 +8,15 @@ describe('thresholdPlugin', () => {
       datasets,
       thresholds = [],
       hiddenDatasetIndices = [],
+      axisId,
     }: {
       datasets: Array<{
         data: Array<{ x: number, y: number }>
+        yAxisID?: string
       }>
       thresholds?: Threshold[]
       hiddenDatasetIndices?: number[]
+      axisId?: string
     }) => {
       const chart = {
         data: {
@@ -26,7 +29,7 @@ describe('thresholdPlugin', () => {
         },
       } as any
 
-      return getThresholdIntersections(chart, thresholds)
+      return getThresholdIntersections(chart, thresholds, axisId)
     }
 
     it('returns an empty array when no datasets are visible', () => {
@@ -81,6 +84,26 @@ describe('thresholdPlugin', () => {
         { start: 2.5, end: 3.5, type: 'error' },
         { start: 4.5, end: 5, type: 'error' },
       ])
+    })
+  })
+
+  describe('y axes', () => {
+    const datasets = [
+      { rawMetric: 'request_count', data: [{ x: 1, y: 10 }, { x: 2, y: 20 }] },
+      { rawMetric: 'response_latency_p99', yAxisID: 'y1', data: [{ x: 1, y: 100 }, { x: 2, y: 200 }] },
+    ]
+    const chart = { data: { datasets }, getDatasetMeta: () => ({ visible: true }) } as any
+    const threshold: Threshold[] = [{ type: 'error', value: 150, highlightIntersections: true }]
+
+    it('resolves the axis a metric is plotted on', () => {
+      expect(thresholdAxisId(chart, 'request_count')).toBe('y')
+      expect(thresholdAxisId(chart, 'response_latency_p99')).toBe('y1')
+      expect(thresholdAxisId(chart, 'unknown_metric')).toBe('y')
+    })
+
+    it('only intersects datasets on the threshold axis', () => {
+      expect(getThresholdIntersections(chart, threshold, 'y')).toEqual([])
+      expect(getThresholdIntersections(chart, threshold, 'y1')).toEqual([{ start: 1.5, end: 2, type: 'error' }])
     })
   })
 
