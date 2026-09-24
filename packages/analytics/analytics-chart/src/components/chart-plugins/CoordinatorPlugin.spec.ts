@@ -226,7 +226,6 @@ describe('CoordinatorPlugin', () => {
 
       plugin.afterDatasetsDraw(chart)
 
-      expect(chart.ctx.save).toHaveBeenCalled()
       expect(chart.ctx.globalAlpha).toBe(1)
     })
 

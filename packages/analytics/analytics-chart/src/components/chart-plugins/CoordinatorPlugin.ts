@@ -1,6 +1,6 @@
 import type { Chart, ChartEvent, Plugin } from 'chart.js'
 import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
-import { watch, type WatchHandle } from 'vue'
+import { onWatcherCleanup, watch, type WatchHandle } from 'vue'
 
 const drawLine = (
   ctx: CanvasRenderingContext2D,
@@ -110,7 +110,6 @@ export class CoordinatorPlugin implements Plugin {
   afterDatasetsDraw(chart: Chart) {
     // regardless of what we do in other hooks, we always want to reset the alpha
     // to 1 here, so that legends and axes are drawn full opacity
-    chart.ctx.save()
     chart.ctx.globalAlpha = 1
 
     // Here we assume that we only want to draw timestamp effects in places where
@@ -188,6 +187,10 @@ export class CoordinatorPlugin implements Plugin {
             redraw()
           }
         }, this.coordinator?.DIMENSION_DEBOUNCE_MS ?? 400)
+
+        onWatcherCleanup(() => {
+          clearTimeout(hoverTimeout)
+        })
       })
     }
 
@@ -222,8 +225,6 @@ export class CoordinatorPlugin implements Plugin {
   }
 
   _highlightDimensionDefault(chart: Chart, args: any) {
-    chart.ctx.save()
-
     if (this.activeDimension && this.activeDimensionValue) {
       const highlightedSets = chart.data.datasets
         .map((dataset: any, index: number) => {
