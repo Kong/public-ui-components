@@ -337,6 +337,13 @@ describe('TableDataGridRenderer grid integration', () => {
         fullscreenBounds.top + fullscreenBounds.height / 2,
       )
       expect(fullscreenHit !== null && container.contains(fullscreenHit) && fullscreenTooltip.contains(fullscreenHit)).toBe(true)
+
+      // The tooltip returns to body once fullscreen ends.
+      await document.exitFullscreen()
+      await expect.poll(() => document.fullscreenElement).toBeNull()
+      await page.elementLocator(label).hover()
+      await expect.poll(() => element('.popover').textContent).toContain(name)
+      expect(container.contains(element('.popover'))).toBe(false)
     } finally {
       if (document.fullscreenElement) {
         await document.exitFullscreen()
