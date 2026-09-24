@@ -8,7 +8,7 @@ import type {
 import {
   Tooltip,
 } from 'chart.js'
-import { formatChartTicksByGranularity, horizontalTooltipPositioning, lineChartTooltipBehavior, verticalTooltipPositioning } from '../utils'
+import { formatChartTicksByGranularity, horizontalTooltipPositioning, lineChartTooltipBehavior, verticalTooltipPositioning, RIGHT_Y_AXIS_ID } from '../utils'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { millisecondsToHours } from 'date-fns'
@@ -51,6 +51,9 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
     },
     stacked: chartOptions.stacked.value,
   }))
+
+  const isDualAxis = computed(() => !!chartOptions.rightYAxis?.value)
+
   const yAxesOptions = computed(() => ({
     title: {
       display: !isNullOrUndef(chartOptions.metricAxesTitle?.value),
@@ -65,6 +68,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
     },
     grid: {
       drawBorder: false,
+      ...(chartOptions.leftYAxisGrid?.value === false ? { drawOnChartArea: false } : {}),
     },
     id: 'main-y-axis',
     beginAtZero: true,
@@ -72,7 +76,42 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       display: false,
     },
     stacked: chartOptions.stacked.value,
+    ...(isDualAxis.value ? { display: 'auto' } : {}),
   }))
+
+  const rightYAxisOptions = computed(() => {
+    const rightYAxis = chartOptions.rightYAxis?.value
+
+    if (!rightYAxis) {
+      return undefined
+    }
+
+    return {
+      display: 'auto',
+      position: 'right',
+      title: {
+        display: !isNullOrUndef(rightYAxis.title),
+        text: rightYAxis.title,
+        padding: { bottom: 3 },
+        font: {
+          weight: 'bold',
+        },
+      },
+      ticks: {
+        maxTicksLimit: 5,
+      },
+      grid: {
+        drawBorder: false,
+        // This will draw the grid lines for the right y axis
+        drawOnChartArea: rightYAxis.showGrid ?? false,
+      },
+      beginAtZero: true,
+      border: {
+        display: false,
+      },
+      stacked: chartOptions.stacked.value,
+    }
+  })
 
   const chartID = chartOptions.tooltipState.chartID
   const positionKey = `lineChartTooltipPosition-${chartID}`
@@ -142,6 +181,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       scales: {
         x: xAxesOptions.value,
         y: yAxesOptions.value,
+        ...(rightYAxisOptions.value ? { [RIGHT_Y_AXIS_ID]: rightYAxisOptions.value } : {}),
       },
       responsive: true,
       maintainAspectRatio: false,

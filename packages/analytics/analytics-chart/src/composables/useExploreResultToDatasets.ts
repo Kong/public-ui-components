@@ -45,6 +45,8 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
 
     // The label here matters for the title in the tooltip and legend.  It doesn't impact axes.
     return {
+      dimension: seriesDimension,
+      dimensionValue: dimension.id,
       // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
@@ -58,7 +60,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
       isSegmentEmpty: dimension.id === 'empty',
-    } as Dataset
+    } as unknown as Dataset
   })
 }
 
