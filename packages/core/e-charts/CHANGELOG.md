@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.3.0...%40kong-ui-public%2Fe-charts%400.4.0) (2026-09-24)
+
+### Features
+
+* **e-charts:** add a shared tooltip matching analytics-chart ([#3871](https://github.com/Kong/public-ui-components/issues/3871)) ([51dda62](https://github.com/Kong/public-ui-components/commit/51dda62d9cfb9a0c4d5ed2630cbde8a0d475ac61))
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.2.0...%40kong-ui-public%2Fe-charts%400.3.0) (2026-09-24)
 
 ### Features
