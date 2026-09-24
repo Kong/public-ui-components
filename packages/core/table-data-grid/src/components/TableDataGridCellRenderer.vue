@@ -8,14 +8,7 @@
     }"
     :data-threshold="thresholdType"
   >
-    <component
-      :is="matchedIcon"
-      v-if="matchedIcon"
-      class="table-data-grid-cell-icon"
-      data-testid="table-data-grid-cell-icon"
-      decorative
-      size="var(--kui-icon-size-30, 16px)"
-    />
+    <component :is="renderCellIcon" />
     <component :is="renderCellContent">
       <template #default>
         <KTooltip
@@ -75,7 +68,6 @@ import {
 import {
   formatPercentage,
   getBarRatio,
-  getCellIcon,
   getThresholdType,
   toFiniteNumber,
   type TableDataGridPresentationContext,
@@ -158,11 +150,6 @@ const thresholdType = computed(() => (
     ? getThresholdType(numericValue.value, header.value.thresholds)
     : undefined
 ))
-const matchedIcon = computed(() => getCellIcon({
-  icons: header.value.icons,
-  rawValue: rawValue.value,
-}))
-
 // Props passed to a `[header.key]` slot when the host provides one.
 const slotPayload = computed<TableDataGridCellSlotProps>(() => ({
   column: header.value,
@@ -183,7 +170,7 @@ const renderCellContent: FunctionalComponent = (_, { slots }) => {
   const colId = currentParams.value.colDef?.colId
   const hostSlots = currentParams.value.context?.cells?.slots
 
-  if (!colId || !hostSlots?.[colId]) {
+  if (!colId || colId === 'cell-icon' || !hostSlots?.[colId]) {
     return slots.default?.()
   }
 
@@ -192,6 +179,14 @@ const renderCellContent: FunctionalComponent = (_, { slots }) => {
     { class: 'table-data-grid-cell-slot-content' },
     renderSlot(hostSlots, colId, slotPayload.value, () => slots.default?.() ?? []),
   )
+}
+
+const renderCellIcon: FunctionalComponent = () => {
+  const hostSlots = currentParams.value.context?.cells?.slots
+
+  return hostSlots?.['cell-icon']
+    ? renderSlot(hostSlots, 'cell-icon', slotPayload.value)
+    : null
 }
 
 let resizeObserver: ResizeObserver | undefined
@@ -342,12 +337,6 @@ defineExpose({
 
 .table-data-grid-cell-bar[data-threshold="error"] .table-data-grid-cell-bar-fill {
   background-color: var(--kui-color-background-danger, #{$kui-color-background-danger});
-}
-
-.table-data-grid-cell-icon {
-  flex: 0 0 auto;
-  height: var(--kui-icon-size-30, 16px);
-  width: var(--kui-icon-size-30, 16px);
 }
 
 .table-data-grid-cell-content {
