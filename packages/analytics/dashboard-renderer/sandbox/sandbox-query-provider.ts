@@ -129,6 +129,23 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
   }
 
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
+    if (query.query.metrics?.includes('request_count') && query.query.metrics.includes('response_latency_p99')) {
+      const result = generateData({
+        metrics: [
+          { name: 'request_count', unit: 'count' },
+          { name: 'response_latency_p99', unit: 'ms' },
+        ],
+        timeSeries: true,
+      })
+
+      // Put latency on a much smaller scale than traffic so the two y axes are visibly different
+      result.data.forEach(({ event }) => {
+        event.response_latency_p99 = Number(event.response_latency_p99) / 100
+      })
+
+      return await delayedResponse(result)
+    }
+
     if (query.query.metrics?.includes('response_latency_average') && query.query.metrics.includes('response_latency_p99')) {
       return await delayedResponse(generateData({
         metrics: [

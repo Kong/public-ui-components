@@ -223,6 +223,7 @@ import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import TopTalkersRenderer from './TopTalkersRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -369,6 +370,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'top_talkers': TopTalkersRenderer,
   'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
@@ -499,8 +501,19 @@ watch(metricNames, metrics => {
   }
 }, { immediate: true })
 
+const isDualAxisChart = computed(() => {
+  const chartOptions = chart.value
+
+  if (chartOptions.type !== 'timeseries_line') {
+    return false
+  }
+
+  return metricNames.value.some(metric => chartOptions.metric_axis_map?.[metric] === 'right')
+})
+
 const showMetricSelector = computed(() => (
   isTimeSeriesChart.value
+  && !isDualAxisChart.value
   && (chartData.value?.data.length ?? 0) > 0
   && metricNames.value.length > 1
   && Object.keys(chartData.value?.meta.display ?? {}).length > 0

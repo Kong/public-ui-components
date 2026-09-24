@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 import {
+  color,
   colorByState,
   colorByStatusCode,
   colorByStatusCodeGroup,
@@ -17,6 +18,17 @@ import {
 } from './color-overrides'
 
 describe('color utils - colorByDiscriminator()', () => {
+  it('uses the chart series colors in design order, reserving series 9 for empty', () => {
+    expect(lightPalette).toEqual([
+      '#0076F4', '#00819D', '#00A17B', '#8A50FF', '#FF3C99',
+      '#FF395D', '#FF6D3C', '#B3A100', '#4E594E',
+    ])
+    expect(darkPalette).toEqual([
+      '#5485BA', '#087D96', '#3D8776', '#7654BA', '#A1406F',
+      '#953042', '#BF5430', '#B5A72C', '#4E594E',
+    ])
+  })
+
   it('uses the lightPalette when theme is "light"', () => {
     // for ease of generating a bunch of results, just iterate through the length
     // of the palette. Any integer works as a discriminator.
@@ -64,6 +76,11 @@ describe('color utils - colorByDiscriminator()', () => {
 })
 
 describe('color utils - colorByState()', () => {
+  it('uses the reserved chart series 9 color for empty dimensions', () => {
+    expect(colorByState({ state: 'empty' })).toBe('#9DA99D')
+    expect(color({ dimensionValue: 'empty' })).toBe('#9DA99D')
+  })
+
   it('returns some default color when the state is invalid', () => {
     // @ts-ignore we're intentionally passing an invalid state
     const result = colorByState({ state: 'invalid state' })
