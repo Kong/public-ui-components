@@ -77,7 +77,8 @@ Group names are not drawn on the boxes by default (a reserved strip renders empt
 | `showValues` | `boolean` | none (name only) | Shows each node's value under its name, formatted with `valueFormatter`. |
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip and the node labels. |
 | `colorPalette` | `string[]` | theme tokens | Categorical colors, one per top-level group; cycled if there are more groups than colors. |
-| `leafDepth` | `number` | none (all levels) | Enables drill-down mode: only shows nodes down to this depth (counted from zero at the view root), see [drill-down](#drill-down--breadcrumb). |
+| `drillDown` | `boolean` | `true` | Click a group to zoom into it, with a breadcrumb to go back. `false` makes a static chart that fills the whole area, see [drill-down](#drill-down--breadcrumb). |
+| `leafDepth` | `number` | none (all levels) | Initial depth to show (counted from zero at the view root); deeper levels appear when drilling in. |
 | `tooltipTitle` | `string` | none | Bold title of the shared tooltip, see [Tooltip](#tooltip). |
 | `seriesOption` | `TreemapSeriesOption` | none | Deep-merged into the generated treemap series, e.g. `{ label: { fontWeight: 'bold' } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
 | `option` | `EChartsOption` | none | Raw ECharts option, always deep-merged over the generated config, see [custom options](./custom-options.md). |
@@ -85,9 +86,9 @@ Group names are not drawn on the boxes by default (a reserved strip renders empt
 
 ## Tooltip
 
-Hovering a node shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips): a row with the node's color, its name and its value formatted with `valueFormatter`.
+Hovering a node shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips): the node's parent groups (e.g. `Gateways / us-east`) and `seriesName` as the subtitle, and a row with the node's color, its name and its value formatted with `valueFormatter`.
 
-Like `@kong-ui-public/analytics-chart`, the content comes from the chart's data: pass `valueFormatter` for the value and `tooltipTitle` for a bold title (empty by default):
+Like `@kong-ui-public/analytics-chart`, the content comes from the chart's data: pass `seriesName` for the metric, `valueFormatter` for the value and `tooltipTitle` for a bold title (empty by default):
 
 ```vue
 <TreeMapChart
@@ -100,12 +101,14 @@ Like `@kong-ui-public/analytics-chart`, the content comes from the chart's data:
 
 ## Drill-down & breadcrumb
 
-By default every level is visible and clicking a group zooms into it (`nodeClick: 'zoomToNode'`). Set `seriesOption: { nodeClick: false }` for a static card that shouldn't react to clicks. Set `leafDepth` to restrict the initial view to a fixed depth: nodes above `leafDepth` become drill-down groups, and a breadcrumb slides in at the bottom of the chart to navigate back up. The chart reserves room for the breadcrumb while `leafDepth` is set:
+By default, clicking a group zooms into it, and a breadcrumb at the bottom of the chart (with room reserved for it) navigates back up. Set `leafDepth` to limit the initial view to that depth, so deeper levels only appear when drilling in. The mouse wheel doesn't zoom, so scrolling over the chart scrolls the page.
+
+For a static card, set `drill-down` to `false`: clicks do nothing, there's no breadcrumb, and the treemap fills the whole chart area:
 
 ```vue
 <TreeMapChart
   :data="data"
-  :leaf-depth="2"
+  :drill-down="false"
   series-name="Resources"
 />
 ```

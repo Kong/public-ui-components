@@ -9,7 +9,7 @@
         :data="resources"
         series-name="Resources"
       />
-      <p>Click a group to zoom into it. Top-level groups each get a color from the default palette.</p>
+      <p>Top-level groups each get a color from the default palette. Click a group to zoom into it, and use the breadcrumb to go back.</p>
     </section>
 
     <section class="example">
@@ -20,7 +20,6 @@
         tooltip-title="Model usage"
         :value-formatter="formatCount"
       />
-      <p>Every node carries its own `itemStyle.color`, interpolated across a diverging heatmap scale by overall request rank (heaviest box warmest, lightest coolest) rather than the group palette. `visibleMin: 0` keeps low-share boxes painted, and `nodeClick: false` makes it a static card. Names blank out only where a box is too small for the text.</p>
     </section>
 
     <section class="example">

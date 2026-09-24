@@ -43,7 +43,7 @@ describe('<TreeMapChart />', () => {
     const option = chartOption(wrapper)
 
     expect(option.tooltip).toBeUndefined()
-    expect(option.series[0]).toMatchObject({ type: 'treemap', name: 'Usage', data, nodeClick: 'zoomToNode' })
+    expect(option.series[0]).toMatchObject({ type: 'treemap', name: 'Usage', data })
   })
 
   it('defaults to the token color palette', () => {
@@ -99,20 +99,24 @@ describe('<TreeMapChart />', () => {
     })
   })
 
-  it('fills the chart area without drill-down by default', () => {
+  it('drills down with a breadcrumb by default, without wheel zoom', () => {
     const option = chartOption(mountChart({ data }))
 
-    expect(option.series[0]).not.toHaveProperty('leafDepth')
-    expect(option.series[0]).toMatchObject({ left: 0, top: 0, right: 0, bottom: 0, visibleMin: 0 })
+    expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: false, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
+    expect(option.series[0].breadcrumb.show).toBe(true)
+    expect(option.series[0].leafDepth).toBeUndefined()
   })
 
-  it('enables drill-down with leafDepth and reserves room for the breadcrumb', () => {
-    const option = chartOption(mountChart({ data, leafDepth: 2 }))
+  it('is a static chart filling the whole area with drillDown false', () => {
+    const option = chartOption(mountChart({ data, drillDown: false }))
 
-    expect(option.series[0].leafDepth).toBe(2)
-    expect(option.series[0].bottom).toBe(40)
+    expect(option.series[0]).toMatchObject({ nodeClick: false, bottom: 0 })
+    expect(option.series[0].breadcrumb.show).toBe(false)
   })
 
+  it('passes leafDepth through to limit the initial depth', () => {
+    expect(chartOption(mountChart({ data, leafDepth: 2 })).series[0].leafDepth).toBe(2)
+  })
   it('shows node names by default without a label formatter', () => {
     const option = chartOption(mountChart({ data }))
 
@@ -136,10 +140,10 @@ describe('<TreeMapChart />', () => {
     expect(option.series[0].label.formatter({ name: 'n', value: 3 })).toBe('n\n3')
   })
 
-  it('shows only the name when showValues is false', () => {
+  it('uses the default name label when showValues is false, even with valueFormatter', () => {
     const option = chartOption(mountChart({ data, showValues: false, valueFormatter: (value: number) => `${value}%` }))
 
-    expect(option.series[0].label.formatter({ name: 'n', value: 3 })).toBe('n')
+    expect(option.series[0].label.formatter).toBeUndefined()
   })
 
   it('uses tooltipTitle as the tooltip title', () => {
@@ -154,7 +158,21 @@ describe('<TreeMapChart />', () => {
     const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
     expect(nodeTooltipContent({ name: 'Gateways', value: 42, color: '#123456' } as any)).toEqual({
+      metric: 'Usage',
       rows: [{ color: '#123456', label: 'Gateways', value: '42' }],
+    })
+  })
+
+  it('shows the hovered node\'s parent groups as the tooltip context', () => {
+    const wrapper = mountChart({ data, seriesName: 'Usage' })
+    const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
+    // `treePathInfo` runs from the root to the node itself
+    const treePathInfo = [{ name: '' }, { name: 'Gateways' }, { name: 'us-east' }, { name: 'dp-1' }]
+
+    expect(nodeTooltipContent({ name: 'dp-1', value: 7, treePathInfo } as any)).toMatchObject({
+      context: 'Gateways / us-east',
+      metric: 'Usage',
+      rows: [{ label: 'dp-1', value: '7' }],
     })
   })
 

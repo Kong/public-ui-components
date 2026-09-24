@@ -65,15 +65,14 @@ interface BaseChartProps {
   tooltipTitle?: string
 }
 
-/** A node in the treemap's hierarchical data: a named value with optional children. */
-export interface TreeMapDataNode {
+/**
+ * A node in the treemap's hierarchical data: a `name`, a `value` (required on
+ * leaves) and optional `children`. It's ECharts' own node option, so per-node
+ * `itemStyle`, `label`, etc. work too; see the [treemap data docs](../docs/treemap-chart.md#data).
+ */
+export type TreeMapDataNode = Omit<NonNullable<TreemapSeriesOption['data']>[number], 'name' | 'children'> & {
   name: string
-  value?: number
   children?: TreeMapDataNode[]
-  /** Per-node fill and borders, overriding the palette; see the [treemap data docs](../docs/treemap-chart.md#data). */
-  itemStyle?: { color?: string, borderColor?: string, borderWidth?: number, gapWidth?: number }
-  /** Per-node label tweaks, e.g. `{ offset: [0, 9] }` to leave room for an overlaid icon. */
-  label?: { color?: string, offset?: [number, number] }
 }
 
 export interface TreeMapChartProps extends BaseChartProps {
@@ -86,7 +85,9 @@ export interface TreeMapChartProps extends BaseChartProps {
   valueFormatter?: (value: number) => string
   /** Categorical colors, one per top-level group; cycled if more groups than colors */
   colorPalette?: string[]
-  /** Enables drill-down mode with the breadcrumb */
+  /** Click a group to zoom into it, with a breadcrumb at the bottom to go back. Defaults to `true`. */
+  drillDown?: boolean
+  /** Initial depth to show: deeper levels appear when drilling into a group. Shows all levels by default. */
   leafDepth?: number
   /**
    * Deep-merged into the generated treemap series, e.g. to change node borders

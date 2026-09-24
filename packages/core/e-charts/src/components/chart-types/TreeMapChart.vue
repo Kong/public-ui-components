@@ -29,6 +29,7 @@ const {
   showValues,
   colorPalette,
   valueFormatter,
+  drillDown = true,
   leafDepth,
   seriesOption,
   tooltipTitle,
@@ -36,12 +37,20 @@ const {
 
 const colors = useChartColors()
 
-/** Tooltip content: the hovered node's name and its value (formatted with `valueFormatter`). */
+/**
+ * Tooltip content: the node's parent groups and the series name as the
+ * subtitle, and a row with the node's name and value (formatted with `valueFormatter`).
+ */
 const nodeTooltipContent: ChartTooltipContent = (params) => {
   const [node] = tooltipItems(params)
+  // `treePathInfo` runs from the root to the node itself; the groups are the entries in between
+  const treePath = (node as typeof node & { treePathInfo?: Array<{ name: string }> }).treePathInfo ?? []
+  const groups = treePath.slice(1, -1).map(({ name }) => name)
 
   return {
     title: tooltipTitle,
+    context: groups.length ? groups.join(' / ') : undefined,
+    metric: seriesName,
     rows: [tooltipRow(node, node.name, Number(node.value), valueFormatter)],
   }
 }
@@ -65,20 +74,22 @@ const generatedOption = computed((): EChartsOption => ({
       data: data ?? [],
       // ECharts cycles the palette when there are more groups than colors
       color: colorPalette ?? defaultPalette(),
-      nodeClick: 'zoomToNode',
-      ...(leafDepth ? { leafDepth } : {}),
-      // Fill the chart area: ECharts otherwise reserves `top`/`bottom` space
-      // for a breadcrumb bar even when it never shows
+      // Drill-down: click a group to zoom in, and use the breadcrumb to go back
+      nodeClick: drillDown ? 'zoomToNode' : false,
+      leafDepth,
+      // No mouse-wheel zoom or drag-to-pan, so scrolling over the chart scrolls the page
+      roam: false,
+      // Fill the chart area, leaving room at the bottom for the breadcrumb with drill-down
       left: 0,
       top: 0,
       right: 0,
-      // Reserve room for the breadcrumb, which slides in at the bottom when drilled down
-      bottom: leafDepth ? 40 : 0,
+      bottom: drillDown ? 40 : 0,
       // Draw even tiny nodes: ECharts leaves a node's area blank when it falls
       // under the default threshold, which reads as dead space on dense charts
       visibleMin: 0,
       breadcrumb: {
-        show: true,
+        // Shown from the start (with just the root) whenever drill-down is on
+        show: drillDown,
         itemStyle: {
           color: colors.value.KUI_COLOR_BACKGROUND_NEUTRAL_WEAK,
           borderColor: 'transparent',
@@ -125,13 +136,9 @@ const generatedOption = computed((): EChartsOption => ({
         align: 'center',
         verticalAlign: 'middle',
         overflow: 'truncate',
-        // Boolean props default to `false` when absent, so an explicit `false`
-        // is indistinguishable from not passing `showValues`
-        formatter: showValues || valueFormatter
-          ? ({ name, value }) => {
-            const formatted = valueFormatter ? valueFormatter(Number(value)) : String(value)
-            return showValues ? `${name}\n${formatted}` : name
-          }
+        // ECharts shows the node name by default
+        formatter: showValues
+          ? ({ name, value }) => `${name}\n${valueFormatter ? valueFormatter(Number(value)) : String(value)}`
           : undefined,
       },
     }, seriesOption),
