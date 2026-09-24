@@ -18,7 +18,10 @@
                 :visible="mobileNavIsToggled.value"
                 @close="toggleMobileNav"
               >
-                <div class="nav-theme-picker">
+                <div
+                  v-if="applyTheming"
+                  class="nav-theme-picker"
+                >
                   <SandboxThemePicker />
                 </div>
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
@@ -67,7 +70,10 @@
     </header>
     <div class="layout">
       <div class="desktop-nav-container">
-        <div class="nav-theme-picker">
+        <div
+          v-if="applyTheming"
+          class="nav-theme-picker"
+        >
           <SandboxThemePicker />
         </div>
         <SandboxNavigation />
@@ -111,6 +117,11 @@ const props = defineProps({
   controlsMinWidth: {
     type: Number,
     default: 240,
+  },
+  /** Whether to apply a Kong theme to the sandbox and render the theme picker in the navigation. Set to `false` to leave the sandbox un-themed. */
+  applyTheming: {
+    type: Boolean,
+    default: true,
   },
 })
 
