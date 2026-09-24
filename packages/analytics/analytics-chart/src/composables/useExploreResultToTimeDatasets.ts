@@ -187,6 +187,8 @@ export default function useExploreResultToTimeDataset(
           const isRightAxis = deps.metricAxisMap?.[metric] === 'right'
 
           return {
+            dimension,
+            dimensionValue: dimensionId,
             rawDimension: dimensionName,
             rawMetric: metric,
             label: hasGroupedMetrics ? `${dimensionLabel} — ${metricLabel}` : dimensionLabel,

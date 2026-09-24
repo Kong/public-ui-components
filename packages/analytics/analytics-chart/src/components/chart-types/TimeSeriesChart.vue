@@ -59,6 +59,7 @@ import { reactive, ref, computed, toRef, inject, watch, onUnmounted, useTemplate
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { VerticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
+import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
 import { DragSelectPlugin } from '../chart-plugins/DragSelectPlugin'
 import type { DragSelectEventDetail } from '../chart-plugins/DragSelectPlugin'
@@ -68,12 +69,13 @@ import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { Threshold, TooltipState, YAxisConfig, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
-import type { GranularityValues, AbsoluteTimeRangeV4, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues, AbsoluteTimeRangeV4, ExploreAggregations, InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import type { Chart, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
 import { ThresholdPlugin } from '../chart-plugins/ThresholdPlugin'
+import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
 
 interface TimeSeriesChartProps {
   chartData?: KChartData
@@ -141,6 +143,13 @@ const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
+const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
+const coordinatorPlugin = new CoordinatorPlugin({
+  coordinator,
+  triggerOnSelf: true,
+  watchTimestamp: true,
+  watchDimension: true,
+})
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -174,6 +183,7 @@ const htmlLegendPlugin: Plugin = {
 }
 
 const plugins = computed(() => [
+  coordinatorPlugin,
   htmlLegendPlugin,
   highlightPlugin,
   ...(props.brush ? [dragSelectPlugin] : []),
