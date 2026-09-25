@@ -22,7 +22,8 @@ export type TableDataGridPresentationContext = {
 }
 
 /**
- * Format a cell value the same way the grid displays it.
+ * Return the text a cell displays: the header's `valueFormatter` output, or the raw value as a string.
+ * Shared by the AG Grid column formatter and the label sizer so both measure the same text.
  *
  * @param header - Column whose optional value formatter applies.
  * @param row - Row that owns the value.
