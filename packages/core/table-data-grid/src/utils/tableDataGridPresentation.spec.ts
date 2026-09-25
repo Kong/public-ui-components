@@ -21,7 +21,6 @@ describe('table-data-grid presentation helpers', () => {
 
   it('calculates complete-result sum and maximum statistics', () => {
     const header: TableDataGridHeader<TestRow> = {
-      dataType: 'number',
       key: 'value',
       label: 'Value',
     }
