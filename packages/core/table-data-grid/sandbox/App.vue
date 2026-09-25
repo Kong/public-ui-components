@@ -27,6 +27,18 @@
     <main class="sandbox-main">
       <section class="table-section">
         <div class="table-section-toolbar">
+          <div
+            v-if="fetchMode === 'unpaginated'"
+            class="bar-scale-options"
+          >
+            <span>Bar scale</span>
+            <KSegmentedControl
+              aria-label="Bar scale"
+              :model-value="barScale"
+              :options="barScaleOptions"
+              @update:model-value="barScale = $event"
+            />
+          </div>
           <KSegmentedControl
             aria-label="Data mode"
             class="fetch-mode-control"
@@ -308,6 +320,7 @@ type SandboxRow = {
 
 type DatasetMode = 'generated' | 'empty'
 type FetchMode = 'infinite' | 'unpaginated'
+type BarScale = 'relative' | 'absolute'
 type SandboxSectionId = 'tableOptions' | 'fetchDebug' | 'headers'
 type FetchRequest = TableDataGridInfiniteFetcherParams
 
@@ -342,11 +355,16 @@ const fetchModeOptions: Array<SegmentedControlOption<FetchMode>> = [
   { label: 'Infinite', value: 'infinite' },
   { label: 'All rows', value: 'unpaginated' },
 ]
+const barScaleOptions: Array<SegmentedControlOption<BarScale>> = [
+  { label: 'Of total', value: 'relative' },
+  { label: 'Of maximum', value: 'absolute' },
+]
 
 const pageSize = ref(defaultPageSize)
 const fetchDelayMs = ref(defaultFetchDelayMs)
 const datasetMode = ref<DatasetMode>('generated')
 const fetchMode = ref<FetchMode>('infinite')
+const barScale = ref<BarScale>('relative')
 const showErrorState = ref(false)
 const refreshKey = ref(0)
 const tableResetKey = ref(0)
@@ -364,7 +382,7 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
   tableOptions: false,
 })
 
-const headers: Array<TableDataGridHeader<SandboxRow>> = [
+const headers = computed<Array<TableDataGridHeader<SandboxRow>>>(() => [
   { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
   { key: 'description', label: 'Description', width: 240 },
   // Rendered via the `#status` slot below instead of the raw column value.
@@ -372,7 +390,7 @@ const headers: Array<TableDataGridHeader<SandboxRow>> = [
   // Rendered via the `#latency` slot below instead of the raw column value.
   { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
   {
-    bar: 'relative',
+    bar: barScale.value,
     dataType: 'number',
     key: 'requests',
     label: 'Requests',
@@ -383,7 +401,7 @@ const headers: Array<TableDataGridHeader<SandboxRow>> = [
   { key: 'region', label: 'Region', minWidth: 140 },
   // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
   { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
-]
+])
 
 const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   const rowNumber = index + 1
@@ -468,6 +486,7 @@ const resetSandbox = () => {
   fetchDelayMs.value = defaultFetchDelayMs
   datasetMode.value = 'generated'
   fetchMode.value = 'infinite'
+  barScale.value = 'relative'
   showErrorState.value = false
   refreshKey.value = 0
   tableResetKey.value += 1
@@ -566,7 +585,7 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
 const tableProps = computed<TableDataGridProps<SandboxRow>>(() => {
   const commonProps = {
     error: showErrorState.value,
-    headers,
+    headers: headers.value,
     tableConfig: tableConfig.value,
   }
 
@@ -755,11 +774,24 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 }
 
 .table-section-toolbar {
+  align-items: center;
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: flex-end;
 
   .fetch-mode-control {
     width: auto;
+  }
+}
+
+.bar-scale-options {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-20, $kui-space-20);
+
+  > span {
+    white-space: nowrap;
   }
 }
 
