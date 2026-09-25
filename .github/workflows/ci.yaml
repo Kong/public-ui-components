@@ -11,12 +11,6 @@ on:
       - labeled
     branches:
       - main
-      # Publish the complete stack preview until the test PR is retargeted to main.
-      - workbench/ma-5503-use-tabledatagrid-for-topn-e6c85af7
-      # Run CI for the client-side sorting PR stacked on browser tests.
-      - workbench/ma-5503-browser-tests
-      # Run CI for the datasource reuse PR stacked on client-side sorting.
-      - workbench/ma-5419-client-side-sorting
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
