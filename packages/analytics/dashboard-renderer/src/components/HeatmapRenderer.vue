@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <HeatmapChart
-      v-if="data?.meta?.start && data?.meta?.end"
+      v-if="metric && data?.meta?.start && data?.meta?.end"
       :data="heatmapData"
       height="100%"
       :series-name="seriesName"
@@ -38,19 +38,26 @@ const {
   options: any
 }>()
 
+const metric = computed<string>(() => {
+  if (query?.metrics?.[0]) {
+    return query.metrics[0]
+  }
+
+  return ''
+})
+
 const seriesName = computed(() => {
   // @ts-ignore dynamic lookup
-  return i18n.te(`chartLabels.${query.metrics[0]}`) // @ts-ignore dynamic lookup
-    ? i18n.t(`chartLabels.${query.metrics[0]}`)
-    : query.metrics[0]
+  return i18n.te(`chartLabels.${metric.value}`) // @ts-ignore dynamic lookup
+    ? i18n.t(`chartLabels.${metric.value}`)
+    : metric.value
 })
 
 const unit = computed<string>(() => {
-  const metric = query.metrics[0]
-  if (metric === 'cost') {
+  if (metric.value === 'cost') {
     return 'usd'
   }
-  if (metric.includes('latency')) {
+  if (metric.value.includes('latency')) {
     return 'ms'
   }
   return ''
@@ -104,7 +111,7 @@ const heatmapData = computed<HeatmapDataPoint[]>(() => {
     ? query.dimensions[1]
     : query.dimensions[0]
 
-  const metricName = query.metrics[0]
+  const metricName = metric.value
 
   return data.data.map((datapoint: any) => {
     const day = format(new Date(datapoint.timestamp), 'MMM dd')
