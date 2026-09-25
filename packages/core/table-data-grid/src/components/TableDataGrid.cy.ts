@@ -973,6 +973,38 @@ describe('<TableDataGrid />', () => {
     cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')
   })
 
+  it('colors threshold values in infinite mode', () => {
+    const fetcher = cy.stub().resolves({
+      data: [{ requests: 5 }, { requests: 15 }],
+      hasMore: false,
+    })
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
+    cy.mount(defineComponent({
+      name: 'InfiniteThresholdPresentationTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '400px' } }, [
+          h(TestTableDataGrid, {
+            fetcher,
+            headers: [{
+              key: 'requests',
+              label: 'Requests',
+              thresholds: [
+                { type: 'warning', value: 5 },
+                { type: 'error', value: 10 },
+              ],
+            }],
+          }),
+        ])
+      },
+    }))
+
+    cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
+      .should('have.attr', 'data-threshold', 'warning')
+    cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-error')
+      .should('have.attr', 'data-threshold', 'error')
+  })
+
   it('emits row:click with the clicked row data and the source event', () => {
     const onRowClick = cy.stub().as('rowClick')
     const fetcher = cy.stub().resolves({

@@ -42,14 +42,16 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
         return
       }
 
-      const issue = activeMode === 'infinite'
-        ? 'percentage, bar, and threshold presentation is only supported in unpaginated mode'
-        : rows?.value?.some((row) => {
-          const value: unknown = Reflect.get(row, header.key)
-          return value !== null && value !== undefined && toFiniteNumber(value) === null
-        })
-          ? 'contains non-finite or nonnumeric values; numeric presentation skips those values'
-          : undefined
+      let issue: string | undefined
+
+      if (activeMode === 'infinite' && (header.showPercentage || header.bar)) {
+        issue = 'percentage and bar presentation is only supported in unpaginated mode'
+      } else if (activeMode === 'unpaginated' && rows?.value?.some((row) => {
+        const value: unknown = Reflect.get(row, header.key)
+        return value !== null && value !== undefined && toFiniteNumber(value) === null
+      })) {
+        issue = 'contains non-finite or nonnumeric values; numeric presentation skips those values'
+      }
 
       if (!issue) {
         return

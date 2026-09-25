@@ -251,15 +251,16 @@ should opt out of the default flexible fill behavior.
 | `showPercentage` | `boolean` | No | In unpaginated mode, shows a numeric row value's percentage of the complete returned column sum. |
 | `percentageFormatter` | `(percentage) => string` | No | Optional formatter for the percentage points (50 means 50%) shown by `showPercentage`. The default uses the grid locale, up to two decimal places, and `< 0.01 %` for small positive values. |
 | `bar` | `'relative' \| 'absolute'` | No | In unpaginated mode, renders a bar for numeric values. `relative` uses `value / sum`; `absolute` uses `value / maximum`, matching the TopN scales. |
-| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Compares the raw numeric value with each threshold. Colors the bar if one is configured, or the value text if there is no bar. The highest crossed threshold wins, with `error` winning ties. Works without `bar`. |
+| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Compares the raw numeric value with each threshold in either grid mode. Colors the bar when rendered, or the value text otherwise. The highest crossed threshold wins, with `error` winning ties. Works without `bar`. |
 
 Setting `showPercentage`, `bar`, or `thresholds` opts a column into numeric
-presentation; no separate data type field is needed. Calculations use the
-complete `rows` result in unpaginated mode. Infinite mode does not calculate
-aggregate values, so supplying numeric presentation options there emits a
-console warning and omits those adornments. Nonnumeric or non-finite values
-also warn once per column and keep their ordinary content without numeric
-adornments. Missing values retain an empty bar track when a bar is configured.
+presentation; no separate data type field is needed. Percentages and bars use
+the complete `rows` result in unpaginated mode. Infinite mode does not calculate
+aggregate values, so `showPercentage` or `bar` emits a console warning and omits
+those adornments. Thresholds compare each numeric cell value in either mode.
+Nonnumeric or non-finite values in unpaginated mode warn once per column and
+keep their ordinary content without numeric adornments. Missing values retain
+an empty bar track when a bar is configured.
 Bars clamp to 0–100%; percentage labels are omitted when the column total is not positive.
 
 Hosts render optional icons through the `cell-icon` slot. The grid places slot

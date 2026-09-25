@@ -61,8 +61,9 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   /** Renders a bar using the column total or maximum as its denominator. */
   bar?: 'relative' | 'absolute'
   /**
-   * Colors the bar when present, or the value text when there is no bar.
-   * Compares the raw numeric value with each threshold independently of `bar`.
+   * Colors the bar when rendered, or the value text otherwise.
+   * Compares the raw numeric value with each threshold independently of `bar`
+   * and works in both infinite and unpaginated modes.
    */
   thresholds?: TableDataGridThreshold[]
 }

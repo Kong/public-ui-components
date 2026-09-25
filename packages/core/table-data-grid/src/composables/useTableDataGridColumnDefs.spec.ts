@@ -64,7 +64,7 @@ describe('useTableDataGridColumnDefs', () => {
     expect(columnDefs.value[0]).not.toHaveProperty('initialSortIndex')
   })
 
-  it('warns once for numeric presentation in infinite mode', () => {
+  it('warns for aggregate presentation but allows thresholds in infinite mode', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     try {
@@ -80,6 +80,17 @@ describe('useTableDataGridColumnDefs', () => {
 
       expect(warn).toHaveBeenCalledOnce()
       expect(warn.mock.calls[0][0]).to.contain('unpaginated mode')
+
+      useTableDataGridColumnDefs({
+        headers: ref<Array<TableDataGridHeader<TestRow>>>([{
+          key: 'name',
+          label: 'Name',
+          thresholds: [{ type: 'warning', value: 5 }],
+        }]),
+        slots: {},
+      })
+
+      expect(warn).toHaveBeenCalledOnce()
     } finally {
       warn.mockRestore()
     }

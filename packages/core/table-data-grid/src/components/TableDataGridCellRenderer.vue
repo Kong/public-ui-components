@@ -119,10 +119,7 @@ const displayValue = computed(() => {
 const rawValue = computed(() => currentParams.value.value)
 const numericValue = computed(() => toFiniteNumber(rawValue.value))
 const stats = computed(() => presentation.value?.stats[header.value.key])
-const isNumericUnpaginated = computed(() => (
-  presentation.value?.mode === 'unpaginated'
-  && Boolean(header.value.showPercentage || header.value.bar || header.value.thresholds?.length)
-))
+const isNumericUnpaginated = computed(() => presentation.value?.mode === 'unpaginated')
 const relativeValue = computed(() => {
   if (!isNumericUnpaginated.value || !header.value.showPercentage || !stats.value) {
     return undefined
@@ -149,7 +146,7 @@ const barWidth = computed(() => (
     : 0
 ))
 const thresholdType = computed(() => (
-  isNumericUnpaginated.value && numericValue.value !== null
+  header.value.thresholds?.length && numericValue.value !== null
     ? getThresholdType(numericValue.value, header.value.thresholds)
     : undefined
 ))
