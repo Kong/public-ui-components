@@ -62,7 +62,6 @@ void invalidModeChecks
 const numericHeader: TableDataGridHeader<{ count: number }> = {
   key: 'count',
   label: 'Requests',
-  dataType: 'number',
   showPercentage: true,
   bar: 'absolute',
   thresholds: [{ value: 100, type: 'warning' }],
