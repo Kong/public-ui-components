@@ -98,21 +98,25 @@ describe('useTableDataGridColumnDefs', () => {
 
   it('warns once for nonnumeric values and excludes them from the column total', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
-    const rows = ref([{ value: true }, { value: 25 }])
-    const { gridContext } = useTableDataGridColumnDefs({
-      headers: ref<Array<TableDataGridHeader<{ value: unknown }>>>([{
-        key: 'value', label: 'Value', showPercentage: true,
-      }]),
-      mode: 'unpaginated', rows, slots: {},
-    })
 
-    expect(warn).toHaveBeenCalledOnce()
-    expect(warn.mock.calls[0][0]).toContain('non-finite or nonnumeric')
-    expect(gridContext.value.presentation.stats.value.sum).toBe(25)
-    rows.value = [{ value: false }, { value: 50 }]
-    await nextTick()
-    expect(warn).toHaveBeenCalledOnce()
-    warn.mockRestore()
+    try {
+      const rows = ref([{ value: true }, { value: 25 }])
+      const { gridContext } = useTableDataGridColumnDefs({
+        headers: ref<Array<TableDataGridHeader<{ value: unknown }>>>([{
+          key: 'value', label: 'Value', showPercentage: true,
+        }]),
+        mode: 'unpaginated', rows, slots: {},
+      })
+
+      expect(warn).toHaveBeenCalledOnce()
+      expect(warn.mock.calls[0][0]).toContain('non-finite or nonnumeric')
+      expect(gridContext.value.presentation.stats.value.sum).toBe(25)
+      rows.value = [{ value: false }, { value: 50 }]
+      await nextTick()
+      expect(warn).toHaveBeenCalledOnce()
+    } finally {
+      warn.mockRestore()
+    }
   })
 
 })
