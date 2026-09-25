@@ -337,8 +337,9 @@ Dashboard `top_n` tiles now use `TableDataGrid` through
 [`@kong-ui-public/dashboard-renderer`](../dashboard-renderer/README.md), without
 changing dashboard definitions. For new standalone tables, use
 [`@kong-ui-public/table-data-grid`](../../core/table-data-grid/README.md).
-`TableDataGrid` accepts a fetcher and column headers, so it is not a drop-in
-replacement for `TopNTable`'s Explore response props.
+`TableDataGrid` accepts column headers with a fetcher for infinite mode or
+complete rows for unpaginated mode, so it is not a drop-in replacement for
+`TopNTable`'s Explore response props.
 
 The internal helpers and types in [`src/utils/topn-columns.ts`](src/utils/topn-columns.ts)
 are also deprecated and retained for `TopNTable`. Dashboard TopN mapping now lives
