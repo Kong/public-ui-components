@@ -63,10 +63,6 @@ function formatUsingResolver({
 }): string {
   const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
 
-  if (granularity === 'daily') {
-    console.log('formatting with daily')
-  }
-
   if (granularity === 'weekly') {
     return weeklyFormatter(tickValue, tz)
   }
