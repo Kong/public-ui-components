@@ -8,31 +8,49 @@
     }"
     :data-threshold="thresholdType"
   >
-    <span class="table-data-grid-cell-label">
-      <component :is="renderCellIcon" />
-      <component :is="renderCellContent">
-        <template #default>
-          <KTooltip
-            class="table-data-grid-cell-tooltip"
-            :disabled="!isOverflowing"
-            :kpop-attributes="{ popoverDelay: 400 }"
-            max-width="300"
-            placement="bottom-start"
-            :target="tooltipTarget"
-            :text="displayValue"
-          >
-            <span
-              ref="contentElement"
-              class="table-data-grid-cell-content"
-            >{{ displayValue }}</span>
-          </KTooltip>
-        </template>
-      </component>
+    <span class="table-data-grid-cell-label-track">
+      <span class="table-data-grid-cell-label">
+        <component :is="renderCellIcon" />
+        <component :is="renderCellContent">
+          <template #default>
+            <KTooltip
+              class="table-data-grid-cell-tooltip"
+              :disabled="!isOverflowing"
+              :kpop-attributes="{ popoverDelay: 400 }"
+              max-width="300"
+              placement="bottom-start"
+              :target="tooltipTarget"
+              :text="displayValue"
+            >
+              <span
+                ref="contentElement"
+                class="table-data-grid-cell-content"
+              >{{ displayValue }}</span>
+            </KTooltip>
+          </template>
+        </component>
+        <span
+          v-if="relativeValue"
+          class="table-data-grid-cell-relative"
+          data-testid="table-data-grid-cell-relative"
+        >({{ relativeValue }})</span>
+      </span>
+      <!-- Reserves the column's widest label so every row's bar starts at the same offset. -->
       <span
-        v-if="relativeValue"
-        class="table-data-grid-cell-relative"
-        data-testid="table-data-grid-cell-relative"
-      >({{ relativeValue }})</span>
+        v-if="labelSizer"
+        aria-hidden="true"
+        class="table-data-grid-cell-label table-data-grid-cell-label-sizer"
+      >
+        <span
+          class="table-data-grid-cell-sizer-value"
+          :data-text="labelSizer.value"
+        />
+        <span
+          v-if="labelSizer.relative"
+          class="table-data-grid-cell-sizer-relative"
+          :data-text="`(${labelSizer.relative})`"
+        />
+      </span>
     </span>
     <span
       v-if="hasBar"
@@ -68,7 +86,7 @@ import {
   watch,
 } from 'vue'
 import {
-  formatPercentage,
+  formatRelativeValue,
   getBarRatio,
   getThresholdType,
   toFiniteNumber,
@@ -120,22 +138,16 @@ const rawValue = computed(() => currentParams.value.value)
 const numericValue = computed(() => toFiniteNumber(rawValue.value))
 const stats = computed(() => presentation.value?.stats[header.value.key])
 const isNumericUnpaginated = computed(() => presentation.value?.mode === 'unpaginated')
-const relativeValue = computed(() => {
-  if (!isNumericUnpaginated.value || !header.value.showPercentage || !stats.value) {
-    return undefined
-  }
-
-  const value = numericValue.value
-
-  if (value === null || stats.value.sum <= 0) {
-    return undefined
-  }
-
-  const percentage = value / stats.value.sum * 100
-
-  return header.value.percentageFormatter?.(percentage)
-    ?? formatPercentage(percentage, presentation.value?.locale)
-})
+const relativeValue = computed(() => (
+  isNumericUnpaginated.value && header.value.showPercentage && stats.value
+    ? formatRelativeValue({
+      value: numericValue.value,
+      stats: stats.value,
+      header: header.value,
+      locale: presentation.value?.locale ?? 'en-US',
+    })
+    : undefined
+))
 const hasBar = computed(() => (
   isNumericUnpaginated.value && !!header.value.bar
   && (numericValue.value !== null || rawValue.value === null || rawValue.value === undefined)
@@ -144,6 +156,9 @@ const barWidth = computed(() => (
   hasBar.value && stats.value
     ? getBarRatio(numericValue.value, stats.value, header.value.bar) * 100
     : 0
+))
+const labelSizer = computed(() => (
+  hasBar.value ? presentation.value?.labelSizers[header.value.key] : undefined
 ))
 const thresholdType = computed(() => (
   header.value.thresholds?.length && numericValue.value !== null
@@ -283,13 +298,41 @@ defineExpose({
   min-width: 0;
 }
 
-.table-data-grid-cell-renderer--bar {
+.table-data-grid-cell-label-track {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(80px, 2fr);
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
 }
 
-.table-data-grid-cell-renderer--bar .table-data-grid-cell-label {
-  justify-content: flex-end;
+.table-data-grid-cell-label-track > * {
+  grid-area: 1 / 1;
+}
+
+.table-data-grid-cell-label-sizer {
+  height: 0;
+  visibility: hidden;
+}
+
+.table-data-grid-cell-sizer-value::before,
+.table-data-grid-cell-sizer-relative::before {
+  content: attr(data-text);
+  white-space: nowrap;
+}
+
+.table-data-grid-cell-sizer-value {
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+}
+
+.table-data-grid-cell-sizer-relative {
+  flex-shrink: 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+}
+
+.table-data-grid-cell-renderer--bar {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(80px, 1fr);
 }
 
 .table-data-grid-cell-content,

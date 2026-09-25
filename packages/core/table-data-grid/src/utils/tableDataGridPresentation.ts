@@ -8,10 +8,35 @@ export type TableDataGridColumnStats = {
   max: number
 }
 
+/** Longest value and percentage text in a bar column, used to size a shared label track. */
+export type TableDataGridLabelSizer = {
+  value: string
+  relative?: string
+}
+
 export type TableDataGridPresentationContext = {
   mode: 'infinite' | 'unpaginated'
   locale: string
   stats: Record<string, TableDataGridColumnStats>
+  labelSizers: Record<string, TableDataGridLabelSizer>
+}
+
+/**
+ * Format a cell value the same way the grid displays it.
+ *
+ * @param header - Column whose optional value formatter applies.
+ * @param row - Row that owns the value.
+ * @returns Display text for the cell.
+ */
+export const formatCellValue = <Row extends object>(
+  header: Pick<TableDataGridHeader<Row>, 'key' | 'valueFormatter'>,
+  row: Row,
+): string => {
+  const value: unknown = Reflect.get(row, header.key)
+
+  return header.valueFormatter
+    ? header.valueFormatter(value, row)
+    : String(value ?? '')
 }
 
 /**
@@ -120,3 +145,74 @@ export const formatPercentage = (percentage: number, locale = 'en-US'): string =
     ? `< ${formatter.format(0.01)} %`
     : `${formatted} %`
 }
+
+/**
+ * Format a value as its share of the column total.
+ *
+ * @param value - Numeric cell value, or null when missing.
+ * @param stats - Sum and maximum of the complete column.
+ * @param header - Column whose optional percentage formatter applies.
+ * @param locale - Number formatting locale.
+ * @returns Percentage text, or undefined when the share is undefined.
+ */
+export const formatRelativeValue = ({
+  value,
+  stats,
+  header,
+  locale,
+}: {
+  value: number | null
+  stats: TableDataGridColumnStats
+  header: Pick<TableDataGridHeader, 'percentageFormatter'>
+  locale: string
+}): string | undefined => {
+  if (value === null || stats.sum <= 0) {
+    return undefined
+  }
+
+  const percentage = value / stats.sum * 100
+
+  return header.percentageFormatter?.(percentage) ?? formatPercentage(percentage, locale)
+}
+
+const longest = (current: string | undefined, next: string | undefined): string | undefined => (
+  next !== undefined && next.length > (current?.length ?? -1) ? next : current
+)
+
+/**
+ * Find the longest value and percentage text in the complete result.
+ *
+ * Every bar cell reserves this text's width, so bars start at the same offset across rows.
+ * Length approximates rendered width, which holds for numeric text. Host slot content and
+ * cell icons are not measured.
+ *
+ * @param rows - Complete result for the current query.
+ * @param header - Bar column to measure.
+ * @param stats - Sum and maximum of the complete column.
+ * @param locale - Number formatting locale.
+ * @returns The longest value text and, when percentages show, the longest percentage text.
+ */
+export const getLabelSizer = <Row extends object>({
+  rows,
+  header,
+  stats,
+  locale,
+}: {
+  rows: readonly Row[]
+  header: TableDataGridHeader<Row>
+  stats: TableDataGridColumnStats
+  locale: string
+}): TableDataGridLabelSizer => rows.reduce<TableDataGridLabelSizer>(
+  (sizer, row) => ({
+    value: longest(sizer.value, formatCellValue(header, row)) ?? '',
+    relative: header.showPercentage
+      ? longest(sizer.relative, formatRelativeValue({
+        value: toFiniteNumber(Reflect.get(row, header.key)),
+        stats,
+        header,
+        locale,
+      }))
+      : undefined,
+  }),
+  { value: '' },
+)

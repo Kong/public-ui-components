@@ -969,18 +969,24 @@ describe('<TableDataGrid />', () => {
         expect(first.left).to.be.closeTo(second.left, 1)
         expect(first.right).to.be.closeTo(second.right, 1)
 
-        for (const bar of $bars) {
-          const percentage = bar.closest('.table-data-grid-cell-renderer')
-            ?.querySelector('.table-data-grid-cell-relative')
+        const gaps = [...$bars].map((bar) => {
+          const renderer = bar.closest('.table-data-grid-cell-renderer')
+          const content = renderer?.querySelector('.table-data-grid-cell-content')
+          const percentage = renderer?.querySelector('.table-data-grid-cell-relative')
 
-          if (!percentage) {
-            throw new Error('Expected a percentage label beside the bar')
+          if (!renderer || !content || !percentage) {
+            throw new Error('Expected a value and percentage beside the bar')
           }
 
-          const gap = bar.getBoundingClientRect().left - percentage.getBoundingClientRect().right
-          expect(gap).to.be.greaterThan(0)
-          expect(gap).to.be.lessThan(16)
-        }
+          // Values start at the column edge, like TopN, instead of hugging the bar.
+          expect(content.getBoundingClientRect().left - renderer.getBoundingClientRect().left).to.be.lessThan(1)
+
+          return bar.getBoundingClientRect().left - percentage.getBoundingClientRect().right
+        })
+
+        // The widest label sets the shared track, so only it sits next to the bar.
+        expect(Math.min(...gaps)).to.be.greaterThan(0)
+        expect(Math.min(...gaps)).to.be.lessThan(16)
       })
     cy.get('[row-index="0"] [col-id="threshold"] [data-threshold]').should('not.exist')
     cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')
