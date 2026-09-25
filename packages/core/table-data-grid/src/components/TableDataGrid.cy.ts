@@ -928,10 +928,10 @@ describe('<TableDataGrid />', () => {
     })
   })
 
-  it('renders numeric options independently without a data type field', () => {
+  it('renders numeric options independently and aligns combined percentage bars', () => {
     const numericRows = [
-      { percentage: 25, bar: 25, threshold: 25 },
-      { percentage: 75, bar: 75, threshold: 75 },
+      { percentage: 25, bar: 25, combined: 1, threshold: 25 },
+      { percentage: 75, bar: 75, combined: 999, threshold: 75 },
     ]
 
     // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
@@ -943,6 +943,7 @@ describe('<TableDataGrid />', () => {
             headers: [
               { key: 'percentage', label: 'Percentage', showPercentage: true },
               { key: 'bar', label: 'Bar', bar: 'absolute' },
+              { key: 'combined', label: 'Combined', bar: 'relative', showPercentage: true },
               { key: 'threshold', label: 'Threshold', thresholds: [{ type: 'warning', value: 50 }] },
             ],
             mode: 'unpaginated',
@@ -960,8 +961,61 @@ describe('<TableDataGrid />', () => {
       })
     cy.get('[row-index="1"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
       .should('have.attr', 'style', 'width: 100%;')
+    cy.get('[col-id="combined"] [data-testid="table-data-grid-cell-bar"]')
+      .should('have.length', 2)
+      .then(($bars) => {
+        const [first, second] = [...$bars].map(bar => bar.getBoundingClientRect())
+
+        expect(first.left).to.be.closeTo(second.left, 1)
+        expect(first.right).to.be.closeTo(second.right, 1)
+
+        for (const bar of $bars) {
+          const percentage = bar.closest('.table-data-grid-cell-renderer')
+            ?.querySelector('.table-data-grid-cell-relative')
+
+          if (!percentage) {
+            throw new Error('Expected a percentage label beside the bar')
+          }
+
+          const gap = bar.getBoundingClientRect().left - percentage.getBoundingClientRect().right
+          expect(gap).to.be.greaterThan(0)
+          expect(gap).to.be.lessThan(16)
+        }
+      })
     cy.get('[row-index="0"] [col-id="threshold"] [data-threshold]').should('not.exist')
     cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')
+  })
+
+  it('colors threshold values in infinite mode', () => {
+    const fetcher = cy.stub().resolves({
+      data: [{ requests: 5 }, { requests: 15 }],
+      hasMore: false,
+    })
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
+    cy.mount(defineComponent({
+      name: 'InfiniteThresholdPresentationTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '400px' } }, [
+          h(TestTableDataGrid, {
+            fetcher,
+            headers: [{
+              key: 'requests',
+              label: 'Requests',
+              thresholds: [
+                { type: 'warning', value: 5 },
+                { type: 'error', value: 10 },
+              ],
+            }],
+          }),
+        ])
+      },
+    }))
+
+    cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
+      .should('have.attr', 'data-threshold', 'warning')
+    cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-error')
+      .should('have.attr', 'data-threshold', 'error')
   })
 
   it('emits row:click with the clicked row data and the source event', () => {
