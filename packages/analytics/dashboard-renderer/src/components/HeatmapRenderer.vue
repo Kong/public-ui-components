@@ -61,7 +61,6 @@ const valueFormatter = (value: any) => {
 }
 
 const getXAxis = (start: Date, end: Date) => {
-  console.log(start, end)
   const dates = []
   const current = new Date(start)
 
