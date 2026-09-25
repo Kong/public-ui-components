@@ -392,7 +392,6 @@ const headers = computed<Array<TableDataGridHeader<SandboxRow>>>(() => [
   { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
   {
     bar: barScale.value,
-    dataType: 'number',
     key: 'requests',
     label: 'Requests',
     minWidth: 240,

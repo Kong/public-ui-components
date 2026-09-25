@@ -118,7 +118,8 @@ const rawValue = computed(() => currentParams.value.value)
 const numericValue = computed(() => toFiniteNumber(rawValue.value))
 const stats = computed(() => presentation.value?.stats[header.value.key])
 const isNumericUnpaginated = computed(() => (
-  presentation.value?.mode === 'unpaginated' && header.value.dataType === 'number'
+  presentation.value?.mode === 'unpaginated'
+  && Boolean(header.value.showPercentage || header.value.bar || header.value.thresholds?.length)
 ))
 const relativeValue = computed(() => {
   if (!isNumericUnpaginated.value || !header.value.showPercentage || !stats.value) {

@@ -928,6 +928,42 @@ describe('<TableDataGrid />', () => {
     })
   })
 
+  it('renders numeric options independently without a data type field', () => {
+    const numericRows = [
+      { percentage: 25, bar: 25, threshold: 25 },
+      { percentage: 75, bar: 75, threshold: 75 },
+    ]
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
+    cy.mount(defineComponent({
+      name: 'UnpaginatedNumericPresentationTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '900px' } }, [
+          h(TestTableDataGrid, {
+            headers: [
+              { key: 'percentage', label: 'Percentage', showPercentage: true },
+              { key: 'bar', label: 'Bar', bar: 'absolute' },
+              { key: 'threshold', label: 'Threshold', thresholds: [{ type: 'warning', value: 50 }] },
+            ],
+            mode: 'unpaginated',
+            rows: numericRows,
+          }),
+        ])
+      },
+    }))
+
+    cy.get('[row-index="0"] [col-id="percentage"] [data-testid="table-data-grid-cell-relative"]')
+      .should('have.text', '(25 %)')
+    cy.get('[row-index="0"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
+      .should(($fill) => {
+        expect(parseFloat($fill[0].style.width)).to.be.closeTo(100 / 3, 0.01)
+      })
+    cy.get('[row-index="1"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
+      .should('have.attr', 'style', 'width: 100%;')
+    cy.get('[row-index="0"] [col-id="threshold"] [data-threshold]').should('not.exist')
+    cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')
+  })
+
   it('emits row:click with the clicked row data and the source event', () => {
     const onRowClick = cy.stub().as('rowClick')
     const fetcher = cy.stub().resolves({
