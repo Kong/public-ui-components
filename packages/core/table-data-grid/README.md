@@ -120,7 +120,7 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
 | `pageSize` | `number` | No | `25` | Infinite mode only. AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
 | `refreshKey` | `string \| number \| boolean` | No | - | Infinite mode only. Parent invalidation signal that rebuilds the datasource from the beginning. |
-| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort and page size. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
+| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort, page size, and optional content-height sizing. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
 
@@ -174,6 +174,12 @@ changes. An empty `rows` array shows the empty state.
 
 The row model is selected when `TableDataGrid` mounts. To switch between
 `infinite` and `unpaginated`, key the component by mode so Vue remounts it.
+
+For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
+leave the host height unconstrained. The grid fits its header and all returned
+rows, retains horizontal scrolling, and resizes when the result changes. This
+option defaults to `false` and is ignored in infinite mode. Otherwise, give the
+host a height and the grid scrolls within it.
 
 ```vue
 <TableDataGrid

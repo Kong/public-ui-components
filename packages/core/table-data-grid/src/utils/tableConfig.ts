@@ -28,6 +28,7 @@ export const resolveTableConfig = <Row extends object = TableDataGridRow>({
     sortColumnKey,
     sortColumnOrder: sortColumnKey ? config?.sortColumnOrder : undefined,
     pageSize: config?.pageSize ?? pageSize,
+    ...(config?.fitToContent !== undefined ? { fitToContent: config.fitToContent } : {}),
   }
 }
 
@@ -42,4 +43,5 @@ export const tableConfigsEqual = (a: TableDataGridConfig, b: TableDataGridConfig
   a.sortColumnKey === b.sortColumnKey
   && a.sortColumnOrder === b.sortColumnOrder
   && a.pageSize === b.pageSize
+  && a.fitToContent === b.fitToContent
 )

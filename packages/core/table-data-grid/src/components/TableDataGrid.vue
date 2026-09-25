@@ -2,6 +2,7 @@
   <div
     ref="rootElement"
     class="kong-ui-public-table-data-grid"
+    :class="{ 'fit-to-content': fitToContent }"
     data-testid="table-data-grid"
   >
     <div
@@ -39,6 +40,7 @@
       :context="gridContext"
       :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
+      :dom-layout="fitToContent ? 'autoHeight' : 'normal'"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
@@ -166,6 +168,8 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   patchTableConfig,
 })
 
+const fitToContent = computed(() => mode === 'unpaginated' && !!activeTableConfig.value.fitToContent)
+
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
   headers: toRef(() => headers),
@@ -254,6 +258,14 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   overflow: hidden;
   width: 100%;
 
+  &.fit-to-content {
+    height: auto;
+
+    // Auto-height grids default to a 150px body, even for a single row.
+    :deep(.ag-grid-scrolling-rows) {
+      min-height: 0;
+    }
+  }
 }
 
 .table-data-grid-grid {

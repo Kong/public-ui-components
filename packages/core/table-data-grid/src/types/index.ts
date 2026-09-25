@@ -77,6 +77,8 @@ export type TableDataGridSort = {
 
 export type TableDataGridConfig = TableDataGridSort & {
   pageSize?: number
+  /** Size to all returned rows in unpaginated mode. Ignored in infinite mode. */
+  fitToContent?: boolean
 }
 
 export type TableDataGridProps<Row extends object = TableDataGridRow> = {
