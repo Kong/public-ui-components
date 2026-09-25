@@ -60,7 +60,10 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   percentageFormatter?: (percentage: number) => string
   /** Renders a bar using the column total or maximum as its denominator. */
   bar?: 'relative' | 'absolute'
-  /** Applies warning/error presentation at or above the crossed threshold. */
+  /**
+   * Colors the bar when present, or the value text when there is no bar.
+   * Compares the raw numeric value with each threshold independently of `bar`.
+   */
   thresholds?: TableDataGridThreshold[]
 }
 

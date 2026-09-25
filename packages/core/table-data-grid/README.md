@@ -251,7 +251,7 @@ should opt out of the default flexible fill behavior.
 | `showPercentage` | `boolean` | No | In unpaginated mode, shows a numeric row value's percentage of the complete returned column sum. |
 | `percentageFormatter` | `(percentage) => string` | No | Optional formatter for the percentage points (50 means 50%) shown by `showPercentage`. The default uses the grid locale, up to two decimal places, and `< 0.01 %` for small positive values. |
 | `bar` | `'relative' \| 'absolute'` | No | In unpaginated mode, renders a bar for numeric values. `relative` uses `value / sum`; `absolute` uses `value / maximum`, matching the TopN scales. |
-| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Applies threshold text/bar colors at or above the highest crossed threshold. Numeric finite values only. |
+| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Compares the raw numeric value with each threshold. Colors the bar if one is configured, or the value text if there is no bar. The highest crossed threshold wins, with `error` winning ties. Works without `bar`. |
 
 Setting `showPercentage`, `bar`, or `thresholds` opts a column into numeric
 presentation; no separate data type field is needed. Calculations use the
