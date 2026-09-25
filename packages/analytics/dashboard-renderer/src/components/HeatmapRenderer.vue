@@ -7,6 +7,7 @@
       :series-name="seriesName"
       :tooltip-title="options.chart_title ?? undefined"
       :value-formatter="valueFormatter"
+      :visible-rows="10"
       :x-axis-labels="days"
       :y-axis-labels="dimensionValues"
     />
