@@ -4,9 +4,12 @@ import type { Ref, Slots } from 'vue'
 import { computed, watch } from 'vue'
 import TableDataGridCellRenderer from '../components/TableDataGridCellRenderer.vue'
 import {
+  formatCellValue,
   getColumnStats,
+  getLabelSizer,
   toFiniteNumber,
   type TableDataGridColumnStats,
+  type TableDataGridLabelSizer,
 } from '../utils/tableDataGridPresentation'
 
 /**
@@ -26,7 +29,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   slots: Slots
   initialSort?: TableDataGridSort
   mode?: 'infinite' | 'unpaginated'
-  rows?: Readonly<Ref<readonly object[] | undefined>>
+  rows?: Readonly<Ref<readonly Row[] | undefined>>
   locale?: Readonly<Ref<string>>
   tooltipTarget?: Readonly<Ref<string | HTMLElement>>
 }) => {
@@ -84,6 +87,26 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
     )
   })
 
+  const labelSizers = computed<Record<string, TableDataGridLabelSizer>>(() => {
+    if (activeMode !== 'unpaginated') {
+      return {}
+    }
+
+    const currentRows = rows?.value ?? []
+    const currentLocale = locale?.value ?? 'en-US'
+
+    return Object.fromEntries(
+      headers.value
+        .filter(header => header.bar)
+        .map(header => [header.key, getLabelSizer({
+          rows: currentRows,
+          header,
+          stats: presentationStats.value[header.key] ?? getColumnStats(currentRows, header),
+          locale: currentLocale,
+        })]),
+    )
+  })
+
   // AG Grid's generic passthrough object, copied onto every cell/header renderer.
   const gridContext = computed(() => ({
     cells: { slots, tooltipTarget },
@@ -91,6 +114,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
       mode: activeMode,
       locale: locale?.value ?? 'en-US',
       stats: presentationStats.value,
+      labelSizers: labelSizers.value,
     },
   }))
 
@@ -109,8 +133,8 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
       ...(isInitialSortColumn ? { initialSort: initialSort?.sortColumnOrder, initialSortIndex: 0 } : {}),
       valueGetter: params => params.data?.[header.key],
       valueFormatter: params => (
-        header.valueFormatter && params.data
-          ? header.valueFormatter(params.value, params.data)
+        params.data
+          ? formatCellValue(header, params.data)
           : String(params.value ?? '')
       ),
       width: header.width,
