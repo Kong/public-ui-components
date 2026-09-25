@@ -7,14 +7,14 @@ type TooltipResolver = () => string
 const weeklyFormatter = (tickValue: Date, tz: string) =>
   `${formatInTimeZone(tickValue, tz, 'yyyy')} W${formatInTimeZone(tickValue, tz, 'II')}`
 
-const TICK_FMT_DATE_TIME_SECONDS = 'yyyy-MM-dd h:mm:ss a'
+const TICK_FMT_DATE_TIME_SECONDS = 'MMM dd, h:mm:ss a'
 const TICK_FMT_TIME_SECONDS = 'h:mm:ss a'
-const TICK_FMT_DATE_TIME_MINUTES = 'yyyy-MM-dd h:mm a'
+const TICK_FMT_DATE_TIME_MINUTES = 'MMM dd, h:mm a'
 const TICK_FMT_TIME_MINUTES = 'h:mm a'
-const TICK_FMT_DATE = 'yyyy-MM-dd'
+const TICK_FMT_DATE = 'MMM dd'
 
-const TOOLTIP_FMT_DATE_TIME_SECONDS = 'MMM dd, yyyy h:mm:ss a'
-const TOOLTIP_FMT_DATE_TIME_MINUTES = 'MMM dd, yyyy h:mm a'
+const TOOLTIP_FMT_DATE_TIME_SECONDS = 'MMM dd, h:mm:ss a'
+const TOOLTIP_FMT_DATE_TIME_MINUTES = 'MMM dd, h:mm a'
 
 const tickResolvers: Partial<Record<GranularityValues, TickResolver>> = {
   secondly: (d) => (d ? TICK_FMT_DATE_TIME_SECONDS : TICK_FMT_TIME_SECONDS),
@@ -63,6 +63,10 @@ function formatUsingResolver({
 }): string {
   const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
 
+  if (granularity === 'daily') {
+    console.log('formatting with daily')
+  }
+
   if (granularity === 'weekly') {
     return weeklyFormatter(tickValue, tz)
   }
@@ -97,7 +101,7 @@ export const formatChartTicksByGranularity = ({
     timezone,
     dayBoundaryCrossed,
     tickMap: tickResolvers,
-    defaultFormat: 'yyyy-MM-dd h:mm:ss a',
+    defaultFormat: 'MMM dd, h:mm:ss a',
   })
 
 export const formatTooltipTimestampByGranularity = ({
@@ -116,5 +120,4 @@ export const formatTooltipTimestampByGranularity = ({
     tooltipMap: tooltipResolvers,
     defaultFormat: 'MMM dd, yyyy h:mm:ss a',
   })
-
 

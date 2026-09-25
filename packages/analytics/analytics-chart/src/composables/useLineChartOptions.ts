@@ -26,7 +26,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
     },
     ticks: {
       padding: 0,
-      autoSkipPadding: 100,
+      autoSkipPadding: 10,
       source: 'auto',
       maxRotation: 0,
       callback: (value: number) => {
@@ -39,12 +39,8 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       },
     },
     title: {
-      display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
-      text: chartOptions.dimensionAxesTitle?.value,
-      padding: { top: 3 },
-      font: {
-        weight: 'bold',
-      },
+      // we don't display the date axis label
+      display: false,
     },
     border: {
       display: false,
