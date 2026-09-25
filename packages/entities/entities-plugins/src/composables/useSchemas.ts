@@ -1,6 +1,6 @@
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import type { FGCollapsibleOptions, FGSlots } from '@kong-ui-public/forms'
-import { customFields, getSharedFormName } from '@kong-ui-public/forms'
+import { customFields } from '@kong-ui-public/forms'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
@@ -38,15 +38,12 @@ import { kafkaLogSchema } from '../definitions/schemas/KafkaLog'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
-import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 import type { UnionFieldSchema } from '@kong-ui-public/freeform'
-import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
-import { shouldUseFreeForm } from '../components/free-form/plugin-registry'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -93,32 +90,9 @@ export interface UseSchemasOptions {
   experimentalRenders?: Record<string, boolean>
 }
 
-/** Sorts non-config fields and place them at the top */
-const sortFieldByNonConfigTakePrecedence = (a: Field, b: Field) => {
-  const aIsConfig = a.model.startsWith('config-')
-  const bIsConfig = b.model.startsWith('config-')
-
-  if (aIsConfig && !bIsConfig) {
-    return 1
-  }
-
-  if (!aIsConfig && bIsConfig) {
-    return -1
-  }
-
-  return 0
-}
-
-const sortFieldByOrder = (a: Field, b: Field) => (a.order ?? 0) - (b.order ?? 0)
-
-const sortNonPinnedFields = (a: Field, b: Field) =>
-  sortFieldByNonConfigTakePrecedence(a, b) || sortFieldByOrder(a, b) || a.model.localeCompare(b.model)
-
 export const useSchemas = (options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
-  const { i18n: { t } } = useI18n()
-  const experimentalFreeForms = useExperimentalFreeForms()
 
   const customSchemas: CustomSchemas = {
     'application-registration': {
@@ -308,7 +282,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @param {Object} frontendSchema the schema defined in the custom js files
    * @returns {Object} an object containing a formModel and formSchema, both of which will be consumed by the VFG form generator
    */
-  const parseSchema = (currentSchema: Record<string, any>, backendSchema?: Record<string, any>, frontendSchema?: Record<string, any>, engine?: 'vfg' | 'freeform') => {
+  const parseSchema = (currentSchema: Record<string, any>, backendSchema?: Record<string, any>, frontendSchema?: Record<string, any>) => {
     let inputSchema: Record<string, any> = {}
     if (backendSchema || currentSchema) {
       inputSchema = backendSchema || (currentSchema.fields ? currentSchema.fields : currentSchema)
@@ -324,7 +298,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     comparatorIdx > -1 && inputSchemaFields.splice(comparatorIdx, 1)
 
-    let formSchema: Schema = { fields: [] }
+    const formSchema: Schema = { fields: [] }
     const formModel: any = {}
 
     // Iterate over each schema field to augment with display configuration.
@@ -352,153 +326,33 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(effectivePluginName) || shouldUseFreeForm(effectivePluginName, experimentalFreeForms, engine) || metadata?.useLegacyForm || options?.credential) {
-      /**
-       * Do not generate grouped schema when:
-       * - The plugin has a custom layout
-       * - The plugin is explicitly marked to use legacy form
-       * - Rendering a form for a plugin credential
-       */
-
-      // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
-      if (metadata?.useLegacyForm && options?.enableRedisPartial && currentSchema._supported_redis_partial_type) {
-        for (const field of formSchema.fields!) {
-          if (isRedisField(field)) {
-            redisFields.push(field)
-            continue
-          }
-        }
-        formSchema.fields = formSchema.fields!.filter((field) => !isRedisField(field))
-        // Add redis fields to advanced fields
-        if (redisFields.length) formSchema.fields!.push({
-          id: '_redis',
-          fields: redisFields,
-          model: '__redis_partial',
-          pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
-          redisType: currentSchema._supported_redis_partial_type,
-          redisPath: currentSchema._redis_partial_path,
-        })
-      }
-
-      // Assume the fields are sorted, unless they have an `order` property
-      formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
-        a.order = a.order || 0
-        b.order = b.order || 0
-
-        return a.order - b.order
-      })
-    } else {
-      // Grouped schema generation
-
-      const pinnedFields = []
-      const defaultVisibleFields = []
-      const advancedFields = []
-      const redisFields = []
-
-      // Transform the any of field sets into a flatten set for fast lookup
-      // The boolean values help us to know if we have unknown fields in the plugin metadata
-      const ruledFields: Record<string, boolean> = {}
-
-      if (metadata?.fieldRules) {
-        const flattenRules = [
-          ...metadata.fieldRules.atLeastOneOf ?? [],
-          ...metadata.fieldRules.onlyOneOf ?? [],
-          ...metadata.fieldRules.mutuallyRequired ?? [],
-        ]
-
-        if (metadata.fieldRules.onlyOneOfMutuallyRequired) {
-          for (const ruleSet of metadata.fieldRules.onlyOneOfMutuallyRequired) {
-            flattenRules.push(...ruleSet)
-          }
-        }
-
-        for (const fields of flattenRules) {
-          for (const field of fields) {
-            // We flatten the schema with hyphen notation
-            ruledFields[field.replace(/-/g, '_').replace(/\./g, '-')] = false // Not visited yet
-          }
-        }
-      }
+    // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+    if (metadata?.useLegacyForm && options?.enableRedisPartial && currentSchema._supported_redis_partial_type) {
       for (const field of formSchema.fields!) {
-        // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
-        if (options?.enableRedisPartial && currentSchema._supported_redis_partial_type && isRedisField(field)) {
+        if (isRedisField(field)) {
           redisFields.push(field)
           continue
         }
-        // Fields that don't start with 'config-' are considered common fields
-        if (field.pinned) {
-          pinnedFields.push(field)
-          continue
-        }
-
-        // A field is hoisted if any of the following is true:
-        // - It has a `required` property and it's set to true
-        // - Is a field with one or more field rules
-        // set Redis fields as advanced fields
-        if (field.required || ruledFields[field.model] !== undefined) {
-          if (ruledFields[field.model] === false) {
-            ruledFields[field.model] = true // Mark this as visited
-          }
-          defaultVisibleFields.push(field)
-          continue
-        }
-
-        // Otherwise, consider it an advanced field
-        advancedFields.push(field)
       }
-
+      formSchema.fields = formSchema.fields!.filter((field) => !isRedisField(field))
       // Add redis fields to advanced fields
-      if (redisFields.length) advancedFields.push({
+      if (redisFields.length) formSchema.fields!.push({
         id: '_redis',
         fields: redisFields,
         model: '__redis_partial',
         pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
         redisType: currentSchema._supported_redis_partial_type,
         redisPath: currentSchema._redis_partial_path,
-        order: -1, // Place redis fields at the top of the advanced fields
       })
-
-      // For better dev: warn about unknown checked fields
-      const unknownRuleFields = Object.entries(ruledFields)
-        .filter(([, visited]) => !visited)
-        .map(([field]) => field.replace(/-/g, '.').replace(/_/g, '-'))
-      if (unknownRuleFields.length > 0) {
-        console.warn(`Unknown checked fields for plugin ${pluginName}: ${unknownRuleFields.join(', ')}`)
-      }
-
-      const fieldGroups: Group[] = []
-
-      if (pinnedFields.length > 0) {
-        fieldGroups.push({
-          fields: pinnedFields.sort(sortFieldByOrder),
-        })
-      }
-
-      if (defaultVisibleFields.length > 0 || advancedFields.length > 0) {
-        fieldGroups.push({
-          fields: defaultVisibleFields.sort(sortNonPinnedFields),
-          collapsible: {
-            title: t('plugins.form.grouping.plugin_configuration.title'),
-            description: t('plugins.form.grouping.plugin_configuration.description'),
-            nestedCollapsible: {
-              fields: advancedFields.sort(sortNonPinnedFields),
-              triggerLabel: {
-                expand: t('plugins.form.grouping.advanced_parameters.view'),
-                collapse: t('plugins.form.grouping.advanced_parameters.hide'),
-              },
-            },
-          },
-          slots: {
-            beforeContent: 'plugin-config-before-content',
-            emptyState: 'plugin-config-empty-state',
-          },
-        })
-      }
-
-      formSchema = {
-        groups: fieldGroups,
-      }
     }
+
+    // Assume the fields are sorted, unless they have an `order` property
+    formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
+      a.order = a.order || 0
+      b.order = b.order || 0
+
+      return a.order - b.order
+    })
 
     return {
       schema: formSchema,

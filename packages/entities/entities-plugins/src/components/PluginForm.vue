@@ -51,7 +51,6 @@
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="realEngine"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
         :record="record"
@@ -371,15 +370,6 @@ const props = defineProps({
     type: Object as PropType<ScopedEntitiesPermissions>,
     default: null,
   },
-
-  /**
-   * Force the engine type for the form.
-   */
-  engine: {
-    type: String as PropType<'vfg' | 'freeform'>,
-    required: false,
-    default: undefined,
-  },
 })
 
 const router = useRouter()
@@ -390,7 +380,6 @@ const { customSchemas, typedefs } = composables.useSchemas({
   experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
-const { shouldUseFreeForm: isFreeForm } = composables.useFreeFormResolver()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -419,8 +408,6 @@ const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 
-const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
-
 const clonedSourcePlugin = ref<string | null>(null)
 
 const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
@@ -428,18 +415,6 @@ const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
 const effectivePluginType = computed(() =>
   (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
 )
-
-const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
-  if (props.engine) return props.engine
-  if (!customPluginFreeform || !isCustomPlugin.value) return undefined
-  if (isClonedPlugin.value && clonedSourcePlugin.value) {
-    // Cloned plugin: defer to the source plugin's engine.
-    return isFreeForm(clonedSourcePlugin.value) ? 'freeform' : 'vfg'
-  }
-  return 'freeform'
-})
-
-const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
 
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
@@ -756,7 +731,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !scheme.elements.one_of) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -1520,15 +1495,6 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
-    const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
-      customSchema.shamefullyTransformPayload({
-        originalModel: formFieldsOriginal,
-        model: form.fields,
-        payload,
-        schema: finalSchema.value,
-      })
-    }
 
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)

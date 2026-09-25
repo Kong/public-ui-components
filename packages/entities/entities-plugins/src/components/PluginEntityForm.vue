@@ -152,7 +152,7 @@ import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/components/CommonForm.vue'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
-import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
+import { getFreeFormComponent, getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
 const emit = defineEmits<{
@@ -240,15 +240,6 @@ const props = defineProps({
     default: false,
   },
 
-  /**
-   * Force the engine type for the form.
-   */
-  engine: {
-    type: String as PropType<'vfg' | 'freeform'>,
-    required: false,
-    default: undefined,
-  },
-
   /** For Kong Manager portal developers */
   developer: {
     type: Boolean,
@@ -290,7 +281,6 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
 const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
 const setPluginFormLayoutState = (value: boolean) => {
   if (pluginFormLayoutState) {
@@ -510,9 +500,7 @@ const syncFormRenderingMode = (pluginName?: string) => {
   // For cloned plugins, use the source plugin name for rendering decisions
   const effectivePluginName = props.schema?._sourcePlugin || pluginName
   pluginConfig.value = getPluginConfig(effectivePluginName)
-  freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
-    ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)
-    : undefined
+  freeformComponent.value = getFreeFormComponent(effectivePluginName) ?? CommonForm
   sharedFormName.value = getSharedFormName(effectivePluginName)
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
@@ -1047,7 +1035,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const parsedForm: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
+  const parsedForm: Record<string, any> = parseSchema(newSchema)
 
   Object.assign(formModel, parsedForm.model)
 
@@ -1064,7 +1052,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema, undefined, undefined, props.engine)
+  form.value = parseSchema(props.schema)
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
