@@ -8,30 +8,32 @@
     }"
     :data-threshold="thresholdType"
   >
-    <component :is="renderCellIcon" />
-    <component :is="renderCellContent">
-      <template #default>
-        <KTooltip
-          class="table-data-grid-cell-tooltip"
-          :disabled="!isOverflowing"
-          :kpop-attributes="{ popoverDelay: 400 }"
-          max-width="300"
-          placement="bottom-start"
-          :target="tooltipTarget"
-          :text="displayValue"
-        >
-          <span
-            ref="contentElement"
-            class="table-data-grid-cell-content"
-          >{{ displayValue }}</span>
-        </KTooltip>
-      </template>
-    </component>
-    <span
-      v-if="relativeValue"
-      class="table-data-grid-cell-relative"
-      data-testid="table-data-grid-cell-relative"
-    >({{ relativeValue }})</span>
+    <span class="table-data-grid-cell-label">
+      <component :is="renderCellIcon" />
+      <component :is="renderCellContent">
+        <template #default>
+          <KTooltip
+            class="table-data-grid-cell-tooltip"
+            :disabled="!isOverflowing"
+            :kpop-attributes="{ popoverDelay: 400 }"
+            max-width="300"
+            placement="bottom-start"
+            :target="tooltipTarget"
+            :text="displayValue"
+          >
+            <span
+              ref="contentElement"
+              class="table-data-grid-cell-content"
+            >{{ displayValue }}</span>
+          </KTooltip>
+        </template>
+      </component>
+      <span
+        v-if="relativeValue"
+        class="table-data-grid-cell-relative"
+        data-testid="table-data-grid-cell-relative"
+      >({{ relativeValue }})</span>
+    </span>
     <span
       v-if="hasBar"
       class="table-data-grid-cell-bar"
@@ -276,6 +278,19 @@ defineExpose({
   width: 100%;
 }
 
+.table-data-grid-cell-label {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--kui-space-20, $kui-space-20);
+  min-width: 0;
+}
+
+.table-data-grid-cell-renderer--bar {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(80px, 2fr);
+}
+
 .table-data-grid-cell-content,
 .table-data-grid-cell-slot-content,
 .table-data-grid-cell-relative {
@@ -283,6 +298,7 @@ defineExpose({
 }
 
 .table-data-grid-cell-relative {
+  flex-shrink: 0;
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
 }
@@ -318,7 +334,6 @@ defineExpose({
   background-color: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
   border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
   display: block;
-  flex: 1 1 80px;
   height: 8px;
   min-width: 80px;
   overflow: hidden;
