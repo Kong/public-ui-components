@@ -328,7 +328,6 @@ describe('<TableDataGrid /> in Browser Mode', () => {
       headers: [
         ...headers,
         {
-          dataType: 'number',
           key: 'value',
           label: 'Value',
           showPercentage: true,
@@ -394,7 +393,6 @@ describe('<TableDataGrid /> in Browser Mode', () => {
         { key: 'status', label: 'Status' },
         {
           bar: 'absolute',
-          dataType: 'number',
           key: 'value',
           label: 'Requests',
           showPercentage: true,
@@ -453,7 +451,6 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     mountTestTableDataGrid({
       headers: [{
         bar: 'relative',
-        dataType: 'number',
         key: 'value',
         label: 'Requests',
         showPercentage: true,
@@ -478,7 +475,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
 
     mountTestTableDataGrid({
       fetcher,
-      headers: [{ key: 'value', label: 'Value', dataType: 'number', showPercentage: true, bar: 'relative' }],
+      headers: [{ key: 'value', label: 'Value', showPercentage: true, bar: 'relative' }],
     })
 
     await expect.poll(() => cell(0, 'value').textContent).toContain('50')
@@ -494,7 +491,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
         { ...rows[1], value: null },
         { id: 'valid', name: 'Valid', status: 'Active', value: 50 },
       ],
-      headers: [{ key: 'value', label: 'Value', dataType: 'number', showPercentage: true, bar: 'relative' }],
+      headers: [{ key: 'value', label: 'Value', showPercentage: true, bar: 'relative' }],
     })
 
     await expect.poll(() => cell(0, 'value').textContent).toContain('true')
@@ -507,7 +504,7 @@ describe('<TableDataGrid /> in Browser Mode', () => {
 
   it('recalculates percentages when rows change with unchanged headers', async () => {
     const tableDataGrid = mountTestTableDataGrid({
-      headers: [...headers, { key: 'value', label: 'Value', dataType: 'number', showPercentage: true }],
+      headers: [...headers, { key: 'value', label: 'Value', showPercentage: true }],
       mode: 'unpaginated',
       rows: [{ ...rows[0], value: 50 }, { ...rows[1], value: 50 }],
     })
