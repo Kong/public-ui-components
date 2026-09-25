@@ -9,8 +9,6 @@ on:
       - synchronize
       - reopened
       - labeled
-    branches:
-      - main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
