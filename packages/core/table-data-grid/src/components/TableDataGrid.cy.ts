@@ -930,8 +930,8 @@ describe('<TableDataGrid />', () => {
 
   it('renders numeric options independently and aligns combined percentage bars', () => {
     const numericRows = [
-      { percentage: 25, bar: 25, combined: 1, threshold: 25 },
-      { percentage: 75, bar: 75, combined: 999, threshold: 75 },
+      { percentage: 25, bar: 25, combined: 1 },
+      { percentage: 75, bar: 75, combined: 999 },
     ]
 
     // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
@@ -944,7 +944,6 @@ describe('<TableDataGrid />', () => {
               { key: 'percentage', label: 'Percentage', showPercentage: true },
               { key: 'bar', label: 'Bar', bar: 'absolute' },
               { key: 'combined', label: 'Combined', bar: 'relative', showPercentage: true },
-              { key: 'threshold', label: 'Threshold', thresholds: [{ type: 'warning', value: 50 }] },
             ],
             mode: 'unpaginated',
             rows: numericRows,
@@ -988,8 +987,6 @@ describe('<TableDataGrid />', () => {
         expect(Math.min(...gaps)).to.be.greaterThan(0)
         expect(Math.min(...gaps)).to.be.lessThan(16)
       })
-    cy.get('[row-index="0"] [col-id="threshold"] [data-threshold]').should('not.exist')
-    cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')
   })
 
   it('colors threshold values in infinite mode', () => {

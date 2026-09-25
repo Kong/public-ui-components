@@ -33,18 +33,18 @@ describe('table-data-grid presentation helpers', () => {
     ], header)).toEqual({ sum: 100, max: 75 })
   })
 
-  it('preserves TopN relative and absolute bar scales', () => {
+  it('preserves TopN relative and absolute bar scales and clamps out-of-range ratios', () => {
     const stats = { sum: 100, max: 75 }
 
     expect(getBarRatio(25, stats, 'relative')).to.equal(0.25)
     expect(getBarRatio(75, stats, 'relative')).to.equal(0.75)
     expect(getBarRatio(25, stats, 'absolute')).to.equal(1 / 3)
     expect(getBarRatio(75, stats, 'absolute')).to.equal(1)
+    expect(getBarRatio(-5, stats, 'relative')).to.equal(0)
+    expect(getBarRatio(100, { sum: 0, max: 0 }, 'absolute')).to.equal(0)
   })
 
-  it('clamps bars and resolves the highest threshold with error precedence', () => {
-    expect(getBarRatio(-5, { sum: 100, max: 75 }, 'relative')).to.equal(0)
-    expect(getBarRatio(100, { sum: 0, max: 0 }, 'absolute')).to.equal(0)
+  it('resolves the highest crossed threshold with error precedence', () => {
     expect(getThresholdType(100, [
       { type: 'warning', value: 50 },
       { type: 'warning', value: 100 },
