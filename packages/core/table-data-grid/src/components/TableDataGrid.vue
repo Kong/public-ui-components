@@ -79,7 +79,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -126,7 +126,7 @@ const { t } = i18n
 const slots = useSlots()
 
 const gridApi = shallowRef<GridApi<Row>>()
-const rootElement = shallowRef<HTMLElement>()
+const rootElement = useTemplateRef<HTMLElement>('rootElement')
 
 // Tooltips teleported to body are hidden while an ancestor is in native fullscreen.
 const tooltipTarget = shallowRef<string | HTMLElement>('body')
