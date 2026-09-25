@@ -52,11 +52,6 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
    * when `sortable` is true.
    */
   showSortIcon?: boolean
-  /**
-   * Marks a column as numeric for aggregate percentage, bar, and threshold
-   * presentation. These options are only applied in unpaginated mode.
-   */
-  dataType?: 'number'
   /** Formats the raw cell value for display. */
   valueFormatter?: (value: unknown, row: Row) => string
   /** Shows the row's share of the full returned column total. */

@@ -32,27 +32,24 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
 }) => {
   const activeMode = mode ?? 'infinite'
   const warnedOptions = new Set<string>()
+  const hasNumericPresentation = (header: TableDataGridHeader<Row>) => Boolean(
+    header.showPercentage || header.bar || header.thresholds?.length,
+  )
 
   const validatePresentationOptions = () => {
     headers.value.forEach((header) => {
-      const hasNumericOptions = Boolean(
-        header.showPercentage || header.bar || header.thresholds?.length,
-      )
-
-      if (!hasNumericOptions) {
+      if (!hasNumericPresentation(header)) {
         return
       }
 
       const issue = activeMode === 'infinite'
         ? 'percentage, bar, and threshold presentation is only supported in unpaginated mode'
-        : header.dataType !== 'number'
-          ? 'percentage, bar, and threshold presentation requires dataType: "number"'
-          : rows?.value?.some((row) => {
-            const value: unknown = Reflect.get(row, header.key)
-            return value !== null && value !== undefined && toFiniteNumber(value) === null
-          })
-            ? 'contains non-finite or nonnumeric values; numeric presentation skips those values'
-            : undefined
+        : rows?.value?.some((row) => {
+          const value: unknown = Reflect.get(row, header.key)
+          return value !== null && value !== undefined && toFiniteNumber(value) === null
+        })
+          ? 'contains non-finite or nonnumeric values; numeric presentation skips those values'
+          : undefined
 
       if (!issue) {
         return
@@ -80,7 +77,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
 
     return Object.fromEntries(
       headers.value
-        .filter(header => header.dataType === 'number')
+        .filter(header => header.showPercentage || header.bar)
         .map(header => [header.key, getColumnStats(currentRows, header)]),
     )
   })
