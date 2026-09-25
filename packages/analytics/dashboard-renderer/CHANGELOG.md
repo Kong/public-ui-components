@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.33.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.32.1...%40kong-ui-public%2Fdashboard-renderer%408.33.0) (2026-09-25)
+
+### Features
+
+* **analytics:** line label formatting + heatmap integration to dashboards [MA-5525] ([#3882](https://github.com/Kong/public-ui-components/issues/3882)) ([30a15ca](https://github.com/Kong/public-ui-components/commit/30a15cab364f65988230d5332652430ae29a8873))
+
+
 ## [8.32.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.32.0...%40kong-ui-public%2Fdashboard-renderer%408.32.1) (2026-09-25)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
