@@ -3,6 +3,7 @@ import {
   formatPercentage,
   getBarRatio,
   getColumnStats,
+  getLabelSizer,
   getThresholdType,
   toFiniteNumber,
 } from './tableDataGridPresentation'
@@ -54,5 +55,31 @@ describe('table-data-grid presentation helpers', () => {
   it('formats percentages with two decimal places and the small-value placeholder', () => {
     expect(formatPercentage(50)).to.equal('50 %')
     expect(formatPercentage(0.001)).to.equal('< 0.01 %')
+  })
+
+  it('finds the longest formatted value and percentage across the full result', () => {
+    const rows: TestRow[] = [
+      { name: 'a', value: 1 },
+      { name: 'b', value: 999 },
+      { name: 'c', value: null },
+    ]
+    const header: TableDataGridHeader<TestRow> = {
+      key: 'value',
+      label: 'Value',
+      bar: 'relative',
+      showPercentage: true,
+      valueFormatter: value => `${String(value ?? '–')} ms`,
+    }
+
+    expect(getLabelSizer({ rows, header, stats: getColumnStats(rows, header), locale: 'en-US' })).to.deep.equal({
+      value: '999 ms',
+      relative: '99.9 %',
+    })
+    expect(getLabelSizer({
+      rows,
+      header: { ...header, showPercentage: false },
+      stats: getColumnStats(rows, header),
+      locale: 'en-US',
+    })).to.deep.equal({ value: '999 ms', relative: undefined })
   })
 })
