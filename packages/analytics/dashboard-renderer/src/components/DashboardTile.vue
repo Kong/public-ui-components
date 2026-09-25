@@ -224,6 +224,7 @@ import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TopTalkersRenderer from './TopTalkersRenderer.vue'
+import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -359,6 +360,7 @@ const canShowHeaderActions = computed((): boolean => !hideActions && canShowKeba
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !isFullscreen)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
+  'heatmap': BaseAnalyticsChartRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,

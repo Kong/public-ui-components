@@ -8,7 +8,14 @@
     @chart-data="onChartData"
   >
     <div class="analytics-chart">
+      <HeatmapRenderer
+        v-if="chartOptions.type === 'heatmap'"
+        :data="data"
+        :options="chartOptions"
+        :query="query"
+      />
       <AnalyticsChart
+        v-else
         :active-metric="activeMetric"
         :chart-data="data"
         :chart-options="options"
@@ -43,6 +50,7 @@ import type { AnalyticsChartOptions, YAxisConfig } from '@kong-ui-public/analyti
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
 import type { AbsoluteTimeRangeV4, ExploreResultV4, YAxisOptions } from '@kong-ui-public/analytics-utilities'
+import HeatmapRenderer from './HeatmapRenderer.vue'
 
 const props = defineProps<ChartRendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{

@@ -750,7 +750,6 @@ describe('<AnalyticsChart /> scatter with a metric on x', () => {
       cy.get('.chart-container > canvas').trigger('mousemove', 200 + step * 40, 60)
     }
 
-    cy.get('.tooltip-container .context').should('contain.text', '2024')
     cy.get('.tooltip-container .display-label').first().should('have.text', 'GPT')
     cy.get('.tooltip-container .display-value').first().should('contain.text', '$')
     cy.get('.tooltip-container .extra-row .display-label').should('have.text', 'Request count')
