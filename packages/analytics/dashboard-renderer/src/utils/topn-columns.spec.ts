@@ -79,7 +79,7 @@ describe('createTopNPresentation', () => {
     expect(rows.map(row => row.REQUEST_COUNT)).toEqual([75, 25])
     expect(presentation.headers.find(header => header.key === 'REQUEST_COUNT')?.valueFormatter?.(rows[0].REQUEST_COUNT, rows[0])).toBe('75 ')
     expect(presentation.headers[2]).toMatchObject({
-      dataType: 'number', showPercentage: true, bar: 'absolute',
+      showPercentage: true, bar: 'absolute',
     })
     expect(presentation.headers[2].percentageFormatter?.(0.001)).toBe('< 0.01 %')
   })
