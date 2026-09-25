@@ -64,26 +64,22 @@ describe('useTableDataGridColumnDefs', () => {
     expect(columnDefs.value[0]).not.toHaveProperty('initialSortIndex')
   })
 
-  it.each([
-    ['infinite', 'unpaginated mode'],
-    ['unpaginated', 'dataType'],
-  ] as const)('warns once for %s numeric presentation', (testMode, expectedMessage) => {
+  it('warns once for numeric presentation in infinite mode', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     try {
       useTableDataGridColumnDefs({
         headers: ref<Array<TableDataGridHeader<TestRow>>>([{
-          bar: testMode === 'infinite' ? 'relative' : 'absolute',
+          bar: 'relative',
           key: 'name',
           label: 'Name',
           showPercentage: true,
         }]),
-        mode: testMode === 'infinite' ? undefined : testMode,
         slots: {},
       })
 
       expect(warn).toHaveBeenCalledOnce()
-      expect(warn.mock.calls[0][0]).to.contain(expectedMessage)
+      expect(warn.mock.calls[0][0]).to.contain('unpaginated mode')
     } finally {
       warn.mockRestore()
     }
@@ -94,7 +90,7 @@ describe('useTableDataGridColumnDefs', () => {
     const rows = ref([{ value: true }, { value: 25 }])
     const { gridContext } = useTableDataGridColumnDefs({
       headers: ref<Array<TableDataGridHeader<{ value: unknown }>>>([{
-        key: 'value', label: 'Value', dataType: 'number', showPercentage: true,
+        key: 'value', label: 'Value', showPercentage: true,
       }]),
       mode: 'unpaginated', rows, slots: {},
     })

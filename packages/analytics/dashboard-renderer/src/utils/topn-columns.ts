@@ -282,7 +282,6 @@ export const createTopNPresentation = ({
       key: metricKey,
       label: getColumnLabel(metricKey, getChartLabel(metricKey)),
       type: 'metric',
-      dataType: 'number',
       valueFormatter: (_value, row) => getMetricValue(row.record, metricKey),
       showPercentage: options?.value === 'relative',
       percentageFormatter: formatPercent,
