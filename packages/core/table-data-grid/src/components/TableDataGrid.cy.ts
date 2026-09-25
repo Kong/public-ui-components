@@ -968,6 +968,19 @@ describe('<TableDataGrid />', () => {
 
         expect(first.left).to.be.closeTo(second.left, 1)
         expect(first.right).to.be.closeTo(second.right, 1)
+
+        for (const bar of $bars) {
+          const percentage = bar.closest('.table-data-grid-cell-renderer')
+            ?.querySelector('.table-data-grid-cell-relative')
+
+          if (!percentage) {
+            throw new Error('Expected a percentage label beside the bar')
+          }
+
+          const gap = bar.getBoundingClientRect().left - percentage.getBoundingClientRect().right
+          expect(gap).to.be.greaterThan(0)
+          expect(gap).to.be.lessThan(16)
+        }
       })
     cy.get('[row-index="0"] [col-id="threshold"] [data-threshold]').should('not.exist')
     cy.get('[row-index="1"] [col-id="threshold"] [data-threshold="warning"]').should('exist')

@@ -288,6 +288,10 @@ defineExpose({
   grid-template-columns: minmax(0, 3fr) minmax(80px, 2fr);
 }
 
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-label {
+  justify-content: flex-end;
+}
+
 .table-data-grid-cell-content,
 .table-data-grid-cell-slot-content,
 .table-data-grid-cell-relative {
