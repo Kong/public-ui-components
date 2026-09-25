@@ -59,7 +59,7 @@ import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
 import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
-import type { FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
+import type { ChangeSource, FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from './RedisSelector.vue'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
@@ -69,7 +69,7 @@ defineOptions({ inheritAttrs: false })
 const props = defineProps<Props<T>>()
 
 const emit = defineEmits<{
-  change: [value: T]
+  change: [value: T, source: ChangeSource]
 }>()
 
 const attrs = useAttrs()
@@ -107,9 +107,9 @@ const formData = computed(() => {
   return pick(props.model, props.controlledFields)
 })
 
-function handleDataChange(value: T) {
-  emit('change', value)
-  props.onFormChange(value, props.controlledFields)
+function handleDataChange(value: T, source: ChangeSource) {
+  emit('change', value, source)
+  props.onFormChange(value, props.controlledFields, source)
 }
 
 defineExpose({

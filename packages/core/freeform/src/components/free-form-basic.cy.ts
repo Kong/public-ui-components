@@ -337,6 +337,64 @@ describe('Free Form', () => {
      * - active update by user operation
      * - passive update by external data prop change
      */
+
+    describe('change source', () => {
+      it('tags initial hydration as `init`', () => {
+        const onChangeSpy = cy.spy().as('onChangeSpy')
+
+        cy.mount(Form, {
+          props: {
+            schema: getSchema('Default Name'),
+            onChange: onChangeSpy,
+          },
+        })
+
+        cy.get('@onChangeSpy')
+          .should('have.been.calledOnce')
+          .should('have.been.calledWith', { name: 'Default Name' }, 'init')
+      })
+
+      it('tags a `data` prop change as `init`', () => {
+        const onChangeSpy = cy.spy().as('onChangeSpy')
+        const data = ref({ name: 'Initial Name' })
+
+        cy.mount(Form, {
+          props: {
+            schema: getSchema(),
+            data,
+            onChange: onChangeSpy,
+          },
+        })
+
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(0).then(() => { // wait for next tick
+          data.value = { name: 'New Name' }
+          cy.get('@onChangeSpy')
+            .should('have.been.calledTwice')
+            .its('secondCall.args')
+            .should('deep.equal', [{ name: 'New Name' }, 'init'])
+        })
+      })
+
+      it('tags a genuine user edit as `user`', () => {
+        const onChangeSpy = cy.spy().as('onChangeSpy')
+
+        cy.mount(Form, {
+          props: {
+            schema: getSchema(),
+            onChange: onChangeSpy,
+          },
+        })
+
+        cy.get('@onChangeSpy').should('have.been.calledOnce')
+
+        cy.getTestId('ff-name').type('n')
+        cy.get('@onChangeSpy')
+          .should('have.been.calledTwice')
+          .its('secondCall.args')
+          .should('deep.equal', [{ name: 'n' }, 'user'])
+      })
+    })
   })
 
 })

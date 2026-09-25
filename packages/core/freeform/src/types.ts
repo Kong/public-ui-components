@@ -40,6 +40,19 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
 export type EmptyValue = null | undefined
 
 /**
+ * Where a `Form` `change` emission came from:
+ * - `'init'` — the value was set by the form itself, not typed/toggled by the
+ *   user: initial hydration from `data`/schema defaults, or a field marking
+ *   its own write as non-user-driven (see `markNonUserChange`/`setSilently`),
+ *   e.g. an async lookup correcting a stale reference.
+ * - `'user'` — the user actually edited a field.
+ *
+ * Lets a host distinguish "the form just loaded" from "the user changed
+ * something" for dirty-checking, without resorting to timing heuristics.
+ */
+export type ChangeSource = 'init' | 'user'
+
+/**
  * Resolves `FormConfig.emptyFieldValue` to the actual sentinel value.
  */
 export function resolveEmptyFieldValue(emptyFieldValue?: 'null' | 'undefined'): EmptyValue {

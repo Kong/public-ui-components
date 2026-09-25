@@ -123,7 +123,9 @@ onMounted(async () => {
     selectedItem.value = item
   } catch (err) {
     console.error('Failed to load selected entity:', err)
-    fieldValue.value = field.emptyValue!.value
+    // Not a user edit — the reference just failed to resolve. Write silently
+    // so this correction doesn't spuriously mark the form dirty on load.
+    field.setSilently!(field.emptyValue!.value)
   } finally {
     loading.value = false
   }
@@ -131,6 +133,15 @@ onMounted(async () => {
 
 // --- Event handling ---
 function handleChange(item: SelectItem<string> | null) {
+  // The underlying select re-emits `change` to confirm the already-loaded selection
+  // once its suggestions resolve, not only on a genuine user pick — if the id isn't
+  // actually changing, skip the write entirely rather than spuriously marking the
+  // form dirty on load.
+  if ((fieldValue?.value?.id ?? null) === (item?.value ?? null)) {
+    selectedItem.value = item ?? undefined
+    return
+  }
+
   if (item) {
     fieldValue!.value = { id: item.value }
     selectedItem.value = item

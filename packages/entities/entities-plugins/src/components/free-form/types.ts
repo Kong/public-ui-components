@@ -1,4 +1,4 @@
-import type { FormConfig, FieldRendererRule, RenderRules, FormSchema } from '@kong-ui-public/freeform'
+import type { ChangeSource, FormConfig, FieldRendererRule, RenderRules, FormSchema } from '@kong-ui-public/freeform'
 import type { FreeFormPluginData } from '../../types/plugins/free-form'
 import type { Component, Ref } from 'vue'
 
@@ -94,8 +94,12 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   schema: FormSchema
   /** The **initial** entire plugin model, never update */
   model: T
-  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
-  onFormChange: (value: Partial<T>, fields?: string[]) => void
+  /**
+   * Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority.
+   * `source` is omitted for callers that don't know it (safe to treat as `'user'`) — pass it through whenever it's available, so the
+   * host can tell a genuine edit apart from a system-driven one (initial hydration, an async correction) for dirty-checking purposes.
+   */
+  onFormChange: (value: Partial<T>, fields?: string[], source?: ChangeSource) => void
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
   renderRules?: RenderRules
