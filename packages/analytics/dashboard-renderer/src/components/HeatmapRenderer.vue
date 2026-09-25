@@ -95,7 +95,7 @@ const dimensionValues = computed(() => {
     ? query.dimensions[1]
     : query.dimensions[0]
 
-  const uniqueVals = new Set()
+  const uniqueVals = new Set<string>()
   data.data.forEach((datapoint: any) => {
     uniqueVals.add(datapoint.event[dimName])
   })
@@ -107,9 +107,9 @@ const heatmapData = computed<HeatmapDataPoint[]>(() => {
     return []
   }
 
-  const dimName = query.dimensions[0] === 'time'
-    ? query.dimensions[1]
-    : query.dimensions[0]
+  const dimName = (query.dimensions?.[0] === 'time'
+    ? query.dimensions?.[1]
+    : query.dimensions?.[0]) ?? ''
 
   const metricName = metric.value
 

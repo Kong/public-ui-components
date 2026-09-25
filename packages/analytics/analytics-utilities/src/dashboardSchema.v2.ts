@@ -29,6 +29,7 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 // TODO: Once we support all chart types, this could potentially be replaced with a direct reference to `chartTypes`.
 // This is partially overlapping with analytics chart types, but not strictly so.
 export const dashboardTileTypes = [
+  'heatmap',
   'horizontal_bar',
   'vertical_bar',
   'gauge',

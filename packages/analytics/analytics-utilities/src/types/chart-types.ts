@@ -1,5 +1,4 @@
 export const reportChartTypes = [
-  'heatmap',
   'horizontal_bar',
   'vertical_bar',
   'timeseries_line',
