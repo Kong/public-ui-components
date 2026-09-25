@@ -4,7 +4,7 @@
     <header class="sandbox-header">
       <div>
         <h1>TableDataGrid</h1>
-        <p>Compare infinite loading and complete results with refresh, states, and fetch history.</p>
+        <p>Compare infinite loading and complete results with refresh, states, fetch history, and host-rendered icons.</p>
       </div>
 
       <div class="sandbox-header-actions">
@@ -59,6 +59,28 @@
               message="Turn off the host error state to show the grid again."
               title="Sandbox error state"
             />
+          </template>
+
+          <template #cell-icon="{ column }">
+            <svg
+              v-if="column.key === 'name'"
+              aria-hidden="true"
+              class="sandbox-service-icon"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              viewBox="0 0 16 16"
+            >
+              <rect
+                height="11"
+                rx="2"
+                width="11"
+                x="2.5"
+                y="2.5"
+              />
+              <path d="M5 6h6M5 9h4" />
+            </svg>
           </template>
 
           <template #status="{ rowValue }">
@@ -701,6 +723,13 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 
 .sandbox-header-actions {
   justify-content: flex-end;
+}
+
+.sandbox-service-icon {
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  flex: none;
+  height: var(--kui-icon-size-30, $kui-icon-size-30);
+  width: var(--kui-icon-size-30, $kui-icon-size-30);
 }
 
 .sandbox-main {
