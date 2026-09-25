@@ -1,7 +1,7 @@
 import type { TableDataGridFetcher, TableDataGridSort } from '../types'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import { describe, expect, it, vi } from 'vitest'
-import { isReadonly, nextTick, ref } from 'vue'
+import { isReadonly, nextTick, ref, shallowRef } from 'vue'
 import { useFetchInfinite } from './useFetchInfinite'
 
 type TestRow = {
@@ -74,14 +74,16 @@ const createInfiniteFetch = (
   sort?: ReturnType<typeof ref<TableDataGridSort | undefined>>,
 ) => {
   const resetKey = ref(0)
+  const fetcherRef = shallowRef(fetcher)
   const infiniteFetch = useFetchInfinite({
-    fetcher,
+    fetcher: fetcherRef,
     resetKey,
     sort,
   })
 
   return {
     ...infiniteFetch,
+    fetcherRef,
     resetKey,
   }
 }
@@ -208,6 +210,7 @@ describe('useFetchInfinite', () => {
       successCallback: staleSuccessCallback,
       failCallback: staleFailCallback,
     })) as Promise<void>
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
 
     resetKey.value += 1
     await nextTick()
@@ -243,6 +246,54 @@ describe('useFetchInfinite', () => {
     expect(latestBlock.rows).toEqual(createRows('latest-block', 15))
     expect(data.value).toEqual(createRows('latest-block', 15))
     expect(isFetching.value).toBe(false)
+  })
+
+  it.each(['resolve', 'reject'] as const)('replaces the fetcher and ignores its superseded %s in the same tick', async (settlement) => {
+    const pending = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
+    const oldFetcher = vi.fn()
+      .mockResolvedValueOnce({ data: createRows('old', 15), cursor: 'old-cursor', hasMore: true })
+      .mockReturnValueOnce(pending.promise)
+    const newFetcher = vi.fn()
+      .mockResolvedValueOnce({ data: createRows('new', 15), cursor: 'new-cursor', hasMore: true })
+      .mockResolvedValueOnce({ data: createRows('new-page', 15), hasMore: false })
+    const { data, datasource, error, fetcherRef, isFetching } = createInfiniteFetch(oldFetcher)
+    const oldDatasource = expectDatasource(datasource.value)
+    await getDatasourceRows(oldDatasource, { startRow: 0, endRow: 15 })
+
+    const successCallback = vi.fn()
+    const failCallback = vi.fn()
+    const oldRequest = oldDatasource.getRows(createGetRowsParams({
+      startRow: 15,
+      endRow: 30,
+      successCallback,
+      failCallback,
+    }))
+    await vi.waitFor(() => expect(oldFetcher).toHaveBeenCalledTimes(2))
+
+    // Settle before replacing, so the old continuation is already queued.
+    if (settlement === 'resolve') {
+      pending.resolve({ data: createRows('stale', 15), cursor: 'stale-cursor', hasMore: true })
+    } else {
+      pending.reject(new Error('Superseded request failed'))
+    }
+    fetcherRef.value = newFetcher
+    await oldRequest
+
+    const newDatasource = expectDatasource(datasource.value)
+    expect(newDatasource).not.toBe(oldDatasource)
+    expect(successCallback).not.toHaveBeenCalled()
+    expect(failCallback).toHaveBeenCalledOnce()
+    expect(data.value).toBeUndefined()
+    expect(error.value).toBeUndefined()
+    expect(isFetching.value).toBe(false)
+
+    const firstPage = await getDatasourceRows(newDatasource, { startRow: 0, endRow: 15 })
+    await getDatasourceRows(newDatasource, { startRow: 15, endRow: 30 })
+    expect(firstPage.rows).toEqual(createRows('new', 15))
+    expect(data.value).toEqual(createRows('new', 15))
+    expect(newFetcher).toHaveBeenNthCalledWith(1, { mode: 'infinite', pageSize: 15, cursor: undefined, sort: undefined })
+    expect(newFetcher).toHaveBeenNthCalledWith(2, { mode: 'infinite', pageSize: 15, cursor: 'new-cursor', sort: undefined })
+    expect(oldFetcher).toHaveBeenCalledTimes(2)
   })
 
   it('forwards the current sort to the fetcher for the life of a datasource generation', async () => {
@@ -297,6 +348,8 @@ describe('useFetchInfinite', () => {
       failCallback: preSortFailCallback,
     })) as Promise<void>
 
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
+
     // Simulate a sort change: TableDataGrid.vue includes the resolved sort
     // in resetKey, so this is the same rebuild path a sort change triggers.
     resetKey.value += 1
@@ -338,10 +391,8 @@ describe('useFetchInfinite', () => {
   // (it isn't the latest generation) and would otherwise leave isFetching
   // stuck true forever.
   it('does not resurrect isFetching for a stale generation\'s orphaned block-0 request', async () => {
-    const orphanRequest = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
     const fetcher = vi.fn()
       .mockResolvedValueOnce({ data: createRows('latest-block', 15), cursor: 'latest-cursor', hasMore: false })
-      .mockReturnValueOnce(orphanRequest.promise)
     const { datasource, isFetching, resetKey } = createInfiniteFetch(fetcher)
     const staleDatasource = expectDatasource(datasource.value)
 
@@ -366,10 +417,10 @@ describe('useFetchInfinite', () => {
     await nextTick()
     expect(isFetching.value).toBe(false)
 
-    orphanRequest.resolve({ data: createRows('orphan-block', 15), cursor: 'orphan-cursor', hasMore: true })
     await orphanGetRows
 
     expect(orphanFailCallback).toHaveBeenCalledOnce()
+    expect(fetcher).toHaveBeenCalledOnce()
     expect(isFetching.value).toBe(false)
   })
 })

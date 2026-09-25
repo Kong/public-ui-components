@@ -32,15 +32,16 @@
 
     <AgGridVue
       v-else
-      :cache-block-size="activePageSize"
+      :cache-block-size="mode === 'infinite' ? activePageSize : undefined"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
       :context="gridContext"
-      :datasource="datasource"
+      :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
-      :infinite-initial-row-count="1"
+      :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
-      row-model-type="infinite"
+      :row-data="mode === 'unpaginated' ? rowData : undefined"
+      :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
       :suppress-multi-sort="true"
       :theme="themeQuartz"
@@ -57,8 +58,7 @@ import type {
   TableDataGridCellClickPayload,
   TableDataGridCellSlotProps,
   TableDataGridConfig,
-  TableDataGridFetcher,
-  TableDataGridHeader,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
@@ -71,6 +71,7 @@ import type {
 import { AgGridVue } from 'ag-grid-vue3'
 import {
   AllCommunityModule,
+  ClientSideRowModelModule,
   InfiniteRowModelModule,
   ModuleRegistry,
   themeQuartz,
@@ -85,23 +86,20 @@ import { useTableDataGridSort } from '../composables/useTableDataGridSort'
 import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule])
 
 const {
-  error: hostError = false,
   fetcher,
+  mode: providedMode,
+  rows,
   headers,
+  error: hostError = false,
   pageSize = 25,
   refreshKey,
   tableConfig,
-} = defineProps<{
-  headers: Array<TableDataGridHeader<Row>>
-  fetcher: TableDataGridFetcher<Row>
-  error?: boolean
-  pageSize?: number
-  refreshKey?: string | number | boolean
-  tableConfig?: TableDataGridConfig
-}>()
+} = defineProps<TableDataGridProps<Row>>()
+// The row model selects setup-time composables; remount the grid to change modes.
+const mode = providedMode ?? 'infinite'
 
 defineSlots<{
   'empty-state': () => unknown
@@ -146,12 +144,6 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   patchTableConfig,
 })
 
-const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
-  headers: toRef(() => headers),
-  slots,
-  initialSort: activeSort.value,
-})
-
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
   headers: toRef(() => headers),
@@ -164,41 +156,59 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
+// Presentation-only config changes must not invalidate the fetch request.
+const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
+const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
 const resetKey = computed(() => [
-  fetcher,
   activePageSize.value,
   refreshKey,
-  activeTableConfig.value.sortColumnKey,
-  activeTableConfig.value.sortColumnOrder,
+  sortColumnKey.value,
+  sortColumnOrder.value,
 ])
 
-const {
-  data,
-  datasource,
-  error: fetchError,
-  isFetching,
-} = useFetchInfinite({
-  fetcher,
-  resetKey,
-  sort: activeSort,
+// Unpaginated rows are host-owned; only infinite mode fetches.
+const fetchResult = mode === 'infinite'
+  ? useFetchInfinite({
+    fetcher: toRef(() => fetcher),
+    resetKey,
+    sort: activeSort,
+  })
+  : undefined
+
+const datasource = fetchResult?.datasource
+const data = computed(() => fetchResult ? fetchResult.data.value : rows)
+const isFetching = computed(() => fetchResult?.isFetching.value ?? false)
+const rowData = computed(() => rows ? Array.from(rows) : undefined)
+
+const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
+  headers: toRef(() => headers),
+  slots,
+  initialSort: activeSort.value,
 })
 
 const {
   fetchState,
   hasData,
   state: fetchLifecycleState,
-} = useFetchState(data, fetchError, isFetching)
+} = useFetchState(
+  data,
+  toRef(() => fetchResult?.error.value),
+  isFetching,
+)
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS
   && !hasData.value
 ))
 
-useEmitState({
-  emitState: payload => emit('state', payload),
-  fetchLifecycleState,
-  hasData,
-})
+// State events describe the internal fetch lifecycle, so unpaginated mode emits none.
+if (fetchResult) {
+  useEmitState({
+    emitState: payload => emit('state', payload),
+    fetchLifecycleState,
+    hasData,
+  })
+}
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api
@@ -217,6 +227,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   min-height: 0;
   overflow: hidden;
   width: 100%;
+
 }
 
 .table-data-grid-grid {
