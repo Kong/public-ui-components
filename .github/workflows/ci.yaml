@@ -9,8 +9,6 @@ on:
       - synchronize
       - reopened
       - labeled
-    branches:
-      - main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -79,6 +77,7 @@ jobs:
         with:
           files: |
             ./vite.config.shared.ts
+            ./vitest.*.ts
             ./cypress.config.ts
             ./cypress/**
             ./package.json
@@ -143,6 +142,7 @@ jobs:
 
           filter=""
           unitTestFilter=""
+          browserTestFilter=""
           unitTestMatrix=""
           componentTestFilter=""
           componentTestMatrix=""
@@ -170,6 +170,12 @@ jobs:
                 componentTestMatrix="${componentTestMatrix}\"${pkgFolder}\","
             fi
 
+            # Browser specs need a real browser and run separately from jsdom tests.
+            findRes=$(find "${pkgFolder}" -name "*.browser.spec.ts" || true)
+            if [[ -n "${findRes}" ]]; then
+                browserTestFilter="${browserTestFilter}${pkgFolder}|"
+            fi
+
             # we will keep the list of packages that do require unit tests based on the fact that we
             # detecting UT files
             findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
@@ -177,6 +183,12 @@ jobs:
                 unitTestFilter="${unitTestFilter}${pkgFolder}|"
             fi
           done
+
+          browserTestFilter="{("$(echo "${browserTestFilter}" | sed 's/|$//')")}"
+          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${browserTestFilter}" == "{()}" ]]; then
+            browserTestFilter=""
+          fi
+          echo "browserTestFilter=${browserTestFilter}" >> $GITHUB_OUTPUT
 
           # remove trailing '|' from pnpm filter
           filter="{("$(echo "${filter}" | sed 's/|$//')")}"
@@ -311,6 +323,14 @@ jobs:
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
         run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
+
+      - name: Install Chromium for Vitest
+        if: ${{ steps.changed_packages.outputs.browserTestFilter != '' }}
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Vitest Browser Tests
+        if: ${{ steps.changed_packages.outputs.browserTestFilter != '' }}
+        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.browserTestFilter}}" run test:browser
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}

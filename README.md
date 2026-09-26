@@ -124,7 +124,18 @@ Run Component or Unit tests.
 #### File naming conventions
 
 - Unit test files should be named `*.spec.ts` and will be run with Vitest
-- Component test files should be named `*.cy.ts` and will be run with Cypress component test runner.
+- Vitest browser component tests use `*.browser.spec.ts` and run in headless Chromium. Dashboard-renderer and table-data-grid use this runner for their new TopN coverage. These files are excluded from the jsdom unit runner.
+- Existing Cypress component tests use `*.cy.ts`.
+
+Install Chromium once, then run a package's Vitest browser tests:
+
+```sh
+pnpm exec playwright install chromium
+pnpm --filter "@kong-ui-public/dashboard-renderer" run test:browser
+pnpm --filter "@kong-ui-public/table-data-grid" run test:browser
+```
+
+CI installs Chromium and runs `test:browser` for changed packages containing browser specs.
 
 ```sh
 # Component tests
