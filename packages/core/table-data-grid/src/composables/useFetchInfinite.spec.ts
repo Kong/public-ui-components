@@ -30,11 +30,13 @@ const createDeferred = <Value>() => {
 const createGetRowsParams = ({
   endRow,
   failCallback = vi.fn(),
+  sortModel = [],
   startRow,
   successCallback = vi.fn(),
 }: {
   endRow: number
   failCallback?: IGetRowsParams['failCallback']
+  sortModel?: IGetRowsParams['sortModel']
   startRow: number
   successCallback?: IGetRowsParams['successCallback']
 }): IGetRowsParams => ({
@@ -42,7 +44,7 @@ const createGetRowsParams = ({
   endRow,
   failCallback,
   filterModel: undefined,
-  sortModel: [],
+  sortModel,
   startRow,
   successCallback,
 })
@@ -55,7 +57,7 @@ const expectDatasource = (datasource: IDatasource | undefined): IDatasource => {
 
 const getDatasourceRows = async (
   datasource: IDatasource,
-  range: { endRow: number, startRow: number },
+  range: { endRow: number, sortModel?: IGetRowsParams['sortModel'], startRow: number },
 ): Promise<{ lastRow?: number, rows: TestRow[] }> => new Promise((resolve, reject) => {
   datasource.getRows(createGetRowsParams({
     ...range,
@@ -304,8 +306,8 @@ describe('useFetchInfinite', () => {
     const { datasource } = createInfiniteFetch(fetcher, sort)
     const activeDatasource = expectDatasource(datasource.value)
 
-    await getDatasourceRows(activeDatasource, { startRow: 0, endRow: 100 })
-    await getDatasourceRows(activeDatasource, { startRow: 100, endRow: 200 })
+    await getDatasourceRows(activeDatasource, { startRow: 0, endRow: 100, sortModel: [{ colId: 'id', sort: 'asc' }] })
+    await getDatasourceRows(activeDatasource, { startRow: 100, endRow: 200, sortModel: [{ colId: 'id', sort: 'asc' }] })
 
     expect(fetcher).toHaveBeenNthCalledWith(1, {
       mode: 'infinite',
@@ -321,20 +323,14 @@ describe('useFetchInfinite', () => {
     })
   })
 
-  // Regression test for a reviewer-flagged race: a sort change must rebuild
-  // the datasource (a new generation with cleared cursorMap/blockCompletionMap)
-  // rather than reusing the same datasource with a different sort, because a
-  // cursor is only valid relative to the sort that produced it. This proves a
-  // delayed pre-sort request can never contribute a stale cursor to the new
-  // sort's block chain, and that the new generation's block 1 always waits
-  // for (and uses) its own generation's block 0 cursor.
-  it('rebuilds the datasource on a sort change and never lets a delayed pre-sort request contribute a stale cursor', async () => {
+  it('reuses the datasource on sort change without accepting an old cursor or response', async () => {
     const preSortRequest = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
     const fetcher = vi.fn()
       .mockReturnValueOnce(preSortRequest.promise)
       .mockResolvedValueOnce({ data: createRows('sorted-block-0', 15), cursor: 'sorted-cursor-0', hasMore: true })
       .mockResolvedValueOnce({ data: createRows('sorted-block-1', 15), hasMore: false })
-    const { datasource, resetKey } = createInfiniteFetch(fetcher)
+    const sort = ref<TableDataGridSort | undefined>({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    const { data, datasource, isFetching } = createInfiniteFetch(fetcher, sort)
     const preSortDatasource = expectDatasource(datasource.value)
     const preSortSuccessCallback = vi.fn()
     const preSortFailCallback = vi.fn()
@@ -350,37 +346,93 @@ describe('useFetchInfinite', () => {
 
     await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
 
-    // Simulate a sort change: TableDataGrid.vue includes the resolved sort
-    // in resetKey, so this is the same rebuild path a sort change triggers.
-    resetKey.value += 1
+    sort.value = { sortColumnKey: 'id', sortColumnOrder: 'asc' }
     await nextTick()
 
     const sortedDatasource = expectDatasource(datasource.value)
-    expect(sortedDatasource).not.toBe(preSortDatasource)
+    expect(sortedDatasource).toBe(preSortDatasource)
 
-    // The new generation's block 0 and block 1, in order, using only cursors
-    // produced by this generation.
-    const sortedBlock0 = await getDatasourceRows(sortedDatasource, { startRow: 0, endRow: 15 })
-    const sortedBlock1 = await getDatasourceRows(sortedDatasource, { startRow: 15, endRow: 30 })
+    // AG Grid asks the same datasource for a fresh first block after sorting.
+    const queuedFailCallback = vi.fn()
+    const queuedSuccessCallback = vi.fn()
+    await sortedDatasource.getRows(createGetRowsParams({
+      startRow: 0,
+      endRow: 15,
+      sortModel: [],
+      failCallback: queuedFailCallback,
+      successCallback: queuedSuccessCallback,
+    }))
+    expect(queuedFailCallback).toHaveBeenCalledOnce()
+    expect(queuedSuccessCallback).not.toHaveBeenCalled()
+    expect(fetcher).toHaveBeenCalledOnce()
 
-    expect(fetcher).toHaveBeenNthCalledWith(2, { mode: 'infinite', pageSize: 15, cursor: undefined, sort: undefined })
-    expect(fetcher).toHaveBeenNthCalledWith(3, { mode: 'infinite', pageSize: 15, cursor: 'sorted-cursor-0', sort: undefined })
+    const sortedBlock0 = await getDatasourceRows(sortedDatasource, {
+      startRow: 0,
+      endRow: 15,
+      sortModel: [{ colId: 'id', sort: 'asc' }],
+    })
+    expect(fetcher).toHaveBeenNthCalledWith(2, {
+      mode: 'infinite',
+      pageSize: 15,
+      cursor: undefined,
+      sort: { sortColumnKey: 'id', sortColumnOrder: 'asc' },
+    })
     expect(sortedBlock0.rows).toEqual(createRows('sorted-block-0', 15))
-    expect(sortedBlock1.rows).toEqual(createRows('sorted-block-1', 15))
 
-    // The delayed pre-sort request finally resolves — its data must be
-    // fully inert: no success callback, and no contribution to the new
-    // generation's block chain (already proven above, since block 1 used
-    // 'sorted-cursor-0', not anything from this request). It still gets a
-    // failCallback, though — AG Grid's own block-loader tracks this specific
-    // load by block index, and never hearing back (success or fail) would
-    // leave that index permanently marked "in flight", silently blocking
-    // any later request for the same index against a future datasource.
+    // A late pre-sort response must not replace the new cursor or first-block data.
     preSortRequest.resolve({ data: createRows('stale-block-0', 15), cursor: 'stale-cursor-0', hasMore: true })
     await preSortGetRows
 
     expect(preSortSuccessCallback).not.toHaveBeenCalled()
     expect(preSortFailCallback).toHaveBeenCalledOnce()
+    expect(data.value).toEqual(createRows('sorted-block-0', 15))
+    expect(isFetching.value).toBe(false)
+
+    const sortedBlock1 = await getDatasourceRows(sortedDatasource, {
+      startRow: 15,
+      endRow: 30,
+      sortModel: [{ colId: 'id', sort: 'asc' }],
+    })
+    expect(fetcher).toHaveBeenNthCalledWith(3, {
+      mode: 'infinite',
+      pageSize: 15,
+      cursor: 'sorted-cursor-0',
+      sort: { sortColumnKey: 'id', sortColumnOrder: 'asc' },
+    })
+    expect(sortedBlock1.rows).toEqual(createRows('sorted-block-1', 15))
+  })
+
+  it('rejects an old-sort response settled before the sort watcher runs', async () => {
+    const oldResponse = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
+    const fetcher = vi.fn()
+      .mockReturnValueOnce(oldResponse.promise)
+      .mockResolvedValue({ data: createRows('sorted', 15), hasMore: false })
+    const sort = ref<TableDataGridSort | undefined>({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    const { data, datasource } = createInfiniteFetch(fetcher, sort)
+    const activeDatasource = expectDatasource(datasource.value)
+    const successCallback = vi.fn()
+    const failCallback = vi.fn()
+    const pending = activeDatasource.getRows(createGetRowsParams({
+      startRow: 0,
+      endRow: 15,
+      successCallback,
+      failCallback,
+    })) as Promise<void>
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
+
+    oldResponse.resolve({ data: createRows('old', 15), cursor: 'old-cursor', hasMore: true })
+    sort.value = { sortColumnKey: 'id', sortColumnOrder: 'asc' }
+    await pending
+
+    expect(successCallback).not.toHaveBeenCalled()
+    expect(failCallback).toHaveBeenCalledOnce()
+    expect(data.value).toBeUndefined()
+    const sortedBlock = await getDatasourceRows(activeDatasource, {
+      startRow: 0,
+      endRow: 15,
+      sortModel: [{ colId: 'id', sort: 'asc' }],
+    })
+    expect(sortedBlock.rows).toEqual(createRows('sorted', 15))
   })
 
   // Regression test: block 0 always bypasses the staleness check in

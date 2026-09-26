@@ -50,6 +50,7 @@
       :theme="themeQuartz"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
+      @new-columns-loaded="reconcileGridSort"
       @row-clicked="onRowClick"
       @sort-changed="onSortChanged"
     />
@@ -79,7 +80,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -182,14 +183,11 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
+// AG Grid reloads infinite blocks on sort; the composable resets its cursor chain.
 // Presentation-only config changes must not invalidate the fetch request.
-const sortColumnKey = computed(() => activeTableConfig.value.sortColumnKey)
-const sortColumnOrder = computed(() => activeTableConfig.value.sortColumnOrder)
 const resetKey = computed(() => [
   activePageSize.value,
   refreshKey,
-  sortColumnKey.value,
-  sortColumnOrder.value,
 ])
 
 // Unpaginated rows are host-owned; only infinite mode fetches.
@@ -239,6 +237,26 @@ if (fetchResult) {
     hasData,
   })
 }
+
+// AG Grid discards a sort for columns it has not created yet, and infinite blocks
+// are rejected while its sort model differs from activeSort. Reconcile on every
+// active-sort change and whenever AG Grid finishes loading new columns.
+const reconcileGridSort = () => {
+  const api = gridApi.value
+  if (!api || api.isDestroyed()) {
+    return
+  }
+
+  const sort = activeSort.value
+  const sortedColumn = api.getColumnState().find(column => column.sort)
+  if (sortedColumn?.colId === sort.sortColumnKey && (sortedColumn?.sort ?? undefined) === sort.sortColumnOrder) {
+    return
+  }
+
+  applySortToGrid(api, sort)
+}
+
+watch([gridApi, activeSort], reconcileGridSort)
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api

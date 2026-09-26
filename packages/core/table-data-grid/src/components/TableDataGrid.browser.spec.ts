@@ -134,6 +134,164 @@ const expectOverflowTooltip = async (value: string) => {
 }
 
 describe('<TableDataGrid /> in Browser Mode', () => {
+  it('keeps the infinite datasource and starts a new cursor chain when sorting after a pending scroll block', async () => {
+    let resolveOldSecondBlock!: (result: Awaited<ReturnType<TableDataGridFetcher<TestRow>>>) => void
+    const oldSecondBlock = new Promise<Awaited<ReturnType<TableDataGridFetcher<TestRow>>>>((resolve) => {
+      resolveOldSecondBlock = resolve
+    })
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ cursor, sort }) => {
+      if (sort?.sortColumnOrder === 'asc') {
+        return Promise.resolve(cursor === undefined
+          ? { data: createRows(101, 15), cursor: 'sorted-cursor', hasMore: true }
+          : { data: createRows(116, 15), hasMore: false })
+      }
+
+      return cursor === undefined
+        ? Promise.resolve({ data: createRows(1, 15), cursor: 'old-cursor', hasMore: true })
+        : oldSecondBlock
+    })
+    let gridApi: GridApi<TestRow> | undefined
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      pageSize: 15,
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 1')
+    const datasource = gridApi?.getGridOption('datasource')
+    expect(datasource).toBeDefined()
+
+    gridApi?.ensureIndexVisible(15)
+    await expect.poll(() => fetcher.mock.calls.some(([params]) => params.cursor === 'old-cursor')).toBe(true)
+    gridApi?.applyColumnState({ state: [{ colId: 'name', sort: 'asc' }] })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 101')
+    expect(gridApi?.getGridOption('datasource')).toBe(datasource)
+    expect(fetcher.mock.calls.filter(([params]) => params.sort?.sortColumnOrder === 'asc' && params.cursor === undefined)).toHaveLength(1)
+
+    gridApi?.ensureIndexVisible(15)
+    await expect.poll(() => cell(15, 'name').textContent).toContain('Service 116')
+    expect(fetcher).toHaveBeenCalledWith(expect.objectContaining({
+      cursor: 'sorted-cursor',
+      sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+    }))
+
+    resolveOldSecondBlock({ data: createRows(16, 15), hasMore: false })
+    await nextTick()
+    expect(cell(15, 'name').textContent).toContain('Service 116')
+  })
+
+  it('keeps loading after the sorted column is removed from an uncontrolled grid', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ sort }) => Promise.resolve({
+      data: sort?.sortColumnKey ? [rows[0]] : createRows(1, 1),
+      hasMore: false,
+    }))
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 1')
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+
+    await table.setProps({ headers: [{ key: 'status', label: 'Status' }] })
+
+    await expect.poll(() => fetcher.mock.lastCall?.[0].sort).toEqual({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    await expect.poll(() => cell(0, 'status').textContent).toContain('Active')
+  })
+
+  it('applies a controlled sort whose header arrives after mount and keeps scrolling', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ cursor, sort }) => Promise.resolve(
+      sort?.sortColumnKey !== 'name'
+        ? { data: createRows(1, 15), cursor: 'unsorted-cursor', hasMore: true }
+        : cursor === undefined
+          ? { data: createRows(101, 15), cursor: 'sorted-cursor', hasMore: true }
+          : { data: createRows(116, 15), hasMore: false },
+    ))
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [],
+      pageSize: 15,
+      tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 15 },
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    // Headers must arrive after grid-ready so AG Grid receives the new columns asynchronously.
+    await expect.poll(() => gridApi).toBeDefined()
+    await table.setProps({ headers: [{ key: 'name', label: 'Name', sortable: true }] })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 101')
+    expect(gridApi?.getColumnState().find(column => column.colId === 'name')?.sort).toBe('asc')
+    gridApi?.ensureIndexVisible(15)
+    await expect.poll(() => cell(15, 'name').textContent).toContain('Service 116')
+    expect(fetcher).toHaveBeenCalledWith(expect.objectContaining({
+      cursor: 'sorted-cursor',
+      sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+    }))
+  })
+
+  it('loads once per controlled sort change and ignores the host config echo', async () => {
+    const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockImplementation(({ sort }) => Promise.resolve({
+      data: sort?.sortColumnOrder === 'asc'
+        ? [rows[0]]
+        : sort?.sortColumnOrder === 'desc'
+          ? [rows[1]]
+          : createRows(1, 1),
+      hasMore: false,
+    }))
+    const onUpdateTableConfig = vi.fn<(config: TableDataGridConfig) => void>()
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      fetcher,
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      onGridReady: (api) => {
+        gridApi = api
+      },
+      onUpdateTableConfig,
+      tableConfig: { pageSize: 25 },
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 1')
+    const datasource = gridApi?.getGridOption('datasource')
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    // The header click itself is covered in TableDataGrid.cy.ts. It supplies the config the host echoes back.
+    expect(fetcher).toHaveBeenCalledTimes(2)
+
+    const emittedConfig = onUpdateTableConfig.mock.lastCall?.[0]
+    expect(emittedConfig).toBeDefined()
+    await table.setProps({ tableConfig: emittedConfig })
+    await nextTick()
+    expect(fetcher).toHaveBeenCalledTimes(2)
+
+    await table.setProps({ tableConfig: { ...emittedConfig, sortColumnOrder: 'desc' } })
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
+    expect(fetcher).toHaveBeenCalledTimes(3)
+    expect(fetcher).toHaveBeenLastCalledWith(expect.objectContaining({
+      cursor: undefined,
+      sort: { sortColumnKey: 'name', sortColumnOrder: 'desc' },
+    }))
+
+    await table.setProps({ tableConfig: { ...emittedConfig, sortColumnKey: undefined, sortColumnOrder: undefined } })
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Service 1')
+    expect(fetcher).toHaveBeenCalledTimes(4)
+    expect(fetcher).toHaveBeenLastCalledWith(expect.objectContaining({
+      cursor: undefined,
+      sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
+    }))
+    expect(gridApi?.getGridOption('datasource')).toBe(datasource)
+  })
+
   it('replaces the infinite fetcher without a refresh key', async () => {
     const fetcher = vi.fn<TableDataGridFetcher<TestRow>>().mockResolvedValue({
       data: [rows[0]],

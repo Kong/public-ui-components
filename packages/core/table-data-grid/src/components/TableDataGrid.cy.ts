@@ -1113,15 +1113,10 @@ describe('<TableDataGrid />', () => {
       sortColumnOrder: 'asc',
       pageSize: 25,
     })
-    // AG Grid's own infinite row model purges its block cache and re-fetches
-    // block 0 as soon as the native header click updates its sort state,
-    // ahead of (and in addition to) the datasource rebuild this package
-    // triggers via resetKey — so at least one re-fetch beyond the initial
-    // block is guaranteed, but the exact count is an AG Grid implementation
-    // detail. What matters is that every re-fetch after the click carries
-    // the new sort.
+    // AG Grid reloads its infinite cache for the sort change. The grid must
+    // request the first block once through the existing datasource.
     cy.wrap(fetcher).should((stub) => {
-      expect(stub.callCount).to.be.greaterThan(1)
+      expect(stub.callCount).to.equal(2)
       expect(stub.lastCall.args[0]).to.deep.equal({
         mode: 'infinite',
         pageSize: 25,

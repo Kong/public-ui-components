@@ -151,10 +151,10 @@ type TableDataGridFetcher<Row> = (
 uses `cursor: undefined`; later requests receive the previous response cursor.
 
 `sort` carries the current single-column sort, with `sortColumnKey` and
-`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
-request-context change like `refreshKey` or `pageSize`: it rebuilds the
-datasource and restarts the cursor chain from the beginning, because a cursor
-produced under one sort order is not valid under another.
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change makes
+AG Grid reload its blocks and restarts the cursor chain from the beginning
+without replacing the datasource, because a cursor produced under one sort
+order is not valid under another.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in
@@ -312,9 +312,9 @@ as `rows`. AG Grid sorts those rows locally with its built-in row animation.
 />
 ```
 
-In the default infinite mode, sorting rebuilds the datasource from the
-beginning. A cursor produced under one sort order is not valid under another,
-so the fetcher receives the new sort and loads rows again.
+In the default infinite mode, sorting reloads AG Grid's blocks while reusing
+the datasource. The cursor chain starts over, and the fetcher receives the new
+sort as rows load again.
 
 ## Custom Cell Content
 
