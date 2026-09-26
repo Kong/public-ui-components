@@ -72,6 +72,9 @@ importers:
       '@vitejs/plugin-vue-jsx':
         specifier: ^5.1.6
         version: 5.1.6(supports-color@7.2.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))
+      '@vitest/browser-playwright':
+        specifier: 4.1.11
+        version: 4.1.11(playwright@1.62.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vitest@4.1.11)
       '@vitest/ui':
         specifier: ^4.1.11
         version: 4.1.11(vitest@4.1.11)
@@ -111,6 +114,9 @@ importers:
       npm-run-all2:
         specifier: ^9.0.3
         version: 9.0.3
+      playwright:
+        specifier: 1.62.1
+        version: 1.62.1
       postcss:
         specifier: ^8.5.26
         version: 8.5.26
@@ -179,7 +185,7 @@ importers:
         version: 8.2.1(supports-color@7.2.0)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@24.13.3)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+        version: 4.1.11(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
       vue:
         specifier: ^3.5.41
         version: 3.5.41(typescript@5.9.3)
@@ -1883,6 +1889,9 @@ packages:
   '@bcoe/v8-coverage@1.0.2':
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
+
+  '@blazediff/core@1.9.1':
+    resolution: {integrity: sha512-ehg3jIkYKulZh+8om/O25vkvSsXXwC+skXmyA87FFx6A/45eqOkZsBltMw/TVteb0mloiGT8oGRTcjRAz66zaA==}
 
   '@braintree/sanitize-url@6.0.2':
     resolution: {integrity: sha512-Tbsj02wXCbqGmzdnXNk0SOF19ChhRU70BsroIi4Pm6Ehp56in6vch94mfbdQ17DozxkL3BAVjbZ4Qc1a0HFRAg==}
@@ -4162,6 +4171,17 @@ packages:
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
       vue: ^3.2.25
+
+  '@vitest/browser-playwright@4.1.11':
+    resolution: {integrity: sha512-riLBxPqwnJ0lWs2DN2WeUfYeKLoAjbP2Xx8cLQdSddzMi20sksIa6K2mPz79DyMZKKVKH2ksOC2yJvtNcZg8cg==}
+    peerDependencies:
+      playwright: '*'
+      vitest: 4.1.11
+
+  '@vitest/browser@4.1.11':
+    resolution: {integrity: sha512-bwMovvAeuTFOK5kIFevw4VEf+1gVEICv4SYK4k3knJOxl6b1zEWud8mYKD73e1B0odAn174h1MofURy2TPWf3w==}
+    peerDependencies:
+      vitest: 4.1.11
 
   '@vitest/expect@4.1.11':
     resolution: {integrity: sha512-VX2x5vNJXET47KAFzwERI+KRMtTTCSWTfSMKsW7JsUsXV4psq++e3DvZpuTDOpHcxytiDs6p2nhVb2tVDiiUYw==}
@@ -8502,6 +8522,10 @@ packages:
   plimit-lit@1.5.0:
     resolution: {integrity: sha512-Eb/MqCb1Iv/ok4m1FqIXqvUKPISufcjZ605hl3KM/n8GaX8zfhtgdLwZU3vKjuHGh2O9Rjog/bHTq8ofIShdng==}
 
+  pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
+
   points-on-curve@0.2.0:
     resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
 
@@ -11329,6 +11353,8 @@ snapshots:
 
   '@bcoe/v8-coverage@1.0.2': {}
 
+  '@blazediff/core@1.9.1': {}
+
   '@braintree/sanitize-url@6.0.2': {}
 
   '@braintree/sanitize-url@6.0.4': {}
@@ -14076,6 +14102,36 @@ snapshots:
       vite: 7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.51.2)(yaml@2.9.0)
       vue: 3.5.41(typescript@5.9.3)
 
+  '@vitest/browser-playwright@4.1.11(playwright@1.62.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vitest@4.1.11)':
+    dependencies:
+      '@vitest/browser': 4.1.11(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vitest@4.1.11)
+      '@vitest/mocker': 4.1.11(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+      playwright: 1.62.1
+      tinyrainbow: 3.1.1
+      vitest: 4.1.11(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
+  '@vitest/browser@4.1.11(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vitest@4.1.11)':
+    dependencies:
+      '@blazediff/core': 1.9.1
+      '@vitest/mocker': 4.1.11(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+      '@vitest/utils': 4.1.11
+      magic-string: 0.30.21
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      tinyrainbow: 3.1.1
+      vitest: 4.1.11(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+      ws: 8.21.3
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+
   '@vitest/expect@4.1.11':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -14120,7 +14176,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@types/node@24.13.3)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
+      vitest: 4.1.11(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
 
   '@vitest/utils@4.1.11':
     dependencies:
@@ -19274,6 +19330,8 @@ snapshots:
     dependencies:
       queue-lit: 1.5.0
 
+  pngjs@7.0.0: {}
+
   points-on-curve@0.2.0: {}
 
   points-on-path@0.2.1:
@@ -21474,7 +21532,7 @@ snapshots:
       terser: 5.51.2
       yaml: 2.9.0
 
-  vitest@4.1.11(@types/node@24.13.3)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0)):
+  vitest@4.1.11(@types/node@24.13.3)(@vitest/browser-playwright@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.0.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.11
       '@vitest/mocker': 4.1.11(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))
@@ -21498,6 +21556,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.13.3
+      '@vitest/browser-playwright': 4.1.11(playwright@1.62.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.104.0)(terser@5.43.1)(yaml@2.9.0))(vitest@4.1.11)
       '@vitest/ui': 4.1.11(vitest@4.1.11)
       jsdom: 30.0.1
     transitivePeerDependencies:

@@ -21,6 +21,10 @@ cypress/videos/
 cypress/screenshots/
 cypress/downloads/
 
+# Vitest browser failure artifacts
+.vitest-attachments/
+__screenshots__/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
