@@ -991,7 +991,7 @@ describe('<TableDataGrid />', () => {
 
   it('colors threshold values in infinite mode', () => {
     const fetcher = cy.stub().resolves({
-      data: [{ requests: 5 }, { requests: 15 }],
+      data: [{ requests: 0 }, { requests: 5 }, { requests: 15 }],
       hasMore: false,
     })
 
@@ -1015,9 +1015,11 @@ describe('<TableDataGrid />', () => {
       },
     }))
 
-    cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
+    cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer')
+      .should('not.have.attr', 'data-threshold')
+    cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
       .should('have.attr', 'data-threshold', 'warning')
-    cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-error')
+    cy.get('[row-index="2"] [col-id="requests"] .table-data-grid-cell-renderer--text-error')
       .should('have.attr', 'data-threshold', 'error')
   })
 
