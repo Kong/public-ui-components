@@ -896,6 +896,133 @@ describe('<TableDataGrid />', () => {
     cy.getTestId('status-row-value').first().should('contain.text', 'Suspended')
   })
 
+  it('renders a host icon slot beside default and custom cell content', () => {
+    const fetcher = cy.stub().resolves({ data: rows, total: rows.length })
+
+    mountTestTableDataGrid({
+      fetcher,
+      slots: {
+        'cell-icon': ({ column, row }: TableDataGridCellSlotProps<TestRow>) => row.id === 'row-1'
+          ? h('span', { 'data-testid': 'host-cell-icon' }, column.key)
+          : null,
+        status: ({ rowValue }: TableDataGridCellSlotProps<TestRow>) => h(
+          'strong',
+          { 'data-testid': 'custom-status' },
+          String(rowValue),
+        ),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+      .find('[data-testid="host-cell-icon"]').should('contain.text', 'name')
+    cy.get('[row-index="0"] [col-id="status"]').should('contain.text', 'Active')
+      .find('[data-testid="host-cell-icon"]').should('contain.text', 'status')
+    cy.get('[row-index="0"] [col-id="status"] [data-testid="custom-status"]').should('be.visible')
+    cy.get('[row-index="1"] [data-testid="host-cell-icon"]').should('not.exist')
+    cy.get('[row-index="1"] [col-id="name"] .table-data-grid-cell-renderer').should(($renderer) => {
+      const content = $renderer[0].querySelector('.table-data-grid-cell-content')
+      if (!content) {
+        throw new Error('Expected the default cell content')
+      }
+      expect(content.getBoundingClientRect().left - $renderer[0].getBoundingClientRect().left).to.be.lessThan(1)
+    })
+  })
+
+  it('renders numeric options independently and aligns combined percentage bars', () => {
+    const numericRows = [
+      { percentage: 25, bar: 25, combined: 1 },
+      { percentage: 75, bar: 75, combined: 999 },
+    ]
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
+    cy.mount(defineComponent({
+      name: 'UnpaginatedNumericPresentationTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '900px' } }, [
+          h(TestTableDataGrid, {
+            headers: [
+              { key: 'percentage', label: 'Percentage', showPercentage: true },
+              { key: 'bar', label: 'Bar', bar: 'absolute' },
+              { key: 'combined', label: 'Combined', bar: 'relative', showPercentage: true },
+            ],
+            mode: 'unpaginated',
+            rows: numericRows,
+          }),
+        ])
+      },
+    }))
+
+    cy.get('[row-index="0"] [col-id="percentage"] [data-testid="table-data-grid-cell-relative"]')
+      .should('have.text', '(25 %)')
+    cy.get('[row-index="0"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
+      .should(($fill) => {
+        expect(parseFloat($fill[0].style.width)).to.be.closeTo(100 / 3, 0.01)
+      })
+    cy.get('[row-index="1"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
+      .should('have.attr', 'style', 'width: 100%;')
+    cy.get('[col-id="combined"] [data-testid="table-data-grid-cell-bar"]')
+      .should('have.length', 2)
+      .then(($bars) => {
+        const [first, second] = [...$bars].map(bar => bar.getBoundingClientRect())
+
+        expect(first.left).to.be.closeTo(second.left, 1)
+        expect(first.right).to.be.closeTo(second.right, 1)
+
+        const gaps = [...$bars].map((bar) => {
+          const renderer = bar.closest('.table-data-grid-cell-renderer')
+          const content = renderer?.querySelector('.table-data-grid-cell-content')
+          const percentage = renderer?.querySelector('.table-data-grid-cell-relative')
+
+          if (!renderer || !content || !percentage) {
+            throw new Error('Expected a value and percentage beside the bar')
+          }
+
+          // Values start at the column edge, like TopN, instead of hugging the bar.
+          expect(content.getBoundingClientRect().left - renderer.getBoundingClientRect().left).to.be.lessThan(1)
+
+          return bar.getBoundingClientRect().left - percentage.getBoundingClientRect().right
+        })
+
+        // The widest label sets the shared track, so only it sits next to the bar.
+        expect(Math.min(...gaps)).to.be.greaterThan(0)
+        expect(Math.min(...gaps)).to.be.lessThan(16)
+      })
+  })
+
+  it('colors threshold values in infinite mode', () => {
+    const fetcher = cy.stub().resolves({
+      data: [{ requests: 0 }, { requests: 5 }, { requests: 15 }],
+      hasMore: false,
+    })
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's required height.
+    cy.mount(defineComponent({
+      name: 'InfiniteThresholdPresentationTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '400px' } }, [
+          h(TestTableDataGrid, {
+            fetcher,
+            headers: [{
+              key: 'requests',
+              label: 'Requests',
+              thresholds: [
+                { type: 'warning', value: 5 },
+                { type: 'error', value: 10 },
+              ],
+            }],
+          }),
+        ])
+      },
+    }))
+
+    cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer')
+      .should('not.have.attr', 'data-threshold')
+    cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
+      .should('have.attr', 'data-threshold', 'warning')
+    cy.get('[row-index="2"] [col-id="requests"] .table-data-grid-cell-renderer--text-error')
+      .should('have.attr', 'data-threshold', 'error')
+  })
+
   it('emits row:click with the clicked row data and the source event', () => {
     const onRowClick = cy.stub().as('rowClick')
     const fetcher = cy.stub().resolves({

@@ -58,3 +58,17 @@ const invalidModeChecks: [
 
 void validProps
 void invalidModeChecks
+
+const numericHeader: TableDataGridHeader<{ count: number }> = {
+  key: 'count',
+  label: 'Requests',
+  showPercentage: true,
+  bar: 'absolute',
+  thresholds: [{ value: 100, type: 'warning' }],
+  valueFormatter: (_value, row) => `${row.count} requests`,
+  percentageFormatter: percentage => `${percentage}%`,
+}
+type RejectUnknownBar = Expect<'max' extends NonNullable<TableDataGridHeader['bar']> ? false : true>
+const rejectUnknownBar: RejectUnknownBar = true
+void numericHeader
+void rejectUnknownBar

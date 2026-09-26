@@ -1,40 +1,106 @@
 <template>
-  <component
-    :is="renderCellSlot"
-    v-if="cellSlot"
-  />
   <span
-    v-else
     class="table-data-grid-cell-renderer"
+    :class="{
+      'table-data-grid-cell-renderer--bar': hasBar,
+      'table-data-grid-cell-renderer--percentage': !!relativeValue,
+      [`table-data-grid-cell-renderer--text-${thresholdType}`]: !hasBar && !!thresholdType,
+    }"
+    :data-threshold="thresholdType"
   >
-    <KTooltip
-      class="table-data-grid-cell-tooltip"
-      :disabled="!isOverflowing"
-      :kpop-attributes="{ popoverDelay: 400 }"
-      max-width="300"
-      placement="bottom-start"
-      target="body"
-      :text="displayValue"
+    <span class="table-data-grid-cell-label-track">
+      <span class="table-data-grid-cell-label">
+        <component :is="renderCellIcon" />
+        <component :is="renderCellContent">
+          <template #default>
+            <KTooltip
+              class="table-data-grid-cell-tooltip"
+              :disabled="!isOverflowing"
+              :kpop-attributes="{ popoverDelay: 400 }"
+              max-width="300"
+              placement="bottom-start"
+              :target="tooltipTarget"
+              :text="displayValue"
+            >
+              <span
+                ref="contentElement"
+                class="table-data-grid-cell-content"
+              >{{ displayValue }}</span>
+            </KTooltip>
+          </template>
+        </component>
+        <span
+          v-if="relativeValue"
+          class="table-data-grid-cell-relative"
+          data-testid="table-data-grid-cell-relative"
+        >({{ relativeValue }})</span>
+      </span>
+      <!-- Reserves the column's widest label so every row's bar starts at the same offset. -->
+      <span
+        v-if="labelSizer"
+        aria-hidden="true"
+        class="table-data-grid-cell-label table-data-grid-cell-label-sizer"
+      >
+        <span
+          class="table-data-grid-cell-sizer-value"
+          :data-text="labelSizer.value"
+        />
+        <span
+          v-if="labelSizer.relative"
+          class="table-data-grid-cell-sizer-relative"
+          :data-text="`(${labelSizer.relative})`"
+        />
+      </span>
+    </span>
+    <span
+      v-if="hasBar"
+      class="table-data-grid-cell-bar"
+      data-testid="table-data-grid-cell-bar"
+      :data-threshold="thresholdType"
     >
       <span
-        ref="contentElement"
-        class="table-data-grid-cell-content"
-      >{{ displayValue }}</span>
-    </KTooltip>
+        class="table-data-grid-cell-bar-fill"
+        data-testid="table-data-grid-cell-bar-fill"
+        :style="{ width: `${barWidth}%` }"
+      />
+    </span>
   </span>
 </template>
 
 <script setup lang="ts">
-import type { TableDataGridCellSlotProps, TableDataGridHeader } from '../types'
+import type {
+  TableDataGridCellSlotProps,
+  TableDataGridHeader,
+} from '../types'
 import type { ICellRendererParams } from 'ag-grid-community'
-import type { Slots } from 'vue'
-import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import type { FunctionalComponent, Ref, Slots } from 'vue'
+import {
+  computed,
+  h,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  renderSlot,
+  ref,
+  shallowRef,
+  watch,
+} from 'vue'
+import {
+  formatRelativeValue,
+  getBarRatio,
+  getThresholdType,
+  toFiniteNumber,
+  type TableDataGridPresentationContext,
+} from '../utils/tableDataGridPresentation'
 
 type CellRendererParams = ICellRendererParams<Record<string, unknown>> & {
   /** Set internally via `cellRendererParams` so the renderer can resolve the
    * host slot and build its payload without leaking AG Grid's own `column`. */
   headerDef?: TableDataGridHeader
-  context?: { cells?: { slots?: Slots } }
+  context?: {
+    cells?: { slots?: Slots, tooltipTarget?: Readonly<Ref<string | HTMLElement>> }
+    presentation?: TableDataGridPresentationContext
+  }
 }
 
 defineOptions({
@@ -52,20 +118,56 @@ const {
 const currentParams = shallowRef(params)
 const contentElement = ref<HTMLElement | null>(null)
 const isOverflowing = ref(false)
-const displayValue = computed(() => (
-  currentParams.value.valueFormatted ?? String(currentParams.value.value ?? '')
-))
+const header = computed<TableDataGridHeader>(() => currentParams.value.headerDef ?? {
+  key: '',
+  label: '',
+})
+const presentation = computed(() => currentParams.value.context?.presentation)
+const tooltipTarget = computed(() => currentParams.value.context?.cells?.tooltipTarget?.value ?? 'body')
+const displayValue = computed(() => {
+  const params = currentParams.value
 
-// A slot named by the column key replaces this cell's default content.
-const cellSlot = computed(() => {
-  const colId = currentParams.value.colDef?.colId
+  if (params.valueFormatted !== undefined && params.valueFormatted !== null) {
+    return String(params.valueFormatted)
+  }
 
-  return colId ? currentParams.value.context?.cells?.slots?.[colId] : undefined
+  return String(params.value ?? '')
 })
 
+const rawValue = computed(() => currentParams.value.value)
+const numericValue = computed(() => toFiniteNumber(rawValue.value))
+const stats = computed(() => presentation.value?.stats[header.value.key])
+const isNumericUnpaginated = computed(() => presentation.value?.mode === 'unpaginated')
+const relativeValue = computed(() => (
+  isNumericUnpaginated.value && header.value.showPercentage && stats.value
+    ? formatRelativeValue({
+      value: numericValue.value,
+      stats: stats.value,
+      header: header.value,
+      locale: presentation.value?.locale ?? 'en-US',
+    })
+    : undefined
+))
+const hasBar = computed(() => (
+  isNumericUnpaginated.value && !!header.value.bar
+  && (numericValue.value !== null || rawValue.value === null || rawValue.value === undefined)
+))
+const barWidth = computed(() => (
+  hasBar.value && stats.value
+    ? getBarRatio(numericValue.value, stats.value, header.value.bar) * 100
+    : 0
+))
+const labelSizer = computed(() => (
+  hasBar.value ? presentation.value?.labelSizers[header.value.key] : undefined
+))
+const thresholdType = computed(() => (
+  header.value.thresholds?.length && numericValue.value !== null
+    ? getThresholdType(numericValue.value, header.value.thresholds)
+    : undefined
+))
 // Props passed to a `[header.key]` slot when the host provides one.
 const slotPayload = computed<TableDataGridCellSlotProps>(() => ({
-  column: currentParams.value.headerDef as TableDataGridHeader,
+  column: header.value,
   refreshCell: () => {
     const node = currentParams.value.node
 
@@ -79,8 +181,28 @@ const slotPayload = computed<TableDataGridCellSlotProps>(() => ({
   selected: currentParams.value.node?.isSelected() ?? false,
 }))
 
-// Renders the matched slot's own content in place of the default cell markup.
-const renderCellSlot = () => cellSlot.value?.(slotPayload.value)
+const renderCellContent: FunctionalComponent = (_, { slots }) => {
+  const colId = currentParams.value.colDef?.colId
+  const hostSlots = currentParams.value.context?.cells?.slots
+
+  if (!colId || colId === 'cell-icon' || !hostSlots?.[colId]) {
+    return slots.default?.()
+  }
+
+  return h(
+    'span',
+    { class: 'table-data-grid-cell-slot-content' },
+    renderSlot(hostSlots, colId, slotPayload.value, () => slots.default?.() ?? []),
+  )
+}
+
+const renderCellIcon: FunctionalComponent = () => {
+  const hostSlots = currentParams.value.context?.cells?.slots
+
+  return hostSlots?.['cell-icon']
+    ? renderSlot(hostSlots, 'cell-icon', slotPayload.value)
+    : null
+}
 
 let resizeObserver: ResizeObserver | undefined
 let animationFrame: number | undefined
@@ -126,7 +248,7 @@ onMounted(() => {
   observeContentElement(contentElement.value)
 })
 
-watch(contentElement, observeContentElement, { flush: 'post' })
+watch(contentElement, observeContentElement)
 
 onUnmounted(() => {
   isUnmounted = true
@@ -151,10 +273,130 @@ defineExpose({
 /* AG Grid separately mounts framework renderers, so parent-scoped selectors do not reach this DOM. */
 .table-data-grid-cell-renderer,
 .table-data-grid-cell-tooltip,
-.table-data-grid-cell-content {
+.table-data-grid-cell-content,
+.table-data-grid-cell-slot-content {
   display: block;
   min-width: 0;
   width: 100%;
+}
+
+.table-data-grid-cell-renderer {
+  align-items: center;
+  display: flex;
+  font-feature-settings: "case";
+  font-variant-numeric: tabular-nums;
+  gap: var(--kui-space-20, $kui-space-20);
+  min-width: 0;
+  width: 100%;
+}
+
+.table-data-grid-cell-label {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--kui-space-20, $kui-space-20);
+  min-width: 0;
+}
+
+.table-data-grid-cell-label-track {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.table-data-grid-cell-label-track > * {
+  grid-area: 1 / 1;
+}
+
+.table-data-grid-cell-label-sizer {
+  height: 0;
+  visibility: hidden;
+}
+
+.table-data-grid-cell-sizer-value::before,
+.table-data-grid-cell-sizer-relative::before {
+  content: attr(data-text);
+  white-space: nowrap;
+}
+
+.table-data-grid-cell-sizer-value {
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+}
+
+.table-data-grid-cell-sizer-relative {
+  flex-shrink: 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+}
+
+.table-data-grid-cell-renderer--bar {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(80px, 1fr);
+}
+
+.table-data-grid-cell-content,
+.table-data-grid-cell-slot-content,
+.table-data-grid-cell-relative {
+  white-space: nowrap;
+}
+
+.table-data-grid-cell-relative {
+  flex-shrink: 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+}
+
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-content,
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-slot-content,
+.table-data-grid-cell-renderer--text-warning .table-data-grid-cell-content,
+.table-data-grid-cell-renderer--text-warning .table-data-grid-cell-slot-content,
+.table-data-grid-cell-renderer--text-error .table-data-grid-cell-content,
+.table-data-grid-cell-renderer--text-error .table-data-grid-cell-slot-content {
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+}
+
+.table-data-grid-cell-renderer--text-warning {
+  color: var(--kui-color-text-warning, $kui-color-text-warning);
+}
+
+.table-data-grid-cell-renderer--text-error {
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
+}
+
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-content,
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-slot-content,
+.table-data-grid-cell-renderer--bar .table-data-grid-cell-tooltip,
+.table-data-grid-cell-renderer--percentage .table-data-grid-cell-slot-content,
+.table-data-grid-cell-renderer--percentage .table-data-grid-cell-tooltip,
+.table-data-grid-cell-renderer--percentage .table-data-grid-cell-content {
+  flex: 0 1 auto;
+  width: auto;
+}
+
+.table-data-grid-cell-bar {
+  background-color: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
+  border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
+  display: block;
+  height: 8px;
+  min-width: 80px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.table-data-grid-cell-bar-fill {
+  background-color: #6a86d2;
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+}
+
+.table-data-grid-cell-bar[data-threshold="warning"] .table-data-grid-cell-bar-fill {
+  background-color: var(--kui-color-background-warning, #{$kui-color-background-warning});
+}
+
+.table-data-grid-cell-bar[data-threshold="error"] .table-data-grid-cell-bar-fill {
+  background-color: var(--kui-color-background-danger, #{$kui-color-background-danger});
 }
 
 .table-data-grid-cell-content {

@@ -4,7 +4,7 @@
     <header class="sandbox-header">
       <div>
         <h1>TableDataGrid</h1>
-        <p>Compare infinite loading and complete results with refresh, states, and fetch history.</p>
+        <p>Compare infinite loading and complete results with refresh, states, fetch history, and host-rendered icons.</p>
       </div>
 
       <div class="sandbox-header-actions">
@@ -27,6 +27,18 @@
     <main class="sandbox-main">
       <section class="table-section">
         <div class="table-section-toolbar">
+          <div
+            v-if="fetchMode === 'unpaginated'"
+            class="bar-scale-options"
+          >
+            <span>Bar scale</span>
+            <KSegmentedControl
+              aria-label="Bar scale"
+              :model-value="barScale"
+              :options="barScaleOptions"
+              @update:model-value="barScale = $event"
+            />
+          </div>
           <KSegmentedControl
             aria-label="Data mode"
             class="fetch-mode-control"
@@ -59,6 +71,28 @@
               message="Turn off the host error state to show the grid again."
               title="Sandbox error state"
             />
+          </template>
+
+          <template #cell-icon="{ column }">
+            <svg
+              v-if="column.key === 'name'"
+              aria-hidden="true"
+              class="sandbox-service-icon"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              viewBox="0 0 16 16"
+            >
+              <rect
+                height="11"
+                rx="2"
+                width="11"
+                x="2.5"
+                y="2.5"
+              />
+              <path d="M5 6h6M5 9h4" />
+            </svg>
           </template>
 
           <template #status="{ rowValue }">
@@ -280,11 +314,13 @@ type SandboxRow = {
   name: string
   status: string
   latency: number
+  requests: number
   region: string
 }
 
 type DatasetMode = 'generated' | 'empty'
 type FetchMode = 'infinite' | 'unpaginated'
+type BarScale = 'relative' | 'absolute'
 type SandboxSectionId = 'tableOptions' | 'fetchDebug' | 'headers'
 type FetchRequest = TableDataGridInfiniteFetcherParams
 
@@ -319,11 +355,16 @@ const fetchModeOptions: Array<SegmentedControlOption<FetchMode>> = [
   { label: 'Infinite', value: 'infinite' },
   { label: 'All rows', value: 'unpaginated' },
 ]
+const barScaleOptions: Array<SegmentedControlOption<BarScale>> = [
+  { label: 'Of total', value: 'relative' },
+  { label: 'Of maximum', value: 'absolute' },
+]
 
 const pageSize = ref(defaultPageSize)
 const fetchDelayMs = ref(defaultFetchDelayMs)
 const datasetMode = ref<DatasetMode>('generated')
 const fetchMode = ref<FetchMode>('infinite')
+const barScale = ref<BarScale>('relative')
 const showErrorState = ref(false)
 const refreshKey = ref(0)
 const tableResetKey = ref(0)
@@ -341,17 +382,25 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
   tableOptions: false,
 })
 
-const headers: Array<TableDataGridHeader<SandboxRow>> = [
+const headers = computed<Array<TableDataGridHeader<SandboxRow>>>(() => [
   { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
   { key: 'description', label: 'Description', width: 240 },
   // Rendered via the `#status` slot below instead of the raw column value.
   { key: 'status', label: 'Status', minWidth: 140, sortable: true },
   // Rendered via the `#latency` slot below instead of the raw column value.
   { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
+  {
+    bar: barScale.value,
+    key: 'requests',
+    label: 'Requests',
+    minWidth: 240,
+    showPercentage: true,
+    thresholds: [{ type: 'warning', value: 150 }],
+  },
   { key: 'region', label: 'Region', minWidth: 140 },
   // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
   { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
-]
+])
 
 const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   const rowNumber = index + 1
@@ -362,6 +411,7 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
     id: `row-${rowNumber}`,
     latency: 35 + ((index * 29) % 800),
     name: `Service ${rowNumber}`,
+    requests: 25 + ((index * 37) % 180),
     region: ['us', 'eu', 'au', 'me'][index % 4] ?? 'us',
     status: ['Active', 'Deploying', 'Inactive'][index % 3] ?? 'Active',
   }
@@ -435,6 +485,7 @@ const resetSandbox = () => {
   fetchDelayMs.value = defaultFetchDelayMs
   datasetMode.value = 'generated'
   fetchMode.value = 'infinite'
+  barScale.value = 'relative'
   showErrorState.value = false
   refreshKey.value = 0
   tableResetKey.value += 1
@@ -533,7 +584,7 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
 const tableProps = computed<TableDataGridProps<SandboxRow>>(() => {
   const commonProps = {
     error: showErrorState.value,
-    headers,
+    headers: headers.value,
     tableConfig: tableConfig.value,
   }
 
@@ -692,6 +743,13 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   justify-content: flex-end;
 }
 
+.sandbox-service-icon {
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  flex: none;
+  height: var(--kui-icon-size-30, $kui-icon-size-30);
+  width: var(--kui-icon-size-30, $kui-icon-size-30);
+}
+
 .sandbox-main {
   display: flex;
   flex-direction: column;
@@ -715,11 +773,24 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 }
 
 .table-section-toolbar {
+  align-items: center;
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: flex-end;
 
   .fetch-mode-control {
     width: auto;
+  }
+}
+
+.bar-scale-options {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-20, $kui-space-20);
+
+  > span {
+    white-space: nowrap;
   }
 }
 

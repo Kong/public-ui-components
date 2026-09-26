@@ -1,6 +1,8 @@
 <template>
   <div
+    ref="rootElement"
     class="kong-ui-public-table-data-grid"
+    :class="{ 'fit-to-content': fitToContent }"
     data-testid="table-data-grid"
   >
     <div
@@ -38,6 +40,7 @@
       :context="gridContext"
       :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
+      :dom-layout="fitToContent ? 'autoHeight' : 'normal'"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
@@ -76,7 +79,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, shallowRef, toRef, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -104,6 +107,7 @@ const mode = providedMode ?? 'infinite'
 defineSlots<{
   'empty-state': () => unknown
   'error-state': () => unknown
+  'cell-icon': (props: TableDataGridCellSlotProps<Row>) => unknown
   [columnKey: string]: (props: TableDataGridCellSlotProps<Row>) => unknown
 }>()
 
@@ -116,11 +120,31 @@ const emit = defineEmits<{
   (e: 'update:tableConfig', payload: TableDataGridConfig): void
 }>()
 
-const { i18n: { t } } = useI18n()
+const { i18n } = useI18n()
+const { t } = i18n
 
 const slots = useSlots()
 
 const gridApi = shallowRef<GridApi<Row>>()
+const rootElement = useTemplateRef<HTMLElement>('rootElement')
+
+// Tooltips teleported to body are hidden while an ancestor is in native fullscreen.
+const tooltipTarget = shallowRef<string | HTMLElement>('body')
+const updateTooltipTarget = () => {
+  const fullscreenElement = document.fullscreenElement
+  tooltipTarget.value = fullscreenElement instanceof HTMLElement && fullscreenElement.contains(rootElement.value ?? null)
+    ? fullscreenElement
+    : 'body'
+}
+
+onMounted(() => {
+  updateTooltipTarget()
+  document.addEventListener('fullscreenchange', updateTooltipTarget)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', updateTooltipTarget)
+})
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
   headers: toRef(() => headers),
@@ -143,6 +167,8 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   emitSort: sort => emit('sort', sort),
   patchTableConfig,
 })
+
+const fitToContent = computed(() => mode === 'unpaginated' && !!activeTableConfig.value.fitToContent)
 
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
@@ -182,7 +208,11 @@ const rowData = computed(() => rows ? Array.from(rows) : undefined)
 
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
+  locale: computed(() => i18n.locale),
+  mode,
+  rows: rowData,
   slots,
+  tooltipTarget,
   initialSort: activeSort.value,
 })
 
@@ -228,6 +258,14 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   overflow: hidden;
   width: 100%;
 
+  &.fit-to-content {
+    height: auto;
+
+    // Auto-height grids default to a 150px body, even for a single row.
+    :deep(.ag-grid-scrolling-rows) {
+      min-height: 0;
+    }
+  }
 }
 
 .table-data-grid-grid {
