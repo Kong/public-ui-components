@@ -19,7 +19,9 @@
       :href="externalLink"
       :target="newWindow ? '_blank' : '_self'"
     >
+      <!-- Escape clipped cells while staying inside the native fullscreen layer. -->
       <KTooltip
+        :target="tooltipTarget"
         :text="isTruncated && entityLinkData.label || ''"
       >
         <span
@@ -56,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import type { EntityLinkData } from '../../types'
 import composables from '../../composables'
@@ -88,6 +90,21 @@ const props = defineProps({
 const textContent = ref<HTMLElement>()
 const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTMLElement>)
 const { i18n: { t } } = composables.useI18n()
+
+const tooltipTarget = shallowRef<string | HTMLElement>('body')
+const updateTooltipTarget = () => {
+  const fullscreenElement = document.fullscreenElement
+  tooltipTarget.value = fullscreenElement instanceof HTMLElement ? fullscreenElement : 'body'
+}
+
+onMounted(() => {
+  updateTooltipTarget()
+  document.addEventListener('fullscreenchange', updateTooltipTarget)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', updateTooltipTarget)
+})
 
 const tooltipDefaultText = t('global.actions.copyId')
 const copyUuidTooltipText = ref(tooltipDefaultText)

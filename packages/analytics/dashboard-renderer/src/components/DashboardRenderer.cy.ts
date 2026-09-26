@@ -516,7 +516,7 @@ describe('<DashboardRenderer />', () => {
     })
 
     // Check value of href attribute
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
   })
 
   it('Renders a dashboard with a TopNTable with EntityLinks mapped by dimension', () => {
@@ -571,12 +571,12 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('tbody tr').first().within(() => {
-      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+    cy.get('.ag-row[row-index="0"]').first().within(() => {
+      cy.get('[col-id="route"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
 
-      cy.get('td').eq(1).find('[data-testid="entity-link-parent"] > a')
+      cy.get('[col-id="gateway_service"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/services/service-1')
     })
@@ -634,7 +634,7 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"] > a')
       .should('have.attr', 'href')
       .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
   })
@@ -688,13 +688,13 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('tbody tr').first().within(() => {
-      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+    cy.get('.ag-row[row-index="0"]').first().within(() => {
+      cy.get('[col-id="route"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
 
-      cy.get('td').eq(1).should('contain.text', 'Gateway Service 1')
-      cy.get('td').eq(1).find('a').should('not.exist')
+      cy.get('[col-id="gateway_service"]').should('contain.text', 'Gateway Service 1')
+      cy.get('[col-id="gateway_service"]').find('a').should('not.exist')
     })
   })
 
@@ -747,8 +747,8 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
   })
 
   it("doesn't issue queries if it's still waiting for the timeSpec", () => {

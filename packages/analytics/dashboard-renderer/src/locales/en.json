@@ -57,6 +57,38 @@
     "status_code": "Status code",
     "team": "Team",
     "name": "Name",
+    "latencies_response_ms": "Response latency",
+    "latencies_upstream_ms": "Upstream latency",
+    "latencies_kong_gateway_ms": "Kong latency",
+    "latencies_kong_internal_ms": "Kong internal latency",
+    "request_body_size": "Request size",
+    "response_body_size": "Response size",
+    "response_header_content_length": "Content length",
+    "ai": {
+      "cost": "Cost",
+      "costCaching": "Caching cost",
+      "promptTokens": "Prompt tokens",
+      "completionTokens": "Completion tokens",
+      "totalTokens": "Total tokens",
+      "llmLatency": "LLM latency",
+      "fetchLatency": "Fetch latency",
+      "embeddingsLatency": "Embeddings latency"
+    },
+    "mcp": {
+      "latency": "MCP latency",
+      "response_body_size": "MCP response size"
+    },
+    "a2a": {
+      "latency": "A2A latency",
+      "response_body_size": "A2A response size"
+    },
+    "ai_gateway": "AI gateway",
+    "ai_gateway_agent": "AI gateway agent",
+    "ai_gateway_consumer": "AI gateway consumer",
+    "ai_gateway_consumer_group": "AI gateway consumer group",
+    "ai_gateway_data_plane_node": "AI gateway data plane node",
+    "ai_gateway_mcp_server": "AI gateway MCP server",
+    "ai_gateway_model": "AI gateway model",
     "ai_count": "LLM request count",
     "ai_plugin": "AI plugin",
     "ai_provider": "Provider",
@@ -98,6 +130,7 @@
     "total_tokens_per_minute": "Total tokens per minute",
     "control_plane_group": "Control plane group",
     "consumer": "Consumer",
+    "consumer_group": "Consumer group",
     "country_code": "Country",
     "country": "Country",
     "data_plane_node": "Data plane node",
@@ -177,6 +210,7 @@
     "total_tokens": "Total token count",
     "prompt_tokens": "Prompt token count",
     "completion_tokens": "Completion token count",
+    "share_of_requests": "Share of requests",
     "cost": "Costs",
     "cost_per_request_average": "Cost per request (avg)",
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
@@ -221,6 +255,8 @@
     "consumer_count": "Consumer count",
     "plugin_count": "Plugin count",
     "node_count": "Data plane node count",
+    "oidc_credential": "OIDC credential",
+    "principal": "Principal",
     "virtual_cluster_id": "Virtual cluster",
     "backend_cluster_id": "Backend cluster",
     "listener_id": "Listener",
@@ -240,7 +276,29 @@
     "cache_items_average": "Cache items (avg)",
     "cache_memory_utilization_max": "Cache memory utilization (max)",
     "cache_status": "Cache status",
-    "cache_hit_rate": "Cache hit rate"
+    "cache_hit_rate": "Cache hit rate",
+    "share_of_cost": "Share of cost"
+  },
+  "chartUnits": {
+    "ms": "ms",
+    "bytes": "Byte{plural}",
+    "count": "request{plural}",
+    "count/minute": "rpm",
+    "requests": "request{plural}",
+    "token count": "token{plural}",
+    "tokens/minute": "tpm",
+    "%": "%",
+    "ops/minute": "ops/minute"
+  },
+  "topNTable": {
+    "nameLabel": "Name",
+    "defaultEmptyStateTitle": "No data to display",
+    "defaultErrorStateTitle": "Something went wrong",
+    "errors": {
+      "meta": "Error: response must contain 'meta'",
+      "display": "Error: 'display' response incorrectly formatted (must have at least one key)",
+      "metricNames": "Error: 'metricNames' response incorrectly formatted (must have at least one entry)"
+    }
   },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
