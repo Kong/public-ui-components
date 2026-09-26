@@ -3,7 +3,9 @@ import type {
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridProps,
+  TableDataGridSort,
   TableDataGridStatePayload,
+  TableDataGridConfig,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -24,7 +26,9 @@ type TestTableDataGridSlots = Record<string, (props: TableDataGridCellSlotProps<
 
 type MountTableOptions = TableDataGridProps<TestRow> & {
   onGridReady?: (api: GridApi<TestRow>) => void
+  onSort?: (sort: TableDataGridSort) => void
   onState?: (payload: TableDataGridStatePayload) => void
+  onUpdateTableConfig?: (config: TableDataGridConfig) => void
   slots?: TestTableDataGridSlots
 }
 
@@ -62,7 +66,9 @@ afterEach(() => {
 
 const mountTestTableDataGrid = ({
   onGridReady,
+  onSort,
   onState,
+  onUpdateTableConfig,
   slots,
   ...gridProps
 }: MountTableOptions) => {
@@ -77,6 +83,8 @@ const mountTestTableDataGrid = ({
 
   const commonProps = {
     'onGrid:ready': onGridReady,
+    'onUpdate:tableConfig': onUpdateTableConfig,
+    onSort,
     onState,
   }
 
@@ -181,6 +189,39 @@ describe('<TableDataGrid /> in Browser Mode', () => {
     await expect.element(page.getByText('Service 30', { exact: true })).toBeVisible()
     await expect.poll(() => cell(29, 'value').textContent).toContain('(6.45 %)')
     expect(onState).not.toHaveBeenCalled()
+  })
+
+  it('sorts complete rows client-side', async () => {
+    const onSort = vi.fn<(sort: TableDataGridSort) => void>()
+    const onUpdateTableConfig = vi.fn<(config: TableDataGridConfig) => void>()
+
+    const table = mountTestTableDataGrid({
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      mode: 'unpaginated',
+      onSort,
+      onUpdateTableConfig,
+      rows: [rows[1], rows[0]],
+    })
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
+    const gridRoot = element('.ag-root-wrapper')
+
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    expect(element('.ag-root-wrapper')).toBe(gridRoot)
+    expect(onSort).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    expect(onUpdateTableConfig).toHaveBeenCalledWith(expect.objectContaining({
+      sortColumnKey: 'name',
+      sortColumnOrder: 'asc',
+    }))
+
+    await page.elementLocator(element('.ag-header-cell[col-id="name"]')).click()
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Portal app')
+
+    await table.setProps({ tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc' } })
+    await expect.poll(() => cell(0, 'name').textContent).toContain('Gateway service')
+    expect(element('.ag-root-wrapper')).toBe(gridRoot)
   })
 
   it('renders unpaginated percentages, preserved bar scales, thresholds, and host icons', async () => {
