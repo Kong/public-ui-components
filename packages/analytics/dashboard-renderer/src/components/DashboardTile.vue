@@ -245,6 +245,7 @@ const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 const {
   context,
   definition,
+  fitToContent = false,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
   isFullscreen,
@@ -256,6 +257,7 @@ const {
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
+  fitToContent?: boolean
   height?: number
   hideActions?: boolean
   isFullscreen?: boolean
@@ -415,6 +417,7 @@ const componentData = computed(() => {
     rendererProps: {
       ...rendererProps,
       ...(!isTableChart ? chartRendererProps : {}),
+      ...(definition.chart.type === 'top_n' ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,

@@ -30,7 +30,7 @@
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"
       >
-        <template #tile="{ tile }">
+        <template #tile="{ tile, fitToContent }">
           <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
           <div
             v-if="isSlottableTile(tile)"
@@ -45,6 +45,7 @@
             class="tile-container"
             :context="enrichedContext"
             :definition="tile.meta as TileDefinition"
+            :fit-to-content="fitToContent"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="!showTileActions"
             :is-fullscreen="isFullscreen"

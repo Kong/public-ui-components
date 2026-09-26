@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
@@ -510,6 +511,30 @@ describe('<DashboardTile /> table tiles', () => {
       refreshCounter: 0,
     })
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
+  })
+
+  it('passes fitToContent to TopN tiles', () => {
+    const topNDefinition: TileDefinition = {
+      chart: { type: 'top_n', entity_link: '/services/{entity-id}' },
+      query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'] },
+    }
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: mockContext, definition: topNDefinition, queryReady: true,
+        refreshCounter: 0, tileId: '1', fitToContent: true,
+      },
+      shallow: true,
+      global: {
+        plugins: [Kongponents],
+        provide: { [INJECT_QUERY_PROVIDER]: mockQueryProvider },
+      },
+    })
+
+    expect(wrapper.findComponent(TopNTableRenderer).props()).toMatchObject({
+      chartOptions: topNDefinition.chart,
+      fitToContent: true,
+      query: topNDefinition.query,
+    })
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {

@@ -510,6 +510,27 @@ const dashboardConfig = ref<DashboardConfig>({
         size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Top 40 services by requests',
+          entity_links: { gateway_service: 'https://example.com/services/{entity-id}' },
+          column_options: {
+            gateway_service: { label: 'Gateway service' },
+            request_count: { label: 'Requests', value: 'relative', bar: 'relative' },
+            response_latency_p95: { label: 'P95 latency', bar: 'max', thresholds: [{ type: 'warning', value: 250 }] },
+          },
+        },
+        header_description: 'Complete mock result in a fixed-height tile. Scroll to service 40 without another query.',
+        query: {
+          datasource: 'basic', dimensions: ['gateway_service', 'status_code'],
+          metrics: ['request_count', 'response_latency_p95'], limit: 40,
+        },
+      },
+      layout: { position: { col: 0, row: 19 }, size: { cols: 6, rows: 3 } },
+    } satisfies TileConfig,
   ],
 })
 
