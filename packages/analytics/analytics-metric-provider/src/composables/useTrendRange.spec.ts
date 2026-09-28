@@ -81,8 +81,8 @@ describe('useTrendRange', () => {
 
       const result = useTrendRange(withTrend, timeRange)
 
-      // 7 days / 2 = 3.5 days, rounds to 4 days
-      expect(result.value).toBe('vs previous 4 days')
+      // 7 days / 2 = 3.5 days, floor down to 3 days
+      expect(result.value).toBe('vs previous 3 days')
     })
 
     it('calculates hours correctly when less than 1 day with trend', () => {

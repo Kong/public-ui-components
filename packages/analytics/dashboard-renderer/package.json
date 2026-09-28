@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.29.4",
+  "version": "8.33.0",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -44,6 +44,7 @@
     "@kong-ui-public/analytics-geo-map": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/e-charts": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
@@ -74,7 +75,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1.1MB"
+    "errorLimit": "2MB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -82,6 +83,7 @@
     "@kong-ui-public/analytics-geo-map": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/e-charts": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/table-data-grid": "workspace:^",
     "@kong/icons": "^1.58.0",
@@ -92,6 +94,7 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.24.10",
+    "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",

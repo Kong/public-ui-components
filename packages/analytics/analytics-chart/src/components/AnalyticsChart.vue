@@ -53,9 +53,11 @@
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
+        :left-y-axis-grid="chartOptions.yAxes?.left?.showGrid"
         :legend-values="legendValues"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
+        :right-y-axis="rightYAxis"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
         :threshold="selectedThreshold"
@@ -123,8 +125,8 @@
 
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
-import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, YAxisConfig, ZoomActionItem } from '../types'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, YAxisPosition } from '@kong-ui-public/analytics-utilities'
 import type { ScatterChartColors } from '../utils'
 
 import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
@@ -190,13 +192,36 @@ const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
 ))
 
+// A second y axis is only added for line charts, and only when a queried metric is mapped to it.
+const metricAxisMap = computed<Partial<Record<string, YAxisPosition>> | undefined>(() => {
+  const mapping = props.chartOptions.metricAxisMap
+  const metrics = exploreData.value?.meta?.metric_names ?? []
+
+  if (props.chartOptions.type !== 'timeseries_line' || !mapping || !metrics.some(metric => mapping[metric] === 'right')) {
+    return undefined
+  }
+
+  return mapping
+})
+
+const isDualAxis = computed(() => !!metricAxisMap.value)
+
+const axisMetrics = (metricNames: string[], position: YAxisPosition): string[] => {
+  if (!metricAxisMap.value) {
+    return metricNames
+  }
+
+  return metricNames.filter(metric => (metricAxisMap.value?.[metric] ?? 'left') === position)
+}
+
 // A grouped time series shows one metric at a time; other chart modes keep the full query.
+// Dual y axis charts plot every metric at once, so they skip the metric selection.
 const selectableMetrics = computed(() => {
   const meta = exploreData.value?.meta
   const metrics = meta?.metric_names ?? []
   const isTimeSeries = ['timeseries_line', 'timeseries_bar'].includes(props.chartOptions.type)
 
-  return isTimeSeries && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
+  return isTimeSeries && !isDualAxis.value && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
 })
 const hasGroupedMetrics = computed(() => selectableMetrics.value.length > 1)
 const selectedMetric = computed(() => props.activeMetric && selectableMetrics.value.includes(props.activeMetric)
@@ -297,6 +322,7 @@ const computedChartData = computed(() => {
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
     ).value
@@ -373,7 +399,8 @@ const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.char
 const tooltipMetricDisplay = computed<string | undefined>(() => {
   const { metricNames, metricUnits } = chartMeta.value
 
-  if (!metricNames || !metricUnits) {
+  // Each series is labelled with its own metric, so a single metric subtitle would mislead
+  if (isDualAxis.value || !metricNames || !metricUnits) {
     return undefined
   }
 
@@ -406,8 +433,10 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
 })
 
 const metricAxesTitle = computed<string | undefined>(() => {
-  if (props.chartOptions?.metricAxesTitle) {
-    return props.chartOptions?.metricAxesTitle
+  const titleOverride = props.chartOptions.yAxes?.left?.title ?? props.chartOptions?.metricAxesTitle
+
+  if (titleOverride) {
+    return titleOverride
   }
 
   const { metricNames, metricUnits } = chartMeta.value
@@ -416,7 +445,30 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
+  return metricGroupTitle(axisMetrics(metricNames, 'left'), metricUnits)
+})
+
+const rightYAxis = computed<YAxisConfig | undefined>(() => {
+  if (!isDualAxis.value) {
+    return undefined
+  }
+
+  const { metricNames, metricUnits } = chartMeta.value
+  const autoTitle = metricNames && metricUnits ? metricGroupTitle(axisMetrics(metricNames, 'right'), metricUnits) : undefined
+
+  return {
+    title: props.chartOptions.yAxes?.right?.title ?? autoTitle,
+    showGrid: props.chartOptions.yAxes?.right?.showGrid,
+  }
+})
+
+const metricGroupTitle = (metricNames: string[], metricUnits: NonNullable<SharedMeta['metricUnits']>): string | undefined => {
   const metricName = metricNames[0]
+
+  if (!metricName) {
+    return undefined
+  }
+
   const metricUnit = metricUnits[metricName] || ''
 
   if (metricNames.length > 1) {
@@ -431,17 +483,19 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   return metricTitle(metricName, metricUnit)
-})
+}
 
 const metricTitle = (metricName: string, metricUnit: string): string | undefined => {
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+  if (i18n.te(`metricAxisTitles.${metricName}`)) {
     if (isNoSuffixMetric(metricUnit)) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`metricAxisTitles.${metricName}`) || undefined
     }
     // @ts-ignore - dynamic i18n key
-    return i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) }) || undefined
+    const unit = i18n.te(`chartUnits.${metricUnit}`) ? i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) : metricUnit
+    // @ts-ignore - dynamic i18n key
+    return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
   }
 
   return metricName || undefined

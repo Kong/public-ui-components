@@ -18,6 +18,21 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       cssFileName: 'style',
     },
+    rollupOptions: {
+      // echarts and vue-echarts are peerDependencies; externalize them (merged
+      // with the shared config's external list) so they aren't bundled into dist
+      external: [
+        /^echarts/,
+        'vue-echarts',
+      ],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          'echarts': 'echarts',
+          'vue-echarts': 'VueECharts',
+        },
+      },
+    },
   },
 }))
 

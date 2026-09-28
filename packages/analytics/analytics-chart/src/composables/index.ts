@@ -14,6 +14,7 @@ import useTranslatedUnits from './useTranslatedUnits'
 import useEvaluateFeatureFlag from './useEvaluateFeatureFlag'
 import useTooltipAbsolutePosition from './useTooltipAbsolutePosition'
 import useSparklineSync from './useSparklineSync'
+import useTopTalkersData from './useTopTalkersData'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -33,4 +34,5 @@ export default {
   useEvaluateFeatureFlag,
   useTooltipAbsolutePosition,
   useSparklineSync,
+  useTopTalkersData,
 }

@@ -8,7 +8,14 @@
     @chart-data="onChartData"
   >
     <div class="analytics-chart">
+      <HeatmapRenderer
+        v-if="chartOptions.type === 'heatmap'"
+        :data="data"
+        :options="chartOptions"
+        :query="query"
+      />
       <AnalyticsChart
+        v-else
         :active-metric="activeMetric"
         :chart-data="data"
         :chart-options="options"
@@ -39,10 +46,11 @@
 import type { ChartRendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
-import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
+import type { AnalyticsChartOptions, YAxisConfig } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
-import type { AbsoluteTimeRangeV4, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, ExploreResultV4, YAxisOptions } from '@kong-ui-public/analytics-utilities'
+import HeatmapRenderer from './HeatmapRenderer.vue'
 
 const props = defineProps<ChartRendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{
@@ -59,8 +67,18 @@ const options = computed((): AnalyticsChartOptions => ({
   stacked: props.chartOptions.stacked ?? false,
   chartDatasetColors: props.chartOptions.chart_dataset_colors,
   threshold: props.chartOptions.threshold,
+  metricAxisMap: props.chartOptions.metric_axis_map,
+  yAxes: props.chartOptions.y_axes && {
+    left: toYAxisConfig(props.chartOptions.y_axes.left),
+    right: toYAxisConfig(props.chartOptions.y_axes.right),
+  },
   hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,
 }))
+
+const toYAxisConfig = (axis?: YAxisOptions): YAxisConfig | undefined => axis && {
+  title: axis.title,
+  showGrid: axis.show_grid,
+}
 
 const editTile = () => {
   emit('edit-tile')

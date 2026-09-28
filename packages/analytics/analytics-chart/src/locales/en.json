@@ -24,7 +24,7 @@
     "%": "%",
     "ops/minute": "ops/minute"
   },
-  "csvExport" :{
+  "csvExport": {
     "dataError": "Error loading data",
     "noDataRange": "No data in selected range",
     "noDataRetry": "Please adjust the time period and try again",
@@ -424,6 +424,11 @@
       "display": "Error: 'display' response incorrectly formatted (must have at least one key)",
       "metricNames": "Error: 'metricNames' response incorrectly formatted (must have at least one entry)"
     }
+  },
+  "topTalkers": {
+    "total": "{value} total",
+    "defaultEmptyStateTitle": "No data to display",
+    "defaultErrorStateTitle": "Something went wrong"
   },
   "singleValue": {
     "valueError": "Invalid configuration",

@@ -6,7 +6,7 @@ import type {
 } from '../types'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
-import { readonly, ref, shallowRef, watch } from 'vue'
+import { readonly, ref, shallowReadonly, shallowRef, watch } from 'vue'
 import { getCursorBlock, resolveInfiniteLastRow } from '../utils/fetchers'
 
 type BlockCompletion = {
@@ -18,10 +18,10 @@ type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
 
 interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
   /**
-   * Public row fetcher supplied by the host. The composable keeps AG Grid row
+   * Public row fetcher ref supplied by the host. The composable keeps AG Grid row
    * ranges internal and calls this with the cursor-first TableDataGrid contract.
    */
-  fetcher: TableDataGridFetcher<Row>
+  fetcher: Readonly<Ref<TableDataGridFetcher<Row> | undefined>>
   /**
    * Reactive invalidation input from the component layer. Any change rebuilds
    * the datasource and clears cursor/block state back to block 0.
@@ -65,9 +65,13 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const error = shallowRef<unknown>()
   const pendingFetchCount = ref(0)
   const isFetching = ref(false)
+  let datasourceFetcher: TableDataGridFetcher<Row>
+  let datasourceResetKey: unknown
 
   const isLatestDatasource = (datasourceId: number): boolean => (
     datasourceId === latestDatasourceId.value
+    && datasourceFetcher === fetcher.value
+    && datasourceResetKey === resetKey?.value
   )
 
   const syncIsFetching = () => {
@@ -257,6 +261,12 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * @returns AG Grid datasource for the latest cursor chain.
    */
   const buildDatasource = (): IDatasource => {
+    const currentFetcher = fetcher.value
+    if (!currentFetcher) {
+      throw new Error('TableDataGrid requires a fetcher in infinite mode')
+    }
+    datasourceFetcher = currentFetcher
+    datasourceResetKey = resetKey?.value
     const datasourceId = latestDatasourceId.value + 1
     latestDatasourceId.value = datasourceId
     cursorMap.clear()
@@ -268,6 +278,11 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
 
     return {
       async getRows(getRowsParams) {
+        if (!isLatestDatasource(datasourceId)) {
+          getRowsParams.failCallback()
+          return
+        }
+
         // AG Grid owns block scheduling and supplies zero-based row ranges.
         // This layer converts those ranges into cursor-chain blocks before
         // calling the public fetcher.
@@ -288,16 +303,14 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           datasourceId,
         })
 
-        if (blockGateResult !== 'ready') {
-          // Both 'failed' and 'stale' still need a completion signal, or AG Grid leaves this block in flight forever.
+        if (blockGateResult !== 'ready' || !isLatestDatasource(datasourceId)) {
+          // Complete obsolete requests without invoking the replacement fetcher.
           getRowsParams.failCallback()
+          rejectBlockCompletion(blockIndex, currentBlockCompletion)
           return
         }
 
-        // Skip for a stale generation, or isFetching can get stuck true.
-        if (isLatestDatasource(datasourceId)) {
-          markFetchStarted()
-        }
+        markFetchStarted()
 
         try {
           // AG Grid schedules blocks by row range, so `blockIndex` is this
@@ -308,7 +321,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
 
-          const result = await fetcher({
+          const result = await currentFetcher({
             mode: 'infinite',
             pageSize,
             cursor,
@@ -367,7 +380,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   }
 
   watch(
-    () => resetKey?.value,
+    [fetcher, () => resetKey?.value],
     () => {
       resetDatasource()
     },
@@ -376,7 +389,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
 
   return {
     datasource: readonly(datasource),
-    data: readonly(data),
+    data: shallowReadonly(data),
     error: readonly(error),
     isFetching: readonly(isFetching),
   }

@@ -1,6 +1,6 @@
 import type { GridApi } from 'ag-grid-community'
 
-export type TableDataGridMode = 'infinite'
+export type TableDataGridMode = 'infinite' | 'unpaginated'
 export type TableDataGridRow = Record<string, unknown>
 export type TableDataGridState = 'loading' | 'success' | 'error'
 
@@ -59,6 +59,28 @@ export type TableDataGridSort = {
 export type TableDataGridConfig = TableDataGridSort & {
   pageSize?: number
 }
+
+export type TableDataGridProps<Row extends object = TableDataGridRow> = {
+  headers: Array<TableDataGridHeader<Row>>
+  error?: boolean
+  tableConfig?: TableDataGridConfig
+} & (
+  | {
+    fetcher: TableDataGridFetcher<Row>
+    mode?: 'infinite'
+    pageSize?: number
+    refreshKey?: string | number | boolean
+    rows?: never
+  }
+  | {
+    /** Complete host-owned result rendered through AG Grid's client-side row model. */
+    rows: Row[]
+    mode: 'unpaginated'
+    fetcher?: never
+    pageSize?: never
+    refreshKey?: never
+  }
+)
 
 export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'

@@ -76,15 +76,17 @@ import type {
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
+import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, inject, nextTick, ref } from 'vue'
+import { computed, inject, nextTick, provide, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
+  INJECT_DASHBOARD_COORDINATOR,
   INJECT_QUERY_PROVIDER,
 } from '../constants'
 import { duplicateChartTile } from '../utils/duplicate-tile'
@@ -98,6 +100,11 @@ const {
   context: DashboardRendererContext
   preview?: boolean
 }>()
+
+if (context.disableCoordination !== true) {
+  const coordinator = useInteractionCoordinator()
+  provide(INJECT_DASHBOARD_COORDINATOR, coordinator)
+}
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void

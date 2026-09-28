@@ -8,35 +8,29 @@ import {
 } from './color-overrides'
 import { KUI_COLOR_BACKGROUND_NEUTRAL } from '@kong/design-tokens'
 
-// https://supercolorpalette.com/ is a nice tool for generating these
+// Chart series 9 is reserved for empty values.
 export const lightPalette = [
-  '#1693AE',
-  '#2EA697',
-  '#5CB56C',
-  '#AD47F1',
-  '#7287F1',
-  '#4DA8DF',
-  '#DA5024',
-  '#EC4D87',
-  '#D771D5',
-  '#6C931E',
-  '#AC8E26',
-  '#DB8743',
+  '#0076F4',
+  '#00819D',
+  '#00A17B',
+  '#8A50FF',
+  '#FF3C99',
+  '#FF395D',
+  '#FF6D3C',
+  '#B3A100',
+  '#4E594E',
 ]
 
 export const darkPalette = [
-  '#006B74',
-  '#187C62',
-  '#538732',
-  '#7201DE',
-  '#1E63D3',
-  '#1E83A3',
-  '#B2001F',
-  '#BA107B',
-  '#A739D0',
-  '#5E6400',
-  '#8B620C',
-  '#BB5420',
+  '#5485BA',
+  '#087D96',
+  '#3D8776',
+  '#7654BA',
+  '#A1406F',
+  '#953042',
+  '#BF5430',
+  '#B5A72C',
+  '#4E594E',
 ]
 
 export const generateDiscriminator = (id: string): number => djb2(id)

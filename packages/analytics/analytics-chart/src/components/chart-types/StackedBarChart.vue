@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import type { ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
+import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
@@ -70,6 +71,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition } from '../../enums'
 import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
+import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 
 
 const props = withDefaults(defineProps<{
@@ -106,6 +108,13 @@ const { translateUnit } = composables.useTranslatedUnits()
 const axisCanvasId = crypto.randomUUID()
 const chartCanvasId = crypto.randomUUID()
 const highlightPlugin = new HighlightPlugin()
+const coordinator: InteractionCoordinator | null = inject('analytics-dashboard-coordinator', null)
+const coordinatorPlugin = new CoordinatorPlugin({
+  coordinator,
+  triggerOnSelf: true,
+  watchTimestamp: false,
+  watchDimension: true,
+})
 
 // Parameters for bar sizing.
 const DEFAULT_CHART_WIDTH = '100%'
@@ -298,6 +307,7 @@ const plugins = [
   htmlLegendPlugin,
   axesTooltipPlugin,
   highlightPlugin,
+  coordinatorPlugin,
   ...(props.annotations ? [reactiveAnnotationsPlugin] : []),
 ]
 

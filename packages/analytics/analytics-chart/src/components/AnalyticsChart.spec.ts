@@ -19,6 +19,7 @@ const TimeSeriesChartStub = defineComponent({
     metricAxesTitle: String,
     tooltipMetricDisplay: String,
     threshold: Object,
+    rightYAxis: Object,
   },
   setup(props) {
     return () => h('div', {
@@ -180,4 +181,51 @@ describe('<AnalyticsChart /> activeMetric', () => {
     expect(thresholds.response_latency_p99).toEqual([{ type: 'error', value: 300 }])
   })
 
+})
+
+describe('<AnalyticsChart /> dual y axis', () => {
+  const requestsVsSpendResult: ExploreResultV4 = {
+    data: [
+      { timestamp: '2026-09-09T15:00:00Z', event: { ai_request_count: 620, cost: 4.5 } },
+    ],
+    meta: {
+      start: '2026-09-09T15:00:00Z',
+      end: '2026-09-09T16:00:00Z',
+      granularity_ms: 3600000,
+      metric_names: ['ai_request_count', 'cost'],
+      metric_units: { ai_request_count: 'count', cost: 'usd' },
+      query_id: 'test-query',
+      display: {},
+    },
+  }
+
+  const mountDualAxis = (chartOptions: Partial<AnalyticsChartOptions> = {}) => mount(AnalyticsChart, {
+    props: {
+      chartData: requestsVsSpendResult,
+      chartOptions: { type: 'timeseries_line', stacked: false, metricAxisMap: { cost: 'right' }, ...chartOptions },
+    },
+    global: {
+      stubs: { TimeSeriesChart: TimeSeriesChartStub, StackedBarChart: true, KTooltip: true, KEmptyState: true },
+    },
+  })
+
+  it('titles each axis with its translated metric title', () => {
+    const chart = mountDualAxis().findComponent(TimeSeriesChartStub)
+
+    expect(chart.props('metricAxesTitle')).toBe('Request count')
+    expect(chart.props('rightYAxis')).toMatchObject({ title: 'Costs' })
+  })
+
+  it('prefers configured axis titles', () => {
+    const chart = mountDualAxis({ yAxes: { left: { title: 'Requests' }, right: { title: 'Spend' } } }).findComponent(TimeSeriesChartStub)
+
+    expect(chart.props('metricAxesTitle')).toBe('Requests')
+    expect(chart.props('rightYAxis')).toMatchObject({ title: 'Spend' })
+  })
+
+  it('does not add a right axis for bar charts', () => {
+    const chart = mountDualAxis({ type: 'timeseries_bar' }).findComponent(TimeSeriesChartStub)
+
+    expect(chart.props('rightYAxis')).toBeUndefined()
+  })
 })

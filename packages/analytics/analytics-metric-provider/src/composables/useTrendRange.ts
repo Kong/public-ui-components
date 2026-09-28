@@ -30,15 +30,15 @@ export default function useTrendRange(
     const numMinutes = duration / MS_PER_MINUTE
 
     if (numDays >= 1) {
-      return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+      return i18n.t('trendRange.custom_days', { numDays: Math.floor(numDays) })
     } else if (numHours >= 1) {
-      return i18n.t('trendRange.custom_hours', { numHours: Math.round(numHours) })
+      return i18n.t('trendRange.custom_hours', { numHours: Math.floor(numHours) })
     } else if (numMinutes >= 1) {
-      return i18n.t('trendRange.custom_minutes', { numMinutes: Math.round(numMinutes) })
+      return i18n.t('trendRange.custom_minutes', { numMinutes: Math.floor(numMinutes) })
     }
 
     // Avoid weirdness around daylight savings time by rounding up or down to the nearest day
-    return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+    return i18n.t('trendRange.custom_days', { numDays: Math.floor(numDays) })
   }
 
   const getTimestamps = (): { startMs: number, endMs: number } | undefined => {

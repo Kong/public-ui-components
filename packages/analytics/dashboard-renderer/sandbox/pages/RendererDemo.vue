@@ -489,6 +489,27 @@ const dashboardConfig = ref<DashboardConfig>({
         size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chart_title: 'Traffic vs latency (dual y axis)',
+          metric_axis_map: { request_count: 'left', response_latency_p99: 'right' },
+          y_axes: { left: { show_grid: true }, right: { show_grid: false } },
+          threshold: { response_latency_p99: [{ type: 'warning', value: 10, highlightIntersections: true }] },
+        },
+        query: {
+          datasource: 'api_usage',
+          metrics: ['request_count', 'response_latency_p99'],
+          dimensions: ['time'],
+        },
+      },
+      layout: {
+        position: { col: 0, row: 17 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
   ],
 })
 
