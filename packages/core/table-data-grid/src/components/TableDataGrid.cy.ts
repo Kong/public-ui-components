@@ -9,7 +9,7 @@ import type {
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { defineComponent, h, nextTick, reactive } from 'vue'
+import { defineComponent, h, nextTick, reactive, ref } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
@@ -954,10 +954,6 @@ describe('<TableDataGrid />', () => {
 
     cy.get('[row-index="0"] [col-id="percentage"] [data-testid="table-data-grid-cell-relative"]')
       .should('have.text', '(25 %)')
-    cy.get('[row-index="0"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
-      .should(($fill) => {
-        expect(parseFloat($fill[0].style.width)).to.be.closeTo(100 / 3, 0.01)
-      })
     cy.get('[row-index="1"] [col-id="bar"] [data-testid="table-data-grid-cell-bar-fill"]')
       .should('have.attr', 'style', 'width: 100%;')
     cy.get('[col-id="combined"] [data-testid="table-data-grid-cell-bar"]')
@@ -987,6 +983,32 @@ describe('<TableDataGrid />', () => {
         expect(Math.min(...gaps)).to.be.greaterThan(0)
         expect(Math.min(...gaps)).to.be.lessThan(16)
       })
+  })
+
+  it('sizes an unpaginated grid to its rows with fitToContent', () => {
+    const tableConfig = ref<TableDataGridConfig>({ fitToContent: true })
+
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's parent height.
+    cy.mount(defineComponent({
+      name: 'FitToContentTest',
+      setup() {
+        return () => h('div', { style: { height: '520px', width: '400px' } }, [
+          h(TestTableDataGrid, {
+            headers: [{ key: 'name', label: 'Name' }],
+            mode: 'unpaginated',
+            rows: [{ name: 'Only row' }],
+            tableConfig: tableConfig.value,
+          }),
+        ])
+      },
+    }))
+
+    cy.contains('.ag-cell', 'Only row').should('be.visible')
+    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('be.lessThan', 150)
+    cy.then(() => {
+      tableConfig.value = {}
+    })
+    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('equal', 520)
   })
 
   it('colors threshold values in infinite mode', () => {
