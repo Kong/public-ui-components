@@ -44,7 +44,7 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
     editorStatus: 'loading',
     searchBoxIsRevealed: false,
     hasContent: false,
-    theme: options.theme || 'light',
+    theme: toValue(options.theme) || 'light',
     currentLanguage: options.language || '',
     readOnly: true,
   })
@@ -149,6 +149,16 @@ export function useMonacoDiffEditor<T extends HTMLElement>(
     if (newValue === modifiedModel.getValue()) return
     modifiedModel.setValue(newValue)
     editorStates.hasContent = !!newValue.length
+  })
+
+  // Watch for external `theme` changes and re-theme the live editor. `monaco.editor.setTheme()`
+  // is global (Monaco has no per-instance theming API), matching the initial theme set in `init()`.
+  watch(() => toValue(options.theme), (newTheme) => {
+    if (!_isSetup) return
+    const theme = newTheme || 'light'
+    if (theme === editorStates.theme) return
+    editorStates.theme = theme
+    monaco.editor.setTheme(getMonacoTheme(theme))
   })
 
   // Lifecycle hooks

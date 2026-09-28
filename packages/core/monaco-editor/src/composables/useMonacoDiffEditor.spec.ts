@@ -177,6 +177,21 @@ describe('useMonacoDiffEditor', () => {
     expect(originalModelMock.setValue).not.toHaveBeenCalled()
   })
 
+  it('re-themes the live editor via the global setTheme API when theme changes', async () => {
+    const theme = ref<'light' | 'dark'>('light')
+    const wrapper = mount(createDiffEditorTestComponent({ theme }))
+    await nextTick()
+
+    const setThemeMock = vi.mocked(monaco.editor.setTheme)
+    setThemeMock.mockClear()
+
+    theme.value = 'dark'
+    await nextTick()
+
+    expect(setThemeMock).toHaveBeenCalledWith('material-theme-darker')
+    expect(wrapper.vm.diffEditorApi.editorStates.theme).toBe('dark')
+  })
+
   it('setLanguage updates the language on both models', async () => {
     const wrapper = mount(dummyComponent)
     await nextTick()
