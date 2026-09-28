@@ -48,7 +48,7 @@ When a chart wrapper's generated option doesn't fit your use case at all, use th
 </template>
 
 <script setup lang="ts">
-import { ECharts } from '@kong-ui-public/e-charts'
+import { ECharts } from '@kong-ui-public/echarts'
 import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import type { EChartsOption } from 'echarts'

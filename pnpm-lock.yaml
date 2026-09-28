@@ -582,7 +582,7 @@ importers:
         specifier: ^3.5.41
         version: 3.5.41(typescript@5.9.3)
 
-  packages/core/e-charts:
+  packages/core/echarts:
     devDependencies:
       '@kong-ui-public/sandbox-layout':
         specifier: workspace:^

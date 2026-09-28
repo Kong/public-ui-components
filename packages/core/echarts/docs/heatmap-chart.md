@@ -4,8 +4,8 @@
 
 ```vue
 <script setup lang="ts">
-import { HeatmapChart } from '@kong-ui-public/e-charts'
-import type { HeatmapDataPoint } from '@kong-ui-public/e-charts'
+import { HeatmapChart } from '@kong-ui-public/echarts'
+import type { HeatmapDataPoint } from '@kong-ui-public/echarts'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

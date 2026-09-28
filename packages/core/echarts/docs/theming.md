@@ -17,7 +17,7 @@ You can also pass your own trigger ref if you want colors to re-resolve on some 
 
 ```ts
 import { ref } from 'vue'
-import { useChartColors } from '@kong-ui-public/e-charts'
+import { useChartColors } from '@kong-ui-public/echarts'
 
 const refreshSignal = ref(0)
 const colors = useChartColors(refreshSignal)
@@ -33,7 +33,7 @@ Use `chartColors()` (non-reactive) or `useChartColors()` (reactive `Ref`) direct
 ```vue
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ECharts, useChartColors } from '@kong-ui-public/e-charts'
+import { ECharts, useChartColors } from '@kong-ui-public/echarts'
 import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import type { EChartsOption } from 'echarts'

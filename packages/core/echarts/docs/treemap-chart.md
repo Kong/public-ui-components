@@ -4,8 +4,8 @@
 
 ```vue
 <script setup lang="ts">
-import { TreeMapChart } from '@kong-ui-public/e-charts'
-import type { TreeMapDataNode } from '@kong-ui-public/e-charts'
+import { TreeMapChart } from '@kong-ui-public/echarts'
+import type { TreeMapDataNode } from '@kong-ui-public/echarts'
 
 const data: TreeMapDataNode[] = [
   {

@@ -1,4 +1,4 @@
-# @kong-ui-public/e-charts
+# @kong-ui-public/echarts
 
 ECharts-based chart components for Kong UI, with theme-reactive colors resolved from `@kong/design-tokens` at runtime.
 
@@ -22,13 +22,13 @@ ECharts-based chart components for Kong UI, with theme-reactive colors resolved 
 Install the package along with its peer dependencies in your host application:
 
 ```sh
-pnpm add @kong-ui-public/e-charts echarts vue-echarts
+pnpm add @kong-ui-public/echarts echarts vue-echarts
 ```
 
 Import the styles in your application. They provide the chart's default height (`400px`, overridable via the `height` prop):
 
 ```typescript
-import '@kong-ui-public/e-charts/dist/style.css'
+import '@kong-ui-public/echarts/dist/style.css'
 ```
 
 ### Sizing
