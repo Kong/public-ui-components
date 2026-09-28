@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.50.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.49.0...%40kong-ui-public%2Fanalytics-utilities%4012.50.0) (2026-09-28)
+
+### Features
+
+* **analytics:** treemap and heatmap chart types [MA-5526] ([#3890](https://github.com/Kong/public-ui-components/issues/3890)) ([35c0ace](https://github.com/Kong/public-ui-components/commit/35c0aceff3aedec26522f0c260b43ebb9da1451e))
+
+
 # [12.49.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.48.0...%40kong-ui-public%2Fanalytics-utilities%4012.49.0) (2026-09-25)
 
 ### Features

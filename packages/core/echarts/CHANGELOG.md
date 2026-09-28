@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fecharts%400.6.0...%40kong-ui-public%2Fecharts%400.7.0) (2026-09-28)
+
+### Features
+
+* **analytics:** treemap and heatmap chart types [MA-5526] ([#3890](https://github.com/Kong/public-ui-components/issues/3890)) ([35c0ace](https://github.com/Kong/public-ui-components/commit/35c0aceff3aedec26522f0c260b43ebb9da1451e))
+
+
 # 0.6.0 (2026-09-28)
 
 ### Features
