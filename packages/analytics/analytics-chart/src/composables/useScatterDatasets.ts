@@ -10,9 +10,9 @@ import { isNullOrUndef } from 'chart.js/helpers'
 import { computePercentiles, datavisPalette, determineBaseColor, scatterChartColors, withAlpha } from '../utils'
 import composables from '../composables'
 
-export const DEFAULT_POINT_RADIUS = 2
+export const DEFAULT_POINT_RADIUS = 3
 export const DEFAULT_POINT_OPACITY = 0.6
-const OUTLIER_RADIUS_BOOST = 1
+const OUTLIER_RADIUS_BOOST = 2
 const HOVER_RADIUS_BOOST = 2
 const MEDIAN_PERCENTILE = 50
 const MEDIAN_BORDER_DASH = [6, 4]
@@ -149,6 +149,8 @@ export default function useScatterDatasets(
         const label: string = (i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name
 
         datasets.push({
+          dimension,
+          dimensionValue: groupId,
           type: 'scatter',
           rawDimension: name,
           rawMetric: metric,

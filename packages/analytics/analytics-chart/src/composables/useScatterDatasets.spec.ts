@@ -155,7 +155,7 @@ describe('useScatterDatasets', () => {
       makeResult(costRecords()),
     ).value
 
-    expect(resolve(datasets[0].pointRadius, { y: 10 })).toBe(4)
+    expect(resolve(datasets[0].pointRadius, { y: 10 })).toBe(5)
     expect(resolve(datasets[0].pointRadius, { y: 1 })).toBe(3)
   })
 

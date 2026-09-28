@@ -100,7 +100,9 @@ export class CoordinatorPlugin implements Plugin {
     }
 
     // @ts-ignore chart.config.type does exist
-    if (chart.config.type === 'doughnut') {
+    const chartType = chart.config.type
+
+    if (chartType === 'doughnut') {
       this._highlightDimensionDonut(chart)
     } else {
       this._highlightDimensionDefault(chart, args)
@@ -269,9 +271,10 @@ export class CoordinatorPlugin implements Plugin {
 
   _getDatasetDimension(chart: Chart, event: Event): [string, string] | undefined {
     // @ts-ignore chart.config.type does exist
-    const intersect = chart.config.type !== 'line'
-    // @ts-ignore chart.config.type does exist
-    const mode = chart.config.type === 'doughnut' ? 'point' : 'dataset'
+    const chartType = chart.config.type
+
+    const intersect = chartType !== 'line'
+    const mode = ['doughnut', 'scatter'].includes(chartType) ? 'point' : 'dataset'
 
     const result = chart.getElementsAtEventForMode(event, mode, { intersect }, false)
 
@@ -284,7 +287,8 @@ export class CoordinatorPlugin implements Plugin {
     const { datasetIndex, index } = point
     const { dimension, dimensionValue } = chart.data.datasets[datasetIndex] as any
 
-    if (mode === 'point') {
+    if (chartType === 'doughnut') {
+      // donut chart has an array of dimension values, everything else is a single value
       return [dimension, dimensionValue[index]]
     }
 

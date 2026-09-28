@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { Chart, Plugin } from 'chart.js'
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues, InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, TooltipState } from '../../types'
 import type { ScatterChartColors } from '../../utils'
 
@@ -54,6 +54,8 @@ import { OutlierBandPlugin } from '../chart-plugins/OutlierBandPlugin'
 import { ReferenceLinePlugin } from '../chart-plugins/ReferenceLinePlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
+import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
+import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 
 interface ScatterChartProps {
   chartData?: KChartData
@@ -104,6 +106,14 @@ const outlierBandPlugin = new OutlierBandPlugin()
 const referenceLinePlugin = new ReferenceLinePlugin()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
+const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
+const coordinatorPlugin = new CoordinatorPlugin({
+  coordinator,
+  requiresUpdate: true,
+  triggerOnSelf: true,
+  watchTimestamp: false,
+  watchDimension: true,
+})
 
 const chartInstance = ref<{ chart: Chart }>()
 
@@ -185,6 +195,7 @@ const outlierBandValue = computed(() => (
 ))
 
 const plugins = computed(() => [
+  coordinatorPlugin,
   htmlLegendPlugin,
   ...(outlierBandValue.value !== undefined ? [outlierBandPlugin] : []),
   ...(referenceLines.value.length ? [referenceLinePlugin] : []),
