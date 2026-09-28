@@ -177,7 +177,7 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
       intersect: false,
     },
     interaction: {
-      mode: 'nearest',
+      mode: 'point',
       intersect: false,
     },
     animation: {
