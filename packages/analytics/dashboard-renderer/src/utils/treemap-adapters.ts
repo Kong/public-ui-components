@@ -3,7 +3,7 @@ import type { TreeMapDataNode } from '@kong-ui-public/echarts'
 
 import { color } from '@kong-ui-public/analytics-utilities'
 import { toMetricValue } from './metric-value'
-import { OTHER_DIMENSION_ID } from '../constants'
+import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
 
 interface Branch {
   node: TreeMapDataNode

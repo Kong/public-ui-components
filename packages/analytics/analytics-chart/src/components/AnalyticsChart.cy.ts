@@ -1,6 +1,5 @@
 // Cypress component test spec file
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { h } from 'vue'
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
@@ -347,73 +346,6 @@ describe('<AnalyticsChart />', () => {
     cy.get('.sub-label').eq(2).should('include.text', '30K')
     cy.get('.label').eq(3).should('include.text', '300')
     cy.get('.sub-label').eq(3).should('include.text', '12K')
-  })
-
-  describe('ECharts types', () => {
-    const meta = {
-      start: '2024-06-16T00:00:00.000Z',
-      end: '2024-06-18T00:00:00.000Z',
-      granularity_ms: 86400000,
-      metric_names: ['ai_request_count'],
-      metric_units: { ai_request_count: 'count' },
-      query_id: '12345',
-      truncated: false,
-      limit: 50,
-    }
-
-    const heatmapResult = {
-      data: [
-        { timestamp: '2024-06-16T00:00:00.000Z', event: { ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
-        { timestamp: '2024-06-17T00:00:00.000Z', event: { ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
-      ],
-      meta: {
-        ...meta,
-        display: { ai_gateway_model: { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } } },
-      },
-    }
-
-    const treemapResult = {
-      data: [
-        { timestamp: meta.start, event: { ai_provider: 'openai', ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
-        { timestamp: meta.start, event: { ai_provider: 'anthropic', ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
-      ],
-      meta: {
-        ...meta,
-        display: {
-          ai_provider: { openai: { name: 'OpenAI' }, anthropic: { name: 'Anthropic' } },
-          ai_gateway_model: { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } },
-        },
-      },
-    }
-
-    const mountInTile = (chartData: object, type: string) => cy.mount(() => h(
-      'div',
-      { style: { height: '400px' } },
-      [h(AnalyticsChart, { chartData, chartOptions: { type }, tooltipTitle: 'Tooltip Title' })],
-    ))
-
-    it('renders a heatmap chart', () => {
-      mountInTile(heatmapResult, 'heatmap')
-
-      cy.get('[data-testid="heatmap-chart"] canvas').should('be.visible')
-      cy.get('[data-testid="no-data-in-report"]').should('not.exist')
-    })
-
-    it('renders a treemap chart', () => {
-      mountInTile(treemapResult, 'treemap')
-
-      cy.get('[data-testid="treemap-chart"] canvas').should('be.visible')
-      cy.get('[data-testid="no-data-in-report"]').should('not.exist')
-    })
-
-    for (const type of ['heatmap', 'treemap']) {
-      it(`shows the empty state for a ${type} chart with no data`, () => {
-        mount({ chartData: emptyExploreResult, chartOptions: { type } })
-
-        cy.get('[data-testid="no-data-in-report"]').should('be.visible')
-        cy.get(`[data-testid="${type}-chart"]`).should('not.exist')
-      })
-    }
   })
 
   it('renders an empty state with default title and description text', () => {

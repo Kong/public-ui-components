@@ -7,8 +7,6 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import type { ScatterChartData, ScatterDataPoint, ScatterPointExtra } from '../types'
 
-import { toMetricValue } from './metric-value'
-
 const EMPTY_GROUP = 'empty'
 
 /**
@@ -78,6 +76,16 @@ export const exploreResultToScatterData = (result: ExploreResultV4 | undefined):
     limit,
     datasource,
   }
+}
+
+const toMetricValue = (rawValue: unknown): number | undefined => {
+  if (rawValue === null || rawValue === undefined || rawValue === '') {
+    return undefined
+  }
+
+  const value = Number(rawValue)
+
+  return Number.isFinite(value) ? value : undefined
 }
 
 /**

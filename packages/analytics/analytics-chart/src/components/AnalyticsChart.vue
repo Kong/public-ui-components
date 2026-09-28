@@ -119,20 +119,6 @@
         :x-metric="scatterData?.xMetric"
         :x-metric-unit="scatterData?.xMetricUnit"
       />
-      <HeatmapChart
-        v-else-if="isHeatmapChart && exploreData"
-        :chart-data="exploreData"
-        :metric-unit="computedMetricUnit"
-        :tooltip-metric-display="tooltipMetricDisplay"
-        :tooltip-title="tooltipTitle"
-      />
-      <TreeMapChart
-        v-else-if="isTreemapChart && exploreData"
-        :chart-data="exploreData"
-        :metric-unit="computedMetricUnit"
-        :tooltip-metric-display="tooltipMetricDisplay"
-        :tooltip-title="tooltipTitle"
-      />
     </div>
   </div>
 </template>
@@ -163,8 +149,6 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import ScatterChart from './chart-types/ScatterChart.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
-import HeatmapChart from './chart-types/HeatmapChart.vue'
-import TreeMapChart from './chart-types/TreeMapChart.vue'
 
 interface ChartProps {
   chartData: ExploreResultV4 | ScatterChartData
@@ -329,7 +313,7 @@ const computedChartData = computed(() => {
     ).value
   }
 
-  if (!exploreData.value || isHeatmapChart.value || isTreemapChart.value) {
+  if (!exploreData.value) {
     return { datasets: [] }
   }
 
@@ -409,8 +393,6 @@ const isTimeSeriesChart = computed<boolean>(() => {
 })
 const isDonutChart = computed<boolean>(() => props.chartOptions.type === 'donut')
 const isScatterChart = computed<boolean>(() => props.chartOptions.type === 'scatter')
-const isHeatmapChart = computed<boolean>(() => props.chartOptions.type === 'heatmap')
-const isTreemapChart = computed<boolean>(() => props.chartOptions.type === 'treemap')
 
 const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 

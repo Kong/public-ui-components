@@ -300,7 +300,7 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('have.been.calledThrice')
   })
 
-  it('Renders heatmap and treemap tiles through AnalyticsChart', () => {
+  it('Renders heatmap and treemap tiles through their renderers', () => {
     const models = { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } }
     const meta = {
       start: '2024-06-16T00:00:00.000Z',
