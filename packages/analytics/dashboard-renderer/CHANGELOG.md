@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.34.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.33.1...%40kong-ui-public%2Fdashboard-renderer%408.34.0) (2026-09-28)
+
+### Features
+
+* **echarts:** rename package from e-charts to echarts ([#3888](https://github.com/Kong/public-ui-components/issues/3888)) ([5026d00](https://github.com/Kong/public-ui-components/commit/5026d004ee225f263432239c82393fad4b64f6cc))
+
+
 ## [8.33.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.33.0...%40kong-ui-public%2Fdashboard-renderer%408.33.1) (2026-09-28)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

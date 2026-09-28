@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.6.0 (2026-09-28)
+
+### Features
+
+* **echarts:** rename package from e-charts to echarts ([#3888](https://github.com/Kong/public-ui-components/issues/3888)) ([5026d00](https://github.com/Kong/public-ui-components/commit/5026d004ee225f263432239c82393fad4b64f6cc))
+
+
 # [0.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fe-charts%400.4.1...%40kong-ui-public%2Fe-charts%400.5.0) (2026-09-24)
 
 ### Features
