@@ -1,3 +1,4 @@
+import { computed, hasInjectionContext, inject, type ComputedRef } from 'vue'
 import { djb2 } from './djb2'
 import {
   statusCodeColors,
@@ -15,10 +16,8 @@ export const lightPalette = [
   '#00A17B',
   '#8A50FF',
   '#FF3C99',
-  '#FF395D',
   '#FF6D3C',
   '#B3A100',
-  '#4E594E',
 ]
 
 export const darkPalette = [
@@ -27,10 +26,8 @@ export const darkPalette = [
   '#3D8776',
   '#7654BA',
   '#A1406F',
-  '#953042',
   '#BF5430',
   '#B5A72C',
-  '#4E594E',
 ]
 
 export const generateDiscriminator = (id: string): number => djb2(id)
@@ -92,7 +89,6 @@ export const color = ({
   dimension = undefined,
   dimensionValue = undefined,
   metric = undefined,
-  theme = 'light',
   customPalette = undefined,
 }: {
   discriminator?: number
@@ -100,9 +96,14 @@ export const color = ({
   dimension?: string
   dimensionValue?: string
   metric?: string
-  theme?: 'light' | 'dark'
   customPalette?: string[]
 }): string => {
+  let theme: 'light' | 'dark' = 'light'
+  if (hasInjectionContext()) {
+    const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
+    theme = activeColorMode.value
+  }
+
   // if discriminator is defined, always use it.
   if (discriminator !== undefined) {
     return colorByDiscriminator({
