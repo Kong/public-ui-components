@@ -167,7 +167,7 @@ describe('<TreeMapChart />', () => {
     const wrapper = mountChart({ data, tooltipTitle: 'Resources' })
     const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any).title).toBe('Resources')
+    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any)?.title).toBe('Resources')
   })
 
   it('maps the hovered node to the shared tooltip content', () => {
@@ -193,11 +193,18 @@ describe('<TreeMapChart />', () => {
     })
   })
 
+  it('shows no tooltip for the root, which is hovered through the gaps between groups', () => {
+    const wrapper = mountChart({ data, seriesName: 'Usage' })
+    const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
+
+    expect(nodeTooltipContent({ name: 'Usage', value: 100, treePathInfo: [{ name: 'Usage' }] } as any)).toBeUndefined()
+  })
+
   it('uses valueFormatter for the tooltip value', () => {
     const wrapper = mountChart({ data, valueFormatter: (value: number) => `${value}%` })
     const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any).rows?.[0]?.value).toBe('42%')
+    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any)?.rows?.[0]?.value).toBe('42%')
   })
 
   it('always merges the option over the generated option, even without data', () => {

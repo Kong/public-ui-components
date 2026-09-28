@@ -45,6 +45,11 @@ const nodeTooltipContent: ChartTooltipContent = (params) => {
   const [node] = tooltipItems(params)
   // `treePathInfo` runs from the root to the node itself; the groups are the entries in between
   const treePath = (node as typeof node & { treePathInfo?: Array<{ name: string }> }).treePathInfo ?? []
+
+  if (treePath.length === 1) {
+    return undefined
+  }
+
   const groups = treePath.slice(1, -1).map(({ name }) => name)
 
   return {
