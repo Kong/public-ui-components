@@ -22,11 +22,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Make sure to externalize deps that shouldn't be bundled into your library
       external: [
         '@kong-ui-public/analytics-metric-provider',
+        '@kong-ui-public/echarts',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           '@kong-ui-public/analytics-metric-provider': 'kong-ui-public-analytics-metric-provider',
+          '@kong-ui-public/echarts': 'kong-ui-public-echarts',
         },
       },
     },
