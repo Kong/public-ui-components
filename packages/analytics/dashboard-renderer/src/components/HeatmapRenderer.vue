@@ -17,10 +17,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../composables'
-import { HeatmapChart } from '@kong-ui-public/e-charts'
-import type { HeatmapDataPoint } from '@kong-ui-public/e-charts'
+import { HeatmapChart } from '@kong-ui-public/echarts'
+import type { HeatmapDataPoint } from '@kong-ui-public/echarts'
 import type { ExploreResultV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
-import '@kong-ui-public/e-charts/dist/style.css'
+import '@kong-ui-public/echarts/dist/style.css'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns'
 

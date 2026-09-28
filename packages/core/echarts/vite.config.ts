@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
-const packageName = 'e-charts'
+const packageName = 'echarts'
 const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
@@ -36,7 +36,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   },
 }))
 
-// If we are trying to preview a build of the local `package/e-charts/sandbox` directory,
+// If we are trying to preview a build of the local `package/echarts/sandbox` directory,
 // unset the lib, rollupOptions.external and rollupOptions.output.globals properties
 if (process.env.USE_SANDBOX) {
   config.build.lib = undefined
