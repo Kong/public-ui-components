@@ -118,4 +118,24 @@ describe('exploreResultToTreemap', () => {
 
     expect(group.itemStyle).toEqual({ color: color({ state: 'empty' }) })
   })
+
+  it('names the `____OTHER____` bucket with otherLabel at both levels, and colors the group like other charts', () => {
+    const result = exploreResultToTreemap(exploreResult([
+      { ai_provider: 'openai', ai_gateway_model: '____OTHER____', ai_request_count: 2 },
+      { ai_provider: '____OTHER____', ai_gateway_model: 'gpt-4o', ai_request_count: 1 },
+    ]), { otherLabel: 'Others' })
+
+    expect(result).toEqual([
+      { name: 'OpenAI', ...colored('openai'), children: [{ name: 'Others', value: 2 }] },
+      { name: 'Others', itemStyle: { color: color({ state: '____OTHER____' }) }, children: [{ name: 'gpt-4o', value: 1 }] },
+    ])
+  })
+
+  it('keeps the `____OTHER____` id as the name without otherLabel', () => {
+    const result = exploreResultToTreemap(exploreResult([
+      { ai_provider: '____OTHER____', ai_request_count: 1 },
+    ], { display: { ai_provider: PROVIDERS } }))
+
+    expect(result?.[0]?.name).toBe('____OTHER____')
+  })
 })

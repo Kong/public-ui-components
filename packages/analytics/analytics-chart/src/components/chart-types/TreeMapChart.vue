@@ -25,7 +25,7 @@ const { i18n } = composables.useI18n()
 const { translateUnit } = composables.useTranslatedUnits()
 const { formatUnit } = unitFormatter({ i18n })
 
-const treemapData = computed(() => exploreResultToTreemap(chartData))
+const treemapData = computed(() => exploreResultToTreemap(chartData, { otherLabel: i18n.t('chartLabels.____OTHER____') }))
 
 const hasGroups = computed(() => !!treemapData.value?.some((node) => node.children?.length))
 

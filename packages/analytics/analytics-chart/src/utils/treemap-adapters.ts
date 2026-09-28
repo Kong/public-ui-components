@@ -3,18 +3,23 @@ import type { TreeMapDataNode } from '@kong-ui-public/echarts'
 
 import { color } from '@kong-ui-public/analytics-utilities'
 import { toMetricValue } from './metric-value'
+import { OTHER_DIMENSION_ID } from '../constants'
 
 interface Branch {
   node: TreeMapDataNode
   children: Map<string, TreeMapDataNode>
 }
 
-const namedNode = (dimensionDisplay: Display | undefined, id: string): TreeMapDataNode => ({
-  name: dimensionDisplay?.[id]?.name ?? id,
+export interface TreemapAdapterOptions {
+  otherLabel?: string
+}
+
+const namedNode = (dimensionDisplay: Display | undefined, id: string, { otherLabel }: TreemapAdapterOptions): TreeMapDataNode => ({
+  name: (id === OTHER_DIMENSION_ID && otherLabel) || (dimensionDisplay?.[id]?.name ?? id),
 })
 
-const groupNode = (dimension: string, dimensionDisplay: Display | undefined, id: string): TreeMapDataNode => ({
-  ...namedNode(dimensionDisplay, id),
+const groupNode = (dimension: string, dimensionDisplay: Display | undefined, id: string, options: TreemapAdapterOptions): TreeMapDataNode => ({
+  ...namedNode(dimensionDisplay, id, options),
   itemStyle: { color: color({ dimension, dimensionValue: id }) },
 })
 
@@ -36,6 +41,7 @@ const buildBranches = (
   metric: string,
   display: Record<string, Display>,
   [groupDimension, childDimension]: string[],
+  options: TreemapAdapterOptions,
 ): Map<string, Branch> => {
   const branches = new Map<string, Branch>()
   const dimensionKey = (event: RecordEvent, dimension: string): string => String(event[dimension])
@@ -48,7 +54,12 @@ const buildBranches = (
     }
 
     const groupId = dimensionKey(event, groupDimension)
-    const branch = getOrCreate(branches, groupId, () => ({ node: groupNode(groupDimension, display[groupDimension], groupId), children: new Map() }))
+    const branch = getOrCreate(branches, groupId, () => (
+      {
+        node: groupNode(groupDimension, display[groupDimension], groupId, options),
+        children: new Map(),
+      }),
+    )
 
     if (!childDimension) {
       addValue(branch.node, value)
@@ -56,7 +67,7 @@ const buildBranches = (
     }
 
     const childId = dimensionKey(event, childDimension)
-    const childNode = getOrCreate(branch.children, childId, () => namedNode(display[childDimension], childId))
+    const childNode = getOrCreate(branch.children, childId, () => namedNode(display[childDimension], childId, options))
     addValue(childNode, value)
   }
 
@@ -69,7 +80,10 @@ const buildBranches = (
  * With one dimension each value is a flat node. With two the first dimension
  * groups the second, e.g. provider -> model
  */
-export const exploreResultToTreemap = (result: ExploreResultV4 | undefined): TreeMapDataNode[] | undefined => {
+export const exploreResultToTreemap = (
+  result: ExploreResultV4 | undefined,
+  options: TreemapAdapterOptions = {},
+): TreeMapDataNode[] | undefined => {
   if (!result?.meta || !result.data) {
     return undefined
   }
@@ -85,7 +99,7 @@ export const exploreResultToTreemap = (result: ExploreResultV4 | undefined): Tre
     return undefined
   }
 
-  const branches = buildBranches(result.data as AnalyticsExploreRecord[], metric, display, dimensions)
+  const branches = buildBranches(result.data as AnalyticsExploreRecord[], metric, display, dimensions, options)
 
   return [...branches.values()].map(({ node, children }) => (children.size ? { ...node, children: [...children.values()] } : node))
 }
