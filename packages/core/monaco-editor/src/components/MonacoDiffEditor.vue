@@ -147,7 +147,7 @@ const monacoDiffEditor = useMonacoDiffEditor(editorRef, {
   language,
   original: () => original,
   modified: () => modified,
-  theme: editorTheme.value,
+  theme: () => editorTheme.value,
   monacoOptions: realMonacoOptions.value,
   onReady: (diffEditor) => {
     emit('ready', diffEditor)

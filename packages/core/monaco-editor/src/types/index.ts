@@ -59,7 +59,7 @@ export interface UseMonacoDiffEditorOptions {
   /**
    * The theme of the diff editor
    */
-  theme?: EditorThemes
+  theme?: MaybeRefOrGetter<EditorThemes>
   /**
    * Callback function triggered when the diff editor is ready
    */
