@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.51.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.50.0...%40kong-ui-public%2Fanalytics-utilities%4012.51.0) (2026-09-28)
+
+### Features
+
+* **analytics:** ai-x observability polish ([#3891](https://github.com/Kong/public-ui-components/issues/3891)) ([1e8283c](https://github.com/Kong/public-ui-components/commit/1e8283c2d6e4a45c33d156739e5686c2baf6d372))
+
+
 # [12.50.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.49.0...%40kong-ui-public%2Fanalytics-utilities%4012.50.0) (2026-09-28)
 
 ### Features
