@@ -21,6 +21,12 @@ describe('useChartTooltip', () => {
     expect(second.querySelector('.title')?.textContent?.trim()).toBe('Jun 17')
   })
 
+  it('returns empty content, so ECharts hides the tooltip, when the content is undefined', () => {
+    const formatter = useChartTooltip(() => () => undefined)
+
+    expect(formatter({} as any)).toBe('')
+  })
+
   it('falls back to the default content', () => {
     const formatter = useChartTooltip(() => undefined)
     const element = formatter({ name: 'Jun 16', seriesName: 'openai', color: '#ff0000', value: 1417 } as any)

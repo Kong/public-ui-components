@@ -48,8 +48,9 @@ export interface ChartTooltipProps {
 /**
  * Builds the shared tooltip's content from the hovered item's ECharts tooltip
  * params. Chart types provide one; consumers only set the title (`tooltipTitle`).
+ * Returns `undefined` to show no tooltip for the hovered item.
  */
-export type ChartTooltipContent = (params: TooltipComponentFormatterCallbackParams) => ChartTooltipProps
+export type ChartTooltipContent = (params: TooltipComponentFormatterCallbackParams) => ChartTooltipProps | undefined
 
 interface BaseChartProps {
   /**

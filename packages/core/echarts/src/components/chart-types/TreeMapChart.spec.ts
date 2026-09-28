@@ -46,10 +46,11 @@ describe('<TreeMapChart />', () => {
     expect(option.series[0]).toMatchObject({ type: 'treemap', name: 'Usage', data })
   })
 
-  it('defaults to the token color palette', () => {
+  it('defaults to the token color palette on the root level only', () => {
     const option = chartOption(mountChart({ data }))
 
-    expect(option.series[0].color).toEqual([
+    expect(option.series[0]).not.toHaveProperty('color')
+    expect(option.series[0].levels[0].color).toEqual([
       KUI_COLOR_BACKGROUND_PRIMARY_WEAK,
       KUI_COLOR_BACKGROUND_SUCCESS_WEAK,
       KUI_COLOR_BACKGROUND_WARNING_WEAK,
@@ -63,7 +64,7 @@ describe('<TreeMapChart />', () => {
   it('replaces the palette with colorPalette', () => {
     const option = chartOption(mountChart({ data, colorPalette: ['#111111', '#222222'] }))
 
-    expect(option.series[0].color).toEqual(['#111111', '#222222'])
+    expect(option.series[0].levels[0].color).toEqual(['#111111', '#222222'])
   })
 
   it('passes colors set on nodes in data through untouched', () => {
@@ -95,7 +96,7 @@ describe('<TreeMapChart />', () => {
     })
   })
 
-  it('styles levels: bordered groups, saturated children', () => {
+  it('styles levels: bordered groups, children fading by value', () => {
     const option = chartOption(mountChart({ data }))
 
     expect(option.series[0].levels[0]).toMatchObject({
@@ -103,7 +104,7 @@ describe('<TreeMapChart />', () => {
     })
     expect(option.series[0].levels[0]).not.toHaveProperty('upperLabel')
     expect(option.series[0].levels[1]).toMatchObject({
-      colorSaturation: [0.3, 0.5],
+      colorAlpha: [0.55, 1],
       itemStyle: { borderColor: KUI_COLOR_BACKGROUND, borderWidth: 1, gapWidth: 1 },
     })
   })
@@ -113,7 +114,14 @@ describe('<TreeMapChart />', () => {
 
     expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: false, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
     expect(option.series[0].breadcrumb.show).toBe(true)
-    expect(option.series[0].leafDepth).toBeUndefined()
+    // The full depth, so every level shows and the breadcrumb follows the view root
+    expect(option.series[0].leafDepth).toBe(2)
+  })
+
+  it('defaults leafDepth to 1 for flat data', () => {
+    const flat: TreeMapDataNode[] = [{ name: 'Gateways', value: 300 }, { name: 'Plugins', value: 100 }]
+
+    expect(chartOption(mountChart({ data: flat })).series[0].leafDepth).toBe(1)
   })
 
   it('is a static chart filling the whole area with drillDown false', () => {
@@ -159,7 +167,7 @@ describe('<TreeMapChart />', () => {
     const wrapper = mountChart({ data, tooltipTitle: 'Resources' })
     const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any).title).toBe('Resources')
+    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any)?.title).toBe('Resources')
   })
 
   it('maps the hovered node to the shared tooltip content', () => {
@@ -185,11 +193,18 @@ describe('<TreeMapChart />', () => {
     })
   })
 
+  it('shows no tooltip for the root, which is hovered through the gaps between groups', () => {
+    const wrapper = mountChart({ data, seriesName: 'Usage' })
+    const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
+
+    expect(nodeTooltipContent({ name: 'Usage', value: 100, treePathInfo: [{ name: 'Usage' }] } as any)).toBeUndefined()
+  })
+
   it('uses valueFormatter for the tooltip value', () => {
     const wrapper = mountChart({ data, valueFormatter: (value: number) => `${value}%` })
     const nodeTooltipContent = chart(wrapper).props('tooltipContent') as ChartTooltipContent
 
-    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any).rows?.[0]?.value).toBe('42%')
+    expect(nodeTooltipContent({ name: 'Gateways', value: 42 } as any)?.rows?.[0]?.value).toBe('42%')
   })
 
   it('always merges the option over the generated option, even without data', () => {

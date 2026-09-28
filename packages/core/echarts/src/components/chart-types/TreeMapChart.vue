@@ -15,7 +15,7 @@ import { useChartColors } from '../../composables/useChartColors.ts'
 import { deepMerge } from '../../utils/deepMerge.ts'
 import { tooltipItems, tooltipRow } from '../../utils/tooltip.ts'
 import type { EChartsOption, TreemapSeriesOption } from 'echarts'
-import type { ChartTooltipContent, TreeMapChartProps } from '../../types/index.ts'
+import type { ChartTooltipContent, TreeMapChartProps, TreeMapDataNode } from '../../types/index.ts'
 
 // The renderer, grid and tooltip are registered by the base `ECharts` component.
 // The breadcrumb is part of the treemap series, not a separate component
@@ -45,6 +45,11 @@ const nodeTooltipContent: ChartTooltipContent = (params) => {
   const [node] = tooltipItems(params)
   // `treePathInfo` runs from the root to the node itself; the groups are the entries in between
   const treePath = (node as typeof node & { treePathInfo?: Array<{ name: string }> }).treePathInfo ?? []
+
+  if (treePath.length === 1) {
+    return undefined
+  }
+
   const groups = treePath.slice(1, -1).map(({ name }) => name)
 
   return {
@@ -66,17 +71,21 @@ const defaultPalette = () => [
   colors.value.KUI_COLOR_BACKGROUND_DECORATIVE_AQUA_WEAKEST,
 ]
 
+/** Levels in the tree, counting the top-level groups as 1 */
+const treeDepth = (nodes: TreeMapDataNode[] = []): number => {
+  return nodes.reduce((depth, node) => Math.max(depth, 1 + treeDepth(node.children)), 0)
+}
+
 const generatedOption = computed((): EChartsOption => ({
   series: [
     deepMerge<TreemapSeriesOption>({
       name: seriesName,
       type: 'treemap',
       data: data ?? [],
-      // ECharts cycles the palette when there are more groups than colors
-      color: colorPalette ?? defaultPalette(),
       // Drill-down: click a group to zoom in, and use the breadcrumb to go back
       nodeClick: drillDown ? 'zoomToNode' : false,
-      leafDepth,
+      // Defaults to the full depth
+      leafDepth: leafDepth ?? treeDepth(data),
       // No mouse-wheel zoom or drag-to-pan, so scrolling over the chart scrolls the page
       roam: false,
       // Fill the chart area, leaving room at the bottom for the breadcrumb with drill-down
@@ -114,15 +123,17 @@ const generatedOption = computed((): EChartsOption => ({
         // a group is too short for the text, so group names come from the
         // tooltip instead. Add one via `seriesOption` for tall charts
         {
+          // ECharts cycles the palette when there are more groups than colors
+          color: colorPalette ?? defaultPalette(),
           itemStyle: {
             borderColor: colors.value.KUI_COLOR_BACKGROUND,
             borderWidth: 2,
             gapWidth: 2,
           },
         },
-        // Deeper levels: children inherit the group hue with varied saturation
+        // Deeper levels: children inherit the group hue with varied alpha
         {
-          colorSaturation: [0.3, 0.5],
+          colorAlpha: [0.55, 1],
           itemStyle: {
             borderColor: colors.value.KUI_COLOR_BACKGROUND,
             borderWidth: 1,

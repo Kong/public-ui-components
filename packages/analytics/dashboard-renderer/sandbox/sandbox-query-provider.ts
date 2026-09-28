@@ -87,6 +87,74 @@ const aiProviderExploreResponse: ExploreResultV4 = {
   },
 }
 
+// Provider → model request counts, shaped like the model usage treemap mockup
+const aiModelRequests: Array<[provider: string, model: string, requests: number]> = [
+  ['openai', 'gpt-4o', 21_480],
+  ['openai', 'gpt-4o-mini', 12_960],
+  ['openai', 'gpt-4.1', 9_870],
+  ['openai', 'gpt-4.1-mini', 7_020],
+  ['openai', 'o3-mini', 5_310],
+  ['anthropic', 'claude-sonnet-4-5', 6_340],
+  ['anthropic', 'claude-opus-4-1', 4_867],
+  ['anthropic', 'claude-sonnet-4', 4_210],
+  ['anthropic', 'claude-haiku-4-5', 3_150],
+  ['gemini', 'gemini-2.5-pro', 3_880],
+  ['gemini', 'gemini-2.5-flash', 3_020],
+  ['gemini', 'gemini-1.5-flash', 1_640],
+  ['bedrock', 'llama-3.1-70b', 2_210],
+  ['bedrock', 'nova-lite', 1_430],
+  ['bedrock', 'titan-embed-text', 1_120],
+  ['mistral', 'mistral-large', 1_380],
+  ['mistral', 'codestral', 870],
+  ['deepseek', 'deepseek-chat', 1_060],
+]
+
+const aiModelDisplay = Object.fromEntries(aiModelRequests.map(([, model]) => [model, { name: model, deleted: false }]))
+
+const aiModelMeta = (start: string, end: string, granularityMs: number, display: ExploreResultV4['meta']['display']): ExploreResultV4['meta'] => ({
+  display,
+  start,
+  end,
+  granularity_ms: granularityMs,
+  metric_names: ['ai_request_count'],
+  metric_units: { ai_request_count: 'count' },
+  query_id: 'ai-model-usage',
+  truncated: false,
+})
+
+const aiModelTreemapResponse: ExploreResultV4 = {
+  data: aiModelRequests.map(([provider, model, requests]) => ({
+    event: { ai_provider: provider, ai_gateway_model: model, ai_request_count: requests },
+    timestamp: '2024-01-31T20:00:00.000Z',
+  })),
+  meta: aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, {
+    ai_provider: aiProviderExploreResponse.meta.display.ai_provider,
+    ai_gateway_model: aiModelDisplay,
+  }),
+}
+
+// Each model's daily requests over the last two weeks, with a deterministic wobble and quieter weekends
+const aiModelHeatmapResponse = (): ExploreResultV4 => {
+  const dayMs = 86400000
+  const days = 14
+  const end = new Date(new Date().setUTCHours(0, 0, 0, 0) + dayMs)
+  const start = new Date(end.getTime() - days * dayMs)
+
+  const data = aiModelRequests.flatMap(([, model, requests], modelIndex) => Array.from({ length: days }, (_, day) => {
+    const timestamp = new Date(start.getTime() + day * dayMs)
+    const weekday = timestamp.getUTCDay()
+    const weekendFactor = weekday === 0 || weekday === 6 ? 0.55 : 1
+    const wobble = 1 + 0.3 * Math.sin(day * 0.9 + modelIndex)
+
+    return {
+      event: { ai_gateway_model: model, ai_request_count: Math.round(requests / 7 * weekendFactor * wobble) },
+      timestamp: timestamp.toISOString(),
+    }
+  }))
+
+  return { data, meta: aiModelMeta(start.toISOString(), end.toISOString(), dayMs, { ai_gateway_model: aiModelDisplay }) }
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -105,6 +173,11 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     && query.query.metrics[0] === 'request_count'
   ) {
     return await delayedResponse(singleValueTrendExploreResponse)
+  }
+
+  // Model usage: a heatmap over time, or a treemap of provider → model
+  if (query.query.dimensions?.includes('ai_gateway_model')) {
+    return await delayedResponse(query.query.dimensions.includes('time') ? aiModelHeatmapResponse() : aiModelTreemapResponse)
   }
 
   if (query.query.dimensions && query.query.dimensions.includes('time')) {

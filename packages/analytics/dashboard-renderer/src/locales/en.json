@@ -17,7 +17,15 @@
     "fullscreen": "Fullscreen",
     "remove": "Remove",
     "delete": "Delete",
-    "as_of_today": "As of today"
+    "as_of_today": "As of today",
+    "noDataAvailable": {
+      "title": "No data in the current time frame",
+      "description": "Once there is traffic, it will display here"
+    },
+    "treemapUnsupported": {
+      "title": "This query can't be shown as a treemap",
+      "description": "Treemaps need a count or total metric, such as requests or tokens, and no time dimension"
+    }
   },
   "pdfExport": {
     "branding": "Kong Konnect",

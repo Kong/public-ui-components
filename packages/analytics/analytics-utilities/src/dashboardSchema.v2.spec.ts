@@ -545,6 +545,32 @@ describe('dashboardSchema.v2', () => {
     expect(validate({ datasource: 'requests', metric: 'cost', unroll: ['ai'] })).toBe(false)
   })
 
+  describe('heatmap and treemap tiles', () => {
+    const chartTile = (chart: Record<string, unknown>, dimensions: string[]) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: { datasource: 'llm_usage', metrics: ['ai_request_count'], dimensions },
+            chart,
+          },
+        },
+      ],
+    })
+
+    it.each([
+      ['heatmap', ['time', 'ai_gateway_model']],
+      ['treemap', ['ai_provider', 'ai_gateway_model']],
+    ])('accepts a %s tile with a chart title', (type, dimensions) => {
+      expect(validateDashboardConfigSchema(chartTile({ type, chart_title: 'Model usage' }, dimensions))).toBe(true)
+    })
+
+    it.each(['heatmap', 'treemap'])('rejects unknown %s chart options', (type) => {
+      expect(validateDashboardConfigSchema(chartTile({ type, stacked: true }, ['ai_provider']))).toBe(false)
+    })
+  })
+
   describe('scatter tiles', () => {
     const scatterTile = (query: Record<string, unknown>) => ({
       tiles: [{

@@ -30,6 +30,7 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 // This is partially overlapping with analytics chart types, but not strictly so.
 export const dashboardTileTypes = [
   'heatmap',
+  'treemap',
   'horizontal_bar',
   'vertical_bar',
   'gauge',
@@ -327,6 +328,37 @@ export const donutChartSchema = {
 } as const satisfies JSONSchema
 
 export type DonutChartOptions = FromSchemaWithOptions<typeof donutChartSchema>
+
+export const heatmapChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['heatmap'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type HeatmapChartOptions = FromSchemaWithOptions<typeof heatmapChartSchema>
+
+// One or two dimensions. When two dimensions are provided the first groups the second, e.g. provider -> model
+export const treemapChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['treemap'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TreemapChartOptions = FromSchemaWithOptions<typeof treemapChartSchema>
 
 export const columnIconSet = ['ai_provider'] as const
 
@@ -1031,6 +1063,8 @@ const dashboardTileChartSchema = {
     barChartSchema,
     gaugeChartSchema,
     donutChartSchema,
+    heatmapChartSchema,
+    treemapChartSchema,
     timeseriesChartSchema,
     scatterChartSchema,
     metricCardSchema,

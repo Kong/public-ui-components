@@ -300,6 +300,74 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('have.been.calledThrice')
   })
 
+  it('Renders heatmap and treemap tiles through their renderers', () => {
+    const models = { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } }
+    const meta = {
+      start: '2024-06-16T00:00:00.000Z',
+      end: '2024-06-18T00:00:00.000Z',
+      granularity_ms: 86400000,
+      metric_names: ['ai_request_count'],
+      metric_units: { ai_request_count: 'count' },
+      query_id: '12345',
+    } as ExploreResultV4['meta']
+
+    const heatmapResponse: ExploreResultV4 = {
+      data: [
+        { timestamp: meta.start, event: { ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
+        { timestamp: '2024-06-17T00:00:00.000Z', event: { ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
+      ],
+      meta: { ...meta, display: { ai_gateway_model: models } },
+    }
+
+    const treemapResponse: ExploreResultV4 = {
+      data: [
+        { timestamp: meta.start, event: { ai_provider: 'openai', ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
+        { timestamp: meta.start, event: { ai_provider: 'anthropic', ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
+      ],
+      meta: {
+        ...meta,
+        display: { ai_provider: { openai: { name: 'OpenAI' }, anthropic: { name: 'Anthropic' } }, ai_gateway_model: models },
+      },
+    }
+
+    const tile = (type: 'heatmap' | 'treemap', dimensions: string[], col: number): TileConfig => ({
+      type: 'chart',
+      definition: {
+        chart: { type, chart_title: `Model usage ${type}` },
+        query: { datasource: 'llm_usage', metrics: ['ai_request_count'], dimensions },
+      },
+      layout: { position: { col, row: 0 }, size: { cols: 3, rows: 2 } },
+    } as TileConfig)
+
+    // The heatmap query is the one over time
+    const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
+      const { query } = dsAwareQuery as AdvancedDatasourceQuery
+
+      return Promise.resolve(query.dimensions?.includes('time') ? heatmapResponse : treemapResponse)
+    }
+
+    cy.mount(DashboardRenderer, {
+      props: {
+        context: { filters: [], timeSpec: { type: 'relative', time_range: '7d' } },
+        modelValue: {
+          tiles: [
+            tile('heatmap', ['time', 'ai_gateway_model'], 0),
+            tile('treemap', ['ai_provider', 'ai_gateway_model'], 3),
+          ],
+        },
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider(), queryFn },
+        },
+      },
+    })
+
+    cy.get('.tile-boundary').should('have.length', 2)
+    cy.get('[data-testid="heatmap-chart"] canvas').should('be.visible')
+    cy.get('[data-testid="treemap-chart"] canvas').should('be.visible')
+  })
+
   it('Changing the timeframe changes the query', () => {
     const props = {
       context: {

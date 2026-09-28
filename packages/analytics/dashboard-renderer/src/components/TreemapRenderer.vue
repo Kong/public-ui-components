@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { ExploreResultV4, HeatmapChartOptions } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, TreemapChartOptions } from '@kong-ui-public/analytics-utilities'
 import type { ChartRendererProps } from '../types'
 
-import { HeatmapChart } from '@kong-ui-public/echarts'
+import { TreeMapChart } from '@kong-ui-public/echarts'
 import '@kong-ui-public/echarts/dist/style.css'
 
+import { computed } from 'vue'
+
 import composables from '../composables'
-import { exploreResultToHeatmap } from '../utils/heatmap-adapters'
+import { exploreResultToTreemap, isTreemapCompatible } from '../utils/treemap-adapters'
 import QueryDataProvider from './QueryDataProvider.vue'
 
-const VISIBLE_ROWS = 10
-
-defineProps<ChartRendererProps<HeatmapChartOptions>>()
+const props = defineProps<ChartRendererProps<TreemapChartOptions>>()
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
@@ -21,18 +21,20 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const metricFormatter = composables.useMetricFormatter()
 
-// Undefined when there are no cells, which shows the empty state
-const buildChartProps = (result: ExploreResultV4) => {
-  const heatmap = exploreResultToHeatmap(result)
+const isCompatible = computed(() => isTreemapCompatible(props.query.metrics?.[0], props.query.dimensions ?? []))
 
-  if (!heatmap?.data.length) {
+// Undefined when there are no nodes, which shows the empty state
+const buildChartProps = (result: ExploreResultV4) => {
+  const treemap = exploreResultToTreemap(result, { otherLabel: i18n.t('chartLabels.____OTHER____') })
+
+  if (!treemap?.length) {
     return undefined
   }
 
   return {
-    data: heatmap.data,
-    xAxisLabels: heatmap.xAxisLabels,
-    yAxisLabels: heatmap.yAxisLabels,
+    data: treemap,
+    // Drill down is only useful when a second dimension nests under the first
+    drillDown: treemap.some((node) => node.children?.length),
     ...metricFormatter(result),
   }
 }
@@ -60,13 +62,24 @@ const toChartProps = (result: ExploreResultV4) => {
   >
     <div
       class="wrapper"
-      data-testid="heatmap-chart"
+      data-testid="treemap-chart"
     >
-      <HeatmapChart
-        v-if="toChartProps(data)"
+      <KEmptyState
+        v-if="!isCompatible"
+        :action-button-visible="false"
+        data-testid="treemap-unsupported"
+      >
+        <template #title>
+          {{ i18n.t('renderer.treemapUnsupported.title') }}
+        </template>
+        <template #default>
+          {{ i18n.t('renderer.treemapUnsupported.description') }}
+        </template>
+      </KEmptyState>
+      <TreeMapChart
+        v-else-if="toChartProps(data)"
         height="100%"
         :tooltip-title="chartOptions.chart_title ?? undefined"
-        :visible-rows="VISIBLE_ROWS"
         v-bind="toChartProps(data)"
       />
       <KEmptyState

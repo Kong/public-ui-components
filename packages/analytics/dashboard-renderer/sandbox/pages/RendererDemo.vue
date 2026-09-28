@@ -510,6 +510,47 @@ const dashboardConfig = ref<DashboardConfig>({
         size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'treemap',
+          chart_title: 'Model usage',
+        },
+        header_description: 'Requests by model, grouped by provider. Click a provider to drill in.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_provider', 'ai_gateway_model'],
+          metrics: ['ai_request_count'],
+          time_range: { type: 'relative', time_range: '7d' },
+        },
+      },
+      layout: {
+        position: { col: 0, row: 19 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'heatmap',
+          chart_title: 'Daily requests by model',
+        },
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['time', 'ai_gateway_model'],
+          metrics: ['ai_request_count'],
+          time_range: { type: 'relative', time_range: '14d' },
+          granularity: 'daily',
+        },
+      },
+      layout: {
+        // Taller than two rows so ten model rows fit before the heatmap scrolls
+        position: { col: 0, row: 21 },
+        size: { cols: 6, rows: 3 },
+      },
+    } satisfies TileConfig,
   ],
 })
 

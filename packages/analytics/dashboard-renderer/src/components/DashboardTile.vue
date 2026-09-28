@@ -224,7 +224,6 @@ import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TopTalkersRenderer from './TopTalkersRenderer.vue'
-import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -238,6 +237,8 @@ import { KSegmentedControl } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import HeatmapRenderer from './HeatmapRenderer.vue'
+import TreemapRenderer from './TreemapRenderer.vue'
 import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -360,7 +361,8 @@ const canShowHeaderActions = computed((): boolean => !hideActions && canShowKeba
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !isFullscreen)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
-  'heatmap': BaseAnalyticsChartRenderer,
+  'heatmap': HeatmapRenderer,
+  'treemap': TreemapRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,

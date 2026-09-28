@@ -44,10 +44,16 @@ export const useChartTooltip = (getContent: () => ChartTooltipContent | undefine
     })
   }
 
-  return (params: TooltipComponentFormatterCallbackParams): HTMLElement => {
+  return (params: TooltipComponentFormatterCallbackParams): HTMLElement | string => {
+    const content = (getContent() ?? defaultTooltipContent)(params)
+
+    if (!content) {
+      return ''
+    }
+
     container ??= document.createElement('div')
     // Rendering the same component into the same container patches it in place
-    render(h(ChartTooltip, (getContent() ?? defaultTooltipContent)(params)), container)
+    render(h(ChartTooltip, content), container)
 
     return container
   }
