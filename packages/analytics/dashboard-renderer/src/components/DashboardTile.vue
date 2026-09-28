@@ -361,6 +361,7 @@ const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && k
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'heatmap': BaseAnalyticsChartRenderer,
+  'treemap': BaseAnalyticsChartRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,
