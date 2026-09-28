@@ -46,10 +46,11 @@ describe('<TreeMapChart />', () => {
     expect(option.series[0]).toMatchObject({ type: 'treemap', name: 'Usage', data })
   })
 
-  it('defaults to the token color palette', () => {
+  it('defaults to the token color palette on the root level only', () => {
     const option = chartOption(mountChart({ data }))
 
-    expect(option.series[0].color).toEqual([
+    expect(option.series[0]).not.toHaveProperty('color')
+    expect(option.series[0].levels[0].color).toEqual([
       KUI_COLOR_BACKGROUND_PRIMARY_WEAK,
       KUI_COLOR_BACKGROUND_SUCCESS_WEAK,
       KUI_COLOR_BACKGROUND_WARNING_WEAK,
@@ -63,7 +64,7 @@ describe('<TreeMapChart />', () => {
   it('replaces the palette with colorPalette', () => {
     const option = chartOption(mountChart({ data, colorPalette: ['#111111', '#222222'] }))
 
-    expect(option.series[0].color).toEqual(['#111111', '#222222'])
+    expect(option.series[0].levels[0].color).toEqual(['#111111', '#222222'])
   })
 
   it('passes colors set on nodes in data through untouched', () => {
@@ -95,7 +96,7 @@ describe('<TreeMapChart />', () => {
     })
   })
 
-  it('styles levels: bordered groups, saturated children', () => {
+  it('styles levels: bordered groups, children fading by value', () => {
     const option = chartOption(mountChart({ data }))
 
     expect(option.series[0].levels[0]).toMatchObject({
@@ -103,7 +104,7 @@ describe('<TreeMapChart />', () => {
     })
     expect(option.series[0].levels[0]).not.toHaveProperty('upperLabel')
     expect(option.series[0].levels[1]).toMatchObject({
-      colorSaturation: [0.3, 0.5],
+      colorAlpha: [0.55, 1],
       itemStyle: { borderColor: KUI_COLOR_BACKGROUND, borderWidth: 1, gapWidth: 1 },
     })
   })

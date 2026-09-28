@@ -72,8 +72,6 @@ const generatedOption = computed((): EChartsOption => ({
       name: seriesName,
       type: 'treemap',
       data: data ?? [],
-      // ECharts cycles the palette when there are more groups than colors
-      color: colorPalette ?? defaultPalette(),
       // Drill-down: click a group to zoom in, and use the breadcrumb to go back
       nodeClick: drillDown ? 'zoomToNode' : false,
       leafDepth,
@@ -114,15 +112,17 @@ const generatedOption = computed((): EChartsOption => ({
         // a group is too short for the text, so group names come from the
         // tooltip instead. Add one via `seriesOption` for tall charts
         {
+          // ECharts cycles the palette when there are more groups than colors
+          color: colorPalette ?? defaultPalette(),
           itemStyle: {
             borderColor: colors.value.KUI_COLOR_BACKGROUND,
             borderWidth: 2,
             gapWidth: 2,
           },
         },
-        // Deeper levels: children inherit the group hue with varied saturation
+        // Deeper levels: children inherit the group hue with varied alpha
         {
-          colorSaturation: [0.3, 0.5],
+          colorAlpha: [0.55, 1],
           itemStyle: {
             borderColor: colors.value.KUI_COLOR_BACKGROUND,
             borderWidth: 1,
