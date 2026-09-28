@@ -1,6 +1,6 @@
 import type { TableDataGridHeader } from '../types'
 import {
-  formatPercentage,
+  formatRelativeValue,
   getBarRatio,
   getColumnStats,
   getLabelSizer,
@@ -53,8 +53,11 @@ describe('table-data-grid presentation helpers', () => {
   })
 
   it('formats percentages with two decimal places and the small-value placeholder', () => {
-    expect(formatPercentage(50)).to.equal('50 %')
-    expect(formatPercentage(0.001)).to.equal('< 0.01 %')
+    // A column total of 100 makes each value its own percentage.
+    const format = (value: number) => formatRelativeValue({ value, stats: { sum: 100, max: 100 }, header: {} })
+
+    expect(format(50)).to.equal('50 %')
+    expect(format(0.001)).to.equal('< 0.01 %')
   })
 
   it('finds the longest formatted value and percentage across the full result', () => {
@@ -71,7 +74,7 @@ describe('table-data-grid presentation helpers', () => {
       valueFormatter: value => `${String(value ?? '–')} ms`,
     }
 
-    expect(getLabelSizer({ rows, header, stats: getColumnStats(rows, header), locale: 'en-US' })).to.deep.equal({
+    expect(getLabelSizer({ rows, header, stats: getColumnStats(rows, header) })).to.deep.equal({
       value: '999 ms',
       relative: '99.9 %',
     })
@@ -79,7 +82,6 @@ describe('table-data-grid presentation helpers', () => {
       rows,
       header: { ...header, showPercentage: false },
       stats: getColumnStats(rows, header),
-      locale: 'en-US',
     })).to.deep.equal({ value: '999 ms', relative: undefined })
   })
 })

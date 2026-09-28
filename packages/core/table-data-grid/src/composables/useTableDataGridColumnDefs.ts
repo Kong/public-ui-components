@@ -22,7 +22,6 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   initialSort,
   mode,
   rows,
-  locale,
   tooltipTarget,
 }: {
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
@@ -30,7 +29,6 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   initialSort?: TableDataGridSort
   mode?: 'infinite' | 'unpaginated'
   rows?: Readonly<Ref<readonly Row[] | undefined>>
-  locale?: Readonly<Ref<string>>
   tooltipTarget?: Readonly<Ref<string | HTMLElement>>
 }) => {
   const activeMode = mode ?? 'infinite'
@@ -71,7 +69,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
     })
   }
 
-  watch([headers, () => rows?.value], validatePresentationOptions, { deep: true, immediate: true })
+  watch([headers, () => rows?.value], validatePresentationOptions, { immediate: true })
 
   const presentationStats = computed<Record<string, TableDataGridColumnStats>>(() => {
     if (activeMode !== 'unpaginated') {
@@ -93,7 +91,6 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
     }
 
     const currentRows = rows?.value ?? []
-    const currentLocale = locale?.value ?? 'en-US'
 
     return Object.fromEntries(
       headers.value
@@ -101,8 +98,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
         .map(header => [header.key, getLabelSizer({
           rows: currentRows,
           header,
-          stats: presentationStats.value[header.key] ?? getColumnStats(currentRows, header),
-          locale: currentLocale,
+          stats: presentationStats.value[header.key],
         })]),
     )
   })
@@ -111,8 +107,6 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
   const gridContext = computed(() => ({
     cells: { slots, tooltipTarget },
     presentation: {
-      mode: activeMode,
-      locale: locale?.value ?? 'en-US',
       stats: presentationStats.value,
       labelSizers: labelSizers.value,
     },

@@ -124,32 +124,23 @@ const header = computed<TableDataGridHeader>(() => currentParams.value.headerDef
 })
 const presentation = computed(() => currentParams.value.context?.presentation)
 const tooltipTarget = computed(() => currentParams.value.context?.cells?.tooltipTarget?.value ?? 'body')
-const displayValue = computed(() => {
-  const params = currentParams.value
-
-  if (params.valueFormatted !== undefined && params.valueFormatted !== null) {
-    return String(params.valueFormatted)
-  }
-
-  return String(params.value ?? '')
-})
+const displayValue = computed(() => currentParams.value.valueFormatted ?? String(currentParams.value.value ?? ''))
 
 const rawValue = computed(() => currentParams.value.value)
 const numericValue = computed(() => toFiniteNumber(rawValue.value))
+// Stats exist only where percentage and bar presentation apply (unpaginated mode).
 const stats = computed(() => presentation.value?.stats[header.value.key])
-const isNumericUnpaginated = computed(() => presentation.value?.mode === 'unpaginated')
 const relativeValue = computed(() => (
-  isNumericUnpaginated.value && header.value.showPercentage && stats.value
+  header.value.showPercentage && stats.value
     ? formatRelativeValue({
       value: numericValue.value,
       stats: stats.value,
       header: header.value,
-      locale: presentation.value?.locale ?? 'en-US',
     })
     : undefined
 ))
 const hasBar = computed(() => (
-  isNumericUnpaginated.value && !!header.value.bar
+  !!header.value.bar && !!stats.value
   && (numericValue.value !== null || rawValue.value === null || rawValue.value === undefined)
 ))
 const barWidth = computed(() => (
@@ -286,8 +277,6 @@ defineExpose({
   font-feature-settings: "case";
   font-variant-numeric: tabular-nums;
   gap: var(--kui-space-20, $kui-space-20);
-  min-width: 0;
-  width: 100%;
 }
 
 .table-data-grid-cell-label {
@@ -324,12 +313,6 @@ defineExpose({
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
 }
 
-.table-data-grid-cell-sizer-relative {
-  flex-shrink: 0;
-  font-size: var(--kui-font-size-20, $kui-font-size-20);
-  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-}
-
 .table-data-grid-cell-renderer--bar {
   display: grid;
   grid-template-columns: minmax(0, max-content) minmax(80px, 1fr);
@@ -341,7 +324,8 @@ defineExpose({
   white-space: nowrap;
 }
 
-.table-data-grid-cell-relative {
+.table-data-grid-cell-relative,
+.table-data-grid-cell-sizer-relative {
   flex-shrink: 0;
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);

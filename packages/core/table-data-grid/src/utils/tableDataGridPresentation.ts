@@ -2,6 +2,9 @@ import type {
   TableDataGridHeader,
   TableDataGridThreshold,
 } from '../types'
+import useI18n from '../composables/useI18n'
+
+const { i18n } = useI18n()
 
 export type TableDataGridColumnStats = {
   sum: number
@@ -14,9 +17,8 @@ export type TableDataGridLabelSizer = {
   relative?: string
 }
 
+/** Stats and label sizers are only present for unpaginated columns with percentage or bar presentation. */
 export type TableDataGridPresentationContext = {
-  mode: 'infinite' | 'unpaginated'
-  locale: string
   stats: Record<string, TableDataGridColumnStats>
   labelSizers: Record<string, TableDataGridLabelSizer>
 }
@@ -124,7 +126,7 @@ export const getBarRatio = (
 
   const denominator = mode === 'relative' ? stats.sum : stats.max
 
-  if (!denominator || denominator <= 0) {
+  if (!(denominator > 0)) {
     return 0
   }
 
@@ -135,16 +137,14 @@ export const getBarRatio = (
  * Format a percentage already on the 0–100 scale, preserving the small-value placeholder.
  *
  * @param percentage - Percentage expressed on the 0–100 scale.
- * @param locale - Number formatting locale; defaults to en-US.
  * @returns Localized percentage text, including the small-value placeholder.
  */
-export const formatPercentage = (percentage: number, locale = 'en-US'): string => {
-  const formatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 })
-  const formatted = formatter.format(percentage)
+const formatPercentage = (percentage: number): string => {
+  const format = (value: number) => i18n.formatNumber(value, { maximumFractionDigits: 2 })
 
   return percentage > 0 && percentage < 0.01
-    ? `< ${formatter.format(0.01)} %`
-    : `${formatted} %`
+    ? `< ${format(0.01)} %`
+    : `${format(percentage)} %`
 }
 
 /**
@@ -153,19 +153,16 @@ export const formatPercentage = (percentage: number, locale = 'en-US'): string =
  * @param value - Numeric cell value, or null when missing.
  * @param stats - Sum and maximum of the complete column.
  * @param header - Column whose optional percentage formatter applies.
- * @param locale - Number formatting locale.
  * @returns Percentage text, or undefined when the share is undefined.
  */
 export const formatRelativeValue = ({
   value,
   stats,
   header,
-  locale,
 }: {
   value: number | null
   stats: TableDataGridColumnStats
   header: Pick<TableDataGridHeader, 'percentageFormatter'>
-  locale: string
 }): string | undefined => {
   if (value === null || stats.sum <= 0) {
     return undefined
@@ -173,7 +170,7 @@ export const formatRelativeValue = ({
 
   const percentage = value / stats.sum * 100
 
-  return header.percentageFormatter?.(percentage) ?? formatPercentage(percentage, locale)
+  return header.percentageFormatter?.(percentage) ?? formatPercentage(percentage)
 }
 
 const longest = (current: string | undefined, next: string | undefined): string | undefined => (
@@ -190,19 +187,16 @@ const longest = (current: string | undefined, next: string | undefined): string 
  * @param rows - Complete result for the current query.
  * @param header - Bar column to measure.
  * @param stats - Sum and maximum of the complete column.
- * @param locale - Number formatting locale.
  * @returns The longest value text and, when percentages show, the longest percentage text.
  */
 export const getLabelSizer = <Row extends object>({
   rows,
   header,
   stats,
-  locale,
 }: {
   rows: readonly Row[]
   header: TableDataGridHeader<Row>
   stats: TableDataGridColumnStats
-  locale: string
 }): TableDataGridLabelSizer => rows.reduce<TableDataGridLabelSizer>(
   (sizer, row) => ({
     value: longest(sizer.value, formatCellValue(header, row)) ?? '',
@@ -211,7 +205,6 @@ export const getLabelSizer = <Row extends object>({
         value: toFiniteNumber(Reflect.get(row, header.key)),
         stats,
         header,
-        locale,
       }))
       : undefined,
   }),

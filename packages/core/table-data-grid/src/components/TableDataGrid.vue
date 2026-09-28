@@ -47,7 +47,7 @@
       :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
       :suppress-multi-sort="true"
-      :theme="themeQuartz"
+      :theme="gridTheme"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
       @row-clicked="onRowClick"
@@ -169,6 +169,8 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
 })
 
 const fitToContent = computed(() => mode === 'unpaginated' && !!activeTableConfig.value.fitToContent)
+// Auto-height grids otherwise reserve a 150px body, even for a single row.
+const gridTheme = themeQuartz.withParams({ autoHeightMinBodyHeight: 0 })
 
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
@@ -208,7 +210,6 @@ const rowData = computed(() => rows ? Array.from(rows) : undefined)
 
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
-  locale: computed(() => i18n.locale),
   mode,
   rows: rowData,
   slots,
@@ -260,11 +261,6 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 
   &.fit-to-content {
     height: auto;
-
-    // Auto-height grids default to a 150px body, even for a single row.
-    :deep(.ag-grid-scrolling-rows) {
-      min-height: 0;
-    }
   }
 }
 
