@@ -5,6 +5,8 @@ export const chartTypes = [
   'timeseries_line',
   'timeseries_bar',
   'scatter',
+  'heatmap',
+  'treemap',
 ] as const
 
 export type ChartType = typeof chartTypes[number]
