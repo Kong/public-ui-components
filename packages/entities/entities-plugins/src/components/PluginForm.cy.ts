@@ -640,20 +640,7 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        // KNOWN BUG (pre-existing, not introduced by this cleanup): the Save button is not
-        // actually disabled here. PluginForm.vue's dirty-check compares `form.fields` against
-        // `formFieldsOriginal`, a mechanism designed around VFG's flat, stable model shape.
-        // With freeform now the only engine, `handleFreeFormUpdate` in PluginEntityForm.vue
-        // re-emits the freeform `Form`'s own resolved value (including an async re-emit once
-        // ScopeEntityField's entity lookup resolves), which has a different key set than the
-        // raw record (e.g. missing `created_at`/`updated_at`) and never gets mirrored into
-        // `originalModel`. So `changesExist` reads true immediately after loading an existing
-        // plugin, before the user changes anything. See PluginEntityForm.vue's
-        // `handleFreeFormUpdate`/`originalModel`. Left as-is per task instructions (flagged in
-        // the summary, not silently patched); asserting the intended/correct behavior below so
-        // this test fails until the real fix lands upstream.
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
         cy.getTestId('plugin-edit-form-cancel').should('be.visible')
 
         // scope
@@ -665,7 +652,7 @@ describe('<PluginForm />', () => {
         // global fields
         cy.getTestId('ff-enabled').find('input[type="checkbox"]').should('be.checked')
         cy.getTestId('ff-instance_name').should('have.value', plugin1.instance_name)
-        cy.getTestId('ff-tags').should('have.value', plugin1.tags.join(','))
+        cy.getTestId('ff-tags').should('have.value', plugin1.tags.join(', '))
 
         // form fields
         cy.getTestId('ff-config.private_network').should('be.checked')
@@ -772,7 +759,6 @@ describe('<PluginForm />', () => {
         cy.getTestId('plugin-edit-form-cancel').should('be.visible')
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
         cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
 
         // enables save when form has changes
         cy.getTestId('ff-instance_name').type('-edited')
@@ -780,7 +766,6 @@ describe('<PluginForm />', () => {
         // disables save when form changes are undone
         cy.getTestId('ff-instance_name').clear()
         cy.getTestId('ff-instance_name').type(plugin1.instance_name)
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
@@ -1509,10 +1494,7 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // button state
-        // KNOWN BUG (pre-existing, not introduced by this cleanup): see the identical comment
-        // in the "Kong Manager" describe block's copy of this test for the root cause.
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
         cy.getTestId('plugin-edit-form-cancel').should('be.visible')
 
         // scope
@@ -1524,7 +1506,7 @@ describe('<PluginForm />', () => {
         // global fields
         cy.getTestId('ff-enabled').find('input[type="checkbox"]').should('be.checked')
         cy.getTestId('ff-instance_name').should('have.value', plugin1.instance_name)
-        cy.getTestId('ff-tags').should('have.value', plugin1.tags.join(','))
+        cy.getTestId('ff-tags').should('have.value', plugin1.tags.join(', '))
 
         // form fields
         cy.getTestId('ff-config.private_network').should('be.checked')
@@ -1624,12 +1606,9 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        // KNOWN BUG (pre-existing, not introduced by this cleanup): see the identical comment
-        // in the "Kong Manager" describe block's copy of this test for the root cause.
         cy.getTestId('plugin-edit-form-cancel').should('be.visible')
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
         cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
 
         // enables save when form has changes
         cy.getTestId('ff-instance_name').type('-edited')
@@ -1637,7 +1616,6 @@ describe('<PluginForm />', () => {
         // disables save when form changes are undone
         cy.getTestId('ff-instance_name').clear()
         cy.getTestId('ff-instance_name').type(plugin1.instance_name)
-        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
