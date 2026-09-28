@@ -298,15 +298,13 @@ on mount, or to move the sort after mount without a click; omit it to let the
 component own the sort internally. A sort change emits `sort` (the narrower,
 sort-only payload) and then `update:tableConfig` (the full current config).
 
-For client-side sorting, use `mode="unpaginated"` and return the complete result
-from the fetcher. AG Grid sorts those rows locally with its built-in row
-animation; changing the sort does not call the fetcher. A `refreshKey` change or
-fetcher replacement still loads the complete result again.
+For client-side sorting, use `mode="unpaginated"` and pass the complete result
+as `rows`. AG Grid sorts those rows locally with its built-in row animation.
 
 ```vue
 <TableDataGrid
   mode="unpaginated"
-  :fetcher="fetchAllRows"
+  :rows="rows"
   :headers="[
     { key: 'name', label: 'Name', sortable: true },
     { key: 'requests', label: 'Requests', sortable: true },
