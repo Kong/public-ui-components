@@ -114,7 +114,14 @@ describe('<TreeMapChart />', () => {
 
     expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: false, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
     expect(option.series[0].breadcrumb.show).toBe(true)
-    expect(option.series[0].leafDepth).toBeUndefined()
+    // The full depth, so every level shows and the breadcrumb follows the view root
+    expect(option.series[0].leafDepth).toBe(2)
+  })
+
+  it('defaults leafDepth to 1 for flat data', () => {
+    const flat: TreeMapDataNode[] = [{ name: 'Gateways', value: 300 }, { name: 'Plugins', value: 100 }]
+
+    expect(chartOption(mountChart({ data: flat })).series[0].leafDepth).toBe(1)
   })
 
   it('is a static chart filling the whole area with drillDown false', () => {

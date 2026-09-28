@@ -93,7 +93,7 @@ Group names are not drawn on the boxes by default (a reserved strip renders empt
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip and the node labels. |
 | `colorPalette` | `string[]` | theme tokens | Categorical colors, one per top-level group; cycled if there are more groups than colors. To color specific groups or nodes, see [Colors from data](#colors-from-data). |
 | `drillDown` | `boolean` | `true` | Click a group to zoom into it, with a breadcrumb to go back. `false` makes a static chart that fills the whole area, see [drill-down](#drill-down--breadcrumb). |
-| `leafDepth` | `number` | none (all levels) | Initial depth to show (counted from zero at the view root); deeper levels appear when drilling in. |
+| `leafDepth` | `number` | data depth (all levels) | Initial depth to show (counted from zero at the view root); deeper levels appear when drilling in. |
 | `tooltipTitle` | `string` | none | Bold title of the shared tooltip, see [Tooltip](#tooltip). |
 | `seriesOption` | `TreemapSeriesOption` | none | Deep-merged into the generated treemap series, e.g. `{ label: { fontWeight: 'bold' } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
 | `option` | `EChartsOption` | none | Raw ECharts option, always deep-merged over the generated config, see [custom options](./custom-options.md). |

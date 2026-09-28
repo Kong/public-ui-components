@@ -15,7 +15,7 @@ import { useChartColors } from '../../composables/useChartColors.ts'
 import { deepMerge } from '../../utils/deepMerge.ts'
 import { tooltipItems, tooltipRow } from '../../utils/tooltip.ts'
 import type { EChartsOption, TreemapSeriesOption } from 'echarts'
-import type { ChartTooltipContent, TreeMapChartProps } from '../../types/index.ts'
+import type { ChartTooltipContent, TreeMapChartProps, TreeMapDataNode } from '../../types/index.ts'
 
 // The renderer, grid and tooltip are registered by the base `ECharts` component.
 // The breadcrumb is part of the treemap series, not a separate component
@@ -66,6 +66,11 @@ const defaultPalette = () => [
   colors.value.KUI_COLOR_BACKGROUND_DECORATIVE_AQUA_WEAKEST,
 ]
 
+/** Levels in the tree, counting the top-level groups as 1 */
+const treeDepth = (nodes: TreeMapDataNode[] = []): number => {
+  return nodes.reduce((depth, node) => Math.max(depth, 1 + treeDepth(node.children)), 0)
+}
+
 const generatedOption = computed((): EChartsOption => ({
   series: [
     deepMerge<TreemapSeriesOption>({
@@ -74,7 +79,8 @@ const generatedOption = computed((): EChartsOption => ({
       data: data ?? [],
       // Drill-down: click a group to zoom in, and use the breadcrumb to go back
       nodeClick: drillDown ? 'zoomToNode' : false,
-      leafDepth,
+      // Defaults to the full depth
+      leafDepth: leafDepth ?? treeDepth(data),
       // No mouse-wheel zoom or drag-to-pan, so scrolling over the chart scrolls the page
       roam: false,
       // Fill the chart area, leaving room at the bottom for the breadcrumb with drill-down
