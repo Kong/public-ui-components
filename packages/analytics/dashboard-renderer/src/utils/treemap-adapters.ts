@@ -30,7 +30,16 @@ const getOrCreate = <T>(entries: Map<string, T>, id: string, create: () => T): T
   return entry
 }
 
-// Sums values when a dimension value spans several records (e.g. time buckets)
+// Treemap areas are parts of a whole, so the metric has to add up across groups.
+// Averages, percentiles, rates, maximums and per-minute values are not valid
+const NON_ADDITIVE_METRIC = /_(average|p\d+|rate|max|per_minute)$/
+
+/** Whether a treemap can be sized by this metric and grouped by these dimensions */
+export const isTreemapCompatible = (metric: string | undefined, dimensions: string[]): boolean => {
+  return !dimensions.includes('time') && !(metric && NON_ADDITIVE_METRIC.test(metric))
+}
+
+// Sums values when a dimension value spans several records
 const addValue = (node: TreeMapDataNode, value: number): void => {
   node.value = Number(node.value ?? 0) + value
 }
@@ -90,11 +99,17 @@ export const exploreResultToTreemap = (
 
   const { display, metric_names: metricNames } = result.meta
   const metric = metricNames?.[0]
-  // `display` is keyed by the query's dimensions in query order. Skips the `time` dimension
-  const dimensions = display ? Object.keys(display).filter((key) => key !== 'time') : []
+  // `display` is keyed by the query's dimensions in query order
+  const dimensions = display ? Object.keys(display) : []
 
   if (!metric || !dimensions.length) {
     console.error('Cannot build treemap chart data from this explore result. Missing metric or dimension.')
+
+    return undefined
+  }
+
+  if (!isTreemapCompatible(metric, dimensions)) {
+    console.error('Cannot build treemap chart data from this explore result. Needs an additive metric and no time dimension.')
 
     return undefined
   }

@@ -5,13 +5,13 @@ import type { ChartRendererProps } from '../types'
 import { TreeMapChart } from '@kong-ui-public/echarts'
 import '@kong-ui-public/echarts/dist/style.css'
 
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import composables from '../composables'
-import { exploreResultToTreemap } from '../utils/treemap-adapters'
+import { exploreResultToTreemap, isTreemapCompatible } from '../utils/treemap-adapters'
 import QueryDataProvider from './QueryDataProvider.vue'
 
-defineProps<ChartRendererProps<TreemapChartOptions>>()
+const props = defineProps<ChartRendererProps<TreemapChartOptions>>()
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
@@ -21,16 +21,10 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const metricFormatter = composables.useMetricFormatter()
 
-// Kept from chart-data rather than the slot so the chart props can be a computed
-const exploreResult = ref<ExploreResultV4>()
-
-const onChartData = (chartData: ExploreResultV4) => {
-  exploreResult.value = chartData
-  emit('chart-data', chartData)
-}
+const isCompatible = computed(() => isTreemapCompatible(props.query.metrics?.[0], props.query.dimensions ?? []))
 
 // Undefined when there are no nodes, which shows the empty state
-const toChartProps = (result: ExploreResultV4) => {
+const buildChartProps = (result: ExploreResultV4) => {
   const treemap = exploreResultToTreemap(result, { otherLabel: i18n.t('chartLabels.____OTHER____') })
 
   if (!treemap?.length) {
@@ -45,27 +39,48 @@ const toChartProps = (result: ExploreResultV4) => {
   }
 }
 
-const chartProps = computed(() => exploreResult.value && toChartProps(exploreResult.value))
+const chartPropsCache = new WeakMap<ExploreResultV4, ReturnType<typeof buildChartProps>>()
+
+const toChartProps = (result: ExploreResultV4) => {
+  if (!chartPropsCache.has(result)) {
+    chartPropsCache.set(result, buildChartProps(result))
+  }
+
+  return chartPropsCache.get(result)
+}
 </script>
 
 <template>
   <QueryDataProvider
+    v-slot="{ data }"
     :context="context"
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
-    @chart-data="onChartData"
+    @chart-data="emit('chart-data', $event)"
     @query-complete="emit('query-complete')"
   >
     <div
       class="wrapper"
       data-testid="treemap-chart"
     >
+      <KEmptyState
+        v-if="!isCompatible"
+        :action-button-visible="false"
+        data-testid="treemap-unsupported"
+      >
+        <template #title>
+          {{ i18n.t('renderer.treemapUnsupported.title') }}
+        </template>
+        <template #default>
+          {{ i18n.t('renderer.treemapUnsupported.description') }}
+        </template>
+      </KEmptyState>
       <TreeMapChart
-        v-if="chartProps"
+        v-else-if="toChartProps(data)"
         height="100%"
         :tooltip-title="chartOptions.chart_title ?? undefined"
-        v-bind="chartProps"
+        v-bind="toChartProps(data)"
       />
       <KEmptyState
         v-else
