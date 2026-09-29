@@ -24,6 +24,7 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read
+      pull-requests: write
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
@@ -31,7 +32,7 @@ jobs:
       componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
     env:
-      GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       # if previous run did create comment with the reference to PR preview package
@@ -383,8 +384,6 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read
     if: ${{ always() && needs.build.outputs.filter != '' }}
-    env:
-      GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
       - name: Successful tests
@@ -394,12 +393,21 @@ jobs:
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
 
+      - name: Generate Kong token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token-kong
+        with:
+          client-id: ${{ vars.CORE_UI_GH_APP_READ_ID }}
+          private-key: ${{ secrets.CORE_UI_GH_APP_READ_PRIVATE_KEY }}
+          permission-contents: write
+          permission-issues: write
+
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          token: ${{ secrets.KONGPONENTS_BOT_PAT }}
+          token: ${{ steps.app-token-kong.outputs.token }}
 
       - name: Setup PNPM with Dependencies
         if: ${{ github.event_name == 'push' }}
@@ -447,6 +455,8 @@ jobs:
             echo "There are no new packages that should be published"
             exit 0
           fi
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
   notify-slack:
     name: Slack Notification
