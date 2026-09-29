@@ -107,7 +107,13 @@ const WORKER_ALIASES: Record<string, string> = {
 }
 
 const VIRTUAL_MODULE_MONACO_ID = '\0virtual:monaco-editor'
-const VIRTUAL_MODULE_SHIKI_ID = '\0virtual:shiki'
+const VIRTUAL_MODULE_SHIKI_ID = '\0virtual:@kong-ui-public/monaco-editor/shiki'
+
+/**
+ * Public-facing specifier only `@kong-ui-public/monaco-editor`'s own internal code imports
+ * to opt into the trimmed shiki bundle below.
+ */
+const SHIKI_VIRTUAL_SPECIFIER = 'virtual:@kong-ui-public/monaco-editor/shiki'
 
 // Generate import statements for Monaco Editor feature entries
 function generateImports(entries: string | string[]): string[] {
@@ -300,7 +306,8 @@ export default function plugin(options?: Options): Plugin {
   // Only monaco-editor's content is needed eagerly (to build `optimizeDeps.include` below), and
   // building it is just string generation — cheap enough to do unconditionally. shiki's content
   // is left lazy/memoized: generating it calls into `shiki-codegen`, which isn't free, and
-  // shouldn't run on every build/serve/test for consumers who never actually import `shiki`.
+  // shouldn't run on every build/serve/test for consumers who never actually import
+  // `SHIKI_VIRTUAL_SPECIFIER` (i.e. never use `MonacoEditor`/`MonacoDiffEditor`).
   const monacoContent = buildMonacoModule(options)
   let shikiContentPromise: Promise<string> | undefined
 
@@ -311,12 +318,12 @@ export default function plugin(options?: Options): Plugin {
     config() {
       return {
         optimizeDeps: {
-          // `monaco-editor`/`shiki` must never be pre-bundled under their own name: anything
-          // that imports them directly (including other dependencies, like a component
-          // library that itself does `import 'monaco-editor'`) needs to keep hitting
-          // `resolveId` below so it gets redirected to the trimmed, generated entry instead
-          // of esbuild inlining the full, untrimmed package.
-          exclude: ['monaco-editor', 'shiki'],
+          // `monaco-editor` must never be pre-bundled under its own name: anything that
+          // imports it directly (including other dependencies, like a component library that
+          // itself does `import 'monaco-editor'`) needs to keep hitting `resolveId` below so
+          // it gets redirected to the trimmed, generated entry instead of esbuild inlining the
+          // full, untrimmed package.
+          exclude: ['monaco-editor'],
           // The generated monaco-editor entry's own deep imports are real, stable submodules
           // though — pre-bundle those explicitly so dev doesn't pay a per-file request for
           // each one. (The shiki entry only imports `@shikijs/*` packages, which were never
@@ -329,7 +336,7 @@ export default function plugin(options?: Options): Plugin {
     resolveId(id) {
       if (id === 'monaco-editor') {
         return VIRTUAL_MODULE_MONACO_ID
-      } else if (id === 'shiki') {
+      } else if (id === SHIKI_VIRTUAL_SPECIFIER) {
         return VIRTUAL_MODULE_SHIKI_ID
       }
     },
