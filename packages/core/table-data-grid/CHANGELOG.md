@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.6.0...%40kong-ui-public%2Ftable-data-grid%400.7.0) (2026-09-29)
+
+### Features
+
+* **table-data-grid:** add generic cell presentation [MA-5503] ([#3860](https://github.com/Kong/public-ui-components/issues/3860)) ([8b0690e](https://github.com/Kong/public-ui-components/commit/8b0690eea2974bd5accad1e76f3601bfe38189d7)), closes [#3862](https://github.com/Kong/public-ui-components/issues/3862) [#3861](https://github.com/Kong/public-ui-components/issues/3861)
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.5.4...%40kong-ui-public%2Ftable-data-grid%400.6.0) (2026-09-25)
 
 ### Features
