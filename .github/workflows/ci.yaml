@@ -31,19 +31,17 @@ jobs:
       unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
       componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       # if previous run did create comment with the reference to PR preview package
       # this comment is removed in this step
       - name: Remove preview consumption comment
-        if: ${{ env.GH_TOKEN != '' }}
+        if: ${{ github.event.pull_request.head.repo.fork != true }}
         uses: Kong/sticky-pull-request-comment@ae583cebedbfd32256b349cce8ddf5772e77636e # v3.0.4
         with:
           header: pr_preview_consumption
           delete: true
-          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Checkout Source Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -57,8 +55,6 @@ jobs:
         id: 'up-to-date'
         if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@8d98bc15a5143332a36f206e6699296e6cc2adac
-        with:
-          github_token: ${{ env.GH_TOKEN }}
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -245,7 +241,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@4a3422fbaa0ab9fced4959078dbb69d157db873e # main
 
       - name: Publish Previews
-        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) }}
 
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
@@ -297,7 +293,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Provide preview link info
-        if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
+        if: ${{ env.npm_instructions != '' && github.event.pull_request.head.repo.fork != true }}
         uses: Kong/sticky-pull-request-comment@ae583cebedbfd32256b349cce8ddf5772e77636e # v3.0.4
         with:
           header: pr_preview_consumption
@@ -307,7 +303,7 @@ jobs:
              ```
              ${{env.npm_instructions}}
              ```
-          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
