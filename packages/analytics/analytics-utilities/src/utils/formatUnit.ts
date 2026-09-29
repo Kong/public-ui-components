@@ -7,6 +7,14 @@ const defaultLocale = (typeof document !== 'undefined' && document.documentEleme
 
 export const numberFormatter = new Intl.NumberFormat(defaultLocale)
 
+// How a unit sits against its number: flush ("42%") or spaced ("250 ms").
+// Magnitude suffixes from `approximate` (K/M/B) are always flush and are part of the number.
+export type UnitPlacement = 'flush' | 'spaced'
+
+const FLUSH_UNITS: ReadonlySet<string> = new Set(['%'])
+
+export const unitPlacement = (unit: string): UnitPlacement => FLUSH_UNITS.has(unit) ? 'flush' : 'spaced'
+
 export function unitFormatter<T extends Record<string, any>>({
   i18n,
 } : {
@@ -80,6 +88,16 @@ export function unitFormatter<T extends Record<string, any>>({
 
   }
 
+  const withUnit = (formatted: string, rawUnit: string, translatedUnit: string): string => {
+    if (!translatedUnit) {
+      return formatted
+    }
+
+    const separator = unitPlacement(rawUnit) === 'flush' ? '' : ' '
+
+    return `${formatted}${separator}${translatedUnit}`
+  }
+
   type FormatNumberOptions = {
     isBytes1024?: boolean
     currency?: string
@@ -89,8 +107,7 @@ export function unitFormatter<T extends Record<string, any>>({
   }
 
   /*
-   * currently the units supported are those returned from
-   * https://github.com/Kong/kanalytics/blob/main/src/druid/druid.service.ts#L58-L73
+   * currently the units supported are those returned from the backend
    */
   const formatUnit = (value: number, unit: string, {
     isBytes1024 = false,
@@ -109,16 +126,19 @@ export function unitFormatter<T extends Record<string, any>>({
       case 'count/minute':
       case 'token count':
       case 'count':
-      default:
+      default: {
         if (isNaN(value)) {
           return `${value}`
         }
         if (approximate) {
-          return `${approxNum(value, { capital: true })} ${translatedUnit}`
+          return withUnit(approxNum(value, { capital: true }), unit, translatedUnit)
         }
-        return value >= 0.01
-          ? `${numberFormatter.format(Number.parseFloat(value.toFixed(2)))} ${translatedUnit}`
-          : `${Number.parseFloat(value.toPrecision(4))} ${translatedUnit}`
+        if (value < 0.01) {
+          return withUnit(`${Number.parseFloat(value.toPrecision(4))}`, unit, translatedUnit)
+        }
+
+        return withUnit(numberFormatter.format(Number.parseFloat(value.toFixed(2))), unit, translatedUnit)
+      }
     }
   }
 
@@ -145,7 +165,7 @@ export function unitFormatter<T extends Record<string, any>>({
           return `${min} - ${max}`
         }
         if (approximate) {
-          return `${approxNum(min, { capital: true })} - ${approxNum(max, { capital: true })} ${translatedUnit}`
+          return withUnit(`${approxNum(min, { capital: true })} - ${approxNum(max, { capital: true })}`, unit, translatedUnit)
         }
     }
     const minVal = min >= 0.01
@@ -156,7 +176,7 @@ export function unitFormatter<T extends Record<string, any>>({
       ? `${numberFormatter.format(Number.parseFloat(max.toFixed(2)))}`
       : `${Number.parseFloat(max.toPrecision(4))}`
 
-    return `${minVal} - ${maxVal} ${translatedUnit}`
+    return withUnit(`${minVal} - ${maxVal}`, unit, translatedUnit)
   }
 
   return { formatUnit, formatBytes, formatCost, formatRange }
