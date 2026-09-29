@@ -753,9 +753,6 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // default button state
-        // KNOWN BUG (pre-existing, not introduced by this cleanup): see the comment on
-        // "should show edit form" above for the root cause - the Save button is not actually
-        // disabled here. Asserting the intended/correct behavior so this fails until fixed.
         cy.getTestId('plugin-edit-form-cancel').should('be.visible')
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
         cy.getTestId('plugin-edit-form-cancel').should('be.enabled')

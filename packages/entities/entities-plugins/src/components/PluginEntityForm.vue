@@ -40,34 +40,6 @@
           />
         </template>
       </component>
-      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
-      <component
-        :is="(sharedForms as any)[sharedFormName]"
-        v-else-if="sharedFormName"
-        :enable-redis-partial="enableRedisPartial"
-        :form-model="formModel"
-        :form-options="formOptions"
-        :form-schema="formSchema"
-        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
-        :is-editing="editing"
-        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
-        :on-model-updated="onModelUpdated"
-        :on-partial-toggled="onPartialToggled"
-        :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
-        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
-        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
-      >
-        <template
-          v-if="enableVaultSecretPicker"
-          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
-        >
-          <VaultSecretPickerProvider
-            v-if="slotProps.schema.referenceable"
-            v-bind="slotProps"
-            @open="setUpVaultSecretPicker"
-          />
-        </template>
-      </component>
 
       <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
@@ -132,8 +104,6 @@ import {
   FORMS_CONFIG,
   REDIS_CREATE_SLIDEOUT,
   customFields,
-  getSharedFormName,
-  sharedForms,
   VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
@@ -265,11 +235,6 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
-
-// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
-// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
-// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
-const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -459,7 +424,6 @@ provide(REDIS_CREATE_SLIDEOUT, {
   toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
 })
 
-const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
 const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
@@ -490,7 +454,6 @@ const syncFormRenderingMode = (pluginName?: string) => {
   if (!pluginName) {
     pluginConfig.value = undefined
     freeformComponent.value = undefined
-    sharedFormName.value = ''
 
     setPluginFormLayoutState(false)
 
@@ -501,7 +464,6 @@ const syncFormRenderingMode = (pluginName?: string) => {
   const effectivePluginName = props.schema?._sourcePlugin || pluginName
   pluginConfig.value = getPluginConfig(effectivePluginName)
   freeformComponent.value = getFreeFormComponent(effectivePluginName) ?? CommonForm
-  sharedFormName.value = getSharedFormName(effectivePluginName)
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
 }

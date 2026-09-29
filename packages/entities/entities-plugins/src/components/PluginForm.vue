@@ -736,12 +736,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
 
-    // the field is marked for deletion in the frontend schema
-    if (pluginSchema?.fieldsToDelete?.includes(field)) {
-      unset(initialFormSchema, field)
-      return
-    }
-
     // Required, omit keys with overwrite and hidden attributes for Kong Cloud
     if (Object.prototype.hasOwnProperty.call(scheme, 'overwrite') || scheme.hidden) {
       return
