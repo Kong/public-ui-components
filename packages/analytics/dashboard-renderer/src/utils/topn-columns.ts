@@ -83,7 +83,7 @@ const aiProviderIcons: Readonly<Record<string, Component>> = {
  * @param key - Field name to resolve.
  * @returns Matching options, or undefined when none exist.
  */
-export const getColumnOptions = (
+const getColumnOptions = (
   options: TopNColumnOptionsMap | undefined,
   key: string,
 ): TopNColumnOptions | undefined => {
@@ -124,7 +124,7 @@ export const getTopNProviderIcon = ({
  * @param value - Raw Explore metric value.
  * @returns A finite numeric value, or null for missing or invalid input.
  */
-export const toNumber = (value: unknown): number | null => {
+const toNumber = (value: unknown): number | null => {
   if (value === null || value === undefined || value === '') {
     return null
   }
@@ -280,7 +280,7 @@ export const createTopNPresentation = ({
 
     headers.push({
       key: metricKey,
-      label: getColumnLabel(metricKey, getChartLabel(metricKey)),
+      label: options?.label || getChartLabel(metricKey),
       type: 'metric',
       valueFormatter: (_value, row) => getMetricValue(row.record, metricKey),
       showPercentage: options?.value === 'relative',

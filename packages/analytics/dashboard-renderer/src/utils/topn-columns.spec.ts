@@ -6,34 +6,10 @@ import english from '../locales/en.json'
 import {
   createTopNGridRows,
   createTopNPresentation,
-  getColumnOptions,
   getTopNProviderIcon,
-  toNumber,
 } from './topn-columns'
 
 const i18n = createI18n<typeof english>('en-us', english)
-describe('TopN column calculations', () => {
-  it('resolves options case-insensitively', () => {
-    expect(
-      getColumnOptions(
-        { REQUEST_COUNT: { label: 'Requests' } },
-        'request_count',
-      )?.label,
-    ).toBe('Requests')
-  })
-
-  it.each([
-    [12, 12],
-    ['3.5', 3.5],
-    [null, null],
-    [undefined, null],
-    ['', null],
-    ['invalid', null],
-  ])('converts %s to %s', (input, expected) => {
-    expect(toNumber(input)).toBe(expected)
-  })
-})
-
 describe('createTopNPresentation', () => {
   const data: ExploreResultV4 = {
     meta: {
@@ -87,11 +63,15 @@ describe('createTopNPresentation', () => {
   it('normalizes numeric metric values for the grid without changing the Explore records', () => {
     const numericData = {
       ...data,
-      data: [{ timestamp: '', event: { ROUTE: 'route1', REQUEST_COUNT: '25', '4XX': null } }],
+      data: [
+        { timestamp: '', event: { ROUTE: 'route1', REQUEST_COUNT: '25', '4XX': null } },
+        { timestamp: '', event: { ROUTE: 'route2', REQUEST_COUNT: 'invalid', '4XX': '' } },
+      ],
     }
-    const [row] = createTopNGridRows(numericData)
+    const [row, invalidRow] = createTopNGridRows(numericData)
 
     expect(row).toMatchObject({ REQUEST_COUNT: 25, '4XX': null })
+    expect(invalidRow).toMatchObject({ REQUEST_COUNT: null, '4XX': null })
     expect(row.record).toBe(numericData.data[0])
     expect(row.record.event.REQUEST_COUNT).toBe('25')
   })
@@ -153,7 +133,7 @@ describe('createTopNPresentation', () => {
       columnOptions: {
         consumer_group: { label: 'Group' },
         principal: { label: 'Identity' },
-        REQUEST_COUNT: { label: 'Requests' },
+        request_count: { label: 'Requests' },
       },
       i18n,
     })
