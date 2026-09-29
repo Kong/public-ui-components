@@ -1,6 +1,7 @@
 <template>
   <div
     class="top-n-data-grid"
+    :data-testid="rows.length ? 'top-n-table' : undefined"
     :style="gridStyle"
   >
     <TableDataGrid
