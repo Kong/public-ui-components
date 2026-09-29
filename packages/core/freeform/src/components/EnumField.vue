@@ -106,7 +106,7 @@ defineSlots<{
   /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
   tooltip?: () => any
   /** Replaces the default rendering of each dropdown item. */
-  'item-label'(props: SelectItem & Record<string, any>): any
+  'item-label'(props: any): any
   /** Content shown below the dropdown item list. */
   'dropdown-footer-text'?: () => any
 }>()
