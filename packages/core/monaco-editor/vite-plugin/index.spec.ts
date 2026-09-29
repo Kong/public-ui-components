@@ -121,9 +121,9 @@ describe('vite-plugin-monaco', () => {
       return configHook.call(plugin, {}, { command: 'serve', mode: 'development' }).optimizeDeps
     }
 
-    it('excludes monaco-editor so imports of it keep hitting resolveId', () => {
+    it('excludes monaco-editor and the shiki virtual specifier so imports of either keep hitting resolveId', () => {
       const { exclude } = getOptimizeDeps()
-      expect(exclude).toEqual(['monaco-editor'])
+      expect(exclude).toEqual(['monaco-editor', 'virtual:@kong-ui-public/monaco-editor/shiki'])
     })
 
     it('includes only plain-JS deep specifiers, not worker or css imports', () => {

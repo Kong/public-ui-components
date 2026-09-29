@@ -323,7 +323,7 @@ export default function plugin(options?: Options): Plugin {
           // itself does `import 'monaco-editor'`) needs to keep hitting `resolveId` below so
           // it gets redirected to the trimmed, generated entry instead of esbuild inlining the
           // full, untrimmed package.
-          exclude: ['monaco-editor'],
+          exclude: ['monaco-editor', SHIKI_VIRTUAL_SPECIFIER],
           // The generated monaco-editor entry's own deep imports are real, stable submodules
           // though — pre-bundle those explicitly so dev doesn't pay a per-file request for
           // each one. (The shiki entry only imports `@shikijs/*` packages, which were never
