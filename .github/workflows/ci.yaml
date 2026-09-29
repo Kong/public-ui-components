@@ -456,7 +456,7 @@ jobs:
             exit 0
           fi
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token-kong.outputs.token }}
 
   notify-slack:
     name: Slack Notification
