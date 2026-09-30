@@ -40,6 +40,7 @@ overrides:
   prismjs@<1.30.0: ^1.30.0
   smol-toml@<=1.7.0: ^1.8.0
   tmp@<0.2.6: ^0.2.7
+  undici@>=8.0.0 <8.10.2: ^8.10.2
   uuid@<11.1.1: ^11.1.1
 
 allowBuilds:
