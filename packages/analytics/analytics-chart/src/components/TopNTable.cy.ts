@@ -792,9 +792,9 @@ describe('<TopNTable />', () => {
       mountWithOptions({ cost: { value: 'relative' }, ai_request_count: { value: 'relative' } })
 
       metricCell(0, 1).find('.top-n-metric-cell-value').should('have.text', '$60.00')
-      metricCell(0, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(60 %)')
-      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(10 %)')
-      metricCell(0, 2).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(50 %)')
+      metricCell(0, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(60%)')
+      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(10%)')
+      metricCell(0, 2).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(50%)')
     })
 
     it('omits the relative value without the relative option', () => {
@@ -804,24 +804,24 @@ describe('<TopNTable />', () => {
       metricCell(0, 1).find('[data-testid="top-n-metric-cell-relative"]').should('not.exist')
     })
 
-    it('clamps tiny relative values at 0.01 %', () => {
+    it('clamps tiny relative values at 0.01%', () => {
       const data = structuredClone(AI_PROVIDER_TABLE_DATA)
       data.data[2].event.cost = 0.001
 
       cy.mount(TopNTable, { props: { data, columnOptions: { cost: { value: 'relative' } } } })
 
-      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(< 0.01 %)')
+      metricCell(2, 1).find('[data-testid="top-n-metric-cell-relative"]').should('have.text', '(< 0.01%)')
     })
 
-    it('clamps tiny percent metrics at 0.01 %', () => {
+    it('clamps tiny percent metrics at 0.01%', () => {
       const data = structuredClone(AI_PROVIDER_TABLE_DATA)
       data.data[2].event.error_rate = 0.00004
       data.data[1].event.error_rate = 0
 
       cy.mount(TopNTable, { props: { data } })
 
-      metricCell(2, 3).should('have.text', '< 0.01 %')
-      metricCell(1, 3).should('have.text', '0 %')
+      metricCell(2, 3).should('have.text', '< 0.01%')
+      metricCell(1, 3).should('have.text', '0%')
     })
 
     it('spans bar column headers across the value and bar cells', () => {
@@ -902,7 +902,7 @@ describe('<TopNTable />', () => {
       cy.get('.top-n-metric-cell-bar').should('not.exist')
       cy.getTestId('top-n-table-cell-icon').should('not.exist')
       metricCell(0, 1).should('contain.text', '$60.00')
-      metricCell(0, 3).should('have.text', '20 %')
+      metricCell(0, 3).should('have.text', '20%')
     })
   })
 })
