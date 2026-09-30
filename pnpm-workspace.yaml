@@ -47,7 +47,7 @@ overrides:
 
 allowBuilds:
   '@evilmartians/lefthook': true
-  '@kong/kongponents@8.128.0': false
+  '@kong/kongponents': false
   '@parcel/watcher': true
   '@swc/core': true
   core-js: true
