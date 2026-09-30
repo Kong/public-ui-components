@@ -27,6 +27,11 @@ export type TableDataGridCellSlotProps<Row extends object = TableDataGridRow> = 
   refreshCell: () => void
 }
 
+export type TableDataGridThreshold = {
+  value: number
+  type: 'warning' | 'error'
+}
+
 export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   key: Extract<keyof Row, string>
   label: string
@@ -47,6 +52,20 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
    * when `sortable` is true.
    */
   showSortIcon?: boolean
+  /** Formats the raw cell value for display. */
+  valueFormatter?: (value: unknown, row: Row) => string
+  /** Shows the row's share of the full returned column total. */
+  showPercentage?: boolean
+  /** Formats percentage points, e.g. 50 for a 50% share (not the 0–1 ratio). */
+  percentageFormatter?: (percentage: number) => string
+  /** Renders a bar using the column total or maximum as its denominator. */
+  bar?: 'relative' | 'absolute'
+  /**
+   * Colors the bar when rendered, or the value text otherwise.
+   * Compares the raw numeric value with each threshold independently of `bar`
+   * and works in both infinite and unpaginated modes.
+   */
+  thresholds?: TableDataGridThreshold[]
 }
 
 export type TableDataGridSortDirection = 'asc' | 'desc'
@@ -58,6 +77,8 @@ export type TableDataGridSort = {
 
 export type TableDataGridConfig = TableDataGridSort & {
   pageSize?: number
+  /** Size to all returned rows in unpaginated mode. Ignored in infinite mode. */
+  fitToContent?: boolean
 }
 
 export type TableDataGridProps<Row extends object = TableDataGridRow> = {
