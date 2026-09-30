@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.35.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.2...%40kong-ui-public%2Fforms%404.35.4) (2026-09-30)
+
+### Bug Fixes
+
+* switching ci from pat to app token [KHCP-2195] ([#3893](https://github.com/Kong/public-ui-components/issues/3893)) ([5b86526](https://github.com/Kong/public-ui-components/commit/5b8652681ce8a67083ae10cb85a78e485f600a9c))
+
+
 ## [4.35.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.2...%40kong-ui-public%2Fforms%404.35.3) (2026-09-29)
 
 ### Bug Fixes
