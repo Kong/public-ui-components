@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.36.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.1...%40kong-ui-public%2Fdashboard-renderer%408.36.2) (2026-09-30)
+
+### Bug Fixes
+
+* **analytics:** distinguish flushed and spaced units ([#3894](https://github.com/Kong/public-ui-components/issues/3894)) ([b42423b](https://github.com/Kong/public-ui-components/commit/b42423b546d53a242020e499d63000cef2a34467))
+
+
 ## [8.36.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.0...%40kong-ui-public%2Fdashboard-renderer%408.36.1) (2026-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
