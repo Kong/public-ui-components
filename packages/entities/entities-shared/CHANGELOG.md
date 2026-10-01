@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.69.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.3...%40kong-ui-public%2Fentities-shared%403.69.0) (2026-10-01)
+
+### Features
+
+* **dashboard-renderer:** migrate TopN and deprecate old table [MA-5503] ([#3854](https://github.com/Kong/public-ui-components/issues/3854)) ([baecc6f](https://github.com/Kong/public-ui-components/commit/baecc6fb562e9c0cec8570ca0ce4013006c0f77a))
+
+
 ## [3.68.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.2...%40kong-ui-public%2Fentities-shared%403.68.3) (2026-09-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

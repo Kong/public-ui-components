@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.37.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.2...%40kong-ui-public%2Fdashboard-renderer%408.37.0) (2026-10-01)
+
+### Features
+
+* **dashboard-renderer:** migrate TopN and deprecate old table [MA-5503] ([#3854](https://github.com/Kong/public-ui-components/issues/3854)) ([baecc6f](https://github.com/Kong/public-ui-components/commit/baecc6fb562e9c0cec8570ca0ce4013006c0f77a))
+
+
 ## [8.36.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.1...%40kong-ui-public%2Fdashboard-renderer%408.36.2) (2026-09-30)
 
 ### Bug Fixes
