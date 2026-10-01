@@ -279,7 +279,7 @@ describe('TopNTableRenderer grid integration', () => {
     })
     await expect.poll(headers).toEqual(['Requests', 'Errors'])
     await expect.poll(() => cell(0, 'request_count').textContent).toContain('1.2K')
-    expect(cell(0, 'error_rate').textContent).toContain('< 0.01 %')
+    expect(cell(0, 'error_rate').textContent).toContain('< 0.01%')
   })
 
   it('keeps three dimensions and multiple metrics aligned with labels, opt-in provider icons, and thresholds', async () => {
@@ -316,8 +316,8 @@ describe('TopNTableRenderer grid integration', () => {
     expect(cell(0, 'ai_model').textContent).toContain('GPT')
     expect(cell(0, 'status_code').textContent).toContain('200')
     expect(cell(0, 'request_count').textContent).toContain('10')
-    expect(cell(0, 'request_count').textContent).toContain('(50 %)')
-    expect(cell(0, 'error_rate').textContent).toContain('20 %')
+    expect(cell(0, 'request_count').textContent).toContain('(50%)')
+    expect(cell(0, 'error_rate').textContent).toContain('20%')
     expect(element('[row-index="0"] [col-id="error_rate"] [data-testid="table-data-grid-cell-bar"]').dataset.threshold).toBe('error')
     expect(element('[row-index="0"] [col-id="error_rate"] [data-testid="table-data-grid-cell-bar-fill"]').style.width).toBe('100%')
   })
