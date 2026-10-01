@@ -68,7 +68,7 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
     if (!tableConfigProp.value) {
       patchTableConfig({})
     }
-  })
+  }, { deep: true })
 
   // Sort-only view of activeTableConfig.
   const activeSort = computed<TableDataGridSort>(() => ({
