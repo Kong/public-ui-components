@@ -50,6 +50,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
@@ -75,6 +76,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         data-testid="bar-chart-container"
         :dimension-axes-title="dimensionAxesTitle"
         :legend-values="legendValues"
@@ -89,6 +91,7 @@
       <DonutChart
         v-else-if="isDonutChart"
         :chart-data="computedChartData"
+        :coordinator="coordinator"
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
@@ -105,6 +108,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         data-testid="scatter-chart-container"
         :dimension-axes-title="scatterXAxisTitle"
         :granularity="scatterGranularity"
@@ -126,8 +130,9 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, YAxisConfig, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, YAxisPosition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, InteractionCoordinator, YAxisPosition } from '@kong-ui-public/analytics-utilities'
 import type { ScatterChartColors } from '../utils'
+import { INJECT_DASHBOARD_COORDINATOR } from '../constants'
 
 import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
@@ -166,6 +171,8 @@ interface ChartProps {
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
 }
+
+const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
@@ -321,7 +328,7 @@ const computedChartData = computed(() => {
     ? composables.useExploreResultToTimeDataset(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        colorPalette: props.chartOptions.chartDatasetColors,
         metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
@@ -329,9 +336,10 @@ const computedChartData = computed(() => {
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        colorPalette: props.chartOptions.chartDatasetColors,
       },
       exploreData as ComputedRef<ExploreResultV4>,
+      coordinator,
     ).value
 })
 
