@@ -37,6 +37,7 @@ Render Analytics charts on a page from a JSON definition.
   - `@kong-ui-public/analytics-utilities`
   - `@kong-ui-public/analytics-metric-provider`
   - `@kong-ui-public/i18n`
+  - `@kong-ui-public/table-data-grid`
   - `@kong/kongponents`
   - `swrv`
   - `vue`
@@ -270,14 +271,15 @@ Rendering `AnalyticsChart` components (e.g., horizontal bar, vertical bar, times
 
 
 ```typescript
-import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
+import type { DashboardRendererContext } from '@kong-ui-public/dashboard-renderer'
+import type { DashboardConfig } from '@kong-ui-public/analytics-utilities'
 import { DashboardRenderer } from '@kong-ui-public/dashboard-renderer'
 
 const context: DashboardRendererContext = {
   filters: [],
   timeSpec: {
     type: 'relative',
-    time_range: '15M',
+    time_range: '15m',
   },
 }
 
@@ -291,7 +293,12 @@ const config: DashboardConfig = {
           chart_title: 'Top N chart of mock data',
         },
         header_description: 'Description',
-        query: {},
+        query: {
+          datasource: 'basic',
+          metrics: ['request_count'],
+          dimensions: ['gateway_service'],
+          limit: 5,
+        },
       },
       layout: {
         position: {
@@ -313,11 +320,16 @@ const config: DashboardConfig = {
           chart_title: 'Top N chart of mock data',
         },
         header_description: 'Description',
-        query: {},
+        query: {
+          datasource: 'basic',
+          metrics: ['request_count'],
+          dimensions: ['gateway_service'],
+          limit: 5,
+        },
       },
       layout: {
         position: {
-          col: 3,
+          col: 4,
           row: 0,
         },
         size: {
@@ -552,6 +564,16 @@ The following chart types are supported:
 - `slottable` *(deprecated chart-level variant, use the top-level `{ type: 'slottable', id, layout }` tile instead of `definition.chart.type: 'slottable'`)*: Custom content slot
 
 Each chart type has its own configuration schema with specific options.
+
+### TopN tables
+
+Existing `top_n` definitions render through `TableDataGrid` in `unpaginated` mode. `TopNTableRenderer` loads the Explore result through `QueryDataProvider`, like the other chart tiles, and passes the mapped rows to the grid. The query's `limit` controls the complete result; scrolling does not issue another request or add pagination parameters.
+
+`QueryDataProvider` owns query readiness, refresh, loading, and error states, and emits `chart-data` and `query-complete`. Previous rows remain visible during refresh. Dashboard-renderer owns the analytics-specific labels, metric formatting, and entity links.
+
+Dimension slots render entity links and italic empty values; other cells use the grid's default ellipsis and overflow tooltips. Header formatters supply display names and metric units. Dashboard-renderer supplies provider icons through the grid's `cell-icon` slot, matched exactly and case-insensitively on the raw provider id when a column uses `icon_set: 'ai_provider'`. The grid places icons beside default values or entity links and owns percentage-of-total values, bars, and threshold styling. Dashboard-renderer maps existing `column_options` to the grid headers: `value: 'relative'` enables `showPercentage`, `bar: 'relative'` scales against the column total, and `bar: 'max'` maps to the grid's `bar: 'absolute'`, scaled against the maximum. Both calculations use every row in the returned result. Interactive sorting is disabled to preserve backend ranking. `entity_links` and the primary-dimension `entity_link` fallback retain their existing meanings.
+
+The static dashboard sandbox includes a fixed-height **Top 40 services by requests** tile. Scroll to its last row, refresh it, and compare its labels, entity links, relative values, and bars. The adjacent platform table continues to use cursor-based infinite fetching.
 
 ### Table Chart Configuration
 
