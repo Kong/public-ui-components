@@ -2,7 +2,6 @@ import { definePluginConfig } from '../define-plugin-config'
 import { StringField, ArrayField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
-  experimental: true,
   fieldRenderers: [
     {
       match: 'config.message_by_lua_functions.*',

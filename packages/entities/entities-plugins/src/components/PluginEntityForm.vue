@@ -40,34 +40,6 @@
           />
         </template>
       </component>
-      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
-      <component
-        :is="(sharedForms as any)[sharedFormName]"
-        v-else-if="sharedFormName"
-        :enable-redis-partial="enableRedisPartial"
-        :form-model="formModel"
-        :form-options="formOptions"
-        :form-schema="formSchema"
-        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
-        :is-editing="editing"
-        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
-        :on-model-updated="onModelUpdated"
-        :on-partial-toggled="onPartialToggled"
-        :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
-        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
-        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
-      >
-        <template
-          v-if="enableVaultSecretPicker"
-          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
-        >
-          <VaultSecretPickerProvider
-            v-if="slotProps.schema.referenceable"
-            v-bind="slotProps"
-            @open="setUpVaultSecretPicker"
-          />
-        </template>
-      </component>
 
       <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
@@ -132,8 +104,6 @@ import {
   FORMS_CONFIG,
   REDIS_CREATE_SLIDEOUT,
   customFields,
-  getSharedFormName,
-  sharedForms,
   VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
@@ -152,7 +122,7 @@ import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/components/CommonForm.vue'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
-import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
+import { getFreeFormComponent, getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
 const emit = defineEmits<{
@@ -240,15 +210,6 @@ const props = defineProps({
     default: false,
   },
 
-  /**
-   * Force the engine type for the form.
-   */
-  engine: {
-    type: String as PropType<'vfg' | 'freeform'>,
-    required: false,
-    default: undefined,
-  },
-
   /** For Kong Manager portal developers */
   developer: {
     type: Boolean,
@@ -275,11 +236,6 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
-// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
-// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
-// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
-const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
-
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas({
@@ -290,7 +246,6 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
 const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
 const setPluginFormLayoutState = (value: boolean) => {
   if (pluginFormLayoutState) {
@@ -469,7 +424,6 @@ provide(REDIS_CREATE_SLIDEOUT, {
   toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
 })
 
-const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
 const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
@@ -500,7 +454,6 @@ const syncFormRenderingMode = (pluginName?: string) => {
   if (!pluginName) {
     pluginConfig.value = undefined
     freeformComponent.value = undefined
-    sharedFormName.value = ''
 
     setPluginFormLayoutState(false)
 
@@ -510,10 +463,7 @@ const syncFormRenderingMode = (pluginName?: string) => {
   // For cloned plugins, use the source plugin name for rendering decisions
   const effectivePluginName = props.schema?._sourcePlugin || pluginName
   pluginConfig.value = getPluginConfig(effectivePluginName)
-  freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
-    ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)
-    : undefined
-  sharedFormName.value = getSharedFormName(effectivePluginName)
+  freeformComponent.value = getFreeFormComponent(effectivePluginName) ?? CommonForm
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
@@ -1047,7 +997,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const parsedForm: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
+  const parsedForm: Record<string, any> = parseSchema(newSchema)
 
   Object.assign(formModel, parsedForm.model)
 
@@ -1064,7 +1014,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema, undefined, undefined, props.engine)
+  form.value = parseSchema(props.schema)
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}

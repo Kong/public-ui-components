@@ -176,10 +176,4 @@ type RuleBasedConfig = {
   fieldRenderers?: FieldRendererRule[]
 }
 
-export type PluginFormConfig = {
-  /**
-   * Whether the plugin is experimental.
-   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
-   */
-  experimental?: boolean
-} & (ComponentBasedConfig | RuleBasedConfig)
+export type PluginFormConfig = ComponentBasedConfig | RuleBasedConfig
