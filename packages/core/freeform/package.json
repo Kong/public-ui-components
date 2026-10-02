@@ -80,7 +80,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/icons": "^1.62.1",
-    "@kong/kongponents": "9.64.18",
+    "@kong/kongponents": "9.64.21-pr.3445.a302c28.0",
     "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.62.1",
     "@vueuse/core": "^14.4.0",

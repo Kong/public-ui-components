@@ -22,6 +22,15 @@
       @update:model-value="handleUpdate"
     >
       <template
+        v-if="$slots.label"
+        #label
+      >
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        />
+      </template>
+      <template
         v-if="fieldAttrs.labelAttributes?.info || versionInfo"
         #label-tooltip
       >
@@ -71,6 +80,13 @@ const {
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
   'update:modelValue': [value: string[] | EmptyValue]
+}>()
+
+defineSlots<{
+  /** Replaces the field's label content. */
+  label(props: { label: string }): any
+  /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
+  tooltip?: () => any
 }>()
 
 const { value: fieldValue, hide, versionInfo, ...field } = useField<string[] | EmptyValue, SetFieldSchema>(toRef(() => name))

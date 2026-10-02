@@ -1,4 +1,5 @@
 import Form from './Form.vue'
+import JsonField from './JsonField.vue'
 import type { FormSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
@@ -23,6 +24,7 @@ function mountJsonForm(options: {
   schema?: FormSchema
   data?: Record<string, unknown>
   config?: FormConfig
+  labelSlotTemplate?: string
 }) {
   cy.mount(Form, {
     props: {
@@ -31,6 +33,16 @@ function mountJsonForm(options: {
       config: options.config,
       onChange: cy.spy().as('onChangeSpy'),
     },
+    ...(options.labelSlotTemplate
+      ? {
+        slots: {
+          default: `<JsonField name="${FIELD_NAME}"><template #label="{ label }">${options.labelSlotTemplate}</template></JsonField>`,
+        },
+        global: {
+          components: { JsonField },
+        },
+      }
+      : {}),
   })
 }
 
@@ -72,6 +84,19 @@ describe('JsonField', () => {
       cy.getTestId(`ff-${FIELD_NAME}`).clear()
 
       assertLastChange({ [FIELD_NAME]: undefined })
+    })
+  })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      mountJsonForm({
+        data: { [FIELD_NAME]: 'raw text' },
+        labelSlotTemplate: '<span data-testid="custom-label">Custom: {{ label }}</span>',
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Payload')
     })
   })
 

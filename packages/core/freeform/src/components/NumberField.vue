@@ -26,6 +26,15 @@
       @update:model-value="handleUpdate"
     >
       <template
+        v-if="$slots.label"
+        #label
+      >
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        />
+      </template>
+      <template
         v-if="fieldAttrs.labelAttributes?.info || versionInfo"
         #label-tooltip
       >
@@ -137,6 +146,8 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
+  /** Replaces the field's label content. */
+  label(props: { label: string }): any
   /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
   tooltip?: () => any
   /** Replaces the help text under the expression editor's textarea. */

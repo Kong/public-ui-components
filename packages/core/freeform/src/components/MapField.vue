@@ -25,7 +25,12 @@
         :required="fieldAttrs.required"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ fieldAttrs.label }}
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        >
+          {{ fieldAttrs.label }}
+        </slot>
         <template
           v-if="fieldAttrs.labelAttributes?.info || versionInfo"
           #tooltip
@@ -147,6 +152,7 @@ const emit = defineEmits<{
 
 defineSlots<{
   default: (props: { keyId: string }) => any
+  label(props: { label: string }): any
   tooltip: () => any
 }>()
 

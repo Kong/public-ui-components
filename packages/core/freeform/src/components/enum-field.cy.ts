@@ -258,4 +258,30 @@ describe('EnumField', () => {
         .should('have.class', 'ff-version-compatibility-note')
     })
   })
+
+  // KNOWN FAILURE: kongponents 9.64.21-pr.3445.a302c28.0's `KSelect`/`KMultiselect`
+  // declare a `label` slot but never actually render it — verified by mounting
+  // `KInput`/`KTextArea`/`KSelect`/`KMultiselect` directly with only a `label` slot:
+  // all four render the fallback label text instead, while the sibling
+  // `label-tooltip` slot on the same components works correctly. EnumField's own
+  // forwarding (`#label`, mirroring the working `#label-tooltip` forward) is
+  // structurally correct — this is an upstream kongponents bug in the PR #3445
+  // preview build, not a freeform bug. Leaving this test unskipped as a marker; it
+  // should start passing once kongponents ships a fix.
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      cy.mount(() => h(Form, {
+        schema: getMultiEnumSchema(),
+        onChange: cy.spy().as('onChangeSpy'),
+      }, {
+        default: () => h(EnumField, { name: FIELD_NAME, multiple: true }, {
+          label: (slotProps: { label: string }) => h('span', { 'data-testid': 'custom-label' }, `Custom: ${slotProps.label}`),
+        }),
+      }))
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Protocols')
+    })
+  })
 })

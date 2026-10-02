@@ -74,7 +74,12 @@
           }"
           :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
         >
-          {{ fieldAttrs.label }}
+          <slot
+            :label="fieldAttrs.label"
+            name="label"
+          >
+            {{ fieldAttrs.label }}
+          </slot>
           <template
             v-if="fieldAttrs.labelAttributes?.info || versionInfo"
             #tooltip
@@ -183,6 +188,12 @@ const currentRenderRules = useCurrentRenderRules({
   rules: toRef(props, 'renderRules'),
   omittedFields: toRef(() => omit),
 })
+
+defineSlots<{
+  default(): any
+  label(props: { label: string }): any
+  tooltip(): any
+}>()
 
 const added = defineModel<boolean>('added')
 
