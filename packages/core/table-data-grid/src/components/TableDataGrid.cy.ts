@@ -4,18 +4,20 @@ import type {
   TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridHeader,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { defineComponent, h, nextTick, reactive, ref } from 'vue'
+import { Comment, defineComponent, h, nextTick, reactive, ref } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
   id: string
   name: string
   status: string
+  value?: number | boolean | null
 }
 
 type TestTableDataGridSlots = {
@@ -24,21 +26,19 @@ type TestTableDataGridSlots = {
   [slotName: string]: ((props: never) => unknown) | undefined
 }
 
-type MountTableOptions = {
+type MountTableOptions = (
+  | Omit<Extract<TableDataGridProps<TestRow>, { mode?: 'infinite' }>, 'headers'>
+  | Omit<Extract<TableDataGridProps<TestRow>, { mode: 'unpaginated' }>, 'headers'>
+) & {
   containerStyle?: Record<string, string>
-  fetcher: TableDataGridFetcher<TestRow>
   headers?: Array<TableDataGridHeader<TestRow>>
-  error?: boolean
   onCellClick?: (payload: TableDataGridCellClickPayload<TestRow>) => void
   onGridReady?: (api: GridApi<TestRow>) => void
   onRowClick?: (row: TestRow) => void
   onSort?: (payload: TableDataGridSort) => void
   onState?: (payload: TableDataGridStatePayload) => void
   onUpdateTableConfig?: (payload: TableDataGridConfig) => void
-  pageSize?: number
-  refreshKey?: string | number | boolean
   slots?: TestTableDataGridSlots
-  tableConfig?: TableDataGridConfig
 }
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
@@ -303,6 +303,73 @@ describe('<TableDataGrid />', () => {
       cursor: undefined,
       sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
     })
+  })
+
+  it('replaces the infinite fetcher without a refresh key', () => {
+    const fetcher = cy.stub().resolves({ data: [rows[0]], hasMore: false })
+    const replacementFetcher = cy.stub().resolves({ data: [rows[1]], hasMore: false })
+    const table = mountTestTableDataGrid({ fetcher })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    table.setProps({ fetcher: replacementFetcher })
+    cy.contains('.ag-cell', 'Portal app').should('be.visible')
+    cy.wrap(replacementFetcher).should('have.been.calledOnce').and('have.been.calledWithMatch', {
+      mode: 'infinite',
+      pageSize: 25,
+      cursor: undefined,
+    })
+    cy.wrap(fetcher).should('have.been.calledOnce')
+  })
+
+  it('renders and recalculates the complete unpaginated result without fetch state events', () => {
+    const completeRows = createRows(1, 30).map((row, index) => ({ ...row, value: index + 1 }))
+    const onState = cy.stub()
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: completeRows,
+      headers: [...headers, { key: 'value', label: 'Value', showPercentage: true }],
+      onState,
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    cy.get('[row-index="0"] [col-id="value"]').should('contain.text', '(0.22 %)')
+    cy.then(() => gridApi!.ensureIndexVisible(29, 'bottom'))
+    cy.contains('.ag-cell', 'Service 30').should('be.visible')
+    cy.get('[row-index="29"] [col-id="value"]').should('contain.text', '(6.45 %)')
+    table.setProps({ rows: [{ ...rows[0], value: 50 }, { ...rows[1], value: 150 }] })
+    cy.get('[row-index="0"] [col-id="value"]').should('contain.text', '(25 %)')
+    cy.get('[row-index="1"] [col-id="value"]').should('contain.text', '(75 %)')
+    cy.wrap(onState).should('not.have.been.called')
+  })
+
+  it('preserves numeric adornments around custom values and missing-value bar tracks', () => {
+    mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: [{ ...rows[0], value: true }, { ...rows[1], value: null }, { ...rows[0], id: 'valid', value: 50 }],
+      headers: [{ key: 'value', label: 'Value', showPercentage: true, bar: 'relative' }],
+      slots: {
+        value: ({ rowValue }: TableDataGridCellSlotProps<TestRow>) => h('strong', { 'data-testid': 'custom-value' }, String(rowValue)),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.get('[row-index="0"] [data-testid="custom-value"]').should('have.text', 'true')
+    cy.get('[row-index="0"] [data-testid="table-data-grid-cell-bar"]').should('not.exist')
+    cy.get('[row-index="1"] [data-testid="table-data-grid-cell-bar-fill"]').should('have.attr', 'style', 'width: 0%;')
+    cy.get('[row-index="2"] [data-testid="custom-value"]').should('have.text', '50')
+    cy.get('[row-index="2"] [data-testid="table-data-grid-cell-relative"]').should('have.text', '(100 %)')
+    cy.get('[row-index="2"] [data-testid="table-data-grid-cell-bar"]').should('be.visible')
+  })
+
+  it('uses default overflow presentation when the host cell slot renders no content', () => {
+    const longName = 'A gateway service name that is much wider than its flexible table column'
+    mountTestTableDataGrid({
+      fetcher: cy.stub().resolves({ data: [{ ...rows[0], name: longName }], hasMore: false }),
+      slots: { name: () => h(Comment) },
+    })
+    expectOverflowTooltip(longName)
   })
 
   it('uses Kong theme text colors for AG Grid headers and cells', () => {
@@ -987,6 +1054,8 @@ describe('<TableDataGrid />', () => {
 
   it('sizes an unpaginated grid to its rows with fitToContent', () => {
     const tableConfig = ref<TableDataGridConfig>({ fitToContent: true })
+    const contentRows = ref([{ name: 'Only row' }])
+    let initialHeight = 0
 
     // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's parent height.
     cy.mount(defineComponent({
@@ -994,9 +1063,9 @@ describe('<TableDataGrid />', () => {
       setup() {
         return () => h('div', { style: { height: '520px', width: '400px' } }, [
           h(TestTableDataGrid, {
-            headers: [{ key: 'name', label: 'Name' }],
+            headers: [{ key: 'name', label: 'Name', minWidth: 800 }],
             mode: 'unpaginated',
-            rows: [{ name: 'Only row' }],
+            rows: contentRows.value,
             tableConfig: tableConfig.value,
           }),
         ])
@@ -1004,14 +1073,25 @@ describe('<TableDataGrid />', () => {
     }))
 
     cy.contains('.ag-cell', 'Only row').should('be.visible')
-    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('be.lessThan', 150)
+    cy.get('.kong-ui-public-table-data-grid').should(($grid) => {
+      initialHeight = $grid[0].getBoundingClientRect().height
+      expect(initialHeight).to.be.lessThan(150)
+    })
+    expectHorizontalOverflow()
+    cy.then(() => {
+      contentRows.value = createRows(1, 8)
+    })
+    cy.get('.kong-ui-public-table-data-grid').should(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.greaterThan(initialHeight)
+    })
+    cy.contains('.ag-cell', 'Service 8').should('be.visible')
     cy.then(() => {
       tableConfig.value = {}
     })
     cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('equal', 520)
   })
 
-  it('colors threshold values in infinite mode', () => {
+  it('colors threshold values without complete-result bars or percentages in infinite mode', () => {
     const fetcher = cy.stub().resolves({
       data: [{ requests: 0 }, { requests: 5 }, { requests: 15 }],
       hasMore: false,
@@ -1024,9 +1104,12 @@ describe('<TableDataGrid />', () => {
         return () => h('div', { style: { height: '520px', width: '400px' } }, [
           h(TestTableDataGrid, {
             fetcher,
+            tableConfig: { fitToContent: true },
             headers: [{
               key: 'requests',
               label: 'Requests',
+              showPercentage: true,
+              bar: 'relative',
               thresholds: [
                 { type: 'warning', value: 5 },
                 { type: 'error', value: 10 },
@@ -1037,6 +1120,9 @@ describe('<TableDataGrid />', () => {
       },
     }))
 
+    cy.get('[data-testid="table-data-grid-cell-relative"]').should('not.exist')
+    cy.get('[data-testid="table-data-grid-cell-bar"]').should('not.exist')
+    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('equal', 520)
     cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer')
       .should('not.have.attr', 'data-threshold')
     cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
