@@ -24,6 +24,9 @@ auditConfig:
     - 'GHSA-gv7w-rqvm-qjhr'
     - 'GHSA-fx2h-pf6j-xcff'
     - 'GHSA-67hx-6x53-jw92'
+    # braces has no patched release. Remove this exception when a fix is available.
+    # https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+    - 'GHSA-vfj7-8cjw-p6xm'
 
 overrides:
   axios@>=1.0.0 <1.20.0: ^1.20.0
@@ -35,6 +38,7 @@ overrides:
   dompurify@<=3.4.12: ^3.4.14
   fast-uri@>=3.0.0 <3.1.7: ^3.1.7
   form-data@>=3.0.0 <3.0.5: ^4.0.6
+  http-cache-semantics@<=4.2.0: ^4.3.0
   immutable@<4.3.9: ^4.3.9
   js-yaml@>=4.0.0 <4.3.1: ^5.4.1
   minimatch@>=9.0.0 <9.0.7: ^10.2.6
