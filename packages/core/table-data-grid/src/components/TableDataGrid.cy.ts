@@ -414,6 +414,7 @@ describe('<TableDataGrid />', () => {
 
   for (const updateMode of ['replacement', 'in-place']) {
     it(`reloads without stale sort after ${updateMode} removal of the sorted column`, () => {
+      const events: Array<{ type: 'sort' | 'config', payload: TableDataGridSort | TableDataGridConfig }> = []
       const fetcher = cy.stub().callsFake(({ sort }: Parameters<TableDataGridFetcher<TestRow>>[0]) => Promise.resolve({
         data: [sort?.sortColumnKey ? rows[0] : rows[1]], hasMore: false,
       }))
@@ -421,11 +422,19 @@ describe('<TableDataGrid />', () => {
         { key: 'name', label: 'Name', sortable: true },
         { key: 'status', label: 'Status' },
       ])
-      const table = mountTestTableDataGrid({ fetcher, headers: reactiveHeaders.value })
+      const table = mountTestTableDataGrid({
+        fetcher,
+        headers: reactiveHeaders.value,
+        onSort: payload => events.push({ type: 'sort', payload }),
+        onUpdateTableConfig: payload => events.push({ type: 'config', payload }),
+      })
 
       cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
       cy.get('.ag-header-cell[col-id="name"]').click()
       cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+      cy.then(() => {
+        events.length = 0
+      })
       if (updateMode === 'replacement') {
         table.setProps({ headers: [{ key: 'status', label: 'Status' }] })
       } else {
@@ -437,6 +446,10 @@ describe('<TableDataGrid />', () => {
       cy.get('[row-index="0"] [col-id="status"]').should('contain.text', 'Inactive')
       cy.get('.ag-header-cell[col-id="name"]').should('not.exist')
       cy.get('.ag-header-cell[col-id="status"]').should('not.have.attr', 'aria-sort')
+      cy.then(() => expect(events).to.deep.equal([
+        { type: 'sort', payload: { sortColumnKey: undefined, sortColumnOrder: undefined } },
+        { type: 'config', payload: { pageSize: 25, sortColumnKey: undefined, sortColumnOrder: undefined } },
+      ]))
       cy.wrap(fetcher).should(stub => {
         expect(stub.callCount).to.equal(3)
         const params: Parameters<TableDataGridFetcher<TestRow>>[0] = stub.lastCall.args[0]
@@ -448,6 +461,51 @@ describe('<TableDataGrid />', () => {
       })
     })
   }
+
+  it('keeps fetching when an API sort adds a column without changing the active sort', () => {
+    const pending = createDeferredResult()
+    let requestCount = 0
+    const fetcher = cy.stub().callsFake(({ cursor }: Parameters<TableDataGridFetcher<TestRow>>[0]) => {
+      requestCount += 1
+      if (requestCount === 1) {
+        return pending.promise
+      }
+      return Promise.resolve(cursor === undefined
+        ? { data: createRows(101, 25), cursor: 'current-cursor', hasMore: true }
+        : { data: createRows(126, 25), hasMore: false })
+    })
+    const onSort = cy.stub()
+    const onUpdateTableConfig = cy.stub()
+    let gridApi: GridApi<TestRow> | undefined
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      tableConfig: { pageSize: 25, sortColumnKey: 'name', sortColumnOrder: 'asc' },
+      onGridReady: api => {
+        gridApi = api
+      },
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.wrap(fetcher).should('have.been.calledOnce')
+    cy.then(() => gridApi!.applyColumnState({ state: [
+      { colId: 'name', sort: 'asc', sortIndex: 1 },
+      { colId: 'status', sort: 'desc', sortIndex: 0 },
+    ] }))
+    settleGridRender()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 101')
+    cy.get('.ag-header-cell[col-id="name"]').should('have.attr', 'aria-sort', 'ascending')
+    cy.get('.ag-header-cell[col-id="status"]').should('have.attr', 'aria-sort', 'none')
+    cy.wrap(fetcher).should('have.been.calledTwice')
+    cy.then(() => pending.resolve({ data: createRows(1, 25), cursor: 'old-cursor', hasMore: true }))
+    settleGridRender()
+    cy.then(() => gridApi!.ensureIndexVisible(25, 'bottom'))
+    cy.get('[row-index="25"] [col-id="name"]').should('contain.text', 'Service 126')
+    cy.wrap(fetcher).should('have.been.calledWithMatch', { cursor: 'current-cursor' })
+    cy.wrap(onSort).should('not.have.been.called')
+    cy.wrap(onUpdateTableConfig).should('not.have.been.called')
+  })
 
   it('renders and recalculates the complete unpaginated result without fetch state events', () => {
     const completeRows = createRows(1, 30).map((row, index) => ({ ...row, value: index + 1 }))

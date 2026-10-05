@@ -22,6 +22,7 @@ describe('useTableDataGridConfig', () => {
       headers: ref(headers),
       pageSize: ref(25),
       tableConfig,
+      emitSort: vi.fn(),
       emitTableConfigUpdate,
     })
 
@@ -39,6 +40,7 @@ describe('useTableDataGridConfig', () => {
       headers: ref(headers),
       pageSize: ref(25),
       tableConfig,
+      emitSort: vi.fn(),
       emitTableConfigUpdate,
       onExternalConfigChange,
     })
@@ -60,6 +62,7 @@ describe('useTableDataGridConfig', () => {
       headers: ref(headers),
       pageSize: ref(25),
       tableConfig,
+      emitSort: vi.fn(),
       emitTableConfigUpdate: vi.fn(),
       onExternalConfigChange,
     })
@@ -72,27 +75,38 @@ describe('useTableDataGridConfig', () => {
     expect(onExternalConfigChange).not.toHaveBeenCalled()
   })
 
-  it('patchTableConfig emits update:tableConfig only on a real change', () => {
+  it('patchTableConfig emits sort before config updates only on a real change', () => {
     const tableConfig = ref<TableDataGridConfig | undefined>(undefined)
-    const emitTableConfigUpdate = vi.fn()
+    const calls: string[] = []
+    const emitSort = vi.fn(() => calls.push('sort'))
+    const emitTableConfigUpdate = vi.fn(() => calls.push('config'))
 
     const { activeTableConfig, patchTableConfig } = useTableDataGridConfig<TestRow>({
       headers: ref(headers),
       pageSize: ref(25),
       tableConfig,
+      emitSort,
       emitTableConfigUpdate,
     })
 
     patchTableConfig({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
 
     expect(activeTableConfig.value).toEqual({ sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 25 })
+    expect(emitSort).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    expect(calls).toEqual(['sort', 'config'])
     expect(emitTableConfigUpdate).toHaveBeenCalledTimes(1)
     expect(emitTableConfigUpdate).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 25 })
 
+    emitSort.mockClear()
     emitTableConfigUpdate.mockClear()
     patchTableConfig({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
 
+    expect(emitSort).not.toHaveBeenCalled()
     expect(emitTableConfigUpdate).not.toHaveBeenCalled()
+
+    patchTableConfig({ pageSize: 50 })
+    expect(emitSort).not.toHaveBeenCalled()
+    expect(emitTableConfigUpdate).toHaveBeenCalledWith({ sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 50 })
   })
 
   it('keeps a grid-driven sort when headers change afterward, uncontrolled', async () => {
@@ -103,6 +117,7 @@ describe('useTableDataGridConfig', () => {
       headers: headersRef,
       pageSize: ref(25),
       tableConfig,
+      emitSort: vi.fn(),
       emitTableConfigUpdate: vi.fn(),
     })
 
@@ -125,6 +140,7 @@ describe('useTableDataGridConfig', () => {
       headers: ref(headers),
       pageSize: ref(25),
       tableConfig,
+      emitSort: vi.fn(),
       emitTableConfigUpdate: vi.fn(),
       onExternalConfigChange,
     })

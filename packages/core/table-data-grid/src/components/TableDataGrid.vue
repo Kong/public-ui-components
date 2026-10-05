@@ -151,6 +151,7 @@ const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useT
   headers: toRef(() => headers),
   pageSize: toRef(() => pageSize),
   tableConfig: toRef(() => tableConfig),
+  emitSort: sort => emit('sort', sort),
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   onExternalConfigChange: (config) => {
     if (!gridApi.value) {
@@ -165,7 +166,6 @@ const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useT
 
 const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   activeSort,
-  emitSort: sort => emit('sort', sort),
   patchTableConfig,
 })
 

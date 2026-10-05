@@ -323,8 +323,6 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           getRowsParams.failCallback()
           return
         }
-        const requestGeneration = latestRequestGeneration.value
-
         // AG Grid owns block scheduling and supplies zero-based row ranges.
         // This layer converts those ranges into cursor-chain blocks before
         // calling the public fetcher.
@@ -335,6 +333,13 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           startRow: getRowsParams.startRow,
           endRow: getRowsParams.endRow,
         })
+
+        // A replacement first block starts a fresh cache even if the sort is unchanged.
+        // Retire its previous cursor chain before an old response can overwrite it.
+        if (blockIndex === 0 && blockCompletionMap.has(0)) {
+          resetRequestState()
+        }
+        const requestGeneration = latestRequestGeneration.value
 
         // Register the current block before waiting so any following block can
         // find a completion promise instead of treating this request as missing.
