@@ -15,7 +15,7 @@ describe('stripUnknownFilters', () => {
     value: ['foo'],
   }
 
-  // a filter that's only in the api_usage datasource
+  // a filter that's in the api_usage, llm_usage and agentic_usage datasources, but not basic
   const advancedFilter = {
     operator: 'in',
     field: 'upstream_status_code',
@@ -68,7 +68,7 @@ describe('stripUnknownFilters', () => {
   it.each([
     ['basic', [basicFilter]],
     ['api_usage', [basicFilter, advancedFilter, consumerGroupFilter, aiGatewayConsumerGroupFilter]],
-    ['llm_usage', [llmFilter, aiGatewayConsumerGroupFilter]],
+    ['llm_usage', [advancedFilter, llmFilter, aiGatewayConsumerGroupFilter]],
     ['agentic_usage', [basicFilter, advancedFilter, mcpFilter, aiGatewayConsumerGroupFilter]],
     ['managed_cache_usage', [managedCacheFilter]],
   ])('Strips only unknown filters for datasource "%s"', (datasource, expected) => {
