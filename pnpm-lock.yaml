@@ -871,6 +871,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
+      '@kong-ui-public/sandbox-layout':
+        specifier: workspace:^
+        version: link:../sandbox-layout
       '@kong/design-tokens':
         specifier: 3.3.1
         version: 3.3.1
