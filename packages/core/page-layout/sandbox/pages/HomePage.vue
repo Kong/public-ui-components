@@ -3,6 +3,7 @@
     <PageLayout
       back-to="/"
       :breadcrumbs="breadcrumbs"
+      new-appearance
       :page-shortcut-data="pageShortcutData"
       :tabs="tabs"
     >
@@ -43,7 +44,7 @@
 
 <script setup lang="ts">
 import { provide, reactive } from 'vue'
-import { PageLayout } from '../../src'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, PageLayout, SHOW_KAI_BUTTON_INJECTION_KEY } from '../../src'
 import type { PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
 
@@ -123,6 +124,12 @@ const pageShortcutsContext = reactive({
 })
 
 provide('app:pageShortcutsContext', pageShortcutsContext)
+
+// The host app owns the Ask KAi button: PageLayout reads both of these through inject
+provide(SHOW_KAI_BUTTON_INJECTION_KEY, true)
+provide(KAI_BUTTON_CLICK_INJECTION_KEY, () => {
+  console.log('ask-kai-click')
+})
 
 const pageShortcutData: PageShortcutData = {
   label: 'Home',

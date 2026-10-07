@@ -2,7 +2,7 @@ import { defineComponent, inject, h, reactive, ref } from 'vue'
 import { createRouter, createMemoryHistory, type Router } from 'vue-router'
 import type { OptionsParam } from '../../../../../cypress/types'
 import PageLayout from './PageLayout.vue'
-import { nestedPageLayoutInjectionKey } from '../symbols'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
 import type { PageShortcutData } from '../types'
 
 const validShortcutData: PageShortcutData = {
@@ -466,6 +466,215 @@ describe('<PageLayout />', () => {
       })
 
       cy.getTestId('page-layout-favorite-button').should('be.visible')
+    })
+  })
+
+  describe('new appearance', () => {
+    const breadcrumbs = [
+      { key: 'home', text: 'Home', to: '/' },
+      { key: 'services', text: 'Services', to: '/services' },
+    ]
+
+    it('renders the title inline after the breadcrumbs', () => {
+      const title = 'Test Page Title'
+
+      mountWithRouter(PageLayout, {
+        props: { title, breadcrumbs, newAppearance: true },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs').should('be.visible')
+      cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
+
+      // The title sits on the same line as the last breadcrumb
+      cy.getTestId('page-layout-breadcrumbs').then(($crumbs) => {
+        cy.getTestId('page-layout-title').then(($title) => {
+          expect($title[0].getBoundingClientRect().top).to.be.closeTo($crumbs[0].getBoundingClientRect().top, 4)
+          expect($title[0].getBoundingClientRect().left).to.be.greaterThan($crumbs[0].getBoundingClientRect().right - 1)
+        })
+      })
+    })
+
+    it('renders a caret as the breadcrumb divider', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', breadcrumbs, newAppearance: true },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs')
+        .find('.breadcrumbs-divider')
+        .should('have.length', breadcrumbs.length)
+        .each(($divider) => {
+          expect($divider.text().trim()).to.equal('›')
+        })
+    })
+
+    it('does not render breadcrumbs when none are provided', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', newAppearance: true },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs').should('not.exist')
+      cy.getTestId('page-layout-title').should('be.visible')
+    })
+
+    it('does not render the back button even when backTo is provided', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', backTo: '/', newAppearance: true },
+      })
+
+      cy.getTestId('page-layout-navigate-back').should('not.exist')
+    })
+
+    it('does not render the favorite button even when page shortcuts are configured', () => {
+      const ctx = reactive({
+        isFavorite: () => false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData, newAppearance: true },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('truncates a long title', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { title, breadcrumbs, newAppearance: true },
+        slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
+      })
+
+      cy.getTestId('page-layout-title').then(($title) => {
+        const el = $title[0]
+        // Ellipsised rather than overflowing its box
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+
+      // The header does not grow past the container, so the title never runs under the actions
+      cy.getTestId('page-layout-header').then(($header) => {
+        cy.getTestId('page-layout-title').then(($title) => {
+          expect($title[0].getBoundingClientRect().right)
+            .to.be.at.most($header[0].getBoundingClientRect().right)
+        })
+      })
+    })
+
+    describe('Ask KAi button', () => {
+      it('does not render the button when the show injection is missing', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('not.exist')
+      })
+
+      it('does not render the button when the show injection is false', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: false } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('not.exist')
+      })
+
+      it('renders the button when the show injection is true', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('be.visible').and('contain.text', 'Ask KAi')
+      })
+
+      it('reacts to a ref passed through the show injection', () => {
+        const show = ref<boolean>(false)
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: show } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('not.exist')
+
+        cy.then(() => {
+          show.value = true
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('be.visible')
+      })
+
+      it('does not render the button in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('not.exist')
+      })
+
+      it('calls the click injection when the button is clicked', () => {
+        const onKaiButtonClick = cy.spy().as('onKaiButtonClick')
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: {
+            provide: {
+              [SHOW_KAI_BUTTON_INJECTION_KEY]: true,
+              [KAI_BUTTON_CLICK_INJECTION_KEY]: onKaiButtonClick,
+            },
+          },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').click()
+
+        cy.get('@onKaiButtonClick').should('have.been.calledOnce')
+      })
+
+      it('does not throw when clicked with no click injection provided', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').click()
+
+        cy.getTestId('page-layout-ask-kai-button').should('be.visible')
+      })
+
+      it('renders a separator between the button and the actions slot', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+          slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('be.visible')
+        cy.getTestId('page-layout-header-actions-divider').should('be.visible')
+        cy.getTestId('page-layout-slotted-actions').should('be.visible')
+      })
+
+      it('does not render the separator when there is no actions slot content', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-ask-kai-button').should('be.visible')
+        cy.getTestId('page-layout-header-actions-divider').should('not.exist')
+      })
+
+      it('does not render the separator when the button is hidden', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', newAppearance: true },
+          slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
+        })
+
+        cy.getTestId('page-layout-slotted-actions').should('be.visible')
+        cy.getTestId('page-layout-header-actions-divider').should('not.exist')
+      })
     })
   })
 })

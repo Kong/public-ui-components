@@ -14,6 +14,9 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
 - [Nested PageLayout](#nested-pagelayout)
+- [Ask KAi Button](#ask-kai-button)
+  - [`page-layout:show-kai-button` injection](#page-layoutshow-kai-button-injection)
+  - [`page-layout:kai-button-click` injection](#page-layoutkai-button-click-injection)
 - [Page Shortcuts](#page-shortcuts)
   - [`pageShortcutData` prop](#pageshortcutdata-prop)
   - [`app:pageShortcutsContext` injection](#apppageshortcutscontext-injection)
@@ -28,6 +31,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Optional back navigation button next to the title via the `backTo` prop
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
+- An opt-in `newAppearance` variant that renders the title inline with the breadcrumbs
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -109,6 +113,20 @@ When no tabs are provided:
 
 - The default slot is rendered for page content
 - A bottom border is added to the header area as a separator
+
+#### `newAppearance`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Renders the new page header appearance. Instead of sitting on its own row beneath the breadcrumbs, the title is placed inline at the end of the breadcrumb row, separated from the last crumb by a caret (`&rsaquo;`). The title keeps its `<h1>` element but is scaled to match the breadcrumbs, set in a heavier weight and a stronger text color so it reads as the current item in the row.
+
+The back button (`backTo`) and the favorite star button are **not** rendered in this appearance, regardless of whether `backTo` or `pageShortcutData` are provided. Tabs, the `title-after` slot and the `actions` slot are unaffected.
+
+The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
+
+This appearance can also render an "Ask KAi" button in the page header actions. That button is driven entirely by the host application through injection rather than by props -- see [Ask KAi Button](#ask-kai-button).
 
 ### Slots
 
@@ -332,6 +350,54 @@ interface PageLayoutTab {
 `PageLayout` supports nesting. A common case is a parent route wrapping its children with `PageLayout` (for top-level breadcrumbs/tabs), while a child route's component also uses `PageLayout` for its own header. When this happens, the parent automatically detects the child and hides its own header and tabs (removing them from the DOM entirely), acting as a transparent pass-through. This ensures only the child's `PageLayout` header is visible. This is achieved via `provide` / `inject` internally.
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
+
+## Ask KAi Button
+
+When [`newAppearance`](#newappearance) is enabled, `PageLayout` can render an "Ask KAi" button at the start of the page header actions. The button is a Kongponents `KButton` (`secondary`, `small`) and is controlled by the host application through two injections, so no props or events are involved.
+
+Both injection keys are exported from the package:
+
+```ts
+import { KAI_BUTTON_CLICK_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
+```
+
+When both the button and the `actions` slot are present, a vertical separator is rendered between them. The actions container itself is rendered whenever **either** the `actions` slot has content or the button is shown.
+
+### `page-layout:show-kai-button` injection
+
+- type: `boolean | Ref<boolean> | () => boolean`
+- required: `false`
+
+Controls whether the button is rendered. A plain boolean, a ref or a getter are all accepted; refs and getters keep the button reactive to host state. The button is only rendered when this resolves to `true` **and** `newAppearance` is enabled -- it is ignored in the default appearance.
+
+### `page-layout:kai-button-click` injection
+
+- type: `() => void`
+- required: `false`
+
+Called when the button is clicked. If no callback is provided the click is a no-op, so providing only the boolean is safe.
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    new-appearance
+    title="GPT-4o Multi-Purpose"
+  />
+</template>
+
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
+
+const kaiAvailable = ref<boolean>(true)
+
+provide(SHOW_KAI_BUTTON_INJECTION_KEY, kaiAvailable)
+provide(KAI_BUTTON_CLICK_INJECTION_KEY, () => {
+  openKaiPanel()
+})
+</script>
+```
 
 ## Page Shortcuts
 

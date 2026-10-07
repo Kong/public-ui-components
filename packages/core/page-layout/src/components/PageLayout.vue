@@ -1,6 +1,7 @@
 <template>
   <div
     class="kong-ui-public-page-layout"
+    :class="{ 'new-appearance': newAppearance }"
     data-testid="kong-ui-public-page-layout"
   >
     <div
@@ -16,11 +17,22 @@
             data-testid="page-layout-breadcrumbs"
             item-max-width="25ch"
             :items="breadcrumbs"
-          />
+          >
+            <!--
+              KBreadcrumbs renders a divider after every item, including the last one, so
+              this caret doubles as the separator between the breadcrumbs and the inline title.
+            -->
+            <template
+              v-if="newAppearance"
+              #divider
+            >
+              &rsaquo;
+            </template>
+          </KBreadcrumbs>
           <div class="title-container">
             <component
               :is="isBackToString ? 'a' : 'router-link'"
-              v-if="backTo"
+              v-if="backTo && !newAppearance"
               v-bind="isBackToString ? { href: backTo } : { to: backTo }"
               :aria-label="t('back_button')"
               class="navigate-back"
@@ -48,7 +60,7 @@
               </slot>
             </span>
             <div
-              v-if="showFavoriteButton"
+              v-if="showFavoriteButton && !newAppearance"
               :key="favoriteButtonKey"
               class="favorite-button-container"
             >
@@ -82,9 +94,25 @@
         </div>
 
         <div
-          v-if="!!$slots.actions"
+          v-if="!!$slots.actions || showAskKaiButton"
           class="page-header-actions-container"
         >
+          <KButton
+            v-if="showAskKaiButton"
+            appearance="secondary"
+            data-testid="page-layout-ask-kai-button"
+            size="small"
+            @click="onAskKaiButtonClick"
+          >
+            <SparklesIcon decorative />
+            {{ t('ask_kai_button') }}
+          </KButton>
+          <span
+            v-if="showAskKaiButton && !!$slots.actions"
+            aria-hidden="true"
+            class="header-actions-divider"
+            data-testid="page-layout-header-actions-divider"
+          />
           <slot name="actions" />
         </div>
       </div>
@@ -118,12 +146,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, watch } from 'vue'
-import type { DeepReadonly, Reactive } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue'
+import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
-import { nestedPageLayoutInjectionKey } from '../symbols'
-import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
+import { ArrowTopLeftIcon, SparklesIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
@@ -135,11 +163,16 @@ const {
   backTo,
   tabs = [],
   pageShortcutData,
+  newAppearance = false,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+// The host application decides whether the "Ask KAi" button is available and what it
+// does, so both are injected rather than passed in as a prop and an event.
+const showKaiButton = inject<MaybeRefOrGetter<boolean> | null>(SHOW_KAI_BUTTON_INJECTION_KEY, null)
+const onKaiButtonClick = inject<(() => void) | null>(KAI_BUTTON_CLICK_INJECTION_KEY, null)
 const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
@@ -150,6 +183,16 @@ const route = useRoute()
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
+
+// The Ask KAi button belongs to the new appearance only, so the classic header is untouched.
+// `toValue` lets the host provide a plain boolean, a ref or a getter.
+const showAskKaiButton = computed((): boolean => newAppearance && toValue(showKaiButton) === true)
+
+const onAskKaiButtonClick = () => {
+  if (typeof onKaiButtonClick === 'function') {
+    onKaiButtonClick()
+  }
+}
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
@@ -240,6 +283,10 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 </script>
 
 <style lang="scss" scoped>
+// Roughly 1.6x the 25ch cap already applied to each breadcrumb item, so a long title
+// stays the most prominent item in the row without swallowing it.
+$page-layout-title-max-width: 40ch;
+
 .kong-ui-public-page-layout {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
@@ -359,6 +406,60 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
       .page-header-container {
         border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         padding: var(--kui-space-60, $kui-space-60);
+      }
+    }
+  }
+
+  // New appearance: the title moves up into the breadcrumb row, sitting after the caret
+  // that KBreadcrumbs renders following the last crumb.
+  &.new-appearance {
+    // Selectors mirror the default appearance's nesting depth so these rules win on
+    // specificity rather than relying on source order.
+    .page-layout-header .page-header-container {
+      align-items: center;
+
+      .page-header-start {
+        align-items: center;
+        display: flex;
+        // Mirrors the spacing Kongponents puts between a divider and the crumb that
+        // follows it, so the title keeps the row's rhythm. Only applies when there are
+        // breadcrumbs to sit next to.
+        gap: var(--kui-space-20, $kui-space-20);
+
+        .title-container {
+          align-items: center;
+          // As a flex item the title container defaults to `min-width: auto`, which
+          // refuses to shrink below its content. Without this a long title pushes the
+          // header wider than its container and runs under the page actions instead of
+          // truncating.
+          min-width: 0;
+
+          // The title reads as the last item in the breadcrumb row: same size as the
+          // crumbs (whose scale comes from Kongponents), just heavier and darker.
+          .page-layout-title-wrapper > * {
+            font-size: var(--kui-font-size-30, $kui-font-size-30);
+            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
+            // Below this it truncates to whatever space the row leaves it; the ellipsis
+            // itself comes from the default appearance's rules.
+            max-width: $page-layout-title-max-width;
+          }
+        }
+
+        // Keep the breadcrumbs and any title-after content intact; the title is the
+        // element that gives up space when the row runs out of room.
+        .header-breadcrumbs,
+        .title-after-container {
+          flex-shrink: 0;
+        }
+      }
+
+      .page-header-actions-container {
+        .header-actions-divider {
+          border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+          height: var(--kui-icon-size-30, $kui-icon-size-30);
+          margin: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
+        }
       }
     }
   }
