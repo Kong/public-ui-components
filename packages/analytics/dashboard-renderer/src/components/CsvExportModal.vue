@@ -19,7 +19,7 @@
               {{ modalDescription ? modalDescription : i18n.t('csvExport.exportDescription') }}
             </p>
             <p>
-              {{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}
+              {{ selectedRange }}
             </p>
           </div>
           <KSkeleton
@@ -149,9 +149,16 @@ const selectedRange = computed(() => {
 
   const { start, end } = props.exportState.chartData.meta
 
-  return start && end
-    ? `${formatTimestamp(new Date(start))} - ${formatTimestamp(new Date(end), { includeTZ: true })}`
-    : ''
+  if (!start || !end) {
+    return ''
+  }
+
+  // Queries using point in time (e.g. "As of today") timeframes use identical start and end
+  if (new Date(start).getTime() === new Date(end).getTime()) {
+    return i18n.t('csvExport.exportAsOf', { time: formatTimestamp(new Date(start), { includeTZ: true }) })
+  }
+
+  return `${i18n.t('csvExport.exportTimeRange')}: ${formatTimestamp(new Date(start))} - ${formatTimestamp(new Date(end), { includeTZ: true })}`
 })
 
 const previewMessage = computed(() => {
@@ -185,7 +192,8 @@ const tableData = computed(() => {
       if (key in chartData.meta.display) {
         const dimensionId = result.event[key]
         const displayEntry = chartData.meta.display[key]
-        acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || result.event[key]
+        // IDs that can't be resolved will not have a display entry (e.g. deleted platform entities), this falls back to the raw ID
+        acc[key] = (dimensionId && displayEntry?.[dimensionId]?.name) || result.event[key]
       } else {
         acc[key] = result.event[key]
       }
