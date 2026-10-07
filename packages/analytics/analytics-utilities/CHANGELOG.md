@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.52.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.51.1...%40kong-ui-public%2Fanalytics-utilities%4012.52.0) (2026-10-07)
+
+### Features
+
+* **upstream_status_code:** add new dimension analytics-schem [MA-5469] ([#3901](https://github.com/Kong/public-ui-components/issues/3901)) ([51d72f1](https://github.com/Kong/public-ui-components/commit/51d72f1dc7ccecb58890fd2b9706386088afbb60))
+
+
 ## [12.51.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.51.0...%40kong-ui-public%2Fanalytics-utilities%4012.51.1) (2026-09-30)
 
 ### Bug Fixes
