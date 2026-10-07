@@ -24,22 +24,6 @@
     "%": "%",
     "ops/minute": "ops/minute"
   },
-  "csvExport": {
-    "dataError": "Error loading data",
-    "noDataRange": "No data in selected range",
-    "noDataRetry": "Please adjust the time period and try again",
-    "timeRangeSelected": "selected",
-    "exportPreview": "Export preview",
-    "exportAsCsv": "Export as CSV",
-    "exportTimeRange": "Time range",
-    "exportDescription": "Exports a CSV of the data represented in the chart.",
-    "maximumRecordAmount": "The number of groups is limited to {value}",
-    "previewRows": "Previewing {rowsMax} of {rowsTotal} row{plural}",
-    "downloadButton": "Export",
-    "cancelButton": "Cancel",
-    "UtcOffset": "UTC offset",
-    "Timestamp": "Timestamp"
-  },
   "query_errors": {
     "forbidden": {
       "message": "Data request forbidden",

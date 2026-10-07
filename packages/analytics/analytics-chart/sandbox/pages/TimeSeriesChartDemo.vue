@@ -192,22 +192,6 @@
         </div>
         <br>
 
-        <div class="config-container">
-          <div class="flex-vertical">
-            <button @click="exportCsv()">
-              Custom export csv click handler
-            </button>
-            <CsvExportModal
-              v-if="exportModalVisible"
-              :export-state="exportState"
-              filename="asdf.csv"
-              @close-modal="setModalVisibility(false)"
-            />
-          </div>
-        </div>
-
-        <br>
-
         <label>Import chart data</label>
         <CodeText
           v-model="exploreResultText"
@@ -257,9 +241,8 @@ import { computed, ref, watch, inject, provide } from 'vue'
 import {
   AnalyticsChart,
   ChartLegendPosition,
-  CsvExportModal,
 } from '../../src'
-import type { AllAggregations, AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AllAggregations, AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, Threshold } from '../../src/types'
 import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -338,32 +321,6 @@ const threshold = computed(() => ({
     { type: 'error', value: thresholdValue.value, highlightIntersections: true },
   ],
 } as Record<ExploreAggregations, Threshold[]>))
-
-const exportModalVisible = ref(false)
-const exportState = ref<ExploreExportState>({ status: 'loading' })
-
-const setModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
-
-  if (!val) {
-    exportState.value = { status: 'loading' }
-  }
-}
-const exportCsv = () => {
-  setModalVisibility(true)
-  requestExport()
-}
-
-const requestExport = () => {
-  // Simulate export data fetch for demo purposes
-  if (emptyState.value) {
-    exportState.value = { status: 'error', error: 'No data available for export.' }
-  } else if (exploreResult.value.data.length > 0) {
-    exportState.value = { status: 'success', chartData: exploreResult.value }
-  } else {
-    exportState.value = { status: 'error', error: 'Failed to fetch data for export.' }
-  }
-}
 
 provide(INJECT_QUERY_PROVIDER, { evaluateFeatureFlagFn: () => true })
 

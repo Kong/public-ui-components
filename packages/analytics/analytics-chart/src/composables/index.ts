@@ -2,7 +2,6 @@ import useI18n from './useI18n'
 import useBarChartOptions from './useBarChartOptions'
 import useChartJSCommon from './useChartJSCommon'
 import useChartLegendValues from './useChartLegendValues'
-import useChartSelectedRange from './useChartSelectedRange'
 import useDonutChartOptions from './useDonutChartOptions'
 import useLineChartOptions from './useLineChartOptions'
 import useScatterChartOptions from './useScatterChartOptions'
@@ -21,7 +20,6 @@ export default {
   useBarChartOptions,
   useChartJSCommon,
   useChartLegendValues,
-  useChartSelectedRange,
   useExploreResultToDatasets,
   useExploreResultToTimeDataset,
   useScatterDatasets,
