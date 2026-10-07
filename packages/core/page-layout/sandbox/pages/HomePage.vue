@@ -5,7 +5,7 @@
       :breadcrumbs="breadcrumbs"
       new-appearance
       :page-shortcut-data="pageShortcutData"
-      :tabs="tabs"
+      :tabs="showTabs ? tabs : []"
     >
       <template #title>
         <h1>Umbrella R&D Dev</h1>
@@ -18,7 +18,10 @@
           <MoreIcon />
         </KButton>
       </template>
-      <template #title-after>
+      <template
+        v-if="showTitleAfter"
+        #title-after
+      >
         <KBadge>Info</KBadge>
       </template>
       <template #tab-gateway-services="{ tab }">
@@ -27,6 +30,9 @@
         <KBadge size="small">
           2
         </KBadge>
+      </template>
+      <template #default>
+        <NestedPage />
       </template>
       <template #tab-keys="{ tab }">
         {{ tab.label }}
@@ -47,6 +53,10 @@ import { provide, reactive } from 'vue'
 import { KAI_BUTTON_CLICK_INJECTION_KEY, PageLayout, SHOW_KAI_BUTTON_INJECTION_KEY } from '../../src'
 import type { PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
+import NestedPage from './NestedPage.vue'
+import { useSandboxControls } from '../composables/useSandboxControls'
+
+const { showTabs, showKaiButton, showTitleAfter } = useSandboxControls()
 
 const breadcrumbs = [{
   key: 'api-gateway',
@@ -125,8 +135,9 @@ const pageShortcutsContext = reactive({
 
 provide('app:pageShortcutsContext', pageShortcutsContext)
 
-// The host app owns the Ask KAi button: PageLayout reads both of these through inject
-provide(SHOW_KAI_BUTTON_INJECTION_KEY, true)
+// The host app owns the Ask KAi button: PageLayout reads both of these through inject.
+// Providing the ref itself keeps the button reactive to the sandbox toggle.
+provide(SHOW_KAI_BUTTON_INJECTION_KEY, showKaiButton)
 provide(KAI_BUTTON_CLICK_INJECTION_KEY, () => {
   console.log('ask-kai-click')
 })

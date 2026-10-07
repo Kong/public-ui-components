@@ -2,12 +2,35 @@
   <div class="page-layout-sandbox-app">
     <SandboxLayout>
       <router-view />
+
+      <template #navigation-after>
+        <div class="sandbox-control-list">
+          <KInputSwitch
+            v-model="showTabs"
+            label="Tabs"
+            label-before
+          />
+          <KInputSwitch
+            v-model="showKaiButton"
+            label="Ask KAi button"
+            label-before
+          />
+          <KInputSwitch
+            v-model="showTitleAfter"
+            label="Title-after content"
+            label-before
+          />
+        </div>
+      </template>
     </SandboxLayout>
   </div>
 </template>
 
 <script setup lang="ts">
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
+import { useSandboxControls } from './composables/useSandboxControls'
+
+const { showTabs, showKaiButton, showTitleAfter } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>
@@ -33,6 +56,12 @@ import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
       border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
       padding: var(--kui-space-0, $kui-space-0);
     }
+  }
+
+  .sandbox-control-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>

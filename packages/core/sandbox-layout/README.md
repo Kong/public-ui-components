@@ -88,6 +88,12 @@ The `default` slot should be utilized for main component display.
 
 The `controls` slot should be utilized for interactive controls, used to manipulate the component displayed in the `default` slot. The default width of this slot is `240px`.
 
+#### `navigation-after`
+
+An optional slot rendered in the navigation sidebar, directly below the nav links (and below the theme picker when no `links` are provided). Use it for sandbox-level content that belongs alongside the navigation rather than in the `controls` sidebar.
+
+The slot is rendered in both the desktop navigation sidebar and the mobile navigation slideout. It is omitted entirely when no content is provided.
+
 ### Example
 
 Initialize the component in your sandbox app's entry file along with the router and `links` object.

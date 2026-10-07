@@ -25,6 +25,12 @@
                   <SandboxThemePicker />
                 </div>
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
+                <div
+                  v-if="!!$slots['navigation-after']"
+                  class="navigation-after"
+                >
+                  <slot name="navigation-after" />
+                </div>
               </KSlideout>
             </div>
           </KToggle>
@@ -77,6 +83,12 @@
           <SandboxThemePicker />
         </div>
         <SandboxNavigation />
+        <div
+          v-if="!!$slots['navigation-after']"
+          class="navigation-after"
+        >
+          <slot name="navigation-after" />
+        </div>
       </div>
       <div class="sandbox-container">
         <h1 v-if="title">
@@ -204,6 +216,13 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     @media (min-width: $kui-breakpoint-laptop) {
       display: block;
     }
+  }
+
+  // Separates this content from the nav links above it. With no links the navigation
+  // renders an empty element, so this margin collapses with the theme picker's and the
+  // content sits directly below the picker.
+  .navigation-after {
+    margin-top: var(--kui-space-70, $kui-space-70);
   }
 
   // Placed above the nav links (not pinned to the container bottom) so it stays
