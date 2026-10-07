@@ -317,6 +317,7 @@ const computedChartData = computed(() => {
         themeColors: scatterThemeColors,
       },
       scatterData,
+      coordinator,
     ).value
   }
 
@@ -332,6 +333,7 @@ const computedChartData = computed(() => {
         metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
+      coordinator,
     ).value
     : composables.useExploreResultToDatasets(
       {

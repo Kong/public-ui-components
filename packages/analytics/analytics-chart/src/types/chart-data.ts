@@ -181,7 +181,7 @@ export interface AnalyticsChartOptions {
   /**
    * Chart dataset color palette
    */
-  chartDatasetColors?: AnalyticsChartColors | string[]
+  chartDatasetColors?: string[]
   /**
    * Sort the datasets as they are displayed in the legend and tooltip
    */

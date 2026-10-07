@@ -5,7 +5,6 @@ import { describe, it, expect } from 'vitest'
 import { ref } from 'vue'
 
 import useTopTalkersData from './useTopTalkersData'
-import { datavisPalette } from '../utils'
 import { OTHER_DIMENSION_ID } from '../constants'
 
 const DIMENSION = 'llm_model'

@@ -1,36 +1,48 @@
-import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4, InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 import { color } from '@kong-ui-public/analytics-utilities'
-import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
+import type { Dataset, ExploreToDatasetDeps, KChartData, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
-import { lookupDatavisColor, datavisPalette, determineBaseColor } from '../utils'
 import composables from '../composables'
 
-function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationParams): Dataset[] {
-  const {
-    isMultiMetric,
-    hasDimensions,
-    metricNames,
-    barSegmentLabels,
-    pivotRecords,
-    rowLabels,
-    colorPalette,
-    seriesDimension,
-  } = dataSetGenerationParams
+function generateDatasets({
+  barSegmentLabels,
+  colorPalette = undefined,
+  coordinator = undefined,
+  hasDimensions = undefined,
+  isMultiMetric = undefined,
+  metricNames,
+  pivotRecords,
+  rowLabels,
+  seriesDimension = undefined,
+}: {
+  barSegmentLabels: DatasetLabel[]
+  colorPalette?: string[]
+  coordinator?: InteractionCoordinator
+  hasDimensions?: boolean
+  isMultiMetric?: boolean
+  metricNames: string[]
+  pivotRecords: { [k: string]: string | number | null | undefined }
+  rowLabels: DatasetLabel[]
+  seriesDimension?: string
+}): Dataset[] {
   const { i18n } = composables.useI18n()
-  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
+  const uuid = crypto.randomUUID()
 
   if (isMultiMetric) {
     return metricNames.map((metric) => {
       return {
         // @ts-ignore - dynamic i18n key
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
-        backgroundColor: useColors
-          ? color({ metric })
-          : lookupDatavisColor(metricNames.indexOf(metric), datavisPalette),
+        backgroundColor: color({
+          metric,
+          coordinator: coordinator?.color,
+          order: metricNames.indexOf(metric),
+          chartUuid: uuid,
+          customPalette: colorPalette,
+        }),
         data: rowLabels.map((rowPosition, i) => {
           return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
         }),
@@ -50,12 +62,14 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
-      backgroundColor: useColors
-        ? color({
-          dimension: seriesDimension,
-          dimensionValue: dimension.id,
-        })
-        : determineBaseColor(i, dimension.name, dimension.id === 'empty', colorPalette ?? datavisPalette),
+      backgroundColor: color({
+        dimension: seriesDimension,
+        dimensionValue: dimension.id,
+        coordinator: coordinator?.color,
+        order: i,
+        chartUuid: uuid,
+        customPalette: colorPalette,
+      }),
       data: rowLabels.map(rowPosition => {
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
@@ -67,6 +81,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
 export default function useExploreResultToDatasets(
   deps: ExploreToDatasetDeps,
   exploreResult: Ref<ExploreResultV4>,
+  coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
 
   const { i18n } = composables.useI18n()
@@ -150,15 +165,15 @@ export default function useExploreResultToDatasets(
         }
 
         const datasets = generateDatasets({
-          isMultiMetric,
-          hasDimensions,
-          metricNames,
-          dimensionFieldNames,
           barSegmentLabels,
+          colorPalette: deps.colorPalette,
+          coordinator,
+          hasDimensions,
+          isMultiMetric,
+          metricNames,
           pivotRecords,
           rowLabels,
           seriesDimension: secondaryDimension,
-          colorPalette: deps.colorPalette || datavisPalette,
         })
 
         // The labels here are for the axes.  They don't impact the tooltip or legend.

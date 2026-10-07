@@ -14,7 +14,7 @@ import type { ExploreAggregations, YAxisPosition } from '@kong-ui-public/analyti
  *   - maps a metric to the desired y axis, metrics by default will just use the left y axis
  */
 export interface ExploreToDatasetDeps {
-  colorPalette?: AnalyticsChartColors | string[]
+  colorPalette?: string[]
   fill?: boolean
   threshold?: Record<ExploreAggregations, Threshold[]>
   metricAxisMap?: Partial<Record<string, YAxisPosition>>

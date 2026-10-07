@@ -2,12 +2,11 @@ import type { Ref } from 'vue'
 import type { ScriptableContext } from 'chart.js'
 import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
-import { color } from '@kong-ui-public/analytics-utilities'
+import { color, type InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 
 import { computed } from 'vue'
-import { isNullOrUndef } from 'chart.js/helpers'
 
-import { computePercentiles, datavisPalette, determineBaseColor, scatterChartColors, withAlpha } from '../utils'
+import { computePercentiles, scatterChartColors, withAlpha } from '../utils'
 import composables from '../composables'
 
 export const DEFAULT_POINT_RADIUS = 3
@@ -45,10 +44,10 @@ export const jitter = (jitterMs: number, seed: number): number => {
 export default function useScatterDatasets(
   deps: ScatterDatasetDeps,
   scatterData: Ref<ScatterChartData | undefined>,
+  coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
+  const uuid = crypto.randomUUID()
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -124,11 +123,8 @@ export default function useScatterDatasets(
       const outlierValue = scatter.outlierPercentile !== undefined ? percentileValues.get(scatter.outlierPercentile) : undefined
       const hasOutliers = outlierValue !== undefined && Number.isFinite(outlierValue)
 
-      const colorPalette = isNullOrUndef(deps.colorPalette) ? datavisPalette : deps.colorPalette
       const themeColors = deps.themeColors?.value ?? scatterChartColors()
       const datasets: Dataset[] = []
-
-
 
       const isOutlier = (raw: unknown): boolean => {
         const y = (raw as ScatterPoint | undefined)?.y
@@ -139,9 +135,14 @@ export default function useScatterDatasets(
       Array.from(grouped.entries()).forEach(([groupId, points], i) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
-        const baseColor = useColors
-          ? color({ dimension, dimensionValue: groupId })
-          : determineBaseColor(i, name, isSegmentEmpty, colorPalette)
+        const baseColor = color({
+          dimension,
+          dimensionValue: groupId,
+          coordinator: coordinator?.color,
+          order: i,
+          chartUuid: uuid,
+          customPalette: deps.colorPalette,
+        })
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 
