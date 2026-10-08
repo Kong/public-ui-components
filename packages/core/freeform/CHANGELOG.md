@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.4.0...%40kong-ui-public%2Ffreeform%400.4.1) (2026-10-08)
+
+### Bug Fixes
+
+* **freeform:** use new switch value when toggling ObjectField ([#3907](https://github.com/Kong/public-ui-components/issues/3907)) ([70f8191](https://github.com/Kong/public-ui-components/commit/70f8191fcd57accfd0339d1da0867838a1c06403))
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.3.9...%40kong-ui-public%2Ffreeform%400.4.0) (2026-10-08)
 
 ### Features
