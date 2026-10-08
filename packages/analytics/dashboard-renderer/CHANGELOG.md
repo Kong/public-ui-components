@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.38.0...%40kong-ui-public%2Fdashboard-renderer%409.0.0) (2026-10-08)
+
+### Features
+
+* **analytics:** split entry analytics-utilities [MA-5551] ([#3911](https://github.com/Kong/public-ui-components/issues/3911)) ([1f0f385](https://github.com/Kong/public-ui-components/commit/1f0f3859481fa1394d99c3b511e8e8b33f34551b))
+
+### BREAKING CHANGES
+
+* **analytics:** color util and coordination composable are now exported behind @kong-ui-public/analytics-utilities/coordination
+
+
 # [8.38.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.5...%40kong-ui-public%2Fdashboard-renderer%408.38.0) (2026-10-08)
 
 ### Features
