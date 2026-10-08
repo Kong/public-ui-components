@@ -59,16 +59,10 @@ export default function useTopTalkersData(
     return i18n.te(`chartUnits.${unit}`) ? i18n.t(`chartUnits.${unit}`, { plural }) : unit
   }
 
-  // `formatUnit` always joins value and unit with a space, which leaves a trailing
-  // space on percentages as "50 %". Rather than changing the formatter, we can just fix it here...
-  // TODO: Can we please get rid of that formatting nonsense? Who would ever want to read a percentage
-  // as "42 %"? No one, that's who.
-  const removeSpace = (formatted: string): string => formatted.replace(/\s+%/, '%').trim()
-
   const formatPercent = (percent: number): string => {
-    const format = (value: number) => removeSpace(formatUnit(value, '%', {
+    const format = (value: number) => formatUnit(value, '%', {
       translateUnit: (unitName) => translateChartUnit(unitName, value),
-    }))
+    })
 
     return percent > 0 && percent < 0.01 ? `< ${format(0.01)}` : format(percent)
   }
@@ -84,10 +78,10 @@ export default function useTopTalkersData(
       return formatPercent(raw)
     }
 
-    return removeSpace(formatUnit(raw, unit, {
+    return formatUnit(raw, unit, {
       isBytes1024: true,
       translateUnit: (unitName) => translateChartUnit(unitName, raw),
-    }))
+    })
   }
 
   const getChartLabel = (key: string): string => {

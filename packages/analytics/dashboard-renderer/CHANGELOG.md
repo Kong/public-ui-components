@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.37.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.3...%40kong-ui-public%2Fdashboard-renderer%408.37.4) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.37.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.2...%40kong-ui-public%2Fdashboard-renderer%408.37.3) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.37.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.1...%40kong-ui-public%2Fdashboard-renderer%408.37.2) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.37.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.0...%40kong-ui-public%2Fdashboard-renderer%408.37.1) (2026-10-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.37.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.2...%40kong-ui-public%2Fdashboard-renderer%408.37.0) (2026-10-01)
+
+### Features
+
+* **dashboard-renderer:** migrate TopN and deprecate old table [MA-5503] ([#3854](https://github.com/Kong/public-ui-components/issues/3854)) ([baecc6f](https://github.com/Kong/public-ui-components/commit/baecc6fb562e9c0cec8570ca0ce4013006c0f77a))
+
+
+## [8.36.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.1...%40kong-ui-public%2Fdashboard-renderer%408.36.2) (2026-09-30)
+
+### Bug Fixes
+
+* **analytics:** distinguish flushed and spaced units ([#3894](https://github.com/Kong/public-ui-components/issues/3894)) ([b42423b](https://github.com/Kong/public-ui-components/commit/b42423b546d53a242020e499d63000cef2a34467))
+
+
 ## [8.36.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.36.0...%40kong-ui-public%2Fdashboard-renderer%408.36.1) (2026-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

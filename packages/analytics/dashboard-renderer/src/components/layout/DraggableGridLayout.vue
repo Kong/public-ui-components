@@ -17,6 +17,7 @@
     >
       <div class="grid-stack-item-content">
         <slot
+          :fit-to-content="false"
           name="tile"
           :tile="tile"
         />

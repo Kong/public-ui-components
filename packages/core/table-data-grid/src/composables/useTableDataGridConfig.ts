@@ -11,6 +11,7 @@ import { resolveTableConfig, tableConfigsEqual } from '../utils/tableConfig'
  * @param headers Current column headers, used to validate the resolved sort key.
  * @param pageSize Reactive component-level page size default.
  * @param tableConfig Host-supplied `tableConfig` prop, or `undefined` when uncontrolled.
+ * @param emitSort Called before a grid/header-driven change updates the current sort.
  * @param emitTableConfigUpdate Called with the resolved config whenever `patchTableConfig` changes it.
  * @param onExternalConfigChange Called when the host-supplied prop changes the resolved config.
  */
@@ -18,12 +19,14 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
   headers,
   pageSize,
   tableConfig: tableConfigProp,
+  emitSort,
   emitTableConfigUpdate,
   onExternalConfigChange,
 }: {
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   pageSize: Readonly<Ref<number>>
   tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
+  emitSort: (sort: TableDataGridSort) => void
   emitTableConfigUpdate: (config: TableDataGridConfig) => void
   onExternalConfigChange?: (config: TableDataGridConfig) => void
 }) => {
@@ -59,9 +62,23 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
       return
     }
 
+    if (
+      next.sortColumnKey !== activeTableConfig.value.sortColumnKey
+      || next.sortColumnOrder !== activeTableConfig.value.sortColumnOrder
+    ) {
+      emitSort({ sortColumnKey: next.sortColumnKey, sortColumnOrder: next.sortColumnOrder })
+    }
+
     activeTableConfig.value = next
     emitTableConfigUpdate(next)
   }
+
+  // Uncontrolled sorts must be dropped once their header is removed or no longer sortable.
+  watch(headers, () => {
+    if (!tableConfigProp.value) {
+      patchTableConfig({})
+    }
+  }, { deep: true })
 
   // Sort-only view of activeTableConfig.
   const activeSort = computed<TableDataGridSort>(() => ({

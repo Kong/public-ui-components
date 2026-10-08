@@ -29,6 +29,9 @@ export const queryableAiExploreDimensions = [
   'ai_gateway_model',
   'ai_gateway_agent',
   'ai_gateway_data_plane_node',
+  'upstream_status_code',
+  'upstream_status_code_grouped',
+  'response_source',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]

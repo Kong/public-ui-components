@@ -19,7 +19,7 @@ export default function useMetricFormatter() {
     return {
       // @ts-ignore dynamic lookup
       seriesName: (i18n.te(key) ? i18n.t(key) : metric) as string,
-      valueFormatter: (value: number): string => formatUnit(value, unit, { translateUnit }).trim(),
+      valueFormatter: (value: number): string => formatUnit(value, unit, { translateUnit }),
     }
   }
 }

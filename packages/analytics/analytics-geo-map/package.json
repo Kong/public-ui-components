@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.9.47",
+  "version": "1.9.51",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -41,10 +41,10 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "3.3.1",
-    "@kong/kongponents": "9.64.21-pr.3445.a302c28.0",
+    "@kong/kongponents": "9.64.23",
     "@types/geobuf": "^3.0.4",
     "@types/geojson": "^7946.0.16",
-    "maplibre-gl": "^6.0.0",
+    "maplibre-gl": "^6.8.0",
     "vue": "^3.5.41"
   },
   "repository": {

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "11.6.60",
+  "version": "11.6.63",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -67,7 +67,7 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "3.3.1",
-    "@kong/kongponents": "9.64.21-pr.3445.a302c28.0",
+    "@kong/kongponents": "9.64.23",
     "pinia": "^4.0.3"
   }
 }
