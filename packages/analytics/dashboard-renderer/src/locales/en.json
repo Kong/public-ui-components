@@ -42,6 +42,7 @@
     "timeRangeSelected": "selected",
     "exportPreview": "Export preview",
     "exportTimeRange": "Time range",
+    "exportAsOf": "As of {time}",
     "exportDescription": "Exports a CSV of the data represented in the chart.",
     "maximumRecordAmount": "The number of groups is limited to {value}",
     "previewRows": "Previewing {rowsMax} of {rowsTotal} row{plural}",
