@@ -617,8 +617,13 @@ describe('<PageLayout />', () => {
         })
 
         cy.getTestId('page-layout-tabs').should('not.exist')
+        // The height is set on the container (it carries the bottom border), so the
+        // container must not outgrow the header it sits in
         cy.getTestId('page-layout-header').should(($header) => {
+          const container = $header[0].querySelector('.page-header-container')!
+
           expect($header[0].getBoundingClientRect().height).to.equal(44)
+          expect(container.getBoundingClientRect().height).to.equal(44)
         })
       })
 
@@ -630,7 +635,10 @@ describe('<PageLayout />', () => {
 
         // No actions content, so the row would otherwise be shorter than the fixed height
         cy.getTestId('page-layout-header').should(($header) => {
+          const container = $header[0].querySelector('.page-header-container')!
+
           expect($header[0].getBoundingClientRect().height).to.equal(44)
+          expect(container.getBoundingClientRect().height).to.equal(44)
         })
       })
 

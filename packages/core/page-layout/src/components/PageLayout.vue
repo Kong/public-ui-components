@@ -475,11 +475,13 @@ $page-layout-header-height: 44px;
     // fit the tab row, so no height is set there.
     // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
     .page-layout-header:not(:has(.page-layout-tabs)) {
-      // Border-box so this is the rendered height, bottom border included
-      box-sizing: border-box;
-      height: $page-layout-header-height;
-
+      // Set on the container rather than the header: the container is what carries the
+      // bottom border and the padding in this case, so sizing the header alone would
+      // just let the container overflow it.
       .page-header-container {
+        // Border-box so this is the rendered height, bottom border included
+        box-sizing: border-box;
+        height: $page-layout-header-height;
         padding: var(--kui-space-40, $kui-space-40);
       }
     }
