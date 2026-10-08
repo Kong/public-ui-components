@@ -1,6 +1,4 @@
 import { tags } from './typedefs'
-import type { UseSchemasOptions } from 'src/composables/useSchemas'
-import type { CommonSchemaFields } from 'src/types/plugins/shared'
 
 export default {
   fields: [
@@ -22,17 +20,4 @@ export default {
       },
     },
   ],
-}
-
-export const genKeyAuthEncSchema = (options?: UseSchemasOptions): CommonSchemaFields => {
-  if (options?.app === 'kongManager') {
-    return {
-      shamefullyTransformPayload: ({ payload }) => {
-        if (options?.credential && typeof payload.ttl !== 'number' || Number.isNaN(payload.ttl)) {
-          payload.ttl = 0
-        }
-      },
-    }
-  }
-  return {}
 }
