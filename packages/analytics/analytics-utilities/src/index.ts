@@ -1,5 +1,3 @@
-export { default as useInteractionCoordinator } from './composables/useInteractionCoordinator'
-
 export * from './captureProtocol'
 export * from './constants'
 export * from './dashboardSchema.v2'
