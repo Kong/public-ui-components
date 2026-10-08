@@ -291,7 +291,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 // stays the most prominent item in the row without swallowing it.
 $page-layout-title-max-width: 40ch;
 // Height of the new appearance's single-row header. Only applied when there are no tabs.
-$page-layout-header-max-height: 44px;
+$page-layout-header-height: 44px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
@@ -470,13 +470,14 @@ $page-layout-header-max-height: 44px;
       }
     }
 
-    // Without tabs the header is a single row, capped to the height of the top bar it
-    // mirrors. With tabs it has to grow to fit the tab row, so no cap is applied there.
+    // Without tabs the header is a single row, fixed to the height of the top bar it
+    // mirrors so it stays consistent whatever the row holds. With tabs it has to grow to
+    // fit the tab row, so no height is set there.
     // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
     .page-layout-header:not(:has(.page-layout-tabs)) {
-      // Border-box so the cap is the rendered height, bottom border included
+      // Border-box so this is the rendered height, bottom border included
       box-sizing: border-box;
-      height: $page-layout-header-max-height;
+      height: $page-layout-header-height;
 
       .page-header-container {
         padding: var(--kui-space-40, $kui-space-40);

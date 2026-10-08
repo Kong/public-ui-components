@@ -349,7 +349,7 @@ Other differences from the default appearance:
 
 - The back button (`backTo`) and the favorite star button are **not** rendered, regardless of whether `backTo` or `pageShortcutData` are provided.
 - The header uses tighter padding (`--kui-space-40` rather than `--kui-space-60`).
-- When there are no tabs the header is a single row, capped at `44px` tall. With tabs the header has to grow to fit the tab row, so no cap is applied. The cap includes the header's bottom border, and it is a maximum rather than a fixed height -- a sparse header stays shorter.
+- When there are no tabs the header is a single row with a fixed height of `44px`, including its bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
 
 Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected. This appearance can also render an ["Ask KAi" button](#ask-kai-button) in the page header actions.

@@ -608,7 +608,7 @@ describe('<PageLayout />', () => {
     })
 
     describe('header height', () => {
-      it('caps the header height when there are no tabs', () => {
+      it('fixes the header height when there are no tabs', () => {
         mountWithRouter(PageLayout, {
           props: { title: 'Test Page Title', breadcrumbs },
           global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
@@ -622,18 +622,19 @@ describe('<PageLayout />', () => {
         })
       })
 
-      it('does not stretch a sparse header to the cap', () => {
+      it('keeps the fixed height for a sparse header', () => {
         mountWithRouter(PageLayout, {
           props: { title: 'Test Page Title', breadcrumbs },
           global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
         })
 
+        // No actions content, so the row would otherwise be shorter than the fixed height
         cy.getTestId('page-layout-header').should(($header) => {
-          expect($header[0].getBoundingClientRect().height).to.be.at.most(44)
+          expect($header[0].getBoundingClientRect().height).to.equal(44)
         })
       })
 
-      it('does not cap the header height when tabs are present', () => {
+      it('does not fix the header height when tabs are present', () => {
         const tabs = [
           { key: 'overview', label: 'Overview', to: '/overview' },
           { key: 'settings', label: 'Settings', to: '/settings' },
@@ -650,7 +651,7 @@ describe('<PageLayout />', () => {
         })
       })
 
-      it('does not cap the header height in the default appearance', () => {
+      it('does not fix the header height in the default appearance', () => {
         mountWithRouter(PageLayout, {
           props: { title: 'Test Page Title', breadcrumbs },
         })
