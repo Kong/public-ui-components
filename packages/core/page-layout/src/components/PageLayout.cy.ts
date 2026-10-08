@@ -622,8 +622,8 @@ describe('<PageLayout />', () => {
         cy.getTestId('page-layout-header').should(($header) => {
           const container = $header[0].querySelector('.page-header-container')!
 
-          expect($header[0].getBoundingClientRect().height).to.equal(44)
-          expect(container.getBoundingClientRect().height).to.equal(44)
+          expect($header[0].getBoundingClientRect().height).to.equal(45)
+          expect(container.getBoundingClientRect().height).to.equal(45)
         })
       })
 
@@ -637,8 +637,8 @@ describe('<PageLayout />', () => {
         cy.getTestId('page-layout-header').should(($header) => {
           const container = $header[0].querySelector('.page-header-container')!
 
-          expect($header[0].getBoundingClientRect().height).to.equal(44)
-          expect(container.getBoundingClientRect().height).to.equal(44)
+          expect($header[0].getBoundingClientRect().height).to.equal(45)
+          expect(container.getBoundingClientRect().height).to.equal(45)
         })
       })
 
@@ -655,7 +655,7 @@ describe('<PageLayout />', () => {
 
         cy.getTestId('page-layout-tabs').should('be.visible')
         cy.getTestId('page-layout-header').should(($header) => {
-          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(44)
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(45)
         })
       })
 
@@ -665,7 +665,7 @@ describe('<PageLayout />', () => {
         })
 
         cy.getTestId('page-layout-header').should(($header) => {
-          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(44)
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(45)
         })
       })
     })
