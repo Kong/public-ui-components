@@ -3,7 +3,7 @@
     <PageLayout
       back-to="/"
       :breadcrumbs="breadcrumbs"
-      :page-shortcut-data="pageShortcutData"
+      :page-shortcut-data="showFavoriteButton ? pageShortcutData : undefined"
       :tabs="showTabs ? tabs : []"
     >
       <template #title>
@@ -55,7 +55,7 @@ import { MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showTabs, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
 
 const breadcrumbs = [{
   key: 'api-gateway',

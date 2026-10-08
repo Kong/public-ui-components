@@ -528,7 +528,7 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-navigate-back').should('not.exist')
     })
 
-    it('does not render the favorite button even when page shortcuts are configured', () => {
+    it('renders the favorite button when page shortcuts are configured', () => {
       const ctx = reactive({
         isFavorite: () => false,
         onFavoriteToggle: () => { },
@@ -540,7 +540,7 @@ describe('<PageLayout />', () => {
         global: { provide: { 'app:pageShortcutsContext': ctx, [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
-      cy.getTestId('page-layout-favorite-button').should('not.exist')
+      cy.getTestId('page-layout-favorite-button').should('be.visible')
     })
 
     it('truncates a long title', () => {

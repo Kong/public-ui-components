@@ -60,7 +60,7 @@
               </slot>
             </span>
             <div
-              v-if="showFavoriteButton && !newAppearance"
+              v-if="showFavoriteButton"
               :key="favoriteButtonKey"
               class="favorite-button-container"
             >

@@ -4,8 +4,9 @@ import { ref } from 'vue'
 // sandbox layout's controls panel and the page that reads them share one state.
 const newAppearance = ref<boolean>(true)
 const showTabs = ref<boolean>(true)
+const showFavoriteButton = ref<boolean>(true)
 const showTitleAfter = ref<boolean>(false)
 
 export function useSandboxControls() {
-  return { newAppearance, showTabs, showTitleAfter }
+  return { newAppearance, showTabs, showFavoriteButton, showTitleAfter }
 }

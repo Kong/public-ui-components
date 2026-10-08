@@ -16,6 +16,11 @@
             label-before
           />
           <KInputSwitch
+            v-model="showFavoriteButton"
+            label="Favorite button"
+            label-before
+          />
+          <KInputSwitch
             v-model="showTitleAfter"
             label="Title-after content"
             label-before
@@ -30,7 +35,7 @@
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { useSandboxControls } from './composables/useSandboxControls'
 
-const { newAppearance, showTabs, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>
