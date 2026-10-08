@@ -40,6 +40,7 @@ overrides:
   dompurify@<=3.4.12: ^3.4.14
   fast-uri@>=3.0.0 <3.1.7: ^3.1.7
   form-data@>=3.0.0 <3.0.5: ^4.0.6
+  handlebars@>=4.0.0 <=4.7.9: ^4.7.10
   http-cache-semantics@<=4.2.0: ^4.3.0
   immutable@<4.3.9: ^4.3.9
   js-yaml@>=4.0.0 <4.3.1: ^5.4.1
