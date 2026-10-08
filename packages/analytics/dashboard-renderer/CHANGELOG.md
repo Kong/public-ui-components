@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.37.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.4...%40kong-ui-public%2Fdashboard-renderer%408.37.5) (2026-10-08)
+
+### Bug Fixes
+
+* **analytics:** fallback to raw ID for point in time rows [MA-5537] ([#3903](https://github.com/Kong/public-ui-components/issues/3903)) ([c6ef756](https://github.com/Kong/public-ui-components/commit/c6ef75624d9f75ebbc4e2c34edb5bf07de3e6401))
+
+
 ## [8.37.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.3...%40kong-ui-public%2Fdashboard-renderer%408.37.4) (2026-10-08)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
