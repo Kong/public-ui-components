@@ -32,7 +32,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
 if (process.env.USE_SANDBOX) {
   config.build.lib = undefined
   config.build.rollupOptions.external = undefined
-  config.build.rollupOptions.output.globals = undefined
+  config.build.rollupOptions.output.global = undefined
 }
 
 export default config
