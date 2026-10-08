@@ -14,9 +14,9 @@ import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
+import type { SelectItem } from '@kong/kongponents'
 
-export type InputOption = {
-  value: IdConnection
+export interface InputOption extends SelectItem<IdConnection> {
   label: NameConnection
   type: NodeType
 }
