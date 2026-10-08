@@ -94,25 +94,9 @@
         </div>
 
         <div
-          v-if="!!$slots.actions || showAskKaiButton"
+          v-if="!!$slots.actions"
           class="page-header-actions-container"
         >
-          <KButton
-            v-if="showAskKaiButton"
-            appearance="tertiary"
-            data-testid="page-layout-ask-kai-button"
-            size="small"
-            @click="onAskKaiButtonClick"
-          >
-            <SparklesIcon decorative />
-            {{ t('ask_kai_button') }}
-          </KButton>
-          <span
-            v-if="showAskKaiButton && !!$slots.actions"
-            aria-hidden="true"
-            class="header-actions-divider"
-            data-testid="page-layout-header-actions-divider"
-          />
           <slot name="actions" />
         </div>
       </div>
@@ -150,8 +134,8 @@ import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
-import { KAI_BUTTON_CLICK_INJECTION_KEY, NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
-import { ArrowTopLeftIcon, SparklesIcon, StarIcon, StarFillIcon } from '@kong/icons'
+import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
+import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
@@ -171,10 +155,6 @@ const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateT
 // The host application opts whole sections of its UI into the new appearance, so this is
 // injected rather than set per page.
 const newAppearanceInjection = inject<MaybeRefOrGetter<boolean> | null>(NEW_APPEARANCE_INJECTION_KEY, null)
-// The host application decides whether the "Ask KAi" button is available and what it
-// does, so both are injected rather than passed in as a prop and an event.
-const showKaiButton = inject<MaybeRefOrGetter<boolean> | null>(SHOW_KAI_BUTTON_INJECTION_KEY, null)
-const onKaiButtonClick = inject<(() => void) | null>(KAI_BUTTON_CLICK_INJECTION_KEY, null)
 const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
@@ -188,15 +168,6 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 // `toValue` lets the host provide a plain boolean, a ref or a getter
 const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
-
-// The Ask KAi button belongs to the new appearance only, so the classic header is untouched
-const showAskKaiButton = computed((): boolean => newAppearance.value && toValue(showKaiButton) === true)
-
-const onAskKaiButtonClick = () => {
-  if (typeof onKaiButtonClick === 'function') {
-    onKaiButtonClick()
-  }
-}
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
@@ -458,14 +429,6 @@ $page-layout-header-height: 44px;
         .header-breadcrumbs,
         .title-after-container {
           flex-shrink: 0;
-        }
-      }
-
-      .page-header-actions-container {
-        .header-actions-divider {
-          border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-          height: var(--kui-icon-size-30, $kui-icon-size-30);
-          margin: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
         }
       }
     }

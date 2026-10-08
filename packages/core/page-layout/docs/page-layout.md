@@ -16,9 +16,6 @@ A Kong UI page layout component that provides a structured page header with brea
 - [Nested PageLayout](#nested-pagelayout)
 - [New Appearance](#new-appearance)
   - [`page-layout:new-appearance` injection](#page-layoutnew-appearance-injection)
-- [Ask KAi Button](#ask-kai-button)
-  - [`page-layout:show-kai-button` injection](#page-layoutshow-kai-button-injection)
-  - [`page-layout:kai-button-click` injection](#page-layoutkai-button-click-injection)
 - [Page Shortcuts](#page-shortcuts)
   - [`pageShortcutData` prop](#pageshortcutdata-prop)
   - [`app:pageShortcutsContext` injection](#apppageshortcutscontext-injection)
@@ -352,7 +349,7 @@ Other differences from the default appearance:
 - When there are no tabs the header is a single row with a fixed height of `44px`, including its bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
 
-Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected. This appearance can also render an ["Ask KAi" button](#ask-kai-button) in the page header actions.
+Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
 
 ### `page-layout:new-appearance` injection
 
@@ -374,54 +371,6 @@ import { NEW_APPEARANCE_INJECTION_KEY } from '@kong-ui-public/page-layout'
 
 // Usually provided once at the app root so every PageLayout below it opts in
 provide(NEW_APPEARANCE_INJECTION_KEY, true)
-</script>
-```
-
-## Ask KAi Button
-
-When the [new appearance](#new-appearance) is enabled, `PageLayout` can render an "Ask KAi" button at the start of the page header actions. The button is a Kongponents `KButton` (`tertiary`, `small`) and is controlled by the host application through two injections, so no props or events are involved.
-
-Both injection keys are exported from the package:
-
-```ts
-import { KAI_BUTTON_CLICK_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
-```
-
-When both the button and the `actions` slot are present, a vertical separator is rendered between them. The actions container itself is rendered whenever **either** the `actions` slot has content or the button is shown.
-
-### `page-layout:show-kai-button` injection
-
-- type: `boolean | Ref<boolean> | () => boolean`
-- required: `false`
-
-Controls whether the button is rendered. A plain boolean, a ref or a getter are all accepted; refs and getters keep the button reactive to host state. The button is only rendered when this resolves to `true` **and** the [new appearance](#new-appearance) is enabled -- it is ignored in the default appearance.
-
-### `page-layout:kai-button-click` injection
-
-- type: `() => void`
-- required: `false`
-
-Called when the button is clicked. If no callback is provided the click is a no-op, so providing only the boolean is safe.
-
-```html
-<template>
-  <PageLayout
-    :breadcrumbs="breadcrumbs"
-    title="GPT-4o Multi-Purpose"
-  />
-</template>
-
-<script setup lang="ts">
-import { provide, ref } from 'vue'
-import { KAI_BUTTON_CLICK_INJECTION_KEY, NEW_APPEARANCE_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
-
-const kaiAvailable = ref<boolean>(true)
-
-provide(NEW_APPEARANCE_INJECTION_KEY, true)
-provide(SHOW_KAI_BUTTON_INJECTION_KEY, kaiAvailable)
-provide(KAI_BUTTON_CLICK_INJECTION_KEY, () => {
-  openKaiPanel()
-})
 </script>
 ```
 
