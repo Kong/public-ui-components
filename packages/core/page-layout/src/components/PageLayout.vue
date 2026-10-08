@@ -163,7 +163,7 @@ const {
   backTo,
   tabs = [],
   pageShortcutData,
-  newAppearance = false,
+  newAppearance = true,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
