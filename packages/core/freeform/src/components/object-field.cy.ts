@@ -1,3 +1,4 @@
+import { defineComponent, h, ref } from 'vue'
 import Form from './Form.vue'
 import ObjectField from './ObjectField.vue'
 import type { FormSchema } from '../form-schema'
@@ -129,6 +130,40 @@ describe('ObjectField', () => {
 
       cy.getTestId(`ff-object-switch-${FIELD_NAME}`).should('not.be.disabled')
       cy.getTestId(`ff-object-content-${FIELD_NAME}`).should('exist')
+    })
+  })
+
+  describe('v-model:added', () => {
+    it('should fill in the default when toggling back on with `added` bound by the parent', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [{
+          [FIELD_NAME]: {
+            type: 'record',
+            fields: [{ foo: { type: 'string', default: 'default-foo' } }],
+          },
+        }],
+      }
+      const onChange = cy.spy().as('onChangeSpy')
+
+      const Wrapper = defineComponent(() => {
+        const added = ref<boolean>()
+        return () => h(Form, { schema, data: { [FIELD_NAME]: { foo: 'bar' } }, onChange }, () => h(ObjectField, {
+          name: FIELD_NAME,
+          added: added.value,
+          'onUpdate:added': (value: boolean) => {
+            added.value = value
+          },
+        }))
+      })
+
+      cy.mount(Wrapper)
+
+      cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
+      assertLastChange({ [FIELD_NAME]: null })
+
+      cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
+      assertLastChange({ [FIELD_NAME]: { foo: 'default-foo' } })
     })
   })
 })
