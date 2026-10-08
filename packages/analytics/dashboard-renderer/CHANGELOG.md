@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.38.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.5...%40kong-ui-public%2Fdashboard-renderer%408.38.0) (2026-10-08)
+
+### Features
+
+* add LLM latency percentiles MA-5513 ([#3909](https://github.com/Kong/public-ui-components/issues/3909)) ([09837f3](https://github.com/Kong/public-ui-components/commit/09837f3c0d4c7f5a87dc78730e9a5a159c124c6a))
+
+
 ## [8.37.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.37.4...%40kong-ui-public%2Fdashboard-renderer%408.37.5) (2026-10-08)
 
 ### Bug Fixes

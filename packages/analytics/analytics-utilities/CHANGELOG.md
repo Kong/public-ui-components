@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.53.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.52.0...%40kong-ui-public%2Fanalytics-utilities%4012.53.0) (2026-10-08)
+
+### Features
+
+* add LLM latency percentiles MA-5513 ([#3909](https://github.com/Kong/public-ui-components/issues/3909)) ([09837f3](https://github.com/Kong/public-ui-components/commit/09837f3c0d4c7f5a87dc78730e9a5a159c124c6a))
+
+
 # [12.52.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.51.1...%40kong-ui-public%2Fanalytics-utilities%4012.52.0) (2026-10-07)
 
 ### Features

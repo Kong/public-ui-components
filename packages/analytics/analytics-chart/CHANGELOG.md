@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.41.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.3...%40kong-ui-public%2Fanalytics-chart%4010.41.0) (2026-10-08)
+
+### Features
+
+* add LLM latency percentiles MA-5513 ([#3909](https://github.com/Kong/public-ui-components/issues/3909)) ([09837f3](https://github.com/Kong/public-ui-components/commit/09837f3c0d4c7f5a87dc78730e9a5a159c124c6a))
+
+
 ## [10.40.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.2...%40kong-ui-public%2Fanalytics-chart%4010.40.3) (2026-10-08)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
