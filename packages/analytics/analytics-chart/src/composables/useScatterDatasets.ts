@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import type { ScriptableContext } from 'chart.js'
 import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
-import { color } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 import { computed } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'

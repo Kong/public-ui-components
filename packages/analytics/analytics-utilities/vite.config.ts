@@ -14,10 +14,19 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
-      fileName: (format) => format === 'cjs' ? `${sanitizedPackageName}.${format}` : `${sanitizedPackageName}.${format}.js`,
+      // separate vue dependent code into its own entry point so that kanalytics
+      // can use the main entry point without needing vue
+      entry: {
+        main: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
+        coordination: resolve(dirname(fileURLToPath(import.meta.url)), './src/coordination/index.ts'),
+      },
+      fileName: (format, entryName) => {
+        const base = entryName === 'main' ? sanitizedPackageName : `${sanitizedPackageName}-${entryName}`
+        return format === 'cjs' ? `${base}.${format}` : `${base}.${format}.js`
+      },
       cssFileName: 'style',
-      formats: ['es', 'umd', 'cjs'],
+      // UMD is not supported by Vite for multiple entry points
+      formats: ['es', 'cjs'],
     },
   },
   test: {

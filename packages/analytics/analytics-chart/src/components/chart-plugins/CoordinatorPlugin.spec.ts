@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import type { Chart as ChartType } from 'chart.js'
-import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities'
+import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities/coordination'
 import { CoordinatorPlugin } from './CoordinatorPlugin'
 
 describe('CoordinatorPlugin', () => {

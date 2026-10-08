@@ -1,7 +1,7 @@
 import type { AnalyticsExploreRecord, Display, ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import type { TreeMapDataNode } from '@kong-ui-public/echarts'
 
-import { color } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import { toMetricValue } from './metric-value'
 import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
 

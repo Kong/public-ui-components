@@ -6,7 +6,8 @@ import type { TopTalkersCellData, TopTalkersColumnData, TopTalkersTooltipRow } f
 type UnpaintedCell = Omit<TopTalkersCellData, 'color' | 'tint'>
 
 import { computed } from 'vue'
-import { color, unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 import useI18n from './useI18n'
 import { isNoSuffixMetric } from '../utils'

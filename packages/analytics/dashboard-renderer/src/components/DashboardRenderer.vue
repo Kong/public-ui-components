@@ -77,7 +77,7 @@ import type {
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
-import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities'
+import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities/coordination'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
 import { computed, inject, nextTick, provide, ref } from 'vue'
