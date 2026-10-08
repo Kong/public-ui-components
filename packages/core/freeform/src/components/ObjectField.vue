@@ -105,7 +105,7 @@
         :disabled="isLocked"
         :disabled-tooltip-text="versionInfo?.tooltip"
         :model-value="added as boolean"
-        @update:model-value="(value: boolean) => { added = value; handleToggleSwitch() }"
+        @update:model-value="(value: boolean) => { added = value; handleToggleSwitch(value) }"
       />
     </header>
 
@@ -259,8 +259,10 @@ function toggleDisplay() {
   expanded.value = !expanded.value
 }
 
-function handleToggleSwitch() {
-  if (added.value) {
+// Takes the new value explicitly: when the parent binds `v-model:added`,
+// `added.value` still holds the previous value until the parent re-renders.
+function handleToggleSwitch(value: boolean) {
+  if (value) {
     fieldValue!.value = getDefault(field.path!.value)
   } else {
     fieldValue!.value = field.emptyValue!.value
