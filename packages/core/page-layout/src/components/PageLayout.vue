@@ -476,7 +476,7 @@ $page-layout-header-max-height: 44px;
     .page-layout-header:not(:has(.page-layout-tabs)) {
       // Border-box so the cap is the rendered height, bottom border included
       box-sizing: border-box;
-      max-height: $page-layout-header-max-height;
+      height: $page-layout-header-max-height;
 
       .page-header-container {
         padding: var(--kui-space-40, $kui-space-40);
