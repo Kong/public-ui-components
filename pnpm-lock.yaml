@@ -397,6 +397,12 @@ importers:
       '@zumer/snapdom':
         specifier: ^2.24.15
         version: 2.24.15
+      ag-grid-community:
+        specifier: ^36.1.0
+        version: 36.1.0
+      ag-grid-vue3:
+        specifier: ^36.1.0
+        version: 36.1.0(vue@3.5.41(typescript@5.9.3))
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -470,6 +476,9 @@ importers:
       cypress-real-events:
         specifier: ^1.15.0
         version: 1.15.0(cypress@15.21.1)
+      echarts:
+        specifier: ^6.1.0
+        version: 6.1.0
       pinia:
         specifier: ^4.0.3
         version: 4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.41(typescript@5.9.3))
@@ -479,6 +488,9 @@ importers:
       vue:
         specifier: ^3.5.41
         version: 3.5.41(typescript@5.9.3)
+      vue-echarts:
+        specifier: ^8.3.0
+        version: 8.3.0(echarts@6.1.0)(vue@3.5.41(typescript@5.9.3))
 
   packages/analytics/portal-analytics-bridge:
     devDependencies:
