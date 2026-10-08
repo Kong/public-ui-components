@@ -27,6 +27,7 @@
     <main class="sandbox-main">
       <section class="table-section">
         <div class="table-section-toolbar">
+          <p>{{ fetchMode === 'unpaginated' ? 'The host passes all rows. Sorting and scrolling do not fetch.' : 'Scrolling and sorting fetch rows in blocks.' }}</p>
           <div
             v-if="fetchMode === 'unpaginated'"
             class="bar-scale-options"
@@ -394,6 +395,7 @@ const headers = computed<Array<TableDataGridHeader<SandboxRow>>>(() => [
     key: 'requests',
     label: 'Requests',
     minWidth: 240,
+    sortable: true,
     showPercentage: true,
     thresholds: [{ type: 'warning', value: 150 }],
   },
@@ -632,7 +634,7 @@ const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => 
 }
 
 const handleSort = (payload: TableDataGridSort) => {
-  logEvent('sort', payload)
+  logEvent(fetchMode.value === 'unpaginated' ? 'unpaginated:sort' : 'sort', payload)
 }
 
 const handleTableConfigUpdate = (payload: TableDataGridConfig) => {
@@ -777,9 +779,15 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   display: flex;
   flex-wrap: wrap;
   gap: var(--kui-space-30, $kui-space-30);
-  justify-content: flex-end;
+  justify-content: space-between;
+
+  p {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    margin: 0;
+  }
 
   .fetch-mode-control {
+    margin-left: auto;
     width: auto;
   }
 }

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.3.7...%40kong-ui-public%2Ffreeform%400.3.8) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.3.6...%40kong-ui-public%2Ffreeform%400.3.7) (2026-10-01)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
+## [0.3.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.3.4...%40kong-ui-public%2Ffreeform%400.3.6) (2026-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
 ## [0.3.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.3.4...%40kong-ui-public%2Ffreeform%400.3.5) (2026-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/freeform

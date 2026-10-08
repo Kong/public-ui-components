@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.1...%40kong-ui-public%2Ftable-data-grid%400.7.2) (2026-10-07)
+
+### Bug Fixes
+
+* **table-data-grid:** reuse datasource on server sort [MA-5463] ([#3884](https://github.com/Kong/public-ui-components/issues/3884)) ([abb84d3](https://github.com/Kong/public-ui-components/commit/abb84d3e76cff5b510b3fb2c7e90196e3279c596))
+
+
+## [0.7.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.0...%40kong-ui-public%2Ftable-data-grid%400.7.1) (2026-10-02)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
 # [0.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.6.0...%40kong-ui-public%2Ftable-data-grid%400.7.0) (2026-09-29)
 
 ### Features

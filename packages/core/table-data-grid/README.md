@@ -151,10 +151,10 @@ type TableDataGridFetcher<Row> = (
 uses `cursor: undefined`; later requests receive the previous response cursor.
 
 `sort` carries the current single-column sort, with `sortColumnKey` and
-`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
-request-context change like `refreshKey` or `pageSize`: it rebuilds the
-datasource and restarts the cursor chain from the beginning, because a cursor
-produced under one sort order is not valid under another.
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change keeps
+the infinite datasource and restarts its cursor chain from the beginning,
+because a cursor produced under one sort order is not valid under another.
+Changing `refreshKey` or `pageSize` rebuilds the datasource.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in
@@ -296,9 +296,24 @@ The current sort lives in `tableConfig` (`sortColumnKey`, `sortColumnOrder`),
 alongside `pageSize`. Pass `tableConfig` to restore a previously-chosen sort
 on mount, or to move the sort after mount without a click; omit it to let the
 component own the sort internally. A sort change emits `sort` (the narrower,
-sort-only payload) and then `update:tableConfig` (the full current config),
-and rebuilds the infinite datasource from the beginning — a cursor produced
-under one sort order is not valid under another.
+sort-only payload) and then `update:tableConfig` (the full current config).
+
+For client-side sorting, use `mode="unpaginated"` and pass the complete result
+as `rows`. AG Grid sorts those rows locally with its built-in row animation.
+
+```vue
+<TableDataGrid
+  mode="unpaginated"
+  :rows="rows"
+  :headers="[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'requests', label: 'Requests', sortable: true },
+  ]"
+/>
+```
+
+In the default infinite mode, sorting keeps the datasource and restarts its
+cursor chain. The fetcher receives the new sort and loads rows again.
 
 ## Custom Cell Content
 

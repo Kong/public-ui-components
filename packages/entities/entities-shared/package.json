@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.68.3",
+  "version": "3.69.1",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -58,7 +58,7 @@
     "monaco-editor": "^0.55.1",
     "shiki": "^4.4.3",
     "vue": "^3.5.41",
-    "vue-router": "^5.3.0"
+    "vue-router": "^5.3.1"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

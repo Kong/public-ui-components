@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-upstreams-targets",
-  "version": "3.17.3",
+  "version": "3.17.5",
   "type": "module",
   "main": "./dist/entities-upstreams-targets.umd.js",
   "module": "./dist/entities-upstreams-targets.es.js",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.64.23",
     "axios": "^1.20.0",
     "vue": "^3.5.41",
-    "vue-router": "^5.3.0"
+    "vue-router": "^5.3.1"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

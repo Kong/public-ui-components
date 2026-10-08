@@ -4,18 +4,20 @@ import type {
   TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridHeader,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { defineComponent, h, nextTick, reactive, ref } from 'vue'
+import { Comment, defineComponent, h, nextTick, reactive, ref } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
   id: string
   name: string
   status: string
+  value?: number | boolean | null
 }
 
 type TestTableDataGridSlots = {
@@ -24,21 +26,19 @@ type TestTableDataGridSlots = {
   [slotName: string]: ((props: never) => unknown) | undefined
 }
 
-type MountTableOptions = {
+type MountTableOptions = (
+  | Omit<Extract<TableDataGridProps<TestRow>, { mode?: 'infinite' }>, 'headers'>
+  | Omit<Extract<TableDataGridProps<TestRow>, { mode: 'unpaginated' }>, 'headers'>
+) & {
   containerStyle?: Record<string, string>
-  fetcher: TableDataGridFetcher<TestRow>
   headers?: Array<TableDataGridHeader<TestRow>>
-  error?: boolean
   onCellClick?: (payload: TableDataGridCellClickPayload<TestRow>) => void
   onGridReady?: (api: GridApi<TestRow>) => void
   onRowClick?: (row: TestRow) => void
   onSort?: (payload: TableDataGridSort) => void
   onState?: (payload: TableDataGridStatePayload) => void
   onUpdateTableConfig?: (payload: TableDataGridConfig) => void
-  pageSize?: number
-  refreshKey?: string | number | boolean
   slots?: TestTableDataGridSlots
-  tableConfig?: TableDataGridConfig
 }
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
@@ -72,6 +72,19 @@ const createResetFetcher = () => cy.stub().callsFake(({ pageSize }) => Promise.r
   cursor: 'next-cursor',
   data: createRows(1, pageSize),
   hasMore: false,
+}))
+
+const createDeferredResult = () => {
+  let resolveResult!: (result: Awaited<ReturnType<TableDataGridFetcher<TestRow>>>) => void
+  const promise = new Promise<Awaited<ReturnType<TableDataGridFetcher<TestRow>>>>(resolve => {
+    resolveResult = resolve
+  })
+
+  return { promise, resolve: resolveResult }
+}
+
+const settleGridRender = () => cy.window().then(win => new Promise<void>(resolve => {
+  win.requestAnimationFrame(() => resolve())
 }))
 
 const TestTableDataGrid = TableDataGrid as unknown as DefineComponent
@@ -303,6 +316,269 @@ describe('<TableDataGrid />', () => {
       cursor: undefined,
       sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
     })
+  })
+
+  it('replaces the infinite fetcher without a refresh key and ignores its pending result', () => {
+    const pending = createDeferredResult()
+    const fetcher = cy.stub().returns(pending.promise)
+    const replacementFetcher = cy.stub().resolves({ data: [rows[1]], hasMore: false })
+    const table = mountTestTableDataGrid({ fetcher })
+
+    cy.wrap(fetcher).should('have.been.calledOnce')
+    table.setProps({ fetcher: replacementFetcher })
+    cy.contains('.ag-cell', 'Portal app').should('be.visible')
+    cy.wrap(replacementFetcher).should('have.been.calledOnce').and('have.been.calledWithMatch', {
+      mode: 'infinite',
+      pageSize: 25,
+      cursor: undefined,
+    })
+    cy.wrap(fetcher).should('have.been.calledOnce')
+    cy.then(() => pending.resolve({ data: [rows[0]], hasMore: false }))
+    settleGridRender()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app').and('not.contain.text', 'Gateway service')
+  })
+
+  it('starts a fresh sorted cursor chain during a pending scroll block without accepting its late rows', () => {
+    const oldSecondBlock = createDeferredResult()
+    const fetcher = cy.stub().callsFake(({ cursor, sort }: Parameters<TableDataGridFetcher<TestRow>>[0]) => {
+      if (sort?.sortColumnOrder === 'asc') {
+        return Promise.resolve(cursor === undefined
+          ? { data: createRows(101, 15), cursor: 'sorted-cursor', hasMore: true }
+          : { data: createRows(116, 15), hasMore: false })
+      }
+
+      return cursor === undefined
+        ? Promise.resolve({ data: createRows(1, 15), cursor: 'old-cursor', hasMore: true })
+        : oldSecondBlock.promise
+    })
+    let gridApi: GridApi<TestRow> | undefined
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      pageSize: 15,
+      onGridReady: api => {
+        gridApi = api
+      },
+    })
+
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 1')
+    cy.then(() => gridApi!.ensureIndexVisible(15, 'bottom'))
+    cy.wrap(fetcher).should('have.been.calledTwice').and('have.been.calledWithMatch', { cursor: 'old-cursor' })
+    cy.then(() => gridApi!.applyColumnState({ state: [{ colId: 'name', sort: 'asc' }] }))
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 101')
+    cy.get('.ag-header-cell[col-id="name"]').should('have.attr', 'aria-sort', 'ascending')
+    cy.wrap(fetcher).should(() => {
+      const sortedFirstBlocks = fetcher.getCalls().filter(call => (
+        call.args[0].cursor === undefined && call.args[0].sort?.sortColumnKey === 'name' && call.args[0].sort?.sortColumnOrder === 'asc'
+      ))
+      expect(sortedFirstBlocks).to.have.length(1)
+    })
+    cy.then(() => gridApi!.ensureIndexVisible(15, 'bottom'))
+    cy.get('[row-index="15"] [col-id="name"]').should('contain.text', 'Service 116')
+    cy.wrap(fetcher).should('have.been.calledWithMatch', {
+      cursor: 'sorted-cursor', sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+    })
+    cy.then(() => oldSecondBlock.resolve({ data: createRows(16, 15), hasMore: false }))
+    settleGridRender()
+    cy.get('[row-index="15"] [col-id="name"]').should('contain.text', 'Service 116').and('not.contain.text', 'Service 16')
+    cy.wrap(fetcher).should('have.callCount', 4)
+  })
+
+  it('applies a controlled sort when its header arrives after grid-ready and continues the sorted cursor chain', () => {
+    const fetcher = cy.stub().callsFake(({ cursor, sort }: Parameters<TableDataGridFetcher<TestRow>>[0]) => Promise.resolve(
+      sort?.sortColumnKey !== 'name'
+        ? { data: createRows(1, 15), cursor: 'unsorted-cursor', hasMore: true }
+        : cursor === undefined
+          ? { data: createRows(101, 15), cursor: 'sorted-cursor', hasMore: true }
+          : { data: createRows(116, 15), hasMore: false },
+    ))
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      fetcher, headers: [], pageSize: 15,
+      tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc', pageSize: 15 },
+      onGridReady: api => {
+        gridApi = api
+      },
+    })
+
+    cy.wrap(null).should(() => expect(gridApi).not.to.equal(undefined))
+    table.setProps({ headers: [{ key: 'name', label: 'Name', sortable: true }] })
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 101')
+    cy.get('.ag-header-cell[col-id="name"]').should('have.attr', 'aria-sort', 'ascending')
+    cy.then(() => gridApi!.ensureIndexVisible(15, 'bottom'))
+    cy.get('[row-index="15"] [col-id="name"]').should('contain.text', 'Service 116')
+    cy.wrap(fetcher).should('have.been.calledWithMatch', {
+      cursor: 'sorted-cursor', sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+    })
+  })
+
+  for (const updateMode of ['replacement', 'in-place']) {
+    it(`reloads without stale sort after ${updateMode} removal of the sorted column`, () => {
+      const events: Array<{ type: 'sort' | 'config', payload: TableDataGridSort | TableDataGridConfig }> = []
+      const fetcher = cy.stub().callsFake(({ sort }: Parameters<TableDataGridFetcher<TestRow>>[0]) => Promise.resolve({
+        data: [sort?.sortColumnKey ? rows[0] : rows[1]], hasMore: false,
+      }))
+      const reactiveHeaders = ref<Array<TableDataGridHeader<TestRow>>>([
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status' },
+      ])
+      const table = mountTestTableDataGrid({
+        fetcher,
+        headers: reactiveHeaders.value,
+        onSort: payload => events.push({ type: 'sort', payload }),
+        onUpdateTableConfig: payload => events.push({ type: 'config', payload }),
+      })
+
+      cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+      cy.get('.ag-header-cell[col-id="name"]').click()
+      cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+      cy.then(() => {
+        events.length = 0
+      })
+      if (updateMode === 'replacement') {
+        table.setProps({ headers: [{ key: 'status', label: 'Status' }] })
+      } else {
+        cy.then(() => {
+          reactiveHeaders.value.splice(0, 1)
+          return nextTick()
+        })
+      }
+      cy.get('[row-index="0"] [col-id="status"]').should('contain.text', 'Inactive')
+      cy.get('.ag-header-cell[col-id="name"]').should('not.exist')
+      cy.get('.ag-header-cell[col-id="status"]').should('not.have.attr', 'aria-sort')
+      cy.then(() => expect(events).to.deep.equal([
+        { type: 'sort', payload: { sortColumnKey: undefined, sortColumnOrder: undefined } },
+        { type: 'config', payload: { pageSize: 25, sortColumnKey: undefined, sortColumnOrder: undefined } },
+      ]))
+      cy.wrap(fetcher).should(stub => {
+        expect(stub.callCount).to.equal(3)
+        const params: Parameters<TableDataGridFetcher<TestRow>>[0] = stub.lastCall.args[0]
+        expect(params.mode).to.equal('infinite')
+        expect(params.pageSize).to.equal(25)
+        expect(params.cursor).to.equal(undefined)
+        expect(params.sort?.sortColumnKey).to.equal(undefined)
+        expect(params.sort?.sortColumnOrder).to.equal(undefined)
+      })
+    })
+  }
+
+  it('keeps fetching when an API sort adds a column without changing the active sort', () => {
+    const pending = createDeferredResult()
+    let requestCount = 0
+    const fetcher = cy.stub().callsFake(({ cursor }: Parameters<TableDataGridFetcher<TestRow>>[0]) => {
+      requestCount += 1
+      if (requestCount === 1) {
+        return pending.promise
+      }
+      return Promise.resolve(cursor === undefined
+        ? { data: createRows(101, 25), cursor: 'current-cursor', hasMore: true }
+        : { data: createRows(126, 25), hasMore: false })
+    })
+    const onSort = cy.stub()
+    const onUpdateTableConfig = cy.stub()
+    let gridApi: GridApi<TestRow> | undefined
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      tableConfig: { pageSize: 25, sortColumnKey: 'name', sortColumnOrder: 'asc' },
+      onGridReady: api => {
+        gridApi = api
+      },
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.wrap(fetcher).should('have.been.calledOnce')
+    cy.then(() => gridApi!.applyColumnState({ state: [
+      { colId: 'name', sort: 'asc', sortIndex: 1 },
+      { colId: 'status', sort: 'desc', sortIndex: 0 },
+    ] }))
+    settleGridRender()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 101')
+    cy.get('.ag-header-cell[col-id="name"]').should('have.attr', 'aria-sort', 'ascending')
+    cy.get('.ag-header-cell[col-id="status"]').should('have.attr', 'aria-sort', 'none')
+    cy.wrap(fetcher).should('have.been.calledTwice')
+    cy.then(() => pending.resolve({ data: createRows(1, 25), cursor: 'old-cursor', hasMore: true }))
+    settleGridRender()
+    cy.then(() => gridApi!.ensureIndexVisible(25, 'bottom'))
+    cy.get('[row-index="25"] [col-id="name"]').should('contain.text', 'Service 126')
+    cy.wrap(fetcher).should('have.been.calledWithMatch', { cursor: 'current-cursor' })
+    cy.wrap(onSort).should('not.have.been.called')
+    cy.wrap(onUpdateTableConfig).should('not.have.been.called')
+  })
+
+  it('renders and recalculates the complete unpaginated result without fetch state events', () => {
+    const completeRows = createRows(1, 30).map((row, index) => ({ ...row, value: index + 1 }))
+    const onState = cy.stub()
+    let gridApi: GridApi<TestRow> | undefined
+    const table = mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: completeRows,
+      headers: [...headers, { key: 'value', label: 'Value', showPercentage: true }],
+      onState,
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    cy.get('[row-index="0"] [col-id="value"]').should('contain.text', '(0.22 %)')
+    cy.then(() => gridApi!.ensureIndexVisible(29, 'bottom'))
+    cy.contains('.ag-cell', 'Service 30').should('be.visible')
+    cy.get('[row-index="29"] [col-id="value"]').should('contain.text', '(6.45 %)')
+    table.setProps({ rows: [{ ...rows[0], value: 50 }, { ...rows[1], value: 150 }] })
+    cy.get('[row-index="0"] [col-id="value"]').should('contain.text', '(25 %)')
+    cy.get('[row-index="1"] [col-id="value"]').should('contain.text', '(75 %)')
+    cy.wrap(onState).should('not.have.been.called')
+  })
+
+  it('preserves numeric adornments around custom values and missing-value bar tracks', () => {
+    mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: [{ ...rows[0], value: true }, { ...rows[1], value: null }, { ...rows[0], id: 'valid', value: 50 }],
+      headers: [{ key: 'value', label: 'Value', showPercentage: true, bar: 'relative' }],
+      slots: {
+        value: ({ rowValue }: TableDataGridCellSlotProps<TestRow>) => h('strong', { 'data-testid': 'custom-value' }, String(rowValue)),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.get('[row-index="0"] [data-testid="custom-value"]').should('have.text', 'true')
+    cy.get('[row-index="0"] [data-testid="table-data-grid-cell-bar"]').should('not.exist')
+    cy.get('[row-index="1"] [data-testid="table-data-grid-cell-bar-fill"]').should('have.attr', 'style', 'width: 0%;')
+    cy.get('[row-index="2"] [data-testid="custom-value"]').should('have.text', '50')
+    cy.get('[row-index="2"] [data-testid="table-data-grid-cell-relative"]').should('have.text', '(100 %)')
+    cy.get('[row-index="2"] [data-testid="table-data-grid-cell-bar"]').should('be.visible')
+  })
+
+  it('uses default overflow presentation when the host cell slot renders no content', () => {
+    const longName = 'A gateway service name that is much wider than its flexible table column'
+    mountTestTableDataGrid({
+      fetcher: cy.stub().resolves({ data: [{ ...rows[0], name: longName }], hasMore: false }),
+      slots: { name: () => h(Comment) },
+    })
+    expectOverflowTooltip(longName)
+  })
+
+  it('sorts complete rows on header clicks and controlled configuration changes', () => {
+    const onSort = cy.stub()
+    const onUpdateTableConfig = cy.stub()
+    const table = mountTestTableDataGrid({
+      mode: 'unpaginated',
+      rows: [rows[1], rows[0]],
+      headers: [{ key: 'name', label: 'Name', sortable: true }],
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.wrap(onSort).should('have.been.calledWith', { sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    cy.wrap(onUpdateTableConfig).should('have.been.calledWithMatch', { sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+    table.setProps({ tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'asc' } })
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.contains('.ag-header-cell', 'Name').should('have.attr', 'aria-sort', 'ascending')
   })
 
   it('uses Kong theme text colors for AG Grid headers and cells', () => {
@@ -987,6 +1263,8 @@ describe('<TableDataGrid />', () => {
 
   it('sizes an unpaginated grid to its rows with fitToContent', () => {
     const tableConfig = ref<TableDataGridConfig>({ fitToContent: true })
+    const contentRows = ref([{ name: 'Only row' }])
+    let initialHeight = 0
 
     // eslint-disable-next-line vue/one-component-per-file -- Cypress harness provides the grid's parent height.
     cy.mount(defineComponent({
@@ -994,9 +1272,9 @@ describe('<TableDataGrid />', () => {
       setup() {
         return () => h('div', { style: { height: '520px', width: '400px' } }, [
           h(TestTableDataGrid, {
-            headers: [{ key: 'name', label: 'Name' }],
+            headers: [{ key: 'name', label: 'Name', minWidth: 800 }],
             mode: 'unpaginated',
-            rows: [{ name: 'Only row' }],
+            rows: contentRows.value,
             tableConfig: tableConfig.value,
           }),
         ])
@@ -1004,14 +1282,25 @@ describe('<TableDataGrid />', () => {
     }))
 
     cy.contains('.ag-cell', 'Only row').should('be.visible')
-    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('be.lessThan', 150)
+    cy.get('.kong-ui-public-table-data-grid').should(($grid) => {
+      initialHeight = $grid[0].getBoundingClientRect().height
+      expect(initialHeight).to.be.lessThan(150)
+    })
+    expectHorizontalOverflow()
+    cy.then(() => {
+      contentRows.value = createRows(1, 8)
+    })
+    cy.get('.kong-ui-public-table-data-grid').should(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.greaterThan(initialHeight)
+    })
+    cy.contains('.ag-cell', 'Service 8').should('be.visible')
     cy.then(() => {
       tableConfig.value = {}
     })
     cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('equal', 520)
   })
 
-  it('colors threshold values in infinite mode', () => {
+  it('colors threshold values without complete-result bars or percentages in infinite mode', () => {
     const fetcher = cy.stub().resolves({
       data: [{ requests: 0 }, { requests: 5 }, { requests: 15 }],
       hasMore: false,
@@ -1024,9 +1313,12 @@ describe('<TableDataGrid />', () => {
         return () => h('div', { style: { height: '520px', width: '400px' } }, [
           h(TestTableDataGrid, {
             fetcher,
+            tableConfig: { fitToContent: true },
             headers: [{
               key: 'requests',
               label: 'Requests',
+              showPercentage: true,
+              bar: 'relative',
               thresholds: [
                 { type: 'warning', value: 5 },
                 { type: 'error', value: 10 },
@@ -1037,6 +1329,9 @@ describe('<TableDataGrid />', () => {
       },
     }))
 
+    cy.get('[data-testid="table-data-grid-cell-relative"]').should('not.exist')
+    cy.get('[data-testid="table-data-grid-cell-bar"]').should('not.exist')
+    cy.get('.kong-ui-public-table-data-grid').invoke('outerHeight').should('equal', 520)
     cy.get('[row-index="0"] [col-id="requests"] .table-data-grid-cell-renderer')
       .should('not.have.attr', 'data-threshold')
     cy.get('[row-index="1"] [col-id="requests"] .table-data-grid-cell-renderer--text-warning')
@@ -1135,15 +1430,10 @@ describe('<TableDataGrid />', () => {
       sortColumnOrder: 'asc',
       pageSize: 25,
     })
-    // AG Grid's own infinite row model purges its block cache and re-fetches
-    // block 0 as soon as the native header click updates its sort state,
-    // ahead of (and in addition to) the datasource rebuild this package
-    // triggers via resetKey — so at least one re-fetch beyond the initial
-    // block is guaranteed, but the exact count is an AG Grid implementation
-    // detail. What matters is that every re-fetch after the click carries
-    // the new sort.
+    // AG Grid reloads its infinite cache for the sort change. The grid must
+    // request the first block once through the existing datasource.
     cy.wrap(fetcher).should((stub) => {
-      expect(stub.callCount).to.be.greaterThan(1)
+      expect(stub.callCount).to.equal(2)
       expect(stub.lastCall.args[0]).to.deep.equal({
         mode: 'infinite',
         pageSize: 25,
@@ -1266,28 +1556,63 @@ describe('<TableDataGrid />', () => {
     })
   })
 
-  it('moves the grid sort when the tableConfig prop changes, without a click', () => {
-    const fetcher = cy.stub().resolves({
-      data: rows,
-      total: rows.length,
-    })
-    let gridApi: GridApi<TestRow> | undefined
-    const tableDataGrid = mountTestTableDataGrid({
+  it('loads once per controlled sort change, ignores the host config echo, and clears the sort', () => {
+    const fetcher = cy.stub().callsFake(({ sort }: Parameters<TableDataGridFetcher<TestRow>>[0]) => Promise.resolve({
+      data: sort?.sortColumnOrder === 'asc'
+        ? [rows[0]]
+        : sort?.sortColumnOrder === 'desc'
+          ? [rows[1]]
+          : createRows(1, 1),
+      hasMore: false,
+    }))
+    let emittedConfig: TableDataGridConfig | undefined
+    const table = mountTestTableDataGrid({
       fetcher,
       headers: sortableHeaders,
-      onGridReady: (api) => {
-        gridApi = api
+      tableConfig: { pageSize: 25 },
+      onUpdateTableConfig: config => {
+        emittedConfig = config
       },
     })
 
-    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
-    tableDataGrid.setProps({ tableConfig: { sortColumnKey: 'status', sortColumnOrder: 'asc' } })
-
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 1')
+    cy.get('.ag-header-cell[col-id="name"]').click()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.wrap(fetcher).should('have.been.calledTwice')
+    // The existing header-click test owns emission assertions; this exercises the host's echo.
     cy.then(() => {
-      const sortedColumns = gridApi?.getColumnState().filter(column => column.sort) ?? []
+      if (!emittedConfig) {
+        throw new Error('The host did not receive a table configuration to echo')
+      }
+      return table.setProps({ tableConfig: { ...emittedConfig } })
+    })
+    settleGridRender()
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Gateway service')
+    cy.wrap(fetcher).should('have.been.calledTwice')
 
-      expect(sortedColumns).to.have.length(1)
-      expect(sortedColumns[0].colId).to.equal('status')
+    table.setProps({ tableConfig: { pageSize: 25, sortColumnKey: 'status', sortColumnOrder: 'desc' } })
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Portal app')
+    cy.get('.ag-header-cell[col-id="status"]').should('have.attr', 'aria-sort', 'descending')
+    cy.get('.ag-header-cell[col-id="name"]').should('have.attr', 'aria-sort', 'none')
+    cy.wrap(fetcher).should(stub => {
+      expect(stub.callCount).to.equal(3)
+      expect(stub.lastCall.args[0]).to.deep.equal({
+        mode: 'infinite', pageSize: 25, cursor: undefined,
+        sort: { sortColumnKey: 'status', sortColumnOrder: 'desc' },
+      })
+    })
+
+    table.setProps({ tableConfig: { pageSize: 25, sortColumnKey: undefined, sortColumnOrder: undefined } })
+    cy.get('[row-index="0"] [col-id="name"]').should('contain.text', 'Service 1')
+    cy.get('.ag-header-cell[col-id="status"]').should('have.attr', 'aria-sort', 'none')
+    cy.wrap(fetcher).should(stub => {
+      expect(stub.callCount).to.equal(4)
+      const params: Parameters<TableDataGridFetcher<TestRow>>[0] = stub.lastCall.args[0]
+      expect(params.mode).to.equal('infinite')
+      expect(params.pageSize).to.equal(25)
+      expect(params.cursor).to.equal(undefined)
+      expect(params.sort?.sortColumnKey).to.equal(undefined)
+      expect(params.sort?.sortColumnOrder).to.equal(undefined)
     })
   })
 
