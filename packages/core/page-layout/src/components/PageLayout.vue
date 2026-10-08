@@ -18,10 +18,6 @@
             item-max-width="25ch"
             :items="breadcrumbs"
           >
-            <!--
-              KBreadcrumbs renders a divider after every item, including the last one, so
-              this caret doubles as the separator between the breadcrumbs and the inline title.
-            -->
             <template
               v-if="newAppearance"
               #divider
@@ -262,7 +258,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 // stays the most prominent item in the row without swallowing it.
 $page-layout-title-max-width: 40ch;
 // Height of the new appearance's single-row header. Only applied when there are no tabs.
-$page-layout-header-height: 44px;
+$page-layout-header-height: 45px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
