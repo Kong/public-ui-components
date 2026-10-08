@@ -99,7 +99,7 @@
         >
           <KButton
             v-if="showAskKaiButton"
-            appearance="secondary"
+            appearance="tertiary"
             data-testid="page-layout-ask-kai-button"
             size="small"
             @click="onAskKaiButtonClick"
