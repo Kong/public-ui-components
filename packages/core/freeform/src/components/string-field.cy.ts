@@ -1,6 +1,7 @@
 import { h } from 'vue'
 import { AUTOFILL_SLOT } from '@kong-ui-public/forms'
 import Form from './Form.vue'
+import StringField from './StringField.vue'
 import type { FormSchema, StringFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
@@ -26,6 +27,7 @@ function mountStringForm(options: {
   schema?: FormSchema
   data?: Record<string, unknown>
   config?: FormConfig
+  labelSlotTemplate?: string
 }) {
   cy.mount(Form, {
     props: {
@@ -34,6 +36,16 @@ function mountStringForm(options: {
       config: options.config,
       onChange: cy.spy().as('onChangeSpy'),
     },
+    ...(options.labelSlotTemplate
+      ? {
+        slots: {
+          default: `<StringField name="${FIELD_NAME}"><template #label="{ label }">${options.labelSlotTemplate}</template></StringField>`,
+        },
+        global: {
+          components: { StringField },
+        },
+      }
+      : {}),
   })
 }
 
@@ -164,6 +176,19 @@ describe('StringField', () => {
         .find('.ff-version-compatibility-note, .ff-label-tooltip-info')
         .first()
         .should('have.class', 'ff-version-compatibility-note')
+    })
+  })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      mountStringForm({
+        data: { [FIELD_NAME]: 'alpha' },
+        labelSlotTemplate: '<span data-testid="custom-label">Custom: {{ label }}</span>',
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Name')
     })
   })
 

@@ -1,4 +1,5 @@
 import Form from './Form.vue'
+import NumberField from './NumberField.vue'
 import type { FormSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
@@ -22,6 +23,7 @@ function mountNumberForm(options: {
   schema?: FormSchema
   data?: Record<string, unknown>
   config?: FormConfig
+  labelSlotTemplate?: string
 }) {
   cy.mount(Form, {
     props: {
@@ -30,6 +32,16 @@ function mountNumberForm(options: {
       config: options.config,
       onChange: cy.spy().as('onChangeSpy'),
     },
+    ...(options.labelSlotTemplate
+      ? {
+        slots: {
+          default: `<NumberField name="${FIELD_NAME}"><template #label="{ label }">${options.labelSlotTemplate}</template></NumberField>`,
+        },
+        global: {
+          components: { NumberField },
+        },
+      }
+      : {}),
   })
 }
 
@@ -71,6 +83,19 @@ describe('NumberField', () => {
       cy.getTestId(`ff-${FIELD_NAME}`).clear()
 
       assertLastChange({ [FIELD_NAME]: undefined })
+    })
+  })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      mountNumberForm({
+        data: { [FIELD_NAME]: 3 },
+        labelSlotTemplate: '<span data-testid="custom-label">Custom: {{ label }}</span>',
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Retries')
     })
   })
 
