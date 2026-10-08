@@ -24,11 +24,6 @@ export interface PageLayoutProps {
   tabs?: PageLayoutTab[]
   /** Providing this prop "marks" the current page as an entity page that can be added to shortcuts (favorites and recents) */
   pageShortcutData?: PageShortcutData
-  /**
-   * Render the new page header appearance: the title sits inline after the breadcrumbs,
-   * separated by a caret, and the back button and favorite button are omitted.
-   */
-  newAppearance?: boolean
 }
 
 export interface PageLayoutSlots {

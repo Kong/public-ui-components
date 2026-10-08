@@ -2,7 +2,7 @@ import { defineComponent, inject, h, reactive, ref } from 'vue'
 import { createRouter, createMemoryHistory, type Router } from 'vue-router'
 import type { OptionsParam } from '../../../../../cypress/types'
 import PageLayout from './PageLayout.vue'
-import { KAI_BUTTON_CLICK_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
 import type { PageShortcutData } from '../types'
 
 const validShortcutData: PageShortcutData = {
@@ -479,7 +479,8 @@ describe('<PageLayout />', () => {
       const title = 'Test Page Title'
 
       mountWithRouter(PageLayout, {
-        props: { title, breadcrumbs, newAppearance: true },
+        props: { title, breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
       cy.getTestId('page-layout-breadcrumbs').should('be.visible')
@@ -496,7 +497,8 @@ describe('<PageLayout />', () => {
 
     it('renders a caret as the breadcrumb divider', () => {
       mountWithRouter(PageLayout, {
-        props: { title: 'Test Page Title', breadcrumbs, newAppearance: true },
+        props: { title: 'Test Page Title', breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
       cy.getTestId('page-layout-breadcrumbs')
@@ -509,7 +511,8 @@ describe('<PageLayout />', () => {
 
     it('does not render breadcrumbs when none are provided', () => {
       mountWithRouter(PageLayout, {
-        props: { title: 'Test Page Title', newAppearance: true },
+        props: { title: 'Test Page Title' },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
       cy.getTestId('page-layout-breadcrumbs').should('not.exist')
@@ -518,7 +521,8 @@ describe('<PageLayout />', () => {
 
     it('does not render the back button even when backTo is provided', () => {
       mountWithRouter(PageLayout, {
-        props: { title: 'Test Page Title', backTo: '/', newAppearance: true },
+        props: { title: 'Test Page Title', backTo: '/' },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
       cy.getTestId('page-layout-navigate-back').should('not.exist')
@@ -532,8 +536,8 @@ describe('<PageLayout />', () => {
       })
 
       mountWithRouter(PageLayout, {
-        props: { title: 'Test Page Title', pageShortcutData: validShortcutData, newAppearance: true },
-        global: { provide: { 'app:pageShortcutsContext': ctx } },
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx, [NEW_APPEARANCE_INJECTION_KEY]: true } },
       })
 
       cy.getTestId('page-layout-favorite-button').should('not.exist')
@@ -543,7 +547,8 @@ describe('<PageLayout />', () => {
       const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
 
       mountWithRouter(PageLayout, {
-        props: { title, breadcrumbs, newAppearance: true },
+        props: { title, breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
         slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
       })
 
@@ -562,10 +567,105 @@ describe('<PageLayout />', () => {
       })
     })
 
+    describe('appearance injection', () => {
+      it('renders the default appearance when the injection is missing', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+        // The back button is only rendered in the default appearance
+        cy.getTestId('page-layout-navigate-back').should('be.visible')
+      })
+
+      it('renders the default appearance when the injection is false', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: false } },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+        cy.getTestId('page-layout-navigate-back').should('be.visible')
+      })
+
+      it('reacts to a ref passed through the injection', () => {
+        const newAppearance = ref<boolean>(false)
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: newAppearance } },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+
+        cy.then(() => {
+          newAppearance.value = true
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('have.class', 'new-appearance')
+        cy.getTestId('page-layout-navigate-back').should('not.exist')
+      })
+    })
+
+    describe('header height', () => {
+      it('caps the header height when there are no tabs', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+          // Tall actions content the header would otherwise grow to fit
+          slots: { actions: () => h('div', { style: 'height: 80px' }, 'Actions') },
+        })
+
+        cy.getTestId('page-layout-tabs').should('not.exist')
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.equal(44)
+        })
+      })
+
+      it('does not stretch a sparse header to the cap', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.be.at.most(44)
+        })
+      })
+
+      it('does not cap the header height when tabs are present', () => {
+        const tabs = [
+          { key: 'overview', label: 'Overview', to: '/overview' },
+          { key: 'settings', label: 'Settings', to: '/settings' },
+        ]
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs, tabs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-tabs').should('be.visible')
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(44)
+        })
+      })
+
+      it('does not cap the header height in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(44)
+        })
+      })
+    })
+
     describe('Ask KAi button', () => {
       it('does not render the button when the show injection is missing', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').should('not.exist')
@@ -573,8 +673,8 @@ describe('<PageLayout />', () => {
 
       it('does not render the button when the show injection is false', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: false } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: false } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').should('not.exist')
@@ -582,8 +682,8 @@ describe('<PageLayout />', () => {
 
       it('renders the button when the show injection is true', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').should('be.visible').and('contain.text', 'Ask KAi')
@@ -593,8 +693,8 @@ describe('<PageLayout />', () => {
         const show = ref<boolean>(false)
 
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: show } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: show } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').should('not.exist')
@@ -619,9 +719,10 @@ describe('<PageLayout />', () => {
         const onKaiButtonClick = cy.spy().as('onKaiButtonClick')
 
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
+          props: { title: 'Test Page Title' },
           global: {
             provide: {
+              [NEW_APPEARANCE_INJECTION_KEY]: true,
               [SHOW_KAI_BUTTON_INJECTION_KEY]: true,
               [KAI_BUTTON_CLICK_INJECTION_KEY]: onKaiButtonClick,
             },
@@ -635,8 +736,8 @@ describe('<PageLayout />', () => {
 
       it('does not throw when clicked with no click injection provided', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').click()
@@ -646,8 +747,8 @@ describe('<PageLayout />', () => {
 
       it('renders a separator between the button and the actions slot', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
           slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
         })
 
@@ -658,8 +759,8 @@ describe('<PageLayout />', () => {
 
       it('does not render the separator when there is no actions slot content', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
-          global: { provide: { [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true, [SHOW_KAI_BUTTON_INJECTION_KEY]: true } },
         })
 
         cy.getTestId('page-layout-ask-kai-button').should('be.visible')
@@ -668,7 +769,8 @@ describe('<PageLayout />', () => {
 
       it('does not render the separator when the button is hidden', () => {
         mountWithRouter(PageLayout, {
-          props: { title: 'Test Page Title', newAppearance: true },
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
           slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
         })
 

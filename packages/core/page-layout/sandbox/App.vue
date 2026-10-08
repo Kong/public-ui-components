@@ -6,6 +6,11 @@
       <template #navigation-after>
         <div class="sandbox-control-list">
           <KInputSwitch
+            v-model="newAppearance"
+            label="New appearance"
+            label-before
+          />
+          <KInputSwitch
             v-model="showTabs"
             label="Tabs"
             label-before
@@ -30,7 +35,7 @@
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { useSandboxControls } from './composables/useSandboxControls'
 
-const { showTabs, showKaiButton, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showKaiButton, showTitleAfter } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>

@@ -150,7 +150,7 @@ import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
-import { KAI_BUTTON_CLICK_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey, SHOW_KAI_BUTTON_INJECTION_KEY } from '../symbols'
 import { ArrowTopLeftIcon, SparklesIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
@@ -163,12 +163,14 @@ const {
   backTo,
   tabs = [],
   pageShortcutData,
-  newAppearance = true,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+// The host application opts whole sections of its UI into the new appearance, so this is
+// injected rather than set per page.
+const newAppearanceInjection = inject<MaybeRefOrGetter<boolean> | null>(NEW_APPEARANCE_INJECTION_KEY, null)
 // The host application decides whether the "Ask KAi" button is available and what it
 // does, so both are injected rather than passed in as a prop and an event.
 const showKaiButton = inject<MaybeRefOrGetter<boolean> | null>(SHOW_KAI_BUTTON_INJECTION_KEY, null)
@@ -184,9 +186,11 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
 
-// The Ask KAi button belongs to the new appearance only, so the classic header is untouched.
-// `toValue` lets the host provide a plain boolean, a ref or a getter.
-const showAskKaiButton = computed((): boolean => newAppearance && toValue(showKaiButton) === true)
+// `toValue` lets the host provide a plain boolean, a ref or a getter
+const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
+
+// The Ask KAi button belongs to the new appearance only, so the classic header is untouched
+const showAskKaiButton = computed((): boolean => newAppearance.value && toValue(showKaiButton) === true)
 
 const onAskKaiButtonClick = () => {
   if (typeof onKaiButtonClick === 'function') {
@@ -286,6 +290,8 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 // Roughly 1.6x the 25ch cap already applied to each breadcrumb item, so a long title
 // stays the most prominent item in the row without swallowing it.
 $page-layout-title-max-width: 40ch;
+// Height of the new appearance's single-row header. Only applied when there are no tabs.
+$page-layout-header-max-height: 44px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
@@ -417,6 +423,7 @@ $page-layout-title-max-width: 40ch;
     // specificity rather than relying on source order.
     .page-layout-header .page-header-container {
       align-items: center;
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
 
       .page-header-start {
         align-items: center;
@@ -460,6 +467,19 @@ $page-layout-title-max-width: 40ch;
           height: var(--kui-icon-size-30, $kui-icon-size-30);
           margin: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
         }
+      }
+    }
+
+    // Without tabs the header is a single row, capped to the height of the top bar it
+    // mirrors. With tabs it has to grow to fit the tab row, so no cap is applied there.
+    // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
+    .page-layout-header:not(:has(.page-layout-tabs)) {
+      // Border-box so the cap is the rendered height, bottom border included
+      box-sizing: border-box;
+      max-height: $page-layout-header-max-height;
+
+      .page-header-container {
+        padding: var(--kui-space-40, $kui-space-40);
       }
     }
   }

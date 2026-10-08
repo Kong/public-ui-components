@@ -14,6 +14,8 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
 - [Nested PageLayout](#nested-pagelayout)
+- [New Appearance](#new-appearance)
+  - [`page-layout:new-appearance` injection](#page-layoutnew-appearance-injection)
 - [Ask KAi Button](#ask-kai-button)
   - [`page-layout:show-kai-button` injection](#page-layoutshow-kai-button-injection)
   - [`page-layout:kai-button-click` injection](#page-layoutkai-button-click-injection)
@@ -31,7 +33,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Optional back navigation button next to the title via the `backTo` prop
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
-- An opt-in `newAppearance` variant that renders the title inline with the breadcrumbs
+- An opt-in new appearance that renders the title inline with the breadcrumbs
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -113,20 +115,6 @@ When no tabs are provided:
 
 - The default slot is rendered for page content
 - A bottom border is added to the header area as a separator
-
-#### `newAppearance`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Renders the new page header appearance. Instead of sitting on its own row beneath the breadcrumbs, the title is placed inline at the end of the breadcrumb row, separated from the last crumb by a caret (`&rsaquo;`). The title keeps its `<h1>` element but is scaled to match the breadcrumbs, set in a heavier weight and a stronger text color so it reads as the current item in the row.
-
-The back button (`backTo`) and the favorite star button are **not** rendered in this appearance, regardless of whether `backTo` or `pageShortcutData` are provided. Tabs, the `title-after` slot and the `actions` slot are unaffected.
-
-The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
-
-This appearance can also render an "Ask KAi" button in the page header actions. That button is driven entirely by the host application through injection rather than by props -- see [Ask KAi Button](#ask-kai-button).
 
 ### Slots
 
@@ -351,9 +339,47 @@ interface PageLayoutTab {
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
 
+## New Appearance
+
+An opt-in page header appearance, enabled by the host application through injection rather than per page.
+
+Instead of sitting on its own row beneath the breadcrumbs, the title is placed inline at the end of the breadcrumb row, separated from the last crumb by a caret (`&rsaquo;`). The title keeps its `<h1>` element but is scaled to match the breadcrumbs, set in a heavier weight and a stronger text color so it reads as the current item in the row.
+
+Other differences from the default appearance:
+
+- The back button (`backTo`) and the favorite star button are **not** rendered, regardless of whether `backTo` or `pageShortcutData` are provided.
+- The header uses tighter padding (`--kui-space-40` rather than `--kui-space-60`).
+- When there are no tabs the header is a single row, capped at `44px` tall. With tabs the header has to grow to fit the tab row, so no cap is applied. The cap includes the header's bottom border, and it is a maximum rather than a fixed height -- a sparse header stays shorter.
+- The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
+
+Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected. This appearance can also render an ["Ask KAi" button](#ask-kai-button) in the page header actions.
+
+### `page-layout:new-appearance` injection
+
+- type: `boolean | Ref<boolean> | () => boolean`
+- required: `false`
+
+Enables the new appearance when it resolves to `true`. A plain boolean, a ref or a getter are all accepted; refs and getters let the host switch appearance reactively. When the injection is missing or resolves to anything else, the default appearance is rendered.
+
+The injection key is exported from the package:
+
+```ts
+import { NEW_APPEARANCE_INJECTION_KEY } from '@kong-ui-public/page-layout'
+```
+
+```html
+<script setup lang="ts">
+import { provide } from 'vue'
+import { NEW_APPEARANCE_INJECTION_KEY } from '@kong-ui-public/page-layout'
+
+// Usually provided once at the app root so every PageLayout below it opts in
+provide(NEW_APPEARANCE_INJECTION_KEY, true)
+</script>
+```
+
 ## Ask KAi Button
 
-When [`newAppearance`](#newappearance) is enabled, `PageLayout` can render an "Ask KAi" button at the start of the page header actions. The button is a Kongponents `KButton` (`secondary`, `small`) and is controlled by the host application through two injections, so no props or events are involved.
+When the [new appearance](#new-appearance) is enabled, `PageLayout` can render an "Ask KAi" button at the start of the page header actions. The button is a Kongponents `KButton` (`tertiary`, `small`) and is controlled by the host application through two injections, so no props or events are involved.
 
 Both injection keys are exported from the package:
 
@@ -368,7 +394,7 @@ When both the button and the `actions` slot are present, a vertical separator is
 - type: `boolean | Ref<boolean> | () => boolean`
 - required: `false`
 
-Controls whether the button is rendered. A plain boolean, a ref or a getter are all accepted; refs and getters keep the button reactive to host state. The button is only rendered when this resolves to `true` **and** `newAppearance` is enabled -- it is ignored in the default appearance.
+Controls whether the button is rendered. A plain boolean, a ref or a getter are all accepted; refs and getters keep the button reactive to host state. The button is only rendered when this resolves to `true` **and** the [new appearance](#new-appearance) is enabled -- it is ignored in the default appearance.
 
 ### `page-layout:kai-button-click` injection
 
@@ -381,17 +407,17 @@ Called when the button is clicked. If no callback is provided the click is a no-
 <template>
   <PageLayout
     :breadcrumbs="breadcrumbs"
-    new-appearance
     title="GPT-4o Multi-Purpose"
   />
 </template>
 
 <script setup lang="ts">
 import { provide, ref } from 'vue'
-import { KAI_BUTTON_CLICK_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
+import { KAI_BUTTON_CLICK_INJECTION_KEY, NEW_APPEARANCE_INJECTION_KEY, SHOW_KAI_BUTTON_INJECTION_KEY } from '@kong-ui-public/page-layout'
 
 const kaiAvailable = ref<boolean>(true)
 
+provide(NEW_APPEARANCE_INJECTION_KEY, true)
 provide(SHOW_KAI_BUTTON_INJECTION_KEY, kaiAvailable)
 provide(KAI_BUTTON_CLICK_INJECTION_KEY, () => {
   openKaiPanel()
