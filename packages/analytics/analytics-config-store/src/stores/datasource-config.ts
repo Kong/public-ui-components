@@ -65,6 +65,25 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     }, {})
   })
 
+  const fieldTranslationMap = computed<Map<string, string>>(() => {
+    const result = new Map<string, string>()
+
+    if (!datasourceConfig.value) {
+      return result
+    }
+
+    for (const datasource of datasourceConfig.value) {
+      for (const field of datasource.fields) {
+        // There may be multiple fields with the same value across datasources.
+        // Until we resolve that issue, just assume that the last one wins.
+        // TODO: do we want to echo the datasource in the query meta?
+        result.set(field.name, field.label)
+      }
+    }
+
+    return result
+  })
+
   const getFieldDataSources = computed(() => {
     return (fieldName: string): string[] => {
       if (loading.value) {
@@ -161,6 +180,7 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     datasourceConfig,
     datasourceConfigError,
     datasourceConfigMap,
+    fieldTranslationMap,
     getFieldDataSources,
     isFilterValidForDatasource,
     loading,
