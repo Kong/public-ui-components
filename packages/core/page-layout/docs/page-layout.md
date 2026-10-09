@@ -347,7 +347,7 @@ Other differences from the default appearance:
 - The back button (`backTo`) is **not** rendered, regardless of whether `backTo` is provided. The favorite star button behaves as it does in the default appearance -- see [Page Shortcuts](#page-shortcuts).
 - The header uses tighter padding (`--kui-space-40` rather than `--kui-space-60`), and the tab row's horizontal padding matches it so the tabs line up with the breadcrumbs above them.
 - The header is `position: sticky` at the top of its nearest scrolling ancestor, so it (and its tab row) stays in view while the page content scrolls beneath it.
-- When there are no tabs the header is a single row with a fixed height of `44px`, including its bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
+- When there are no tabs the header is a single row with a fixed height of `45px`, including its 1px bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
 
 Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
