@@ -64,12 +64,24 @@
       @fetch:success="handleSuccess"
       @loading="handleLoading"
     />
+
+    <h2>Mock Plugin with Nested Sensitive Fields</h2>
+    <SchemaProvider :schema="mockPluginSchema">
+      <EntityBaseConfigCard
+        :config="mockPluginConfig"
+        :config-schema="{}"
+        :entity-type="SupportedEntityType.Plugin"
+        fetch-url="/{workspace}/plugins/{id}"
+        plugin-config-key="config"
+        :plugin-config-schema="mockPluginConfigSchema"
+      />
+    </SchemaProvider>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { ConfigurationSchema, KonnectBaseEntityConfig, KongManagerBaseEntityConfig } from '../../src'
+import { computed, defineComponent, ref, toRef } from 'vue'
+import type { ConfigurationSchema, KonnectBaseEntityConfig, KongManagerBaseEntityConfig, PluginConfigurationSchema } from '../../src'
 import {
   EntityBaseConfigCard,
   ConfigurationSchemaType,
@@ -136,6 +148,96 @@ const configSchema = ref<ConfigurationSchema>({
     type: ConfigurationSchemaType.Json,
   },
 })
+
+// Mirrors what `PluginConfigCard` provides to `EntityBaseConfigCard`
+const SchemaProvider = defineComponent({
+  props: {
+    schema: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props, { slots }) {
+    composables.useSchemaProvider(toRef(props, 'schema'))
+    return () => slots.default?.()
+  },
+})
+
+const authSchema = {
+  type: 'record',
+  fields: [
+    { header_name: { type: 'string' } },
+    { header_value: { type: 'string', encrypted: true } },
+  ],
+}
+const modelSchema = {
+  type: 'record',
+  fields: [
+    { name: { type: 'string' } },
+    { provider: { type: 'string' } },
+  ],
+}
+// Trimmed ai-proxy-advanced plugin schema
+const mockPluginSchema = {
+  fields: [
+    {
+      config: {
+        type: 'record',
+        fields: [
+          {
+            targets: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [{ auth: authSchema }, { model: modelSchema }],
+              },
+            },
+          },
+          {
+            embeddings: {
+              type: 'record',
+              fields: [{ auth: authSchema }, { model: modelSchema }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+const mockPluginConfigSchema: PluginConfigurationSchema = {
+  targets: { type: ConfigurationSchemaType.Json },
+  embeddings: { type: ConfigurationSchemaType.Json },
+}
+const mockPluginRecord = {
+  id: 'a1b2c3d4-0000-4000-8000-000000000001',
+  name: 'ai-proxy-advanced',
+  enabled: true,
+  protocols: ['http', 'https'],
+  created_at: 1760000000,
+  updated_at: 1760000000,
+  config: {
+    targets: [
+      {
+        auth: { header_name: 'Authorization', header_value: 'Bearer sk-target-secret' },
+        model: { name: 'gpt-4o', provider: 'openai' },
+      },
+    ],
+    embeddings: {
+      auth: { header_name: 'api-key', header_value: 'sk-embeddings-secret' },
+      model: { name: 'text-embedding-3-small', provider: 'openai' },
+    },
+  },
+}
+const mockPluginConfig: KongManagerBaseEntityConfig = {
+  app: 'kongManager',
+  workspace: 'default',
+  apiBaseUrl: '/mock',
+  entityId: mockPluginRecord.id,
+  axiosRequestConfig: {
+    // Serve the mock record without a network request
+    adapter: async (config) => ({ data: mockPluginRecord, status: 200, statusText: 'OK', headers: {}, config }),
+  },
+}
 
 const handleError = (err: any) => {
   console.log(`Error: ${err}`)
