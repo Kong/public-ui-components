@@ -3,8 +3,8 @@
     <PageLayout
       back-to="/"
       :breadcrumbs="breadcrumbs"
-      :page-shortcut-data="pageShortcutData"
-      :tabs="tabs"
+      :page-shortcut-data="showFavoriteButton ? pageShortcutData : undefined"
+      :tabs="showTabs ? tabs : []"
     >
       <template #title>
         <h1>Umbrella R&D Dev</h1>
@@ -17,7 +17,10 @@
           <MoreIcon />
         </KButton>
       </template>
-      <template #title-after>
+      <template
+        v-if="showTitleAfter"
+        #title-after
+      >
         <KBadge>Info</KBadge>
       </template>
       <template #tab-gateway-services="{ tab }">
@@ -26,6 +29,9 @@
         <KBadge size="small">
           2
         </KBadge>
+      </template>
+      <template #default>
+        <NestedPage />
       </template>
       <template #tab-keys="{ tab }">
         {{ tab.label }}
@@ -43,9 +49,13 @@
 
 <script setup lang="ts">
 import { provide, reactive } from 'vue'
-import { PageLayout } from '../../src'
+import { NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
 import type { PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
+import NestedPage from './NestedPage.vue'
+import { useSandboxControls } from '../composables/useSandboxControls'
+
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
 
 const breadcrumbs = [{
   key: 'api-gateway',
@@ -124,6 +134,10 @@ const pageShortcutsContext = reactive({
 
 provide('app:pageShortcutsContext', pageShortcutsContext)
 
+// The host app owns the appearance: PageLayout reads it through inject. Providing the
+// ref itself keeps it reactive to the sandbox toggle.
+provide(NEW_APPEARANCE_INJECTION_KEY, newAppearance)
+
 const pageShortcutData: PageShortcutData = {
   label: 'Home',
   path: '/',
@@ -133,7 +147,11 @@ const pageShortcutData: PageShortcutData = {
 
 <style lang="scss" scoped>
 .page-layout-sandbox-wrapper {
-  overflow-x: auto;
+  // `overflow-x: auto` computes `overflow-y` to `auto` too, which makes this element the
+  // nearest scroll container for the sticky header inside it. Bounding the height gives it
+  // something to actually scroll, so the sticky behaviour is demonstrable here.
+  max-height: 80vh;
+  overflow: auto;
   resize: horizontal;
   width: 90%;
 }

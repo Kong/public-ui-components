@@ -23,6 +23,35 @@ describe('<SandboxLayout />', () => {
       })
     })
 
+    describe('navigation-after', () => {
+      it('renders navigation-after slot content in the navigation sidebar', () => {
+        const slotText = 'This is the content'
+        const navigationAfterText = 'This is the navigation-after content'
+
+        cy.mount(SandboxLayout, {
+          slots: {
+            default: () => h('div', { 'data-testid': 'default-slot-content' }, slotText),
+            'navigation-after': () => h('div', { 'data-testid': 'navigation-after-slot-content' }, navigationAfterText),
+          },
+        })
+
+        cy.get('.desktop-nav-container')
+          .findTestId('navigation-after-slot-content')
+          .should('be.visible')
+          .and('contain.text', navigationAfterText)
+      })
+
+      it('does not render the navigation-after container when no content is provided', () => {
+        cy.mount(SandboxLayout, {
+          slots: {
+            default: () => h('div', { 'data-testid': 'default-slot-content' }, 'This is the content'),
+          },
+        })
+
+        cy.get('.navigation-after').should('not.exist')
+      })
+    })
+
     describe('controls', () => {
       it('renders controls slot content', () => {
         const slotText = 'This is the content'
