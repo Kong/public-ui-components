@@ -218,6 +218,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         tag: 'KCopy',
         attrs: {
           'data-testid': `${props.item.key}-copy-uuid-redacted`,
+          'data-dd-privacy': 'mask',
           format: redactedFormat.value,
           'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
           text: props.item.value,
@@ -229,6 +230,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         tag: 'div',
         additionalComponent: 'KCopy',
         childAttrs: {
+          'data-dd-privacy': 'mask',
           format: redactedFormat.value,
           'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
         },
@@ -337,6 +339,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
           tag: 'KCodeBlock',
           attrs: {
             'data-testid': `${props.item.key}-json-code`,
+            'data-dd-privacy': 'mask',
             id: `json-code-${uniqueId}`,
             language: 'json',
             code: JSON.stringify(showSensitiveFields.value ? props.item.value : redactByApiSchema(props.item.value, schema.value), null, '  '),

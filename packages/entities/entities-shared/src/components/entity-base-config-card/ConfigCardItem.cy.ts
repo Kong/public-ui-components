@@ -401,6 +401,7 @@ describe('<ConfigCardItem />', () => {
         })
 
         cy.getTestId('0-json-code').should('be.visible')
+        cy.getTestId('0-json-code').should('have.attr', 'data-dd-privacy', 'mask')
         cy.getTestId('0-json-code').should('contain.text', REDACTED_MASK)
         cy.getTestId('0-json-code').should('contain.text', 'Authorization')
         cy.getTestId('0-json-code').should('not.contain.text', 'sk-target-secret')
@@ -593,6 +594,7 @@ describe('<ConfigCardItem />', () => {
 
         cy.get('.config-card-details-row').should('be.visible')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('be.visible')
+        cy.getTestId(`${item.key}-copy-uuid-redacted`).should('have.attr', 'data-dd-privacy', 'mask')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('contain.text', '*')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('not.contain.text', val)
       })
@@ -616,6 +618,7 @@ describe('<ConfigCardItem />', () => {
         cy.getTestId(`${item.key}-copy-uuid-array`).should('be.visible')
         ids.forEach((id: string, idx: number) => {
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('be.visible')
+          cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('have.attr', 'data-dd-privacy', 'mask')
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('contain.text', '*')
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('not.contain.text', id)
         })
