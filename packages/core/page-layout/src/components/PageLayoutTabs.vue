@@ -92,14 +92,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toValue, useTemplateRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
-import { KUI_SPACE_60, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { KUI_SPACE_40, KUI_SPACE_60, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useResizeObserver } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 import { inject } from 'vue'
 import { ChevronDownIcon } from '@kong/icons'
+import { NEW_APPEARANCE_INJECTION_KEY } from '../symbols'
 
 const {
   tabs = [],
@@ -126,7 +128,11 @@ const onTabNavigation = (tab: PageLayoutTab) => {
   navigateTo(tab.to)
 }
 
-const TABS_HORIZONTAL_PADDING = KUI_SPACE_60
+// Read the same injection as PageLayout so the tab row lines up with the header above it
+const newAppearanceInjection = inject<MaybeRefOrGetter<boolean> | null>(NEW_APPEARANCE_INJECTION_KEY, null)
+const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
+
+const tabsHorizontalPadding = computed((): string => newAppearance.value ? KUI_SPACE_40 : KUI_SPACE_60)
 
 const pageLayoutTabsRef = useTemplateRef('page-layout-tabs')
 const pageLayoutTabsListRef = useTemplateRef('page-layout-tabs-list')
@@ -151,7 +157,7 @@ const computeTabLayoutOverflow = async (): Promise<void> => {
   // Wait for initial render
   await nextTick()
 
-  const containerWidth = pageLayoutTabsRef.value?.getBoundingClientRect().width - (parseInt(TABS_HORIZONTAL_PADDING) * 2)
+  const containerWidth = pageLayoutTabsRef.value?.getBoundingClientRect().width - (parseInt(tabsHorizontalPadding.value) * 2)
   let listWidth = pageLayoutTabsListRef.value?.getBoundingClientRect().width
 
   if (!containerWidth || !listWidth) {
@@ -200,6 +206,12 @@ onBeforeUnmount(() => {
 watch(() => tabs, () => {
   computeTabLayoutOverflow()
 }, { deep: true })
+
+// The padding feeds into the available width, so the overflow has to be recomputed
+// when the appearance changes
+watch(tabsHorizontalPadding, () => {
+  computeTabLayoutOverflow()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -212,7 +224,7 @@ watch(() => tabs, () => {
   display: flex;
   height: $tabs-navbar-height;
   overflow-x: clip;
-  padding: var(--kui-space-0, $kui-space-0) v-bind('TABS_HORIZONTAL_PADDING');
+  padding: var(--kui-space-0, $kui-space-0) v-bind('tabsHorizontalPadding');
   position: relative;
   width: 100%;
 
@@ -290,7 +302,7 @@ watch(() => tabs, () => {
     gap: var(--kui-space-70, $kui-space-70);
     height: $tabs-navbar-height;
     inset: 0;
-    left: v-bind('TABS_HORIZONTAL_PADDING');
+    left: v-bind('tabsHorizontalPadding');
     position: absolute;
   }
 }

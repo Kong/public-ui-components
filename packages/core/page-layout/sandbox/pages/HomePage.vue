@@ -147,7 +147,11 @@ const pageShortcutData: PageShortcutData = {
 
 <style lang="scss" scoped>
 .page-layout-sandbox-wrapper {
-  overflow-x: auto;
+  // `overflow-x: auto` computes `overflow-y` to `auto` too, which makes this element the
+  // nearest scroll container for the sticky header inside it. Bounding the height gives it
+  // something to actually scroll, so the sticky behaviour is demonstrable here.
+  max-height: 80vh;
+  overflow: auto;
   resize: horizontal;
   width: 90%;
 }

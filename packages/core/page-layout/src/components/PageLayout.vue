@@ -386,6 +386,14 @@ $page-layout-header-height: 45px;
   // New appearance: the title moves up into the breadcrumb row, sitting after the caret
   // that KBreadcrumbs renders following the last crumb.
   &.new-appearance {
+    // Keep the header (and its tab row) in view while the page content scrolls beneath
+    // it. The header already paints its own background, so content does not show through.
+    .page-layout-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
     // Selectors mirror the default appearance's nesting depth so these rules win on
     // specificity rather than relying on source order.
     .page-layout-header .page-header-container {

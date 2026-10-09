@@ -607,6 +607,32 @@ describe('<PageLayout />', () => {
       })
     })
 
+    describe('sticky header', () => {
+      it('makes the header sticky', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          const styles = getComputedStyle($header[0])
+
+          expect(styles.position).to.equal('sticky')
+          expect(styles.top).to.equal('0px')
+        })
+      })
+
+      it('does not make the header sticky in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect(getComputedStyle($header[0]).position).to.not.equal('sticky')
+        })
+      })
+    })
+
     describe('header height', () => {
       it('fixes the header height when there are no tabs', () => {
         mountWithRouter(PageLayout, {
