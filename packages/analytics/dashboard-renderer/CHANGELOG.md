@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.0.2...%40kong-ui-public%2Fdashboard-renderer%409.0.3) (2026-10-09)
+
+### Bug Fixes
+
+* **dashboard-renderer:** bundle table-data-grid and echarts [MA-5549] ([#3908](https://github.com/Kong/public-ui-components/issues/3908)) ([5aba57d](https://github.com/Kong/public-ui-components/commit/5aba57d8cd0d6a9e40cb972eba5f55f1b3154ef7))
+
+
 ## [9.0.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.0.1...%40kong-ui-public%2Fdashboard-renderer%409.0.2) (2026-10-09)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
