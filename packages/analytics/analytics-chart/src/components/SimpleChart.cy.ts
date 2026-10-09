@@ -2,6 +2,7 @@
 import { ChartLegendPosition } from '../enums/'
 import SimpleChart from './SimpleChart.vue'
 import { emptyExploreResult } from '../../fixtures/mockData'
+import { createPinia, setActivePinia } from 'pinia'
 
 const exploreResultTruncated = {
   data: [
@@ -33,6 +34,10 @@ const exploreResultTruncated = {
 }
 
 describe('<SimpleChart />', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('shows the empty state with no data', () => {
     cy.mount(SimpleChart, {
       props: {

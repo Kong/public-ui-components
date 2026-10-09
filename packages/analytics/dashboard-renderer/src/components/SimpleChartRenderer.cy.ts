@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { createPinia, setActivePinia } from 'pinia'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 
@@ -18,6 +19,10 @@ const data: ExploreResultV4 = {
 }
 
 describe('<SimpleChartRenderer />', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders the current value and left-aligned trend for trend granularity', () => {
     cy.mount(SimpleChartRenderer, {
       props: {

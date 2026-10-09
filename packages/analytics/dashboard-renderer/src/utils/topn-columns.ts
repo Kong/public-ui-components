@@ -177,10 +177,12 @@ export const createTopNPresentation = ({
   data,
   columnOptions,
   i18n,
+  fieldTranslationMap,
 }: {
   data?: ExploreResultV4
   columnOptions?: TopNColumnOptionsMap
   i18n: IntlShapeEx<typeof english>
+  fieldTranslationMap: Map<string, string>
 }): TopNPresentation => {
   const { formatUnit } = unitFormatter({ i18n })
   const records = data?.data ?? []
@@ -191,6 +193,12 @@ export const createTopNPresentation = ({
   const firstMetric = metricKeys[0]
   const hasMultipleDimensions = displayKeys.length > 1
   const getChartLabel = (key: string): string => {
+    const configLabel = fieldTranslationMap.get(key)
+
+    if (configLabel) {
+      return configLabel
+    }
+
     const translationKey = `chartLabels.${key}`
 
     return i18n.messages[translationKey]

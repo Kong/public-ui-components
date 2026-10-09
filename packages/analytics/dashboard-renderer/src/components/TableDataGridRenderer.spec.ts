@@ -193,6 +193,7 @@ describe('TableDataGridRenderer', () => {
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
       isReady,
       stripUnknownFilters: ({ filters }: { filters: unknown[] }) => filters,
+      fieldTranslationMap: new Map<string, string>(),
     } as any)
   })
 
@@ -239,6 +240,19 @@ describe('TableDataGridRenderer', () => {
       refreshKey: expect.stringContaining('"refreshCounter":3'),
     }))
     expect(tableDataGridProps.mock.calls[0][0].fetcher).toEqual(expect.any(Function))
+  })
+
+  it('prefers datasource config labels for table headers', async () => {
+    vi.mocked(useDatasourceConfigStore).mockReturnValue({
+      isReady,
+      stripUnknownFilters: ({ filters }: { filters: unknown[] }) => filters,
+      fieldTranslationMap: new Map([['control_plane', 'Custom control plane']]),
+    } as any)
+
+    const wrapper = mountRenderer()
+    await flushPromises()
+
+    expect(wrapper.getTestId('table-data-grid-stub').text()).toBe('Custom control plane')
   })
 
   it('updates the table refresh key when the table query entity changes', async () => {

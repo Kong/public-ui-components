@@ -154,6 +154,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import ScatterChart from './chart-types/ScatterChart.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 interface ChartProps {
   chartData: ExploreResultV4 | ScatterChartData
@@ -194,6 +195,8 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+
+const datasourceConfigStore = useDatasourceConfigStore()
 
 const instanceUuid = ref<string>(crypto.randomUUID())
 watch(() => props.chartOptions.type, () => {
@@ -440,6 +443,12 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
     return undefined
   }
 
+  const datasourceLabel = datasourceConfigStore.fieldTranslationMap.get(metricName)
+
+  if (datasourceLabel) {
+    return datasourceLabel
+  }
+
   // @ts-ignore - dynamic i18n key
   if (isNoSuffixMetric(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
     // @ts-ignore - dynamic i18n key
@@ -504,16 +513,28 @@ const metricGroupTitle = (metricNames: string[], metricUnits: NonNullable<Shared
 }
 
 const metricTitle = (metricName: string, metricUnit: string): string | undefined => {
-  // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`)) {
-    if (isNoSuffixMetric(metricUnit)) {
+  const datasourceLabel = datasourceConfigStore.fieldTranslationMap.get(metricName)
+
+  if (isNoSuffixMetric(metricUnit)) {
+    if (datasourceLabel) {
+      return datasourceLabel
+    }
+
+    // @ts-ignore - dynamic i18n key
+    if (i18n.te(`metricAxisTitles.${metricName}`)) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`metricAxisTitles.${metricName}`) || undefined
     }
+  } else {
     // @ts-ignore - dynamic i18n key
     const unit = i18n.te(`chartUnits.${metricUnit}`) ? i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) : metricUnit
-    // @ts-ignore - dynamic i18n key
-    return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
+
+    if (datasourceLabel) {
+      return `${datasourceLabel} (${unit})`
+    } else {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
+    }
   }
 
   return metricName || undefined
@@ -531,8 +552,9 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
-  // @ts-ignore - dynamic i18n key
-  return i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension
+  return datasourceConfigStore.fieldTranslationMap.get(dimension) ||
+    // @ts-ignore - dynamic i18n key
+    (i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension)
 })
 
 const timestampAxisTitle = computed(() => {

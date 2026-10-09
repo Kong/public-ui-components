@@ -1,7 +1,9 @@
 import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import {
   KUI_STATUS_COLOR_100,
   KUI_STATUS_COLOR_200,
@@ -13,6 +15,10 @@ import useExploreResultToDatasets from './useExploreResultToDatasets'
 import { defaultStatusCodeColors } from '../utils'
 
 describe('useVitalsExploreDatasets', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('can handle empty records', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [] as GroupByResult[],
@@ -338,6 +344,59 @@ describe('useVitalsExploreDatasets', () => {
         labels: ['Request count'],
         datasets: [
           expect.objectContaining({ label: 'Request count', data: [1], isSegmentEmpty: false }),
+        ],
+        isLabelEmpty: [false],
+        isMultiDimension: false,
+      },
+    )
+  })
+
+  it('prefers datasource config labels over i18n translations', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'request_count',
+        label: 'Custom request count',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: '2022-01-01T01:01:02Z',
+          event: {
+            request_count: 1,
+          },
+        },
+      ],
+      meta: {
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
+        granularity_ms: 8000,
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
+        truncated: false,
+        limit: 15,
+        display: {},
+      },
+    }))
+    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+    expect(result.value).toEqual(
+      {
+        labels: ['Custom request count'],
+        datasets: [
+          expect.objectContaining({ label: 'Custom request count', data: [1], isSegmentEmpty: false }),
         ],
         isLabelEmpty: [false],
         isMultiDimension: false,

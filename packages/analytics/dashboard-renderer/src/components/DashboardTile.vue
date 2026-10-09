@@ -527,9 +527,10 @@ const isChartLabel = (name: string): name is keyof typeof english.chartLabels =>
 
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,
-  label: isChartLabel(value)
-    ? i18n.t(`chartLabels.${value}`)
-    : value,
+  label: datasourceConfigStore.fieldTranslationMap.get(value)
+    ?? (isChartLabel(value)
+      ? i18n.t(`chartLabels.${value}`)
+      : value),
 })))
 
 const isAgedOutQuery = computed(() => {

@@ -91,6 +91,7 @@ const headers = computed(() => tableDataGridHeadersByDatasource[props.query.data
   columns: props.query.columns?.length ? props.query.columns : responseMetaColumns.value,
   translate: key => i18n.t(key as any) as string,
   canTranslate: key => i18n.te(key as any),
+  fieldTranslationMap: datasourceConfigStore.fieldTranslationMap,
 }))
 
 const fetcher = computed<TableDataGridFetcher<TableDataGridRow>>(() => async ({ cursor, pageSize }) => {

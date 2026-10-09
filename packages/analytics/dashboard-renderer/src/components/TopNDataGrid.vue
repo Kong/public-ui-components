@@ -64,6 +64,7 @@ import { computed, defineAsyncComponent, inject } from 'vue'
 import { TableDataGrid } from '@kong-ui-public/table-data-grid'
 import '@kong-ui-public/table-data-grid/dist/style.css'
 import { WarningOutlineIcon } from '@kong/icons'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import composables from '../composables'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
 import { createTopNGridRows, createTopNPresentation, getTopNProviderIcon, type TopNGridRow } from '../utils/topn-columns'
@@ -77,6 +78,7 @@ const { chartOptions, data, fitToContent = false, height } = defineProps<{
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+const datasourceConfigStore = useDatasourceConfigStore()
 const { i18n } = composables.useI18n()
 
 // Derive rows once per response; a new array on every render would reset AG Grid's row data.
@@ -85,6 +87,7 @@ const presentation = computed(() => createTopNPresentation({
   data,
   columnOptions: chartOptions.column_options,
   i18n,
+  fieldTranslationMap: datasourceConfigStore.fieldTranslationMap,
 }))
 const headers = computed(() => presentation.value.headers.map(header => ({
   ...header,

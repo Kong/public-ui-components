@@ -43,28 +43,33 @@ const platformTabularResponseToTableDataGridRows = (
 
 /**
  * Builds platform table headers from configured or response-provided column names.
- * Known chart label translations are reused for user-facing labels, with the raw column as fallback.
+ * Datasource config labels are preferred, falling back to known chart label translations,
+ * then the raw column name.
  *
  * @param options - Header builder options.
  * @param options.canTranslate - Checks whether a chart label translation exists for a column key.
  * @param options.columns - Column keys to expose as TableDataGrid headers.
  * @param options.translate - Resolves a translation key into a display label.
+ * @param options.fieldTranslationMap - Field name to label map from the datasource config store.
  * @returns TableDataGrid header definitions for the provided columns.
  */
 const platformTableDataGridHeaders = ({
   canTranslate,
   columns,
   translate,
+  fieldTranslationMap,
 }: {
   canTranslate: (key: string) => boolean
   columns: string[]
   translate: (key: string) => string
+  fieldTranslationMap?: Map<string, string>
 }): Array<TableDataGridHeader<TableDataGridRow>> => columns.map(column => {
   const labelKey = `chartLabels.${column}`
+  const configLabel = fieldTranslationMap?.get(column)
 
   return {
     key: column,
-    label: canTranslate(labelKey) ? translate(labelKey) : column,
+    label: configLabel || (canTranslate(labelKey) ? translate(labelKey) : column),
   }
 })
 

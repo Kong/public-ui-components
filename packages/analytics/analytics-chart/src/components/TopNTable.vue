@@ -202,6 +202,7 @@ import type { TopNColumnOptionsMap, TopNColumnStats, TopNThresholdType } from '.
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import composables from '../composables'
 import { isNoSuffixMetric } from '../utils'
 import {
@@ -268,6 +269,7 @@ const props = withDefaults(defineProps<{
 
 const { i18n } = composables.useI18n()
 const { formatUnit } = unitFormatter({ i18n })
+const datasourceConfigStore = useDatasourceConfigStore()
 
 const records = computed((): AnalyticsExploreRecord[] => props.data.data)
 const hasData = computed((): boolean => !!(records.value?.length))
@@ -578,7 +580,8 @@ const getDimensionSlotRecord = (row: TopNRow, key: string) => {
 }
 
 const getChartLabel = (key: string): string => {
-  return i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key
+  return datasourceConfigStore.fieldTranslationMap.get(key) ||
+    (i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key)
 }
 
 const translateChartUnit = (unit: string, value: number): string => {

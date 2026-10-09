@@ -1,5 +1,6 @@
 import TopNTable from './TopNTable.vue'
 import { getActivePalette } from '@kong-ui-public/analytics-utilities/coordination'
+import { createPinia, setActivePinia } from 'pinia'
 
 const ROUTE_ID = 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6'
 const ROUTE_NAME = 'GetMeAKongDefault (secondaryRuntime)'
@@ -276,6 +277,10 @@ const TITLE = 'Top 5 Routes'
 const DESCRIPTION = 'Last 30-Day Summary'
 
 describe('<TopNTable />', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('correctly renders explore prop data', () => {
     cy.mount(TopNTable, {
       props: {

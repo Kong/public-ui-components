@@ -71,6 +71,27 @@ describe('table data grid renderer utilities', () => {
     expect(tableDataGridHeadersByDatasource.platform_usage(args)).toEqual(expected)
   })
 
+  it('prefers datasource config labels over i18n translations', () => {
+    const translate = (key: string): string => ({
+      'chartLabels.control_plane': 'Control plane',
+    })[key] ?? key
+
+    const canTranslate = (key: string): boolean => key !== 'chartLabels.unknown_column'
+    const fieldTranslationMap = new Map([
+      ['control_plane', 'Custom control plane'],
+      ['unknown_column', 'Custom unknown column'],
+    ])
+
+    const expected = [
+      { key: 'control_plane', label: 'Custom control plane' },
+      { key: 'unknown_column', label: 'Custom unknown column' },
+    ]
+    const args = { columns: ['control_plane', 'unknown_column'], translate, canTranslate, fieldTranslationMap }
+
+    expect(tableDataGridHeadersByDatasource.platform(args)).toEqual(expected)
+    expect(tableDataGridHeadersByDatasource.platform_usage(args)).toEqual(expected)
+  })
+
   it('selects the platform fetcher and fetches tabular data with a datasource-aware query', async () => {
     const tabularQueryFn = vi.fn().mockResolvedValue(response)
     const abortController = new AbortController()

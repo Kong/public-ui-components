@@ -1,4 +1,7 @@
 import SingleValue from './SingleValue.vue'
+import { INJECT_QUERY_PROVIDER } from '../../constants'
+import { createPinia, setActivePinia } from 'pinia'
+import type { DatasourceConfig } from '@kong-ui-public/analytics-utilities'
 
 const buildExploreResult = ({
   previous = 10,
@@ -40,6 +43,10 @@ const buildExploreResult = ({
 })
 
 describe('<SingleValue />', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('left-aligns the value and trend by default and responds to alignment changes', () => {
     cy.mount(SingleValue, {
       props: {
@@ -408,5 +415,45 @@ describe('<SingleValue />', () => {
         expect(text.trim()).to.not.equal('')
         expect(text.trim()).to.equal('vs previous 12 hours')
       })
+  })
+
+  it('prefers labels from the datasource config store', () => {
+    const datasourceConfig: DatasourceConfig[] = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'request_per_minute',
+        label: 'Custom RPM label',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    cy.mount(SingleValue, {
+      props: {
+        data: buildExploreResult(),
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            datasourceConfigFn: () => Promise.resolve(datasourceConfig),
+          },
+        },
+      },
+    })
+
+    cy.get('.single-value-metric-name').should('have.text', 'Custom RPM label')
+  })
+
+  it('falls back to i18n labels when the metric is not in the datasource config', () => {
+    cy.mount(SingleValue, {
+      props: {
+        data: buildExploreResult(),
+      },
+    })
+
+    cy.get('.single-value-metric-name').should('have.text', 'Requests per minute')
   })
 })

@@ -10,6 +10,7 @@ import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 import useI18n from './useI18n'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { isNoSuffixMetric } from '../utils'
 import { getColumnOptions, getColumnStats, getRelativeValue, getThresholdType, toNumber } from '../utils/topn-columns'
 import { EMPTY_DIMENSION_ID, OTHER_DIMENSION_ID } from '../constants'
@@ -25,6 +26,7 @@ export default function useTopTalkersData(
 ) {
   const { i18n } = useI18n()
   const { formatUnit } = unitFormatter({ i18n })
+  const datasourceConfigStore = useDatasourceConfigStore()
 
   const paintColumn = (ordered: UnpaintedCell[]): TopTalkersCellData[] => {
     return ordered.map((cell) => {
@@ -86,7 +88,8 @@ export default function useTopTalkersData(
   }
 
   const getChartLabel = (key: string): string => {
-    return i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key
+    return datasourceConfigStore.fieldTranslationMap.get(key) ||
+      (i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key)
   }
 
   const getLabel = (key: string): string => {

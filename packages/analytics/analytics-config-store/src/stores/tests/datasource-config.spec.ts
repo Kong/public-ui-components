@@ -16,6 +16,7 @@ describe('useDatasourceConfigStore', () => {
       fields: [
         {
           name: 'status_code',
+          label: 'Status code',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -27,6 +28,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'gateway_service',
+          label: 'Gateway service',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -38,6 +40,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'route',
+          label: 'Route',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -49,6 +52,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'consumer',
+          label: 'Consumer',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -60,6 +64,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'request_count',
+          label: 'Request count',
           showInUI: true,
           aggregation: true,
           group: false,
@@ -67,6 +72,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'request_size',
+          label: 'Request size',
           showInUI: true,
           aggregation: true,
           group: false,
@@ -75,6 +81,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'error_rate',
+          label: 'Error rate',
           showInUI: true,
           aggregation: true,
           group: false,
@@ -83,6 +90,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'consumer_count',
+          label: 'Consumer count',
           showInUI: true,
           aggregation: true,
           group: false,
@@ -91,6 +99,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'no_dimensions_metric',
+          label: 'No dimensions metric',
           showInUI: true,
           aggregation: true,
           group: false,
@@ -106,6 +115,7 @@ describe('useDatasourceConfigStore', () => {
       fields: [
         {
           name: 'status_code',
+          label: 'Response code',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -117,6 +127,7 @@ describe('useDatasourceConfigStore', () => {
         },
         {
           name: 'route',
+          label: 'Route',
           showInUI: true,
           aggregation: false,
           group: true,
@@ -218,6 +229,42 @@ describe('useDatasourceConfigStore', () => {
 
     expect(store.loading).toBe(false)
     expect(store.datasourceConfig).toEqual(datasourceConfigFixture)
+  })
+
+  describe('fieldTranslationMap', () => {
+    it('is empty while the config is loading', () => {
+      const store = useStore()
+
+      expect(store.loading).toBe(true)
+      expect(store.fieldTranslationMap.size).toBe(0)
+    })
+
+    it('maps field names to labels', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      expect(store.fieldTranslationMap.get('request_count')).toBe('Request count')
+      expect(store.fieldTranslationMap.get('request_size')).toBe('Request size')
+      expect(store.fieldTranslationMap.get('route')).toBe('Route')
+    })
+
+    it('lets the last datasource with a duplicate field name win', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      // `status_code` exists in both `api_usage` and `requests`; the last one wins.
+      expect(store.fieldTranslationMap.get('status_code')).toBe('Response code')
+    })
+
+    it('is empty when the config fetch fails', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const store = useStore({ reject: true })
+
+      await store.isReady()
+
+      expect(store.fieldTranslationMap.size).toBe(0)
+      warnSpy.mockRestore()
+    })
   })
 
   it('isReady resolves even if the config fetch fails', async () => {

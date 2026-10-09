@@ -1,8 +1,10 @@
 import type { AllAggregations, ExploreResultV4, GroupByResult, MetricUnit } from '@kong-ui-public/analytics-utilities'
 import type { TopNColumnOptionsMap } from '../utils/topn-columns'
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { ref } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 import useTopTalkersData from './useTopTalkersData'
 import { OTHER_DIMENSION_ID } from '../constants'
@@ -40,6 +42,10 @@ const build = (result: ExploreResultV4 | undefined, options?: TopNColumnOptionsM
   useTopTalkersData(ref(result), ref(DIMENSION), ref(sizeMetric), ref(options))
 
 describe('useTopTalkersData', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('sizes cells by each row\'s share of the column total', () => {
     const { cells } = build(makeResult([
       { id: 'a', requests: 50 },
@@ -59,6 +65,31 @@ describe('useTopTalkersData', () => {
 
     expect(column.value.total).toBe('10')
     expect(cells.value.reduce((sum, cell) => sum + cell.ratio, 0)).toBe(1)
+  })
+
+  it('prefers datasource config labels over i18n translations', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'llm_model',
+        label: 'Custom dimension label',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    const { column } = build(makeResult([
+      { id: 'a', requests: 2 },
+    ]))
+
+    expect(column.value.label).toBe('Custom dimension label')
   })
 
   it('pins the OTHER bucket last and flags it', () => {

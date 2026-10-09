@@ -118,9 +118,17 @@ import {
 } from '@kong-ui-public/analytics-utilities'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { CsvData, Header, TimeseriesColumn } from '../types/csv-export'
 
 const { i18n } = composables.useI18n()
+const datasourceConfigStore = useDatasourceConfigStore()
+
+const fieldLabel = (key: string): string => {
+  return datasourceConfigStore.fieldTranslationMap.get(key)
+    // @ts-ignore - dynamic i18n key
+    ?? (i18n.te(`chartLabels.${key}`) ? i18n.t(`chartLabels.${key}`) : key)
+}
 
 const props = withDefaults(defineProps<{
   exportState: ExploreExportState
@@ -227,13 +235,11 @@ const tableData = computed(() => {
   const displayHeaders: Header[] = [
     ...timeseriesColumns,
     ...Object.keys(dimensions).map(key => ({
-      // @ts-ignore - dynamic i18n key
-      label: i18n.t(`chartLabels.${key}`),
+      label: fieldLabel(key),
       key,
     })),
     ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
-      // @ts-ignore - dynamic i18n key
-      label: i18n.t(`chartLabels.${key}`),
+      label: fieldLabel(key),
       key,
     })),
   ]

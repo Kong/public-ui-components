@@ -10,6 +10,8 @@ import {
 } from './topn-columns'
 
 const i18n = createI18n<typeof english>('en-us', english)
+const emptyLabelMapping = new Map<string, string>()
+
 describe('createTopNPresentation', () => {
   const data: ExploreResultV4 = {
     meta: {
@@ -43,6 +45,7 @@ describe('createTopNPresentation', () => {
         REQUEST_COUNT: { value: 'relative', bar: 'max' },
       },
       i18n,
+      fieldTranslationMap: emptyLabelMapping,
     })
 
     expect(presentation.headers.map((header) => header.key)).toEqual(['ROUTE', 'GATEWAY_SERVICE', 'REQUEST_COUNT', '4XX'])
@@ -86,7 +89,7 @@ describe('createTopNPresentation', () => {
       ...english,
       chartUnits: { ...english.chartUnits, ms: 'millisecond{plural}' },
     })
-    const presentation = createTopNPresentation({ data: unitData, i18n: translatedI18n })
+    const presentation = createTopNPresentation({ data: unitData, i18n: translatedI18n, fieldTranslationMap: emptyLabelMapping })
     const [row] = createTopNGridRows(unitData)
 
     expect(presentation.headers.find(header => header.key === 'REQUEST_COUNT')?.valueFormatter?.(value, row)).toBe(expected)
@@ -100,7 +103,7 @@ describe('createTopNPresentation', () => {
       ],
     }
     const rows = createTopNGridRows(emptyData)
-    const presentation = createTopNPresentation({ data: emptyData, i18n })
+    const presentation = createTopNPresentation({ data: emptyData, i18n, fieldTranslationMap: emptyLabelMapping })
 
     expect(
       presentation.getDimension(rows[0], 'ROUTE'),
@@ -127,7 +130,7 @@ describe('createTopNPresentation', () => {
       },
     }
 
-    const translated = createTopNPresentation({ data: lowercaseData, i18n })
+    const translated = createTopNPresentation({ data: lowercaseData, i18n, fieldTranslationMap: emptyLabelMapping })
     const custom = createTopNPresentation({
       data: lowercaseData,
       columnOptions: {
@@ -136,9 +139,38 @@ describe('createTopNPresentation', () => {
         request_count: { label: 'Requests' },
       },
       i18n,
+      fieldTranslationMap: emptyLabelMapping,
     })
 
     expect(translated.headers.map((header) => header.label)).toEqual(['Consumer group', 'Principal', 'Request count'])
     expect(custom.headers.map((header) => header.label)).toEqual(['Group', 'Identity', 'Requests'])
+  })
+
+  it('prefers datasource config labels over i18n translations', () => {
+    const fieldTranslationMap = new Map([
+      ['route', 'Custom route label'],
+      ['gateway_service', 'Custom gateway label'],
+      ['REQUEST_COUNT', 'Custom request label'],
+    ])
+
+    const presentation = createTopNPresentation({
+      data: {
+        ...data,
+        data: [{
+          event: { route: 'route1', gateway_service: 'service1', REQUEST_COUNT: 3 },
+          timestamp: '',
+        }],
+        meta: {
+          ...data.meta,
+          display: { route: { route1: { name: 'Route 1' } }, gateway_service: { service1: { name: 'Service 1' } } },
+          metric_names: ['REQUEST_COUNT'],
+          metric_units: { REQUEST_COUNT: 'count' },
+        },
+      },
+      i18n,
+      fieldTranslationMap,
+    })
+
+    expect(presentation.headers.map((header) => header.label)).toEqual(['Custom route label', 'Custom gateway label', 'Custom request label'])
   })
 })

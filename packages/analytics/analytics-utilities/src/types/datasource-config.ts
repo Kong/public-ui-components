@@ -31,6 +31,7 @@ export type FieldFilter =
 
 export interface Field {
   name: string
+  label: string
   showInUI: boolean
   aggregation: boolean
   group: boolean
