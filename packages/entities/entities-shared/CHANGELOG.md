@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.70.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.69.2...%40kong-ui-public%2Fentities-shared%403.70.0) (2026-10-09)
+
+### Features
+
+* **entities-shared:** mask nested sensitive fields in structured config view ([#3913](https://github.com/Kong/public-ui-components/issues/3913)) ([1b1e25c](https://github.com/Kong/public-ui-components/commit/1b1e25cfda741a378c0be32e262eae95df2e8082))
+
+
 ## [3.69.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.69.1...%40kong-ui-public%2Fentities-shared%403.69.2) (2026-10-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
