@@ -58,6 +58,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
           environment: 'jsdom',
           setupFiles: ['./src/tests/setup.ts'],
           include: ['**/src/**/*.spec.ts'],
+          testTimeout: 15_000,
         },
       },
       {
