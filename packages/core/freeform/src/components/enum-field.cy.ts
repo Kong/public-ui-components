@@ -258,4 +258,21 @@ describe('EnumField', () => {
         .should('have.class', 'ff-version-compatibility-note')
     })
   })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      cy.mount(() => h(Form, {
+        schema: getMultiEnumSchema(),
+        onChange: cy.spy().as('onChangeSpy'),
+      }, {
+        default: () => h(EnumField, { name: FIELD_NAME, multiple: true }, {
+          label: (slotProps: { label: string }) => h('span', { 'data-testid': 'custom-label' }, `Custom: ${slotProps.label}`),
+        }),
+      }))
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Protocols')
+    })
+  })
 })

@@ -18,7 +18,7 @@ describe('stripUnknownFilters', () => {
   // a filter that's only in the api_usage datasource
   const advancedFilter = {
     operator: 'in',
-    field: 'upstream_status_code',
+    field: 'country_code',
     value: ['foo'],
   }
 

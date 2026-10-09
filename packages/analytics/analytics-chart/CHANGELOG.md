@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.41.0...%40kong-ui-public%2Fanalytics-chart%4011.0.0) (2026-10-08)
+
+### Features
+
+* **analytics:** split entry analytics-utilities [MA-5551] ([#3911](https://github.com/Kong/public-ui-components/issues/3911)) ([1f0f385](https://github.com/Kong/public-ui-components/commit/1f0f3859481fa1394d99c3b511e8e8b33f34551b))
+
+### BREAKING CHANGES
+
+* **analytics:** color util and coordination composable are now exported behind @kong-ui-public/analytics-utilities/coordination
+
+
+# [10.41.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.3...%40kong-ui-public%2Fanalytics-chart%4010.41.0) (2026-10-08)
+
+### Features
+
+* add LLM latency percentiles MA-5513 ([#3909](https://github.com/Kong/public-ui-components/issues/3909)) ([09837f3](https://github.com/Kong/public-ui-components/commit/09837f3c0d4c7f5a87dc78730e9a5a159c124c6a))
+
+
+## [10.40.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.2...%40kong-ui-public%2Fanalytics-chart%4010.40.3) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.40.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.1...%40kong-ui-public%2Fanalytics-chart%4010.40.2) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.40.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.40.0...%40kong-ui-public%2Fanalytics-chart%4010.40.1) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 # [10.40.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.39.1...%40kong-ui-public%2Fanalytics-chart%4010.40.0) (2026-10-01)
 
 ### Features

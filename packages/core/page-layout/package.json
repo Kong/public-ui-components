@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "1.1.13",
+  "version": "1.1.15",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",
@@ -43,7 +43,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/icons": "^1.62.1",
-    "@kong/kongponents": "9.64.18",
+    "@kong/kongponents": "9.64.23",
     "vue": "^3.5.41",
     "vue-router": "^5.3.1"
   },

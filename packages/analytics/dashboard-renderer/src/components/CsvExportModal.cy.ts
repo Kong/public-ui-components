@@ -1,6 +1,8 @@
-import { formatTimestamp, type ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AllAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { VueWrapper } from '@vue/test-utils'
 import type { ComponentPublicInstance } from 'vue'
+
+import { formatTimestamp } from '@kong-ui-public/analytics-utilities'
 import CsvExportModal from './CsvExportModal.vue'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
@@ -36,6 +38,31 @@ const populatedExploreResult: ExploreResultV4 = {
 const emptyExploreResult: ExploreResultV4 = {
   ...populatedExploreResult,
   data: [],
+}
+
+const platformAsOf = '2026-10-07T14:18:00.000Z'
+
+const platformCountResult: ExploreResultV4 = {
+  data: [
+    { timestamp: platformAsOf, event: { control_plane: 'cp-default', control_plane_count: 43 } },
+    { timestamp: platformAsOf, event: { control_plane: 'cp-unresolved', control_plane_count: 4 } },
+  ],
+  meta: {
+    start: platformAsOf,
+    end: platformAsOf,
+    display: {
+      control_plane: {
+        'cp-default': { name: 'default', deleted: false },
+      },
+    },
+    // Platform metrics are config-driven and aren't part of the AllAggregations union.
+    metric_names: ['control_plane_count'] as unknown as AllAggregations[],
+    metric_units: { control_plane_count: 'control_plane_count' },
+    granularity_ms: 0,
+    truncated: false,
+    query_id: 'csv-export-platform-test',
+    datasource: 'platform_usage',
+  },
 }
 
 describe('<CsvExportModal />', () => {
@@ -111,6 +138,34 @@ describe('<CsvExportModal />', () => {
     })
     cy.get('.k-table-data .table tbody tr').should('have.length', 3)
     cy.getTestId('csv-download-button').should('not.be.disabled')
+  })
+
+  it('falls back to the raw ID for dimension values missing from the display', () => {
+    mount({
+      exportState: { status: 'success', chartData: platformCountResult },
+      filename: 'Platform usage',
+    })
+
+    cy.get('.k-table-data .table thead th').should(th => {
+      expect(Array.from(th, element => element.textContent)).to.deep.equal([
+        'Control plane',
+        'Control plane count',
+      ])
+    })
+    cy.get('.k-table-data .table tbody tr').should('have.length', 2)
+    cy.get('.k-table-data .table tbody tr').eq(0).should('contain.text', 'default')
+    cy.get('.k-table-data .table tbody tr').eq(1).should('contain.text', 'cp-unresolved')
+    cy.getTestId('csv-download-button').should('not.be.disabled')
+  })
+
+  it('shows an "As of..." label instead of a range for point in time exports', () => {
+    mount({
+      exportState: { status: 'success', chartData: platformCountResult },
+      filename: 'Platform usage',
+    })
+
+    cy.get('.selected-range').should('contain.text', `As of ${formatTimestamp(new Date(platformAsOf), { includeTZ: true })}`)
+    cy.get('.selected-range').should('not.contain.text', 'Time range')
   })
 
   it('uses a custom modal description', () => {

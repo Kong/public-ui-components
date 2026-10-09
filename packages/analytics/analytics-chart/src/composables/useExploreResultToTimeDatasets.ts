@@ -1,5 +1,5 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { color } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 

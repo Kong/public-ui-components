@@ -29,6 +29,9 @@ export const queryableAiExploreDimensions = [
   'ai_gateway_model',
   'ai_gateway_agent',
   'ai_gateway_data_plane_node',
+  'upstream_status_code',
+  'upstream_status_code_grouped',
+  'response_source',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
@@ -46,10 +49,8 @@ export interface AiExploreEmptyFilterV2 extends Omit<BasicExploreEmptyFilterV2, 
 }
 
 export const aiExploreAggregations = [
-  'ai_request_count',
-  'share_of_requests',
-  'share_of_cost',
   'active_agents',
+  'ai_request_count',
   'cached_tokens',
   'completion_tokens',
   'cost',
@@ -60,7 +61,12 @@ export const aiExploreAggregations = [
   'llm_embeddings_cost',
   'llm_embeddings_tokens',
   'llm_latency_average',
+  'llm_latency_p50',
+  'llm_latency_p95',
+  'llm_latency_p99',
   'prompt_tokens',
+  'share_of_cost',
+  'share_of_requests',
   'time_per_token_average',
   'time_per_token_p50',
   'time_per_token_p95',

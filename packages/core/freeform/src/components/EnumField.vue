@@ -21,6 +21,15 @@
     @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
   >
     <template
+      v-if="$slots.label"
+      #label
+    >
+      <slot
+        :label="fieldAttrs.label"
+        name="label"
+      />
+    </template>
+    <template
       v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info || versionInfo"
       #label-tooltip
     >
@@ -89,6 +98,17 @@ type EnumFieldProps = {
 
 const emit = defineEmits<{
   update: [EnumValue]
+}>()
+
+defineSlots<{
+  /** Replaces the field's label content. */
+  label(props: { label: string }): any
+  /** Replaces the info tooltip's default `fieldAttrs.labelAttributes.info` content. */
+  tooltip?: () => any
+  /** Replaces the default rendering of each dropdown item. */
+  'item-label'(props: any): any
+  /** Content shown below the dropdown item list. */
+  'dropdown-footer-text'?: () => any
 }>()
 
 const {
