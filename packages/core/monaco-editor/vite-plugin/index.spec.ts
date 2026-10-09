@@ -121,9 +121,9 @@ describe('vite-plugin-monaco', () => {
       return configHook.call(plugin, {}, { command: 'serve', mode: 'development' }).optimizeDeps
     }
 
-    it('excludes monaco-editor/shiki so imports of them keep hitting resolveId', () => {
+    it('excludes monaco-editor and the shiki virtual specifier so imports of either keep hitting resolveId', () => {
       const { exclude } = getOptimizeDeps()
-      expect(exclude).toEqual(['monaco-editor', 'shiki'])
+      expect(exclude).toEqual(['monaco-editor', 'virtual:@kong-ui-public/monaco-editor/shiki'])
     })
 
     it('includes only plain-JS deep specifiers, not worker or css imports', () => {
@@ -142,6 +142,57 @@ describe('vite-plugin-monaco', () => {
       // Only the always-present core editor entry point remains — codicon itself contributed
       // nothing, since all of its entries are `.css` and got filtered out
       expect(include).toEqual(['monaco-editor/esm/vs/editor/editor.api'])
+    })
+  })
+
+  describe('shiki scoping', () => {
+    it('redirects only the internal virtual specifier to the trimmed bundle, leaving a real "shiki" import untouched', async () => {
+      const { output: [{ code }] } = await build({
+        plugins: [
+          monacoPlugin({ languages: [], shiki: { langs: ['lua'] } }),
+          {
+            name: 'test-entry',
+            resolveId(id) {
+              if (id === 'test-entry') return '\0test-entry'
+            },
+            load(id) {
+              if (id === '\0test-entry') {
+                // `console.log` forces Rollup to keep both imports alive. a plain
+                // re-export of unused namespace bindings gets tree-shaken away entirely,
+                // which would satisfy the assertions below.
+                return [
+                  'import * as realShiki from "shiki"',
+                  'import { bundledLanguages } from "virtual:@kong-ui-public/monaco-editor/shiki"',
+                  'console.log(realShiki, bundledLanguages)',
+                ].join('\n')
+              }
+            },
+          },
+        ],
+        build: {
+          target: 'esnext',
+          rollupOptions: {
+            input: ['test-entry'],
+            // The real package is left for Rollup's own external resolution (our plugin no
+            // longer intercepts it) — external it so the test doesn't pull in shiki's actual
+            // (large) implementation.
+            external: ['shiki', /^monaco-editor\/.+/],
+          },
+          minify: false,
+          write: false,
+        },
+        configFile: false,
+        logLevel: 'silent',
+      }) as RollupOutput
+
+      // The real package name passes straight through as a genuine external import.
+      expect(code).toContain("from 'shiki'")
+      // The virtual specifier never appears as a literal import in the output — it was
+      // redirected and its generated trimmed content inlined instead, containing only the
+      // one language configured for `shiki.langs` above.
+      expect(code).not.toContain('virtual:@kong-ui-public/monaco-editor/shiki')
+      expect(code).toContain('lua:')
+      expect(code).not.toContain('javascript:')
     })
   })
 })

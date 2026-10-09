@@ -38,12 +38,17 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         /^monaco-editor/,
         /^@shikijs\//,
         /^shiki/,
+        // `monaco-loader.ts`'s virtual specifier for its own trimmed shiki import, like the
+        // real 'shiki' above, this package never bundles it itself; it's left external so
+        // whichever consuming app applies our own vite-plugin resolves it.
+        'virtual:@kong-ui-public/monaco-editor/shiki',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           'monaco-editor': 'monaco',
           'shiki': 'shiki',
+          'virtual:@kong-ui-public/monaco-editor/shiki': 'shiki',
         },
       },
     },
@@ -53,6 +58,25 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     projects: [
       {
         extends: './vite.config.ts',
+        plugins: [
+          // `monaco-loader.ts` imports its own trimmed shiki bundle via a virtual specifier
+          // that only our own vite-plugin can resolve. Vite's import-analysis fails outright on an unresolvable
+          // specifier before a spec file's `vi.mock(...)` for it ever gets a chance to run, so
+          // stub it here to resolve.
+          {
+            name: 'stub-monaco-editor-shiki-virtual-specifier',
+            resolveId(id: string) {
+              if (id === 'virtual:@kong-ui-public/monaco-editor/shiki') {
+                return '\0virtual:@kong-ui-public/monaco-editor/shiki'
+              }
+            },
+            load(id: string) {
+              if (id === '\0virtual:@kong-ui-public/monaco-editor/shiki') {
+                return 'export default {}'
+              }
+            },
+          },
+        ],
         test: {
           name: 'runtime',
           environment: 'jsdom',
