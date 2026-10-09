@@ -5,6 +5,12 @@ import type DeckCommandEditor from './components/common/DeckCommandEditor.vue'
 export const PLUGIN_FORM_LAYOUT_STATE: InjectionKey<Ref<boolean>> = Symbol('PLUGIN_FORM_LAYOUT_STATE')
 
 /**
+ * Whether the config card displays sensitive field values unmasked.
+ * Provided by `EntityBaseConfigCard`; `ConfigCardItem` masks sensitive values when it is not provided.
+ */
+export const CONFIG_CARD_SHOW_SENSITIVE_FIELDS: InjectionKey<Readonly<Ref<boolean>>> = Symbol('CONFIG_CARD_SHOW_SENSITIVE_FIELDS')
+
+/**
  * The injection key for providing the `DeckCommandEditor` component.
  *
  * For:

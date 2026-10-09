@@ -22,7 +22,6 @@
         <slot name="actions" />
 
         <KCheckbox
-          v-if="configFormat !== 'structured'"
           v-model="showSensitiveFields"
           class="sensitive-fields-checkbox"
           data-testid="sensitive-fields-checkbox"
@@ -139,7 +138,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, onMounted } from 'vue'
+import { computed, ref, onBeforeMount, watch, onMounted, provide } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   KonnectBaseEntityConfig,
@@ -156,6 +155,7 @@ import type {
 import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { HeaderTag } from '@kong/kongponents'
@@ -480,6 +480,7 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
 
 // redact sensitive fields by default
 const showSensitiveFields = ref(false)
+provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, showSensitiveFields)
 
 const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaField } = composables.useHelpers()
 
