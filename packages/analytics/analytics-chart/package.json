@@ -30,8 +30,6 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/kongponents": "9.64.23",
-    "file-saver": "^2.0.5",
-    "papaparse": "^5.7.0",
     "vue": "^3.5.41"
   },
   "scripts": {
@@ -67,8 +65,6 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/icons": "^1.62.1",
-    "@types/file-saver": "^2.0.7",
-    "@types/papaparse": "^5.5.2",
     "@vueuse/core": "^14.4.0",
     "approximate-number": "^3.0.1",
     "chart.js": "^4.5.1",
@@ -76,7 +72,6 @@
     "chartjs-plugin-annotation": "^3.1.0",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
-    "lodash": "^4.18.1",
     "uuid": "^14.0.2",
     "vue-chartjs": "^5.3.4"
   },

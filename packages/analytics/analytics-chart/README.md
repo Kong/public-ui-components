@@ -320,14 +320,6 @@ export default defineComponent({
 </script>
 ```
 
-## CsvExportModal
-
-`CsvExportModal` from `@kong-ui-public/analytics-chart` is deprecated and remains available for compatibility. For new integrations, use [`CsvExportModal` from dashboard-renderer](../dashboard-renderer/README.md#csvexportmodal).
-
-```ts
-import { CsvExportModal } from '@kong-ui-public/dashboard-renderer'
-```
-
 ## TopNTable (deprecated)
 
 `TopNTable` is deprecated and remains exported for existing standalone consumers.

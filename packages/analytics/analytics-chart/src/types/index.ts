@@ -1,6 +1,5 @@
 export * from './chart-data'
 export * from './chart-meta'
-export * from './chart-export'
 export * from './chart-types'
 export * from './chartjs-options'
 export * from './explore-to-dataset-deps'
