@@ -418,13 +418,27 @@ $page-layout-header-height: 45px;
 
           // The title reads as the last item in the breadcrumb row: same size as the
           // crumbs (whose scale comes from Kongponents), just heavier and darker.
-          .page-layout-title-wrapper > * {
+          .page-layout-title-wrapper {
+            // The `> *` rule below covers both the default `<h1>` and any element slotted
+            // into `#title`, but a slot holding a bare text node has no element to match.
+            // Repeating the scale, cap and truncation here keeps raw text in parity, and
+            // also makes the `ch` cap resolve against the same font size either way.
+            color: var(--kui-color-text, $kui-color-text);
             font-size: var(--kui-font-size-30, $kui-font-size-30);
+            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
             line-height: var(--kui-line-height-30, $kui-line-height-30);
-            // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
-            // Below this it truncates to whatever space the row leaves it; the ellipsis
-            // itself comes from the default appearance's rules.
             max-width: $page-layout-title-max-width;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            > * {
+              font-size: var(--kui-font-size-30, $kui-font-size-30);
+              line-height: var(--kui-line-height-30, $kui-line-height-30);
+              // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
+              // Below this it truncates to whatever space the row leaves it; the ellipsis
+              // itself comes from the default appearance's rules.
+              max-width: $page-layout-title-max-width;
+            }
           }
         }
 

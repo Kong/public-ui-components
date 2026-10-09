@@ -543,6 +543,46 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-favorite-button').should('be.visible')
     })
 
+    it('truncates a long title provided through the title slot', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { breadcrumbs },
+        slots: { title: () => h('h1', { 'data-testid': 'slotted-title' }, title) },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('slotted-title').should(($title) => {
+        const el = $title[0]
+
+        // Scoped `> *` still reaches slotted content, because the scope attribute lands on
+        // the wrapper rather than on the universal selector
+        expect(getComputedStyle(el).fontSize).to.equal('14px')
+        expect(getComputedStyle(el).maxWidth).to.not.equal('none')
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+    })
+
+    it('truncates a long title provided as bare text in the title slot', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { breadcrumbs },
+        // No element to match `> *`, so the wrapper itself has to carry the cap
+        slots: { title: () => title },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.get('.page-layout-title-wrapper').should(($wrapper) => {
+        const el = $wrapper[0]
+
+        expect(el.children.length).to.equal(0)
+        expect(getComputedStyle(el).fontSize).to.equal('14px')
+        expect(getComputedStyle(el).maxWidth).to.not.equal('none')
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+    })
+
     it('truncates a long title', () => {
       const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
 
