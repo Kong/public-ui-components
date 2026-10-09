@@ -391,7 +391,7 @@ $page-layout-header-height: 45px;
     .page-layout-header {
       position: sticky;
       top: 0;
-      z-index: 2;
+      z-index: 3;
     }
 
     // Selectors mirror the default appearance's nesting depth so these rules win on
