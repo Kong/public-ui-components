@@ -46,6 +46,10 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = composables.useStringHelpers()
 
+if (props.isArrayItem) {
+  composables.useSubSchema(String(props.index))
+}
+
 const key = computed((): string => props.item.key ?? 'json-array-item')
 const rawValue = computed((): Record<string, any> => {
   return props.item.value ?? props.item

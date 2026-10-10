@@ -122,6 +122,7 @@ export enum ConfigurationSchemaType {
   BadgeMethod = 'badge-method',
   LinkInternal = 'link-internal',
   LinkExternal = 'link-external',
+  ManagedBy = 'managed-by',
 }
 
 export enum ConfigurationSchemaSection {
@@ -176,6 +177,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   enabled: ConfigurationSchemaItem
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
+  managed_by: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
   labels: ConfigurationSchemaItem
   partials: ConfigurationSchemaItem

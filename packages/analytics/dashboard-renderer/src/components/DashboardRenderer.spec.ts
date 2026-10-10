@@ -1,11 +1,24 @@
-import { describe, it, expect, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { beforeEach, describe, it, expect, vi } from 'vitest'
+import { defineComponent, h, provide } from 'vue'
 import { mount } from '@vue/test-utils'
 import Ajv from 'ajv'
 import { dashboardConfigSchema, type DashboardConfig } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
-import { INJECT_QUERY_PROVIDER } from '../constants'
+import { INJECT_QUERY_PROVIDER, INJECT_DASHBOARD_COORDINATOR } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
+
+vi.mock('vue', async (importActual) => {
+  const actual = await importActual()
+  const provide = vi.fn()
+  provide.mockImplementation((actual as any).provide)
+
+  return {
+    // @ts-ignore this is how we mock this
+    ...actual,
+    default: actual,
+    provide,
+  }
+})
 
 const createGridLayoutStub = vi.hoisted(() => (name: string) => {
   return {
@@ -327,6 +340,51 @@ describe('Slottable tiles', () => {
 })
 
 describe('<DashboardRenderer /> table tiles', () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
+
+  it.each([
+    ['provides', true],
+    ['does not provide', false],
+    ['does not provide', undefined],
+  ])('%s a coordinator when the context includes `tileCoordination: %s`', (_title, withTileCoord) => {
+    const model: DashboardConfig = {
+      tiles: [],
+    }
+
+    expect(provide).toHaveBeenCalledTimes(0)
+
+    mount(DashboardRenderer, {
+      props: {
+        context: {
+          filters: [],
+          disableCoordination: !withTileCoord,
+        },
+        modelValue: model,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            configFn: vi.fn().mockResolvedValue({ analytics: { percentiles: true } }),
+            datasourceConfigFn: vi.fn().mockResolvedValue([]),
+            evaluateFeatureFlagFn: vi.fn(),
+            queryFn: vi.fn(),
+          },
+        },
+        stubs: {
+          KAlert: true,
+        },
+      },
+    })
+
+    if (withTileCoord) {
+      expect(provide).toHaveBeenCalledWith(INJECT_DASHBOARD_COORDINATOR, expect.objectContaining({}))
+    } else {
+      expect(provide).not.toHaveBeenCalledWith(INJECT_DASHBOARD_COORDINATOR, expect.objectContaining({}))
+    }
+  })
+
   it('preserves table chart shape when duplicating', async () => {
     setupPiniaTestStore()
 

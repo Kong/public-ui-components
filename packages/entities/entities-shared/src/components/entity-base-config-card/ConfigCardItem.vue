@@ -136,15 +136,17 @@
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, ref, useId, useSlots } from 'vue'
+import { computed, inject, ref, useId, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
+import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance } from '@kong/kongponents'
 import JsonCardItem from './JsonCardItem.vue'
 import InternalLinkItem from './InternalLinkItem.vue'
 import StatusBadge from './StatusBadge.vue'
+import { getManagedByLabel } from '../../utils/managed-by'
 
 const props = defineProps({
   item: {
@@ -178,6 +180,9 @@ const isJson = computed((): boolean => props.item.type === ConfigurationSchemaTy
 const isJsonArray = computed((): boolean => props.item.type === ConfigurationSchemaType.JsonArray)
 
 const schema = composables.useSubSchema(props.item.key)
+const { redactByApiSchema } = composables.useHelpers()
+const showSensitiveFields = inject(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, ref(false))
+const redactedFormat = computed(() => showSensitiveFields.value ? 'default' : 'redacted')
 
 const itemType = computed(() => {
   return props.item.type
@@ -213,7 +218,8 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         tag: 'KCopy',
         attrs: {
           'data-testid': `${props.item.key}-copy-uuid-redacted`,
-          format: 'redacted',
+          'data-dd-privacy': 'mask',
+          format: redactedFormat.value,
           'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
           text: props.item.value,
         },
@@ -224,7 +230,8 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         tag: 'div',
         additionalComponent: 'KCopy',
         childAttrs: {
-          format: 'redacted',
+          'data-dd-privacy': 'mask',
+          format: redactedFormat.value,
           'copy-tooltip': t('baseConfigCard.copy.tooltip', { label: props.item.label }),
         },
       }
@@ -295,6 +302,17 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         text: props.item.value,
       }
 
+    case ConfigurationSchemaType.ManagedBy:
+      // The API returns an object (owner plus version/repository/etc); only the owner is
+      // meaningful here. The full object stays visible in the JSON/YAML tabs.
+      return {
+        tag: 'div',
+        attrs: {
+          'data-testid': `${props.item.key}-managed-by`,
+        },
+        text: getManagedByLabel(props.item.value) ?? '–',
+      }
+
     case ConfigurationSchemaType.Json:
       return {
         tag: 'JsonCardItem',
@@ -321,9 +339,12 @@ const componentAttrsData = computed((): ComponentAttrsData => {
           tag: 'KCodeBlock',
           attrs: {
             'data-testid': `${props.item.key}-json-code`,
+            'data-dd-privacy': 'mask',
             id: `json-code-${uniqueId}`,
             language: 'json',
-            code: JSON.stringify(props.item.value, null, '  '),
+            code: JSON.stringify(showSensitiveFields.value ? props.item.value : redactByApiSchema(props.item.value, schema.value), null, '  '),
+            // Aligns with KCopy: copying yields the unredacted value
+            copyCode: JSON.stringify(props.item.value, null, '  '),
             maxHeight: '480px',
             showLineNumbers: false,
             onCodeBlockRender: highlightCodeBlock,

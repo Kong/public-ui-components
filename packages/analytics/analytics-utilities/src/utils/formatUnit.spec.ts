@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { unitFormatter, numberFormatter } from './formatUnit'
+import { unitFormatter, numberFormatter, unitPlacement } from './formatUnit'
 import { createI18n } from '@kong-ui-public/i18n'
 
 const i18n = createI18n('en-us', {} as any)
@@ -107,7 +107,30 @@ describe('formatUnit.formatUnit()', () => {
     expect(formatUnit(1234, 'usd', { approximate: true })).toEqual('$1,234.00')
   })
 
+  it('does not put a space between the value and a percent sign', () => {
+    expect(formatUnit(42, '%')).toEqual('42%')
+    expect(formatUnit(0.001, '%')).toEqual('0.001%')
+    expect(formatUnit(1234, '%', { approximate: true })).toEqual('1.2K%')
+  })
+
+  it('decides spacing from the raw unit, not the translated label', () => {
+    expect(formatUnit(42, '%', { translateUnit: () => 'pct' })).toEqual('42pct')
+    expect(formatUnit(42, 'count', { translateUnit: () => '%' })).toEqual('42 %')
+  })
+
+  it('keeps magnitude suffixes flush and spaces the unit after them', () => {
+    expect(formatUnit(9000, 'count', { approximate: true, translateUnit: () => 'requests' })).toEqual('9K requests')
+    expect(formatUnit(2500000, 'ms', { approximate: true })).toEqual('2.5M ms')
+  })
+
+  it('does not leave a trailing space when the translated unit is empty', () => {
+    expect(formatUnit(100, 'count', { translateUnit: () => '' })).toEqual('100')
+    expect(formatUnit(1234, 'count', { approximate: true, translateUnit: () => '' })).toEqual('1.2K')
+  })
+
   it('handles formatting range of values', () => {
+    expect(formatRange(10, 50, '%')).toBe('10 - 50%')
+    expect(formatRange(1000, 5000, 'count', { translateUnit: () => '' })).toBe('1,000 - 5,000')
     expect(formatRange(1000, 5000, 'ms')).toBe('1,000 - 5,000 ms')
     expect(formatRange(1000, 5000, 'count', { approximate: true })).toBe('1K - 5K count')
     expect(formatRange(1000, 5000, 'count/minute', { approximate: true })).toBe('1K - 5K count/minute')
@@ -126,5 +149,15 @@ describe('numberFormatter', () => {
   it('formats numbers correctly with the fallback locale', () => {
     expect(numberFormatter.format(1234.56)).toBe('1,234.56')
     expect(numberFormatter.format(1000000)).toBe('1,000,000')
+  })
+})
+
+describe('unitPlacement', () => {
+  it('places percent flush against the number', () => {
+    expect(unitPlacement('%')).toBe('flush')
+  })
+
+  it.each(['ms', 'bytes', 'count', 'count/minute', 'token count', 'usd', ''])('spaces \'%s\' from the number', (unit) => {
+    expect(unitPlacement(unit)).toBe('spaced')
   })
 })

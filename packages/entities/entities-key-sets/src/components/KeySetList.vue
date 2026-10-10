@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-key-sets-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -113,6 +114,9 @@
           truncate
         />
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -192,6 +196,8 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerKeySetListConfig,
@@ -286,7 +292,10 @@ const fields: BaseTableHeaders = {
   tags: { label: t('keySets.list.table_headers.tags') },
   id: { label: t('keySets.list.table_headers.id'), sortable: true },
 }
-const tableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 
 /**
  * Fetcher & Filtering

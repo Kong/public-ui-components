@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.3...%40kong-ui-public%2Ftable-data-grid%400.7.4) (2026-10-09)
+
+### Bug Fixes
+
+* **dashboard-renderer:** bundle table-data-grid and echarts [MA-5549] ([#3908](https://github.com/Kong/public-ui-components/issues/3908)) ([5aba57d](https://github.com/Kong/public-ui-components/commit/5aba57d8cd0d6a9e40cb972eba5f55f1b3154ef7))
+
+
+## [0.7.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.2...%40kong-ui-public%2Ftable-data-grid%400.7.3) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.7.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.1...%40kong-ui-public%2Ftable-data-grid%400.7.2) (2026-10-07)
+
+### Bug Fixes
+
+* **table-data-grid:** reuse datasource on server sort [MA-5463] ([#3884](https://github.com/Kong/public-ui-components/issues/3884)) ([abb84d3](https://github.com/Kong/public-ui-components/commit/abb84d3e76cff5b510b3fb2c7e90196e3279c596))
+
+
+## [0.7.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.0...%40kong-ui-public%2Ftable-data-grid%400.7.1) (2026-10-02)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.6.0...%40kong-ui-public%2Ftable-data-grid%400.7.0) (2026-09-29)
+
+### Features
+
+* **table-data-grid:** add generic cell presentation [MA-5503] ([#3860](https://github.com/Kong/public-ui-components/issues/3860)) ([8b0690e](https://github.com/Kong/public-ui-components/commit/8b0690eea2974bd5accad1e76f3601bfe38189d7)), closes [#3862](https://github.com/Kong/public-ui-components/issues/3862) [#3861](https://github.com/Kong/public-ui-components/issues/3861)
+
+
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.5.4...%40kong-ui-public%2Ftable-data-grid%400.6.0) (2026-09-25)
+
+### Features
+
+* **table-data-grid:** add unpaginated rows mode [MA-5503] [MA-5419] ([#3859](https://github.com/Kong/public-ui-components/issues/3859)) ([aef6f4b](https://github.com/Kong/public-ui-components/commit/aef6f4bbb7715f543ae38dd12016c5f42ab09f68)), closes [#3862](https://github.com/Kong/public-ui-components/issues/3862)
+
+
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.5.3...%40kong-ui-public%2Ftable-data-grid%400.5.4) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.5.2...%40kong-ui-public%2Ftable-data-grid%400.5.3) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
 ## [0.5.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.5.1...%40kong-ui-public%2Ftable-data-grid%400.5.2) (2026-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/table-data-grid

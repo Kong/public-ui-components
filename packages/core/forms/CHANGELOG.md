@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.35.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.7...%40kong-ui-public%2Fforms%404.35.8) (2026-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.35.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.6...%40kong-ui-public%2Fforms%404.35.7) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.35.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.5...%40kong-ui-public%2Fforms%404.35.6) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.35.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.4...%40kong-ui-public%2Fforms%404.35.5) (2026-10-01)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.35.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.2...%40kong-ui-public%2Fforms%404.35.4) (2026-09-30)
+
+### Bug Fixes
+
+* switching ci from pat to app token [KHCP-2195] ([#3893](https://github.com/Kong/public-ui-components/issues/3893)) ([5b86526](https://github.com/Kong/public-ui-components/commit/5b8652681ce8a67083ae10cb85a78e485f600a9c))
+
+
+## [4.35.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.2...%40kong-ui-public%2Fforms%404.35.3) (2026-09-29)
+
+### Bug Fixes
+
+* switching ci from pat to app token [KHCP-2195] ([#3893](https://github.com/Kong/public-ui-components/issues/3893)) ([5b86526](https://github.com/Kong/public-ui-components/commit/5b8652681ce8a67083ae10cb85a78e485f600a9c))
+
+
+## [4.35.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.1...%40kong-ui-public%2Fforms%404.35.2) (2026-09-28)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.35.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.0...%40kong-ui-public%2Fforms%404.35.1) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.35.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.9...%40kong-ui-public%2Fforms%404.35.0) (2026-09-22)
+
+### Features
+
+* **freeform:** version compatibility (part 2) ([#3857](https://github.com/Kong/public-ui-components/issues/3857)) ([59f211b](https://github.com/Kong/public-ui-components/commit/59f211b6f10637c9c7883382bf3e97dfd5972196))
+
+
+## [4.34.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.8...%40kong-ui-public%2Fforms%404.34.9) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.34.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.7...%40kong-ui-public%2Fforms%404.34.8) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.34.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.6...%40kong-ui-public%2Fforms%404.34.7) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.34.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.34.5...%40kong-ui-public%2Fforms%404.34.6) (2026-09-14)
 
 **Note:** Version bump only for package @kong-ui-public/forms

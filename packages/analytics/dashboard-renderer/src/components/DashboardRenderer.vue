@@ -30,7 +30,7 @@
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"
       >
-        <template #tile="{ tile }">
+        <template #tile="{ tile, fitToContent }">
           <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
           <div
             v-if="isSlottableTile(tile)"
@@ -45,10 +45,11 @@
             class="tile-container"
             :context="enrichedContext"
             :definition="tile.meta as TileDefinition"
+            :fit-to-content="fitToContent"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="!showTileActions"
-            :hide-zoom-actions="!showTileZoomActions"
             :is-fullscreen="isFullscreen"
+            :preview="preview"
             :query-ready="queryReady"
             :tile-id="tile.id"
             :tile-type="tile.type"
@@ -76,15 +77,17 @@ import type {
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
+import { useInteractionCoordinator } from '@kong-ui-public/analytics-utilities/coordination'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, inject, nextTick, ref } from 'vue'
+import { computed, inject, nextTick, provide, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
+  INJECT_DASHBOARD_COORDINATOR,
   INJECT_QUERY_PROVIDER,
 } from '../constants'
 import { duplicateChartTile } from '../utils/duplicate-tile'
@@ -98,6 +101,11 @@ const {
   context: DashboardRendererContext
   preview?: boolean
 }>()
+
+if (context.disableCoordination !== true) {
+  const coordinator = useInteractionCoordinator()
+  provide(INJECT_DASHBOARD_COORDINATOR, coordinator)
+}
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
@@ -325,7 +333,6 @@ const {
   enrichedContext,
   queryReady,
   showTileActions,
-  showTileZoomActions,
   timeSpec,
 } = composables.useDashboardContext({
   globalFilters,
@@ -349,7 +356,7 @@ defineExpose({
   .tile-container {
     background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
     height: 100%;
 
     &.slottable-tile {

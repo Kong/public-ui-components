@@ -300,6 +300,74 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('have.been.calledThrice')
   })
 
+  it('Renders heatmap and treemap tiles through their renderers', () => {
+    const models = { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } }
+    const meta = {
+      start: '2024-06-16T00:00:00.000Z',
+      end: '2024-06-18T00:00:00.000Z',
+      granularity_ms: 86400000,
+      metric_names: ['ai_request_count'],
+      metric_units: { ai_request_count: 'count' },
+      query_id: '12345',
+    } as ExploreResultV4['meta']
+
+    const heatmapResponse: ExploreResultV4 = {
+      data: [
+        { timestamp: meta.start, event: { ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
+        { timestamp: '2024-06-17T00:00:00.000Z', event: { ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
+      ],
+      meta: { ...meta, display: { ai_gateway_model: models } },
+    }
+
+    const treemapResponse: ExploreResultV4 = {
+      data: [
+        { timestamp: meta.start, event: { ai_provider: 'openai', ai_gateway_model: 'gpt-4o', ai_request_count: 10 } },
+        { timestamp: meta.start, event: { ai_provider: 'anthropic', ai_gateway_model: 'claude-opus-4-1', ai_request_count: 20 } },
+      ],
+      meta: {
+        ...meta,
+        display: { ai_provider: { openai: { name: 'OpenAI' }, anthropic: { name: 'Anthropic' } }, ai_gateway_model: models },
+      },
+    }
+
+    const tile = (type: 'heatmap' | 'treemap', dimensions: string[], col: number): TileConfig => ({
+      type: 'chart',
+      definition: {
+        chart: { type, chart_title: `Model usage ${type}` },
+        query: { datasource: 'llm_usage', metrics: ['ai_request_count'], dimensions },
+      },
+      layout: { position: { col, row: 0 }, size: { cols: 3, rows: 2 } },
+    } as TileConfig)
+
+    // The heatmap query is the one over time
+    const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
+      const { query } = dsAwareQuery as AdvancedDatasourceQuery
+
+      return Promise.resolve(query.dimensions?.includes('time') ? heatmapResponse : treemapResponse)
+    }
+
+    cy.mount(DashboardRenderer, {
+      props: {
+        context: { filters: [], timeSpec: { type: 'relative', time_range: '7d' } },
+        modelValue: {
+          tiles: [
+            tile('heatmap', ['time', 'ai_gateway_model'], 0),
+            tile('treemap', ['ai_provider', 'ai_gateway_model'], 3),
+          ],
+        },
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider(), queryFn },
+        },
+      },
+    })
+
+    cy.get('.tile-boundary').should('have.length', 2)
+    cy.get('[data-testid="heatmap-chart"] canvas').should('be.visible')
+    cy.get('[data-testid="treemap-chart"] canvas').should('be.visible')
+  })
+
   it('Changing the timeframe changes the query', () => {
     const props = {
       context: {
@@ -516,7 +584,7 @@ describe('<DashboardRenderer />', () => {
     })
 
     // Check value of href attribute
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
   })
 
   it('Renders a dashboard with a TopNTable with EntityLinks mapped by dimension', () => {
@@ -571,12 +639,12 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('tbody tr').first().within(() => {
-      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+    cy.get('.ag-row[row-index="0"]').first().within(() => {
+      cy.get('[col-id="route"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
 
-      cy.get('td').eq(1).find('[data-testid="entity-link-parent"] > a')
+      cy.get('[col-id="gateway_service"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/services/service-1')
     })
@@ -634,7 +702,7 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"] > a')
       .should('have.attr', 'href')
       .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
   })
@@ -688,13 +756,13 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('tbody tr').first().within(() => {
-      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+    cy.get('.ag-row[row-index="0"]').first().within(() => {
+      cy.get('[col-id="route"]').find('[data-testid="entity-link-parent"] > a')
         .should('have.attr', 'href')
         .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
 
-      cy.get('td').eq(1).should('contain.text', 'Gateway Service 1')
-      cy.get('td').eq(1).find('a').should('not.exist')
+      cy.get('[col-id="gateway_service"]').should('contain.text', 'Gateway Service 1')
+      cy.get('[col-id="gateway_service"]').find('a').should('not.exist')
     })
   })
 
@@ -747,8 +815,8 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
-    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
+    cy.get('[row-index="0"] [col-id="route"] [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
   })
 
   it("doesn't issue queries if it's still waiting for the timeSpec", () => {
@@ -1224,7 +1292,7 @@ describe('<DashboardRenderer />', () => {
     cy.getTestId('tile-tile-1').find('.ui-resizable-se').should('not.exist')
   })
 
-  it('preview mode passes a non-interactive context to tiles', () => {
+  it('preview mode passes preview value to tiles', () => {
     const props = {
       context: {
         filters: [],
@@ -1248,17 +1316,16 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(false)
-      expect(context.zoomable).to.eq(false)
-      expect(tile.props('hideZoomActions')).to.eq(true)
+      expect(tile.props('preview')).to.eq(true)
       expect(tile.props('hideActions')).to.eq(true)
     })
   })
 
-  it('without preview mode normal defaults are set', () => {
+  it('preview defaults to false', () => {
     const props = {
       context: {
         filters: [],
@@ -1270,7 +1337,6 @@ describe('<DashboardRenderer />', () => {
       },
       modelValue: fourByFourDashboardConfigJustCharts,
       onTileTimeRangeZoom: () => {},
-      preview: false,
     }
 
     cy.mount(DashboardRenderer, {
@@ -1282,12 +1348,11 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(true)
-      expect(context.zoomable).to.eq(true)
-      expect(tile.props('hideZoomActions')).to.eq(false)
+      expect(tile.props('preview')).to.eq(false)
       expect(tile.props('hideActions')).to.eq(false)
     })
   })

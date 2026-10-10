@@ -21,7 +21,7 @@ describe('formatChartTicksByGranularity', () => {
       granularity: granularity as GranularityValues,
       dayBoundaryCrossed: true,
       timezone: 'UTC',
-    })).toBe('2024-12-10 3:30:45 PM')
+    })).toBe('Dec 10, 3:30:45 PM')
   })
 
   it.each([
@@ -40,7 +40,7 @@ describe('formatChartTicksByGranularity', () => {
       granularity: granularity as GranularityValues,
       dayBoundaryCrossed: true,
       timezone: 'America/New_York',
-    })).toBe('2024-12-10 10:30:45 AM')
+    })).toBe('Dec 10, 10:30:45 AM')
   })
 
   it.each([
@@ -62,7 +62,7 @@ describe('formatChartTicksByGranularity', () => {
       granularity: granularity as GranularityValues,
       dayBoundaryCrossed: true,
       timezone: 'UTC',
-    })).toBe('2024-12-10 3:30 PM')
+    })).toBe('Dec 10, 3:30 PM')
   })
 
   it.each([
@@ -84,7 +84,7 @@ describe('formatChartTicksByGranularity', () => {
       granularity: granularity as GranularityValues,
       dayBoundaryCrossed: true,
       timezone: 'America/New_York',
-    })).toBe('2024-12-10 10:30 AM')
+    })).toBe('Dec 10, 10:30 AM')
   })
 
   it('formats correctly for twelveHourly granularity in UTC and America/New_York', () => {
@@ -93,13 +93,13 @@ describe('formatChartTicksByGranularity', () => {
       granularity: 'twelveHourly',
       dayBoundaryCrossed: false,
       timezone: 'UTC',
-    })).toBe('2024-12-10 3:30 PM')
+    })).toBe('Dec 10, 3:30 PM')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
       granularity: 'twelveHourly',
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
-    })).toBe('2024-12-10 10:30 AM')
+    })).toBe('Dec 10, 10:30 AM')
   })
 
   it('formats correctly for daily granularity in UTC and America/New_York', () => {
@@ -108,13 +108,13 @@ describe('formatChartTicksByGranularity', () => {
       granularity: 'daily',
       dayBoundaryCrossed: false,
       timezone: 'UTC',
-    })).toBe('2024-12-10')
+    })).toBe('Dec 10')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
       granularity: 'daily',
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
-    })).toBe('2024-12-10')
+    })).toBe('Dec 10')
   })
 
   it('formats correctly for weekly granularity in UTC and America/New_York', () => {
@@ -139,7 +139,7 @@ describe('formatChartTicksByGranularity', () => {
       granularity: 'unknownGranularity',
       dayBoundaryCrossed: false,
       timezone: 'UTC',
-    })).toBe('2024-12-10 3:30:45 PM')
+    })).toBe('Dec 10, 3:30:45 PM')
 
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
@@ -147,24 +147,24 @@ describe('formatChartTicksByGranularity', () => {
       granularity: 'unknownGranularity',
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
-    })).toBe('2024-12-10 10:30:45 AM')
+    })).toBe('Dec 10, 10:30:45 AM')
   })
 
   describe('formatTooltipTimestampByGranularity', () => {
     const testDate = new Date('2024-12-10T15:30:45Z')
 
     it.each([
-      ['secondly', 'Dec 10, 2024 3:30:45 PM'],
-      ['tenSecondly', 'Dec 10, 2024 3:30:45 PM'],
-      ['thirtySecondly', 'Dec 10, 2024 3:30:45 PM'],
-      ['minutely', 'Dec 10, 2024 3:30 PM'],
-      ['fiveMinutely', 'Dec 10, 2024 3:30 PM'],
-      ['tenMinutely', 'Dec 10, 2024 3:30 PM'],
-      ['thirtyMinutely', 'Dec 10, 2024 3:30 PM'],
-      ['hourly', 'Dec 10, 2024 3:30 PM'],
-      ['twoHourly', 'Dec 10, 2024 3:30 PM'],
-      ['twelveHourly', 'Dec 10, 2024 3:30 PM'],
-      ['daily', 'Dec 10, 2024 3:30 PM'],
+      ['secondly', 'Dec 10, 3:30:45 PM'],
+      ['tenSecondly', 'Dec 10, 3:30:45 PM'],
+      ['thirtySecondly', 'Dec 10, 3:30:45 PM'],
+      ['minutely', 'Dec 10, 3:30 PM'],
+      ['fiveMinutely', 'Dec 10, 3:30 PM'],
+      ['tenMinutely', 'Dec 10, 3:30 PM'],
+      ['thirtyMinutely', 'Dec 10, 3:30 PM'],
+      ['hourly', 'Dec 10, 3:30 PM'],
+      ['twoHourly', 'Dec 10, 3:30 PM'],
+      ['twelveHourly', 'Dec 10, 3:30 PM'],
+      ['daily', 'Dec 10, 3:30 PM'],
       ['weekly', '2024 W50'],
     ])('formats \'%s\' granularity in UTC', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({
@@ -175,17 +175,17 @@ describe('formatChartTicksByGranularity', () => {
     })
 
     it.each([
-      ['secondly', 'Dec 10, 2024 10:30:45 AM'],
-      ['tenSecondly', 'Dec 10, 2024 10:30:45 AM'],
-      ['thirtySecondly', 'Dec 10, 2024 10:30:45 AM'],
-      ['minutely', 'Dec 10, 2024 10:30 AM'],
-      ['fiveMinutely', 'Dec 10, 2024 10:30 AM'],
-      ['tenMinutely', 'Dec 10, 2024 10:30 AM'],
-      ['thirtyMinutely', 'Dec 10, 2024 10:30 AM'],
-      ['hourly', 'Dec 10, 2024 10:30 AM'],
-      ['twoHourly', 'Dec 10, 2024 10:30 AM'],
-      ['twelveHourly', 'Dec 10, 2024 10:30 AM'],
-      ['daily', 'Dec 10, 2024 10:30 AM'],
+      ['secondly', 'Dec 10, 10:30:45 AM'],
+      ['tenSecondly', 'Dec 10, 10:30:45 AM'],
+      ['thirtySecondly', 'Dec 10, 10:30:45 AM'],
+      ['minutely', 'Dec 10, 10:30 AM'],
+      ['fiveMinutely', 'Dec 10, 10:30 AM'],
+      ['tenMinutely', 'Dec 10, 10:30 AM'],
+      ['thirtyMinutely', 'Dec 10, 10:30 AM'],
+      ['hourly', 'Dec 10, 10:30 AM'],
+      ['twoHourly', 'Dec 10, 10:30 AM'],
+      ['twelveHourly', 'Dec 10, 10:30 AM'],
+      ['daily', 'Dec 10, 10:30 AM'],
       ['weekly', '2024 W50'],
     ])('formats \'%s\' granularity in America/New_York', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({

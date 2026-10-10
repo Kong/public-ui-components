@@ -38,9 +38,10 @@ function mountMapForm(options: {
   multiline?: boolean
   oneLine?: boolean
   slotTemplate?: string
+  labelSlotTemplate?: string
   config?: FormConfig
 }) {
-  const useCustomMapField = options.multiline || options.oneLine || options.slotTemplate
+  const useCustomMapField = options.multiline || options.oneLine || options.slotTemplate || options.labelSlotTemplate
 
   const mapFieldAttrs = [
     'name="kv"',
@@ -48,8 +49,13 @@ function mountMapForm(options: {
     options.multiline ? ':appearance="{ string: { multiline: true } }"' : '',
   ].filter(Boolean).join(' ')
 
-  const mapFieldTemplate = options.slotTemplate
-    ? `<MapField ${mapFieldAttrs}><template #default="{ keyId }">${options.slotTemplate}</template></MapField>`
+  const mapFieldSlots = [
+    options.slotTemplate ? `<template #default="{ keyId }">${options.slotTemplate}</template>` : '',
+    options.labelSlotTemplate ? `<template #label="{ label }">${options.labelSlotTemplate}</template>` : '',
+  ].filter(Boolean).join('')
+
+  const mapFieldTemplate = mapFieldSlots
+    ? `<MapField ${mapFieldAttrs}>${mapFieldSlots}</MapField>`
     : `<MapField ${mapFieldAttrs} />`
 
   cy.mount(Form, {
@@ -509,6 +515,69 @@ describe('MapField', () => {
       // Built-in StringField/Field fallbacks are NOT rendered.
       getMapRow(0).find('.ff-string-field').should('not.exist')
       getMapRow(0).find('input[data-testid^="ff-kv."]').should('not.exist')
+    })
+  })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      mountMapForm({
+        data: { kv: { foo: 'bar' } },
+        labelSlotTemplate: '<span data-testid="custom-label">Custom: {{ label }}</span>',
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Kv')
+    })
+  })
+
+  describe('version compatibility', () => {
+    function mountVersionCompatibilityForm(options: { config?: FormConfig } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: {
+            type: 'record',
+            fields: [{
+              [FIELD_NAME]: {
+                type: 'map',
+                description: 'Custom request headers.',
+                min_ai_gateway_version: '2.1',
+                keys: { type: 'string' },
+                values: { type: 'string' },
+              },
+            }],
+          } as FormSchema,
+          data: { [FIELD_NAME]: { foo: 'bar' } },
+          config: options.config,
+        },
+      })
+    }
+
+    it('disables the key input, value control and add/remove buttons when locked', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.0' } })
+
+      getKeyInput(0).should('be.disabled')
+      getValueControl(0).should('be.disabled')
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).should('be.disabled')
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('be.disabled')
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('leaves everything usable when minRuntimeVersion satisfies the requirement', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.1' } })
+
+      getKeyInput(0).should('not.be.disabled')
+      getValueControl(0).should('not.be.disabled')
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).should('not.be.disabled')
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled')
+    })
+
+    it('fails open when minRuntimeVersion is not provided', () => {
+      mountVersionCompatibilityForm()
+
+      getKeyInput(0).should('not.be.disabled')
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled')
     })
   })
 })

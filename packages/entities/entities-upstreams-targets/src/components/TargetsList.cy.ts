@@ -1,5 +1,7 @@
 // Cypress component test spec file
+import type { App } from 'vue'
 import TargetsList from './TargetsList.vue'
+import { ENTITIES_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import type {
   KonnectTargetsListConfig,
   KongManagerTargetsListConfig,
@@ -902,5 +904,79 @@ describe('<TargetsList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-targets-list').should('be.visible')
     })
+  })
+})
+
+describe('<TargetsList /> - managed_by column', () => {
+  const managedByColumnClass = '.kong-ui-entities-targets-list'
+
+  const targetsWithManagedBy: FetcherRawResponse = {
+    ...targets,
+    data: targets.data.map(row => ({
+      ...row,
+      managed_by: { service: 'gw-manager' },
+    })),
+  }
+
+  const mountList = (options: { managedByEnabled?: boolean } = {}) => {
+    cy.mount(TargetsList, {
+      props: {
+        cacheIdentifier: `targets-list-managed-by-${uuidv4()}`,
+        config: baseConfigKonnect,
+        canCreate: () => false,
+        canEdit: () => false,
+        canDelete: () => false,
+        canRetrieve: () => false,
+      },
+      global: options.managedByEnabled
+        ? {
+          plugins: [{
+            install: (app: App) => app.provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, true),
+          }],
+        }
+        : undefined,
+    })
+  }
+
+  beforeEach(() => {
+    cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop limit exceeded'))
+    cy.intercept(
+      {
+        method: 'GET',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${baseConfigKonnect.upstreamId}/targets*`,
+      },
+      {
+        statusCode: 200,
+        body: targetsWithManagedBy,
+      },
+    )
+  })
+
+  it('omits the managed_by column entirely while the flag is off', () => {
+    mountList()
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Target')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('not.exist')
+  })
+
+  it('offers managed_by in the visibility menu but keeps it hidden while the flag is on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Target')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('exist').and('contain.text', 'Managed By')
+  })
+
+  it('shows the managed_by label once the column is toggled on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').click()
+    cy.getTestId('apply-button').click()
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Managed By')
+    cy.getTestId('managed_by').should('contain.text', 'Konnect UI')
   })
 })

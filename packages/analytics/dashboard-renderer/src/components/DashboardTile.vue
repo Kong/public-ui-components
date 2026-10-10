@@ -223,6 +223,7 @@ import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import TopTalkersRenderer from './TopTalkersRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
@@ -236,6 +237,8 @@ import { KSegmentedControl } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import HeatmapRenderer from './HeatmapRenderer.vue'
+import TreemapRenderer from './TreemapRenderer.vue'
 import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -243,10 +246,11 @@ const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 const {
   context,
   definition,
+  fitToContent = false,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
-  hideZoomActions = false,
   isFullscreen,
+  preview = false,
   queryReady,
   showRefresh = false,
   tileId,
@@ -254,15 +258,21 @@ const {
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
+  fitToContent?: boolean
   height?: number
   hideActions?: boolean
-  hideZoomActions?: boolean
   isFullscreen?: boolean
+  preview?: boolean
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
   tileType?: TileConfig['type']
 }>()
+
+const { zoomConfiguration } = composables.useDashboardContext({
+  context: computed(() => context),
+  preview: computed(() => preview),
+})
 
 const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
 const refresh = () => {
@@ -353,6 +363,8 @@ const canShowHeaderActions = computed((): boolean => !hideActions && canShowKeba
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !isFullscreen)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
+  'heatmap': HeatmapRenderer,
+  'treemap': TreemapRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,
@@ -362,6 +374,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'top_talkers': TopTalkersRenderer,
   'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
@@ -391,13 +404,14 @@ const componentData = computed(() => {
     queryReady: queryReady,
     height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
+    zoomConfiguration: zoomConfiguration.value,
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
     activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
-    requestsLink: hideZoomActions ? undefined : requestsLinkZoomActions.value,
-    exploreLink: hideZoomActions ? undefined : exploreLinkZoomActions.value,
+    requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {
@@ -405,6 +419,7 @@ const componentData = computed(() => {
     rendererProps: {
       ...rendererProps,
       ...(!isTableChart ? chartRendererProps : {}),
+      ...(definition.chart.type === 'top_n' ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,
@@ -490,8 +505,19 @@ watch(metricNames, metrics => {
   }
 }, { immediate: true })
 
+const isDualAxisChart = computed(() => {
+  const chartOptions = chart.value
+
+  if (chartOptions.type !== 'timeseries_line') {
+    return false
+  }
+
+  return metricNames.value.some(metric => chartOptions.metric_axis_map?.[metric] === 'right')
+})
+
 const showMetricSelector = computed(() => (
   isTimeSeriesChart.value
+  && !isDualAxisChart.value
   && (chartData.value?.data.length ?? 0) > 0
   && metricNames.value.length > 1
   && Object.keys(chartData.value?.meta.display ?? {}).length > 0
@@ -705,6 +731,7 @@ defineExpose({ getExportData })
       max-width: 100%;
       min-width: 0;
       overflow-x: auto;
+      z-index: 0;
 
       .metric-selector {
         width: max-content;

@@ -2,8 +2,9 @@
 
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
-This package currently supports AG Grid infinite row loading with a cursor-first
-fetcher contract, basic column definitions, single-column sorting, empty/error
+This package supports AG Grid infinite row loading with a cursor-first fetcher
+contract and host-supplied complete results through its client-side row model. It also
+provides basic column definitions, single-column sorting, empty/error
 presentation states, and state lifecycle emits.
 
 ## Peer Dependencies
@@ -113,11 +114,13 @@ const handleState = (payload: TableDataGridStatePayload) => {
 | Prop | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
-| `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called by the AG Grid infinite datasource. |
+| `fetcher` | `TableDataGridFetcher<Row>` | Infinite mode | - | Async row loader called by the AG Grid infinite datasource. |
+| `rows` | `Row[]` | Unpaginated mode | - | Complete host-owned result. The grid does not fetch in this mode. |
+| `mode` | `'infinite' \| 'unpaginated'` | No | `'infinite'` | Selects `fetcher` or `rows` and the AG Grid row model when mounted. Remount to change modes. |
 | `error` | `boolean` | No | `false` | Host-controlled visible error state. Internal fetch failures emit state but do not render error UI unless this prop is true. |
-| `pageSize` | `number` | No | `25` | AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
-| `refreshKey` | `string \| number \| boolean` | No | - | Parent invalidation signal that rebuilds the datasource from the beginning. |
-| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort and page size. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
+| `pageSize` | `number` | No | `25` | Infinite mode only. AG Grid cache block size and fetcher request size. `tableConfig.pageSize` wins when present. |
+| `refreshKey` | `string \| number \| boolean` | No | - | Infinite mode only. Parent invalidation signal that rebuilds the datasource from the beginning. |
+| `tableConfig` | `TableDataGridConfig` | No | - | Host-controlled current sort, page size, and optional content-height sizing. Restores a previously-chosen sort on mount, or moves it after mount, without a click. Uncontrolled (internal state) when omitted. |
 
 ## Fetcher Contract
 
@@ -148,10 +151,10 @@ type TableDataGridFetcher<Row> = (
 uses `cursor: undefined`; later requests receive the previous response cursor.
 
 `sort` carries the current single-column sort, with `sortColumnKey` and
-`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
-request-context change like `refreshKey` or `pageSize`: it rebuilds the
-datasource and restarts the cursor chain from the beginning, because a cursor
-produced under one sort order is not valid under another.
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change keeps
+the infinite datasource and restarts its cursor chain from the beginning,
+because a cursor produced under one sort order is not valid under another.
+Changing `refreshKey` or `pageSize` rebuilds the datasource.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in
@@ -161,11 +164,38 @@ the public fetcher contract.
 is omitted, `hasMore: false` or a response shorter than `pageSize` marks the last
 loaded row as the end of the dataset.
 
+## Complete Results
+
+For a complete result that the host already loaded, set `mode="unpaginated"`
+and pass `rows`. The rows go to AG Grid's client-side row model. The grid does
+not fetch, show a loading overlay, or emit `state` events in this mode. The host
+owns loading, refresh, and error handling, and replaces `rows` when its result
+changes. An empty `rows` array shows the empty state.
+
+The row model is selected when `TableDataGrid` mounts. To switch between
+`infinite` and `unpaginated`, key the component by mode so Vue remounts it.
+
+For compact, content-sized tables, set `tableConfig.fitToContent` to `true` and
+leave the host height unconstrained. The grid fits its header and all returned
+rows, retains horizontal scrolling, and resizes when the result changes. This
+option defaults to `false` and is ignored in infinite mode. Otherwise, give the
+host a height and the grid scrolls within it.
+
+```vue
+<TableDataGrid
+  mode="unpaginated"
+  :headers="headers"
+  :rows="rows"
+/>
+```
+
 ## Refresh Behavior
 
 `refreshKey` is a parent-owned invalidation signal. Changing it rebuilds the
 infinite datasource, clears stored cursors, and starts again from the first
-block with `cursor: undefined`.
+block with `cursor: undefined`. Replacing `fetcher` triggers the same reset;
+subsequent requests use the new function and superseded responses cannot update
+current rows or error state.
 
 This reset is required for cursor APIs because cursor values are only valid
 relative to the response and query chain that produced them. Reusing a later
@@ -223,6 +253,24 @@ should opt out of the default flexible fill behavior.
 | `disableRowClick` | `boolean` | No | Suppresses `row:click` for clicks landing in this column's cells, e.g. an actions column. `cell:click` still fires. |
 | `sortable` | `boolean` | No | Enables sorting on this column via AG Grid's built-in header sort control. Only one column can be sorted at a time. |
 | `showSortIcon` | `boolean` | No | Shows the unsorted sort icon on this column even when it isn't the active sort, instead of only on hover or once sorted. Only relevant when `sortable` is true. |
+| `valueFormatter` | `(value, row) => string` | No | Formats a raw value for display. A custom cell slot still receives the original `rowValue`. |
+| `showPercentage` | `boolean` | No | In unpaginated mode, shows a numeric row value's percentage of the complete returned column sum. |
+| `percentageFormatter` | `(percentage) => string` | No | Optional formatter for the percentage points (50 means 50%) shown by `showPercentage`. The default uses the grid's i18n number formatting, up to two decimal places, and `< 0.01 %` for small positive values. |
+| `bar` | `'relative' \| 'absolute'` | No | In unpaginated mode, renders a bar for numeric values. `relative` uses `value / sum`; `absolute` uses `value / maximum`, matching the TopN scales. |
+| `thresholds` | `Array<{ value: number, type: 'warning' \| 'error' }>` | No | Compares the raw numeric value with each threshold in either grid mode. Colors the bar when rendered, or the value text otherwise. The highest crossed threshold wins, with `error` winning ties. Works without `bar`. |
+
+Setting `showPercentage`, `bar`, or `thresholds` opts a column into numeric
+presentation; no separate data type field is needed. Percentages and bars use
+the complete `rows` result in unpaginated mode. Infinite mode does not calculate
+aggregate values, so `showPercentage` or `bar` emits a console warning and omits
+those adornments. Thresholds compare each numeric cell value in either mode.
+Nonnumeric or non-finite values in unpaginated mode warn once per column and
+keep their ordinary content without numeric adornments. Missing values retain
+an empty bar track when a bar is configured.
+Bars clamp to 0–100%; percentage labels are omitted when the column total is not positive.
+
+Hosts render optional icons through the `cell-icon` slot. The grid places slot
+content beside the cell value without replacing its default or custom content.
 
 ## Sorting
 
@@ -248,14 +296,35 @@ The current sort lives in `tableConfig` (`sortColumnKey`, `sortColumnOrder`),
 alongside `pageSize`. Pass `tableConfig` to restore a previously-chosen sort
 on mount, or to move the sort after mount without a click; omit it to let the
 component own the sort internally. A sort change emits `sort` (the narrower,
-sort-only payload) and then `update:tableConfig` (the full current config),
-and rebuilds the infinite datasource from the beginning — a cursor produced
-under one sort order is not valid under another.
+sort-only payload) and then `update:tableConfig` (the full current config).
+
+For client-side sorting, use `mode="unpaginated"` and pass the complete result
+as `rows`. AG Grid sorts those rows locally with its built-in row animation.
+
+```vue
+<TableDataGrid
+  mode="unpaginated"
+  :rows="rows"
+  :headers="[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'requests', label: 'Requests', sortable: true },
+  ]"
+/>
+```
+
+In the default infinite mode, sorting keeps the datasource and restarts its
+cursor chain. The fetcher receives the new sort and loads rows again.
 
 ## Custom Cell Content
 
 Columns render custom cell content through a slot named after `header.key`.
-Columns without a matching slot render their raw `rowValue`.
+Columns without a matching slot render `valueFormatter(rowValue, row)` when
+configured, otherwise their raw `rowValue`. The `cell-icon` slot, percentages,
+and bars decorate both default values and slot content.
+When a named slot renders no content, the grid falls back to the formatted
+default value with ellipsis and an overflow tooltip; non-empty slot content
+remains host-owned.
+`cell-icon` is reserved for icon content and cannot name a column content slot.
 
 ```vue
 <TableDataGrid
@@ -267,6 +336,9 @@ Columns without a matching slot render their raw `rowValue`.
       {{ rowValue }}
     </KBadge>
   </template>
+  <template #cell-icon="{ column, rowValue }">
+    <ProviderIcon v-if="column.key === 'provider' && rowValue === 'openai'" />
+  </template>
 </TableDataGrid>
 ```
 
@@ -275,7 +347,7 @@ Columns without a matching slot render their raw `rowValue`.
 | `row` | `Row` | The full row record backing this cell. |
 | `rowValue` | `unknown` | `row[header.key]`. |
 | `column` | `TableDataGridHeader<Row>` | The header definition for this column. |
-| `rowIndex` | `number` | The row's index in the currently loaded block. |
+| `rowIndex` | `number` | The row's index in the currently loaded result. |
 | `selected` | `boolean` | Whether the row is currently selected. |
 | `refreshCell` | `() => void` | Forces AG Grid to re-render this cell. |
 
@@ -284,7 +356,7 @@ Columns without a matching slot render their raw `rowValue`.
 | Event | Payload | When it fires |
 | --- | --- | --- |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready. |
-| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. |
+| `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. Not emitted in `unpaginated` mode. |
 | `row:click` | `(row: TableDataGridRowClickPayload<Row>, event: RowClickedEvent<Row>)` | A row is clicked, unless the click landed in a `disableRowClick` column. |
 | `cell:click` | `TableDataGridCellClickPayload<Row>` | Any cell is clicked, including cells in `disableRowClick` columns. |
 | `sort` | `TableDataGridSort` | The current single-column sort changes. Fires before `update:tableConfig`. |
@@ -294,8 +366,9 @@ Columns without a matching slot render their raw `rowValue`.
 
 | Slot | Purpose |
 | --- | --- |
-| `empty-state` | Replaces the default empty state after a successful empty first block. |
+| `empty-state` | Replaces the default empty state after a successful empty result. |
 | `error-state` | Replaces the default visible error state when `error` is true. |
+| `cell-icon` | Adds optional host-rendered content before each cell's default value or column slot. Uses the same cell slot props; render nothing for cells without an icon. |
 | `[columnKey]` | Renders custom cell content for the column matching `header.key`. See [Custom Cell Content](#custom-cell-content). |
 
 ## Exports
@@ -308,6 +381,7 @@ Columns without a matching slot render their raw `rowValue`.
 - `TableDataGridCellClickPayload`
 - `TableDataGridCellSlotProps`
 - `TableDataGridHeader`
+- `TableDataGridProps`
 - `TableDataGridInfiniteFetcherParams`
 - `TableDataGridFetcherResult`
 - `TableDataGridFetcher`

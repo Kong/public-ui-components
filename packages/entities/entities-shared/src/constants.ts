@@ -5,6 +5,12 @@ import type DeckCommandEditor from './components/common/DeckCommandEditor.vue'
 export const PLUGIN_FORM_LAYOUT_STATE: InjectionKey<Ref<boolean>> = Symbol('PLUGIN_FORM_LAYOUT_STATE')
 
 /**
+ * Whether the config card displays sensitive field values unmasked.
+ * Provided by `EntityBaseConfigCard`; `ConfigCardItem` masks sensitive values when it is not provided.
+ */
+export const CONFIG_CARD_SHOW_SENSITIVE_FIELDS: InjectionKey<Readonly<Ref<boolean>>> = Symbol('CONFIG_CARD_SHOW_SENSITIVE_FIELDS')
+
+/**
  * The injection key for providing the `DeckCommandEditor` component.
  *
  * For:
@@ -38,3 +44,22 @@ export const CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT = '50vh'
  * keep the plain-text rendering that KCodeBlock already produces via `v-html`.
  */
 export const SHIKI_MAX_HIGHLIGHT_LENGTH = 200_000
+
+/**
+ * Feature flags shared across the entity packages.
+ *
+ * These use plain string keys (rather than symbols) so a host app can provide them from a
+ * flag service without importing anything, matching the convention in entities-plugins.
+ *
+ * Usage:
+ * ```ts
+ * // In the host app
+ * import { provide } from 'vue'
+ * import { ENTITIES_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+ * provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, isManagedByEnabled) // boolean or Ref<boolean>
+ * ```
+ */
+export const ENTITIES_FEATURE_FLAGS = {
+  /** Surfaces the `managed_by` ownership field in entity lists and detail cards. */
+  MANAGED_BY: 'KM-3018-entity-managed-by',
+} as const

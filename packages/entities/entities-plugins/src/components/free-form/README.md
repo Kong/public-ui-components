@@ -39,8 +39,9 @@ free-form/
 │   ├── ConditionField.vue   # Optional condition editor in General Info
 │   ├── CommonForm.vue (+ .cy.ts) # Generic plugin form used by default
 │   ├── ConfigForm.vue       # CommonForm's schema-driven config step (required/advanced grouping)
-│   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here until its mount harness
-│                             #   stops depending on PluginConfigurationForm — see its own TODO
+│   └── expressible-fields.spec.ts # Expressible-field ownership when a plugin customizes the field;
+│                             #   stays here until its mount harness stops depending on
+│                             #   PluginConfigurationForm — see its own TODO
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
     └── <plugin>/index.ts    # Folder-based plugins with dedicated Vue components
@@ -59,7 +60,7 @@ them, it doesn't own them.
 ### Expressible Fields (`expressions`)
 
 See the framework README for the full semantics of the `expressions` twin-field convention
-(`ExpressionField`/`ExpressionEditor`, array pairing, empty-slot rules). The rest of this section covers
+(`ExpressionEditor`, array pairing, empty-slot rules). The rest of this section covers
 what's specific to **this app's** integration.
 
 | Rule | Detail |
@@ -70,12 +71,18 @@ what's specific to **this app's** integration.
 > [!WARNING]
 > **Shape the payload in `formData`, never in `onFormChange`.** The framework's `form-context.ts` decides whether an incoming `model` is a real change by comparing it against the payload it last emitted (`isEqual(getValue(), newData)`). A payload that disagrees with the form's own state fails that comparison for good, so the next `model` looks like a change and the form re-initializes from it — reverting what the user just did. rate-limiting-advanced unset an all-empty `expressions` record in its `handleFormChange` and clearing an expression silently came back. Mutating `formData` keeps the two in step.
 
-It ships **no placeholder**: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression. Plugins pass their own, and override the help text through the `help` slot, using either of the normal field-copy patterns:
+Rendering is entirely schema-driven, so **a plugin needs no configuration to get it**: `StringField` and `NumberField` render their own `ExpressionEditor` below the value input whenever the field's twin resolves in the schema, and nothing otherwise. Schemas without an `expressions` record are unaffected. This is self-contained per field component rather than a separate dispatch step, so it applies equally whether the field was reached through `Field.vue`'s type-based dispatch or a plugin rendered `StringField`/`NumberField` directly (`MapField`'s inline string values, for one).
 
-- **A registered renderer** — `fieldRenderers` is how a plugin customizes one field, and a registered renderer owns the whole field, expression included, so it renders `ExpressionField` itself with the wording it wants: `plugins/_shared/CustomKeyField.vue`, registered for `config.custom_key` by both rate-limiting forms. The field keeps its place among the auto-rendered siblings.
-- **Explicit placement** — for a field the plugin lays out itself, pass the props directly: `RequestLimitsForm.vue`'s per-row `ExpressionEditor`, which pairs each `limit` with its `window_size`.
+| Component | Use |
+|---|---|
+| `ExpressionEditor` | The collapsible editor on its own. `StringField`/`NumberField` render one via their `expressionEditor` prop; a plugin that lays the value input out itself places it directly — see `rate-limiting-advanced/RequestLimitsForm.vue`, which pairs `limit` with `window_size` |
 
-Note that `ExpressionField` resolves its own path and hands children the absolute form, so a relative `name` works either way.
+`expressionEditor` accepts `{ placeholder }` (the field ships **no placeholder** by default: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression) or `false` to suppress the built-in editor entirely — the escape hatch for a plugin that places its own `ExpressionEditor` instead. Override the expression's help text through the `#expression-help` slot (distinct from the field's own `#help`). Two normal field-copy patterns:
+
+- **A registered renderer** — `fieldRenderers` is how a plugin customizes one field, and a registered renderer owns the whole field, expression included, so it renders `StringField`/`NumberField` itself with the wording it wants: `plugins/_shared/CustomKeyField.vue`, registered for `config.custom_key` by both rate-limiting forms. The field keeps its place among the auto-rendered siblings.
+- **Explicit placement** — for a field the plugin lays out itself, pass `expression-editor="false"` and render `ExpressionEditor` directly: `RequestLimitsForm.vue`'s per-row editor, which pairs each `limit` with its `window_size`.
+
+Note that `StringField`/`NumberField` resolve their own path and hand `ExpressionEditor` the absolute form, so a relative `name` works either way.
 
 #### Adopting it in a consuming app
 
@@ -229,7 +236,7 @@ filler.fillField('config.host', 'example.com')
 |---|---|
 | `components/free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
 | `components/credential-secret-field.cy.ts`, `components/scope-entity-field.cy.ts` | Entities-plugins-specific field integration tests |
-| `components/ExpressionField.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
+| `components/expressible-fields.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
 | `layout/StandardLayout.cy.ts` | Layout behavior, scope switching, general info and code mode |
 | `*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
 

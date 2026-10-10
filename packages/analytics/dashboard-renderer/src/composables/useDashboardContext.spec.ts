@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import useDashboardContext from './useDashboardContext'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import type { DashboardRendererContext } from '../types'
+import type { DashboardRendererContext, ZoomConfiguration } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -28,8 +28,7 @@ vi.mock('vue', async (importActual) => {
 // need to import after the mock
 import { getCurrentInstance, nextTick, ref, type App, type Ref } from 'vue'
 
-
-describe('useContextLinks', () => {
+describe('useDashboardContext', () => {
   let app: App | undefined
   let configFn: Mock
   let datasourceConfigFn: Mock
@@ -101,6 +100,7 @@ describe('useContextLinks', () => {
 
     let enrichedContext: Ref<DashboardRendererContext>
     let queryReady: Ref<boolean>
+    let zoomConfiguration: Ref<ZoomConfiguration>
     const wrapper = mount({
       template: '<div />',
       setup() {
@@ -112,6 +112,7 @@ describe('useContextLinks', () => {
         })
         enrichedContext = result.enrichedContext
         queryReady = result.queryReady
+        zoomConfiguration = result.zoomConfiguration
       },
     })
 
@@ -123,6 +124,8 @@ describe('useContextLinks', () => {
       enrichedContext,
       // @ts-ignore it's defined in mount, and we await nextTick for it
       queryReady,
+      // @ts-ignore it's defined in mount, and we await nextTick for it
+      zoomConfiguration,
     }
   }
 
@@ -140,10 +143,8 @@ describe('useContextLinks', () => {
       filters: [],
       refreshInterval: DEFAULT_TILE_REFRESH_INTERVAL_MS,
       showTileActions: true,
-      showTileZoomActions: true,
       timeSpec: defaultTimeSpec,
       tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
-      zoomable: false,
     })
   })
 
@@ -240,18 +241,36 @@ describe('useContextLinks', () => {
     }))
   })
 
-  it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
-    const { enrichedContext } = await setup({ hasZoomProp: true })
-    expect(enrichedContext.value.zoomable).to.eq(true)
-  })
-
   it('forces editable to false when preview is true, even if context.editable is true', async () => {
     const { enrichedContext } = await setup({ contextEditable: true, preview: true })
     expect(enrichedContext.value.editable).to.eq(false)
   })
 
-  it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
-    const { enrichedContext } = await setup({ hasZoomProp: true, preview: true })
-    expect(enrichedContext.value.zoomable).to.eq(false)
+  describe('zoomConfiguration', () => {
+    it.each([
+      [true, false, true],
+      [false, false, false],
+      [false, true, true],
+      [false, true, false],
+    ])('sets enabled and showZoomInAction to %s when preview is %s and the node onTileTimeRangeZoom prop set %s', async (
+      expected,
+      preview,
+      hasZoomProp,
+    ) => {
+      const { zoomConfiguration } = await setup({ hasZoomProp, preview })
+      expect(zoomConfiguration.value.enabled).to.eq(expected)
+      expect(zoomConfiguration.value.showZoomInAction).to.eq(expected)
+    })
+
+    it.each([
+      [true, false],
+      [false, true],
+    ])('sets showRequestsAction to %s when preview is %s', async (
+      expected,
+      preview,
+    ) => {
+      const { zoomConfiguration } = await setup({ preview })
+      expect(zoomConfiguration.value.showRequestsAction).to.eq(expected)
+    })
   })
 })

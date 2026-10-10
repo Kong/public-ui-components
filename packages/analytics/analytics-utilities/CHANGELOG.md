@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.53.0...%40kong-ui-public%2Fanalytics-utilities%4013.0.0) (2026-10-08)
+
+### Features
+
+* **analytics:** split entry analytics-utilities [MA-5551] ([#3911](https://github.com/Kong/public-ui-components/issues/3911)) ([1f0f385](https://github.com/Kong/public-ui-components/commit/1f0f3859481fa1394d99c3b511e8e8b33f34551b))
+
+### BREAKING CHANGES
+
+* **analytics:** color util and coordination composable are now exported behind @kong-ui-public/analytics-utilities/coordination
+
+
+# [12.53.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.52.0...%40kong-ui-public%2Fanalytics-utilities%4012.53.0) (2026-10-08)
+
+### Features
+
+* add LLM latency percentiles MA-5513 ([#3909](https://github.com/Kong/public-ui-components/issues/3909)) ([09837f3](https://github.com/Kong/public-ui-components/commit/09837f3c0d4c7f5a87dc78730e9a5a159c124c6a))
+
+
+# [12.52.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.51.1...%40kong-ui-public%2Fanalytics-utilities%4012.52.0) (2026-10-07)
+
+### Features
+
+* **upstream_status_code:** add new dimension analytics-schem [MA-5469] ([#3901](https://github.com/Kong/public-ui-components/issues/3901)) ([51d72f1](https://github.com/Kong/public-ui-components/commit/51d72f1dc7ccecb58890fd2b9706386088afbb60))
+
+
+## [12.51.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.51.0...%40kong-ui-public%2Fanalytics-utilities%4012.51.1) (2026-09-30)
+
+### Bug Fixes
+
+* **analytics:** distinguish flushed and spaced units ([#3894](https://github.com/Kong/public-ui-components/issues/3894)) ([b42423b](https://github.com/Kong/public-ui-components/commit/b42423b546d53a242020e499d63000cef2a34467))
+
+
+# [12.51.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.50.0...%40kong-ui-public%2Fanalytics-utilities%4012.51.0) (2026-09-28)
+
+### Features
+
+* **analytics:** ai-x observability polish ([#3891](https://github.com/Kong/public-ui-components/issues/3891)) ([1e8283c](https://github.com/Kong/public-ui-components/commit/1e8283c2d6e4a45c33d156739e5686c2baf6d372))
+
+
+# [12.50.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.49.0...%40kong-ui-public%2Fanalytics-utilities%4012.50.0) (2026-09-28)
+
+### Features
+
+* **analytics:** treemap and heatmap chart types [MA-5526] ([#3890](https://github.com/Kong/public-ui-components/issues/3890)) ([35c0ace](https://github.com/Kong/public-ui-components/commit/35c0aceff3aedec26522f0c260b43ebb9da1451e))
+
+
+# [12.49.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.48.0...%40kong-ui-public%2Fanalytics-utilities%4012.49.0) (2026-09-25)
+
+### Features
+
+* **analytics:** line label formatting + heatmap integration to dashboards [MA-5525] ([#3882](https://github.com/Kong/public-ui-components/issues/3882)) ([30a15ca](https://github.com/Kong/public-ui-components/commit/30a15cab364f65988230d5332652430ae29a8873))
+
+
+# [12.48.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.1...%40kong-ui-public%2Fanalytics-utilities%4012.48.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dashboard coordination [MA-5427] ([#3868](https://github.com/Kong/public-ui-components/issues/3868)) ([a34b6db](https://github.com/Kong/public-ui-components/commit/a34b6db99d242fb5a4ad8935a840e81330f9930c))
+
+
+## [12.47.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.47.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.1) (2026-09-24)
+
+### Bug Fixes
+
+* **analytics:** update chart color palette (MA-5517) ([#3875](https://github.com/Kong/public-ui-components/issues/3875)) ([8d14ee0](https://github.com/Kong/public-ui-components/commit/8d14ee0e0a8995c30b7b02e19159c4002aed0e28))
+
+
+# [12.47.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.46.0...%40kong-ui-public%2Fanalytics-utilities%4012.47.0) (2026-09-24)
+
+### Features
+
+* **analytics:** top talkers grid and renderer [MA-5428] ([#3865](https://github.com/Kong/public-ui-components/issues/3865)) ([310fd2b](https://github.com/Kong/public-ui-components/commit/310fd2b8409ab6ae79cece53a4613d01f9afd64e))
+
+
+# [12.46.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.45.0...%40kong-ui-public%2Fanalytics-utilities%4012.46.0) (2026-09-24)
+
+### Features
+
+* **analytics:** dual y axis metrics in timeseries charts [MA-5442] ([#3851](https://github.com/Kong/public-ui-components/issues/3851)) ([2c9966c](https://github.com/Kong/public-ui-components/commit/2c9966ca9d27363ba94a66d523282cc20c7171c4))
+
+
+# [12.45.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.44.0...%40kong-ui-public%2Fanalytics-utilities%4012.45.0) (2026-09-24)
+
+### Features
+
+* add a2a_task_state to api requests ([#3872](https://github.com/Kong/public-ui-components/issues/3872)) ([2ebe897](https://github.com/Kong/public-ui-components/commit/2ebe897f37bac1ac659811638d19cc367961dd47))
+
+
+# [12.44.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.43.0...%40kong-ui-public%2Fanalytics-utilities%4012.44.0) (2026-09-21)
+
+### Features
+
+* **analytics:** consistent colors for identical dimensions/metrics on all charts [MA-5427] ([#3849](https://github.com/Kong/public-ui-components/issues/3849)) ([77054ff](https://github.com/Kong/public-ui-components/commit/77054fffca34e71525b9679eab48417ff30e8311))
+
+
+# [12.43.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.42.0...%40kong-ui-public%2Fanalytics-utilities%4012.43.0) (2026-09-17)
+
+### Features
+
+* **analytics:** allow metric mapping to x axis of scatter charts [MA-5493] ([#3844](https://github.com/Kong/public-ui-components/issues/3844)) ([a016a13](https://github.com/Kong/public-ui-components/commit/a016a13df45e3dc94be9c3114d7dfeef10d9d59b))
+* **analytics:** topn cell icon and metric bar [MA-5424] ([#3845](https://github.com/Kong/public-ui-components/issues/3845)) ([e9a92de](https://github.com/Kong/public-ui-components/commit/e9a92de4a37d3d0caa521f260fb9a7fd9145095f))
+
+
 # [12.42.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.41.0...%40kong-ui-public%2Fanalytics-utilities%4012.42.0) (2026-09-14)
 
 ### Features

@@ -3,6 +3,7 @@
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :cell-attributes="cellAttrsFn"
+      :default-table-preferences="defaultTablePreferences"
       :disable-row-click="true"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
@@ -134,6 +135,9 @@
       <template #tags="{ rowValue }">
         <TableTags :tags="rowValue" />
       </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
+      </template>
 
       <!-- Row actions -->
       <template #actions="{ row }">
@@ -206,6 +210,8 @@ import {
   useDeleteUrlBuilder,
   useTableState,
   TableTags,
+  getManagedByLabel,
+  useManagedByColumn,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerSniListConfig,
@@ -307,7 +313,10 @@ const fields: BaseTableHeaders = {
   certificate: { label: t('snis.list.table_headers.certificate_id'), sortable: false },
   tags: { label: t('snis.list.table_headers.tags'), sortable: false },
 }
-const tableHeaders: BaseTableHeaders = fields
+
+// `managed_by` is flag-gated and, once the flag is on, still opt-in: hidden until a user turns
+// it on from the column visibility menu.
+const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 
 const cellAttrsFn = (params: Record<string, any>) => {
   /**

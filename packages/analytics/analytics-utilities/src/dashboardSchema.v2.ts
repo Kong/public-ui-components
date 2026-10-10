@@ -29,6 +29,8 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 // TODO: Once we support all chart types, this could potentially be replaced with a direct reference to `chartTypes`.
 // This is partially overlapping with analytics chart types, but not strictly so.
 export const dashboardTileTypes = [
+  'heatmap',
+  'treemap',
   'horizontal_bar',
   'vertical_bar',
   'gauge',
@@ -38,6 +40,7 @@ export const dashboardTileTypes = [
   'scatter',
   'golden_signals',
   'top_n',
+  'top_talkers',
   'table',
   'slottable',
   'single_value',
@@ -146,6 +149,24 @@ export const thresholdSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const yAxisPositions = ['left', 'right'] as const
+export type YAxisPosition = typeof yAxisPositions[number]
+
+export const yAxisSchema = {
+  type: 'object',
+  properties: {
+    show_grid: {
+      type: 'boolean',
+    },
+    title: {
+      type: 'string',
+    },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type YAxisOptions = FromSchemaWithOptions<typeof yAxisSchema>
+
 export const timeseriesChartSchema = {
   type: 'object',
   properties: {
@@ -162,6 +183,22 @@ export const timeseriesChartSchema = {
         type: 'array',
         items: thresholdSchema,
       },
+    },
+    metric_axis_map: {
+      type: 'object',
+      description: 'Maps a metric to the specified y axis, by default the metric will only use the left y axis. Only applies to timeseries_line.',
+      additionalProperties: {
+        type: 'string',
+        enum: yAxisPositions,
+      },
+    },
+    y_axes: {
+      type: 'object',
+      properties: {
+        left: yAxisSchema,
+        right: yAxisSchema,
+      },
+      additionalProperties: false,
     },
     chart_dataset_colors: chartDatasetColorsSchema,
     synthetics_data_key: syntheticsDataKey,
@@ -292,6 +329,85 @@ export const donutChartSchema = {
 
 export type DonutChartOptions = FromSchemaWithOptions<typeof donutChartSchema>
 
+export const heatmapChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['heatmap'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type HeatmapChartOptions = FromSchemaWithOptions<typeof heatmapChartSchema>
+
+// One or two dimensions. When two dimensions are provided the first groups the second, e.g. provider -> model
+export const treemapChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['treemap'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TreemapChartOptions = FromSchemaWithOptions<typeof treemapChartSchema>
+
+export const columnIconSet = ['ai_provider'] as const
+
+export type ColumnIconSet = typeof columnIconSet[number]
+
+export const topNColumnOptionsSchema = {
+  type: 'object',
+  properties: {
+    label: {
+      type: 'string',
+    },
+    value: {
+      type: 'string',
+      enum: ['raw', 'relative'],
+      description: '`relative` shows the value\'s percentage of the column total across the returned rows next to the raw value.',
+    },
+    bar: {
+      type: 'string',
+      enum: ['relative', 'max'],
+      description: 'Renders a bar sized relative to the column total (`relative`) or the column maximum (`max`).',
+    },
+    icon_set: {
+      type: 'string',
+      enum: columnIconSet,
+    },
+    thresholds: {
+      type: 'array',
+      description: 'Colors the bar (or the value when there is no bar) once the raw metric value reaches a threshold.',
+      items: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['warning', 'error'],
+          },
+          value: {
+            type: 'number',
+          },
+        },
+        required: ['type', 'value'],
+        additionalProperties: false,
+      },
+    },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopNColumnOptions = FromSchemaWithOptions<typeof topNColumnOptionsSchema>
+
 export const topNTableSchema = {
   type: 'object',
   properties: {
@@ -310,12 +426,129 @@ export const topNTableSchema = {
       type: 'string',
     },
     entity_links: entityLinks,
+    column_options: {
+      type: 'object',
+      description: 'Per-column rendering options keyed by metric or dimension name.',
+      additionalProperties: topNColumnOptionsSchema,
+    },
   },
   required: ['type'],
   additionalProperties: false,
 } as const
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
+
+const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions?: T) => ({
+  type: 'array',
+  description: 'A list of filters to apply to the query',
+  items: {
+    oneOf: [
+      {
+        type: 'object',
+        description: 'In filter',
+        properties: {
+          field: {
+            type: 'string',
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
+          },
+          operator: {
+            type: 'string',
+            enum: exploreFilterTypesV2,
+          },
+          value: {
+            type: 'array',
+            items: {
+              type: ['string', 'number', 'null'],
+            },
+          },
+        },
+        required: [
+          'field',
+          'operator',
+          'value',
+        ],
+        additionalProperties: false,
+      },
+      {
+        type: 'object',
+        description: 'Empty filter',
+        properties: {
+          field: {
+            type: 'string',
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
+          },
+          operator: {
+            type: 'string',
+            enum: requestFilterTypeEmptyV2,
+          },
+        },
+        required: [
+          'field',
+          'operator',
+        ],
+        additionalProperties: false,
+      },
+    ],
+  },
+} as const satisfies JSONSchema)
+
+const topTalkersColumnSchema = {
+  type: 'object',
+  properties: {
+    dimension: {
+      type: 'string',
+      description: 'Dimension to group this column by.',
+    },
+    label: {
+      type: 'string',
+      description: 'Column heading, defaults to the translated dimension name.',
+    },
+    filters: {
+      ...filtersFn(),
+      description: 'Filters applied to this column only, in addition to the query filters.',
+    },
+  },
+  required: ['dimension'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopTalkersColumnDefinition = FromSchemaWithOptions<typeof topTalkersColumnSchema>
+
+/**
+ * A grid of ranked, proportionally sized blocks: one column per dimension, each
+ * issuing its own group-by against the tile's shared query. The first metric (or
+ * `size_metric`) sizes each block, the remaining metrics render in its tooltip.
+ */
+export const topTalkersSchema = {
+  type: 'object',
+  properties: {
+    chart_title: chartTitle,
+    synthetics_data_key: syntheticsDataKey,
+    type: {
+      type: 'string',
+      enum: ['top_talkers'],
+    },
+    columns: {
+      type: 'array',
+      minItems: 1,
+      items: topTalkersColumnSchema,
+    },
+    size_metric: {
+      type: 'string',
+      description: 'Metric for computing the block size and the percentage label, defaults to the first entry in the query metrics.',
+    },
+    column_options: {
+      type: 'object',
+      description: 'Per-metric or per-dimension rendering options, keyed by name. Applies to tooltip rows as well as headings.',
+      additionalProperties: topNColumnOptionsSchema,
+    },
+    entity_links: entityLinks,
+  },
+  required: ['type', 'columns'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TopTalkersOptions = FromSchemaWithOptions<typeof topTalkersSchema>
 
 export const tableChartSchema = {
   type: 'object',
@@ -507,60 +740,6 @@ const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) =
   items: {
     type: 'string',
     ...(dimensions ? { enum: dimensions } : {}),
-  },
-} as const satisfies JSONSchema)
-
-const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions?: T) => ({
-  type: 'array',
-  description: 'A list of filters to apply to the query',
-  items: {
-    oneOf: [
-      {
-        type: 'object',
-        description: 'In filter',
-        properties: {
-          field: {
-            type: 'string',
-            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
-          },
-          operator: {
-            type: 'string',
-            enum: exploreFilterTypesV2,
-          },
-          value: {
-            type: 'array',
-            items: {
-              type: ['string', 'number', 'null'],
-            },
-          },
-        },
-        required: [
-          'field',
-          'operator',
-          'value',
-        ],
-        additionalProperties: false,
-      },
-      {
-        type: 'object',
-        description: 'Empty filter',
-        properties: {
-          field: {
-            type: 'string',
-            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
-          },
-          operator: {
-            type: 'string',
-            enum: requestFilterTypeEmptyV2,
-          },
-        },
-        required: [
-          'field',
-          'operator',
-        ],
-        additionalProperties: false,
-      },
-    ],
   },
 } as const satisfies JSONSchema)
 
@@ -884,10 +1063,13 @@ const dashboardTileChartSchema = {
     barChartSchema,
     gaugeChartSchema,
     donutChartSchema,
+    heatmapChartSchema,
+    treemapChartSchema,
     timeseriesChartSchema,
     scatterChartSchema,
     metricCardSchema,
     topNTableSchema,
+    topTalkersSchema,
     slottableSchema,
     singleValueSchema,
     choroplethMapSchema,

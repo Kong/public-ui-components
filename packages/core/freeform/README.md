@@ -20,7 +20,7 @@ A schema-driven dynamic form rendering engine for Kong plugin configuration, ext
 src/
 ├── types.ts             # Core type definitions
 ├── form-schema.ts       # FormSchema/UnionFieldSchema/etc. — the schema type contract
-├── field-dispatch.ts    # Schema-type -> component mapping (shared by Field/ExpressionField)
+├── field-dispatch.ts    # Schema-type -> component mapping, used by Field.vue
 ├── utils.ts (+ .spec.ts) # Path utilities, field sorting
 ├── constants.ts         # USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY injection keys
 ├── external-links.ts    # Doc links referenced by field help text
@@ -42,8 +42,7 @@ src/
     ├── StringArrayField.vue # Tag-like comma-separated string sets
     ├── JsonField.vue        # JSON textarea editor
     ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
-    ├── ExpressionField.vue  # An expressible field: its value input plus its expression
-    ├── ExpressionEditor.vue # Just the collapsible expression editor
+    ├── ExpressionEditor.vue # The collapsible expression editor; StringField/NumberField render one inline, or a host places it itself
     ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
     ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
     ├── SlideTransition.vue  # Height-animated collapse transition
@@ -83,7 +82,6 @@ Defined in `field-dispatch.ts`. The mapping logic:
 
 | Schema Type | `one_of` present? | Component |
 |---|---|---|
-| any type, with an `expressions` twin | - | `ExpressionField` (the value input below, plus its expression) |
 | `string` | No | `StringField` |
 | `string` | Yes | `EnumField` |
 | `number` | `integer` | No | `NumberField` |
@@ -97,6 +95,8 @@ Defined in `field-dispatch.ts`. The mapping logic:
 | `map` | - | `MapField` |
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
+
+This is the whole mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a host rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
 
 ### Entity Checks
 
@@ -236,12 +236,11 @@ Some Gateway config fields can alternatively have their value supplied as a CEL 
 | Empty array slot | `""` — never `null`. Kong makes every array element `required`, so a null element fails validation. A twin array is emitted at the source array's full length with `""` in every literal slot |
 | Empty scalar twin | The configured `emptyFieldValue` sentinel (absent/null); a scalar has no slot to hold |
 
-Rendering is entirely schema-driven: `Field.vue` dispatches to `ExpressionField` (the plain input plus its expression) for any field whose twin resolves in the schema, and to the normal type mapping otherwise. Schemas without an `expressions` record are unaffected.
+Rendering is entirely schema-driven, so **a host needs no configuration to get it**: `StringField` and `NumberField` render their own `ExpressionEditor` below the value input whenever the field's twin resolves in the schema, and nothing otherwise. Schemas without an `expressions` record are unaffected. This is self-contained per field component rather than a separate dispatch step, so it applies equally whether the field was reached through `Field.vue`'s type-based dispatch or a host rendered `StringField`/`NumberField` directly (`MapField`'s inline string values, for one).
 
 | Component | Use |
 |---|---|
-| `ExpressionField` | The pair. What the dispatch resolves to; a host overriding the field replaces both halves |
-| `ExpressionEditor` | Just the collapsible editor, for a host that lays out the value input itself |
+| `ExpressionEditor` | The collapsible editor on its own. `StringField`/`NumberField` render one via their `expressionEditor` prop; a host that lays the value input out itself places it directly |
 
 ## Usage
 
@@ -368,7 +367,7 @@ await filler.fill({ config: { host: 'localhost', port: 6379 } })
 ### Adding a New Field Type
 
 1. Create `components/[Type]Field.vue` component
-2. Add a case in `field-dispatch.ts`'s `resolveFieldComponent` (kept separate from `Field.vue` so `ExpressionField` can share it)
+2. Add a case in `field-dispatch.ts`'s `resolveFieldComponent`
 3. Add handler type in `filler/shared/field-walker.ts` (`HandlerType` enum)
 4. Add Cypress handler in `filler/cypress/handlers/`
 5. Add Playwright handler in `filler/playwright/handlers/`

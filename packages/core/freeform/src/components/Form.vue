@@ -63,8 +63,8 @@ const childFields = computed(() => {
 
   // The `expressions` record is a companion to its sibling top-level record,
   // not a field in its own right: each entry is rendered inline by the
-  // expressible field it overrides (see `ExpressionField`). Rendering it here
-  // as well would duplicate every one of those inputs.
+  // expressible field it overrides (see `StringField`/`NumberField`).
+  // Rendering it here as well would duplicate every one of those inputs.
   let sortedFields = fields.filter((field) => Object.keys(field)[0] !== EXPRESSIONS_FIELD)
 
   if (fieldsOrder) {

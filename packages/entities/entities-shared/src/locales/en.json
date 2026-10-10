@@ -59,6 +59,7 @@
       "enabled_tooltip": "Enabled is FTW",
       "updated_at_label": "Last updated",
       "created_at_label": "Created",
+      "managed_by_label": "Managed By",
       "tags_label": "Tags",
       "link": "Link",
       "partial_label": "Redis configuration"

@@ -56,6 +56,13 @@ export interface LineChartOptions extends BaseChartOptions {
   granularity: Ref<GranularityValues>
   pointsWithoutHover?: ComputedRef<boolean | undefined>
   threshold?: Readonly<Ref<Record<ExploreAggregations, Threshold[]> | undefined>>
+  leftYAxisGrid?: Readonly<Ref<boolean | undefined>>
+  rightYAxis?: Readonly<Ref<YAxisConfig | undefined>> // present only when a metric is plotted on the right
+}
+
+export interface YAxisConfig {
+  title?: string
+  showGrid?: boolean
 }
 
 export interface ScatterChartOptions {
@@ -66,6 +73,8 @@ export interface ScatterChartOptions {
   metricAxesTitle?: Ref<string | undefined>
   dimensionAxesTitle?: Ref<string | undefined>
   metricUnit?: Ref<string | undefined>
+  xMetric?: Ref<string | undefined>
+  xMetricUnit?: Ref<string | undefined>
   outlierValue?: Ref<number | undefined>
   referenceLines?: Ref<ResolvedReferenceLine[]>
   themeColors: Ref<ScatterChartColors>

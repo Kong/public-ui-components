@@ -1,5 +1,6 @@
-import { h } from 'vue'
+import { defineComponent, h, provide, ref } from 'vue'
 import composables from '../../composables'
+import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
 import type { RecordItem } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
@@ -341,6 +342,169 @@ describe('<ConfigCardItem />', () => {
       })
     })
 
+    describe('Encrypted fields in JSON code blocks', () => {
+      const REDACTED_MASK = '********'
+      const authSchema = {
+        type: 'record',
+        fields: [
+          { header_name: { type: 'string' } },
+          { header_value: { type: 'string', encrypted: true } },
+        ],
+      }
+      const modelSchema = {
+        type: 'record',
+        fields: [{ name: { type: 'string' } }],
+      }
+      const configSchema = {
+        type: 'record',
+        fields: [
+          {
+            targets: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [{ auth: authSchema }, { model: modelSchema }],
+              },
+            },
+          },
+          {
+            embeddings: {
+              type: 'record',
+              fields: [{ auth: authSchema }, { model: modelSchema }],
+            },
+          },
+        ],
+      }
+      const target = {
+        auth: { header_name: 'Authorization', header_value: 'Bearer sk-target-secret' },
+        model: { name: 'gpt-4o' },
+      }
+
+      const mountWithSchema = (item: RecordItem, showSensitiveFields = false): void => {
+        cy.mount(defineComponent({
+          setup() {
+            composables.useSchemaProvider(ref(configSchema))
+            if (showSensitiveFields) {
+              provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, ref(true))
+            }
+            return () => h(ConfigCardItem, { item })
+          },
+        }))
+      }
+
+      it('redacts encrypted fields of array elements', () => {
+        mountWithSchema({
+          type: ConfigurationSchemaType.Json,
+          key: 'targets',
+          label: 'Targets',
+          value: [target],
+        })
+
+        cy.getTestId('0-json-code').should('be.visible')
+        cy.getTestId('0-json-code').should('have.attr', 'data-dd-privacy', 'mask')
+        cy.getTestId('0-json-code').should('contain.text', REDACTED_MASK)
+        cy.getTestId('0-json-code').should('contain.text', 'Authorization')
+        cy.getTestId('0-json-code').should('not.contain.text', 'sk-target-secret')
+      })
+
+      it('redacts encrypted fields of nested records', () => {
+        mountWithSchema({
+          type: ConfigurationSchemaType.Json,
+          key: 'embeddings',
+          label: 'Embeddings',
+          value: {
+            auth: { header_name: 'api-key', header_value: 'sk-embeddings-secret' },
+            model: { name: 'text-embedding-3-small' },
+          },
+        })
+
+        cy.getTestId('auth-json-code').should('be.visible')
+        cy.getTestId('auth-json-code').should('contain.text', REDACTED_MASK)
+        cy.getTestId('auth-json-code').should('not.contain.text', 'sk-embeddings-secret')
+        cy.getTestId('model-json-code').should('contain.text', 'text-embedding-3-small')
+      })
+
+      it('redacts encrypted fields in JSON array items', () => {
+        mountWithSchema({
+          type: ConfigurationSchemaType.JsonArray,
+          key: 'targets',
+          label: 'Targets',
+          value: [target],
+        })
+
+        cy.getTestId('auth-json-code').should('be.visible')
+        cy.getTestId('auth-json-code').should('contain.text', REDACTED_MASK)
+        cy.getTestId('auth-json-code').should('not.contain.text', 'sk-target-secret')
+      })
+
+      it('copies the unredacted value', () => {
+        cy.window().then((win) => {
+          cy.stub(win.navigator.clipboard, 'writeText').as('writeText').resolves()
+        })
+
+        mountWithSchema({
+          type: ConfigurationSchemaType.Json,
+          key: 'targets',
+          label: 'Targets',
+          value: [target],
+        })
+
+        cy.getTestId('0-json-code').find('.code-block-copy-button').click({ force: true })
+        cy.get('@writeText').should('have.been.calledWith', JSON.stringify(target, null, '  '))
+      })
+
+      it('displays encrypted fields unmasked when sensitive fields are shown', () => {
+        mountWithSchema({
+          type: ConfigurationSchemaType.Json,
+          key: 'targets',
+          label: 'Targets',
+          value: [target],
+        }, true)
+
+        cy.getTestId('0-json-code').should('be.visible')
+        cy.getTestId('0-json-code').should('contain.text', 'sk-target-secret')
+        cy.getTestId('0-json-code').should('not.contain.text', REDACTED_MASK)
+      })
+    })
+
+    describe('ManagedBy', () => {
+      const mountManagedByItem = (value: Record<string, string> | null | undefined): void => {
+        cy.mount(ConfigCardItem, {
+          props: {
+            item: {
+              type: ConfigurationSchemaType.ManagedBy,
+              key: 'managed_by',
+              label: 'Managed By',
+              value,
+            },
+          },
+        })
+      }
+
+      it('renders the friendly label for a known owner', () => {
+        mountManagedByItem({ tool: 'terraform-provider-konnect', version: 'v2.12.0' })
+
+        cy.getTestId('managed_by-managed-by').should('be.visible')
+        cy.getTestId('managed_by-managed-by').should('contain.text', 'Terraform')
+      })
+
+      it('renders the custom label for an unmapped owner', () => {
+        mountManagedByItem({ service: 'some-service-we-have-never-seen' })
+
+        cy.getTestId('managed_by-managed-by').should('contain.text', 'Custom')
+      })
+
+      it('renders a dash instead of the raw object when there is no owner', () => {
+        mountManagedByItem(null)
+
+        // A null value takes the generic empty-value branch; the ManagedBy renderer is
+        // never reached, and the raw `managed_by` object never shows through
+        cy.getTestId('managed_by-no-value').should('be.visible')
+        cy.getTestId('managed_by-no-value').should('contain.text', '–')
+        cy.getTestId('managed_by-managed-by').should('not.exist')
+      })
+    })
+
     describe('ID & Redacted Types', () => {
       it('renders an ID correctly', () => {
         const val = 'abc-123-cats-are-neat'
@@ -430,6 +594,7 @@ describe('<ConfigCardItem />', () => {
 
         cy.get('.config-card-details-row').should('be.visible')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('be.visible')
+        cy.getTestId(`${item.key}-copy-uuid-redacted`).should('have.attr', 'data-dd-privacy', 'mask')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('contain.text', '*')
         cy.getTestId(`${item.key}-copy-uuid-redacted`).should('not.contain.text', val)
       })
@@ -453,8 +618,49 @@ describe('<ConfigCardItem />', () => {
         cy.getTestId(`${item.key}-copy-uuid-array`).should('be.visible')
         ids.forEach((id: string, idx: number) => {
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('be.visible')
+          cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('have.attr', 'data-dd-privacy', 'mask')
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('contain.text', '*')
           cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('not.contain.text', id)
+        })
+      })
+
+      const mountWithSensitiveFieldsShown = (item: RecordItem): void => {
+        cy.mount(defineComponent({
+          setup() {
+            provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, ref(true))
+            return () => h(ConfigCardItem, { item })
+          },
+        }))
+      }
+
+      it('renders a redacted ID unmasked when sensitive fields are shown', () => {
+        const val = 'abc-123-cats-are-neat'
+        const item: RecordItem = {
+          type: ConfigurationSchemaType.Redacted,
+          key: 'id',
+          label: 'ID',
+          value: val,
+        }
+
+        mountWithSensitiveFieldsShown(item)
+
+        cy.getTestId(`${item.key}-copy-uuid-redacted`).should('be.visible')
+        cy.getTestId(`${item.key}-copy-uuid-redacted`).should('contain.text', val)
+      })
+
+      it('renders a redacted ID Array unmasked when sensitive fields are shown', () => {
+        const ids = ['abc-123-cats-are-neat', 'def-456-dogs-are-neat']
+        const item: RecordItem = {
+          type: ConfigurationSchemaType.RedactedArray,
+          key: 'client_ids',
+          label: 'Client ID',
+          value: ids,
+        }
+
+        mountWithSensitiveFieldsShown(item)
+
+        ids.forEach((id: string, idx: number) => {
+          cy.getTestId(`${item.key}-copy-uuid-${idx}`).should('contain.text', id)
         })
       })
     })

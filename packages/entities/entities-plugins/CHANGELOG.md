@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.273.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.13...%40kong-ui-public%2Fentities-plugins%409.273.14) (2026-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.12...%40kong-ui-public%2Fentities-plugins%409.273.13) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.11...%40kong-ui-public%2Fentities-plugins%409.273.12) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.10...%40kong-ui-public%2Fentities-plugins%409.273.11) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.9...%40kong-ui-public%2Fentities-plugins%409.273.10) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.8...%40kong-ui-public%2Fentities-plugins%409.273.9) (2026-10-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.6...%40kong-ui-public%2Fentities-plugins%409.273.8) (2026-09-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.6...%40kong-ui-public%2Fentities-plugins%409.273.7) (2026-09-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.5...%40kong-ui-public%2Fentities-plugins%409.273.6) (2026-09-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.4...%40kong-ui-public%2Fentities-plugins%409.273.5) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.3...%40kong-ui-public%2Fentities-plugins%409.273.4) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.2...%40kong-ui-public%2Fentities-plugins%409.273.3) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.1...%40kong-ui-public%2Fentities-plugins%409.273.2) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.273.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.0...%40kong-ui-public%2Fentities-plugins%409.273.1) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.273.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.18...%40kong-ui-public%2Fentities-plugins%409.273.0) (2026-09-22)
+
+### Features
+
+* **entities:** surface managed_by in entity lists and config cards [KM-3018] ([#3740](https://github.com/Kong/public-ui-components/issues/3740)) ([29bc496](https://github.com/Kong/public-ui-components/commit/29bc4968cacfa25a1d33b53a404a6e94a6b8e9a0))
+
+
+## [9.272.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.17...%40kong-ui-public%2Fentities-plugins%409.272.18) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.16...%40kong-ui-public%2Fentities-plugins%409.272.17) (2026-09-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.15...%40kong-ui-public%2Fentities-plugins%409.272.16) (2026-09-16)
+
+### Bug Fixes
+
+* **entities-plugins:** hide empty plugin configuration section [KM-3283] ([#3843](https://github.com/Kong/public-ui-components/issues/3843)) ([6cbc33d](https://github.com/Kong/public-ui-components/commit/6cbc33d11886b034aad45824739bfc2a5670d2b9))
+
+
 ## [9.272.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.14...%40kong-ui-public%2Fentities-plugins%409.272.15) (2026-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

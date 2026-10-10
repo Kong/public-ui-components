@@ -36,12 +36,18 @@
           {{ fieldAttrs.label }}
         </slot>
         <template
-          v-if="fieldAttrs.labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info || versionInfo"
           #tooltip
         >
           <slot name="tooltip">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="fieldAttrs.labelAttributes.info" />
+            <p
+              v-if="versionInfo"
+              class="ff-version-compatibility-note"
+            >
+              {{ versionInfo.tooltip }}
+            </p>
+            <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+            <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
           </slot>
         </template>
       </KLabel>
@@ -50,6 +56,7 @@
         appearance="tertiary"
         :aria-label="realAddItemLabel"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
+        :disabled="isLocked"
         icon
         @click="addItem"
       >
@@ -99,6 +106,7 @@
               :aria-label="t('actions.remove_entity', { entity: fieldName })"
               class="ff-array-field-item-remove"
               :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
+              :disabled="isLocked"
               icon
               @click.stop="removeItem(index)"
             >
@@ -113,6 +121,7 @@
         :aria-label="realAddItemLabel"
         class="ff-array-field-add-item-btn"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
+        :disabled="isLocked"
         @click="addItem"
       >
         <AddIcon />
@@ -164,6 +173,7 @@
             :aria-label="t('actions.remove_entity', { entity: fieldName })"
             class="ff-array-field-item-remove"
             :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
+            :disabled="isLocked"
             icon
             @click.stop="removeItem(index)"
           >
@@ -220,8 +230,10 @@ defineSlots<{
 
 const { i18n: { t } } = useI18n()
 const { getDefault, getSchema } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<T[] | EmptyValue>(toRef(props, 'name'))
+const { value: fieldValue, hide, versionInfo, ...field } = useField<T[] | EmptyValue>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+
+const isLocked = computed(() => !!versionInfo?.value)
 const subSchema = computed(() => {
   if (!field.path) throw new Error('Field path is required for sub-schema retrieval')
   const schema = getSchema<ArrayLikeFieldSchema>(field.path.value)
@@ -438,6 +450,12 @@ const stickyTop = computed(() => {
 
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   &-add-item-btn {

@@ -79,6 +79,13 @@ export interface FieldSchema {
 
   one_of?: any[]
 
+  /**
+   * The lowest AI Gateway version that supports this field. Compared against
+   * `FormConfig.minRuntimeVersion`; the field is disabled (not hidden) when
+   * the runtime doesn't meet it.
+   */
+  min_ai_gateway_version?: string
+
   help?: string
 
   entity_checks?: EntityCheck[]
@@ -100,6 +107,12 @@ export interface StringFieldSchema extends FieldSchema {
   encrypted?: boolean
 
   one_of?: string[]
+
+  /**
+   * Per-`one_of`-value version requirements, matched by `value`. An option
+   * with no entry here has no version requirement. See {@link FieldSchema.min_ai_gateway_version}.
+   */
+  enum_min_versions?: Array<{ min_ai_gateway_version: string, value: string }>
 
   len_eq?: number
   len_min?: number

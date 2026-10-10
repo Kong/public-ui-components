@@ -125,7 +125,7 @@
 
     <!-- Default single plugin configuration step (back-compatible) -->
     <EntityFormBlock
-      v-else-if="editorMode === 'form'"
+      v-else-if="editorMode === 'form' && hasConfigFields"
       data-testid="form-section-plugin-config"
       :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
       :step="2"
@@ -321,10 +321,22 @@ const slots = defineSlots<{
 }>()
 
 /**
- * General Info is the last numbered step. In default single-config mode it is
- * step 3; in multi-section mode it follows the configured sections.
+ * Whether the plugin schema's `config` record has any fields to render. When
+ * it doesn't (and no `configSections` are provided), the default single
+ * config step has nothing to show and is hidden entirely.
  */
-const generalInfoStep = computed(() => 2 + (props.configSections?.length ?? 1))
+const hasConfigFields = computed(() => {
+  const configField = props.schema.fields.find(field => Object.keys(field)[0] === 'config')
+  const configSchema = configField?.config
+  return !!configSchema && 'fields' in configSchema && Array.isArray(configSchema.fields) && configSchema.fields.length > 0
+})
+
+/**
+ * General Info is the last numbered step. It follows the configured sections,
+ * or the single default config step when the schema has config fields, or
+ * directly after Scope when there are none.
+ */
+const generalInfoStep = computed(() => 2 + (props.configSections?.length ?? (hasConfigFields.value ? 1 : 0)))
 
 const scopeWrapperAttrs = computed(() => {
   if (scopeSchema.value?.disabled) {

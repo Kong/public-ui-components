@@ -16,6 +16,10 @@ export interface ScatterDataPoint {
    */
   value: number
   /**
+   * The value on the x axis when it plots a metric. Undefined plots `timestamp` instead.
+   */
+  x?: number
+  /**
    * Raw id of the series the point belongs to. Undefined puts every point in one series
    * named after the metric.
    */
@@ -28,6 +32,8 @@ export interface ScatterChartData extends ResultMetaBase {
   points: ScatterDataPoint[]
   metric: string
   metricUnit?: string
+  xMetric?: string
+  xMetricUnit?: string
   dimension?: string
   display?: Display
 }

@@ -1,4 +1,5 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 
@@ -13,6 +14,7 @@ import {
   NO_BORDER,
   determineBaseColor,
   isChartLabel,
+  RIGHT_Y_AXIS_ID,
 } from '../utils'
 import composables from '../composables'
 
@@ -67,12 +69,14 @@ export default function useExploreResultToTimeDataset(
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const chartData: Ref<KChartData> = computed(() => {
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
+  const chartData: Ref<KChartData> = computed(() => {
     try {
       if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
         const records = exploreResult.value.data as AnalyticsExploreRecord[]
-        const { display, metric_names: metricNames, start, end } = exploreResult.value.meta
+        const { display, metric_names: metricNames, metric_units: metricUnits, start, end } = exploreResult.value.meta
         const startMs = new Date(start).getTime()
         const endMs = new Date(end).getTime()
 
@@ -174,12 +178,17 @@ export default function useExploreResultToTimeDataset(
             colorPalette = datavisPalette
           }
 
-          const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
+          const baseColor = useColors
+            ? color({ dimension, dimensionValue: dimensionId })
+            : determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)
+          const isRightAxis = deps.metricAxisMap?.[metric] === 'right'
 
           return {
+            dimension,
+            dimensionValue: dimensionId,
             rawDimension: dimensionName,
             rawMetric: metric,
             label: hasGroupedMetrics ? `${dimensionLabel} — ${metricLabel}` : dimensionLabel,
@@ -190,6 +199,10 @@ export default function useExploreResultToTimeDataset(
             ...defaultLineOptions,
             // Keep dimension colors (including empty/status colors) while distinguishing metrics.
             ...(hasGroupedMetrics ? { borderDash: metricIndex === 0 ? [] : [metricIndex * 4, 2] } : {}),
+            ...(!hasGroupedMetrics && isRightAxis ? { borderDash: [4, 2] } : {}),
+            ...(isRightAxis ? { yAxisID: RIGHT_Y_AXIS_ID } : {}),
+            // When a second y axis is added it will need a separate unit label
+            ...(deps.metricAxisMap ? { unit: metricUnits?.[metric as keyof typeof metricUnits] ?? '' } : {}),
             fill,
             borderWidth: fill ? NO_BORDER : BORDER_WIDTH,
             isSegmentEmpty,

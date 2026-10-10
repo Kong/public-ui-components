@@ -146,7 +146,7 @@ describe('useScatterDatasets', () => {
     expect(datasets).toHaveLength(1)
     expect(datasets[0].data).toHaveLength(10)
     expect(resolve(datasets[0].backgroundColor, { y: 9 })).toBe(outlier!.color)
-    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgba(168, 108, 213, 0.6)')
+    expect(resolve(datasets[0].backgroundColor, { y: 1 })).not.toBe(outlier!.color)
   })
 
   it('draws an outlier slightly larger than the cloud around it', () => {
@@ -155,7 +155,7 @@ describe('useScatterDatasets', () => {
       makeResult(costRecords()),
     ).value
 
-    expect(resolve(datasets[0].pointRadius, { y: 10 })).toBe(4)
+    expect(resolve(datasets[0].pointRadius, { y: 10 })).toBe(5)
     expect(resolve(datasets[0].pointRadius, { y: 1 })).toBe(3)
   })
 
@@ -184,15 +184,16 @@ describe('useScatterDatasets', () => {
     ).value
 
     // Chart.js resolves a scriptable option with no point on it to build the legend swatch
-    expect(resolve(datasets[0].backgroundColor)).toBe('rgba(168, 108, 213, 0.6)')
-    expect(resolve(datasets[0].borderColor)).toBe('#a86cd5')
+    expect(resolve(datasets[0].backgroundColor)).toBeDefined()
+    expect(resolve(datasets[0].borderColor)).toBeDefined()
   })
 
   it('draws points translucent so a dense cloud shows density', () => {
     const { datasets } = useScatterDatasets({}, makeResult(costRecords())).value
 
-    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgba(168, 108, 213, 0.6)')
-    expect(resolve(datasets[0].borderColor, { y: 1 })).toBe('#a86cd5')
+    // sets opacity on the rgb color
+    expect((resolve(datasets[0].backgroundColor, { y: 1 }) as string).endsWith(', 0.6)')).toBe(true)
+    expect(resolve(datasets[0].borderColor, { y: 1 })).toBeDefined()
   })
 
   it('honours an explicit point opacity', () => {
@@ -202,7 +203,7 @@ describe('useScatterDatasets', () => {
     ).value
 
     // A fully opaque color serializes as rgb() rather than rgba(..., 1).
-    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgb(168, 108, 213)')
+    expect(/rgb\([0-9]+, [0-9]+, [0-9]+\)$/.exec(resolve(datasets[0].backgroundColor, { y: 1 }) as string)).toBeTruthy()
   })
 
   it('keeps outlier points opaque so they stay vivid over the cloud', () => {
@@ -247,6 +248,64 @@ describe('useScatterDatasets', () => {
     themeColors.value = { ...themeColors.value, outlier: '#000000' }
 
     expect(xValues()).toEqual(before)
+  })
+})
+
+describe('useScatterDatasets with a metric on x', () => {
+  const measureVsMeasure = (pairs: Array<[number, number]>): ComputedRef<ScatterChartData> => computed(() => ({
+    points: pairs.map(([x, value], i) => ({
+      timestamp: new Date(START).valueOf() + i * 1000,
+      x,
+      value,
+    })),
+    metric: 'cost',
+    xMetric: 'ai_request_count',
+    start: START,
+    end: END,
+  }))
+
+  it('plots the metric on x and keeps the timestamp', () => {
+    const { datasets } = useScatterDatasets({}, measureVsMeasure([[10, 1], [20, 2]])).value
+
+    expect(datasets[0].data).toEqual([
+      expect.objectContaining({ x: 10, y: 1, timestamp: new Date(START).valueOf() }),
+      expect.objectContaining({ x: 20, y: 2, timestamp: new Date(START).valueOf() + 1000 }),
+    ])
+  })
+
+  it('lists the x value first in the tooltip extras', () => {
+    const data = computed<ScatterChartData>(() => ({
+      points: [{ timestamp: new Date(START).valueOf(), x: 10, value: 1, extras: [{ label: 'Model', value: 'gpt' }] }],
+      metric: 'cost',
+      xMetric: 'ai_request_count',
+      xMetricUnit: 'count',
+      start: START,
+      end: END,
+    }))
+    const { datasets } = useScatterDatasets({}, data).value
+
+    expect((datasets[0].data[0] as { extras?: unknown[] }).extras).toEqual([
+      { label: 'Request count', value: 10, unit: 'count' },
+      { label: 'Model', value: 'gpt' },
+    ])
+  })
+
+  it('does not jitter a metric x value', () => {
+    const { datasets } = useScatterDatasets(
+      { scatter: { jitterMs: 500 } },
+      measureVsMeasure([[10, 1]]),
+    ).value
+
+    expect((datasets[0].data[0] as { x: number }).x).toBe(10)
+  })
+
+  it('computes percentiles from the y values', () => {
+    const { referenceLines } = useScatterDatasets(
+      { scatter: { percentileLines: [{ percentile: 50 }] } },
+      measureVsMeasure([[1000, 1], [2000, 2], [3000, 3]]),
+    ).value
+
+    expect(referenceLines?.[0].value).toBe(2)
   })
 })
 

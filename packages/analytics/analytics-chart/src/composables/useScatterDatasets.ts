@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import type { ScriptableContext } from 'chart.js'
 import type { Dataset, ExploreToDatasetDeps, KChartData, ResolvedReferenceLine, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 import { computed } from 'vue'
 import { isNullOrUndef } from 'chart.js/helpers'
@@ -9,9 +10,9 @@ import { isNullOrUndef } from 'chart.js/helpers'
 import { computePercentiles, datavisPalette, determineBaseColor, scatterChartColors, withAlpha } from '../utils'
 import composables from '../composables'
 
-export const DEFAULT_POINT_RADIUS = 2
+export const DEFAULT_POINT_RADIUS = 3
 export const DEFAULT_POINT_OPACITY = 0.6
-const OUTLIER_RADIUS_BOOST = 1
+const OUTLIER_RADIUS_BOOST = 2
 const HOVER_RADIUS_BOOST = 2
 const MEDIAN_PERCENTILE = 50
 const MEDIAN_BORDER_DASH = [6, 4]
@@ -25,6 +26,7 @@ export interface ScatterDatasetDeps extends ExploreToDatasetDeps {
 interface ScatterPoint {
   x: number
   y: number
+  timestamp?: number
   extras?: ScatterPointExtra[]
 }
 
@@ -35,7 +37,7 @@ export const jitter = (jitterMs: number, seed: number): number => {
 }
 
 /**
- * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension.
+ * Builds the dataset for scatter plots as one point per record, grouped into a series per dimension value.
  *
  * Percentiles are computed over the points actually supplied, so they are only really
  * meaningful when the input is not truncated.
@@ -45,6 +47,8 @@ export default function useScatterDatasets(
   scatterData: Ref<ScatterChartData | undefined>,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -66,7 +70,9 @@ export default function useScatterDatasets(
         return { datasets: [] }
       }
 
-      const { metric, dimension, display } = data
+      const { metric, dimension, display, xMetric, xMetricUnit } = data
+      // @ts-ignore - dynamic i18n key
+      const xMetricLabel: string = xMetric ? (i18n.te(`chartLabels.${xMetric}`) && i18n.t(`chartLabels.${xMetric}`)) || xMetric : ''
 
       const scatter = deps.scatter || {}
       const jitterMs = scatter.jitterMs ?? 0
@@ -81,10 +87,28 @@ export default function useScatterDatasets(
         const groupId = point.group ?? metric
         const points = grouped.get(groupId) || []
 
+        let xValue: { x: number, timestamp?: number }
+        let extras: ScatterPointExtra[]
+
+        if (point.x !== undefined) {
+          xValue = { x: point.x, timestamp: point.timestamp }
+          extras = [
+            {
+              label: xMetricLabel,
+              value: point.x,
+              ...(xMetricUnit ? { unit: xMetricUnit } : {}),
+            },
+            ...(point.extras ?? []),
+          ]
+        } else {
+          xValue = { x: point.timestamp + jitter(jitterMs, point.timestamp + point.value) }
+          extras = point.extras ?? []
+        }
+
         points.push({
-          x: point.timestamp + jitter(jitterMs, point.timestamp + point.value),
+          ...xValue,
           y: point.value,
-          ...(point.extras?.length ? { extras: point.extras } : {}),
+          ...(extras.length ? { extras } : {}),
         })
         grouped.set(groupId, points)
         allValues.push(point.value)
@@ -115,7 +139,9 @@ export default function useScatterDatasets(
       Array.from(grouped.entries()).forEach(([groupId, points], i) => {
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
-        const baseColor = determineBaseColor(i, name, isSegmentEmpty, colorPalette)
+        const baseColor = useColors
+          ? color({ dimension, dimensionValue: groupId })
+          : determineBaseColor(i, name, isSegmentEmpty, colorPalette)
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 
@@ -123,6 +149,8 @@ export default function useScatterDatasets(
         const label: string = (i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name
 
         datasets.push({
+          dimension,
+          dimensionValue: groupId,
           type: 'scatter',
           rawDimension: name,
           rawMetric: metric,

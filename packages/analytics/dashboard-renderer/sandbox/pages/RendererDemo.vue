@@ -462,6 +462,116 @@ const dashboardConfig = ref<DashboardConfig>({
         size: { cols: 6, rows: 2 },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Cost by provider',
+          column_options: {
+            ai_provider: { label: 'Provider', icon_set: 'ai_provider' },
+            cost: { label: 'Share of spend', value: 'relative', bar: 'relative' },
+            ai_request_count: { label: 'Share of requests', value: 'relative' },
+            error_rate: { label: 'Failure rate', bar: 'max', thresholds: [{ type: 'warning', value: 10 }, { type: 'error', value: 15 }] },
+            time_to_first_token_p95: { label: 'P95 TTFT', thresholds: [{ type: 'warning', value: 10_000 }, { type: 'error', value: 20_000 }] },
+          },
+        },
+        header_description: 'Where spend concentrates vs where request volume concentrates.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_provider'],
+          metrics: ['cost', 'ai_request_count', 'error_rate', 'time_to_first_token_p95'],
+          time_range: { type: 'relative', time_range: '24h' },
+        },
+      },
+      layout: {
+        position: { col: 0, row: 15 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chart_title: 'Traffic vs latency (dual y axis)',
+          metric_axis_map: { request_count: 'left', response_latency_p99: 'right' },
+          y_axes: { left: { show_grid: true }, right: { show_grid: false } },
+          threshold: { response_latency_p99: [{ type: 'warning', value: 10, highlightIntersections: true }] },
+        },
+        query: {
+          datasource: 'api_usage',
+          metrics: ['request_count', 'response_latency_p99'],
+          dimensions: ['time'],
+        },
+      },
+      layout: {
+        position: { col: 0, row: 17 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'treemap',
+          chart_title: 'Model usage',
+        },
+        header_description: 'Requests by model, grouped by provider. Click a provider to drill in.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_provider', 'ai_gateway_model'],
+          metrics: ['ai_request_count'],
+          time_range: { type: 'relative', time_range: '7d' },
+        },
+      },
+      layout: {
+        position: { col: 0, row: 19 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'heatmap',
+          chart_title: 'Daily requests by model',
+        },
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['time', 'ai_gateway_model'],
+          metrics: ['ai_request_count'],
+          time_range: { type: 'relative', time_range: '14d' },
+          granularity: 'daily',
+        },
+      },
+      layout: {
+        // Taller than two rows so ten model rows fit before the heatmap scrolls
+        position: { col: 0, row: 21 },
+        size: { cols: 6, rows: 3 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'top_n',
+          chart_title: 'Top 40 services by requests',
+          entity_links: { gateway_service: 'https://example.com/services/{entity-id}' },
+          column_options: {
+            gateway_service: { label: 'Gateway service' },
+            request_count: { label: 'Requests', value: 'relative', bar: 'relative' },
+            response_latency_p95: { label: 'P95 latency', bar: 'max', thresholds: [{ type: 'warning', value: 250 }] },
+          },
+        },
+        header_description: 'Complete mock result in a fixed-height tile. Scroll to service 40 without another query.',
+        query: {
+          datasource: 'basic', dimensions: ['gateway_service', 'status_code'],
+          metrics: ['request_count', 'response_latency_p95'], limit: 40,
+        },
+      },
+      layout: { position: { col: 0, row: 24 }, size: { cols: 6, rows: 3 } },
+    } satisfies TileConfig,
   ],
 })
 

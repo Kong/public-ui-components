@@ -220,7 +220,6 @@ describe('<DashboardTile />', () => {
     editable: true,
     tz: '',
     refreshInterval: 0,
-    zoomable: false,
   }
 
   const mockQueryProvider = {

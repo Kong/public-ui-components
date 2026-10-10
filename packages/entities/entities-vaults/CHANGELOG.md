@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.18.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.6...%40kong-ui-public%2Fentities-vaults%404.18.7) (2026-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.5...%40kong-ui-public%2Fentities-vaults%404.18.6) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.4...%40kong-ui-public%2Fentities-vaults%404.18.5) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.3...%40kong-ui-public%2Fentities-vaults%404.18.4) (2026-10-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.2...%40kong-ui-public%2Fentities-vaults%404.18.3) (2026-09-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.1...%40kong-ui-public%2Fentities-vaults%404.18.2) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.18.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.18.0...%40kong-ui-public%2Fentities-vaults%404.18.1) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [4.18.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.6...%40kong-ui-public%2Fentities-vaults%404.18.0) (2026-09-22)
+
+### Features
+
+* **entities:** surface managed_by in entity lists and config cards [KM-3018] ([#3740](https://github.com/Kong/public-ui-components/issues/3740)) ([29bc496](https://github.com/Kong/public-ui-components/commit/29bc4968cacfa25a1d33b53a404a6e94a6b8e9a0))
+
+
+## [4.17.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.5...%40kong-ui-public%2Fentities-vaults%404.17.6) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
 ## [4.17.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.17.4...%40kong-ui-public%2Fentities-vaults%404.17.5) (2026-09-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

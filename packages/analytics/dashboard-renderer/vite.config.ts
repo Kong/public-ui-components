@@ -9,6 +9,9 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
+  test: {
+    setupFiles: ['swrv/testing'],
+  },
   build: {
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
@@ -26,7 +29,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/analytics-metric-provider',
         '@kong-ui-public/analytics-utilities',
         '@kong-ui-public/analytics-geo-map',
-        '@kong-ui-public/table-data-grid',
+        'ag-grid-community',
+        'ag-grid-vue3',
+        /^echarts(\/|$)/,
+        'vue-echarts',
         'swrv',
         '@zumer/snapdom',
         'jspdf',
@@ -39,7 +45,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
           '@kong-ui-public/analytics-metric-provider': 'kong-ui-public-analytics-metric-provider',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
           '@kong-ui-public/analytics-geo-map': 'kong-ui-public-analytics-geo-map',
-          '@kong-ui-public/table-data-grid': 'kong-ui-public-table-data-grid',
+          'ag-grid-community': 'agGridCommunity',
+          'ag-grid-vue3': 'AgGridVue',
+          'echarts/core': 'echarts',
+          'echarts/charts': 'echarts',
+          'echarts/components': 'echarts',
+          'echarts/renderers': 'echarts',
+          'vue-echarts': 'VueECharts',
           swrv: 'swrv',
           '@zumer/snapdom': 'snapdom',
           jspdf: 'jspdf',

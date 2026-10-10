@@ -3,7 +3,7 @@
     v-if="!isRequestsQuery"
     v-slot="{ data: exploreData }"
     :context="context"
-    :query="(query as ValidDashboardChartQuery)"
+    :query="exploreQuery"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
     @chart-data="emit('chart-data', $event)"
@@ -62,17 +62,19 @@
 
 <script setup lang="ts">
 import type { AnalyticsChartOptions, QueryError, ScatterChartData } from '@kong-ui-public/analytics-chart'
-import type { ApiRequestsQuery, ExploreResultV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
+import type { ApiRequestsQuery, ExploreResultV4, TimeRangeV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
 import type { ScatterRendererProps } from '../types'
 
 import { computed, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import { AnalyticsChart, handleQueryError, requestsToScatterData } from '@kong-ui-public/analytics-chart'
+import { finestGranularityForDuration, Granularities } from '@kong-ui-public/analytics-utilities'
 import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 import composables from '../composables'
 import { toRequestsScatterOptions } from '../utils/requests-query'
+import { getTimeRangeDurationMs } from '../utils/time-range-support'
 import QueryDataProvider from './QueryDataProvider.vue'
 
 const props = defineProps<ScatterRendererProps>()
@@ -86,6 +88,27 @@ const { i18n } = composables.useI18n()
 const { issueRequestsQuery } = composables.useIssueRequestsQuery()
 
 const isRequestsQuery = computed(() => props.query.datasource === 'requests')
+
+const exploreQuery = computed<ValidDashboardChartQuery>(() => {
+  const query = props.query as ValidDashboardChartQuery
+  const timeRange = (query.time_range ?? props.context.timeSpec) as TimeRangeV4 | undefined
+  const durationMs = timeRange ? getTimeRangeDurationMs(timeRange) : undefined
+
+  if (!durationMs) {
+    return query
+  }
+
+  const finest = finestGranularityForDuration(durationMs)
+  let granularity
+
+  if (query.granularity && Granularities[query.granularity] >= Granularities[finest]) {
+    granularity = query.granularity
+  } else {
+    granularity = finest
+  }
+
+  return { ...query, granularity } as ValidDashboardChartQuery
+})
 
 const queryKey = () => {
   if (isRequestsQuery.value && props.queryReady) {

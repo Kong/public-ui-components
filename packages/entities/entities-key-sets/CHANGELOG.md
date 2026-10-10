@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.6...%40kong-ui-public%2Fentities-key-sets%403.14.7) (2026-10-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.5...%40kong-ui-public%2Fentities-key-sets%403.14.6) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.4...%40kong-ui-public%2Fentities-key-sets%403.14.5) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.3...%40kong-ui-public%2Fentities-key-sets%403.14.4) (2026-10-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.2...%40kong-ui-public%2Fentities-key-sets%403.14.3) (2026-09-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.1...%40kong-ui-public%2Fentities-key-sets%403.14.2) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.14.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.14.0...%40kong-ui-public%2Fentities-key-sets%403.14.1) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.13.38...%40kong-ui-public%2Fentities-key-sets%403.14.0) (2026-09-22)
+
+### Features
+
+* **entities:** surface managed_by in entity lists and config cards [KM-3018] ([#3740](https://github.com/Kong/public-ui-components/issues/3740)) ([29bc496](https://github.com/Kong/public-ui-components/commit/29bc4968cacfa25a1d33b53a404a6e94a6b8e9a0))
+
+
+## [3.13.38](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.13.37...%40kong-ui-public%2Fentities-key-sets%403.13.38) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
 ## [3.13.37](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.13.36...%40kong-ui-public%2Fentities-key-sets%403.13.37) (2026-09-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

@@ -222,6 +222,7 @@ watch(() => tabs, () => {
     border: none;
     color: inherit;
     cursor: pointer;
+    font: inherit;
     outline: none;
     padding: var(--kui-space-0, $kui-space-0);
     text-decoration: none;

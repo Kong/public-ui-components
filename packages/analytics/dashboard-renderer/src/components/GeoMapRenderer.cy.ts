@@ -48,7 +48,6 @@ describe('<GeoMapRenderer />', () => {
         } as any,
         context: {
           filters: [],
-          zoomable: false,
         } as any,
         queryReady: true,
         chartOptions: {

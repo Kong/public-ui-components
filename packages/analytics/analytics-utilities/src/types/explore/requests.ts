@@ -7,6 +7,7 @@ export const queryableRequestDimensions = [
   'a2a_error',
   'a2a_method',
   'a2a_task_id',
+  'a2a_task_state',
   'api',
   'api_package',
   'api_product',

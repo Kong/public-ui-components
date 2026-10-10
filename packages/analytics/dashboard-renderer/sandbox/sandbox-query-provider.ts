@@ -37,6 +37,124 @@ const singleValueTrendExploreResponse: ExploreResultV4 = {
   },
 }
 
+const aiProviderExploreResponse: ExploreResultV4 = {
+  data: [
+    ['openai', 1_408, 35.2, 13.5, 23_100],
+    ['anthropic', 1_363, 16.36, 14.5, 5_000],
+    ['azure', 859, 20.62, 17.1, 45_500],
+    ['bedrock', 659, 3.3, 13.8, 7_700],
+    ['deepseek', 420, 2.1, 0.42, 3_300],
+    ['gemini', 503, 0.1, 0.05, 10_000],
+    ['ollama', 734, 4.5, 3.4, 4_200],
+    ['mistral', 212, 0.42, 4.2, 2_100],
+    ['moonshot', 30, 0.001, 0.00004, 2_400],
+  ].map(([aiProvider, requests, cost, errorRate, ttft]) => ({
+    event: {
+      ai_provider: aiProvider,
+      ai_request_count: requests,
+      cost,
+      error_rate: errorRate,
+      time_to_first_token_p95: ttft,
+    },
+    timestamp: '2024-01-31T20:00:00.000Z',
+  })),
+  meta: {
+    display: {
+      ai_provider: {
+        openai: { name: 'OpenAI', deleted: false },
+        anthropic: { name: 'Anthropic', deleted: false },
+        azure: { name: 'Azure OpenAI', deleted: false },
+        bedrock: { name: 'AWS Bedrock', deleted: false },
+        deepseek: { name: 'DeepSeek', deleted: false },
+        gemini: { name: 'Gemini', deleted: false },
+        ollama: { name: 'Ollama', deleted: false },
+        mistral: { name: 'Mistral', deleted: false },
+        moonshot: { name: 'Moonshot', deleted: false },
+      },
+    },
+    end: '2024-01-31T20:00:00.000Z',
+    granularity_ms: 60 * 60 * 1000,
+    metric_names: ['cost', 'ai_request_count', 'error_rate', 'time_to_first_token_p95'],
+    metric_units: {
+      cost: 'usd',
+      ai_request_count: 'count',
+      error_rate: '%',
+      time_to_first_token_p95: 'ms',
+    },
+    query_id: 'ai-provider-top-n',
+    start: '2024-01-31T19:00:00.000Z',
+    truncated: false,
+  },
+}
+
+// Provider → model request counts, shaped like the model usage treemap mockup
+const aiModelRequests: Array<[provider: string, model: string, requests: number]> = [
+  ['openai', 'gpt-4o', 21_480],
+  ['openai', 'gpt-4o-mini', 12_960],
+  ['openai', 'gpt-4.1', 9_870],
+  ['openai', 'gpt-4.1-mini', 7_020],
+  ['openai', 'o3-mini', 5_310],
+  ['anthropic', 'claude-sonnet-4-5', 6_340],
+  ['anthropic', 'claude-opus-4-1', 4_867],
+  ['anthropic', 'claude-sonnet-4', 4_210],
+  ['anthropic', 'claude-haiku-4-5', 3_150],
+  ['gemini', 'gemini-2.5-pro', 3_880],
+  ['gemini', 'gemini-2.5-flash', 3_020],
+  ['gemini', 'gemini-1.5-flash', 1_640],
+  ['bedrock', 'llama-3.1-70b', 2_210],
+  ['bedrock', 'nova-lite', 1_430],
+  ['bedrock', 'titan-embed-text', 1_120],
+  ['mistral', 'mistral-large', 1_380],
+  ['mistral', 'codestral', 870],
+  ['deepseek', 'deepseek-chat', 1_060],
+]
+
+const aiModelDisplay = Object.fromEntries(aiModelRequests.map(([, model]) => [model, { name: model, deleted: false }]))
+
+const aiModelMeta = (start: string, end: string, granularityMs: number, display: ExploreResultV4['meta']['display']): ExploreResultV4['meta'] => ({
+  display,
+  start,
+  end,
+  granularity_ms: granularityMs,
+  metric_names: ['ai_request_count'],
+  metric_units: { ai_request_count: 'count' },
+  query_id: 'ai-model-usage',
+  truncated: false,
+})
+
+const aiModelTreemapResponse: ExploreResultV4 = {
+  data: aiModelRequests.map(([provider, model, requests]) => ({
+    event: { ai_provider: provider, ai_gateway_model: model, ai_request_count: requests },
+    timestamp: '2024-01-31T20:00:00.000Z',
+  })),
+  meta: aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, {
+    ai_provider: aiProviderExploreResponse.meta.display.ai_provider,
+    ai_gateway_model: aiModelDisplay,
+  }),
+}
+
+// Each model's daily requests over the last two weeks, with a deterministic wobble and quieter weekends
+const aiModelHeatmapResponse = (): ExploreResultV4 => {
+  const dayMs = 86400000
+  const days = 14
+  const end = new Date(new Date().setUTCHours(0, 0, 0, 0) + dayMs)
+  const start = new Date(end.getTime() - days * dayMs)
+
+  const data = aiModelRequests.flatMap(([, model, requests], modelIndex) => Array.from({ length: days }, (_, day) => {
+    const timestamp = new Date(start.getTime() + day * dayMs)
+    const weekday = timestamp.getUTCDay()
+    const weekendFactor = weekday === 0 || weekday === 6 ? 0.55 : 1
+    const wobble = 1 + 0.3 * Math.sin(day * 0.9 + modelIndex)
+
+    return {
+      event: { ai_gateway_model: model, ai_request_count: Math.round(requests / 7 * weekendFactor * wobble) },
+      timestamp: timestamp.toISOString(),
+    }
+  }))
+
+  return { data, meta: aiModelMeta(start.toISOString(), end.toISOString(), dayMs, { ai_gateway_model: aiModelDisplay }) }
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -57,7 +175,50 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     return await delayedResponse(singleValueTrendExploreResponse)
   }
 
+  // Model usage: a heatmap over time, or a treemap of provider → model
+  if (query.query.dimensions?.includes('ai_gateway_model')) {
+    return await delayedResponse(query.query.dimensions.includes('time') ? aiModelHeatmapResponse() : aiModelTreemapResponse)
+  }
+
+  // Complete TopN result: deliberately larger than the infinite grid block size.
+  if (query.query.dimensions?.some(dimension => dimension === 'gateway_service') && query.query.dimensions.some(dimension => dimension === 'status_code')) {
+    const data = Array.from({ length: 40 }, (_, index) => ({
+      timestamp: '2026-09-21T00:00:00Z',
+      event: { gateway_service: `service-${index + 1}`, status_code: index % 5 === 0 ? '500' : '200', request_count: (40 - index) * 100, response_latency_p95: (index + 1) * 10 },
+    }))
+    return await delayedResponse({
+      data,
+      meta: {
+        start: '2026-09-20T00:00:00Z', end: '2026-09-21T00:00:00Z', granularity_ms: 0,
+        query_id: 'topn-complete-result', truncated: false,
+        display: {
+          gateway_service: Object.fromEntries(data.map(({ event }) => [event.gateway_service, { name: `Gateway service ${event.gateway_service.split('-')[1]}` }])),
+          status_code: { 200: { name: '200' }, 500: { name: '500' } },
+        },
+        metric_names: ['request_count', 'response_latency_p95'],
+        metric_units: { request_count: 'count', response_latency_p95: 'ms' },
+      },
+    })
+  }
+
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
+    if (query.query.metrics?.includes('request_count') && query.query.metrics.includes('response_latency_p99')) {
+      const result = generateData({
+        metrics: [
+          { name: 'request_count', unit: 'count' },
+          { name: 'response_latency_p99', unit: 'ms' },
+        ],
+        timeSeries: true,
+      })
+
+      // Put latency on a much smaller scale than traffic so the two y axes are visibly different
+      result.data.forEach(({ event }) => {
+        event.response_latency_p99 = Number(event.response_latency_p99) / 100
+      })
+
+      return await delayedResponse(result)
+    }
+
     if (query.query.metrics?.includes('response_latency_average') && query.query.metrics.includes('response_latency_p99')) {
       return await delayedResponse(generateData({
         metrics: [
@@ -84,6 +245,10 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
         { country_code: ['US', 'GB', 'FR', 'DE', 'RO', 'CN', 'IN', 'BR', 'ZA'] },
       ),
     )
+  }
+
+  if (query.query.dimensions?.includes('ai_provider')) {
+    return await delayedResponse(aiProviderExploreResponse)
   }
 
   if (query.query.dimensions && query.query.dimensions.findIndex(d => d === 'route') > -1) {

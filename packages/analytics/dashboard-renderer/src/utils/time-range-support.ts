@@ -7,7 +7,7 @@ interface SupportedTimeRange {
   key: string
 }
 
-const getTimeRangeDurationMs = (timeRange: TimeRangeV4): number | undefined => {
+export const getTimeRangeDurationMs = (timeRange: TimeRangeV4): number | undefined => {
   if (timeRange.type === 'relative') {
     return TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])?.timeframeLengthMs()
   }

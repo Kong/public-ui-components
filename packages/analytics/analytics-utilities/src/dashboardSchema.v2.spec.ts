@@ -431,6 +431,73 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(false)
   })
 
+  describe('top_n column options', () => {
+    const withColumnOptions = (columnOptions: unknown) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              column_options: columnOptions,
+            },
+          },
+        },
+      ],
+    })
+
+    it('accepts column options keyed by metric or dimension', () => {
+      expect(validateDashboardConfigSchema(withColumnOptions({
+        request_count: { label: 'Share of requests', value: 'relative', bar: 'relative' },
+        response_latency_p95: { bar: 'max', thresholds: [{ type: 'warning', value: 100 }, { type: 'error', value: 500 }] },
+        ai_provider: { icon_set: 'ai_provider' },
+      }))).toBe(true)
+    })
+
+    it.each([
+      ['an unknown value mode', { request_count: { value: 'percent' } }],
+      ['an unknown bar scale', { request_count: { bar: 'min' } }],
+      ['an unknown icon set', { route: { icon_set: 'routes' } }],
+      ['a neutral threshold', { request_count: { thresholds: [{ type: 'neutral', value: 1 }] } }],
+      ['a threshold without a value', { request_count: { thresholds: [{ type: 'error' }] } }],
+      ['an unknown property', { request_count: { color: 'red' } }],
+    ])('rejects column options with %s', (_, columnOptions) => {
+      expect(validateDashboardConfigSchema(withColumnOptions(columnOptions))).toBe(false)
+    })
+  })
+
+  describe('timeseries y axes', () => {
+    const withTimeseriesChart = (chart: Record<string, unknown>) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: { type: 'timeseries_line', ...chart },
+          },
+        },
+      ],
+    })
+
+    it('accepts a metric axis map and per-axis options', () => {
+      expect(validateDashboardConfigSchema(withTimeseriesChart({
+        metric_axis_map: { request_count: 'left', response_latency_p95: 'right' },
+        y_axes: { left: { show_grid: true, title: 'Requests' }, right: { show_grid: false } },
+      }))).toBe(true)
+    })
+
+    it.each([
+      ['an unknown axis position', { metric_axis_map: { request_count: 'center' } }],
+      ['an unknown axis key', { y_axes: { top: { show_grid: true } } }],
+      ['an unknown axis property', { y_axes: { left: { min: 0 } } }],
+    ])('rejects %s', (_, chart) => {
+      expect(validateDashboardConfigSchema(withTimeseriesChart(chart))).toBe(false)
+    })
+  })
+
   it.each([
     [apiUsageQuerySchema, exploreAggregations, queryableExploreDimensions, filterableExploreDimensions],
     [basicQuerySchema, basicExploreAggregations, queryableBasicExploreDimensions, filterableBasicExploreDimensions],
@@ -476,6 +543,32 @@ describe('dashboardSchema.v2', () => {
     // `field` is the one thing an annotation can't do without
     expect(validate({ datasource: 'requests', metric: 'cost', extra_fields: [{ label: 'Tokens' }] })).toBe(false)
     expect(validate({ datasource: 'requests', metric: 'cost', unroll: ['ai'] })).toBe(false)
+  })
+
+  describe('heatmap and treemap tiles', () => {
+    const chartTile = (chart: Record<string, unknown>, dimensions: string[]) => ({
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: { datasource: 'llm_usage', metrics: ['ai_request_count'], dimensions },
+            chart,
+          },
+        },
+      ],
+    })
+
+    it.each([
+      ['heatmap', ['time', 'ai_gateway_model']],
+      ['treemap', ['ai_provider', 'ai_gateway_model']],
+    ])('accepts a %s tile with a chart title', (type, dimensions) => {
+      expect(validateDashboardConfigSchema(chartTile({ type, chart_title: 'Model usage' }, dimensions))).toBe(true)
+    })
+
+    it.each(['heatmap', 'treemap'])('rejects unknown %s chart options', (type) => {
+      expect(validateDashboardConfigSchema(chartTile({ type, stacked: true }, ['ai_provider']))).toBe(false)
+    })
   })
 
   describe('scatter tiles', () => {

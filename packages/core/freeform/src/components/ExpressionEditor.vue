@@ -83,7 +83,7 @@ import externalLinks from '../external-links'
 import * as utils from '../utils'
 import { useExpressionField, useFieldPath } from '../composables'
 
-import type { EmptyValue } from '../types'
+import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
 defineOptions({ name: 'ExpressionEditor' })
 
@@ -96,17 +96,7 @@ const { name, placeholder } = defineProps<{
    * Renders nothing when that field has no twin in the schema.
    */
   name: string
-  /**
-   * Example expression to show while the field is empty. There is no default,
-   * on purpose — a useful example is specific to the plugin and the field it
-   * overrides, so a shared one would be wrong for most of them.
-   *
-   * Left unset the field shows nothing rather than falling through to
-   * `useFieldAttrs`, whose fallback would offer the field's own default value
-   * as the placeholder — misleading here, since an expression is not a value.
-   */
-  placeholder?: string
-}>()
+} & SharedExpressionEditorFieldProps>()
 
 defineSlots<{
   /** Replaces the default help text under the textarea. */

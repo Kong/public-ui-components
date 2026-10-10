@@ -45,7 +45,6 @@ const defaultProps = {
     editable: false,
     tz: '',
     refreshInterval: 0,
-    zoomable: false,
   },
   query: {
     datasource: 'api_usage',

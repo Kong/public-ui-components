@@ -9,6 +9,20 @@ describe('<StandardLayout />', () => {
       {
         config: {
           type: 'record',
+          fields: [
+            { some_setting: { type: 'string' } },
+          ],
+        },
+      },
+    ],
+  })
+
+  const createEmptyConfigSchema = () => ({
+    type: 'record',
+    fields: [
+      {
+        config: {
+          type: 'record',
           fields: [],
         },
       },
@@ -315,6 +329,47 @@ describe('<StandardLayout />', () => {
       mountStandardLayout()
 
       cy.getTestId('form-section-plugin-config').should('exist')
+        .find('[data-testid="form-block-step"]').should('contain.text', '2')
+      cy.getTestId('form-section-general-info')
+        .find('[data-testid="form-block-step"]').should('contain.text', '3')
+    })
+  })
+
+  describe('Empty config schema', () => {
+    it('should hide the default config block when schema.config has no fields', () => {
+      mountStandardLayout({ schema: createEmptyConfigSchema() })
+
+      cy.getTestId('form-section-plugin-config').should('not.exist')
+    })
+
+    it('should renumber General Info to step 2 when the config block is hidden', () => {
+      mountStandardLayout({ schema: createEmptyConfigSchema() })
+
+      cy.getTestId('form-section-general-info')
+        .find('[data-testid="form-block-step"]').should('contain.text', '2')
+    })
+
+    it('should still render one numbered step per section even when schema.config has no fields', () => {
+      cy.mount(StandardLayout as any, {
+        props: {
+          schema: createEmptyConfigSchema(),
+          formSchema: createFormSchema(),
+          model: createBaseModel(),
+          formModel: { enabled: true },
+          isEditing: false,
+          onFormChange: cy.spy(),
+          pluginName: 'test-plugin',
+          configSections: [
+            { name: 'configuration', title: 'Plugin configuration', description: 'First section' },
+          ],
+        },
+        slots: {
+          'section-configuration': () => h('div', { 'data-testid': 'section-configuration-content' }, 'Configuration fields'),
+        },
+      })
+
+      cy.getTestId('form-section-plugin-config').should('not.exist')
+      cy.getTestId('form-section-configuration').should('exist')
         .find('[data-testid="form-block-step"]').should('contain.text', '2')
       cy.getTestId('form-section-general-info')
         .find('[data-testid="form-block-step"]').should('contain.text', '3')

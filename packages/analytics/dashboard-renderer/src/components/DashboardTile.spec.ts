@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
+import TopNTableRenderer from './TopNTableRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
@@ -177,7 +178,6 @@ const mockContext: DashboardRendererContext = {
   tz: '',
   refreshInterval: 0,
   showTileActions: true,
-  zoomable: false,
 }
 
 const baseDefinition: TileDefinition = {
@@ -198,10 +198,10 @@ const mountTile = (
   dimensions: TileDefinition['query']['dimensions'] = ['time'],
   {
     hideActions = false,
-    hideZoomActions = false,
+    preview = false,
   }: {
     hideActions?: boolean
-    hideZoomActions?: boolean
+    preview?: boolean
   } = {},
 ) => {
   const definition = {
@@ -218,10 +218,11 @@ const mountTile = (
       definition,
       context: mockContext,
       hideActions,
-      hideZoomActions,
+      preview,
       queryReady: true,
       refreshCounter: 0,
       tileId: '1',
+      onTileTimeRangeZoom: vi.fn(),
     },
     shallow: true,
     global: {
@@ -257,6 +258,7 @@ const groupedMetricsResult = {
 
 describe('<DashboardTile /> zoom requests drilldown', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     setupPiniaTestStore()
   })
 
@@ -299,8 +301,8 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     expect((wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink') as { href?: string } | undefined)?.href).toContain('http://test.com/requests?q=')
   })
 
-  it('does not populate zoom action links when zoom actions are hidden', async () => {
-    const wrapper = mountTile('api_usage', ['time'], { hideZoomActions: true })
+  it('does not populate zoom action links when the tile is previewing', async () => {
+    const wrapper = mountTile('api_usage', ['time'], { preview: true })
     await flushPromises()
 
     const renderer = wrapper.findComponent(TimeseriesChartRenderer)
@@ -446,6 +448,7 @@ describe('<DashboardTile /> metric selector', () => {
 
 describe('<DashboardTile /> table tiles', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     setupPiniaTestStore()
   })
 
@@ -508,6 +511,30 @@ describe('<DashboardTile /> table tiles', () => {
       refreshCounter: 0,
     })
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
+  })
+
+  it('passes fitToContent to TopN tiles', () => {
+    const topNDefinition: TileDefinition = {
+      chart: { type: 'top_n', entity_link: '/services/{entity-id}' },
+      query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'] },
+    }
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: mockContext, definition: topNDefinition, queryReady: true,
+        refreshCounter: 0, tileId: '1', fitToContent: true,
+      },
+      shallow: true,
+      global: {
+        plugins: [Kongponents],
+        provide: { [INJECT_QUERY_PROVIDER]: mockQueryProvider },
+      },
+    })
+
+    expect(wrapper.findComponent(TopNTableRenderer).props()).toMatchObject({
+      chartOptions: topNDefinition.chart,
+      fitToContent: true,
+      query: topNDefinition.query,
+    })
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {

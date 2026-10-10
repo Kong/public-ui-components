@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.8...%40kong-ui-public%2Fsandbox-layout%402.7.9) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.7.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.7...%40kong-ui-public%2Fsandbox-layout%402.7.8) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.7.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.6...%40kong-ui-public%2Fsandbox-layout%402.7.7) (2026-09-24)
+
+### Bug Fixes
+
+* text color ([#3880](https://github.com/Kong/public-ui-components/issues/3880)) ([2244f66](https://github.com/Kong/public-ui-components/commit/2244f664658ded0f2bc214adae24c1a45ffe8030))
+
+
+## [2.7.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.5...%40kong-ui-public%2Fsandbox-layout%402.7.6) (2026-09-24)
+
+### Bug Fixes
+
+* **sandbox-layout:** make theme picker optional ([#3877](https://github.com/Kong/public-ui-components/issues/3877)) ([d394c0b](https://github.com/Kong/public-ui-components/commit/d394c0b3c4adc787e72300e431eae1a11221a260))
+
+
+## [2.7.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.4...%40kong-ui-public%2Fsandbox-layout%402.7.5) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
 ## [2.7.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.3...%40kong-ui-public%2Fsandbox-layout%402.7.4) (2026-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout

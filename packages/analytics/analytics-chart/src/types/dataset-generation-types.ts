@@ -6,7 +6,8 @@ export interface BarChartDatasetGenerationParams {
   barSegmentLabels: DatasetLabel[]
   pivotRecords: { [k: string]: string | number | null | undefined }
   rowLabels: DatasetLabel[]
-  colorPalette: string[] | AnalyticsChartColors
+  colorPalette?: string[] | AnalyticsChartColors
+  seriesDimension?: string
   isMultiMetric?: boolean
   hasDimensions?: boolean
 }

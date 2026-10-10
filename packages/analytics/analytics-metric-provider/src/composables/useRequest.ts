@@ -1,6 +1,5 @@
-import type { IConfig } from 'swrv'
+import type { IConfig, IKey, fetcherFn } from 'swrv'
 import useSWRV from 'swrv'
-import type { IKey, fetcherFn } from 'swrv/dist/types'
 import { computed } from 'vue'
 
 export default function useRequest<Data = unknown, Error = { message: string }>(

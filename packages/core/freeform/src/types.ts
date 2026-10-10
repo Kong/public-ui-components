@@ -25,6 +25,13 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
    * existing behavior.
    */
   emptyFieldValue?: 'null' | 'undefined'
+  /**
+   * The lowest AI Gateway version guaranteed to be running (e.g. the minimum
+   * across a fleet of nodes). Fields/options whose schema `min_ai_gateway_version`
+   * exceeds this are disabled rather than hidden. When omitted, no field or
+   * option is disabled on version grounds (fail-open).
+   */
+  minRuntimeVersion?: string
 }
 
 /**
@@ -113,6 +120,33 @@ export interface BaseFieldProps {
   name: string
   labelAttributes?: LabelAttributes
 }
+
+/**
+ * The `ExpressionEditor` knobs a `StringField`/`NumberField` re-expose through
+ * their `expressionEditor` prop. `ExpressionEditor`'s own `defineProps` uses
+ * this same type, so the pass-through and the component can't drift apart.
+ */
+export interface SharedExpressionEditorFieldProps {
+  /**
+   * Example expression to show while the field is empty. There is no default,
+   * on purpose — a useful example is specific to the plugin and the field it
+   * overrides, so a shared one would be wrong for most of them.
+   *
+   * Left unset the field shows nothing rather than falling through to
+   * `useFieldAttrs`, whose fallback would offer the field's own default value
+   * as the placeholder — misleading here, since an expression is not a value.
+   */
+  placeholder?: string
+}
+
+/**
+ * Configures the expression editor a `StringField`/`NumberField` renders below
+ * itself when its schema is `expressible`. `false` turns it off entirely, for
+ * a plugin that pairs the value with its own `ExpressionEditor` instead
+ * (rate-limiting-advanced's limit rows, laid out beside `window_size`).
+ * Omitted renders it with defaults.
+ */
+export type ExpressionEditorFieldProps = false | SharedExpressionEditorFieldProps
 
 export type Match = (opt: {
   path: string

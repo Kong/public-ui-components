@@ -25,14 +25,25 @@
         :required="fieldAttrs.required"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ fieldAttrs.label }}
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        >
+          {{ fieldAttrs.label }}
+        </slot>
         <template
-          v-if="fieldAttrs.labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info || versionInfo"
           #tooltip
         >
           <slot name="tooltip">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="fieldAttrs.labelAttributes.info" />
+            <p
+              v-if="versionInfo"
+              class="ff-version-compatibility-note"
+            >
+              {{ versionInfo.tooltip }}
+            </p>
+            <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+            <div v-if="fieldAttrs.labelAttributes?.info" class="ff-label-tooltip-info" v-html="fieldAttrs.labelAttributes.info" />
           </slot>
         </template>
       </KLabel>
@@ -55,6 +66,7 @@
             class="ff-map-field-fields-key"
             :data-key-input="index"
             :data-testid="`ff-map-key-${field.path.value}.${index}`"
+            :disabled="isLocked"
             :model-value="name"
             :placeholder="keyPlaceholder || 'Key'"
             @keydown.enter.prevent="focus(index)"
@@ -82,6 +94,7 @@
             appearance="tertiary"
             :aria-label="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
             :data-testid="`ff-map-remove-btn-${field.path.value}.${index}`"
+            :disabled="isLocked"
             icon
             @click="removeKey(keyId)"
           >
@@ -96,6 +109,7 @@
       :aria-label="i18n.t('actions.add_entity', { entity: fieldDisplayName })"
       class="ff-map-field-add-entry-btn"
       :data-testid="`ff-map-add-btn-${field.path.value}`"
+      :disabled="isLocked"
       @click="handleAddClick"
     >
       <AddIcon />
@@ -138,6 +152,7 @@ const emit = defineEmits<{
 
 defineSlots<{
   default: (props: { keyId: string }) => any
+  label(props: { label: string }): any
   tooltip: () => any
 }>()
 
@@ -151,6 +166,8 @@ const {
 } = useMapField(toRef(props, 'name'), onLegacyValueChange)
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
+const versionInfo = field.versionInfo
+const isLocked = computed(() => !!versionInfo?.value)
 
 const simpleValueTypes = ['string', 'number', 'boolean', 'integer', 'foreign']
 
@@ -213,6 +230,12 @@ function onLegacyValueChange(newValue: Record<string, unknown> | null) {
   &-label.k-label {
     margin-bottom: 0;
     margin-top: 0;
+  }
+
+  // Separate the description from a preceding version-compatibility note with a
+  // blank line — only when both are present (the description is otherwise the sole line).
+  :deep(.k-tooltip .ff-version-compatibility-note + .ff-label-tooltip-info) {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   &-header {

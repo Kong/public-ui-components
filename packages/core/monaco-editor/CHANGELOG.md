@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.26.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.26.3...%40kong-ui-public%2Fmonaco-editor%400.26.4) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.26.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.26.2...%40kong-ui-public%2Fmonaco-editor%400.26.3) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+## [0.26.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.26.1...%40kong-ui-public%2Fmonaco-editor%400.26.2) (2026-09-28)
+
+### Bug Fixes
+
+* **monaco-editor:** theme updates ([#3889](https://github.com/Kong/public-ui-components/issues/3889)) ([1a84124](https://github.com/Kong/public-ui-components/commit/1a84124237aaf485a9bee57773da8b918adb31fb))
+
+
+## [0.26.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.26.0...%40kong-ui-public%2Fmonaco-editor%400.26.1) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
+# [0.26.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.3...%40kong-ui-public%2Fmonaco-editor%400.26.0) (2026-09-22)
+
+### Features
+
+* **monaco-editor:** monaco inline diff editor[DRWHO-655] ([#3810](https://github.com/Kong/public-ui-components/issues/3810)) ([3a78815](https://github.com/Kong/public-ui-components/commit/3a78815e33e066bc5557b6cf442e74856a6056b1))
+
+
+## [0.25.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.2...%40kong-ui-public%2Fmonaco-editor%400.25.3) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
 ## [0.25.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.25.1...%40kong-ui-public%2Fmonaco-editor%400.25.2) (2026-09-14)
 
 ### Bug Fixes

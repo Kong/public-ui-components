@@ -1,10 +1,17 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "12.42.0",
+  "version": "13.0.0",
   "type": "module",
-  "main": "./dist/vitals-utilities.umd.js",
+  "main": "./dist/vitals-utilities.cjs",
   "module": "./dist/vitals-utilities.es.js",
   "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "coordination": [
+        "dist/types/coordination/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -13,6 +20,11 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-utilities.es.js",
       "require": "./dist/vitals-utilities.cjs"
+    },
+    "./coordination": {
+      "types": "./dist/types/coordination/index.d.ts",
+      "import": "./dist/vitals-utilities-coordination.es.js",
+      "require": "./dist/vitals-utilities-coordination.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

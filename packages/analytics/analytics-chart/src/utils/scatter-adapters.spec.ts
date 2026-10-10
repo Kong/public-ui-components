@@ -64,6 +64,57 @@ describe('exploreResultToScatterData', () => {
 
     expect(data).toMatchObject({ start: START, end: END, truncated: true, limit: 50 })
   })
+
+  describe('with two metrics', () => {
+    const twoMetricResult = (data: ExploreResultV4['data']): ExploreResultV4 => ({
+      data,
+      meta: {
+        start: START,
+        end: END,
+        granularity_ms: 1000,
+        display: { model: { a: { name: 'Model A' } } },
+        metric_names: ['ai_request_count', 'cost'],
+        metric_units: { ai_request_count: 'count', cost: 'usd' },
+        query_id: '',
+      } as unknown as QueryResponseMeta,
+    })
+
+    it('plots the first metric on x and the second on y', () => {
+      const data = exploreResultToScatterData(twoMetricResult([
+        { timestamp: START, event: { ai_request_count: 10, cost: 1.5, model: 'a' } },
+      ] as ExploreResultV4['data']))!
+
+      expect(data.points).toEqual([
+        { timestamp: new Date(START).valueOf(), x: 10, value: 1.5, group: 'a' },
+      ])
+      expect(data).toMatchObject({
+        metric: 'cost',
+        metricUnit: 'usd',
+        xMetric: 'ai_request_count',
+        xMetricUnit: 'count',
+        dimension: 'model',
+      })
+    })
+
+    it('drops records missing either metric', () => {
+      const data = exploreResultToScatterData(twoMetricResult([
+        { timestamp: START, event: { ai_request_count: null, cost: 1, model: 'a' } },
+        { timestamp: START, event: { ai_request_count: 5, cost: null, model: 'a' } },
+        { timestamp: END, event: { ai_request_count: 0, cost: 0, model: 'a' } },
+      ] as ExploreResultV4['data']))!
+
+      expect(data.points).toEqual([
+        { timestamp: new Date(END).valueOf(), x: 0, value: 0, group: 'a' },
+      ])
+    })
+  })
+
+  it('leaves xMetric unset for a single metric', () => {
+    const data = exploreResultToScatterData(exploreResult())!
+
+    expect(data.xMetric).toBeUndefined()
+    expect(data.points.every(p => p.x === undefined)).toBe(true)
+  })
 })
 
 describe('requestsToScatterData', () => {

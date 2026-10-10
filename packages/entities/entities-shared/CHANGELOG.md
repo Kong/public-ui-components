@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.70.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.69.2...%40kong-ui-public%2Fentities-shared%403.70.0) (2026-10-09)
+
+### Features
+
+* **entities-shared:** mask nested sensitive fields in structured config view ([#3913](https://github.com/Kong/public-ui-components/issues/3913)) ([1b1e25c](https://github.com/Kong/public-ui-components/commit/1b1e25cfda741a378c0be32e262eae95df2e8082))
+
+
+## [3.69.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.69.1...%40kong-ui-public%2Fentities-shared%403.69.2) (2026-10-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.69.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.69.0...%40kong-ui-public%2Fentities-shared%403.69.1) (2026-10-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.69.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.3...%40kong-ui-public%2Fentities-shared%403.69.0) (2026-10-01)
+
+### Features
+
+* **dashboard-renderer:** migrate TopN and deprecate old table [MA-5503] ([#3854](https://github.com/Kong/public-ui-components/issues/3854)) ([baecc6f](https://github.com/Kong/public-ui-components/commit/baecc6fb562e9c0cec8570ca0ce4013006c0f77a))
+
+
+## [3.68.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.2...%40kong-ui-public%2Fentities-shared%403.68.3) (2026-09-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.68.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.1...%40kong-ui-public%2Fentities-shared%403.68.2) (2026-09-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.68.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.68.0...%40kong-ui-public%2Fentities-shared%403.68.1) (2026-09-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.68.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.67.6...%40kong-ui-public%2Fentities-shared%403.68.0) (2026-09-22)
+
+### Features
+
+* **entities:** surface managed_by in entity lists and config cards [KM-3018] ([#3740](https://github.com/Kong/public-ui-components/issues/3740)) ([29bc496](https://github.com/Kong/public-ui-components/commit/29bc4968cacfa25a1d33b53a404a6e94a6b8e9a0))
+
+
+## [3.67.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.67.5...%40kong-ui-public%2Fentities-shared%403.67.6) (2026-09-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [3.67.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.67.4...%40kong-ui-public%2Fentities-shared%403.67.5) (2026-09-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

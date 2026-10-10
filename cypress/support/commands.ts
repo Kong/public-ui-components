@@ -5,6 +5,7 @@ import defaultRouter from '../fixtures/routes'
 import RouterLink from '../fixtures/RouterLink.vue'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import { provideSwrvCache } from 'swrv'
 
 interface VueError {
   err: unknown
@@ -65,6 +66,10 @@ Cypress.Commands.add('mount', (component, opt = {}) => {
 
       // Kongponents
       app.use(Kongponents)
+
+      // Give every mounted component its own swrv cache, so mounts in one
+      // test can't be served stale data left behind by another.
+      provideSwrvCache(app)
 
       // Register error handler
       // TODO: IMPORTANT: if you get a Cypress error in the assertion output, disable this app.config.errorHandler and Cypress will output the actual error

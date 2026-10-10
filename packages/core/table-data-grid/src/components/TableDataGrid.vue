@@ -1,6 +1,8 @@
 <template>
   <div
+    ref="rootElement"
     class="kong-ui-public-table-data-grid"
+    :class="{ 'fit-to-content': fitToContent }"
     data-testid="table-data-grid"
   >
     <div
@@ -32,20 +34,23 @@
 
     <AgGridVue
       v-else
-      :cache-block-size="activePageSize"
+      :cache-block-size="mode === 'infinite' ? activePageSize : undefined"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
       :context="gridContext"
-      :datasource="datasource"
+      :datasource="mode === 'infinite' ? datasource : undefined"
       :default-col-def="defaultColDef"
-      :infinite-initial-row-count="1"
+      :dom-layout="fitToContent ? 'autoHeight' : 'normal'"
+      :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
-      row-model-type="infinite"
+      :row-data="mode === 'unpaginated' ? rowData : undefined"
+      :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
       :suppress-multi-sort="true"
-      :theme="themeQuartz"
+      :theme="gridTheme"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
+      @new-columns-loaded="reconcileGridSort"
       @row-clicked="onRowClick"
       @sort-changed="onSortChanged"
     />
@@ -57,8 +62,7 @@ import type {
   TableDataGridCellClickPayload,
   TableDataGridCellSlotProps,
   TableDataGridConfig,
-  TableDataGridFetcher,
-  TableDataGridHeader,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
@@ -71,11 +75,12 @@ import type {
 import { AgGridVue } from 'ag-grid-vue3'
 import {
   AllCommunityModule,
+  ClientSideRowModelModule,
   InfiniteRowModelModule,
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, shallowRef, toRef, useSlots } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -85,27 +90,25 @@ import { useTableDataGridSort } from '../composables/useTableDataGridSort'
 import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule])
 
 const {
-  error: hostError = false,
   fetcher,
+  mode: providedMode,
+  rows,
   headers,
+  error: hostError = false,
   pageSize = 25,
   refreshKey,
   tableConfig,
-} = defineProps<{
-  headers: Array<TableDataGridHeader<Row>>
-  fetcher: TableDataGridFetcher<Row>
-  error?: boolean
-  pageSize?: number
-  refreshKey?: string | number | boolean
-  tableConfig?: TableDataGridConfig
-}>()
+} = defineProps<TableDataGridProps<Row>>()
+// The row model selects setup-time composables; remount the grid to change modes.
+const mode = providedMode ?? 'infinite'
 
 defineSlots<{
   'empty-state': () => unknown
   'error-state': () => unknown
+  'cell-icon': (props: TableDataGridCellSlotProps<Row>) => unknown
   [columnKey: string]: (props: TableDataGridCellSlotProps<Row>) => unknown
 }>()
 
@@ -118,16 +121,37 @@ const emit = defineEmits<{
   (e: 'update:tableConfig', payload: TableDataGridConfig): void
 }>()
 
-const { i18n: { t } } = useI18n()
+const { i18n } = useI18n()
+const { t } = i18n
 
 const slots = useSlots()
 
 const gridApi = shallowRef<GridApi<Row>>()
+const rootElement = useTemplateRef<HTMLElement>('rootElement')
+
+// Tooltips teleported to body are hidden while an ancestor is in native fullscreen.
+const tooltipTarget = shallowRef<string | HTMLElement>('body')
+const updateTooltipTarget = () => {
+  const fullscreenElement = document.fullscreenElement
+  tooltipTarget.value = fullscreenElement instanceof HTMLElement && fullscreenElement.contains(rootElement.value ?? null)
+    ? fullscreenElement
+    : 'body'
+}
+
+onMounted(() => {
+  updateTooltipTarget()
+  document.addEventListener('fullscreenchange', updateTooltipTarget)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('fullscreenchange', updateTooltipTarget)
+})
 
 const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
   headers: toRef(() => headers),
   pageSize: toRef(() => pageSize),
   tableConfig: toRef(() => tableConfig),
+  emitSort: sort => emit('sort', sort),
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   onExternalConfigChange: (config) => {
     if (!gridApi.value) {
@@ -142,15 +166,12 @@ const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useT
 
 const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
   activeSort,
-  emitSort: sort => emit('sort', sort),
   patchTableConfig,
 })
 
-const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
-  headers: toRef(() => headers),
-  slots,
-  initialSort: activeSort.value,
-})
+const fitToContent = computed(() => mode === 'unpaginated' && !!activeTableConfig.value.fitToContent)
+// Auto-height grids otherwise reserve a 150px body, even for a single row.
+const gridTheme = themeQuartz.withParams({ autoHeightMinBodyHeight: 0 })
 
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   cellClick: payload => emit('cell:click', payload),
@@ -164,41 +185,76 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
-const resetKey = computed(() => [
-  fetcher,
-  activePageSize.value,
-  refreshKey,
-  activeTableConfig.value.sortColumnKey,
-  activeTableConfig.value.sortColumnOrder,
-])
+// AG Grid reloads infinite blocks on sort; the composable resets its cursor chain.
+// Presentation-only config changes must not invalidate the fetch request.
+const resetKey = computed(() => [activePageSize.value, refreshKey])
 
-const {
-  data,
-  datasource,
-  error: fetchError,
-  isFetching,
-} = useFetchInfinite({
-  fetcher,
-  resetKey,
-  sort: activeSort,
+// Unpaginated rows are host-owned; only infinite mode fetches.
+const fetchResult = mode === 'infinite'
+  ? useFetchInfinite({
+    fetcher: toRef(() => fetcher),
+    resetKey,
+    sort: activeSort,
+  })
+  : undefined
+
+const datasource = fetchResult?.datasource
+const data = computed(() => fetchResult ? fetchResult.data.value : rows)
+const isFetching = computed(() => fetchResult?.isFetching.value ?? false)
+const rowData = computed(() => rows ? Array.from(rows) : undefined)
+
+const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
+  headers: toRef(() => headers),
+  mode,
+  rows: rowData,
+  slots,
+  tooltipTarget,
+  initialSort: activeSort.value,
 })
 
 const {
   fetchState,
   hasData,
   state: fetchLifecycleState,
-} = useFetchState(data, fetchError, isFetching)
+} = useFetchState(
+  data,
+  toRef(() => fetchResult?.error.value),
+  isFetching,
+)
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS
   && !hasData.value
 ))
 
-useEmitState({
-  emitState: payload => emit('state', payload),
-  fetchLifecycleState,
-  hasData,
-})
+// State events describe the internal fetch lifecycle, so unpaginated mode emits none.
+if (fetchResult) {
+  useEmitState({
+    emitState: payload => emit('state', payload),
+    fetchLifecycleState,
+    hasData,
+  })
+}
+
+// AG Grid discards a sort for columns it has not created yet, and infinite blocks
+// are rejected while its sort model differs from activeSort. Reconcile on every
+// active-sort change and whenever AG Grid finishes loading new columns.
+const reconcileGridSort = () => {
+  const api = gridApi.value
+  if (!api || api.isDestroyed()) {
+    return
+  }
+
+  const sort = activeSort.value
+  const sortedColumn = api.getColumnState().find(column => column.sort)
+  if (sortedColumn?.colId === sort.sortColumnKey && (sortedColumn?.sort ?? undefined) === sort.sortColumnOrder) {
+    return
+  }
+
+  applySortToGrid(api, sort)
+}
+
+watch([gridApi, activeSort], reconcileGridSort)
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api
@@ -217,6 +273,10 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   min-height: 0;
   overflow: hidden;
   width: 100%;
+
+  &.fit-to-content {
+    height: auto;
+  }
 }
 
 .table-data-grid-grid {

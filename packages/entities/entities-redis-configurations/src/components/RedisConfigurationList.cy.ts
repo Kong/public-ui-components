@@ -1,5 +1,7 @@
+import type { App } from 'vue'
 import type { KongManagerRedisConfigurationListConfig, KonnectRedisConfigurationListConfig } from 'src/types'
 import RedisConfigurationList from './RedisConfigurationList.vue'
+import { ENTITIES_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { createRouter, createWebHistory } from 'vue-router'
 import { partials, links } from '../../fixtures/mockData'
 import { v4 as uuidv4 } from 'uuid'
@@ -739,5 +741,89 @@ describe('<RedisConfigurationList />', () => {
 
       cy.wait('@getNoWorkspace')
     })
+  })
+})
+
+describe('<RedisConfigurationList /> - managed_by column', () => {
+  const managedByColumnClass = '.kong-ui-entities-partials-list'
+
+  const partialsWithManagedBy = {
+    ...partials,
+    data: partials.data.map(row => ({
+      ...row,
+      managed_by: { service: 'gw-manager' },
+    })),
+  }
+
+  const mountList = (options: { managedByEnabled?: boolean } = {}) => {
+    cy.mount(RedisConfigurationList, {
+      props: {
+        cacheIdentifier: `redis-configuration-list-managed-by-${uuidv4()}`,
+        config: baseConfigKonnect,
+        canCreate: () => false,
+        canEdit: () => false,
+        canDelete: () => false,
+        canRetrieve: () => false,
+      },
+      global: options.managedByEnabled
+        ? {
+          plugins: [{
+            install: (app: App) => app.provide(ENTITIES_FEATURE_FLAGS.MANAGED_BY, true),
+          }],
+        }
+        : undefined,
+    })
+  }
+
+  beforeEach(() => {
+    cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop limit exceeded'))
+    cy.intercept(
+      {
+        method: 'GET',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials*`,
+      },
+      {
+        statusCode: 200,
+        body: partialsWithManagedBy,
+      },
+    )
+    cy.intercept(
+      {
+        method: 'GET',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*/links*`,
+      },
+      {
+        statusCode: 200,
+        body: links,
+      },
+    )
+  })
+
+  it('omits the managed_by column entirely while the flag is off', () => {
+    mountList()
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Name')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('not.exist')
+  })
+
+  it('offers managed_by in the visibility menu but keeps it hidden while the flag is on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Name')
+    cy.get(`${managedByColumnClass} thead th`).should('not.contain.text', 'Managed By')
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').should('exist').and('contain.text', 'Managed By')
+  })
+
+  it('shows the managed_by label once the column is toggled on', () => {
+    mountList({ managedByEnabled: true })
+
+    cy.getTestId('column-visibility-menu-button').click()
+    cy.getTestId('column-visibility-menu-item-managed_by').click()
+    cy.getTestId('apply-button').click()
+    cy.get(`${managedByColumnClass} thead th`).should('contain.text', 'Managed By')
+    cy.getTestId('managed_by').should('contain.text', 'Konnect UI')
   })
 })

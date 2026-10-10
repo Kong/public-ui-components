@@ -1,5 +1,8 @@
+import { h } from 'vue'
+import { AUTOFILL_SLOT } from '@kong-ui-public/forms'
 import Form from './Form.vue'
-import type { FormSchema } from '../form-schema'
+import StringField from './StringField.vue'
+import type { FormSchema, StringFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
 const FIELD_NAME = 'name'
@@ -24,6 +27,7 @@ function mountStringForm(options: {
   schema?: FormSchema
   data?: Record<string, unknown>
   config?: FormConfig
+  labelSlotTemplate?: string
 }) {
   cy.mount(Form, {
     props: {
@@ -32,6 +36,16 @@ function mountStringForm(options: {
       config: options.config,
       onChange: cy.spy().as('onChangeSpy'),
     },
+    ...(options.labelSlotTemplate
+      ? {
+        slots: {
+          default: `<StringField name="${FIELD_NAME}"><template #label="{ label }">${options.labelSlotTemplate}</template></StringField>`,
+        },
+        global: {
+          components: { StringField },
+        },
+      }
+      : {}),
   })
 }
 
@@ -100,5 +114,130 @@ describe('StringField', () => {
     cy.getTestId(`ff-${FIELD_NAME}`).clear()
 
     assertLastChange({ [FIELD_NAME]: null })
+  })
+
+  describe('version compatibility', () => {
+    function mountVersionCompatibilityForm(options: {
+      config?: FormConfig
+      fieldOverrides?: Partial<StringFieldSchema>
+    } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: {
+            type: 'record',
+            fields: [{
+              [FIELD_NAME]: {
+                type: 'string',
+                min_ai_gateway_version: '2.1',
+                ...options.fieldOverrides,
+              },
+            }],
+          },
+          data: { [FIELD_NAME]: 'alpha' },
+          config: options.config,
+        },
+      })
+    }
+
+    it('disables the field and shows a version tooltip when minRuntimeVersion is below the requirement', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.0' } })
+
+      cy.getTestId(`ff-${FIELD_NAME}`).should('be.disabled')
+      cy.getTestId(`ff-label-${FIELD_NAME}`).find('[data-testid="kui-icon-wrapper-info-icon"]').should('exist')
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .should('contain.text', 'The minimum runtime version required to use this feature is 2.1')
+    })
+
+    it('does not disable the field, and shows no version tooltip, when minRuntimeVersion satisfies the requirement', () => {
+      mountVersionCompatibilityForm({ config: { minRuntimeVersion: '2.1' } })
+
+      cy.getTestId(`ff-${FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-label-${FIELD_NAME}`).find('[data-testid="kui-icon-wrapper-info-icon"]').should('not.exist')
+    })
+
+    it('fails open (not disabled) when minRuntimeVersion is not provided', () => {
+      mountVersionCompatibilityForm()
+
+      cy.getTestId(`ff-${FIELD_NAME}`).should('not.be.disabled')
+      cy.getTestId(`ff-label-${FIELD_NAME}`).find('[data-testid="kui-icon-wrapper-info-icon"]').should('not.exist')
+    })
+
+    it('shows the version note before the field description, with both merged into the same tooltip', () => {
+      mountVersionCompatibilityForm({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: { description: 'The display name for this consumer.' },
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`).find('.ff-version-compatibility-note')
+        .should('contain.text', 'minimum runtime version')
+      cy.getTestId(`ff-label-${FIELD_NAME}`).find('.ff-label-tooltip-info')
+        .should('contain.text', 'The display name for this consumer')
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('.ff-version-compatibility-note, .ff-label-tooltip-info')
+        .first()
+        .should('have.class', 'ff-version-compatibility-note')
+    })
+  })
+
+  describe('label slot', () => {
+    it('should render consumer-provided label slot content with the label scoped prop', () => {
+      mountStringForm({
+        data: { [FIELD_NAME]: 'alpha' },
+        labelSlotTemplate: '<span data-testid="custom-label">Custom: {{ label }}</span>',
+      })
+
+      cy.getTestId(`ff-label-${FIELD_NAME}`)
+        .find('[data-testid="custom-label"]')
+        .should('have.text', 'Custom: Name')
+    })
+  })
+
+  describe('vault picker', () => {
+    const fakePicker = (props: any) => h('div', {
+      'data-disabled': String(!!props.disabled),
+      'data-testid': 'fake-vault-picker',
+    }, 'picker')
+
+    function mountWithVaultPicker(options: {
+      config?: FormConfig
+      fieldOverrides?: Partial<StringFieldSchema>
+    } = {}) {
+      cy.mount(Form, {
+        props: {
+          schema: {
+            type: 'record',
+            fields: [{
+              [FIELD_NAME]: {
+                type: 'string',
+                referenceable: true,
+                ...options.fieldOverrides,
+              },
+            }],
+          },
+          data: { [FIELD_NAME]: 'alpha' },
+          config: options.config,
+        },
+        global: {
+          provide: {
+            [AUTOFILL_SLOT]: fakePicker,
+          },
+        },
+      })
+    }
+
+    it('disables the vault picker when the field is version-locked', () => {
+      mountWithVaultPicker({
+        config: { minRuntimeVersion: '2.0' },
+        fieldOverrides: { min_ai_gateway_version: '2.1' },
+      })
+
+      cy.getTestId('fake-vault-picker').should('have.attr', 'data-disabled', 'true')
+    })
+
+    it('leaves the vault picker enabled when there is no version lock', () => {
+      mountWithVaultPicker({ config: { minRuntimeVersion: '2.1' }, fieldOverrides: { min_ai_gateway_version: '2.1' } })
+
+      cy.getTestId('fake-vault-picker').should('have.attr', 'data-disabled', 'false')
+    })
   })
 })

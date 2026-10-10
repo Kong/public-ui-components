@@ -112,7 +112,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { TableStateParams } from '../../types'
 import composables from '../../composables'
-import { useTablePreferences } from '@kong-ui-public/core'
+import { useTablePreferences, DEFAULT_USER_TABLE_PREFERENCES } from '@kong-ui-public/core'
 import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps, TablePaginationAttributes } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
@@ -394,8 +394,27 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
 // Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
 // for localStorage of user's table preferences across tables, orgs and users
+//
+// `getTablePreferences` returns the `defaultTablePreferences` object whole when nothing is
+// stored at all, so a `defaultTablePreferences` that only carries `columnVisibility` would
+// reach KTable with `pageSize: undefined`. Keep the core defaults underneath, and merge the
+// column visibility per key instead of taking it wholesale: a stored choice always wins,
+// and keys the user has never decided on take the default - otherwise a column meant to be
+// hidden by default would show up for every user who loaded the table before it existed.
+const resolveTablePreferences = (): TablePreferences => {
+  const stored = getTablePreferences(cacheId.value, props.defaultTablePreferences)
+  const defaultColumnVisibility = props.defaultTablePreferences?.columnVisibility
 
-const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
+  return {
+    ...DEFAULT_USER_TABLE_PREFERENCES,
+    ...stored,
+    ...(defaultColumnVisibility
+      ? { columnVisibility: { ...defaultColumnVisibility, ...stored.columnVisibility } }
+      : {}),
+  }
+}
+
+const tablePreferences = ref<TablePreferences>(resolveTablePreferences())
 
 const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams<string, string>> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default

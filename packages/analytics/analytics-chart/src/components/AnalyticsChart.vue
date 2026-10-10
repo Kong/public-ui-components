@@ -53,9 +53,11 @@
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
+        :left-y-axis-grid="chartOptions.yAxes?.left?.showGrid"
         :legend-values="legendValues"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
+        :right-y-axis="rightYAxis"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
         :threshold="selectedThreshold"
@@ -104,7 +106,7 @@
         :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
         data-testid="scatter-chart-container"
-        :dimension-axes-title="timestampAxisTitle"
+        :dimension-axes-title="scatterXAxisTitle"
         :granularity="scatterGranularity"
         :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
@@ -114,6 +116,8 @@
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
+        :x-metric="scatterData?.xMetric"
+        :x-metric-unit="scatterData?.xMetricUnit"
       />
     </div>
   </div>
@@ -121,8 +125,8 @@
 
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
-import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, YAxisConfig, ZoomActionItem } from '../types'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, YAxisPosition } from '@kong-ui-public/analytics-utilities'
 import type { ScatterChartColors } from '../utils'
 
 import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
@@ -188,13 +192,36 @@ const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
 ))
 
+// A second y axis is only added for line charts, and only when a queried metric is mapped to it.
+const metricAxisMap = computed<Partial<Record<string, YAxisPosition>> | undefined>(() => {
+  const mapping = props.chartOptions.metricAxisMap
+  const metrics = exploreData.value?.meta?.metric_names ?? []
+
+  if (props.chartOptions.type !== 'timeseries_line' || !mapping || !metrics.some(metric => mapping[metric] === 'right')) {
+    return undefined
+  }
+
+  return mapping
+})
+
+const isDualAxis = computed(() => !!metricAxisMap.value)
+
+const axisMetrics = (metricNames: string[], position: YAxisPosition): string[] => {
+  if (!metricAxisMap.value) {
+    return metricNames
+  }
+
+  return metricNames.filter(metric => (metricAxisMap.value?.[metric] ?? 'left') === position)
+}
+
 // A grouped time series shows one metric at a time; other chart modes keep the full query.
+// Dual y axis charts plot every metric at once, so they skip the metric selection.
 const selectableMetrics = computed(() => {
   const meta = exploreData.value?.meta
   const metrics = meta?.metric_names ?? []
   const isTimeSeries = ['timeseries_line', 'timeseries_bar'].includes(props.chartOptions.type)
 
-  return isTimeSeries && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
+  return isTimeSeries && !isDualAxis.value && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
 })
 const hasGroupedMetrics = computed(() => selectableMetrics.value.length > 1)
 const selectedMetric = computed(() => props.activeMetric && selectableMetrics.value.includes(props.activeMetric)
@@ -247,8 +274,8 @@ const scatterThemeColors = computed<ScatterChartColors>(() => {
 })
 
 const chartMeta = computed<SharedMeta>(() => {
-  if (isScatterChartData(props.chartData)) {
-    const { start, end, metric, metricUnit, truncated, limit, datasource } = props.chartData
+  if (scatterData.value) {
+    const { start, end, metric, metricUnit, truncated, limit, datasource } = scatterData.value
 
     return {
       start,
@@ -295,6 +322,7 @@ const computedChartData = computed(() => {
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
     ).value
@@ -371,7 +399,8 @@ const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.char
 const tooltipMetricDisplay = computed<string | undefined>(() => {
   const { metricNames, metricUnits } = chartMeta.value
 
-  if (!metricNames || !metricUnits) {
+  // Each series is labelled with its own metric, so a single metric subtitle would mislead
+  if (isDualAxis.value || !metricNames || !metricUnits) {
     return undefined
   }
 
@@ -404,8 +433,10 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
 })
 
 const metricAxesTitle = computed<string | undefined>(() => {
-  if (props.chartOptions?.metricAxesTitle) {
-    return props.chartOptions?.metricAxesTitle
+  const titleOverride = props.chartOptions.yAxes?.left?.title ?? props.chartOptions?.metricAxesTitle
+
+  if (titleOverride) {
+    return titleOverride
   }
 
   const { metricNames, metricUnits } = chartMeta.value
@@ -414,7 +445,30 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
+  return metricGroupTitle(axisMetrics(metricNames, 'left'), metricUnits)
+})
+
+const rightYAxis = computed<YAxisConfig | undefined>(() => {
+  if (!isDualAxis.value) {
+    return undefined
+  }
+
+  const { metricNames, metricUnits } = chartMeta.value
+  const autoTitle = metricNames && metricUnits ? metricGroupTitle(axisMetrics(metricNames, 'right'), metricUnits) : undefined
+
+  return {
+    title: props.chartOptions.yAxes?.right?.title ?? autoTitle,
+    showGrid: props.chartOptions.yAxes?.right?.showGrid,
+  }
+})
+
+const metricGroupTitle = (metricNames: string[], metricUnits: NonNullable<SharedMeta['metricUnits']>): string | undefined => {
   const metricName = metricNames[0]
+
+  if (!metricName) {
+    return undefined
+  }
+
   const metricUnit = metricUnits[metricName] || ''
 
   if (metricNames.length > 1) {
@@ -428,18 +482,24 @@ const metricAxesTitle = computed<string | undefined>(() => {
     }
   }
 
+  return metricTitle(metricName, metricUnit)
+}
+
+const metricTitle = (metricName: string, metricUnit: string): string | undefined => {
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+  if (i18n.te(`metricAxisTitles.${metricName}`)) {
     if (isNoSuffixMetric(metricUnit)) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`metricAxisTitles.${metricName}`) || undefined
     }
     // @ts-ignore - dynamic i18n key
-    return i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) }) || undefined
+    const unit = i18n.te(`chartUnits.${metricUnit}`) ? i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) : metricUnit
+    // @ts-ignore - dynamic i18n key
+    return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
   }
 
   return metricName || undefined
-})
+}
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
   if (props.chartOptions?.dimensionAxesTitle) {
@@ -457,16 +517,12 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
   return i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension
 })
 
-const axisTitleGranularity = computed<GranularityValues | null>(() => (
-  isScatterChart.value ? scatterGranularity.value : msToGranularity(Number(exploreData.value?.meta?.granularity_ms))
-))
-
 const timestampAxisTitle = computed(() => {
   if (isPlatformDatasource(chartMeta.value.datasource)) {
     return i18n.t('timestampAxisTitles.platform')
   }
 
-  const granularity = axisTitleGranularity.value
+  const granularity = msToGranularity(exploreData.value?.meta?.granularity_ms)
 
   if (!granularity) {
     return undefined
@@ -474,6 +530,16 @@ const timestampAxisTitle = computed(() => {
 
   // @ts-ignore - dynamic i18n key
   return i18n.te(`granularityAxisTitles.${granularity}`) ? i18n.t(`granularityAxisTitles.${granularity}`) : granularity
+})
+
+const scatterXAxisTitle = computed<string | undefined>(() => {
+  const xMetric = scatterData.value?.xMetric
+
+  if (!xMetric) {
+    return timestampAxisTitle.value
+  }
+
+  return metricTitle(xMetric, scatterData.value?.xMetricUnit ?? '')
 })
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
@@ -506,12 +572,9 @@ const timeSeriesGranularity = computed<GranularityValues>(() => {
   return msToGranularity(data.meta.granularity_ms) || 'hourly'
 })
 
-// This is to determine the how granular the scatter's x-axis should be. Maybe this could be configurable?
-const SCATTER_TICK_COUNT = 7
-
-const scatterGranularity = computed<GranularityValues>(() => {
-  return msToGranularity(Math.floor((timeRangeMs.value || 0) / SCATTER_TICK_COUNT)) || 'hourly'
-})
+const scatterGranularity = computed<GranularityValues>(() => (
+  msToGranularity(exploreData.value?.meta?.granularity_ms) || 'secondly'
+))
 
 const chartLegendSortFn = computed(() => {
   if (props.chartOptions.chartLegendSortFn) {

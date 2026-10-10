@@ -4,7 +4,7 @@
     <header class="sandbox-header">
       <div>
         <h1>TableDataGrid</h1>
-        <p>Cursor-first infinite loading playground with refresh, states, and fetch history.</p>
+        <p>Compare infinite loading and complete results with refresh, states, fetch history, and host-rendered icons.</p>
       </div>
 
       <div class="sandbox-header-actions">
@@ -15,6 +15,7 @@
           Clear log
         </KButton>
         <KButton
+          v-if="fetchMode === 'infinite'"
           appearance="primary"
           @click="refreshRows"
         >
@@ -25,14 +26,32 @@
 
     <main class="sandbox-main">
       <section class="table-section">
+        <div class="table-section-toolbar">
+          <p>{{ fetchMode === 'unpaginated' ? 'The host passes all rows. Sorting and scrolling do not fetch.' : 'Scrolling and sorting fetch rows in blocks.' }}</p>
+          <div
+            v-if="fetchMode === 'unpaginated'"
+            class="bar-scale-options"
+          >
+            <span>Bar scale</span>
+            <KSegmentedControl
+              aria-label="Bar scale"
+              :model-value="barScale"
+              :options="barScaleOptions"
+              @update:model-value="barScale = $event"
+            />
+          </div>
+          <KSegmentedControl
+            aria-label="Data mode"
+            class="fetch-mode-control"
+            :model-value="fetchMode"
+            :options="fetchModeOptions"
+            @update:model-value="handleFetchModeChange"
+          />
+        </div>
+
         <TableDataGrid
+          v-bind="tableProps"
           :key="tableResetKey"
-          :error="showErrorState"
-          :fetcher="fetchRows"
-          :headers="headers"
-          :page-size="pageSize"
-          :refresh-key="refreshKey"
-          :table-config="tableConfig"
           @cell:click="handleCellClick"
           @grid:ready="handleGridReady"
           @row:click="handleRowClick"
@@ -53,6 +72,28 @@
               message="Turn off the host error state to show the grid again."
               title="Sandbox error state"
             />
+          </template>
+
+          <template #cell-icon="{ column }">
+            <svg
+              v-if="column.key === 'name'"
+              aria-hidden="true"
+              class="sandbox-service-icon"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              viewBox="0 0 16 16"
+            >
+              <rect
+                height="11"
+                rx="2"
+                width="11"
+                x="2.5"
+                y="2.5"
+              />
+              <path d="M5 6h6M5 9h4" />
+            </svg>
           </template>
 
           <template #status="{ rowValue }">
@@ -118,7 +159,7 @@
               </select>
             </label>
 
-            <label>
+            <label v-if="fetchMode === 'infinite'">
               Page size
               <select
                 :value="String(pageSize)"
@@ -134,7 +175,7 @@
               </select>
             </label>
 
-            <label>
+            <label v-if="fetchMode === 'infinite'">
               Fetch delay
               <select
                 :value="String(fetchDelayMs)"
@@ -160,6 +201,7 @@
 
           <div class="sandbox-panel-actions">
             <KButton
+              v-if="fetchMode === 'infinite'"
               appearance="secondary"
               size="small"
               @click="refreshRows"
@@ -257,12 +299,13 @@ import type {
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridInfiniteFetcherParams,
+  TableDataGridProps,
   TableDataGridSort,
   TableDataGridStatePayload,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
-import type { BadgeAppearance } from '@kong/kongponents'
-import { computed, ref } from 'vue'
+import type { BadgeAppearance, SegmentedControlOption } from '@kong/kongponents'
+import { computed, ref, shallowRef } from 'vue'
 import { TableDataGrid } from '../src'
 
 type SandboxRow = {
@@ -272,16 +315,20 @@ type SandboxRow = {
   name: string
   status: string
   latency: number
+  requests: number
   region: string
 }
 
 type DatasetMode = 'generated' | 'empty'
+type FetchMode = 'infinite' | 'unpaginated'
+type BarScale = 'relative' | 'absolute'
 type SandboxSectionId = 'tableOptions' | 'fetchDebug' | 'headers'
+type FetchRequest = TableDataGridInfiniteFetcherParams
 
 type FetchHistoryEntry = {
   fetchCount: number
   id: string
-  request: TableDataGridInfiniteFetcherParams
+  request: FetchRequest
   responseCursor?: unknown
   rowsReturned: number
   title: string
@@ -305,17 +352,28 @@ const datasetModeOptions: Array<{ label: string, value: DatasetMode }> = [
 ]
 const pageSizeOptions = [10, 25, 50, 100]
 const fetchDelayOptions = [0, 150, 350, 800]
+const fetchModeOptions: Array<SegmentedControlOption<FetchMode>> = [
+  { label: 'Infinite', value: 'infinite' },
+  { label: 'All rows', value: 'unpaginated' },
+]
+const barScaleOptions: Array<SegmentedControlOption<BarScale>> = [
+  { label: 'Of total', value: 'relative' },
+  { label: 'Of maximum', value: 'absolute' },
+]
 
 const pageSize = ref(defaultPageSize)
 const fetchDelayMs = ref(defaultFetchDelayMs)
 const datasetMode = ref<DatasetMode>('generated')
+const fetchMode = ref<FetchMode>('infinite')
+const barScale = ref<BarScale>('relative')
 const showErrorState = ref(false)
 const refreshKey = ref(0)
 const tableResetKey = ref(0)
 const tableConfig = ref<TableDataGridConfig>()
 const fetchCount = ref(0)
-const lastRequest = ref<TableDataGridInfiniteFetcherParams>()
+const lastRequest = shallowRef<FetchRequest>()
 const lastResponseCursor = ref<unknown>()
+const fetchDiagnosticsGeneration = ref(0)
 const fetchHistory = ref<FetchHistoryEntry[]>([])
 const collapsedFetchHistoryItems = ref<Record<string, boolean>>({})
 const eventLog = ref<EventLogEntry[]>([])
@@ -325,17 +383,26 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
   tableOptions: false,
 })
 
-const headers: Array<TableDataGridHeader<SandboxRow>> = [
+const headers = computed<Array<TableDataGridHeader<SandboxRow>>>(() => [
   { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
   { key: 'description', label: 'Description', width: 240 },
   // Rendered via the `#status` slot below instead of the raw column value.
   { key: 'status', label: 'Status', minWidth: 140, sortable: true },
   // Rendered via the `#latency` slot below instead of the raw column value.
   { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
+  {
+    bar: barScale.value,
+    key: 'requests',
+    label: 'Requests',
+    minWidth: 240,
+    sortable: true,
+    showPercentage: true,
+    thresholds: [{ type: 'warning', value: 150 }],
+  },
   { key: 'region', label: 'Region', minWidth: 140 },
   // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
   { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
-]
+])
 
 const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   const rowNumber = index + 1
@@ -346,6 +413,7 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
     id: `row-${rowNumber}`,
     latency: 35 + ((index * 29) % 800),
     name: `Service ${rowNumber}`,
+    requests: 25 + ((index * 37) % 180),
     region: ['us', 'eu', 'au', 'me'][index % 4] ?? 'us',
     status: ['Active', 'Deploying', 'Inactive'][index % 3] ?? 'Active',
   }
@@ -361,9 +429,10 @@ const fetchDebug = computed(() => ({
   datasetMode: datasetMode.value,
   fetchCount: fetchCount.value,
   fetchDelayMs: fetchDelayMs.value,
+  fetchMode: fetchMode.value,
   lastRequest: lastRequest.value,
   lastResponseCursor: lastResponseCursor.value,
-  pageSize: pageSize.value,
+  pageSize: fetchMode.value === 'infinite' ? pageSize.value : undefined,
   refreshKey: refreshKey.value,
   showErrorState: showErrorState.value,
   tableConfig: tableConfig.value,
@@ -399,6 +468,7 @@ const logEvent = (event: string, payload: unknown) => {
 }
 
 const clearFetchHistory = () => {
+  fetchDiagnosticsGeneration.value += 1
   fetchCount.value = 0
   lastRequest.value = undefined
   lastResponseCursor.value = undefined
@@ -416,6 +486,8 @@ const resetSandbox = () => {
   pageSize.value = defaultPageSize
   fetchDelayMs.value = defaultFetchDelayMs
   datasetMode.value = 'generated'
+  fetchMode.value = 'infinite'
+  barScale.value = 'relative'
   showErrorState.value = false
   refreshKey.value = 0
   tableResetKey.value += 1
@@ -433,18 +505,19 @@ const recordFetch = ({
   responseCursor,
   rowsReturned,
 }: {
-  request: TableDataGridInfiniteFetcherParams
+  request: FetchRequest
   responseCursor?: unknown
   rowsReturned: number
 }) => {
   const nextFetchCount = fetchCount.value + 1
+  const requestDescription = `cursor ${formatCursor(request.cursor)}`
   const entry: FetchHistoryEntry = {
     fetchCount: nextFetchCount,
     id: `fetch-${nextFetchCount}`,
     request,
     responseCursor,
     rowsReturned,
-    title: `Fetch ${nextFetchCount} - cursor ${formatCursor(request.cursor)}`,
+    title: `Fetch ${nextFetchCount} - ${requestDescription}`,
     time: new Date().toLocaleTimeString(),
   }
   const nextFetchHistory = [...fetchHistory.value, entry].slice(-8)
@@ -476,6 +549,7 @@ const sortRows = (rows: SandboxRow[], sort: TableDataGridSort | undefined): Sand
 }
 
 const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, sort }) => {
+  const requestGeneration = fetchDiagnosticsGeneration.value
   const request: TableDataGridInfiniteFetcherParams = {
     cursor,
     mode: 'infinite',
@@ -494,11 +568,13 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
   const hasMore = nextOffset < rows.length
   const responseCursor = hasMore ? createCursor(nextOffset) : undefined
 
-  recordFetch({
-    request,
-    responseCursor,
-    rowsReturned: data.length,
-  })
+  if (requestGeneration === fetchDiagnosticsGeneration.value) {
+    recordFetch({
+      request,
+      responseCursor,
+      rowsReturned: data.length,
+    })
+  }
 
   return {
     cursor: responseCursor,
@@ -506,6 +582,28 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, s
     hasMore,
   }
 }
+
+const tableProps = computed<TableDataGridProps<SandboxRow>>(() => {
+  const commonProps = {
+    error: showErrorState.value,
+    headers: headers.value,
+    tableConfig: tableConfig.value,
+  }
+
+  return fetchMode.value === 'unpaginated'
+    ? {
+      ...commonProps,
+      mode: 'unpaginated',
+      rows: activeRows.value,
+    }
+    : {
+      ...commonProps,
+      fetcher: fetchRows,
+      mode: 'infinite',
+      pageSize: pageSize.value,
+      refreshKey: refreshKey.value,
+    }
+})
 
 const handleState = (payload: TableDataGridStatePayload) => {
   logEvent('state', payload)
@@ -536,7 +634,7 @@ const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => 
 }
 
 const handleSort = (payload: TableDataGridSort) => {
-  logEvent('sort', payload)
+  logEvent(fetchMode.value === 'unpaginated' ? 'unpaginated:sort' : 'sort', payload)
 }
 
 const handleTableConfigUpdate = (payload: TableDataGridConfig) => {
@@ -550,6 +648,18 @@ const handleActionClick = (row: SandboxRow) => {
 
 const refreshAfterControlChange = () => {
   refreshRows()
+}
+
+const handleFetchModeChange = (nextMode: FetchMode) => {
+  if (nextMode === fetchMode.value) {
+    return
+  }
+
+  fetchMode.value = nextMode
+  tableConfig.value = undefined
+  tableResetKey.value += 1
+  clearFetchHistory()
+  clearEventLog()
 }
 
 const handleDatasetModeChange = (event: Event) => {
@@ -635,6 +745,13 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   justify-content: flex-end;
 }
 
+.sandbox-service-icon {
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  flex: none;
+  height: var(--kui-icon-size-30, $kui-icon-size-30);
+  width: var(--kui-icon-size-30, $kui-icon-size-30);
+}
+
 .sandbox-main {
   display: flex;
   flex-direction: column;
@@ -645,6 +762,8 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 
 .table-section {
   display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-30, $kui-space-30);
   min-width: 0;
 
   :deep(.kong-ui-public-table-data-grid) {
@@ -652,6 +771,34 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
     height: 760px;
     min-height: 0;
     width: 100%;
+  }
+}
+
+.table-section-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kui-space-30, $kui-space-30);
+  justify-content: space-between;
+
+  p {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    margin: 0;
+  }
+
+  .fetch-mode-control {
+    margin-left: auto;
+    width: auto;
+  }
+}
+
+.bar-scale-options {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-20, $kui-space-20);
+
+  > span {
+    white-space: nowrap;
   }
 }
 

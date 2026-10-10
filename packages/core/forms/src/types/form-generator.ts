@@ -21,6 +21,12 @@ export interface AutofillSlotProps {
   schema: Record<string, any>
   value: any
   update: (value: any) => void
+  /**
+   * Set when the host field is disabled (e.g. by freeform's version
+   * compatibility check) — the autofill/vault-picker UI should not be
+   * interactive while this is true.
+   */
+  disabled?: boolean
 }
 
 export type AutofillSlot = Slot<AutofillSlotProps>

@@ -23,18 +23,19 @@ export default function useChartLegendValues(
         }, 0) as number
 
       let formatted: string
+      const unit = v.unit ?? metricUnit.value
 
-      if (metricUnit.value === 'bytes') {
+      if (unit === 'bytes') {
         formatted = formatBytes(raw)
       } else {
         // TODO should we be using approxNum in legend values? Might be better
         // to always use formatUnit whenever we're formatting a unit.
         // @ts-ignore - dynamic i18n key
-        const unitValue = translateUnit(metricUnit.value, raw)
+        const unitValue = translateUnit(unit, raw)
         formatted = (i18n && i18n.t('legend.datapointValueDisplay', {
           value: approxNum(raw, { capital: true }),
           unit: unitValue,
-        })) || `${approxNum(raw, { capital: true })} ${metricUnit.value}`
+        })) || `${approxNum(raw, { capital: true })} ${unit}`
       }
 
       return {
