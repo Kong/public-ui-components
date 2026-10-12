@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.0.6...%40kong-ui-public%2Fdashboard-renderer%409.1.0) (2026-10-12)
+
+### Features
+
+* **analytics:** add treemap and heatmap to available chart types ([#3922](https://github.com/Kong/public-ui-components/issues/3922)) ([991d92c](https://github.com/Kong/public-ui-components/commit/991d92cea3276f95267f9a77ef7bcc2efd14b9c4))
+
+
 ## [9.0.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.0.5...%40kong-ui-public%2Fdashboard-renderer%409.0.6) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
