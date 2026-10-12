@@ -116,10 +116,10 @@ describe('<TreeMapChart />', () => {
     })
   })
 
-  it('drills down with a breadcrumb by default, without wheel zoom', () => {
+  it('drills down with a breadcrumb and roams by default', () => {
     const option = chartOption(mountChart({ data }))
 
-    expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: false, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
+    expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: true, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
     expect(option.series[0].breadcrumb.show).toBe(true)
     // The full depth, so every level shows and the breadcrumb follows the view root
     expect(option.series[0].leafDepth).toBe(2)
@@ -201,7 +201,7 @@ describe('<TreeMapChart />', () => {
   it('is a static chart filling the whole area with drillDown false', () => {
     const option = chartOption(mountChart({ data, drillDown: false }))
 
-    expect(option.series[0]).toMatchObject({ nodeClick: false, bottom: 0 })
+    expect(option.series[0]).toMatchObject({ nodeClick: false, roam: false, bottom: 0 })
     expect(option.series[0].breadcrumb.show).toBe(false)
   })
 

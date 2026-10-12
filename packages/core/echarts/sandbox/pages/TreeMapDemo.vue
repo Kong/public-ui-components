@@ -31,20 +31,7 @@
         tooltip-title="Model usage"
         :value-formatter="formatCount"
       />
-      <p>Nine model groups, each with a few heavy users and a long tail of tiny ones. Click a tiny box to zoom into it: the zoom has no ceiling, so even the smallest nodes become readable, with their neighbors still in view.</p>
-    </section>
-
-    <section class="example">
-      <h2>Free zoom and pan (roam)</h2>
-      <TreeMapChart
-        :data="modelUsage"
-        height="480px"
-        series-name="Model usage"
-        :series-option="{ roam: true }"
-        tooltip-title="Model usage"
-        :value-formatter="formatCount"
-      />
-      <p>The same data with ECharts' <code>roam</code> turned on through <code>seriesOption</code>: scroll to zoom and drag to pan. ECharts doesn't bound either, so the chart can be dragged into blank space, and scrolling over it zooms instead of scrolling the page.</p>
+      <p>Nine model groups, each with a few heavy users and a long tail of tiny ones. Click a tiny box to zoom into it: the zoom has no ceiling, so even the smallest nodes become readable, with their neighbors still in view. Scroll to zoom and drag to pan around.</p>
     </section>
 
     <section class="example">
