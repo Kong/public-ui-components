@@ -1,6 +1,7 @@
 <template>
   <div
     class="kong-ui-public-page-layout"
+    :class="{ 'new-appearance': newAppearance }"
     data-testid="kong-ui-public-page-layout"
   >
     <div
@@ -16,11 +17,18 @@
             data-testid="page-layout-breadcrumbs"
             item-max-width="25ch"
             :items="breadcrumbs"
-          />
+          >
+            <template
+              v-if="newAppearance"
+              #divider
+            >
+              &rsaquo;
+            </template>
+          </KBreadcrumbs>
           <div class="title-container">
             <component
               :is="isBackToString ? 'a' : 'router-link'"
-              v-if="backTo"
+              v-if="backTo && !newAppearance"
               v-bind="isBackToString ? { href: backTo } : { to: backTo }"
               :aria-label="t('back_button')"
               class="navigate-back"
@@ -118,11 +126,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, watch } from 'vue'
-import type { DeepReadonly, Reactive } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue'
+import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
-import { nestedPageLayoutInjectionKey } from '../symbols'
+import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
@@ -140,6 +148,9 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+// The host application opts whole sections of its UI into the new appearance, so this is
+// injected rather than set per page.
+const newAppearanceInjection = inject<MaybeRefOrGetter<boolean> | null>(NEW_APPEARANCE_INJECTION_KEY, null)
 const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
@@ -150,6 +161,9 @@ const route = useRoute()
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
+
+// `toValue` lets the host provide a plain boolean, a ref or a getter
+const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
@@ -240,6 +254,12 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 </script>
 
 <style lang="scss" scoped>
+// Roughly 1.6x the 25ch cap already applied to each breadcrumb item, so a long title
+// stays the most prominent item in the row without swallowing it.
+$page-layout-title-max-width: 40ch;
+// Height of the new appearance's single-row header. Only applied when there are no tabs.
+$page-layout-header-height: 45px;
+
 .kong-ui-public-page-layout {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
@@ -359,6 +379,91 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
       .page-header-container {
         border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         padding: var(--kui-space-60, $kui-space-60);
+      }
+    }
+  }
+
+  // New appearance: the title moves up into the breadcrumb row, sitting after the caret
+  // that KBreadcrumbs renders following the last crumb.
+  &.new-appearance {
+    // Keep the header (and its tab row) in view while the page content scrolls beneath
+    // it. The header already paints its own background, so content does not show through.
+    .page-layout-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+
+    // Selectors mirror the default appearance's nesting depth so these rules win on
+    // specificity rather than relying on source order.
+    .page-layout-header .page-header-container {
+      align-items: center;
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
+
+      .page-header-start {
+        align-items: center;
+        display: flex;
+        // Mirrors the spacing Kongponents puts between a divider and the crumb that
+        // follows it, so the title keeps the row's rhythm. Only applies when there are
+        // breadcrumbs to sit next to.
+        gap: var(--kui-space-20, $kui-space-20);
+
+        .title-container {
+          align-items: center;
+          // As a flex item the title container defaults to `min-width: auto`, which
+          // refuses to shrink below its content. Without this a long title pushes the
+          // header wider than its container and runs under the page actions instead of
+          // truncating.
+          min-width: 0;
+
+          // The title reads as the last item in the breadcrumb row: same size as the
+          // crumbs (whose scale comes from Kongponents), just heavier and darker.
+          .page-layout-title-wrapper {
+            // The `> *` rule below covers both the default `<h1>` and any element slotted
+            // into `#title`, but a slot holding a bare text node has no element to match.
+            // Repeating the scale, cap and truncation here keeps raw text in parity, and
+            // also makes the `ch` cap resolve against the same font size either way.
+            color: var(--kui-color-text, $kui-color-text);
+            font-size: var(--kui-font-size-30, $kui-font-size-30);
+            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            max-width: $page-layout-title-max-width;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            > * {
+              font-size: var(--kui-font-size-30, $kui-font-size-30);
+              line-height: var(--kui-line-height-30, $kui-line-height-30);
+              // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
+              // Below this it truncates to whatever space the row leaves it; the ellipsis
+              // itself comes from the default appearance's rules.
+              max-width: $page-layout-title-max-width;
+            }
+          }
+        }
+
+        // Keep the breadcrumbs and any title-after content intact; the title is the
+        // element that gives up space when the row runs out of room.
+        .header-breadcrumbs,
+        .title-after-container {
+          flex-shrink: 0;
+        }
+      }
+    }
+
+    // Without tabs the header is a single row, fixed to the height of the top bar it
+    // mirrors so it stays consistent whatever the row holds. With tabs it has to grow to
+    // fit the tab row, so no height is set there.
+    // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
+    .page-layout-header:not(:has(.page-layout-tabs)) {
+      // Set on the container rather than the header: the container is what carries the
+      // bottom border and the padding in this case, so sizing the header alone would
+      // just let the container overflow it.
+      .page-header-container {
+        // Border-box so this is the rendered height, bottom border included
+        box-sizing: border-box;
+        height: $page-layout-header-height;
+        padding: var(--kui-space-40, $kui-space-40);
       }
     }
   }

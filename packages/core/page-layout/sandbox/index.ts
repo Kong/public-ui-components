@@ -4,6 +4,7 @@ import Kongponents from '@kong/kongponents'
 import { createRouter, createWebHistory } from 'vue-router'
 
 import '@kong/kongponents/dist/style.css'
+import '@kong-ui-public/sandbox-layout/dist/style.css'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +15,7 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'home',
           component: () => import('./pages/NestedPage.vue'),
         },
       ],
@@ -24,6 +26,7 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'gateway-services',
           component: () => import('./pages/NestedPage.vue'),
         },
       ],

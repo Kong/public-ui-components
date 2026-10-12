@@ -2,7 +2,7 @@ import { defineComponent, inject, h, reactive, ref } from 'vue'
 import { createRouter, createMemoryHistory, type Router } from 'vue-router'
 import type { OptionsParam } from '../../../../../cypress/types'
 import PageLayout from './PageLayout.vue'
-import { nestedPageLayoutInjectionKey } from '../symbols'
+import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
 import type { PageShortcutData } from '../types'
 
 const validShortcutData: PageShortcutData = {
@@ -466,6 +466,274 @@ describe('<PageLayout />', () => {
       })
 
       cy.getTestId('page-layout-favorite-button').should('be.visible')
+    })
+  })
+
+  describe('new appearance', () => {
+    const breadcrumbs = [
+      { key: 'home', text: 'Home', to: '/' },
+      { key: 'services', text: 'Services', to: '/services' },
+    ]
+
+    it('renders the title inline after the breadcrumbs', () => {
+      const title = 'Test Page Title'
+
+      mountWithRouter(PageLayout, {
+        props: { title, breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs').should('be.visible')
+      cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
+
+      // The title sits on the same line as the last breadcrumb
+      cy.getTestId('page-layout-breadcrumbs').then(($crumbs) => {
+        cy.getTestId('page-layout-title').then(($title) => {
+          expect($title[0].getBoundingClientRect().top).to.be.closeTo($crumbs[0].getBoundingClientRect().top, 4)
+          expect($title[0].getBoundingClientRect().left).to.be.greaterThan($crumbs[0].getBoundingClientRect().right - 1)
+        })
+      })
+    })
+
+    it('renders a caret as the breadcrumb divider', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs')
+        .find('.breadcrumbs-divider')
+        .should('have.length', breadcrumbs.length)
+        .each(($divider) => {
+          expect($divider.text().trim()).to.equal('›')
+        })
+    })
+
+    it('does not render breadcrumbs when none are provided', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title' },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-breadcrumbs').should('not.exist')
+      cy.getTestId('page-layout-title').should('be.visible')
+    })
+
+    it('does not render the back button even when backTo is provided', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', backTo: '/' },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-navigate-back').should('not.exist')
+    })
+
+    it('renders the favorite button when page shortcuts are configured', () => {
+      const ctx = reactive({
+        isFavorite: () => false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx, [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('be.visible')
+    })
+
+    it('truncates a long title provided through the title slot', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { breadcrumbs },
+        slots: { title: () => h('h1', { 'data-testid': 'slotted-title' }, title) },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('slotted-title').should(($title) => {
+        const el = $title[0]
+
+        // Scoped `> *` still reaches slotted content, because the scope attribute lands on
+        // the wrapper rather than on the universal selector
+        expect(getComputedStyle(el).fontSize).to.equal('14px')
+        expect(getComputedStyle(el).maxWidth).to.not.equal('none')
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+    })
+
+    it('truncates a long title provided as bare text in the title slot', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { breadcrumbs },
+        // No element to match `> *`, so the wrapper itself has to carry the cap
+        slots: { title: () => title },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.get('.page-layout-title-wrapper').should(($wrapper) => {
+        const el = $wrapper[0]
+
+        expect(el.children.length).to.equal(0)
+        expect(getComputedStyle(el).fontSize).to.equal('14px')
+        expect(getComputedStyle(el).maxWidth).to.not.equal('none')
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+    })
+
+    it('truncates a long title', () => {
+      const title = 'Umbrella R&D Development Control Plane for EMEA Production Workloads and Edge Gateways'
+
+      mountWithRouter(PageLayout, {
+        props: { title, breadcrumbs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
+      })
+
+      cy.getTestId('page-layout-title').then(($title) => {
+        const el = $title[0]
+        // Ellipsised rather than overflowing its box
+        expect(el.scrollWidth).to.be.greaterThan(el.clientWidth)
+      })
+
+      // The header does not grow past the container, so the title never runs under the actions
+      cy.getTestId('page-layout-header').then(($header) => {
+        cy.getTestId('page-layout-title').then(($title) => {
+          expect($title[0].getBoundingClientRect().right)
+            .to.be.at.most($header[0].getBoundingClientRect().right)
+        })
+      })
+    })
+
+    describe('appearance injection', () => {
+      it('renders the default appearance when the injection is missing', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+        // The back button is only rendered in the default appearance
+        cy.getTestId('page-layout-navigate-back').should('be.visible')
+      })
+
+      it('renders the default appearance when the injection is false', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: false } },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+        cy.getTestId('page-layout-navigate-back').should('be.visible')
+      })
+
+      it('reacts to a ref passed through the injection', () => {
+        const newAppearance = ref<boolean>(false)
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', backTo: '/' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: newAppearance } },
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('not.have.class', 'new-appearance')
+
+        cy.then(() => {
+          newAppearance.value = true
+        })
+
+        cy.getTestId('kong-ui-public-page-layout').should('have.class', 'new-appearance')
+        cy.getTestId('page-layout-navigate-back').should('not.exist')
+      })
+    })
+
+    describe('sticky header', () => {
+      it('makes the header sticky', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          const styles = getComputedStyle($header[0])
+
+          expect(styles.position).to.equal('sticky')
+          expect(styles.top).to.equal('0px')
+        })
+      })
+
+      it('does not make the header sticky in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect(getComputedStyle($header[0]).position).to.not.equal('sticky')
+        })
+      })
+    })
+
+    describe('header height', () => {
+      it('fixes the header height when there are no tabs', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+          // Tall actions content the header would otherwise grow to fit
+          slots: { actions: () => h('div', { style: 'height: 80px' }, 'Actions') },
+        })
+
+        cy.getTestId('page-layout-tabs').should('not.exist')
+        // The height is set on the container (it carries the bottom border), so the
+        // container must not outgrow the header it sits in
+        cy.getTestId('page-layout-header').should(($header) => {
+          const container = $header[0].querySelector('.page-header-container')!
+
+          expect($header[0].getBoundingClientRect().height).to.equal(45)
+          expect(container.getBoundingClientRect().height).to.equal(45)
+        })
+      })
+
+      it('keeps the fixed height for a sparse header', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        // No actions content, so the row would otherwise be shorter than the fixed height
+        cy.getTestId('page-layout-header').should(($header) => {
+          const container = $header[0].querySelector('.page-header-container')!
+
+          expect($header[0].getBoundingClientRect().height).to.equal(45)
+          expect(container.getBoundingClientRect().height).to.equal(45)
+        })
+      })
+
+      it('does not fix the header height when tabs are present', () => {
+        const tabs = [
+          { key: 'overview', label: 'Overview', to: '/overview' },
+          { key: 'settings', label: 'Settings', to: '/settings' },
+        ]
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs, tabs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-tabs').should('be.visible')
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(45)
+        })
+      })
+
+      it('does not fix the header height in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', breadcrumbs },
+        })
+
+        cy.getTestId('page-layout-header').should(($header) => {
+          expect($header[0].getBoundingClientRect().height).to.be.greaterThan(45)
+        })
+      })
     })
   })
 })

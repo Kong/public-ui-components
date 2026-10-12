@@ -2,6 +2,7 @@ import PageLayoutTabs from './PageLayoutTabs.vue'
 import { defineComponent, h, ref, type Ref } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import type { PageLayoutTab } from '../types'
+import { NEW_APPEARANCE_INJECTION_KEY } from '../symbols'
 
 const router = createRouter({
   history: createMemoryHistory(),
@@ -316,5 +317,33 @@ describe('<PageLayoutTabs />', () => {
 
     cy.get('@navigateTo').should('not.have.been.called')
     cy.wrap(router).its('currentRoute').its('value').its('name').should('eq', 'tab')
+  })
+
+  describe('new appearance', () => {
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
+
+    it('uses the default horizontal padding when the appearance injection is missing', () => {
+      cy.mount(PageLayoutTabs, { props: { tabs } })
+
+      cy.getTestId('page-layout-tabs').should(($tabs) => {
+        expect(getComputedStyle($tabs[0]).paddingLeft).to.equal('16px')
+        expect(getComputedStyle($tabs[0]).paddingRight).to.equal('16px')
+      })
+    })
+
+    it('matches the new appearance header padding when the injection is enabled', () => {
+      cy.mount(PageLayoutTabs, {
+        props: { tabs },
+        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+      })
+
+      cy.getTestId('page-layout-tabs').should(($tabs) => {
+        expect(getComputedStyle($tabs[0]).paddingLeft).to.equal('8px')
+        expect(getComputedStyle($tabs[0]).paddingRight).to.equal('8px')
+      })
+    })
   })
 })

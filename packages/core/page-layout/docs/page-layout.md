@@ -14,6 +14,8 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
 - [Nested PageLayout](#nested-pagelayout)
+- [New Appearance](#new-appearance)
+  - [`page-layout:new-appearance` injection](#page-layoutnew-appearance-injection)
 - [Page Shortcuts](#page-shortcuts)
   - [`pageShortcutData` prop](#pageshortcutdata-prop)
   - [`app:pageShortcutsContext` injection](#apppageshortcutscontext-injection)
@@ -28,6 +30,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Optional back navigation button next to the title via the `backTo` prop
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
+- An opt-in new appearance that renders the title inline with the breadcrumbs
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -332,6 +335,45 @@ interface PageLayoutTab {
 `PageLayout` supports nesting. A common case is a parent route wrapping its children with `PageLayout` (for top-level breadcrumbs/tabs), while a child route's component also uses `PageLayout` for its own header. When this happens, the parent automatically detects the child and hides its own header and tabs (removing them from the DOM entirely), acting as a transparent pass-through. This ensures only the child's `PageLayout` header is visible. This is achieved via `provide` / `inject` internally.
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
+
+## New Appearance
+
+An opt-in page header appearance, enabled by the host application through injection rather than per page.
+
+Instead of sitting on its own row beneath the breadcrumbs, the title is placed inline at the end of the breadcrumb row, separated from the last crumb by a caret (`&rsaquo;`). The title keeps its `<h1>` element but is scaled to match the breadcrumbs, set in a heavier weight and a stronger text color so it reads as the current item in the row.
+
+Other differences from the default appearance:
+
+- The back button (`backTo`) is **not** rendered, regardless of whether `backTo` is provided. The favorite star button behaves as it does in the default appearance -- see [Page Shortcuts](#page-shortcuts).
+- The header uses tighter padding (`--kui-space-40` rather than `--kui-space-60`), and the tab row's horizontal padding matches it so the tabs line up with the breadcrumbs above them.
+- The header is `position: sticky` at the top of its nearest scrolling ancestor, so it (and its tab row) stays in view while the page content scrolls beneath it.
+- When there are no tabs the header is a single row with a fixed height of `45px`, including its 1px bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
+- The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
+
+Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
+
+### `page-layout:new-appearance` injection
+
+- type: `boolean | Ref<boolean> | () => boolean`
+- required: `false`
+
+Enables the new appearance when it resolves to `true`. A plain boolean, a ref or a getter are all accepted; refs and getters let the host switch appearance reactively. When the injection is missing or resolves to anything else, the default appearance is rendered.
+
+The injection key is exported from the package:
+
+```ts
+import { NEW_APPEARANCE_INJECTION_KEY } from '@kong-ui-public/page-layout'
+```
+
+```html
+<script setup lang="ts">
+import { provide } from 'vue'
+import { NEW_APPEARANCE_INJECTION_KEY } from '@kong-ui-public/page-layout'
+
+// Usually provided once at the app root so every PageLayout below it opts in
+provide(NEW_APPEARANCE_INJECTION_KEY, true)
+</script>
+```
 
 ## Page Shortcuts
 
