@@ -145,6 +145,14 @@ The top offset of the `View Configuration` slidout.
 
 The type of the partial to disable. If set it to `PartialType.REDIS_CE`, the Host/Port CE type option will be disabled. If set it to `PartialType.REDIS_EE`, all EE type options will be disabled.
 
+#### `managedKonnectLayout`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+Konnect stepped layout. Set to `false` to keep the legacy card layout. The create modal passes `false`.
+
 ### Events
 
 #### error

@@ -57,6 +57,18 @@ describe('RedisConfigurationForm', () => {
     expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
   })
 
+  const stepNumbers = (config: KonnectRedisConfigurationFormConfig) =>
+    mountForm(config).findAllComponents({ name: 'EntityFormBlock' }).map(block => block.props('step'))
+
+  it('starts steps at 1 when isCloudGateway is false', () => {
+    expect(stepNumbers(konnect())).toEqual([1, 2])
+    expect(stepNumbers(konnect({ isCloudGateway: false }))).toEqual([1, 2])
+  })
+
+  it('keeps steps 2 and 3 when isCloudGateway is true', () => {
+    expect(stepNumbers(konnect({ isCloudGateway: true }))).toEqual([2, 3])
+  })
+
   it('no managed layout when managedKonnectLayout is false', () => {
     const wrapper = mount(RedisConfigurationForm, {
       props: { config: konnect(), managedKonnectLayout: false },

@@ -25,7 +25,7 @@ export interface BaseRedisConfigurationListConfig {
 
 /** Konnect redis configuration list config */
 export interface KonnectRedisConfigurationListConfig extends KonnectBaseTableConfig, BaseRedisConfigurationListConfig {
-  /** Whether the selected CP is a Cloud Gateway. When false, Redis UI falls back to legacy flow */
+  /** Whether the selected CP is a Cloud Gateway. Gates combined partials and add-ons. Konnect copy still applies when this is false */
   isCloudGateway?: boolean
   /** Optional CP geo used when calling Konnect Cloud Gateways APIs (eg. us, eu) */
   controlPlaneGeo?: string
