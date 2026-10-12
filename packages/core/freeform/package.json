@@ -55,7 +55,7 @@
     "compare-versions": "^6.1.1",
     "dompurify": "^3.4.16",
     "lodash-es": "^4.18.1",
-    "marked": "^18.0.11"
+    "marked": "^18.0.14"
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
@@ -84,7 +84,7 @@
     "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.62.1",
     "@vueuse/core": "^14.4.0",
-    "vue": "^3.5.41",
+    "vue": "^3.5.43",
     "vue-router": "^5.3.1"
   },
   "repository": {

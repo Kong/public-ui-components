@@ -30,7 +30,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/kongponents": "9.64.23",
-    "vue": "^3.5.41"
+    "vue": "^3.5.43"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
