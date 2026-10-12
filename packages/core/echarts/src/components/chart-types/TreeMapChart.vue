@@ -84,6 +84,11 @@ const generatedOption = computed((): EChartsOption => ({
       data: data ?? [],
       // Drill-down: click a group to zoom in, and use the breadcrumb to go back
       nodeClick: drillDown ? 'zoomToNode' : false,
+      // With drill-down, lift ECharts' zoom ceiling (default max 5, which applies even
+      // with `roam: false`) so tiny nodes on dense charts become readable. A clicked
+      // node fills about 20% of the chart area, which keeps its neighbors in view.
+      // Otherwise keep the defaults
+      ...(drillDown ? { scaleLimit: { max: Infinity }, zoomToNodeRatio: 0.2 } : {}),
       // Defaults to the full depth
       leafDepth: leafDepth ?? treeDepth(data),
       // No mouse-wheel zoom or drag-to-pan, so scrolling over the chart scrolls the page
