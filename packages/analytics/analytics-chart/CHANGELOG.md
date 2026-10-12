@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.0.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.0.0...%40kong-ui-public%2Fanalytics-chart%4012.0.1) (2026-10-12)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 # [12.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4011.0.0...%40kong-ui-public%2Fanalytics-chart%4012.0.0) (2026-10-09)
 
 * chore(analytics-chart)!: remove deprecated CSV export [MA-5236] (#3904) ([81b143a](https://github.com/Kong/public-ui-components/commit/81b143ab095a855ec23e3dee388b9b7087cbf8af)), closes [#3904](https://github.com/Kong/public-ui-components/issues/3904)

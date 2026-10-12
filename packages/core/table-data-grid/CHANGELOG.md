@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.4...%40kong-ui-public%2Ftable-data-grid%400.7.5) (2026-10-12)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
 ## [0.7.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.7.3...%40kong-ui-public%2Ftable-data-grid%400.7.4) (2026-10-09)
 
 ### Bug Fixes
