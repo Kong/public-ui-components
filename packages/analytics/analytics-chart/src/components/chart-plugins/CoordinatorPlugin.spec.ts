@@ -38,6 +38,7 @@ describe('CoordinatorPlugin', () => {
     elementsAtEventForMode?: any[]
   } = {}): ChartType => {
     return {
+      canvas: {},
       config: { type },
       data: { datasets },
       scales: {
@@ -457,6 +458,18 @@ describe('CoordinatorPlugin', () => {
         dimensionValue: 'val1',
       })
       expect(plugin.lastMouseBrushEvent).toBe(100)
+    })
+
+    it('ignores mousemove when the chart has been destroyed', () => {
+      const coordinator = useInteractionCoordinator()
+      const activateSpy = vi.spyOn(coordinator, 'activate')
+      const plugin = new CoordinatorPlugin({ coordinator, watchTimestamp: true })
+      const chart = getChart()
+      ;(chart as any).canvas = null
+
+      expect(() => plugin._onMouseBrush({ type: 'mousemove' } as any, chart, 100)).not.toThrow()
+      expect(chart.getElementsAtEventForMode).not.toHaveBeenCalled()
+      expect(activateSpy).not.toHaveBeenCalled()
     })
 
     it('deactivates the coordinator on mouseout', () => {
