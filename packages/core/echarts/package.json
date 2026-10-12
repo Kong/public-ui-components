@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/echarts",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "type": "module",
   "main": "./dist/echarts.umd.js",
   "module": "./dist/echarts.es.js",

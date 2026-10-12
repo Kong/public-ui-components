@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.1.16...%40kong-ui-public%2Fpage-layout%401.1.17) (2026-10-12)
+
+### Bug Fixes
+
+* **page-layout:** new appearance ([#3905](https://github.com/Kong/public-ui-components/issues/3905)) ([faa42f8](https://github.com/Kong/public-ui-components/commit/faa42f8ebb1cc044b03eac835733720a767d65c8))
+
+
 ## [1.1.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.1.15...%40kong-ui-public%2Fpage-layout%401.1.16) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout
