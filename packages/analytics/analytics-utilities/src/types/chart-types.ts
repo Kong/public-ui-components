@@ -9,6 +9,8 @@ export const reportChartTypes = [
   'top_n',
   'table',
   'scatter',
+  'heatmap',
+  'treemap',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]
