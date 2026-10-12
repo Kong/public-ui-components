@@ -11,6 +11,7 @@
       :action-teleport-target="modalActionTeleportTarget"
       :config="realFormConfig"
       :disabled-partial-type="disabledPartialType"
+      :managed-konnect-layout="false"
       :slidout-top-offset="0"
       @cancel="handleClose"
       @error="onError"
@@ -60,15 +61,6 @@ const realFormConfig = computed(() => {
   return {
     ...formConfig,
     cancelRoute: undefined,
-    /**
-     * Konnect-managed layout in RedisConfigurationForm is gated by isManagedKonnectLayout.In Konnect it is
-     * true when useKonnectManagedRedisUi === true, otherwise when isKonnectManagedRedisEnabled is
-     * truthy. useKonnectManagedRedisUi- false is sufficient for current code; also set
-     * isKonnectManagedRedisEnabled: false for clarity and future-proofing. useRedisConfigurationForm
-     * does not use these flags for API URLs or payloads
-     */
-    useKonnectManagedRedisUi: false,
-    isKonnectManagedRedisEnabled: false,
   }
 })
 const { getMessageFromError } = useErrors()

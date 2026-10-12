@@ -267,10 +267,7 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
   if (props.config.app !== 'konnect') return false
 
   const konnect = props.config as KonnectPluginFormConfig
-  return (
-    !!konnect.isKonnectManagedRedisEnabled
-    && konnect.isCloudGateway === true
-  )
+  return konnect.isCloudGateway === true
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)

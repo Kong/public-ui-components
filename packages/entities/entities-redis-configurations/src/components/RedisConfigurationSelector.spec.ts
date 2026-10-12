@@ -53,7 +53,6 @@ const mountSelector = (modelValue?: string) =>
           app: 'konnect',
           apiBaseUrl: '/us/kong-api',
           controlPlaneId: 'cp-1',
-          isKonnectManagedRedisEnabled: true,
           isCloudGateway: false,
         },
       },

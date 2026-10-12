@@ -81,11 +81,11 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the OAuth option in the Cloud Authentication provider selector.
 
-  - `isKonnectManagedRedisEnabled`
+  - `isCloudGateway`
     - type: `boolean`
     - required: `false`
     - default: `undefined`
-    - *Specific to Konnect*. When true, uses the stepped layout (Configuration and General information blocks with custom Save/Cancel/View configuration actions). Set to true when Konnect managed Redis is enabled.
+    - *Specific to Konnect*. When true, the control plane is a Cloud Gateway and Konnect-managed Redis behavior is enabled. Konnect always uses the stepped layout (Configuration and General information blocks with custom Save/Cancel/View configuration actions).
 
   - `isPortReferenceable`
     - type: `boolean`

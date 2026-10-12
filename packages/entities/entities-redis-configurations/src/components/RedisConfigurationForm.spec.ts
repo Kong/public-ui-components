@@ -52,26 +52,17 @@ const mountForm = (config: KonnectRedisConfigurationFormConfig | KongManagerRedi
   })
 
 describe('RedisConfigurationForm', () => {
-  it('adds managed-konnect-layout class when Konnect + isKonnectManagedRedisEnabled', () => {
-    const wrapper = mountForm(konnect({ isKonnectManagedRedisEnabled: true }))
+  it('adds managed-konnect-layout class for Konnect', () => {
+    const wrapper = mountForm(konnect())
     expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
   })
 
-  it('adds managed-konnect-layout class when UI-only flag is enabled', () => {
-    const wrapper = mountForm(konnect({
-      isKonnectManagedRedisEnabled: false,
-      useKonnectManagedRedisUi: true,
-    }))
-    expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
-  })
-
-  it('no managed layout when isKonnectManagedRedisEnabled is false or unset', () => {
-    expect(mountForm(konnect()).find('.managed-konnect-layout').exists()).toBe(false)
-    expect(mountForm(konnect({ isKonnectManagedRedisEnabled: false })).find('.managed-konnect-layout').exists()).toBe(false)
-    expect(mountForm(konnect({
-      isKonnectManagedRedisEnabled: true,
-      useKonnectManagedRedisUi: false,
-    })).find('.managed-konnect-layout').exists()).toBe(false)
+  it('no managed layout when managedKonnectLayout is false', () => {
+    const wrapper = mount(RedisConfigurationForm, {
+      props: { config: konnect(), managedKonnectLayout: false },
+      global: { plugins: [router], stubs },
+    })
+    expect(wrapper.find('.managed-konnect-layout').exists()).toBe(false)
   })
 
   it('no managed layout for Kong Manager', () => {

@@ -184,15 +184,13 @@ const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
 
 const formConfig = inject(FORMS_CONFIG)! as (KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig) & {
-  isKonnectManagedRedisEnabled?: boolean
   isCloudGateway?: boolean
 }
 
-// Konnect + FF + non-Cloud Gateway + slideout provided → new create form; else legacy modal emit
+// Konnect + non-Cloud Gateway + slideout provided → new create form; else legacy modal emit
 const useSlideout = computed(() => (
   !!redisCreate
   && formConfig.app === 'konnect'
-  && !!formConfig.isKonnectManagedRedisEnabled
   && formConfig.isCloudGateway !== true
 ))
 
@@ -264,7 +262,7 @@ const getOnePartialUrl = (partialId: string | number): string => {
 
 type RedisSelectItem = SelectItem<string> & { source?: RedisConfigurationSource, type?: string, tag?: string }
 
-// Map partials list API rows to KSelect items; adds `source` + grouped sections when Konnect-managed FF is on
+// Map partials list API rows to KSelect items; adds `source` + grouped sections for Konnect-managed Redis
 const redisConfigItems = computed((): RedisSelectItem[] => {
   const configs: RedisSelectItem[] = (redisConfigsResults.value || [])
     .map((listItem) => {

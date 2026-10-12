@@ -25,13 +25,6 @@ export interface BaseRedisConfigurationListConfig {
 
 /** Konnect redis configuration list config */
 export interface KonnectRedisConfigurationListConfig extends KonnectBaseTableConfig, BaseRedisConfigurationListConfig {
-  /** Enables managed Konnect Redis behavior in list flows */
-  isKonnectManagedRedisEnabled?: boolean
-  /**
-   * Enables managed-Konnect UI copy styling only
-   * If omitted, list UI falls back to `isKonnectManagedRedisEnabled`
-   */
-  useKonnectManagedRedisUi?: boolean
   /** Whether the selected CP is a Cloud Gateway. When false, Redis UI falls back to legacy flow */
   isCloudGateway?: boolean
   /** Optional CP geo used when calling Konnect Cloud Gateways APIs (eg. us, eu) */
@@ -51,7 +44,7 @@ export interface EntityRow extends Record<string, any> {
   id: string
   name: string
   /**
-   * Set only when the list is combined (Konnect + isKonnectManagedRedisEnabled).
+   * Set only when the list is combined (Konnect Cloud Gateway).
    * Used to: show "Self-managed Redis" vs "Konnect-managed Redis" in the Type column,
    * hide Edit for konnect-managed rows, and choose which API to call on delete.
    */
