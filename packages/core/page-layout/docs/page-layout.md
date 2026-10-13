@@ -32,7 +32,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
 - An opt-in new appearance that renders the title inline with the breadcrumbs
-- Aside slot (new appearance only) for a secondary column beside the page content, which collapses above the content when the layout is too narrow for it
+- Aside slot (new appearance only) for a secondary column beside the page content, which collapses below the content when the layout is too narrow for it. The aside is rendered first in the DOM — so its headings rank early in the document outline — and the container's reversed flex direction places it visually to the right of, or beneath, the content
 - A teleport target in the page header actions area for the host application's "Ask Kai" button
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu

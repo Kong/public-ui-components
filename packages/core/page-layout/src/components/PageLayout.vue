@@ -485,6 +485,8 @@ $page-layout-header-height: 45px;
   .page-layout-content-container {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
+    // Aside is first in the DOM so its heading (usually AboutCard's) ranks early in the
+    // outline; reversing puts it back after the content visually — below it at this width.
     flex-direction: column-reverse;
     gap: var(--kui-space-50, $kui-space-50);
     padding: var(--kui-space-60, $kui-space-60);
@@ -494,6 +496,7 @@ $page-layout-header-height: 45px;
     }
 
     @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+      // Same source-order trick, one axis over: the DOM-first aside renders to the right.
       flex-direction: row-reverse;
       gap: var(--kui-space-40, $kui-space-40);
     }
@@ -502,6 +505,9 @@ $page-layout-header-height: 45px;
       display: flex;
       flex-direction: column;
       gap: var(--kui-space-50, $kui-space-50);
+      // Flex items default to `min-width: auto`, so wide content (code blocks, tables)
+      // would overflow the row — leftward, under the sidebar, since the row is reversed.
+      min-width: 0;
       width: 100%;
     }
 
