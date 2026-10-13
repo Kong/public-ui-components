@@ -89,11 +89,9 @@
           </div>
         </div>
 
-        <div
-          v-if="!!$slots.actions"
-          class="page-header-actions-container"
-        >
+        <div class="page-header-actions-container">
           <slot name="actions" />
+          <div data-teleport-target="ask-kai" />
         </div>
       </div>
       <PageLayoutTabs
