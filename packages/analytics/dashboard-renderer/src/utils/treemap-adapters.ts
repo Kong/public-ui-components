@@ -1,6 +1,7 @@
 import type { AnalyticsExploreRecord, Display, ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import type { TreeMapDataNode } from '@kong-ui-public/echarts'
 
+import { isMetricSupported } from '@kong-ui-public/analytics-utilities'
 import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import { toMetricValue } from './metric-value'
 import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
@@ -30,13 +31,9 @@ const getOrCreate = <T>(entries: Map<string, T>, id: string, create: () => T): T
   return entry
 }
 
-// Treemap areas are parts of a whole, so the metric has to add up across groups.
-// Averages, percentiles, rates, maximums and per-minute values are not valid
-const NON_ADDITIVE_METRIC = /_(average|p\d+|rate|max|per_minute)$/
-
 /** Whether a treemap can be sized by this metric and grouped by these dimensions */
 export const isTreemapCompatible = (metric: string | undefined, dimensions: string[]): boolean => {
-  return !dimensions.includes('time') && !(metric && NON_ADDITIVE_METRIC.test(metric))
+  return !dimensions.includes('time') && (!metric || isMetricSupported('treemap', metric))
 }
 
 // Sums values when a dimension value spans several records
