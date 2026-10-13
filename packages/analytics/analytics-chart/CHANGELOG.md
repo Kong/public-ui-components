@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.0.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.0.3...%40kong-ui-public%2Fanalytics-chart%4012.0.4) (2026-10-13)
+
+### Bug Fixes
+
+* **analytics-chart:** guard CoordinatorPlugin mouse brush against destroyed chart [KM-3416] ([#3914](https://github.com/Kong/public-ui-components/issues/3914)) ([c5bf330](https://github.com/Kong/public-ui-components/commit/c5bf330d3fbd93f26d62f29529cf354a18ab6974))
+
+
 ## [12.0.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.0.2...%40kong-ui-public%2Fanalytics-chart%4012.0.3) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
