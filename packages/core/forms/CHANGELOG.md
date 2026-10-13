@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.35.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.10...%40kong-ui-public%2Fforms%404.35.11) (2026-10-13)
+
+### Bug Fixes
+
+* **redis:** managed redis ff cleanup [khcp-21605] ([#3921](https://github.com/Kong/public-ui-components/issues/3921)) ([19b3ef9](https://github.com/Kong/public-ui-components/commit/19b3ef91b7ffd1ce87e2bf7aec788c06708aae26))
+
+
 ## [4.35.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.35.9...%40kong-ui-public%2Fforms%404.35.10) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/forms

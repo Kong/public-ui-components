@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.273.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.17...%40kong-ui-public%2Fentities-plugins%409.273.18) (2026-10-13)
+
+### Bug Fixes
+
+* **redis:** managed redis ff cleanup [khcp-21605] ([#3921](https://github.com/Kong/public-ui-components/issues/3921)) ([19b3ef9](https://github.com/Kong/public-ui-components/commit/19b3ef91b7ffd1ce87e2bf7aec788c06708aae26))
+
+
 ## [9.273.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.273.16...%40kong-ui-public%2Fentities-plugins%409.273.17) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
