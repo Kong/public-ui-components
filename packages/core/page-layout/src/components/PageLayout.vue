@@ -111,14 +111,24 @@
     </div>
 
     <div
-      class="page-layout-content"
+      class="page-layout-content-container"
       :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
     >
-      <router-view v-if="hasTabs" />
-      <slot
-        v-else
-        name="default"
-      />
+      <div
+        v-if="newAppearance && $slots.aside"
+        class="page-layout-aside-container"
+        data-testid="page-layout-aside"
+      >
+        <slot name="aside" />
+      </div>
+
+      <div class="page-layout-content">
+        <router-view v-if="hasTabs" />
+        <slot
+          v-else
+          name="default"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -260,6 +270,12 @@ $page-layout-header-height: 45px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
+  // Expose the layout's own width as a query container so the content/aside split reacts
+  // to the space the layout actually has (the app shell's side nav, drawers, etc. all eat
+  // into it) rather than to the viewport width. A nested layout registers its own
+  // container, and `@container page-layout` always resolves to the nearest one.
+  container-name: page-layout;
+  container-type: inline-size;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
   .page-layout-header {
@@ -466,7 +482,7 @@ $page-layout-header-height: 45px;
     }
   }
 
-  .page-layout-content {
+  .page-layout-content-container {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
     flex-direction: column;
@@ -475,6 +491,28 @@ $page-layout-header-height: 45px;
 
     &.has-nested-page-layout {
       padding: var(--kui-space-0, $kui-space-0);
+    }
+
+    @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+      flex-direction: row-reverse;
+      gap: var(--kui-space-40, $kui-space-40);
+    }
+
+    .page-layout-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--kui-space-50, $kui-space-50);
+      width: 100%;
+    }
+
+    .page-layout-aside-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--kui-space-40, $kui-space-40);
+
+      @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+        width: 400px;
+      }
     }
   }
 }

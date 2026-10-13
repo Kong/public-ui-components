@@ -43,19 +43,46 @@
           New
         </KBadge>
       </template>
+      <template
+        v-if="showAside"
+        #aside
+      >
+        <KCard title="Summary">
+          Aside content. Drag the handle at the bottom right of the sandbox to narrow the
+          layout: the aside drops above the page content once the layout (not the window)
+          is narrower than the tablet breakpoint.
+        </KCard>
+      </template>
     </PageLayout>
+
+    <!-- Teleported from "outside" PageLayout, the way the app shell owns the Ask Kai button.
+         `pageLayoutMounted` stands in for that: the target only exists once PageLayout has rendered. -->
+    <Teleport
+      v-if="pageLayoutMounted && showAskKaiButton"
+      to="[data-teleport-target='ask-kai']"
+    >
+      <KButton appearance="secondary">
+        Ask Kai
+      </KButton>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { provide, reactive } from 'vue'
+import { onMounted, provide, reactive, ref } from 'vue'
 import { NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
 import type { PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton } = useSandboxControls()
+
+const pageLayoutMounted = ref<boolean>(false)
+
+onMounted(() => {
+  pageLayoutMounted.value = true
+})
 
 const breadcrumbs = [{
   key: 'api-gateway',

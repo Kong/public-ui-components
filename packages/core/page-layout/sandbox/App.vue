@@ -25,6 +25,16 @@
             label="Title-after content"
             label-before
           />
+          <KInputSwitch
+            v-model="showAside"
+            label="Aside content"
+            label-before
+          />
+          <KInputSwitch
+            v-model="showAskKaiButton"
+            label="Ask Kai button"
+            label-before
+          />
         </div>
       </template>
     </SandboxLayout>
@@ -35,7 +45,7 @@
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { useSandboxControls } from './composables/useSandboxControls'
 
-const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>

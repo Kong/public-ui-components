@@ -44,6 +44,11 @@ export interface PageLayoutSlots {
    */
   'title-after'?(): any
   /**
+   * Aside slot for secondary content rendered beside the page content.
+   * Only rendered in the new appearance.
+   */
+  aside?(): any
+  /**
    * Per-tab slot for customizing the rendering of a specific tab. Slot name is `tab-${tab.key}`.
    */
   [key: `tab-${string}`]: (props: { tab: PageLayoutTab }) => any

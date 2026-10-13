@@ -1,4 +1,4 @@
-import { defineComponent, inject, h, reactive, ref } from 'vue'
+import { defineComponent, inject, h, onMounted, reactive, ref, Teleport } from 'vue'
 import { createRouter, createMemoryHistory, type Router } from 'vue-router'
 import type { OptionsParam } from '../../../../../cypress/types'
 import PageLayout from './PageLayout.vue'
@@ -94,6 +94,64 @@ describe('<PageLayout />', () => {
     cy.getTestId(actionsTestId).should('be.visible').and('contain.text', actionsText)
   })
 
+  describe('Ask Kai teleport target', () => {
+    const kaiTarget = '[data-teleport-target="ask-kai"]'
+
+    it('renders the teleport target even when no actions slot content is provided', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title' },
+      })
+
+      // The target is an empty wrapper until the host teleports into it, so it has no size
+      // to be `visible`; the host needs it in the DOM regardless of the actions slot.
+      cy.get(kaiTarget).should('exist')
+      cy.get('.page-header-actions-container').should('exist')
+    })
+
+    it('renders the teleport target after the actions slot content', () => {
+      const actionsTestId = 'page-layout-slotted-actions'
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title' },
+        slots: { actions: () => h('div', { 'data-testid': actionsTestId }, 'Actions') },
+      })
+
+      cy.get('.page-header-actions-container').children().should(($children) => {
+        expect($children).to.have.length(2)
+        expect($children.eq(0).attr('data-testid')).to.equal(actionsTestId)
+        expect($children.eq(1).attr('data-teleport-target')).to.equal('ask-kai')
+      })
+    })
+
+    it('receives content teleported by the host application', () => {
+      const Wrapper = defineComponent({
+        setup() {
+          // The target is only in the document once PageLayout has mounted, which is how
+          // the host app shell reaches it too
+          const layoutMounted = ref(false)
+          onMounted(() => {
+            layoutMounted.value = true
+          })
+
+          return () => h(PageLayout, { title: 'Test Page Title' }, {
+            default: () => layoutMounted.value
+              ? h(Teleport, { to: kaiTarget }, [
+                h('button', { 'data-testid': 'ask-kai-button' }, 'Ask Kai'),
+              ])
+              : null,
+          })
+        },
+      })
+
+      mountWithRouter(Wrapper)
+
+      cy.get(`.page-header-actions-container ${kaiTarget}`)
+        .findTestId('ask-kai-button')
+        .should('be.visible')
+        .and('contain.text', 'Ask Kai')
+    })
+  })
+
   it('renders content passed in through title slot', () => {
     const titleTestId = 'page-layout-slotted-title'
     const titleText = 'Title'
@@ -165,6 +223,39 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-title').should('not.exist')
       cy.getTestId('page-layout-breadcrumbs').should('not.exist')
       cy.getTestId('page-layout-tabs').should('not.exist')
+    })
+
+    it('drops the content padding when a nested PageLayout is detected', () => {
+      const ChildNotifier = defineComponent({
+        setup() {
+          const register = inject<() => (() => void)>(nestedPageLayoutInjectionKey)
+          register?.()
+          return () => null
+        },
+      })
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Parent Title' },
+        slots: { default: () => h(ChildNotifier) },
+      })
+
+      // The nested layout brings its own padding, so the pass-through parent drops its own
+      cy.get('.page-layout-content-container')
+        .should('have.class', 'has-nested-page-layout')
+        .and('have.css', 'padding', '0px')
+    })
+
+    it('keeps the content padding when there is no nested PageLayout', () => {
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title' },
+        slots: { default: () => h('div', 'Page content') },
+      })
+
+      cy.get('.page-layout-content-container')
+        .should('not.have.class', 'has-nested-page-layout')
+        .and(($container) => {
+          expect(parseFloat(getComputedStyle($container[0]).paddingTop)).to.be.greaterThan(0)
+        })
     })
 
     it('calls the parent registration callback on mount when nested inside a parent PageLayout', () => {
@@ -603,6 +694,111 @@ describe('<PageLayout />', () => {
         cy.getTestId('page-layout-title').then(($title) => {
           expect($title[0].getBoundingClientRect().right)
             .to.be.at.most($header[0].getBoundingClientRect().right)
+        })
+      })
+    })
+
+    describe('aside slot', () => {
+      const asideTestId = 'page-layout-slotted-aside'
+      const asideSlot = { aside: () => h('div', { 'data-testid': asideTestId }, 'Aside') }
+
+      it('renders content passed in through the aside slot', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          slots: asideSlot,
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-aside').should('be.visible')
+        cy.getTestId(asideTestId).should('be.visible').and('contain.text', 'Aside')
+      })
+
+      it('does not render the aside container when the slot is not provided', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-aside').should('not.exist')
+      })
+
+      it('does not render the aside in the default appearance', () => {
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          slots: asideSlot,
+        })
+
+        cy.getTestId('page-layout-aside').should('not.exist')
+        cy.getTestId(asideTestId).should('not.exist')
+      })
+
+      it('places the aside to the right of the content when the layout is wide enough', () => {
+        cy.viewport(1280, 800)
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          slots: { ...asideSlot, default: () => h('div', 'Page content') },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-aside').then(($aside) => {
+          cy.get('.page-layout-content').should(($content) => {
+            const aside = $aside[0].getBoundingClientRect()
+            const content = $content[0].getBoundingClientRect()
+
+            expect(aside.width).to.equal(400)
+            expect(aside.top).to.be.closeTo(content.top, 4)
+            // `row-reverse`, so the aside sits after the content even though it comes first in the DOM
+            expect(aside.left).to.be.at.least(content.right)
+          })
+        })
+      })
+
+      it('stacks the aside above the content when the layout is narrow', () => {
+        cy.viewport(800, 800)
+
+        mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          slots: { ...asideSlot, default: () => h('div', 'Page content') },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-aside').then(($aside) => {
+          cy.get('.page-layout-content').should(($content) => {
+            const aside = $aside[0].getBoundingClientRect()
+            const content = $content[0].getBoundingClientRect()
+
+            expect(aside.width).to.be.closeTo(content.width, 1)
+            expect(aside.bottom).to.be.at.most(content.top)
+          })
+        })
+      })
+
+      it('stacks the aside based on the layout width rather than the viewport width', () => {
+        // Viewport well past the breakpoint, layout well below it: a media query would
+        // lay this out side by side, the container query stacks it.
+        cy.viewport(1280, 800)
+
+        const Wrapper = defineComponent({
+          setup: () => () => h('div', { style: 'width: 700px' }, [
+            h(PageLayout, { title: 'Test Page Title' }, {
+              ...asideSlot,
+              default: () => h('div', 'Page content'),
+            }),
+          ]),
+        })
+
+        mountWithRouter(Wrapper, {
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        cy.getTestId('page-layout-aside').then(($aside) => {
+          cy.get('.page-layout-content').should(($content) => {
+            const aside = $aside[0].getBoundingClientRect()
+            const content = $content[0].getBoundingClientRect()
+
+            expect(aside.bottom).to.be.at.most(content.top)
+          })
         })
       })
     })
