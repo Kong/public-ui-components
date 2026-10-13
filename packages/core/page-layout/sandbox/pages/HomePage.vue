@@ -43,19 +43,75 @@
           New
         </KBadge>
       </template>
+      <template
+        v-if="showAside"
+        #aside
+      >
+        <AboutCard
+          description="Drag the handle at the bottom right of the sandbox to narrow the layout."
+          :is-loading="aboutCardIsLoading"
+          :rows="aboutRows"
+          title="About this model"
+        >
+          <template #row-enabled>
+            <KInputSwitch v-model="enabled" />
+          </template>
+          <template #row-labels>
+            <KBadge>env: production</KBadge>
+          </template>
+        </AboutCard>
+      </template>
     </PageLayout>
+
+    <!-- Teleported from "outside" PageLayout, the way the app shell owns the Ask Kai button.
+         `pageLayoutMounted` stands in for that: the target only exists once PageLayout has rendered. -->
+    <Teleport
+      v-if="pageLayoutMounted && showAskKaiButton"
+      to="[data-teleport-target='ask-kai']"
+    >
+      <KButton appearance="secondary">
+        Ask Kai
+      </KButton>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { provide, reactive } from 'vue'
-import { NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
-import type { PageLayoutTab, PageShortcutData } from '../../src'
+import { onMounted, provide, reactive, ref } from 'vue'
+import { AboutCard, NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
+import type { AboutCardRow, PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showTabs, showFavoriteButton, showTitleAfter } = useSandboxControls()
+const { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+
+const pageLayoutMounted = ref<boolean>(false)
+
+onMounted(() => {
+  pageLayoutMounted.value = true
+})
+
+const enabled = ref<boolean>(true)
+
+const aboutRows: AboutCardRow[] = [
+  { key: 'name', label: 'Name', value: 'gpt-4o-multi-purpose', tooltip: 'The display name of this model.' },
+  { key: 'id', label: 'ID', value: 'default-model-1', tooltip: 'The unique identifier of this model.' },
+  { key: 'type', label: 'Type', value: 'Model' },
+  { key: 'path', label: 'Path', value: '/openai/v1/chat', tooltip: 'The request path this model is served on.' },
+  { key: 'host', label: 'Host', value: 'ai.konghq.internal' },
+  { key: 'labels', label: 'Labels' },
+  { key: 'creator', label: 'Creator', value: 'Dana Whitfield' },
+  { key: 'enabled', label: 'Enabled', tooltip: 'Whether this model accepts traffic.' },
+  { key: 'created', label: 'Created', value: 'Sep 3, 2026' },
+  // Both sides overflow: they wrap and then clamp at two lines.
+  {
+    key: 'overflow',
+    label: 'Upstream load balancing algorithm override policy',
+    value: 'consistent-hashing-by-request-header-with-fallback-to-round-robin-across-all-healthy-upstream-targets',
+    tooltip: 'A deliberately long label and value, to exercise wrapping and the two-line clamp.',
+  },
+]
 
 const breadcrumbs = [{
   key: 'api-gateway',

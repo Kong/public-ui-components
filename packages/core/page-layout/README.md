@@ -41,9 +41,10 @@ import { PageLayout } from '@kong-ui-public/page-layout'
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/page-layout/src/types/) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
-import type { PageLayoutTab, PageLayoutProps, PageLayoutSlots, PageLayoutTabsProps } from '@kong-ui-public/page-layout'
+import type { PageLayoutTab, PageLayoutProps, PageLayoutSlots, PageLayoutTabsProps, AboutCardRow, AboutCardProps, AboutCardSlots } from '@kong-ui-public/page-layout'
 ```
 
 ## Individual component documentation
 
 - [`<PageLayout />`](docs/page-layout.md)
+- [`<AboutCard />`](docs/about-card.md)

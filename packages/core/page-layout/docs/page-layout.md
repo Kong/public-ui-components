@@ -14,6 +14,7 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
 - [Nested PageLayout](#nested-pagelayout)
+- [Teleport targets](#teleport-targets)
 - [New Appearance](#new-appearance)
   - [`page-layout:new-appearance` injection](#page-layoutnew-appearance-injection)
 - [Page Shortcuts](#page-shortcuts)
@@ -31,6 +32,8 @@ A Kong UI page layout component that provides a structured page header with brea
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
 - An opt-in new appearance that renders the title inline with the breadcrumbs
+- Aside slot (new appearance only) for a secondary column beside the page content, which collapses below the content when the layout is too narrow for it. The aside is rendered first in the DOM — so its headings rank early in the document outline — and the container's reversed flex direction places it visually to the right of, or beneath, the content
+- A teleport target in the page header actions area for the host application's "Ask Kai" button
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -123,6 +126,8 @@ The main content area of the page. This slot is **only rendered when no tabs are
 
 An optional slot rendered on the right side of the page header, aligned to the bottom of the header row. Use this slot to place action buttons, dropdowns, or other controls that relate to the current page. The slot is rendered regardless of whether tabs are present.
 
+The container that holds this slot is always rendered, even when the slot is empty, because it also hosts the [Ask Kai teleport target](#teleport-targets). Slotted content is rendered before that target.
+
 #### `title`
 
 Optional slot for a custom page title. Use it when the default `<h1>` needs to be replaced with a lower-level heading to preserve proper heading order.
@@ -130,6 +135,22 @@ Optional slot for a custom page title. Use it when the default `<h1>` needs to b
 #### `title-after`
 
 An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
+
+#### `aside`
+
+An optional secondary column rendered beside the page content. Use it for supporting content that belongs to the page but not to the main flow -- summary cards, metadata panels, contextual help, and so on.
+
+This slot is **only rendered in the [new appearance](#new-appearance)**. In the default appearance the slot content is dropped entirely, so do not rely on it unless the host application provides the `page-layout:new-appearance` injection.
+
+It renders alongside both the `default` slot and the `<router-view>` used when tabs are present, so a tabbed page gets the same aside on every tab. If per-tab aside content is needed, render it from the tab's own route component instead.
+
+The aside wrapper carries `data-testid="page-layout-aside"`.
+
+Layout:
+
+- The aside is **400px wide** and sits to the right of the page content when the layout is at least `$kui-breakpoint-tablet` (`1024px`) wide.
+- Below that, the aside becomes full width and stacks **below** the page content.
+- The threshold is measured against the **width of the `PageLayout` itself**, not the viewport, using a CSS container query. A page rendered next to a wide app sidebar therefore collapses its aside earlier than the raw viewport width would suggest. Nested `PageLayout` components each register their own container, so an inner layout responds to its own width.
 
 #### `tab-${tab.key}` (dynamic)
 
@@ -262,6 +283,25 @@ const breadcrumbs = [
 </template>
 ```
 
+#### With an aside (new appearance only)
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #aside>
+      <KCard title="Summary">
+        <!-- Supporting content -->
+      </KCard>
+    </template>
+
+    <div>Page content here</div>
+  </PageLayout>
+</template>
+```
+
 #### With back button (string URL)
 
 ```html
@@ -336,6 +376,27 @@ interface PageLayoutTab {
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
 
+## Teleport targets
+
+`PageLayout` renders empty elements in its header that a host application can teleport content into, for controls that are owned by the app shell rather than by the page.
+
+| Target                              | Location                                                           |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| `[data-teleport-target="ask-kai"]`  | Page header actions area, after any `actions` slot content          |
+
+The target is always present, whether or not the `actions` slot is used, and in both appearances:
+
+```html
+<template>
+  <!-- Rendered somewhere in the app shell, outside of PageLayout -->
+  <Teleport to="[data-teleport-target='ask-kai']">
+    <AskKaiButton />
+  </Teleport>
+</template>
+```
+
+The target only exists while a `PageLayout` is mounted, and a `PageLayout` that defers to a [nested PageLayout](#nested-pagelayout) does not render a header, so only the innermost layout provides it. Guard the teleport (e.g. with `v-if` or `:disabled`) so it is not mounted before a `PageLayout` is on screen.
+
 ## New Appearance
 
 An opt-in page header appearance, enabled by the host application through injection rather than per page.
@@ -349,6 +410,7 @@ Other differences from the default appearance:
 - The header is `position: sticky` at the top of its nearest scrolling ancestor, so it (and its tab row) stays in view while the page content scrolls beneath it.
 - When there are no tabs the header is a single row with a fixed height of `45px`, including its 1px bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
+- The [`aside` slot](#aside) is rendered. It is ignored in the default appearance.
 
 Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
 
