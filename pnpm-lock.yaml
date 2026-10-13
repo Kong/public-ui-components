@@ -77,7 +77,7 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@types/node':
-        specifier: ^24.13.6
+        specifier: ^24.19.0
         version: 24.19.2
       '@vitejs/plugin-vue':
         specifier: ^6.0.9
@@ -128,7 +128,7 @@ importers:
         specifier: ^8.5.28
         version: 8.5.29
       postcss-custom-properties:
-        specifier: ^15.0.2
+        specifier: ^15.0.3
         version: 15.0.4(postcss@8.5.29)
       postcss-html:
         specifier: ^2.0.0
@@ -140,7 +140,7 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(rolldown@1.2.3)(rollup@4.62.2)
       sass:
-        specifier: ^1.104.1
+        specifier: ^1.105.1
         version: 1.105.1
       stylelint:
         specifier: ^17.14.1
@@ -164,7 +164,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.15.7)(@swc/wasm@1.15.7)(@types/node@24.19.2)(typescript@5.9.3)
       tsc-alias:
-        specifier: ^1.9.5
+        specifier: ^1.9.7
         version: 1.9.7
       tslib:
         specifier: ^2.8.1
@@ -1635,7 +1635,7 @@ importers:
         specifier: ^5.110.3
         version: 5.110.3(@swc/core@1.15.7)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.29)(uglify-js@3.19.3)(webpack-cli@7.2.3)
       webpack-bundle-analyzer:
-        specifier: ^5.3.3
+        specifier: ^5.4.0
         version: 5.4.0
       webpack-cli:
         specifier: ^7.2.3
