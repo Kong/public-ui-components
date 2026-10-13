@@ -42,7 +42,6 @@
         :config="konnectConfig"
         enable-redis-partial
         enable-vault-secret-picker
-        :engine="pluginFormEngine"
         :plugin-id="id"
         :plugin-type="plugin"
         use-custom-names-for-plugin
@@ -56,7 +55,6 @@
         :config="kongManagerConfig"
         enable-redis-partial
         enable-vault-secret-picker
-        :engine="pluginFormEngine"
         :plugin-id="id"
         :plugin-type="plugin"
         @global-action="handleGlobalAction"
@@ -71,7 +69,7 @@ import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
 import SandboxPage from '../SandboxPage.vue'
-import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
+import { PluginForm, TOASTER_PROVIDER } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
@@ -98,7 +96,6 @@ defineProps({
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
-const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
 // All feature flags provided to the plugin forms, editable at runtime via the sandbox switches.
 // `provide` captures a plain value once, so to flip any flag live we re-provide on change: the
 // generic FeatureFlagProvider re-runs `provide` in its setup whenever it remounts, and we force
@@ -107,7 +104,6 @@ const featureFlags = ref<Record<string, boolean>>({
   [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
   [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
   [FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES]: true,
-  [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
   [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
   [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
   [FEATURE_FLAGS.KM_3034_FEATURES_316]: true,
@@ -127,114 +123,6 @@ const FeatureFlagProvider = defineComponent({
 })
 
 provideDeckCommandEditor()
-
-useProvideExperimentalFreeForms([
-  'ace',
-  'acl',
-  'acme',
-  'ai-a2a-proxy',
-  'ai-azure-content-safety',
-  'ai-gcp-model-armor',
-  'ai-lakera-guard',
-  'ai-llm-as-judge',
-  'ai-mcp-oauth2',
-  'ai-prompt-decorator',
-  'ai-prompt-guard',
-  'ai-prompt-template',
-  'ai-proxy-advanced',
-  'ai-proxy',
-  'ai-rag-injector',
-  'ai-rate-limiting-advanced',
-  'ai-request-transformer',
-  'ai-response-transformer',
-  'ai-sanitizer',
-  'ai-semantic-cache',
-  'ai-semantic-prompt-guard',
-  'ai-semantic-response-guard',
-  'app-dynamics',
-  'aws-lambda',
-  'azure-functions',
-  'basic-auth',
-  'bot-detection',
-  'canary',
-  'confluent-consume',
-  'confluent',
-  'correlation-id',
-  'cors',
-  'datadog',
-  'degraphql',
-  'entitlement-enforcement',
-  'exit-transformer',
-  'file-log',
-  'forward-proxy',
-  'graphql-proxy-cache-advanced',
-  'graphql-rate-limiting-advanced',
-  'grpc-gateway',
-  'grpc-web',
-  'header-cert-auth',
-  'hmac-auth',
-  'http-log',
-  'injection-protection',
-  'ip-restriction',
-  'jq',
-  'json-threat-protection',
-  'jwe-decrypt',
-  'kafka-consume',
-  'kafka-log',
-  'kafka-upstream',
-  'key-auth-enc',
-  'key-auth',
-  'ldap-auth-advanced',
-  'ldap-auth',
-  'loggly',
-  'metering-and-billing',
-  'mocking',
-  'mtls-auth',
-  'oas-validation',
-  'oauth2-introspection',
-  'oauth2',
-  'opa',
-  'openid-connect',
-  'opentelemetry',
-  'openwhisk',
-  'post-function',
-  'pre-function',
-  'prometheus',
-  'proxy-cache-advanced',
-  'proxy-cache',
-  'rate-limiting-advanced',
-  'rate-limiting',
-  'redirect',
-  'request-size-limiting',
-  'request-termination',
-  'request-transformer-advanced',
-  'request-transformer',
-  'request-validator',
-  'response-ratelimiting',
-  'response-transformer-advanced',
-  'response-transformer',
-  'route-by-header',
-  'saml',
-  'service-protection',
-  'session',
-  'solace-consume',
-  'solace-log',
-  'solace-upstream',
-  'standard-webhooks',
-  'statsd',
-  'syslog',
-  'tcp-log',
-  'tls-handshake-modifier',
-  'tls-metadata-headers',
-  'udp-log',
-  'upstream-oauth',
-  'upstream-timeout',
-  'vault-auth',
-  'websocket-size-limit',
-  'websocket-validator',
-  'xml-threat-protection',
-  'zipkin',
-])
 
 const enableDeckConfigCustomization = ref(false)
 const enableDeckCallout = ref(false)

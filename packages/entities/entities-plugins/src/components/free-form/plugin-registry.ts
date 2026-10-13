@@ -5,7 +5,6 @@ import type { PluginFormConfig, PluginFormLayoutComponent } from './types'
 
 export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
-  experimental: boolean
   renderRules?: RenderRules
   fieldRenderers: FieldRendererRule[]
 }
@@ -50,7 +49,6 @@ export function buildPluginConfigRegistry(
 
     registry[pluginName] = {
       component: pluginConfig.component ?? CommonForm,
-      experimental: pluginConfig.experimental ?? false,
       renderRules: pluginConfig.renderRules,
       fieldRenderers: pluginConfig.fieldRenderers ?? [],
     }
@@ -67,38 +65,6 @@ export function getPluginConfig(pluginName: string): ResolvedPluginFormConfig | 
 
 export function getFreeFormComponent(
   pluginName: string,
-  experimentalWhitelist: string[],
 ): PluginFormLayoutComponent<any> | undefined {
-  const pluginConfig = getPluginConfig(pluginName)
-
-  if (!pluginConfig) {
-    return undefined
-  }
-
-  if (pluginConfig.experimental && !experimentalWhitelist.includes(pluginName)) {
-    return undefined
-  }
-
-  return pluginConfig.component
-}
-
-export function shouldUseFreeForm(
-  pluginName: string,
-  experimentalWhitelist: string[],
-  engine?: 'vfg' | 'freeform',
-): boolean {
-  if (engine === 'freeform') {
-    return true
-  } else if (engine === 'vfg') {
-    return false
-  }
-
-  return !!getFreeFormComponent(pluginName, experimentalWhitelist)
-}
-
-export function getExperimentalPluginNames(): string[] {
-  return Object.entries(pluginConfigRegistry)
-    .filter(([, config]) => config.experimental)
-    .map(([pluginName]) => pluginName)
-    .sort((a, b) => a.localeCompare(b))
+  return getPluginConfig(pluginName)?.component
 }

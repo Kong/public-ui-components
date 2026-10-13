@@ -17,7 +17,7 @@ import PluginConfigurationForm from './components/free-form/components/PluginCon
 import composables from './composables'
 import pluginEndpoints from './plugins-endpoints'
 
-const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
+const { usePluginMetaData } = composables
 
 export {
   FlowCanvas,
@@ -37,7 +37,6 @@ export {
   DynamicLayout,
   PluginConfigurationForm,
   usePluginMetaData,
-  useProvideExperimentalFreeForms,
 }
 
 export {
