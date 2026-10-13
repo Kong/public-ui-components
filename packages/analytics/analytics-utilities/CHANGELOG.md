@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.1.0...%40kong-ui-public%2Fanalytics-utilities%4013.2.0) (2026-10-13)
+
+### Features
+
+* **analytics:** support finer granularity in heatmap [MA-5563] ([#3928](https://github.com/Kong/public-ui-components/issues/3928)) ([cacdd21](https://github.com/Kong/public-ui-components/commit/cacdd211ab4c80a5ff1521b5f3dcd48661ac3668))
+
+
 # [13.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.0.1...%40kong-ui-public%2Fanalytics-utilities%4013.1.0) (2026-10-12)
 
 ### Features
