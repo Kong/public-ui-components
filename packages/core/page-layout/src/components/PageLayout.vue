@@ -485,7 +485,7 @@ $page-layout-header-height: 45px;
   .page-layout-content-container {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: var(--kui-space-50, $kui-space-50);
     padding: var(--kui-space-60, $kui-space-60);
 
