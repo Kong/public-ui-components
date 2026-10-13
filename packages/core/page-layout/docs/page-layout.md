@@ -149,7 +149,7 @@ The aside wrapper carries `data-testid="page-layout-aside"`.
 Layout:
 
 - The aside is **400px wide** and sits to the right of the page content when the layout is at least `$kui-breakpoint-tablet` (`1024px`) wide.
-- Below that, the aside becomes full width and stacks **above** the page content.
+- Below that, the aside becomes full width and stacks **below** the page content.
 - The threshold is measured against the **width of the `PageLayout` itself**, not the viewport, using a CSS container query. A page rendered next to a wide app sidebar therefore collapses its aside earlier than the raw viewport width would suggest. Nested `PageLayout` components each register their own container, so an inner layout responds to its own width.
 
 #### `tab-${tab.key}` (dynamic)
