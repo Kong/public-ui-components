@@ -511,6 +511,9 @@ $page-layout-header-height: 45px;
       gap: var(--kui-space-40, $kui-space-40);
 
       @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+        // The content's `width: 100%` overflows the row on its own, so without this the
+        // aside gives up part of its 400px to absorb the overflow instead of the content
+        flex-shrink: 0;
         width: 400px;
       }
     }
