@@ -754,7 +754,7 @@ describe('<PageLayout />', () => {
         })
       })
 
-      it('stacks the aside above the content when the layout is narrow', () => {
+      it('stacks the aside below the content when the layout is narrow', () => {
         cy.viewport(800, 800)
 
         mountWithRouter(PageLayout, {
@@ -769,7 +769,8 @@ describe('<PageLayout />', () => {
             const content = $content[0].getBoundingClientRect()
 
             expect(aside.width).to.be.closeTo(content.width, 1)
-            expect(aside.bottom).to.be.at.most(content.top)
+            // `column-reverse`, so the aside stacks after the content even though it comes first in the DOM
+            expect(aside.top).to.be.at.least(content.bottom)
           })
         })
       })
@@ -797,7 +798,7 @@ describe('<PageLayout />', () => {
             const aside = $aside[0].getBoundingClientRect()
             const content = $content[0].getBoundingClientRect()
 
-            expect(aside.bottom).to.be.at.most(content.top)
+            expect(aside.top).to.be.at.least(content.bottom)
           })
         })
       })
