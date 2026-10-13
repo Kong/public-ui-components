@@ -211,6 +211,10 @@ export class CoordinatorPlugin implements Plugin {
     }
 
     if (type === 'mousemove') {
+      // afterEvent defers this via requestAnimationFrame; the chart may have been destroyed
+      // in the meantime (Chart.js nulls `canvas`), which makes getElementsAtEventForMode throw
+      if (!chart.canvas) return
+
       const timestamp = this._getTimestamp(chart, event)
       const [dimension, dimensionValue] = this._getDatasetDimension(chart, event) ?? []
       this.coordinator.activate({
