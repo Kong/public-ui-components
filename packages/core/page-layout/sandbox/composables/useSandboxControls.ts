@@ -8,7 +8,8 @@ const showFavoriteButton = ref<boolean>(true)
 const showTitleAfter = ref<boolean>(false)
 const showAside = ref<boolean>(true)
 const showAskKaiButton = ref<boolean>(true)
+const aboutCardIsLoading = ref<boolean>(false)
 
 export function useSandboxControls() {
-  return { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton }
+  return { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading }
 }
