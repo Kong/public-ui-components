@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.1.17...%40kong-ui-public%2Fpage-layout%401.1.18) (2026-10-13)
+
+### Bug Fixes
+
+* **page-layout:** kai button teleport target [KHCP-22087] ([#3926](https://github.com/Kong/public-ui-components/issues/3926)) ([6adf3ae](https://github.com/Kong/public-ui-components/commit/6adf3ae43fdfeceb22401dda338490abf58d8a9e))
+
+
 ## [1.1.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.1.16...%40kong-ui-public%2Fpage-layout%401.1.17) (2026-10-12)
 
 ### Bug Fixes
