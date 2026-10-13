@@ -590,6 +590,13 @@ const props = defineProps({
     type: String as PropType<PartialType>,
     default: '',
   },
+  /**
+   * Konnect stepped layout. The create modal passes false so it keeps the legacy form
+   */
+  managedKonnectLayout: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits<{
@@ -614,18 +621,13 @@ const isManagedKonnectLayout = computed<boolean>(() => {
     return false
   }
 
-  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
-  if (typeof props.config.useKonnectManagedRedisUi === 'boolean') {
-    return props.config.useKonnectManagedRedisUi
-  }
-
-  return !!props.config.isKonnectManagedRedisEnabled
+  return props.managedKonnectLayout
 })
 
-// For non-cloud gateways, the selector hides managed step 1, so compress steps down:
-// so step 2 becomes 1 and step 3 becomes 2
+// Step 1 only exists when isCloudGateway is true.
+// Omitted counts as non-cloud, same as the selector, so start at step 1
 const managedLayoutStepOffset = computed<number>(() => (
-  (props.config as any).isCloudGateway === false ? -1 : 0
+  props.config.isCloudGateway === true ? 0 : -1
 ))
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {

@@ -71,12 +71,7 @@ export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, K
 export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig { }
 
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
-  /**
-   * FF: Konnect-managed Redis copy/grouping in plugin forms
-   * No effect unless `isCloudGateway` is true (same as Redis configuration list)
-   */
-  isKonnectManagedRedisEnabled?: boolean
-  /** When true, CP is a Cloud Gateway */
+  /** When true, CP is a Cloud Gateway. Enables Konnect-managed Redis copy and grouping */
   isCloudGateway?: boolean
   /**
    * KRN-based permission flag from the host app (gateway-manager).

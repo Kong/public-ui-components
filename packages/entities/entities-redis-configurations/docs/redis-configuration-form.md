@@ -81,11 +81,11 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the OAuth option in the Cloud Authentication provider selector.
 
-  - `isKonnectManagedRedisEnabled`
+  - `isCloudGateway`
     - type: `boolean`
     - required: `false`
     - default: `undefined`
-    - *Specific to Konnect*. When true, uses the stepped layout (Configuration and General information blocks with custom Save/Cancel/View configuration actions). Set to true when Konnect managed Redis is enabled.
+    - *Specific to Konnect*. When true, the control plane is a Cloud Gateway and Konnect-managed Redis behavior is enabled. Konnect always uses the stepped layout (Configuration and General information blocks with custom Save/Cancel/View configuration actions).
 
   - `isPortReferenceable`
     - type: `boolean`
@@ -144,6 +144,14 @@ The top offset of the `View Configuration` slidout.
 - default: `''`
 
 The type of the partial to disable. If set it to `PartialType.REDIS_CE`, the Host/Port CE type option will be disabled. If set it to `PartialType.REDIS_EE`, all EE type options will be disabled.
+
+#### `managedKonnectLayout`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+Konnect stepped layout. Set to `false` to keep the legacy card layout. The create modal passes `false`.
 
 ### Events
 

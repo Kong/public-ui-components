@@ -15,17 +15,12 @@ import { RedisType, AuthProvider } from './types'
 
 type KonnectManagedRedisFlags = {
   app: 'konnect' | 'kongManager'
-  isKonnectManagedRedisEnabled?: boolean
   isCloudGateway?: boolean
 }
 
-/** Konnect + FF + Cloud Gateway: enables Konnect-managed redis UI; otherwise partials-only */
+// Konnect Cloud Gateway: Konnect-managed redis. Otherwise partials-only
 export const isKonnectManagedRedisEnabled = (config: KonnectManagedRedisFlags): boolean => {
-  return (
-    config.app === 'konnect' &&
-    !!config.isKonnectManagedRedisEnabled &&
-    config.isCloudGateway === true
-  )
+  return config.app === 'konnect' && config.isCloudGateway === true
 }
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {

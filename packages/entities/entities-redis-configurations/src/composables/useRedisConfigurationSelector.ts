@@ -1,6 +1,6 @@
 /**
  * Data for `RedisConfigurationSelector`: partials list + search, Redis-only filter
- * When `isKonnectManagedRedisEnabled` is true (Konnect cloud + FF)- grouped Konnect-managed vs self-managed rows
+ * When `isKonnectManagedRedisEnabled` is true (Konnect Cloud Gateway)- grouped Konnect-managed vs self-managed rows
  * Otherwise (KM/ legacy Konnect)- flat list with type badges on every row
  */
 import { computed, inject, onBeforeMount } from 'vue'

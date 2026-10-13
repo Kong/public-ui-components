@@ -300,7 +300,7 @@ const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 // Show cloud auth fields only when enabled in config
 const konnectCloudAuthAvailable = computed((): boolean => props.config.cloudAuthAvailable === true )
 
-// Konnect managed Redis only (FF). Excludes self-managed Redis, Kong Manager, and legacy Konnect partial detail
+// Konnect managed Redis only. Excludes self-managed Redis, Kong Manager, and legacy Konnect partial detail
 const isManagedKonnectDetailEnabled = computed((): boolean =>
   !props.disableKonnectManagedDetail &&
   props.config.app === 'konnect' &&
