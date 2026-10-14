@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.2.0...%40kong-ui-public%2Fanalytics-chart%4012.3.0) (2026-10-14)
+
+### Features
+
+* aigw version ([#3932](https://github.com/Kong/public-ui-components/issues/3932)) ([eea80ba](https://github.com/Kong/public-ui-components/commit/eea80ba99bc7ed3ac57670c9f207c234f5f1f7bf))
+
+
 # [12.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.1.0...%40kong-ui-public%2Fanalytics-chart%4012.2.0) (2026-10-14)
 
 ### Features
