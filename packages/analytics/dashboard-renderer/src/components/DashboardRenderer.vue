@@ -25,7 +25,7 @@
         :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
-        :columns="model.columns"
+        :columns="layoutConfig.columns"
         :tile-height="model.tile_height"
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"
@@ -91,6 +91,7 @@ import {
   INJECT_QUERY_PROVIDER,
 } from '../constants'
 import { duplicateChartTile } from '../utils/duplicate-tile'
+import { migrateLegacyColumns } from '../utils/migrate-legacy-columns'
 import { tileDescription } from '../utils/tile-definition'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
@@ -114,6 +115,14 @@ const emit = defineEmits<{
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
+
+const layoutConfig = computed(() => migrateLegacyColumns(model.value))
+
+const migrateModel = () => {
+  if (model.value.columns === undefined) {
+    Object.assign(model.value, migrateLegacyColumns(model.value))
+  }
+}
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
@@ -179,7 +188,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 }
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
-  return model.value.tiles.map((tile: TileConfig) => {
+  return layoutConfig.value.tiles.map((tile: TileConfig) => {
     if (editable.value && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
@@ -251,6 +260,7 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
     const newTile = duplicateChartTile(tile)
 
+    migrateModel()
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
   } catch (e) {
@@ -289,6 +299,7 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
     } as TileConfig
   })
 
+  migrateModel()
   model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 

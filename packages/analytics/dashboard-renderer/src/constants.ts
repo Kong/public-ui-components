@@ -1,6 +1,8 @@
 // Default tile height and width - approximated from the figma design.
 export const DEFAULT_TILE_HEIGHT = 170
-export const DASHBOARD_COLS = 6
+export const DASHBOARD_COLS = 12
+// Dashboards saved before the 12 column grid have no `columns` prop and use this width
+export const LEGACY_DASHBOARD_COLS = 6
 export const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 export const INJECT_DASHBOARD_COORDINATOR = 'analytics-dashboard-coordinator'
 export const ENTITY_ID_TOKEN = '{entity-id}'

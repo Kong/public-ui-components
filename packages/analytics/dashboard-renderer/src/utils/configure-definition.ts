@@ -3,7 +3,7 @@ import type {
   TileConfig,
 } from '@kong-ui-public/analytics-utilities'
 
-import { DASHBOARD_COLS } from '../constants'
+import { DASHBOARD_COLS, LEGACY_DASHBOARD_COLS } from '../constants'
 import { isTableChartDefinition } from './tile-definition'
 
 /**
@@ -145,7 +145,7 @@ export const configureAllowedDefinition = (
     .map(processTileForBasicTier)
     .filter((tile) => tile !== undefined)
 
-  const repositionedTiles = repositionTiles(processedTiles, config.columns)
+  const repositionedTiles = repositionTiles(processedTiles, config.columns ?? LEGACY_DASHBOARD_COLS)
 
   return {
     ...config,
