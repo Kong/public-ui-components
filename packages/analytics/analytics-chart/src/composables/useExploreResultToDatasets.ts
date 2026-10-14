@@ -32,12 +32,12 @@ function generateDatasets({
   const uuid = crypto.randomUUID()
 
   if (isMultiMetric) {
-    return metricNames.map((metric) => {
+    return metricNames.map((metric, i) => {
       return {
         // @ts-ignore - dynamic i18n key
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
         backgroundColor: color({
-          metric,
+          discriminator: i,
           coordinator: coordinator?.color,
           order: metricNames.indexOf(metric),
           chartUuid: uuid,
