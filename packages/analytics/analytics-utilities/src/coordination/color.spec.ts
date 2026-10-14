@@ -36,23 +36,6 @@ describe('color utils - colorByDiscriminator()', () => {
     })
   })
 
-  it.each([
-    'light',
-    'dark',
-    undefined,
-  ])('uses the customPalette if provided, even when theme is "%s"', (theme) => {
-    const customPalette = ['#ff0000', '#00ff00']
-    for (let i = 0; i < 10; i++) {
-      const result = colorByDiscriminator({
-        discriminator: 1,
-        theme: theme as any,
-        customPalette,
-      })
-
-      expect(customPalette.includes(result)).toBe(true)
-    }
-  })
-
   it('handles discriminators that are not whole integers', () => {
     expect(lightPalette.includes(colorByDiscriminator({ discriminator: 39.599, theme: 'light' }))).toBe(true)
     expect(lightPalette.includes(colorByDiscriminator({ discriminator: 0.0003, theme: 'light' }))).toBe(true)

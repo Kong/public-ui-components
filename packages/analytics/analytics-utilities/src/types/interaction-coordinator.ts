@@ -12,6 +12,57 @@ export type InteractionCoordinatorDeactivateProps = {
   chartUuid: string
 }
 
+export type ColorCoordinatorResolveArgs = {
+  /**
+   * The consistent series string (e.g. the concatenated dimension/value/metric).
+   * Colors are keyed by this value, so the same string always resolves to the
+   * same palette index across every chart in the dashboard.
+   */
+  name: string
+  /**
+   * This series' rank within its chart (e.g. 1 for the highest value).
+   */
+  order?: number
+  /**
+   * The uuid of the chart requesting the color. Used to group a chart's series
+   * when avoiding adjacent collisions, so interleaving between charts cannot
+   * cause false adjacency.
+   */
+  chartUuid?: string
+  /**
+   * The active color theme. Must match the theme the chart will ultimately pass
+   * to `color()` so the assigned indices resolve to the intended palette.
+   */
+  theme?: 'light' | 'dark'
+  customPalette?: string[]
+}
+
+/**
+ * Coordinates series colors across the charts of a single context (usually a
+ * dashboard).
+ *
+ * This is intentionally NOT reactive: a chart resolves each series color once,
+ * synchronously, at render time and then freezes it. Assignments are append-only
+ * and locked per series string, which guarantees that the same series string
+ * always resolves to the same color across every chart within the same context
+ *
+ * Charts do not call this directly; they pass the coordinator (and `order`/
+ * `chartUuid`) to `color()`, which delegates for generic series.
+ */
+export type ColorCoordinator = {
+  /**
+   * Resolve a single generic series string to a palette index, assigning and
+   * locking it on first use. Honors `order`/`chartUuid` to keep adjacent series
+   * within a chart distinct when possible, and spreads colors across the palette.
+   */
+  resolveDiscriminator: (args: ColorCoordinatorResolveArgs) => number
+  /**
+   * Clear all color assignments. Call when the underlying series are invalidated
+   * (e.g. a dashboard-level filter or time-range change).
+   */
+  reset: () => void
+}
+
 export type InteractionCoordinator = {
   /**
    * Call `activate` whenever the user performs an action that selects or highlights
@@ -63,4 +114,9 @@ export type InteractionCoordinator = {
    * only include a `timestamp`.
    */
   TIMESTAMP_DEBOUNCE_MS: number
+  /**
+   * Cross-chart series color coordination for the dashboard. This is a distinct,
+   * non-reactive concern from the interaction state above.
+   */
+  color: ColorCoordinator
 }
