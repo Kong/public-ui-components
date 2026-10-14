@@ -92,7 +92,7 @@ Group names are not drawn on the boxes by default (a reserved strip renders empt
 | `showValues` | `boolean` | none (name only) | Shows each node's value under its name, formatted with `valueFormatter`. |
 | `valueFormatter` | `(value: number) => string` | none | Formats values in the tooltip and the node labels. |
 | `colorPalette` | `string[]` | theme tokens | Categorical colors, one per top-level group; cycled if there are more groups than colors. To color specific groups or nodes, see [Colors from data](#colors-from-data). |
-| `drillDown` | `boolean` | `true` | Click a group to zoom into it, with a breadcrumb to go back. `false` makes a static chart that fills the whole area, see [drill-down](#drill-down--breadcrumb). |
+| `drillDown` | `boolean` | `true` | Click a group to zoom into it, with a breadcrumb to go back. The mouse wheel zooms and dragging pans. `false` makes a static chart that fills the whole area, see [drill-down](#drill-down--breadcrumb). |
 | `leafDepth` | `number` | data depth (all levels) | Initial depth to show (counted from zero at the view root); deeper levels appear when drilling in. |
 | `tooltipTitle` | `string` | none | Bold title of the shared tooltip, see [Tooltip](#tooltip). |
 | `seriesOption` | `TreemapSeriesOption` | none | Deep-merged into the generated treemap series, e.g. `{ label: { fontWeight: 'bold' } }`, see [custom options](./custom-options.md#tweaking-the-generated-series). |
@@ -116,9 +116,9 @@ Like `@kong-ui-public/analytics-chart`, the content comes from the chart's data:
 
 ## Drill-down & breadcrumb
 
-By default, clicking a group zooms into it, and a breadcrumb at the bottom of the chart (with room reserved for it) navigates back up. Set `leafDepth` to limit the initial view to that depth, so deeper levels only appear when drilling in. The mouse wheel doesn't zoom, so scrolling over the chart scrolls the page.
+By default, clicking a group zooms into it, and a breadcrumb at the bottom of the chart (with room reserved for it) navigates back up. The mouse wheel zooms and dragging pans, so scrolling over the chart zooms it instead of scrolling the page. Set `leafDepth` to limit the initial view to that depth, so deeper levels only appear when drilling in.
 
-For a static card, set `drill-down` to `false`: clicks do nothing, there's no breadcrumb, and the treemap fills the whole chart area:
+For a static card, set `drill-down` to `false`: clicks do nothing, there's no breadcrumb, the wheel and drag are off, and the treemap fills the whole chart area:
 
 ```vue
 <TreeMapChart
