@@ -54,7 +54,6 @@ import { OutlierBandPlugin } from '../chart-plugins/OutlierBandPlugin'
 import { ReferenceLinePlugin } from '../chart-plugins/ReferenceLinePlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
-import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
 import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 
 interface ScatterChartProps {
@@ -73,6 +72,7 @@ interface ScatterChartProps {
   tooltipMetricDisplay?: string
   shadeOutlierRegion?: boolean
   themeColors?: ScatterChartColors
+  coordinator?: InteractionCoordinator
 }
 
 const props = withDefaults(
@@ -91,6 +91,7 @@ const props = withDefaults(
     tooltipMetricDisplay: '',
     shadeOutlierRegion: false,
     themeColors: () => scatterChartColors(),
+    coordinator: undefined,
   },
 )
 
@@ -106,9 +107,8 @@ const outlierBandPlugin = new OutlierBandPlugin()
 const referenceLinePlugin = new ReferenceLinePlugin()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
-const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
 const coordinatorPlugin = new CoordinatorPlugin({
-  coordinator,
+  coordinator: props.coordinator,
   requiresUpdate: true,
   triggerOnSelf: true,
   watchTimestamp: false,

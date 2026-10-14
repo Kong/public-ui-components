@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { computed, inject, reactive, ref, toRef, useTemplateRef } from 'vue'
+import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -61,7 +61,6 @@ import type { KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import type { DonutChartData, LegendValues } from '../../types/chart-data'
-import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
 import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
 
 const props = withDefaults(defineProps<{
@@ -75,6 +74,7 @@ const props = withDefaults(defineProps<{
   tooltipDimensionDisplay?: string
   tooltipMetricDisplay?: string
   showCenterMetric?: boolean
+  coordinator?: InteractionCoordinator
 }>(), {
   metricUnit: '',
   metricName: '',
@@ -84,6 +84,7 @@ const props = withDefaults(defineProps<{
   tooltipDimensionDisplay: '',
   tooltipMetricDisplay: '',
   showCenterMetric: true,
+  coordinator: undefined,
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
@@ -93,9 +94,8 @@ const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref([])
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
-const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
 const coordinatorPlugin = new CoordinatorPlugin({
-  coordinator,
+  coordinator: props.coordinator,
   requiresUpdate: true,
   triggerOnSelf: false,
   watchTimestamp: false,

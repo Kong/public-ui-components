@@ -16,7 +16,6 @@ export { default as TopNTable } from './components/TopNTable.vue'
 
 export * from './types'
 export * from './enums'
-export { statusCodeBadgeBackgroundColor } from './utils/colors'
 export { lookupStatusCodeColor } from './utils/customColors'
 export * from './utils/constants'
 export { formatChartTicksByGranularity } from './utils/format-timestamps'
