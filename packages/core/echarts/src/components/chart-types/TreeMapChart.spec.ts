@@ -177,8 +177,6 @@ describe('<TreeMapChart />', () => {
       expect(width * height / CHART_AREA).toBeCloseTo(0.2, 1)
       // Roughly square, so its label has room
       expect(Math.min(width, height)).toBeGreaterThan(150)
-
-      instance.dispose()
     })
 
     it('leaves the smallest node unreadable when seriesOption restores the ECharts 5x zoom ceiling', () => {
@@ -187,8 +185,6 @@ describe('<TreeMapChart />', () => {
       zoomTo(instance, 'user99')
 
       expect(nodeRect(instance, 'user99').width).toBeLessThan(5)
-
-      instance.dispose()
     })
   })
 
