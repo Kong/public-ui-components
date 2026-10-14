@@ -1,25 +1,8 @@
 <template>
   <div class="json-config config-card-code-block">
-    <div
-      v-if="fetcherUrl"
-      class="json-endpoint"
-    >
-      <KBadge :appearance="requestMethod">
-        {{ requestMethod }}
-      </KBadge>
-      <KCodeBlock
-        id="json-endpoint-codeblock"
-        :code="fetcherUrl"
-        language="plaintext"
-        :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
-        single-line
-        theme="dark"
-      />
-    </div>
     <KCodeBlock
       v-if="entityRecord"
       id="json-codeblock"
-      :class="{ 'json-content': fetcherUrl }"
       :code="JSON.stringify(jsonContent, null, 2)"
       :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
       data-dd-privacy="mask"
@@ -27,7 +10,35 @@
       :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
-    />
+    >
+      <template
+        v-if="fetcherUrl"
+        #actions
+      >
+        <KBadge
+          :appearance="requestMethod"
+          class="json-endpoint-method"
+          data-testid="json-endpoint-method"
+        >
+          {{ requestMethod }}
+        </KBadge>
+        <code
+          id="json-endpoint-codeblock"
+          class="json-endpoint-url"
+          :title="fetcherUrl"
+        >{{ fetcherUrl }}</code>
+        <KClipboardProvider v-slot="{ copyToClipboard }">
+          <KCodeBlockIconButton
+            :aria-label="t('jsonCodeBlock.copy_url')"
+            :copy-tooltip="t('jsonCodeBlock.copy_url')"
+            data-testid="code-block-copy-button-json-endpoint-codeblock"
+            @click="copyToClipboard(fetcherUrl)"
+          >
+            <CopyIcon decorative />
+          </KCodeBlockIconButton>
+        </KClipboardProvider>
+      </template>
+    </KCodeBlock>
   </div>
 </template>
 
@@ -37,6 +48,9 @@ import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
+import { KCodeBlockIconButton } from '@kong/kongponents'
+import { CopyIcon } from '@kong/icons'
+import composables from '../../composables'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -69,6 +83,8 @@ const props = defineProps({
   },
 })
 
+const { i18n: { t } } = composables.useI18n()
+
 const jsonContent = computed((): Record<string, any> => props.entityRecord)
 
 const displayedCharLength = computed((): number => {
@@ -85,44 +101,23 @@ const displayedCharLength = computed((): number => {
 })
 </script>
 
-<style lang="scss">
-.json-content.k-code-block {
-  border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
-  border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+<style lang="scss" scoped>
+.json-endpoint-method {
+  flex-shrink: 0;
 }
 
-.json-endpoint {
-  align-items: baseline;
-  background-color: var(--kui-color-background, $kui-color-background);
-  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
-  border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
-  border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
-  display: flex;
-  gap: var(--kui-space-30, $kui-space-30);
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
-
-  .k-code-block {
-    flex: auto;
-    z-index: 2;
-
-    .code-block-content {
-      padding-bottom: var(--kui-space-0, $kui-space-0);
-      padding-top: var(--kui-space-0, $kui-space-0);
-    }
-
-    .code-block-secondary-actions {
-      margin-top: 0 !important;
-    }
-  }
-
-  code {
-    /* truncate prefix to display relevant partial url but support copying entire url */
-    direction: rtl;
-    max-width: v-bind('`${displayedCharLength}ch`');
-    overflow: hidden !important;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.json-endpoint-url {
+  /* truncate prefix to display relevant partial url but support copying entire url */
+  direction: rtl;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  // push the copy button to the end of the header
+  margin-right: auto;
+  max-width: v-bind('`${displayedCharLength}ch`');
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
