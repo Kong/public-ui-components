@@ -18,6 +18,8 @@ const record = {
   tags: ['dev', 'prod'],
 }
 
+const fetcherUrl = 'https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa'
+
 describe('<JsonCodeBlock />', () => {
   describe('JsonCodeBlock', () => {
     it('renders the Json content correctly', () => {
@@ -28,11 +30,11 @@ describe('<JsonCodeBlock />', () => {
       })
 
       cy.get('.json-config').should('be.visible')
+      cy.get('#json-codeblock .code-block-actions').should('not.exist')
       cy.get('.json-endpoint').should('not.exist')
     })
 
-    it('renders the JSON content and endpoint correctly', () => {
-      const fetcherUrl = 'https://cloud.konghq.com/us/gateway-manager/91e192e0-5981-4662-a37d-7b24272c9da3/routes/0af86198-9822-46e0-9028-47b173caf4aa'
+    it('renders the endpoint in the code block header', () => {
       cy.mount(JsonCodeBlock, {
         props: {
           fetcherUrl,
@@ -42,10 +44,27 @@ describe('<JsonCodeBlock />', () => {
       })
 
       cy.get('.json-config').should('be.visible')
-      cy.get('.json-endpoint').should('be.visible')
-      cy.get('.json-endpoint').should('contain.text', 'get')
-      cy.get('.json-endpoint').should('contain.text', fetcherUrl)
-      cy.get('.json-endpoint').should('contain.text', 'Copy')
+      cy.get('#json-codeblock .code-block-actions .json-endpoint').should('be.visible')
+      cy.get('.json-endpoint .k-badge').should('contain.text', 'get')
+      cy.get('#json-endpoint-codeblock').should('have.text', fetcherUrl)
+      cy.getTestId('code-block-copy-button-json-endpoint-codeblock').should('be.visible')
+    })
+
+    it('copies the endpoint url', () => {
+      cy.mount(JsonCodeBlock, {
+        props: {
+          fetcherUrl,
+          entityRecord: record,
+          requestMethod: 'get',
+        },
+      })
+
+      cy.window().then((win) => {
+        cy.stub(win.navigator.clipboard, 'writeText').as('writeText').resolves()
+      })
+
+      cy.getTestId('code-block-copy-button-json-endpoint-codeblock').click()
+      cy.get('@writeText').should('have.been.calledOnceWith', fetcherUrl)
     })
 
     it('syntax highlights JSON content within the shiki size limit', () => {

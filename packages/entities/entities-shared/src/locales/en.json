@@ -119,6 +119,9 @@
       "confirmText": "Yes, disable"
     }
   },
+  "jsonCodeBlock": {
+    "copy_url": "Copy URL"
+  },
   "deckCodeBlock": {
     "hint": {
       "konnect": "The {token} environment variable must be added first. See {link} for details.",
