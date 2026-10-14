@@ -117,6 +117,7 @@ export default function useExploreResultToTimeDataset(
         const offsetMs = originToOffset(startMs)
         const zeroFilledTimeSeries = createZeroFilledTimeSeries(startMs, endMs, stepMs, offsetMs, records)
 
+        const dimensionIsMetric = !dimensionFieldNames.length
         const timedEvents = !records?.length
           ? {}
           : records.reduce((acc: { [label: string]: any }, druidRow) => {
@@ -140,7 +141,7 @@ export default function useExploreResultToTimeDataset(
                     acc[timestamp][metric] = {}
                   }
                   acc[timestamp][metric][label.id] = Math.round(Number(event[metric]) * 1e3) / 1e3
-                } else if (!dimensionFieldNames.length) { // using metrics as dimensions
+                } else if (dimensionIsMetric) {
                   if (!acc[timestamp][metric]) {
                     acc[timestamp][metric] = {}
                   }
@@ -169,14 +170,21 @@ export default function useExploreResultToTimeDataset(
             return { x: ts, y: 0 }
           })
 
-          const baseColor = color({
-            dimension,
-            dimensionValue: dimensionId,
-            coordinator: coordinator?.color,
-            order: i,
-            chartUuid: uuid,
-            customDimensionColors,
-          })
+          const baseColor = dimensionIsMetric
+            ? color({
+              discriminator: i,
+              coordinator: coordinator?.color,
+              order: i,
+              chartUuid: uuid,
+            })
+            : color({
+              dimension,
+              dimensionValue: dimensionId,
+              coordinator: coordinator?.color,
+              order: i,
+              chartUuid: uuid,
+              customDimensionColors,
+            })
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)
