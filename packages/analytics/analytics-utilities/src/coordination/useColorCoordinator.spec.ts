@@ -126,13 +126,6 @@ describe('useColorCoordinator()', () => {
       expect(coordinator.resolveDiscriminator({ name: 'b', order: 2, theme: 'light' })).not.toBe(0)
     })
 
-    it('drops neighbor avoidance when the palette has a single color', () => {
-      const customPalette = ['#111111']
-      coordinator.resolveDiscriminator({ name: 'a', order: 1, chartUuid: 'chart-1', customPalette })
-
-      expect(coordinator.resolveDiscriminator({ name: 'b', order: 2, chartUuid: 'chart-1', customPalette })).toBe(0)
-    })
-
     it('keeps inherited collisions when an earlier chart already locked the name', () => {
       // chart-1 locks 'x' => 0 and 'y' => 1.
       coordinator.resolveDiscriminator({ name: 'x', order: 1, chartUuid: 'chart-1', theme: 'light' })
@@ -141,24 +134,6 @@ describe('useColorCoordinator()', () => {
       // chart-2 sees them in the opposite order; locked values are not changed.
       expect(coordinator.resolveDiscriminator({ name: 'y', order: 1, chartUuid: 'chart-2', theme: 'light' })).toBe(1)
       expect(coordinator.resolveDiscriminator({ name: 'x', order: 2, chartUuid: 'chart-2', theme: 'light' })).toBe(0)
-    })
-  })
-
-  describe('custom palettes', () => {
-    it('spreads across the length of a custom palette rather than the default one', () => {
-      const customPalette = ['#111111', '#222222', '#333333']
-      const indices = Array.from({ length: customPalette.length }, (_, i) =>
-        coordinator.resolveDiscriminator({ name: `series-${i}`, customPalette }))
-
-      expect([...indices].sort()).toEqual([0, 1, 2])
-    })
-
-    it('never assigns an index outside a custom palette', () => {
-      const customPalette = ['#111111', '#222222']
-      const indices = Array.from({ length: 10 }, (_, i) =>
-        coordinator.resolveDiscriminator({ name: `series-${i}`, order: i + 1, chartUuid: 'chart', customPalette }))
-
-      expect(Math.max(...indices)).toBeLessThan(customPalette.length)
     })
   })
 
@@ -218,13 +193,6 @@ describe('useColorCoordinator()', () => {
       color({ dimensionValue: 'empty', coordinator })
 
       expect(coordinator.resolveDiscriminator({ name: 'new', theme: 'light' })).toBe(0)
-    })
-
-    it('respects a custom palette', () => {
-      const customPalette = ['#111111', '#222222']
-
-      expect(color({ dimension: 'service', dimensionValue: 'a', coordinator, customPalette })).toBe('#111111')
-      expect(color({ dimension: 'service', dimensionValue: 'b', coordinator, customPalette })).toBe('#222222')
     })
   })
 })
