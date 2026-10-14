@@ -32,10 +32,10 @@ describe('<ConfigCardDisplay />', () => {
       })
 
       cy.get('.json-config').should('be.visible')
-      cy.get('.json-endpoint').should('be.visible')
-      cy.get('.json-endpoint').should('contain.text', 'get')
-      cy.get('.json-endpoint').should('contain.text', fetcherUrl)
-      cy.get('.json-endpoint').should('contain.text', 'Copy')
+      cy.get('#json-codeblock .code-block-actions').should('be.visible')
+      cy.getTestId('json-endpoint-method').should('contain.text', 'get')
+      cy.get('#json-endpoint-codeblock').should('have.text', fetcherUrl)
+      cy.getTestId('code-block-copy-button-json-endpoint-codeblock').should('be.visible')
     })
 
     it('renders the Terraform content correctly', () => {

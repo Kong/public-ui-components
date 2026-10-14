@@ -31,7 +31,7 @@ describe('<JsonCodeBlock />', () => {
 
       cy.get('.json-config').should('be.visible')
       cy.get('#json-codeblock .code-block-actions').should('not.exist')
-      cy.get('.json-endpoint').should('not.exist')
+      cy.getTestId('json-endpoint-method').should('not.exist')
     })
 
     it('renders the endpoint in the code block header', () => {
@@ -44,10 +44,11 @@ describe('<JsonCodeBlock />', () => {
       })
 
       cy.get('.json-config').should('be.visible')
-      cy.get('#json-codeblock .code-block-actions .json-endpoint').should('be.visible')
-      cy.get('.json-endpoint .k-badge').should('contain.text', 'get')
-      cy.get('#json-endpoint-codeblock').should('have.text', fetcherUrl)
-      cy.getTestId('code-block-copy-button-json-endpoint-codeblock').should('be.visible')
+      cy.get('#json-codeblock .code-block-actions').within(() => {
+        cy.getTestId('json-endpoint-method').should('be.visible').and('contain.text', 'get')
+        cy.get('#json-endpoint-codeblock').should('have.text', fetcherUrl)
+        cy.getTestId('code-block-copy-button-json-endpoint-codeblock').should('be.visible')
+      })
     })
 
     it('copies the endpoint url', () => {

@@ -15,26 +15,28 @@
         v-if="fetcherUrl"
         #actions
       >
-        <div class="json-endpoint">
-          <KBadge :appearance="requestMethod">
-            {{ requestMethod }}
-          </KBadge>
-          <code
-            id="json-endpoint-codeblock"
-            class="json-endpoint-url"
-            :title="fetcherUrl"
-          >{{ fetcherUrl }}</code>
-          <KClipboardProvider v-slot="{ copyToClipboard }">
-            <KCodeBlockIconButton
-              :aria-label="t('jsonCodeBlock.copy_url')"
-              :copy-tooltip="t('jsonCodeBlock.copy_url')"
-              data-testid="code-block-copy-button-json-endpoint-codeblock"
-              @click="copyToClipboard(fetcherUrl)"
-            >
-              <CopyIcon decorative />
-            </KCodeBlockIconButton>
-          </KClipboardProvider>
-        </div>
+        <KBadge
+          :appearance="requestMethod"
+          class="json-endpoint-method"
+          data-testid="json-endpoint-method"
+        >
+          {{ requestMethod }}
+        </KBadge>
+        <code
+          id="json-endpoint-codeblock"
+          class="json-endpoint-url"
+          :title="fetcherUrl"
+        >{{ fetcherUrl }}</code>
+        <KClipboardProvider v-slot="{ copyToClipboard }">
+          <KCodeBlockIconButton
+            :aria-label="t('jsonCodeBlock.copy_url')"
+            :copy-tooltip="t('jsonCodeBlock.copy_url')"
+            data-testid="code-block-copy-button-json-endpoint-codeblock"
+            @click="copyToClipboard(fetcherUrl)"
+          >
+            <CopyIcon decorative />
+          </KCodeBlockIconButton>
+        </KClipboardProvider>
       </template>
     </KCodeBlock>
   </div>
@@ -100,11 +102,8 @@ const displayedCharLength = computed((): number => {
 </script>
 
 <style lang="scss" scoped>
-.json-endpoint {
-  align-items: center;
-  display: flex;
-  gap: var(--kui-space-30, $kui-space-30);
-  min-width: 0;
+.json-endpoint-method {
+  flex-shrink: 0;
 }
 
 .json-endpoint-url {
@@ -112,6 +111,8 @@ const displayedCharLength = computed((): number => {
   direction: rtl;
   font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
+  // push the copy button to the end of the header
+  margin-right: auto;
   max-width: v-bind('`${displayedCharLength}ch`');
   min-width: 0;
   overflow: hidden;
