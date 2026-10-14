@@ -1401,6 +1401,68 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
+  describe('legacy 6 column layouts', () => {
+    const editableContext = {
+      filters: [],
+      timeSpec: {
+        type: 'relative',
+        time_range: '15m',
+      },
+      editable: true,
+    }
+
+    const legacyConfig = (): DashboardConfig => ({
+      tiles: JSON.parse(JSON.stringify(fourByFourDashboardConfigJustCharts.tiles)).map((tile: TileConfig, i: number) => ({
+        ...tile,
+        layout: { position: { col: (i % 2) * 3, row: Math.floor(i / 2) * 2 }, size: { cols: 3, rows: 2 } },
+      })),
+    })
+
+    const mountRenderer = (modelValue: DashboardConfig) => {
+      cy.mount(DashboardRenderer, {
+        props: { context: editableContext, modelValue },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          },
+        },
+      })
+    }
+
+    it('renders a config without columns at 12 columns without changing the model', () => {
+      const config = legacyConfig()
+
+      mountRenderer(config)
+
+      cy.get('.grid-stack').should('have.class', 'gs-12')
+      cy.getTestId('grid-stack-item-tile-1').should('have.attr', 'gs-w', '6').and('have.attr', 'gs-x', '0')
+      cy.getTestId('grid-stack-item-tile-2').should('have.attr', 'gs-w', '6').and('have.attr', 'gs-x', '6')
+      cy.wrap(config).should((value: DashboardConfig) => {
+        expect(value.columns).to.equal(undefined)
+        expect(value.tiles.map(tile => tile.layout.size.cols)).to.deep.equal([3, 3, 3, 3])
+      })
+    })
+
+    it('migrates the model to 12 columns when tiles are edited', () => {
+      const configRef = ref<DashboardConfig>(legacyConfig())
+
+      mountRenderer(configRef.value)
+      dragTile('tile-tile-3', 'tile-tile-1')
+
+      cy.wrap(configRef).should((value: Ref<DashboardConfig>) => {
+        expect(value.value.columns).to.equal(12)
+        expect(value.value.tiles.map(tile => tile.layout.size.cols)).to.deep.equal([6, 6, 6, 6])
+      })
+    })
+
+    it('renders a config that declares columns as is', () => {
+      mountRenderer({ ...legacyConfig(), columns: 12 })
+
+      cy.get('.grid-stack').should('have.class', 'gs-12')
+      cy.getTestId('grid-stack-item-tile-1').should('have.attr', 'gs-w', '3')
+    })
+  })
+
   it('goes fullscreen when the fullscreen method is called', () => {
     cy.stub(HTMLElement.prototype, 'requestFullscreen').as('fullscreen')
     const props = {

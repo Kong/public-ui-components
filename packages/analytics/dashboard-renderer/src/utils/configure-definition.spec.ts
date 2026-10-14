@@ -295,7 +295,7 @@ describe('configureAllowedDefinition', () => {
 
       expect(result.tiles).toHaveLength(2)
       expect(result.tiles[0].layout?.position).toEqual({ col: 0, row: 0 })
-      // Second tile should wrap to next row (assuming DASHBOARD_COLS is 6)
+      // Second tile should wrap to next row, since configs without `columns` use the legacy 6 column width
       expect(result.tiles[1].layout?.position).toEqual({ col: 0, row: 2 })
     })
 
