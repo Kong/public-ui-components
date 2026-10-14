@@ -84,10 +84,14 @@ const generatedOption = computed((): EChartsOption => ({
       data: data ?? [],
       // Drill-down: click a group to zoom in, and use the breadcrumb to go back
       nodeClick: drillDown ? 'zoomToNode' : false,
+      // `max: Infinity`: ECharts' default cap (5x) stops small nodes on dense charts from ever getting big enough to read.
+      // `min: 1`: no zooming out past the full chart.
+      // `zoomToNodeRatio: 0.2`: a clicked node fills ~20% of the chart, big enough to read while keeping its neighbors in view
+      ...(drillDown ? { scaleLimit: { min: 1, max: Infinity }, zoomToNodeRatio: 0.2 } : {}),
       // Defaults to the full depth
       leafDepth: leafDepth ?? treeDepth(data),
-      // No mouse-wheel zoom or drag-to-pan, so scrolling over the chart scrolls the page
-      roam: false,
+      // Wheel to zoom, drag to pan
+      roam: drillDown,
       // Fill the chart area, leaving room at the bottom for the breadcrumb with drill-down
       left: 0,
       top: 0,

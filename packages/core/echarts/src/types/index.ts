@@ -89,7 +89,10 @@ export interface TreeMapChartProps extends BaseChartProps {
    * To color specific groups or nodes, set `itemStyle.color` on them in `data`.
    */
   colorPalette?: string[]
-  /** Click a group to zoom into it, with a breadcrumb at the bottom to go back. Defaults to `true`. */
+  /**
+   * Click a group to zoom into it, with a breadcrumb at the bottom to go back. Defaults to `true`.
+   * The mouse wheel zooms and dragging pans, so scrolling over the chart doesn't scroll the page.
+   */
   drillDown?: boolean
   /** Initial depth to show: deeper levels appear when drilling into a group. Shows all levels by default. */
   leafDepth?: number
