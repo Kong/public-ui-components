@@ -2,7 +2,6 @@
   <DynamicLayout
     v-bind="props"
     :on-form-change="handleFormChange"
-    :schema="gatedSchema"
   >
     <template #field-renderers>
       <FieldRenderer
@@ -24,16 +23,11 @@ import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from './CustomKeyField.vue'
 import { FieldRenderer } from '@kong-ui-public/freeform'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { useExpressionMode } from '../_shared/use-expression-mode'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 
 const props = defineProps<Props>()
-
-// `limit` and `custom_key` are expressible; gate their expression editors
-// with the rest of the 3.16 features, leaving the fields themselves.
-const { gatedSchema } = useExpressionMode(() => props.schema)
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any

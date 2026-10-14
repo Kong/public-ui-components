@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
-import { FEATURE_FLAGS } from '../../../../constants'
 
 import type { FormSchema } from '@kong-ui-public/freeform'
 
@@ -17,7 +16,7 @@ globalThis.ResizeObserver = class {
   disconnect() {}
 } as any
 
-function mountForm(initialModel: Record<string, any> = {}, expressibleFields = true) {
+function mountForm(initialModel: Record<string, any> = {}) {
   const changes: any[] = []
   const model = ref(initialModel)
 
@@ -33,11 +32,7 @@ function mountForm(initialModel: Record<string, any> = {}, expressibleFields = t
         formModel: {},
       })
     },
-  }), {
-    global: {
-      provide: { [FEATURE_FLAGS.KM_3034_FEATURES_316]: expressibleFields },
-    },
-  })
+  }))
 
   return {
     wrapper,
@@ -55,33 +50,6 @@ const twoLimits = {
   limit: [10, 20],
   window_size: [60, 120],
 }
-
-describe('RateLimitingAdvancedForm — feature gate', () => {
-  it('renders no expression controls while the 3.16 flag is off', () => {
-    const { wrapper } = mountForm({ config: twoLimits }, false)
-
-    expect(wrapper.findAll('[data-testid^="ff-expression-add-"]')).toHaveLength(0)
-    // The plain fields still render on their own.
-    expect(wrapper.find('[data-testid="ff-config.limit.0"]').exists()).toBe(true)
-  })
-
-  it('renders them once the flag is on', () => {
-    const { wrapper } = mountForm({ config: twoLimits }, true)
-
-    expect(wrapper.findAll('[data-testid^="ff-expression-add-"]').length).toBeGreaterThan(0)
-  })
-
-  it('still round-trips a saved expression while the flag is off', () => {
-    const { lastChange } = mountForm({
-      config: twoLimits,
-      expressions: { limit: ['req.size', ''] },
-    }, false)
-
-    // Withholding the schema hides the controls; it must not clear the data a
-    // form that cannot show them is holding.
-    expect(lastChange().expressions).toEqual({ limit: ['req.size', ''] })
-  })
-})
 
 describe('RateLimitingAdvancedForm — emitted payload', () => {
   it('unsets the twin record once no row holds an expression', async () => {
