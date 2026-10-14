@@ -1,4 +1,5 @@
 import TopNTable from './TopNTable.vue'
+import { getActivePalette } from '@kong-ui-public/analytics-utilities/coordination'
 
 const ROUTE_ID = 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6'
 const ROUTE_NAME = 'GetMeAKongDefault (secondaryRuntime)'
@@ -842,10 +843,12 @@ describe('<TopNTable />', () => {
       metricCell(1, 2).find('.top-n-metric-cell-bar-fill').should('have.attr', 'style').and('contain', 'width: 30%')
     })
 
-    it('fills bars with the datavis palette rather than the theme primary color', () => {
+    it('fills bars with the first chart series color rather than the theme primary color', () => {
       mountWithOptions({ cost: { bar: 'relative' } })
 
-      metricCell(0, 2).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', 'rgb(106, 134, 210)')
+      const [r, g, b] = getActivePalette()[0].replace('#', '').match(/../g)!.map(hex => parseInt(hex, 16))
+
+      metricCell(0, 2).find('.top-n-metric-cell-bar-fill').should('have.css', 'background-color', `rgb(${r}, ${g}, ${b})`)
     })
 
     it('sizes max bars against the column maximum', () => {

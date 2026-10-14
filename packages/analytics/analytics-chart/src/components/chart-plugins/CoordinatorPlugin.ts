@@ -22,7 +22,7 @@ const drawLine = (
 }
 
 type CoordinatorPluginConstructor = {
-  coordinator: InteractionCoordinator | null
+  coordinator?: InteractionCoordinator
   requiresUpdate?: boolean
   triggerOnSelf?: boolean
   watchTimestamp?: boolean
@@ -31,7 +31,7 @@ type CoordinatorPluginConstructor = {
 
 export class CoordinatorPlugin implements Plugin {
   id = 'coordinator'
-  coordinator: InteractionCoordinator | null = null
+  coordinator: InteractionCoordinator | undefined = undefined
   instanceId = ''
   stopWatcher: (() => void) | undefined = undefined
   activeDimension: string | null = null

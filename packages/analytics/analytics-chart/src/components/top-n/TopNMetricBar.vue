@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { TopNThresholdType } from '../../utils/topn-columns'
 
-import { datavisPalette } from '../../utils/colors'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 defineProps<{
   ratio: number
   threshold?: TopNThresholdType
 }>()
 
-const defaultBarColor = datavisPalette[1]
+const defaultBarColor = color({ discriminator: 0 })
 </script>
 
 <template>

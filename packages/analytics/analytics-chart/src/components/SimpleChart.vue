@@ -44,7 +44,6 @@ import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
 import { computed, toRef } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette } from '../utils'
 import SingleValue from './chart-types/SingleValue.vue'
 
 const props = defineProps({
@@ -89,7 +88,7 @@ const { i18n } = composables.useI18n()
 const computedChartData = computed(() => {
   const chartData = composables.useExploreResultToDatasets(
     {
-      colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
+      colorPalette: props.chartOptions.chartDatasetColors,
     },
     toRef(props, 'chartData'),
   ).value
