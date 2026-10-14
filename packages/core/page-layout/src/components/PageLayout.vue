@@ -89,11 +89,9 @@
           </div>
         </div>
 
-        <div
-          v-if="!!$slots.actions"
-          class="page-header-actions-container"
-        >
+        <div class="page-header-actions-container">
           <slot name="actions" />
+          <div data-teleport-target="ask-kai" />
         </div>
       </div>
       <PageLayoutTabs
@@ -113,14 +111,24 @@
     </div>
 
     <div
-      class="page-layout-content"
+      class="page-layout-content-container"
       :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
     >
-      <router-view v-if="hasTabs" />
-      <slot
-        v-else
-        name="default"
-      />
+      <div
+        v-if="newAppearance && $slots.aside"
+        class="page-layout-aside-container"
+        data-testid="page-layout-aside"
+      >
+        <slot name="aside" />
+      </div>
+
+      <div class="page-layout-content">
+        <router-view v-if="hasTabs" />
+        <slot
+          v-else
+          name="default"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -262,6 +270,12 @@ $page-layout-header-height: 45px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
+  // Expose the layout's own width as a query container so the content/aside split reacts
+  // to the space the layout actually has (the app shell's side nav, drawers, etc. all eat
+  // into it) rather than to the viewport width. A nested layout registers its own
+  // container, and `@container page-layout` always resolves to the nearest one.
+  container-name: page-layout;
+  container-type: inline-size;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
   .page-layout-header {
@@ -468,15 +482,46 @@ $page-layout-header-height: 45px;
     }
   }
 
-  .page-layout-content {
+  .page-layout-content-container {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
-    flex-direction: column;
+    // Aside is first in the DOM so its heading (usually AboutCard's) ranks early in the
+    // outline; reversing puts it back after the content visually — below it at this width.
+    flex-direction: column-reverse;
     gap: var(--kui-space-50, $kui-space-50);
     padding: var(--kui-space-60, $kui-space-60);
 
     &.has-nested-page-layout {
       padding: var(--kui-space-0, $kui-space-0);
+    }
+
+    @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+      // Same source-order trick, one axis over: the DOM-first aside renders to the right.
+      flex-direction: row-reverse;
+      gap: var(--kui-space-40, $kui-space-40);
+    }
+
+    .page-layout-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--kui-space-50, $kui-space-50);
+      // Flex items default to `min-width: auto`, so wide content (code blocks, tables)
+      // would overflow the row — leftward, under the sidebar, since the row is reversed.
+      min-width: 0;
+      width: 100%;
+    }
+
+    .page-layout-aside-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--kui-space-40, $kui-space-40);
+
+      @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
+        // The content's `width: 100%` overflows the row on its own, so without this the
+        // aside gives up part of its 400px to absorb the overflow instead of the content
+        flex-shrink: 0;
+        width: 400px;
+      }
     }
   }
 }

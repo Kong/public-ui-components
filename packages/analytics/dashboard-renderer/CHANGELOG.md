@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.1.2...%40kong-ui-public%2Fdashboard-renderer%409.2.0) (2026-10-13)
+
+### Features
+
+* **analytics:** support finer granularity in heatmap [MA-5563] ([#3928](https://github.com/Kong/public-ui-components/issues/3928)) ([cacdd21](https://github.com/Kong/public-ui-components/commit/cacdd211ab4c80a5ff1521b5f3dcd48661ac3668))
+
+
+## [9.1.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.1.1...%40kong-ui-public%2Fdashboard-renderer%409.1.2) (2026-10-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [9.1.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.1.0...%40kong-ui-public%2Fdashboard-renderer%409.1.1) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

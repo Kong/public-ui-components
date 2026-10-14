@@ -32,36 +32,31 @@ describe('Infer Partial Source', () => {
 })
 
 describe('isKonnectManagedRedisEnabled', () => {
-  it('is true only for Konnect with FF and for cloud gateway', () => {
+  it('is true for Konnect Cloud Gateway', () => {
     expect(
       isKonnectManagedRedisEnabled({
         app: 'konnect',
-        isKonnectManagedRedisEnabled: true,
         isCloudGateway: true,
       }),
     ).toBe(true)
   })
 
-  it('is false when any of 3 conditions not met', () => {
+  it('is false for Kong Manager or a non-cloud control plane', () => {
     expect(
       isKonnectManagedRedisEnabled({
         app: 'kongManager',
-        isKonnectManagedRedisEnabled: true,
         isCloudGateway: true,
       }),
     ).toBe(false)
     expect(
       isKonnectManagedRedisEnabled({
         app: 'konnect',
-        isKonnectManagedRedisEnabled: false,
-        isCloudGateway: true,
-      }),
-    ).toBe(false)
-    expect(
-      isKonnectManagedRedisEnabled({
-        app: 'konnect',
-        isKonnectManagedRedisEnabled: true,
         isCloudGateway: false,
+      }),
+    ).toBe(false)
+    expect(
+      isKonnectManagedRedisEnabled({
+        app: 'konnect',
       }),
     ).toBe(false)
   })

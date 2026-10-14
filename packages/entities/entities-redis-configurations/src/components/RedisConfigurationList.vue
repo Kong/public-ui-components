@@ -394,34 +394,17 @@ const deleteWarningPluginCount = ref<number>(0)
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
-/** True when list shows both Koko partials and Cloud Gateways managed-cache add-ons (Konnect only) */
+// Combined list: Koko partials plus Cloud Gateways managed-cache add-ons. Require explicit true
+// so hosts that omit isCloudGateway don't call the add-ons API
 const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   props.config.app === 'konnect' &&
-  !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled &&
-  // Konnect-managed Redis is only supported for Cloud Gateways
-  // Require explicit true so hosts that omit this flag don't trigger Cloud Gateways add-ons calls
-  // Other gateway types must keep using the legacy partials flow
   (props.config as KonnectRedisConfigurationListConfig).isCloudGateway === true,
 )
 
-// Determines whether to use Konnect-managed Redis UI (copy, combined fetch, empty state). Kong Manager always false
-const useKonnectManagedRedisUi = computed<boolean>(() => {
-  if (props.config.app !== 'konnect') {
-    return false
-  }
+// Konnect list copy and empty state. Kong Manager stays on the legacy copy
+const useKonnectManagedRedisUi = computed<boolean>(() => props.config.app === 'konnect')
 
-  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-
-  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
-  if (typeof konnectConfig.useKonnectManagedRedisUi === 'boolean') {
-    return konnectConfig.useKonnectManagedRedisUi
-  }
-
-  return isKonnectManagedRedisEnabled.value
-})
-
-// Show CPG-specific empty-state messaging when Konnect-managed Redis UI is enabled and the CP is either the group
-// itself (isControlPlaneGroup) or a member CP (isControlPlaneGroupMember). Standalone CPs skip this
+// CPG empty-state messaging for Konnect when the CP is the group or a member. Standalone CPs skip this
 const showCpgRedisAlert = computed<boolean>(() => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   return shouldShowCpgRedisAlert({

@@ -129,14 +129,12 @@ const { i18n: { t } } = useI18n()
 
 const formConfig = inject(FORMS_CONFIG) as {
   app: string
-  isKonnectManagedRedisEnabled?: boolean
   isCloudGateway?: boolean
 }
 
-// Konnect + FF + non-Cloud Gateway show new managed create form in slideout; else legacy modal
+// Konnect + non-Cloud Gateway: new managed create form in slideout, else legacy modal
 const useSlideout = computed(() => (
   formConfig.app === 'konnect'
-  && !!formConfig.isKonnectManagedRedisEnabled
   && formConfig.isCloudGateway !== true
 ))
 

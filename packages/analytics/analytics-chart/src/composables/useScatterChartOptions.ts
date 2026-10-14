@@ -97,7 +97,9 @@ export default function useScatterChartOptions(chartOptions: ScatterChartOptions
         dayBoundaryCrossed: dayBoundaryCrossed.value,
       }),
     },
-    title: xAxisTitle.value,
+    title: {
+      display: false,
+    },
     border: {
       display: false,
     },

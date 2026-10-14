@@ -67,7 +67,6 @@ const mountSelect = (defaultRedisConfigItem = '') => {
           app: 'konnect',
           apiBaseUrl: '/us/kong-api',
           controlPlaneId: 'cp-1',
-          isKonnectManagedRedisEnabled: true,
           isCloudGateway: false,
         },
         [REDIS_PARTIAL_FETCHER_KEY]: ref(0),

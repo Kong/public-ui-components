@@ -11,7 +11,7 @@ import QueryDataProvider from './QueryDataProvider.vue'
 
 const VISIBLE_ROWS = 10
 
-defineProps<ChartRendererProps<HeatmapChartOptions>>()
+const props = defineProps<ChartRendererProps<HeatmapChartOptions>>()
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
@@ -23,7 +23,7 @@ const metricFormatter = composables.useMetricFormatter()
 
 // Undefined when there are no cells, which shows the empty state
 const buildChartProps = (result: ExploreResultV4) => {
-  const heatmap = exploreResultToHeatmap(result)
+  const heatmap = exploreResultToHeatmap(result, { tz: props.context.tz })
 
   if (!heatmap?.data.length) {
     return undefined

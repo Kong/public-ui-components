@@ -52,7 +52,7 @@ const formConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig>(FOR
 const realFormConfig = computed(() => ({
   ...formConfig,
   cancelRoute: undefined,
-  useKonnectManagedRedisUi: true,
+  // Slideout is the non-cloud create form, so hide the Cloud Gateway step
   isCloudGateway: false,
 }))
 

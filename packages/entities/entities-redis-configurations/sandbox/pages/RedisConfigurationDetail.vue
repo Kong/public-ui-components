@@ -24,7 +24,7 @@ const route = useRoute()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 /**
- * Konnect-managed redis on the config tab when konnect + isCloudGateway + isKonnectManagedRedisEnabled.
+ * Konnect-managed redis on the config tab when konnect + isCloudGateway.
  * cloudGatewaysApiBaseUrl must reach /v2/cloud-gateways/add-ons. On mount resolve entityId to a
  * managed-cache add-on; otherwise the legacy partial card
  */
@@ -35,7 +35,6 @@ const konnectConfig: KonnectRedisConfigurationEntityConfig = {
   controlPlaneId,
   entityId: route.params.id as string,
   formatPreferenceKey: 'redis_configuration_format_preference',
-  isKonnectManagedRedisEnabled: true,
   isCloudGateway: true,
 }
 

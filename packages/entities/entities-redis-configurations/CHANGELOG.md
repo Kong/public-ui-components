@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.20.12...%40kong-ui-public%2Fentities-redis-configurations%401.20.13) (2026-10-13)
+
+### Bug Fixes
+
+* **redis:** managed redis ff cleanup [khcp-21605] ([#3921](https://github.com/Kong/public-ui-components/issues/3921)) ([19b3ef9](https://github.com/Kong/public-ui-components/commit/19b3ef91b7ffd1ce87e2bf7aec788c06708aae26))
+
+
 ## [1.20.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.20.11...%40kong-ui-public%2Fentities-redis-configurations%401.20.12) (2026-10-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
