@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.11...%40kong-ui-public%2Fsandbox-layout%402.8.0) (2026-10-14)
+
+### Features
+
+* **entities-shared:** render JSON endpoint in KCodeBlock actions slot [KM-3402] ([#3930](https://github.com/Kong/public-ui-components/issues/3930)) ([0961b0e](https://github.com/Kong/public-ui-components/commit/0961b0e107deffb0a8a5be7b966da7a462e3797f))
+
+
 ## [2.7.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.7.10...%40kong-ui-public%2Fsandbox-layout%402.7.11) (2026-10-12)
 
 ### Bug Fixes
