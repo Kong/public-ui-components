@@ -134,7 +134,7 @@ import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, Granularity
 import type { ScatterChartColors } from '../utils'
 import { INJECT_DASHBOARD_COORDINATOR } from '../constants'
 
-import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
+import { computed, inject, provide, ref, toRef, useTemplateRef, watch } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -194,6 +194,11 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+
+const instanceUuid = ref<string>(crypto.randomUUID())
+watch(() => props.chartOptions.type, () => {
+  instanceUuid.value = crypto.randomUUID()
+}, { immediate: true })
 
 const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
@@ -317,6 +322,7 @@ const computedChartData = computed(() => {
         themeColors: scatterThemeColors,
       },
       scatterData,
+      instanceUuid.value,
       coordinator,
     ).value
   }
@@ -333,6 +339,7 @@ const computedChartData = computed(() => {
         metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
+      instanceUuid.value,
       coordinator,
     ).value
     : composables.useExploreResultToDatasets(
@@ -341,6 +348,7 @@ const computedChartData = computed(() => {
         colorPalette: props.chartOptions.chartDatasetColors,
       },
       exploreData as ComputedRef<ExploreResultV4>,
+      instanceUuid.value,
       coordinator,
     ).value
 })

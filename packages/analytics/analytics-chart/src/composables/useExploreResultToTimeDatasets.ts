@@ -64,6 +64,7 @@ export const createZeroFilledTimeSeries = (startMs: number, endMs: number, stepM
 export default function useExploreResultToTimeDataset(
   deps: ExploreToDatasetDeps,
   exploreResult: Ref<ExploreResultV4>,
+  uuid: string,
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
@@ -159,8 +160,9 @@ export default function useExploreResultToTimeDataset(
           })
           : datasetLabels.map(label => [label.name, label.id, label.name, label.id === 'empty'])
 
-        const uuid = crypto.randomUUID()
         const customDimensionColors = deps.colorPalette && !Array.isArray(deps.colorPalette) ? deps.colorPalette : undefined
+        const useRawDiscriminator = dimensionIsMetric || !coordinator?.color
+
         const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty], i) => {
           const filled = zeroFilledTimeSeries.map(ts => {
             if (ts in timedEvents && metric in timedEvents[ts]) {
@@ -170,21 +172,15 @@ export default function useExploreResultToTimeDataset(
             return { x: ts, y: 0 }
           })
 
-          const baseColor = dimensionIsMetric
-            ? color({
-              discriminator: i,
-              coordinator: coordinator?.color,
-              order: i,
-              chartUuid: uuid,
-            })
-            : color({
-              dimension,
-              dimensionValue: dimensionId,
-              coordinator: coordinator?.color,
-              order: i,
-              chartUuid: uuid,
-              customDimensionColors,
-            })
+          const baseColor = color({
+            ...(useRawDiscriminator === true && { discriminator: i }),
+            dimension,
+            dimensionValue: dimensionId,
+            coordinator: coordinator?.color,
+            order: i,
+            chartUuid: uuid,
+            customDimensionColors,
+          })
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)

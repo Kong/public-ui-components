@@ -45,10 +45,10 @@ export const jitter = (jitterMs: number, seed: number): number => {
 export default function useScatterDatasets(
   deps: ScatterDatasetDeps,
   scatterData: Ref<ScatterChartData | undefined>,
+  uuid: string,
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const uuid = crypto.randomUUID()
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -139,6 +139,7 @@ export default function useScatterDatasets(
         const name = (dimension && display?.[groupId]?.name) || groupId
         const isSegmentEmpty = groupId === 'empty'
         const baseColor = color({
+          ...(!coordinator?.color && { discriminator: i }),
           dimension,
           dimensionValue: groupId,
           coordinator: coordinator?.color,

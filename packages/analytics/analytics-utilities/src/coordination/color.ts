@@ -35,9 +35,9 @@ export const generateDiscriminator = (id: string): number => djb2(id)
 
 /**
  * Returns the palette that `color()`/`colorByDiscriminator()` will index into for
- * the given theme and optional custom palette. Useful for callers (e.g. a color
- * coordinator) that need to know the palette length in order to assign and spread
- * discriminator indices consistently with how colors are ultimately resolved.
+ * the given theme. Useful for callers (e.g. a color coordinator) that need to
+ * know the palette length in order to assign and spread discriminator indices
+ * consistently with how colors are ultimately resolved.
  */
 export const getActivePalette = ({
   theme = 'light',

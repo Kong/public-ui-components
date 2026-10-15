@@ -34,7 +34,6 @@ export type ColorCoordinatorResolveArgs = {
    * to `color()` so the assigned indices resolve to the intended palette.
    */
   theme?: 'light' | 'dark'
-  customPalette?: string[]
 }
 
 /**

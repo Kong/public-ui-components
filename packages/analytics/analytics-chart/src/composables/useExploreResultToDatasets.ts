@@ -17,6 +17,7 @@ function generateDatasets({
   pivotRecords,
   rowLabels,
   seriesDimension = undefined,
+  uuid,
 }: {
   barSegmentLabels: DatasetLabel[]
   coordinator?: InteractionCoordinator
@@ -27,21 +28,16 @@ function generateDatasets({
   pivotRecords: { [k: string]: string | number | null | undefined }
   rowLabels: DatasetLabel[]
   seriesDimension?: string
+  uuid: string
 }): Dataset[] {
   const { i18n } = composables.useI18n()
-  const uuid = crypto.randomUUID()
 
   if (isMultiMetric) {
     return metricNames.map((metric, i) => {
       return {
         // @ts-ignore - dynamic i18n key
         label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
-        backgroundColor: color({
-          discriminator: i,
-          coordinator: coordinator?.color,
-          order: metricNames.indexOf(metric),
-          chartUuid: uuid,
-        }),
+        backgroundColor: color({ discriminator: i }),
         data: rowLabels.map((rowPosition, i) => {
           return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
         }),
@@ -64,6 +60,7 @@ function generateDatasets({
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
       backgroundColor: color({
+        ...(!coordinator?.color && { discriminator: i }),
         dimension: seriesDimension,
         dimensionValue: dimension.id,
         coordinator: coordinator?.color,
@@ -82,6 +79,7 @@ function generateDatasets({
 export default function useExploreResultToDatasets(
   deps: ExploreToDatasetDeps,
   exploreResult: Ref<ExploreResultV4>,
+  uuid: string,
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
 
@@ -175,6 +173,7 @@ export default function useExploreResultToDatasets(
           pivotRecords,
           rowLabels,
           seriesDimension: secondaryDimension,
+          uuid,
         })
 
         // The labels here are for the axes.  They don't impact the tooltip or legend.

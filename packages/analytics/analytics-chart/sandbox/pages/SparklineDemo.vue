@@ -299,7 +299,7 @@ const fetcher = () => {
 
 .layout {
   display: flex;
-  gap: --var(--kui-space-80, $kui-space-80);
+  gap: var(--kui-space-80, $kui-space-80);
 }
 
 .table-card {
@@ -310,8 +310,8 @@ const fetcher = () => {
 .controls {
   display: flex;
   flex-direction: column;
-  gap: --var(--kui-space-80, $kui-space-80);
-  margin-bottom: --var(--kui-space-80, $kui-space-80);
+  gap: var(--kui-space-80, $kui-space-80);
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 
   &:last-of-type {
     margin-bottom: 0;
