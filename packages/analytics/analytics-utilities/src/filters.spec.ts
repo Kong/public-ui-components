@@ -41,7 +41,7 @@ describe('getFieldDataSources', () => {
   })
 
   it.each([
-    ['ai_provider'],
+    ['llm_embeddings_model'],
     ['ai_response_model'],
     ['ai_request_model'],
   ])('does not include agentic_usage for AI dimension "%s"', (dimension) => {

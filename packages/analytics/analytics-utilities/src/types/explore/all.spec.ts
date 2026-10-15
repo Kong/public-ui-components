@@ -25,7 +25,7 @@ describe('stripUnknownFilters', () => {
   // a filter that's only in the llm_usage datasource
   const llmFilter = {
     operator: 'in',
-    field: 'ai_provider',
+    field: 'llm_embeddings_provider',
     value: ['foo'],
   }
 
