@@ -68,6 +68,7 @@ export const filterableRequestDimensions = makeFilterable(queryableRequestDimens
 export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
 
 export const queryableRequestWildcardDimensions = [
+  'ai_gateway_version',
   'auth_type',
   'cache_status',
   'client_ip',
