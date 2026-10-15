@@ -96,3 +96,35 @@ describe('color utils - colorByStatusCodeGroup()', () => {
     expect(result).not.toEqual(neutral)
   })
 })
+
+describe('color utils - color() override priority', () => {
+  it('prefers state over a custom dimension color', () => {
+    expect(color({ state: 'neutral', dimensionValue: 'foo', customDimensionColors: { foo: '#123456' } }))
+      .toBe(colorByState({ state: 'neutral' }))
+  })
+
+  it('prefers state over a discriminator', () => {
+    expect(color({ state: 'neutral', discriminator: 3 })).toBe(colorByState({ state: 'neutral' }))
+  })
+
+  it('prefers a custom dimension color over the empty/other overrides', () => {
+    expect(color({ dimensionValue: 'empty', customDimensionColors: { empty: '#123456' } })).toBe('#123456')
+    expect(color({ dimensionValue: '____OTHER____', customDimensionColors: { '____OTHER____': '#654321' } })).toBe('#654321')
+  })
+
+  it('prefers a custom dimension color over status code colors and the discriminator', () => {
+    expect(color({ dimension: 'status_code', dimensionValue: '200', customDimensionColors: { 200: '#123456' } })).toBe('#123456')
+    expect(color({ dimensionValue: 'foo', discriminator: 2, customDimensionColors: { foo: '#123456' } })).toBe('#123456')
+  })
+
+  it('prefers empty/other and status code overrides over the discriminator', () => {
+    expect(color({ dimensionValue: 'empty', discriminator: 2 })).toBe(colorByState({ state: 'empty' }))
+    expect(color({ dimension: 'status_code', dimensionValue: '200', discriminator: 2 })).toBe(colorByStatusCode({ statusCode: '200' }))
+    expect(color({ dimension: 'status_code_grouped', dimensionValue: '2XX', discriminator: 2 })).toBe(colorByStatusCodeGroup({ group: '2XX' }))
+  })
+
+  it('uses the discriminator when no overrides apply', () => {
+    expect(color({ dimension: 'service', dimensionValue: 'foo', discriminator: 2 }))
+      .toBe(colorByDiscriminator({ discriminator: 2, theme: 'light' }))
+  })
+})

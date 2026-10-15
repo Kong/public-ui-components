@@ -135,30 +135,22 @@ export const color = ({
     theme = activeColorMode.value
   }
 
-  // Custom overrides win over everything else
-  if (dimensionValue !== undefined && customDimensionColors !== undefined && customDimensionColors[dimensionValue]) {
-    return customDimensionColors[dimensionValue]
-  }
-
-  // if discriminator is defined, always use it.
-  if (discriminator !== undefined) {
-    return colorByDiscriminator({
-      discriminator,
-      theme,
-    })
-  }
-
-  // state must be second as it's for handling specific cases regardless of data
+  // state must be first as it's for handling specific cases regardless of data
   if (state !== undefined) {
     return colorByState({ state })
   }
 
-  // a universal color override for any dimension value of 'empty'
+  // handle overrides that come from config
+  if (dimensionValue !== undefined && customDimensionColors !== undefined && customDimensionColors[dimensionValue]) {
+    return customDimensionColors[dimensionValue]
+  }
+
+  // handle overrides for specific dimension values
   if (dimensionValue && ['empty', '____OTHER____'].includes(dimensionValue)) {
     return colorByState({ state: dimensionValue as ColorState })
   }
 
-  // if we have specific overrides for this dimension
+  // handle overrides for status codes
   if (dimension !== undefined && dimensionValue !== undefined) {
     if (dimension === 'status_code') {
       return colorByStatusCode({ statusCode: dimensionValue })
@@ -167,6 +159,14 @@ export const color = ({
     if (dimension === 'status_code_grouped') {
       return colorByStatusCodeGroup({ group: dimensionValue })
     }
+  }
+
+  // If defined, use the descriminator
+  if (discriminator !== undefined) {
+    return colorByDiscriminator({
+      discriminator,
+      theme,
+    })
   }
 
   // otherwise, generate a discriminator using the information we have
