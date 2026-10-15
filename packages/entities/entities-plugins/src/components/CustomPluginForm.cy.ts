@@ -1,6 +1,7 @@
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import type { KonnectCustomPluginFormConfig, KongManagerCustomPluginFormConfig } from '../types'
+import { FEATURE_FLAGS } from '../constants'
 import CustomPluginForm from './CustomPluginForm.vue'
 
 const konnectConfig: KonnectCustomPluginFormConfig = {
@@ -146,6 +147,32 @@ describe('<CustomPluginForm />', () => {
       // Step 3 should show alias name and priority
       cy.getTestId('custom-plugin-alias-name').should('exist')
       cy.getTestId('custom-plugin-priority').should('exist')
+    })
+
+    it('should hide flagged default clonable plugins when the flag is not provided', () => {
+      cy.mount(CustomPluginForm, {
+        props: { config: { ...kongManagerConfig } },
+        router,
+      })
+
+      cy.getTestId('custom-plugin-type-cloned').click()
+      cy.getTestId('custom-plugin-clone-select').click()
+      cy.getTestId('select-item-acl').should('exist')
+      cy.getTestId('select-item-rate-limiting-advanced').should('not.exist')
+    })
+
+    it('should show flagged default clonable plugins when the flag is provided', () => {
+      cy.mount(CustomPluginForm, {
+        props: { config: { ...kongManagerConfig } },
+        global: {
+          provide: { [FEATURE_FLAGS.KM_3444_GATEWAY_317]: true },
+        },
+        router,
+      })
+
+      cy.getTestId('custom-plugin-type-cloned').click()
+      cy.getTestId('custom-plugin-clone-select').click()
+      cy.getTestId('select-item-rate-limiting-advanced').should('exist')
     })
 
     it('should reset fields when switching plugin type', () => {

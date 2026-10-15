@@ -484,7 +484,9 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType, ComponentPublicInstance } from 'vue'
-import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
+import type { MaybeRef } from 'vue'
+import { computed, inject, onMounted, provide, reactive, ref, unref, watch } from 'vue'
+import { FEATURE_FLAGS } from '../constants'
 import type {
   ClonedPluginPayload,
   KonnectCustomPluginFormConfig,
@@ -499,7 +501,8 @@ import { useRouter } from 'vue-router'
 import { usePluginMetaData } from '../composables/usePluginMeta'
 import { isPluginSchemaInUseError } from '../utils/customPluginErrors'
 
-const DEFAULT_CLONABLE_PLUGINS = [
+// An entry with `flag` is only clonable when the consuming app provides that flag as enabled
+const DEFAULT_CLONABLE_PLUGINS: Array<string | { name: string, flag: string }> = [
   'acl',
   'datakit',
   'file-log',
@@ -510,6 +513,7 @@ const DEFAULT_CLONABLE_PLUGINS = [
   'openid-connect',
   'post-function',
   'pre-function',
+  { name: 'rate-limiting-advanced', flag: FEATURE_FLAGS.KM_3444_GATEWAY_317 },
   'request-transformer-advanced',
   'request-transformer',
   'response-transformer-advanced',
@@ -729,8 +733,14 @@ watch(() => state.fields.pluginType, () => {
 
 const { getDisplayName } = usePluginMetaData()
 
+const featureFlags: Record<string, MaybeRef<boolean>> = {
+  [FEATURE_FLAGS.KM_3444_GATEWAY_317]: inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_3444_GATEWAY_317, false),
+}
+
 const clonablePluginItems = computed(() => {
   const plugins = props.config?.clonablePlugins ?? DEFAULT_CLONABLE_PLUGINS
+    .filter(entry => typeof entry === 'string' || unref(featureFlags[entry.flag]))
+    .map(entry => typeof entry === 'string' ? entry : entry.name)
   if (plugins.length === 0) return []
 
   // Group plugins by their group from PLUGIN_METADATA
