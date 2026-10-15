@@ -23,6 +23,18 @@
     </section>
 
     <section class="example">
+      <h2>Long-tail model usage by user (dense data)</h2>
+      <TreeMapChart
+        :data="modelUsage"
+        height="480px"
+        series-name="Model usage"
+        tooltip-title="Model usage"
+        :value-formatter="formatCount"
+      />
+      <p>Nine model groups, each with a few heavy users and a long tail of tiny ones. Click a tiny box to zoom into it: the zoom has no ceiling, so even the smallest nodes become readable, with their neighbors still in view. Scroll to zoom and drag to pan around.</p>
+    </section>
+
+    <section class="example">
       <h2>Values with a formatter</h2>
       <TreeMapChart
         :data="resources"
@@ -141,6 +153,49 @@ const providerModels: TreeMapDataNode[] = MODEL_ENTRIES.map(([provider, models])
     }
   }),
 }))
+
+// Small seeded PRNG (mulberry32), so the dense example looks the same on every load
+const seededRandom = (seed: number): (() => number) => {
+  let state = seed
+  return () => {
+    state = (state + 0x6D2B79F5) | 0
+    let t = Math.imul(state ^ (state >>> 15), 1 | state)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const FIRST_NAMES = ['alex', 'maria', 'chen', 'priya', 'omar', 'sofia', 'liam', 'yuki', 'noah', 'ana', 'ivan', 'zoe', 'raj', 'emma', 'leo', 'mia']
+const LAST_NAMES = ['smith', 'garcia', 'wang', 'patel', 'khan', 'rossi', 'jones', 'sato', 'singh', 'silva', 'petrov', 'lee', 'nair', 'muller', 'kim', 'dubois']
+
+// `userCount` users with a heavy long-tail (Zipf-like) share of `total` requests, plus an `Others` bucket
+const usageGroup = (name: string, total: number, userCount: number, random: () => number): TreeMapDataNode => {
+  const weights = Array.from({ length: userCount }, (_, index) => (1 / (index + 1) ** 1.3) * (0.7 + random() * 0.6))
+  const weightSum = weights.reduce((sum, weight) => sum + weight, 0)
+
+  const children: TreeMapDataNode[] = weights.map((weight, index) => ({
+    // The index keeps every email unique within the group
+    name: `${FIRST_NAMES[Math.floor(random() * FIRST_NAMES.length)]}.${LAST_NAMES[Math.floor(random() * LAST_NAMES.length)]}${index + 1}@example.com`,
+    value: Math.max(1, Math.round((weight / weightSum) * total)),
+  }))
+  children.push({ name: 'Others', value: Math.max(1, Math.round(total * 0.02)) })
+
+  return { name, children }
+}
+
+const modelUsageRandom = seededRandom(20240607)
+const modelUsage: TreeMapDataNode[] = [
+  usageGroup('claude-opus-5-5', 52000, 140, modelUsageRandom),
+  usageGroup('claude-sonnet-5-5', 90000, 180, modelUsageRandom),
+  usageGroup('claude-haiku-5-5', 31000, 110, modelUsageRandom),
+  usageGroup('gpt-5-mini', 40000, 130, modelUsageRandom),
+  usageGroup('gpt-5', 26000, 90, modelUsageRandom),
+  usageGroup('gemini-3-pro', 12000, 60, modelUsageRandom),
+  usageGroup('gemini-3-flash', 7000, 40, modelUsageRandom),
+  // A couple of tiny top-level groups
+  usageGroup('mistral-large-3', 300, 6, modelUsageRandom),
+  usageGroup('llama-5-70b', 120, 3, modelUsageRandom),
+]
 </script>
 
 <style lang="scss" scoped>

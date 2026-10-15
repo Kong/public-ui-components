@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { init, use } from 'echarts/core'
+import { SVGRenderer } from 'echarts/renderers'
 import TreeMapChart from './TreeMapChart.vue'
 import ECharts from '../ECharts.vue'
+import type { EChartsOption } from 'echarts'
+import type { EChartsType } from 'echarts/core'
 import type { ChartTooltipContent, TreeMapDataNode } from '../../types/index.ts'
 import {
   KUI_COLOR_BACKGROUND,
@@ -16,6 +20,9 @@ import {
   KUI_COLOR_BACKGROUND_NEUTRAL,
   KUI_COLOR_TEXT,
 } from '@kong/design-tokens'
+
+// For the zoom specs, which run the option through a real ECharts instance
+use([SVGRenderer])
 
 const mountChart = (props: Record<string, unknown> = {}) => mount(TreeMapChart, {
   props,
@@ -109,13 +116,76 @@ describe('<TreeMapChart />', () => {
     })
   })
 
-  it('drills down with a breadcrumb by default, without wheel zoom', () => {
+  it('drills down with a breadcrumb and roams by default', () => {
     const option = chartOption(mountChart({ data }))
 
-    expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: false, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
+    expect(option.series[0]).toMatchObject({ nodeClick: 'zoomToNode', roam: true, left: 0, top: 0, right: 0, bottom: 40, visibleMin: 0 })
     expect(option.series[0].breadcrumb.show).toBe(true)
     // The full depth, so every level shows and the breadcrumb follows the view root
     expect(option.series[0].leafDepth).toBe(2)
+  })
+
+  describe('zooming into a node', () => {
+    // A long tail of 100 users, down to `user99`, which starts too small to draw at all
+    const longTail: TreeMapDataNode[] = [
+      {
+        name: 'claude',
+        children: Array.from({ length: 100 }, (_, i) => ({ name: `user${i}`, value: Math.round(1e6 / (i + 1) ** 3) })),
+      },
+      { name: 'gpt', children: [{ name: 'other', value: 500_000 }] },
+    ]
+
+    // Room for the breadcrumb is left below the 600x400 treemap area
+    const CHART_AREA = 600 * 400
+
+    /** Runs the option through a real ECharts instance, server-side so no canvas is needed */
+    const renderChart = (option: EChartsOption) => {
+      const instance = init(null, null, { renderer: 'svg', ssr: true, width: 600, height: 440 })
+
+      instance.setOption(option)
+
+      return instance
+    }
+
+    /** The node's laid out rect, in chart pixels */
+    const nodeRect = (instance: EChartsType, name: string) => {
+      const { tree } = (instance as any).getModel().getSeriesByIndex(0).getData()
+      let rect
+
+      tree.root.eachNode((node: any) => {
+        if (node.name === name) {
+          rect = node.getLayout()
+        }
+      })
+
+      return rect as unknown as { width: number, height: number }
+    }
+
+    const zoomTo = (instance: EChartsType, name: string) => {
+      instance.dispatchAction({ type: 'treemapZoomToNode', targetNodeId: name })
+    }
+
+    it('zooms the smallest node until it fills about a fifth of the chart', () => {
+      const instance = renderChart(chartOption(mountChart({ data: longTail })))
+
+      expect(nodeRect(instance, 'user99').width).toBeLessThan(1)
+
+      zoomTo(instance, 'user99')
+
+      const { width, height } = nodeRect(instance, 'user99')
+
+      expect(width * height / CHART_AREA).toBeCloseTo(0.2, 1)
+      // Roughly square, so its label has room
+      expect(Math.min(width, height)).toBeGreaterThan(150)
+    })
+
+    it('leaves the smallest node unreadable when seriesOption restores the ECharts 5x zoom ceiling', () => {
+      const instance = renderChart(chartOption(mountChart({ data: longTail, seriesOption: { scaleLimit: { max: 5 } } })))
+
+      zoomTo(instance, 'user99')
+
+      expect(nodeRect(instance, 'user99').width).toBeLessThan(5)
+    })
   })
 
   it('defaults leafDepth to 1 for flat data', () => {
@@ -127,7 +197,7 @@ describe('<TreeMapChart />', () => {
   it('is a static chart filling the whole area with drillDown false', () => {
     const option = chartOption(mountChart({ data, drillDown: false }))
 
-    expect(option.series[0]).toMatchObject({ nodeClick: false, bottom: 0 })
+    expect(option.series[0]).toMatchObject({ nodeClick: false, roam: false, bottom: 0 })
     expect(option.series[0].breadcrumb.show).toBe(false)
   })
 

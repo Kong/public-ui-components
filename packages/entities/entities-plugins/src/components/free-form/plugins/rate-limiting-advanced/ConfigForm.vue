@@ -18,37 +18,35 @@
   </ObjectField>
 
   <AdvancedFields hide-general-fields>
-    <EnumField
-      :multiple="true"
-      name="config.compound_identifier"
+    <ObjectField
+      as-child
+      name="config"
+      :omit="PRIMARY_FIELDS"
+      reset-label-path="reset"
     />
-    <Field
-      v-if="getSchema('config.counter_key')"
-      name="config.counter_key"
-    />
-    <Field name="config.sync_rate" />
-    <Field name="config.namespace" />
-    <Field name="config.strategy" />
-    <RedisField />
-    <Field name="config.dictionary_name" />
-    <Field name="config.lock_dictionary_name" />
-    <Field name="config.hide_client_headers" />
-    <Field name="config.retry_after_jitter_max" />
-    <Field name="config.header_name" />
-    <Field name="config.path" />
-    <Field name="config.throttling" />
-    <Field name="config.enforce_consumer_groups" />
-    <Field name="config.consumer_groups" />
-    <Field name="config.disable_penalty" />
   </AdvancedFields>
 </template>
 
 <script setup lang="ts">
-import { Field, EnumField, ObjectField, useFormShared } from '@kong-ui-public/freeform'
+import { Field, ObjectField, useFormShared } from '@kong-ui-public/freeform'
 import AdvancedFields from '../../components/AdvancedFields.vue'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
-import RedisField from './RedisField.vue'
+
+/**
+ * Fields rendered by hand in the section above, kept out of Advanced.
+ */
+const PRIMARY_FIELDS = [
+  'custom_key',
+  'identifier',
+  // RequestLimitsForm
+  'limit',
+  'window_size',
+  'window_type',
+  // ErrorMessageForm
+  'error_code',
+  'error_message',
+]
 
 const { getSchema } = useFormShared()
 </script>

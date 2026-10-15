@@ -98,6 +98,7 @@
     "ai_gateway_data_plane_node": "AI gateway data plane node",
     "ai_gateway_mcp_server": "AI gateway MCP server",
     "ai_gateway_model": "AI gateway model",
+    "ai_gateway_version": "AI gateway version",
     "ai_count": "LLM request count",
     "ai_plugin": "AI plugin",
     "ai_provider": "Provider",
