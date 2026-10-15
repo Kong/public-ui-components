@@ -17,14 +17,21 @@ const PRIMARY_FIELDS = ['limit', 'window_size', 'window_type', 'error_code', 'er
 
 const redis = { host: 'redis.example.com', port: 6379 }
 
-const mountForm = (config: Record<string, any>) => {
+const partial = { id: 'redis-1', name: 'Shared Redis', type: 'redis-ee', config: { host: '127.0.0.1', port: 6379 } }
+
+const mockPartials = () => {
+  cy.intercept('GET', '**/partials?size=1000', { body: { data: [partial] } }).as('getPartials')
+  cy.intercept('GET', `**/partials/${partial.id}`, { body: partial }).as('getPartial')
+}
+
+const mountForm = (config: Record<string, any>, { isEditing = false } = {}) => {
   cy.mount(ServiceProtectionForm, {
     props: {
       schema: { type: 'record', ...schema } as unknown as FormSchema,
       formSchema: { fields: [] },
       formModel: {},
       model: { config: { limit: [10], window_size: [60], ...config } },
-      isEditing: false,
+      isEditing,
       pluginName: 'service-protection',
       onFormChange: cy.spy().as('onFormChange'),
     },
@@ -36,7 +43,7 @@ const mountForm = (config: Record<string, any>) => {
         [REDIS_PARTIAL_INFO as symbol]: {
           redisType: ref('redis-ee'),
           redisPath: ref('config.redis'),
-          isEditing: false,
+          isEditing,
         },
         [FORMS_CONFIG]: {
           app: 'kongManager',
@@ -91,4 +98,25 @@ describe('<ServiceProtectionForm />', () => {
     // `config.redis` is required, so a hidden one resets to its schema defaults rather than null
     lastFormChange().its('config.redis.host').should('not.equal', redis.host)
   })
+
+  for (const isEditing of [false, true]) {
+    it(`clears a selected partial once the strategy leaves redis (${isEditing ? 'edit' : 'create'})`, () => {
+      mockPartials()
+      mountForm({ strategy: 'redis' }, { isEditing })
+
+      cy.wait('@getPartials')
+      // Editing an entry without a partial opens in dedicated mode
+      cy.getTestId('shared-redis-config-radio').click()
+      cy.getTestId('redis-config-select-trigger').click()
+      cy.getTestId(`select-item-${partial.id}`).click()
+      cy.wait('@getPartial')
+      lastFormChange().its('partials').should('deep.equal', [{ id: partial.id }])
+
+      cy.getTestId('ff-config.strategy').click()
+      cy.getTestId('ff-enum-config.strategy-items').findTestId('select-item-local').click()
+
+      // Editing PATCHes the plugin, so only `null` unlinks a stored partial
+      lastFormChange().its('partials').should(isEditing ? 'be.null' : 'be.undefined')
+    })
+  }
 })
