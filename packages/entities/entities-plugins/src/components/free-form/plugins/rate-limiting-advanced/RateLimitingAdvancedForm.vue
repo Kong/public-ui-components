@@ -23,10 +23,6 @@
           multiple
         />
       </FieldRenderer>
-
-      <FieldRenderer :match="({ path }) => path === 'config.redis'">
-        <RedisField />
-      </FieldRenderer>
     </template>
 
     <ConfigForm />
@@ -38,7 +34,6 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from './CustomKeyField.vue'
-import RedisField from './RedisField.vue'
 import { EnumField, FieldRenderer } from '@kong-ui-public/freeform'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
 import { useExpressionMode } from '../_shared/use-expression-mode'
@@ -49,7 +44,8 @@ import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 
 const props = defineProps<Props>()
 
-// Keep the Redis settings right under the strategy that reveals them
+// `config.redis` is rendered by the RedisSelector that PluginConfigurationForm registers
+// for the partial's path; these rules keep it right under `strategy` and show it only for redis.
 const renderRules: RenderRules = {
   bundles: [
     ['config.strategy', 'config.redis'],
