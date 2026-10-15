@@ -8,6 +8,7 @@ import {
   type ColorState,
 } from './color-overrides'
 import { KUI_COLOR_BACKGROUND_NEUTRAL } from '@kong/design-tokens'
+import type { ColorCoordinator } from '../types/interaction-coordinator'
 
 // Chart series 9 is reserved for empty values.
 export const lightPalette = [
@@ -32,19 +33,28 @@ export const darkPalette = [
 
 export const generateDiscriminator = (id: string): number => djb2(id)
 
+/**
+ * Returns the palette that `color()`/`colorByDiscriminator()` will index into for
+ * the given theme. Useful for callers (e.g. a color coordinator) that need to
+ * know the palette length in order to assign and spread discriminator indices
+ * consistently with how colors are ultimately resolved.
+ */
+export const getActivePalette = ({
+  theme = 'light',
+}: {
+  theme?: 'light' | 'dark'
+} = {}): string[] => {
+  return theme === 'dark' ? darkPalette : lightPalette
+}
+
 export const colorByDiscriminator = ({
   discriminator,
   theme = 'light',
-  customPalette = undefined,
 }: {
   discriminator: number
   theme?: 'light' | 'dark'
-  customPalette?: string[]
 }): string => {
   const integerDiscriminator = Math.abs(Math.floor(discriminator))
-  if (customPalette) {
-    return customPalette[integerDiscriminator % customPalette.length]
-  }
 
   return theme === 'dark'
     ? darkPalette[integerDiscriminator % darkPalette.length]
@@ -89,14 +99,35 @@ export const color = ({
   dimension = undefined,
   dimensionValue = undefined,
   metric = undefined,
-  customPalette = undefined,
+  coordinator = undefined,
+  order = undefined,
+  chartUuid = undefined,
+  customDimensionColors = undefined,
 }: {
   discriminator?: number
   state?: ColorState
   dimension?: string
   dimensionValue?: string
   metric?: string
-  customPalette?: string[]
+  /**
+   * An optional cross-chart color coordinator (e.g. from
+   * `useInteractionCoordinator().color`). When provided, generic series colors
+   * are assigned through it so they stay consistent across charts and distinct
+   * within a chart. Has no effect on override colors (status codes, states,
+   * empty/other) or when an explicit `discriminator` is given.
+   */
+  coordinator?: ColorCoordinator
+  /**
+   * This series' rank within its chart (e.g. 1 for the highest value). Used by
+   * the coordinator to avoid giving adjacent series the same color.
+   */
+  order?: number
+  /**
+   * The uuid of the chart requesting the color. Allows the coordinator to
+	 * correctly group a chart's series when avoiding adjacent collisions.
+   */
+  chartUuid?: string
+  customDimensionColors?: Record<string, string>
 }): string => {
   let theme: 'light' | 'dark' = 'light'
   if (hasInjectionContext()) {
@@ -104,26 +135,22 @@ export const color = ({
     theme = activeColorMode.value
   }
 
-  // if discriminator is defined, always use it.
-  if (discriminator !== undefined) {
-    return colorByDiscriminator({
-      discriminator,
-      theme,
-      customPalette,
-    })
-  }
-
-  // state must be second as it's for handling specific cases regardless of data
+  // state must be first as it's for handling specific cases regardless of data
   if (state !== undefined) {
     return colorByState({ state })
   }
 
-  // a universal color override for any dimension value of 'empty'
+  // handle overrides that come from config
+  if (dimensionValue !== undefined && customDimensionColors !== undefined && customDimensionColors[dimensionValue]) {
+    return customDimensionColors[dimensionValue]
+  }
+
+  // handle overrides for specific dimension values
   if (dimensionValue && ['empty', '____OTHER____'].includes(dimensionValue)) {
     return colorByState({ state: dimensionValue as ColorState })
   }
 
-  // if we have specific overrides for this dimension
+  // handle overrides for status codes
   if (dimension !== undefined && dimensionValue !== undefined) {
     if (dimension === 'status_code') {
       return colorByStatusCode({ statusCode: dimensionValue })
@@ -134,12 +161,23 @@ export const color = ({
     }
   }
 
+  // If defined, use the descriminator
+  if (discriminator !== undefined) {
+    return colorByDiscriminator({
+      discriminator,
+      theme,
+    })
+  }
+
   // otherwise, generate a discriminator using the information we have
   if (dimension || dimensionValue || metric) {
+    const name = `${dimension ?? ''}${dimensionValue ?? ''}${metric ?? ''}`
+    const discriminatorValue = coordinator
+      ? coordinator.resolveDiscriminator({ name, order, chartUuid, theme })
+      : generateDiscriminator(name)
     return colorByDiscriminator({
-      discriminator: generateDiscriminator(`${dimension ?? ''}${dimensionValue ?? ''}${metric ?? ''}`),
+      discriminator: discriminatorValue,
       theme,
-      customPalette,
     })
   }
 

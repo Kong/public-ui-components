@@ -42,9 +42,8 @@ import composables from '../composables'
 import type { SimpleChartOptions } from '../types'
 import GaugeChart from './chart-types/GaugeChart.vue'
 import type { PropType } from 'vue'
-import { computed, toRef } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette } from '../utils'
 import SingleValue from './chart-types/SingleValue.vue'
 
 const props = defineProps({
@@ -85,13 +84,18 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
+const instanceUuid = ref<string>(crypto.randomUUID())
+watch(() => props.chartOptions.type, () => {
+  instanceUuid.value = crypto.randomUUID()
+}, { immediate: true })
 
 const computedChartData = computed(() => {
   const chartData = composables.useExploreResultToDatasets(
     {
-      colorPalette: props.chartOptions.chartDatasetColors || datavisPalette,
+      colorPalette: props.chartOptions.chartDatasetColors,
     },
     toRef(props, 'chartData'),
+    instanceUuid.value,
   ).value
 
   if (props.chartOptions?.reverseDataset) {

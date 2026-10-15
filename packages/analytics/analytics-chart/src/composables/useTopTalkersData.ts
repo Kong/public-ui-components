@@ -32,7 +32,7 @@ export default function useTopTalkersData(
       // intensity, i.e. with the maximum tint value. This will cap the scale to 0.5
       const scaled = Math.min(cell.ratio, 0.5) / 0.5
 
-      return { ...cell, color: color({ metric: sizeMetric.value }), tint: `${MIN_TINT + scaled * (MAX_TINT - MIN_TINT)}%` }
+      return { ...cell, color: color({ discriminator: 0 }), tint: `${MIN_TINT + scaled * (MAX_TINT - MIN_TINT)}%` }
     })
   }
 

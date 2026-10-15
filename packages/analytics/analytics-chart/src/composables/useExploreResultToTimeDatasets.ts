@@ -1,18 +1,15 @@
-import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4, InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
 import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import type { Ref } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
 
 import { computed } from 'vue'
-import { isNullOrUndef } from 'chart.js/helpers'
 import { parseISO } from 'date-fns'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
   defaultLineOptions,
-  datavisPalette,
   BORDER_WIDTH,
   NO_BORDER,
-  determineBaseColor,
   isChartLabel,
   RIGHT_Y_AXIS_ID,
 } from '../utils'
@@ -67,10 +64,10 @@ export const createZeroFilledTimeSeries = (startMs: number, endMs: number, stepM
 export default function useExploreResultToTimeDataset(
   deps: ExploreToDatasetDeps,
   exploreResult: Ref<ExploreResultV4>,
+  uuid: string,
+  coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-  const useColors = evaluateFeatureFlag('analytics-color-updates', false)
 
   const chartData: Ref<KChartData> = computed(() => {
     try {
@@ -121,6 +118,7 @@ export default function useExploreResultToTimeDataset(
         const offsetMs = originToOffset(startMs)
         const zeroFilledTimeSeries = createZeroFilledTimeSeries(startMs, endMs, stepMs, offsetMs, records)
 
+        const dimensionIsMetric = !dimensionFieldNames.length
         const timedEvents = !records?.length
           ? {}
           : records.reduce((acc: { [label: string]: any }, druidRow) => {
@@ -144,7 +142,7 @@ export default function useExploreResultToTimeDataset(
                     acc[timestamp][metric] = {}
                   }
                   acc[timestamp][metric][label.id] = Math.round(Number(event[metric]) * 1e3) / 1e3
-                } else if (!dimensionFieldNames.length) { // using metrics as dimensions
+                } else if (dimensionIsMetric) {
                   if (!acc[timestamp][metric]) {
                     acc[timestamp][metric] = {}
                   }
@@ -162,6 +160,9 @@ export default function useExploreResultToTimeDataset(
           })
           : datasetLabels.map(label => [label.name, label.id, label.name, label.id === 'empty'])
 
+        const customDimensionColors = deps.colorPalette && !Array.isArray(deps.colorPalette) ? deps.colorPalette : undefined
+        const useRawDiscriminator = dimensionIsMetric || !coordinator?.color
+
         const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimensionId, dimensionName, isSegmentEmpty], i) => {
           const filled = zeroFilledTimeSeries.map(ts => {
             if (ts in timedEvents && metric in timedEvents[ts]) {
@@ -171,16 +172,15 @@ export default function useExploreResultToTimeDataset(
             return { x: ts, y: 0 }
           })
 
-          // eslint-disable-next-line prefer-const
-          let { colorPalette, fill } = deps
-
-          if (isNullOrUndef(colorPalette)) {
-            colorPalette = datavisPalette
-          }
-
-          const baseColor = useColors
-            ? color({ dimension, dimensionValue: dimensionId })
-            : determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette)
+          const baseColor = color({
+            ...(useRawDiscriminator === true && { discriminator: i }),
+            dimension,
+            dimensionValue: dimensionId,
+            coordinator: coordinator?.color,
+            order: i,
+            chartUuid: uuid,
+            customDimensionColors,
+          })
           const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
           const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
           const metricIndex = metricNames.findIndex(name => name === metric)
@@ -203,8 +203,8 @@ export default function useExploreResultToTimeDataset(
             ...(isRightAxis ? { yAxisID: RIGHT_Y_AXIS_ID } : {}),
             // When a second y axis is added it will need a separate unit label
             ...(deps.metricAxisMap ? { unit: metricUnits?.[metric as keyof typeof metricUnits] ?? '' } : {}),
-            fill,
-            borderWidth: fill ? NO_BORDER : BORDER_WIDTH,
+            fill: deps.fill,
+            borderWidth: deps.fill ? NO_BORDER : BORDER_WIDTH,
             isSegmentEmpty,
           }
         })

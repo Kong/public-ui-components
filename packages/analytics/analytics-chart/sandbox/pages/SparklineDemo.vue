@@ -154,7 +154,7 @@
 import { computed, ref, inject } from 'vue'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SparklineChart } from '../../src'
-import { lookupDatavisColor } from '../../src/utils/colors'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
@@ -221,12 +221,12 @@ const generateRandomDatasets = (labels: string[]) => {
   for (let i = 0; i < datasetCount.value; i++) {
     const timestamps = generateRandomData()
     const label = labels[i]
-    const color = lookupDatavisColor(i)
+    const colorVal = color({ discriminator: i })
 
     generatedDatasets.push({
       timestamps,
       label,
-      ...(useColor.value && { color }),
+      ...(useColor.value && { color: colorVal }),
     })
   }
 
@@ -299,7 +299,7 @@ const fetcher = () => {
 
 .layout {
   display: flex;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 }
 
 .table-card {
@@ -310,8 +310,8 @@ const fetcher = () => {
 .controls {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
-  margin-bottom: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 
   &:last-of-type {
     margin-bottom: 0;

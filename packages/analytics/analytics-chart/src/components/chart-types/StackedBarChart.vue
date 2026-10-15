@@ -58,6 +58,7 @@
 import type { ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
@@ -65,7 +66,7 @@ import type { Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { type BarChartData, generateLegendItems } from '../../utils'
-import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, conditionalDataTotal, debounce } from '../../utils'
+import { MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, conditionalDataTotal, debounce } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition } from '../../enums'
@@ -88,6 +89,7 @@ const props = withDefaults(defineProps<{
   chartLegendSortFn?: ChartLegendSortFn
   chartTooltipSortFn?: ChartTooltipSortFn
   tooltipMetricDisplay?: string
+  coordinator?: InteractionCoordinator
 }>(), {
   tooltipTitle: '',
   legendValues: undefined,
@@ -101,6 +103,7 @@ const props = withDefaults(defineProps<{
   chartLegendSortFn: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
   chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
   tooltipMetricDisplay: '',
+  coordinator: undefined,
 })
 
 const { i18n } = composables.useI18n()
@@ -108,9 +111,8 @@ const { translateUnit } = composables.useTranslatedUnits()
 const axisCanvasId = crypto.randomUUID()
 const chartCanvasId = crypto.randomUUID()
 const highlightPlugin = new HighlightPlugin()
-const coordinator: InteractionCoordinator | null = inject('analytics-dashboard-coordinator', null)
 const coordinatorPlugin = new CoordinatorPlugin({
-  coordinator,
+  coordinator: props.coordinator,
   triggerOnSelf: true,
   watchTimestamp: false,
   watchDimension: true,
@@ -174,7 +176,7 @@ const makeAnnotations = (data: BarChartData, label: string, unit: string, orient
       ? { x: 'start', y: 'center' }
       : { x: 'center', y: 'end' },
     xAdjust: (ctx: EventContext) => isHorizontal ? getTextWidth(formatNumber(totalValueOfDataset(ctx, label), unit)) : 0,
-    color: accessibleGrey,
+    color: color({ state: 'neutral' }),
   }
 
   return {

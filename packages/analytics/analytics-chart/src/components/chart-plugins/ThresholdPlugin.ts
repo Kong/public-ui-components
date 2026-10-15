@@ -1,10 +1,11 @@
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
 import { KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import type { Dataset, Threshold, ThresholdType } from 'src/types'
 import type { createI18n } from '@kong-ui-public/i18n'
 import type english from '../../locales/en.json'
-import { LEFT_Y_AXIS_ID, thresholdColor } from '../../utils'
+import { LEFT_Y_AXIS_ID } from '../../utils'
 
 const HOVER_TRIGGER_DELTA = 20
 const THRESHOLD_ERROR_BRUSH_COLOR = 'rgba(255, 171, 171, 0.4)'
@@ -212,7 +213,7 @@ export class ThresholdPlugin implements Plugin {
           context.moveTo(chart.chartArea.left, yValue)
           context.lineTo(chart.chartArea.right, yValue)
           context.lineWidth = 1
-          context.strokeStyle = thresholdColor(t.type)
+          context.strokeStyle = color({ state: t.type })
           context.setLineDash([5, 5])
           context.stroke()
           context.restore()
@@ -230,7 +231,7 @@ export class ThresholdPlugin implements Plugin {
 
           if (t.hovered) {
             context.save()
-            context.fillStyle = thresholdColor(t.type)
+            context.fillStyle = color({ state: t.type })
             context.font = KUI_FONT_FAMILY_TEXT
             context.fillText(text, chart.chartArea.left, yValue - 4)
             context.restore()
@@ -249,13 +250,13 @@ export class ThresholdPlugin implements Plugin {
           context.fillRect(xStart, chart.chartArea.top, xEnd - xStart, chart.chartArea.bottom - chart.chartArea.top)
           context.restore()
 
-          // Draw a horizontal line at the bottom of the chart area of thresholdColor(t.type)
+          // Draw a horizontal line at the bottom of the chart area
           context.save()
           context.beginPath()
           context.moveTo(xStart, chart.chartArea.bottom)
           context.lineTo(xEnd, chart.chartArea.bottom)
           context.lineWidth = 2
-          context.strokeStyle = thresholdColor(intersection.type)
+          context.strokeStyle = color({ state: intersection.type })
           context.stroke()
           context.restore()
         })

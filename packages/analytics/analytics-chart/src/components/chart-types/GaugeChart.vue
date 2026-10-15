@@ -40,7 +40,6 @@ import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import { datavisPalette } from '../../utils'
 import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
@@ -72,7 +71,7 @@ const props = defineProps({
   datasetColors: {
     type: Object as PropType<AnalyticsChartColors | string[]>,
     required: false,
-    default: datavisPalette,
+    default: () => [] as string[],
   },
   height: {
     type: String,

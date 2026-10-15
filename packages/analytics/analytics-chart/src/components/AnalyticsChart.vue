@@ -50,6 +50,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         :dimension-axes-title="timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
@@ -75,6 +76,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         data-testid="bar-chart-container"
         :dimension-axes-title="dimensionAxesTitle"
         :legend-values="legendValues"
@@ -89,6 +91,7 @@
       <DonutChart
         v-else-if="isDonutChart"
         :chart-data="computedChartData"
+        :coordinator="coordinator"
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
@@ -105,6 +108,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
+        :coordinator="coordinator"
         data-testid="scatter-chart-container"
         :dimension-axes-title="scatterXAxisTitle"
         :granularity="scatterGranularity"
@@ -126,10 +130,11 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, YAxisConfig, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, YAxisPosition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues, InteractionCoordinator, YAxisPosition } from '@kong-ui-public/analytics-utilities'
 import type { ScatterChartColors } from '../utils'
+import { INJECT_DASHBOARD_COORDINATOR } from '../constants'
 
-import { computed, inject, provide, toRef, useTemplateRef } from 'vue'
+import { computed, inject, provide, ref, toRef, useTemplateRef, watch } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -167,6 +172,8 @@ interface ChartProps {
   exploreLink?: ExternalLink
 }
 
+const coordinator: InteractionCoordinator | undefined = inject(INJECT_DASHBOARD_COORDINATOR)
+
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
   (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
@@ -187,6 +194,11 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+
+const instanceUuid = ref<string>(crypto.randomUUID())
+watch(() => props.chartOptions.type, () => {
+  instanceUuid.value = crypto.randomUUID()
+}, { immediate: true })
 
 const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
@@ -310,6 +322,8 @@ const computedChartData = computed(() => {
         themeColors: scatterThemeColors,
       },
       scatterData,
+      instanceUuid.value,
+      coordinator,
     ).value
   }
 
@@ -321,17 +335,21 @@ const computedChartData = computed(() => {
     ? composables.useExploreResultToTimeDataset(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        colorPalette: props.chartOptions.chartDatasetColors,
         metricAxisMap: metricAxisMap.value,
       },
       displayedExploreData as ComputedRef<ExploreResultV4>,
+      instanceUuid.value,
+      coordinator,
     ).value
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.stacked,
-        colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
+        colorPalette: props.chartOptions.chartDatasetColors,
       },
       exploreData as ComputedRef<ExploreResultV4>,
+      instanceUuid.value,
+      coordinator,
     ).value
 })
 

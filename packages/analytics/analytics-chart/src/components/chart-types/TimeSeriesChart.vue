@@ -75,7 +75,6 @@ import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
 import { ThresholdPlugin } from '../chart-plugins/ThresholdPlugin'
-import { INJECT_DASHBOARD_COORDINATOR } from '../../constants'
 
 interface TimeSeriesChartProps {
   chartData?: KChartData
@@ -98,6 +97,7 @@ interface TimeSeriesChartProps {
   threshold?: Record<ExploreAggregations, Threshold[]>
   leftYAxisGrid?: boolean
   rightYAxis?: YAxisConfig
+  coordinator?: InteractionCoordinator
 }
 
 const props = withDefaults(
@@ -121,6 +121,7 @@ const props = withDefaults(
     threshold: undefined,
     leftYAxisGrid: undefined,
     rightYAxis: undefined,
+    coordinator: undefined,
   },
 )
 
@@ -143,9 +144,8 @@ const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
-const coordinator: InteractionCoordinator | null = inject(INJECT_DASHBOARD_COORDINATOR, null)
 const coordinatorPlugin = new CoordinatorPlugin({
-  coordinator,
+  coordinator: props.coordinator,
   triggerOnSelf: true,
   watchTimestamp: true,
   watchDimension: true,

@@ -275,6 +275,7 @@ describe('useVitalsExploreDatasets', () => {
       })
     }
     const emptyDatasets = result.value.datasets.filter(ds => ds.isSegmentEmpty)
+    // 'empty' dimension values always use the empty state color, regardless of metric
     expect(emptyDatasets[0].borderColor).toBe(emptyDatasets[1].borderColor)
     expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_average')).toMatchObject({ borderDash: [] })
     expect(emptyDatasets.find(ds => ds.rawMetric === 'response_latency_p99')).toMatchObject({ borderDash: [4, 2] })

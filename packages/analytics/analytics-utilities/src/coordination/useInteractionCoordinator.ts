@@ -1,4 +1,5 @@
 import { readonly, ref } from 'vue'
+import useColorCoordinator from './useColorCoordinator'
 import type {
   InteractionCoordinator,
   InteractionCoordinatorActivateProps,
@@ -6,12 +7,22 @@ import type {
 } from '../types'
 
 /**
- * The interaction coordinator is used to report when the user is interacting
- * with a timestamp, dimension, dimension value, and/or a metric. Use one instance
- * of the coordinator in multiple components (e.g. with `provide`/`inject`, or
- * as a prop) and within those components `watch` the things you want the component
- * to react to (e.g. `watch(coordinatorInstance.activeDimension, (dim) => highlight(dim)`)
- * within those components and also `activate` when the user interacts.
+ * The interaction coordinator is used for
+ *
+ * * reporting any interaction between a user and a chart so that other charts
+ *     can react to it
+ * * coordinating multiple charts to use the same colors while minimizing
+ *     sequential series with the same color
+ *
+ * Use one instance of the coordinator for each logical grouping of charts. So,
+ * dashboards use `provide`/`inject` to provide an instance of this coordinator
+ * to each of its charts. Each of those charts then calls the color util with
+ * that instance.
+ *
+ * Within each chart component we `watch` the things that we want the component
+ * to react to (e.g. `watch(coordinatorInstance.activeDimension, (dim) =>
+ * highlight(dim)`). Also each of those chart components call `activate` when
+ * the user interacts with them.
  *
  * For performance concerns, please try to respect the `<foo>_DEBOUNCE_MS` constants
  * so that we're only firing certain kinds of interaction (and thereby triggering
@@ -26,6 +37,8 @@ export default function useInteractionCoordinator(): InteractionCoordinator {
   const DIMENSION_DEBOUNCE_MS = 300
   const METRIC_DEBOUNCE_MS = 300
   const TIMESTAMP_DEBOUNCE_MS = 10
+
+  const color = useColorCoordinator()
 
   const activate = ({
     chartUuid,
@@ -64,5 +77,6 @@ export default function useInteractionCoordinator(): InteractionCoordinator {
     DIMENSION_DEBOUNCE_MS,
     METRIC_DEBOUNCE_MS,
     TIMESTAMP_DEBOUNCE_MS,
+    color,
   }
 }
