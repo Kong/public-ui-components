@@ -9,22 +9,31 @@
   </ObjectField>
 
   <AdvancedFields hide-general-fields>
-    <Field name="config.dictionary_name" />
-    <Field name="config.lock_dictionary_name" />
-    <Field name="config.strategy" />
-    <RedisField />
-    <Field name="config.namespace" />
-    <Field name="config.hide_client_headers" />
-    <Field name="config.disable_penalty" />
-    <Field name="config.retry_after_jitter_max" />
-    <Field name="config.sync_rate" />
+    <ObjectField
+      as-child
+      name="config"
+      :omit="PRIMARY_FIELDS"
+      reset-label-path="reset"
+    />
   </AdvancedFields>
 </template>
 
 <script setup lang="ts">
-import { Field, ObjectField } from '@kong-ui-public/freeform'
+import { ObjectField } from '@kong-ui-public/freeform'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
 import AdvancedFields from '../../components/AdvancedFields.vue'
-import RedisField from './RedisField.vue'
+
+/**
+ * Fields rendered by hand in the section above, kept out of Advanced.
+ */
+const PRIMARY_FIELDS = [
+  // RequestLimitsForm
+  'limit',
+  'window_size',
+  'window_type',
+  // ErrorMessageForm
+  'error_code',
+  'error_message',
+]
 </script>
