@@ -10,6 +10,7 @@ export const FEATURE_FLAGS = {
   KM_2485_CLONED_PLUGINS: 'KM-2485-cloned-plugins',
   KHCP_20393_IDENTITY_PRINCIPALS_UI: 'khcp-20393-identity-principals-ui',
   KM_3034_FEATURES_316: 'KM-3034-features-316',
+  KM_3444_GATEWAY_317: 'KM-3444-gateway-317',
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')

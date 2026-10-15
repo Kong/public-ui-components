@@ -63,7 +63,7 @@ Supports both Konnect and Kong Manager configurations.
     - type: `string[]`
     - required: `false`
     - default: `undefined`
-    - Array of available plugin names for cloning. Only needed when using "Cloned" plugin type.
+    - Array of available plugin names for cloning. Only needed when using "Cloned" plugin type. When omitted, a default list is used; feature-flagged entries (e.g. `rate-limiting-advanced`, controlled by `FEATURE_FLAGS.KM_3444_GATEWAY_317`) are only included when the consuming app provides the flag as enabled.
 
   - `workspace`:
     - type: `string` for Kong Manager, `string | null` for Konnect
