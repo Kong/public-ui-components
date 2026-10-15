@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.3.0...%40kong-ui-public%2Fanalytics-utilities%4013.4.0) (2026-10-15)
+
+### Features
+
+* aigw version wildcard ([#3938](https://github.com/Kong/public-ui-components/issues/3938)) ([e2d4b04](https://github.com/Kong/public-ui-components/commit/e2d4b046243e82f1de38e21c312d9e2957a18f0d))
+
+
 # [13.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.2.0...%40kong-ui-public%2Fanalytics-utilities%4013.3.0) (2026-10-14)
 
 ### Features
