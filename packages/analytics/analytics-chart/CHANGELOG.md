@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.3.1...%40kong-ui-public%2Fanalytics-chart%4012.4.0) (2026-10-15)
+
+### Features
+
+* **analytics:** update color utils to handle distinctness within a single chart [MA-5501] ([#3935](https://github.com/Kong/public-ui-components/issues/3935)) ([8e8630f](https://github.com/Kong/public-ui-components/commit/8e8630f29710b4d245af12da6d54412c2f873868))
+
+
 ## [12.3.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.3.0...%40kong-ui-public%2Fanalytics-chart%4012.3.1) (2026-10-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

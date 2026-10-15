@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.4.0...%40kong-ui-public%2Fanalytics-utilities%4013.5.0) (2026-10-15)
+
+### Features
+
+* add provider and model to agentic usage MA-5561 ([#3939](https://github.com/Kong/public-ui-components/issues/3939)) ([d2a7a2e](https://github.com/Kong/public-ui-components/commit/d2a7a2e3df1bb5aed36d4300cab37f9a0e9e30d5))
+* **analytics:** update color utils to handle distinctness within a single chart [MA-5501] ([#3935](https://github.com/Kong/public-ui-components/issues/3935)) ([8e8630f](https://github.com/Kong/public-ui-components/commit/8e8630f29710b4d245af12da6d54412c2f873868))
+
+
 # [13.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4013.3.0...%40kong-ui-public%2Fanalytics-utilities%4013.4.0) (2026-10-15)
 
 ### Features
