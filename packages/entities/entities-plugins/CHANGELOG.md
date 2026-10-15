@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.275.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.274.2...%40kong-ui-public%2Fentities-plugins%409.275.0) (2026-10-15)
+
+### Features
+
+* **entities-plugins:** add rate-limiting-advanced to clonable plugins behind 3.17 flag [KM-3429] ([#3936](https://github.com/Kong/public-ui-components/issues/3936)) ([dd2da63](https://github.com/Kong/public-ui-components/commit/dd2da6393e9270acb31a66dedc1c090696771599))
+
+
 ## [9.274.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.274.1...%40kong-ui-public%2Fentities-plugins%409.274.2) (2026-10-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
