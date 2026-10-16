@@ -4,7 +4,10 @@
 
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
-import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
+// this specifier is redirected by our own vite-plugin to a bundle trimmed to the languages/themes a consuming app
+// configured. Importing the real `'shiki'` package name here would make the plugin redirect
+// every `shiki` import in the consuming app, including ones unrelated to Monaco.
+import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'virtual:@kong-ui-public/monaco-editor/shiki'
 import { ref } from 'vue'
 
 // Flag if monaco loaded
