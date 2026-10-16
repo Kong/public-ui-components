@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.2.0...%40kong-ui-public%2Fpage-layout%401.2.1) (2026-10-16)
+
+### Bug Fixes
+
+* **page-layout:** new appearance horizontal padding ([#3941](https://github.com/Kong/public-ui-components/issues/3941)) ([c52a7a2](https://github.com/Kong/public-ui-components/commit/c52a7a20779b167977b3ea845dec715ff7177890))
+
+
 # [1.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.1.18...%40kong-ui-public%2Fpage-layout%401.2.0) (2026-10-14)
 
 ### Features
