@@ -3,8 +3,11 @@ import { exploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 import { defineComponent, h, type PropType } from 'vue'
 import type { AnalyticsChartOptions, Dataset, KChartData, Threshold } from '../types'
-import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import type { DatasourceConfig } from '@kong-ui-public/analytics-utilities'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
 import AnalyticsChart from './AnalyticsChart.vue'
 
@@ -25,6 +28,7 @@ const TimeSeriesChartStub = defineComponent({
     return () => h('div', {
       'data-testid': 'time-series-chart-stub',
       'data-metric-unit': props.metricUnit,
+      'data-tooltip-metric-display': props.tooltipMetricDisplay,
     })
   },
 })
@@ -56,9 +60,10 @@ const groupedMetricsResult: ExploreResultV4 = {
   },
 }
 
-const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line' }: {
+const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line', datasourceConfig = [] as DatasourceConfig[] }: {
   chartData?: ExploreResultV4
   type?: AnalyticsChartOptions['type']
+  datasourceConfig?: DatasourceConfig[]
 } = {}) => mount(AnalyticsChart, {
   props: {
     chartData,
@@ -68,6 +73,13 @@ const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line'
     },
   },
   global: {
+    provide: {
+      [INJECT_QUERY_PROVIDER]: {
+        queryFn: () => Promise.reject('No query fn'),
+        configFn: () => Promise.reject('No config fn'),
+        datasourceConfigFn: () => Promise.resolve(datasourceConfig),
+      },
+    },
     stubs: {
       TimeSeriesChart: TimeSeriesChartStub,
       StackedBarChart: true,
@@ -78,6 +90,10 @@ const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line'
 })
 
 describe('<AnalyticsChart /> activeMetric', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders the host-selected metric without an internal control', async () => {
     const wrapper = mountChart()
 
@@ -184,6 +200,10 @@ describe('<AnalyticsChart /> activeMetric', () => {
 })
 
 describe('<AnalyticsChart /> dual y axis', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   const requestsVsSpendResult: ExploreResultV4 = {
     data: [
       { timestamp: '2026-09-09T15:00:00Z', event: { ai_request_count: 620, cost: 4.5 } },
@@ -227,5 +247,55 @@ describe('<AnalyticsChart /> dual y axis', () => {
     const chart = mountDualAxis({ type: 'timeseries_bar' }).findComponent(TimeSeriesChartStub)
 
     expect(chart.props('rightYAxis')).toBeUndefined()
+  })
+})
+
+describe('<AnalyticsChart /> datasource config labels', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  const singleMetricResult: ExploreResultV4 = {
+    data: [
+      { timestamp: '2026-09-09T15:00:00Z', event: { response_latency_average: 10 } },
+    ],
+    meta: {
+      start: '2026-09-09T15:00:00Z',
+      end: '2026-09-09T16:00:00Z',
+      granularity_ms: 3600000,
+      metric_names: ['response_latency_average'],
+      metric_units: { response_latency_average: 'ms' },
+      query_id: 'test-query',
+      display: {},
+    },
+  }
+
+  it('prefers labels from the datasource config store', async () => {
+    const datasourceConfig: DatasourceConfig[] = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'response_latency_average',
+        label: 'Custom latency label',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    const wrapper = mountChart({ chartData: singleMetricResult, datasourceConfig })
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="time-series-chart-stub"]').attributes('data-tooltip-metric-display'))
+      .toBe('Custom latency label')
+  })
+
+  it('falls back to i18n when the metric is not in the datasource config', async () => {
+    const wrapper = mountChart({ chartData: singleMetricResult })
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="time-series-chart-stub"]').attributes('data-tooltip-metric-display'))
+      .toBe('Response latency (avg)')
   })
 })

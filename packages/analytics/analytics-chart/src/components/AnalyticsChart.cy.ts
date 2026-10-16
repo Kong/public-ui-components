@@ -6,6 +6,7 @@ import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { createPinia, setActivePinia } from 'pinia'
 
 function mouseMove({
   x1,
@@ -120,6 +121,7 @@ const dragChartAreaAndReturn = ({ x, y }: { x: number, y: number }) => {
 
 const mockQueryProvider = {
   evaluateFeatureFlagFn: () => true,
+  datasourceConfigFn: () => Promise.resolve([]),
 }
 
 describe('<AnalyticsChart />', () => {
@@ -172,6 +174,7 @@ describe('<AnalyticsChart />', () => {
 
   beforeEach(() => {
     cy.viewport(1280, 800)
+    setActivePinia(createPinia())
     cy.stub(composables, 'useEvaluateFeatureFlag').returns({
       evaluateFeatureFlag: () => false,
     })

@@ -86,6 +86,9 @@ import {
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import type { AlignX } from '../../types'
 import composables from '../../composables'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+
+const datasourceConfigStore = useDatasourceConfigStore()
 
 const { i18n } = composables.useI18n()
 const { formatBytes, formatCost } = unitFormatter({ i18n })
@@ -139,6 +142,14 @@ const trendCurrent = computed<undefined | number>(() => {
 const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const formattedMetricName = computed((): string => {
+  if (metricName.value) {
+    const metricLabel = datasourceConfigStore.fieldTranslationMap.get(metricName.value)
+
+    if (metricLabel) {
+      return metricLabel
+    }
+  }
+
   return i18n.te(`chartLabels.${metricName.value}` as any)
     ? i18n.t(`chartLabels.${metricName.value}` as any)
     : ''

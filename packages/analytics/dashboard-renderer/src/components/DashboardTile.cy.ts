@@ -19,6 +19,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
     fields: [
       {
         name: 'api_product',
+        label: 'API product',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -30,6 +31,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'control_plane',
+        label: 'Control plane',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -41,6 +43,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'gateway_service',
+        label: 'Gateway service',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -52,6 +55,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'route',
+        label: 'Route',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -63,6 +67,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'status_code',
+        label: 'Status code',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -74,6 +79,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'request_count',
+        label: 'Request count',
         showInUI: true,
         aggregation: true,
         group: false,
@@ -88,6 +94,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
     fields: [
       {
         name: 'ai_response_model',
+        label: 'Response model',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -99,6 +106,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'ai_provider',
+        label: 'Provider',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -110,6 +118,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'ai_request_model',
+        label: 'Request model',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -128,6 +137,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
     fields: [
       {
         name: 'status_code',
+        label: 'Status code',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -139,6 +149,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
       },
       {
         name: 'route',
+        label: 'Route',
         showInUI: true,
         aggregation: false,
         group: true,

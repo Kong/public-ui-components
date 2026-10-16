@@ -154,6 +154,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import ScatterChart from './chart-types/ScatterChart.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 interface ChartProps {
   chartData: ExploreResultV4 | ScatterChartData
@@ -194,6 +195,8 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+
+const datasourceConfigStore = useDatasourceConfigStore()
 
 const instanceUuid = ref<string>(crypto.randomUUID())
 watch(() => props.chartOptions.type, () => {
@@ -438,6 +441,12 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
 
   if (!metricName) {
     return undefined
+  }
+
+  const datasourceLabel = datasourceConfigStore.fieldTranslationMap.get(metricName)
+
+  if (datasourceLabel) {
+    return datasourceLabel
   }
 
   // @ts-ignore - dynamic i18n key
