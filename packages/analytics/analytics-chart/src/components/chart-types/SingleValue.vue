@@ -1,7 +1,7 @@
 <template>
   <div
     class="chart-parent"
-    :class="alignmentClass"
+    :class="[alignmentClass, { compact }]"
     data-testid="single-value-parent"
   >
     <KEmptyState
@@ -30,13 +30,17 @@
             &nbsp;{{ metricUnit }}
           </span>
         </div>
-        <div class="single-value-metric-name">
+        <div
+          v-if="!compact && !hideMetricName"
+          class="single-value-metric-name"
+        >
           {{ formattedMetricName }}
         </div>
       </div>
       <div
         v-if="showTrend"
         class="single-value-trend"
+        :class="textColor(polarity)"
       >
         <div
           class="trend-change"
@@ -117,6 +121,16 @@ const props = defineProps({
   alignX: {
     type: String as PropType<AlignX>,
     default: 'left',
+  },
+  /** Hides the metric name below the value and makes the font smaller */
+  compact: {
+    type: Boolean,
+    default: false,
+  },
+  /** Without a custom title the tile header shows the metric name, this will hide the metric name below the value */
+  hideMetricName: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -511,6 +525,49 @@ onMounted(() => {
       .single-value-metric-name {
         font-size: var(--kui-font-size-40, $kui-font-size-40);
         line-height: var(--kui-line-height-40, $kui-line-height-40);
+      }
+    }
+  }
+
+  &.compact .single-value-wrapper {
+    gap: 0;
+
+    .single-value,
+    .single-value-unit {
+      font-size: var(--kui-font-size-70, $kui-font-size-70);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-60, $kui-line-height-60);
+    }
+
+    .single-value-trend {
+      column-gap: var(--kui-space-20, $kui-space-20);
+
+      &.positive {
+        color: var(--kui-color-text-success, $kui-color-text-success);
+      }
+
+      &.negative {
+        color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
+      }
+
+      &.neutral {
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+      }
+
+      .trend-change {
+        font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+        padding: var(--kui-space-0, $kui-space-0);
+
+        &.positive,
+        &.negative,
+        &.neutral {
+          background-color: transparent;
+        }
+      }
+
+      .single-value-trend-range {
+        color: inherit;
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
       }
     }
   }

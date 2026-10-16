@@ -28,8 +28,10 @@
       <SingleValue
         v-if="isSingleValueChart"
         :align-x="chartOptions.alignX"
+        :compact="chartOptions.compact"
         :data="chartData"
         :decimal-points="chartOptions.decimalPoints"
+        :hide-metric-name="chartOptions.hideMetricName"
         :increase-is-bad="chartOptions.increaseIsBad"
         :show-trend="chartOptions.showTrend"
       />
