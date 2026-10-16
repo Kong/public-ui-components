@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import RateLimitingForm from './RateLimitingForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting'
-import { FEATURE_FLAGS } from '../../../../constants'
 
 import type { FormSchema } from '@kong-ui-public/freeform'
 
@@ -26,9 +25,7 @@ function mountForm(model: Record<string, any> = {}) {
         formModel: {},
       })
     },
-  }), {
-    global: { provide: { [FEATURE_FLAGS.KM_3034_FEATURES_316]: true } },
-  })
+  }))
 }
 
 describe('RateLimitingForm', () => {

@@ -2,7 +2,6 @@
   <DynamicLayout
     v-bind="props"
     :render-rules="renderRules"
-    :schema="gatedSchema"
   >
     <template #field-renderers>
       <FieldRenderer
@@ -42,7 +41,6 @@ import { FieldRenderer, NumberField } from '@kong-ui-public/freeform'
 import type { RenderRules } from '@kong-ui-public/freeform'
 import useI18n from '../../../../composables/useI18n'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { useExpressionMode } from '../_shared/use-expression-mode'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 
@@ -59,12 +57,6 @@ const LIMIT_FIELDS = new Set([
   'config.month',
   'config.year',
 ])
-
-// `second`..`year` and `custom_key` are expressible; gate them with the rest
-// of the 3.16 features.
-// `second`..`year` and `custom_key` are expressible; gate their expression
-// editors with the rest of the 3.16 features, leaving the fields themselves.
-const { gatedSchema } = useExpressionMode(() => props.schema)
 
 // A custom component owns its own render rules, so these live here rather than
 // in the plugin config.

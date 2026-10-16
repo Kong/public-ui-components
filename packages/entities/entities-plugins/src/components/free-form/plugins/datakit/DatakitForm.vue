@@ -44,7 +44,6 @@
     </template>
 
     <template
-      v-if="enableCaCertificates"
       #section-advanced
     >
       <KCollapse
@@ -87,7 +86,6 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 import english from '../../../../locales/en.json'
-import { FEATURE_FLAGS } from '../../../../constants'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
 import CaCertificatesField from './CaCertificatesField.vue'
 import CodeEditor from './CodeEditor.vue'
@@ -157,9 +155,6 @@ const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
   return modes
 })
 
-// Advanced configuration section (ca_certificates), gated behind KM-3034-features-316.
-const enableCaCertificates = inject<boolean>(FEATURE_FLAGS.KM_3034_FEATURES_316, false)
-
 const advancedCollapsed = ref(!(props.isEditing && !!props.model?.config?.ca_certificates?.length))
 
 const configSections = computed<ConfigSection[]>(() => {
@@ -169,14 +164,11 @@ const configSections = computed<ConfigSection[]>(() => {
       title: t('plugins.free-form.datakit.flow_editor.mode'),
       description: t('plugins.free-form.datakit.description_flow'),
     },
-  ]
-
-  if (enableCaCertificates) {
-    sections.push({
+    {
       name: 'advanced',
       title: t('plugins.free-form.datakit.advanced_configuration.title'),
-    })
-  }
+    },
+  ]
 
   return sections
 })
