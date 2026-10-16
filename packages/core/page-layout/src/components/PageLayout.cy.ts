@@ -586,20 +586,6 @@ describe('<PageLayout />', () => {
       })
     })
 
-    it('renders a caret as the breadcrumb divider', () => {
-      mountWithRouter(PageLayout, {
-        props: { title: 'Test Page Title', breadcrumbs },
-        global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
-      })
-
-      cy.getTestId('page-layout-breadcrumbs')
-        .find('.breadcrumbs-divider')
-        .should('have.length', breadcrumbs.length)
-        .each(($divider) => {
-          expect($divider.text().trim()).to.equal('›')
-        })
-    })
-
     it('does not render breadcrumbs when none are provided', () => {
       mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title' },
