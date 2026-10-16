@@ -22,7 +22,7 @@
               v-if="newAppearance"
               #divider
             >
-              &rsaquo;
+              <ChevronRightIcon decorative />
             </template>
           </KBreadcrumbs>
           <div class="title-container">
@@ -139,7 +139,7 @@ import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
-import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
+import { ArrowTopLeftIcon, StarIcon, StarFillIcon, ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
@@ -412,7 +412,7 @@ $page-layout-header-height: 45px;
     // specificity rather than relying on source order.
     .page-layout-header .page-header-container {
       align-items: center;
-      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .page-header-start {
         align-items: center;
