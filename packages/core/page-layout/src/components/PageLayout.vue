@@ -412,7 +412,7 @@ $page-layout-header-height: 45px;
     // specificity rather than relying on source order.
     .page-layout-header .page-header-container {
       align-items: center;
-      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .page-header-start {
         align-items: center;
