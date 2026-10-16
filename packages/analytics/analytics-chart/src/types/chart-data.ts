@@ -270,6 +270,10 @@ export interface SimpleChartOptions {
    * Determines alignment of the chart
    */
   alignX?: AlignX
+  /** SingleValue only: hides the metric name and uses font with an inline trend */
+  compact?: boolean
+  /** SingleValue only: hides the metric name below the value without changing the layout */
+  hideMetricName?: boolean
 }
 
 export interface LegendValues {

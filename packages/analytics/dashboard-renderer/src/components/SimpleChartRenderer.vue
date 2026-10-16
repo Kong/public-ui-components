@@ -8,7 +8,7 @@
   >
     <div
       class="analytics-chart"
-      :class="{ 'single-value': isSingleValueChart }"
+      :class="{ 'single-value': isSingleValueChart, 'compact': isSingleValueChart && fitToContent }"
       :style="isSingleValueChart ? undefined : { height: `${height}px` }"
     >
       <SimpleChart
@@ -27,7 +27,7 @@ import { SimpleChart } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 
-const props = defineProps<ChartRendererProps<GaugeChartOptions | SingleValueOptions>>()
+const props = defineProps<ChartRendererProps<GaugeChartOptions | SingleValueOptions> & { fitToContent?: boolean }>()
 
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
 
@@ -36,6 +36,9 @@ const simpleChartOptions = computed(() => props.chartOptions.type === 'single_va
     ...props.chartOptions,
     alignX: props.chartOptions.align_x ?? 'left',
     showTrend: props.query.granularity === 'trend',
+    compact: !!props.fitToContent,
+    // Without a custom title the tile header shows the metric name, this will hide the metric name below the value
+    hideMetricName: !props.chartOptions.chart_title,
   }
   : props.chartOptions)
 </script>
@@ -50,6 +53,10 @@ const simpleChartOptions = computed(() => props.chartOptions.type === 'single_va
   // maximum height it can ever be is 104px in a very wide container so we don't need to set a max-height but rather let it take up the available space
   &.single-value {
     height: 100%;
+
+    &.compact {
+      justify-content: flex-start;
+    }
   }
 }
 </style>
