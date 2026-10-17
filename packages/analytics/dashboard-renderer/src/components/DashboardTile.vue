@@ -4,6 +4,7 @@
     :class="{
       'editable': context.editable,
       'headless': !hasTileHeader,
+      'compact-single_value': isSingleValue && fitToContent,
     }"
     :data-testid="`tile-${tileId}`"
   >
@@ -303,8 +304,12 @@ const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 
 const chart = computed(() => definition.chart)
+const isSingleValue = computed<boolean>(() => chart.value.type === 'single_value')
 const tileTitle = computed<string | undefined>(() => {
-  return 'chart_title' in chart.value ? chart.value.chart_title : undefined
+  const title = 'chart_title' in chart.value ? chart.value.chart_title : undefined
+
+  // Single value tiles fall back to the metric name
+  return title || (isSingleValue.value ? singleValueMetricLabel.value : undefined)
 })
 const tileDescription = computed<string | undefined>(() => definition.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
@@ -419,7 +424,7 @@ const componentData = computed(() => {
     rendererProps: {
       ...rendererProps,
       ...(!isTableChart ? chartRendererProps : {}),
-      ...(definition.chart.type === 'top_n' ? { fitToContent } : {}),
+      ...(['top_n', 'single_value'].includes(definition.chart.type) ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,
@@ -524,6 +529,17 @@ const showMetricSelector = computed(() => (
 ))
 
 const isChartLabel = (name: string): name is keyof typeof english.chartLabels => Object.hasOwn(english.chartLabels, name)
+
+const singleValueMetricLabel = computed<string | undefined>(() => {
+  const queryMetric = 'metrics' in definition.query ? definition.query.metrics?.[0] : undefined
+  const metric = queryMetric ?? metricNames.value[0]
+
+  if (!metric) {
+    return undefined
+  }
+
+  return isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
+})
 
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,
@@ -809,6 +825,23 @@ defineExpose({ getExportData })
 
     &.type-chart-golden_signals {
       padding: 0;
+    }
+  }
+
+  &.compact-single_value {
+    .tile-header {
+      padding-bottom: 0;
+
+      .title {
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+      }
+    }
+
+    .tile-content.type-chart-single_value {
+      padding-left: var(--kui-space-50, $kui-space-50);
+      padding-right: var(--kui-space-50, $kui-space-50);
     }
   }
 
