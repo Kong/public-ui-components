@@ -90,8 +90,8 @@
         </div>
 
         <div class="page-header-actions-container">
-          <slot name="actions" />
           <div data-teleport-target="ask-kai" />
+          <slot name="actions" />
         </div>
       </div>
       <PageLayoutTabs
