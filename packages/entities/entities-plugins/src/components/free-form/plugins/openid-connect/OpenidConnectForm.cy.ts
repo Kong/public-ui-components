@@ -89,6 +89,24 @@ const PRINCIPALS_SCHEMA_FIELD = {
   },
 }
 
+// `config.credential_claims` from newer OIDC schemas (string[][]). The base fixture
+// predates the field — the same stale shape older ai-gateway releases serve — so
+// migration-positive tests append it to the config record.
+const CREDENTIAL_CLAIMS_SCHEMA_FIELD = {
+  credential_claims: {
+    elements: {
+      elements: {
+        type: 'string',
+      },
+      description: 'A path of strings representing the location of the claim in a nested object.',
+      type: 'array',
+    },
+    description: 'The claims used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin).',
+    required: false,
+    type: 'array',
+  },
+}
+
 const DEFAULT_PRINCIPALS_MODEL = {
   directory: 'default',
   enabled: false,
@@ -104,11 +122,15 @@ const DEFAULT_PRINCIPALS_MODEL = {
 // FormSchema additionally requires `type: 'record'` at the root. Run the same
 // schema-enhancement pipeline PluginEntityForm uses before passing into free-form
 // components so entity_checks land at the right nesting level.
-const createSchema = (withPrincipals = false): FormSchema => {
+const createSchema = (withPrincipals = false, withCredentialClaims = false): FormSchema => {
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
+  }
+  if (withCredentialClaims) {
+    const configField = (raw.fields as any[]).find(f => 'config' in f)
+    configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
   }
   return distributeEntityChecks(appendEntityChecksFromMetadata('openid-connect', raw))
 }
@@ -147,6 +169,8 @@ interface MountOptions {
   formsConfig?: Record<string, any>
   /** Append the 3.15 `config.principals` record to the schema */
   withPrincipals?: boolean
+  /** Append `config.credential_claims` to the schema (base fixture predates it) */
+  withCredentialClaims?: boolean
   /** Provide the Identity Principals UI feature flag */
   identityPrincipalsUi?: boolean
   /** Opt in to SecretInput for encrypted free-form fields. */
@@ -160,13 +184,14 @@ const mountForm = (options: MountOptions = {}) => {
     app = 'konnect',
     formsConfig = {},
     withPrincipals = false,
+    withCredentialClaims = false,
     identityPrincipalsUi = false,
     useSecretInput = false,
   } = options
 
   cy.mount(OpenidConnectForm, {
     props: {
-      schema: createSchema(withPrincipals),
+      schema: createSchema(withPrincipals, withCredentialClaims),
       formSchema: createFormSchema(),
       formModel: {},
       model,
@@ -716,6 +741,79 @@ describe('OpenidConnectForm', () => {
           (args: any[]) => args[0]?.config?.consumer_claims != null,
         )
         expect(hasMigrationCall).to.equal(false)
+      })
+    })
+  })
+
+  describe('credential_claim → credential_claims migration', () => {
+    it('calls onFormChange with migrated credential_claims on mount when the schema has credential_claims', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const migrationCall = spy.args.find(
+          (args: any[]) => Array.isArray(args[0]?.config?.credential_claims)
+            && args[0].config.credential_claims.length > 0,
+        )
+        expect(migrationCall, 'migration call not found').not.to.equal(undefined)
+        expect(migrationCall[0].config.credential_claims).to.deep.equal([['sub']])
+      })
+    })
+
+    it('does not overwrite existing credential_claims', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: [['username']],
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        for (const args of spy.args) {
+          if (args[0]?.config?.credential_claims !== undefined) {
+            expect(args[0].config.credential_claims).to.deep.equal([['username']])
+          }
+        }
+      })
+    })
+
+    it('does not call onFormChange for migration when credential_claim is null', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: null,
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall).to.equal(false)
+      })
+    })
+
+    it('does not migrate when the schema has no credential_claims (stale ai-gateway schema)', () => {
+      mountForm({
+        // Base fixture predates credential_claims — same as stale ai-gateway schemas.
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall, 'must not submit unknown credential_claims field').to.equal(false)
       })
     })
   })
