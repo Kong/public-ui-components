@@ -1,20 +1,25 @@
 import { computed, effectScope, ref, watch } from 'vue'
+import '@kong/design-tokens/themes/mono-lime-day.css'
+import '@kong/design-tokens/themes/mono-lime-day-high-contrast.css'
+import '@kong/design-tokens/themes/mono-lime-night.css'
+import '@kong/design-tokens/themes/mono-lime-night-high-contrast.css'
 import '@kong/design-tokens/themes/electric-lime-day.css'
 import '@kong/design-tokens/themes/electric-lime-day-high-contrast.css'
 import '@kong/design-tokens/themes/electric-lime-night.css'
 import '@kong/design-tokens/themes/electric-lime-night-high-contrast.css'
 import { KONG_UI_SANDBOX_DEFAULT_THEME, KONG_UI_SANDBOX_THEME_STORAGE_KEY } from '../constants'
-import type { SandboxTheme, SandboxThemeMode } from '../types'
+import type { SandboxTheme, SandboxThemeFamily, SandboxThemeMode } from '../types'
 
-function parseTheme(theme: SandboxTheme): { mode: SandboxThemeMode, highContrast: boolean } {
+function parseTheme(theme: SandboxTheme): { family: SandboxThemeFamily, mode: SandboxThemeMode, highContrast: boolean } {
   return {
+    family: theme.startsWith('electric-lime') ? 'electric-lime' : 'mono-lime',
     mode: theme.includes('night') ? 'night' : 'day',
     highContrast: theme.endsWith('high-contrast'),
   }
 }
 
-function buildTheme(mode: SandboxThemeMode, highContrast: boolean): SandboxTheme {
-  return highContrast ? `electric-lime-${mode}-high-contrast` : `electric-lime-${mode}`
+function buildTheme(family: SandboxThemeFamily, mode: SandboxThemeMode, highContrast: boolean): SandboxTheme {
+  return highContrast ? `${family}-${mode}-high-contrast` : `${family}-${mode}`
 }
 
 const initial = parseTheme(
@@ -24,10 +29,11 @@ const initial = parseTheme(
 // Module-level (not created inside `useSandboxTheme`) so every `SandboxThemePicker`
 // instance in the page — e.g. the desktop sidebar copy and the mobile slideout copy —
 // shares one reactive state instead of drifting out of sync with each other.
+const family = ref<SandboxThemeFamily>(initial.family)
 const mode = ref<SandboxThemeMode>(initial.mode)
 const highContrast = ref<boolean>(initial.highContrast)
 
-const theme = computed<SandboxTheme>(() => buildTheme(mode.value, highContrast.value))
+const theme = computed<SandboxTheme>(() => buildTheme(family.value, mode.value, highContrast.value))
 
 let themeApplied = false
 
@@ -59,5 +65,5 @@ function applySandboxTheme(): void {
 export function useSandboxTheme() {
   applySandboxTheme()
 
-  return { theme, mode, highContrast }
+  return { theme, family, mode, highContrast }
 }

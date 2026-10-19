@@ -1,5 +1,11 @@
 <template>
   <div class="kong-ui-sandbox-theme-picker">
+    <KSegmentedControl
+      v-model="family"
+      aria-label="Theme family"
+      :options="KONG_UI_SANDBOX_THEME_FAMILY_OPTIONS"
+    />
+
     <div class="theme-picker-row">
       <span class="theme-picker-label">Theme</span>
       <div
@@ -50,11 +56,11 @@
 import type { Component } from 'vue'
 import { DarkModeIcon, LightModeIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { KONG_UI_SANDBOX_THEME_MODE_OPTIONS } from '../constants'
+import { KONG_UI_SANDBOX_THEME_FAMILY_OPTIONS, KONG_UI_SANDBOX_THEME_MODE_OPTIONS } from '../constants'
 import { useSandboxTheme } from '../composables/useSandboxTheme'
 import type { SandboxThemeMode } from '../types'
 
-const { mode, highContrast } = useSandboxTheme()
+const { family, mode, highContrast } = useSandboxTheme()
 
 const MODE_ICONS: Record<SandboxThemeMode, Component> = {
   day: LightModeIcon,
