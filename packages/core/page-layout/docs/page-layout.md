@@ -382,7 +382,7 @@ This behavior is automatic and requires no additional configuration — simply n
 
 | Target                              | Location                                                           |
 | ----------------------------------- | ------------------------------------------------------------------ |
-| `[data-teleport-target="ask-kai"]`  | Page header actions area, after any `actions` slot content          |
+| `[data-teleport-target="ask-kai"]`  | Page header actions area, before any `actions` slot content          |
 
 The target is always present, whether or not the `actions` slot is used, and in both appearances:
 

@@ -108,7 +108,7 @@ describe('<PageLayout />', () => {
       cy.get('.page-header-actions-container').should('exist')
     })
 
-    it('renders the teleport target after the actions slot content', () => {
+    it('renders the teleport target before the actions slot content', () => {
       const actionsTestId = 'page-layout-slotted-actions'
 
       mountWithRouter(PageLayout, {
@@ -118,8 +118,8 @@ describe('<PageLayout />', () => {
 
       cy.get('.page-header-actions-container').children().should(($children) => {
         expect($children).to.have.length(2)
-        expect($children.eq(0).attr('data-testid')).to.equal(actionsTestId)
-        expect($children.eq(1).attr('data-teleport-target')).to.equal('ask-kai')
+        expect($children.eq(0).attr('data-teleport-target')).to.equal('ask-kai')
+        expect($children.eq(1).attr('data-testid')).to.equal(actionsTestId)
       })
     })
 
