@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.4.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.4.3...%40kong-ui-public%2Fdashboard-renderer%409.4.4) (2026-10-19)
+
+### Bug Fixes
+
+* **sandbox-layout:** theme picker mono lime ([#3948](https://github.com/Kong/public-ui-components/issues/3948)) ([6c2dc62](https://github.com/Kong/public-ui-components/commit/6c2dc6299adc77e0ae0e004eea993bf1d6bf29d2))
+
+
 ## [9.4.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.4.2...%40kong-ui-public%2Fdashboard-renderer%409.4.3) (2026-10-18)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

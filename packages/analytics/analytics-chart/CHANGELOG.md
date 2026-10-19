@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.4.0...%40kong-ui-public%2Fanalytics-chart%4012.4.1) (2026-10-19)
+
+### Bug Fixes
+
+* **sandbox-layout:** theme picker mono lime ([#3948](https://github.com/Kong/public-ui-components/issues/3948)) ([6c2dc62](https://github.com/Kong/public-ui-components/commit/6c2dc6299adc77e0ae0e004eea993bf1d6bf29d2))
+
+
 # [12.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4012.3.1...%40kong-ui-public%2Fanalytics-chart%4012.4.0) (2026-10-15)
 
 ### Features
