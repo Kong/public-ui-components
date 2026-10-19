@@ -53,8 +53,8 @@ importers:
         specifier: ^2.1.15
         version: 2.2.1
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/eslint-config-kong-ui':
         specifier: ^1.7.1
         version: 1.7.1(@typescript-eslint/parser@8.64.0(eslint@10.9.1(jiti@2.5.1)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@10.9.1(jiti@2.5.1)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
@@ -249,8 +249,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -286,8 +286,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -332,8 +332,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -360,8 +360,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -442,8 +442,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/table-data-grid
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -512,8 +512,8 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -558,8 +558,8 @@ importers:
         version: 3.5.43(typescript@5.9.3)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       axios:
         specifier: ^1.20.0
         version: 1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -580,8 +580,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -598,8 +598,8 @@ importers:
         specifier: workspace:^
         version: link:../sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -616,8 +616,8 @@ importers:
   packages/core/entities-config-editor:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -628,8 +628,8 @@ importers:
   packages/core/error-boundary:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -662,8 +662,8 @@ importers:
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -708,8 +708,8 @@ importers:
         specifier: workspace:^
         version: link:../misc-widgets
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -754,8 +754,8 @@ importers:
         specifier: workspace:^
         version: link:../sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -799,8 +799,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -827,8 +827,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -873,8 +873,8 @@ importers:
         specifier: workspace:^
         version: link:../sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -895,8 +895,8 @@ importers:
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -920,8 +920,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -967,8 +967,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -994,8 +994,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1021,8 +1021,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1048,8 +1048,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1075,8 +1075,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1109,8 +1109,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1160,8 +1160,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1239,8 +1239,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1341,8 +1341,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/misc-widgets
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1378,8 +1378,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1418,8 +1418,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1466,8 +1466,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1493,8 +1493,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.43(typescript@5.9.3))
@@ -1527,8 +1527,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/misc-widgets
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -1552,8 +1552,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -1586,8 +1586,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.3.1
-        version: 3.3.1
+        specifier: 3.4.2
+        version: 3.4.2
       '@kong/kongponents':
         specifier: 9.65.0
         version: 9.65.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.3.1(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(pinia@4.0.3(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.110.3))(vue@3.5.43(typescript@5.9.3))
@@ -2663,8 +2663,8 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@3.3.1':
-    resolution: {integrity: sha512-2nwOiWmFZt2I5S7FxpcK9iOpvpr4XhetNTIetL9HG9+pmgaeUISywFBHflq6OOwuYFPRbGGiPRNfM9YOzeWtHw==}
+  '@kong/design-tokens@3.4.2':
+    resolution: {integrity: sha512-+Ept+OgjhB9s7g8D3QfOa12/eAmMDYKGDEKRGV/0WRVDo4PzO84w1aq3LRnkBoWhg1PDu1Nz8hiqa2fJGoFCdA==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
   '@kong/eslint-config-kong-ui@1.7.1':
@@ -11903,7 +11903,7 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@3.3.1': {}
+  '@kong/design-tokens@3.4.2': {}
 
   '@kong/eslint-config-kong-ui@1.7.1(@typescript-eslint/parser@8.64.0(eslint@10.9.1(jiti@2.5.1)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@10.9.1(jiti@2.5.1)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
