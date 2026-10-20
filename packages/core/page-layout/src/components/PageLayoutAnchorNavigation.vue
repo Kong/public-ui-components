@@ -71,7 +71,7 @@
 
           <template #items="{ closeDropdown }">
             <KDropdownItem
-              v-for="overflowAnchor in anchors"
+              v-for="overflowAnchor in resolvedAnchors"
               :key="`${overflowAnchor.key}-dropdown-item`"
               :aria-current="overflowAnchor.key === activeAnchorKey ? 'location' : undefined"
               :data-testid="anchorDataTestId(overflowAnchor)"
@@ -120,10 +120,21 @@ type AnchorNavigationFit = 'all' | 'window-3' | 'window-2' | 'active-only' | 'hi
 // Starts on the full set: the walk below settles within a single task, before the browser paints,
 // and a measurement that never happens leaves the bar usable instead of blank.
 const fit = ref<AnchorNavigationFit>('all')
-const activeAnchorKey = ref<string>(anchors[0]?.key ?? '')
+const activeAnchorKey = ref<string>('')
+
+/**
+ * Keys of the anchors that currently point at a section on the page, refreshed by
+ * `readAnchorState` below. An anchor whose selector matches nothing, whose `element` has been
+ * unmounted, or that names neither is dropped from the bar entirely rather than rendered as a
+ * pill that does nothing when clicked.
+ */
+const resolvableAnchorKeys = ref<string[]>([])
+
+const resolvedAnchors = computed((): PageLayoutAnchor[] =>
+  anchors.filter((anchor) => resolvableAnchorKeys.value.includes(anchor.key)))
 
 const activeAnchorIndex = computed((): number => {
-  const index = anchors.findIndex((anchor) => anchor.key === activeAnchorKey.value)
+  const index = resolvedAnchors.value.findIndex((anchor) => anchor.key === activeAnchorKey.value)
   return index === -1 ? 0 : index
 })
 
@@ -140,11 +151,12 @@ interface AnchorNavigationView {
  * scroll can slide the window but can never change its size.
  */
 const view = computed((): AnchorNavigationView => {
-  const total = anchors.length
+  const resolved = resolvedAnchors.value
+  const total = resolved.length
   const active = activeAnchorIndex.value
 
   if (fit.value === 'all') {
-    return { anchors, hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: false }
+    return { anchors: resolved, hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: false }
   }
 
   if (fit.value === 'hidden') {
@@ -152,13 +164,13 @@ const view = computed((): AnchorNavigationView => {
   }
 
   if (fit.value === 'active-only') {
-    return { anchors: anchors.slice(active, active + 1), hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: true }
+    return { anchors: resolved.slice(active, active + 1), hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: true }
   }
 
   const count = fit.value === 'window-3' ? 3 : 2
 
   if (total <= count) {
-    return { anchors, hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: true }
+    return { anchors: resolved, hasLeadingEllipsis: false, hasTrailingEllipsis: false, hasOverflowDropdown: true }
   }
 
   // Pinned to the start while the reader is still in the first `count` sections and to the end
@@ -172,7 +184,7 @@ const view = computed((): AnchorNavigationView => {
       : active - 1
 
   return {
-    anchors: anchors.slice(start, start + count),
+    anchors: resolved.slice(start, start + count),
     hasLeadingEllipsis: start > 0,
     hasTrailingEllipsis: start + count < total,
     hasOverflowDropdown: true,
@@ -205,7 +217,10 @@ const findScroller = (): HTMLElement | null => {
 
 const resolveAnchorElement = (anchor: PageLayoutAnchor): HTMLElement | null => {
   if (anchor.element) {
-    return anchor.element
+    // A ref still holds its node after the section has unmounted, and a detached node reports an
+    // all-zero rect -- which would scroll the page to the top and let the anchor win the active
+    // item on every read. Off the page is off the page.
+    return anchor.element.isConnected ? anchor.element : null
   }
 
   if (!anchor.selector) {
@@ -279,7 +294,7 @@ const activeOnlyBudget = (): number =>
  */
 let fitRun = 0
 const computeAnchorNavigationFit = async (): Promise<void> => {
-  if (!anchors.length) {
+  if (!resolvedAnchors.value.length) {
     return
   }
 
@@ -326,6 +341,9 @@ const handleResize = () => {
   }
 
   resizeTimeout = setTimeout(() => {
+    // A resize often comes with the page reflowing around it, so re-read what is on the page
+    // before measuring what has to fit
+    readAnchorState()
     computeAnchorNavigationFit()
   }, 150)
 }
@@ -385,15 +403,23 @@ const scrollMetrics = () => {
   }
 }
 
-/** The active item follows the page: the last section whose top has passed under the header. */
-const readActiveAnchor = () => {
-  if (pinnedAnchorKey || !anchors.length) {
-    return
-  }
-
+/**
+ * Re-reads the page: which anchors still point at a section, and which of those the reader is in.
+ *
+ * Both answers come out of the same walk, since both need every anchor resolved. The DOM has no
+ * event to say a section has appeared or gone, so this runs on every scroll frame (rAF-throttled),
+ * on mount, on resize, and whenever `anchors` changes.
+ *
+ * Returns whether the set of resolvable anchors changed -- that changes what the bar has to fit,
+ * so the caller needs to measure again.
+ */
+const readAnchorState = (): boolean => {
   const { top, scrollTop, clientHeight, scrollHeight } = scrollMetrics()
   const offset = defaultAnchorOffset()
-  let current = anchors[0].key
+  const resolvable: string[] = []
+  // Falls back to the first section on the page until one has actually passed under the header
+  let current: string | null = null
+  let lastResolvable: string | null = null
 
   for (const anchor of anchors) {
     const element = resolveAnchorElement(anchor)
@@ -401,18 +427,36 @@ const readActiveAnchor = () => {
       continue
     }
 
+    resolvable.push(anchor.key)
+    lastResolvable = anchor.key
+    current ??= anchor.key
+
     if (element.getBoundingClientRect().top - top <= (anchor.offset ?? offset) + 8) {
       current = anchor.key
     }
   }
 
-  // The sections at the end of a page can never be brought up to the header, so the last one takes
-  // the bar once the page has run out of scroll -- otherwise it could not be reached by scrolling.
-  if (scrollTop > 0 && scrollTop + clientHeight >= scrollHeight - 2) {
-    current = anchors[anchors.length - 1].key
+  const resolvableChanged = resolvable.length !== resolvableAnchorKeys.value.length ||
+    resolvable.some((key, index) => key !== resolvableAnchorKeys.value[index])
+
+  if (resolvableChanged) {
+    resolvableAnchorKeys.value = resolvable
   }
 
-  activeAnchorKey.value = current
+  // A clicked item holds the bar until its scroll has settled, but the set of sections on the page
+  // is read either way -- it is not the reader's doing
+  if (!pinnedAnchorKey) {
+    // The sections at the end of a page can never be brought up to the header, so the last one
+    // takes the bar once the page has run out of scroll -- otherwise it could not be reached by
+    // scrolling. Only ever a section that is actually there.
+    if (lastResolvable && scrollTop > 0 && scrollTop + clientHeight >= scrollHeight - 2) {
+      current = lastResolvable
+    }
+
+    activeAnchorKey.value = current ?? ''
+  }
+
+  return resolvableChanged
 }
 
 let readScheduled = false
@@ -424,7 +468,10 @@ const onScroll = () => {
   readScheduled = true
   requestAnimationFrame(() => {
     readScheduled = false
-    readActiveAnchor()
+
+    if (readAnchorState()) {
+      computeAnchorNavigationFit()
+    }
   })
 }
 
@@ -460,13 +507,15 @@ const onOverflowAnchorClick = (anchor: PageLayoutAnchor, closeDropdown: () => vo
 onMounted(() => {
   scroller.value = findScroller()
   scrollEventTarget().addEventListener('scroll', onScroll, { passive: true })
-  readActiveAnchor()
+  readAnchorState()
   computeAnchorNavigationFit()
 
-  // Measure again once the first frame has been laid out. The measurement above usually stands,
-  // but a header that is still settling (web fonts arriving, a sticky row being positioned) can
-  // report a width the final layout does not agree with.
+  // Read again once the first frame has been laid out. The measurement above usually stands, but
+  // a header that is still settling (web fonts arriving, a sticky row being positioned) can report
+  // a width the final layout does not agree with -- and sections mounted after this one are only
+  // on the page by now.
   requestAnimationFrame(() => {
+    readAnchorState()
     computeAnchorNavigationFit()
   })
 })
@@ -481,11 +530,13 @@ onBeforeUnmount(() => {
 })
 
 watch(() => anchors, () => {
+  // `readAnchorState` settles the active item against whatever is on the page now; this just makes
+  // sure a key that has gone entirely does not hold the bar in the meantime
   if (!anchors.some((anchor) => anchor.key === activeAnchorKey.value)) {
-    activeAnchorKey.value = anchors[0]?.key ?? ''
+    activeAnchorKey.value = ''
   }
 
-  readActiveAnchor()
+  readAnchorState()
   computeAnchorNavigationFit()
 }, { deep: true })
 </script>
