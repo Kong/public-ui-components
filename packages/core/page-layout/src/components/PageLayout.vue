@@ -489,7 +489,7 @@ $page-layout-header-height: 44px;
         // Border-box so this is the rendered height, bottom border included
         box-sizing: border-box;
         height: $page-layout-header-height;
-        padding: var(--kui-space-40, $kui-space-40);
+        padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
       }
     }
   }
