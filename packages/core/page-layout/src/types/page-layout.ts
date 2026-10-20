@@ -1,5 +1,5 @@
 import type { BreadcrumbItem } from '@kong/kongponents'
-import type { PageLayoutTab } from './'
+import type { PageLayoutAnchor, PageLayoutTab } from './'
 import type { RouteLocationRaw } from 'vue-router'
 
 export interface PageShortcutData {
@@ -22,6 +22,11 @@ export interface PageLayoutProps {
   backTo?: string | RouteLocationRaw
   /** Tabs */
   tabs?: PageLayoutTab[]
+  /**
+   * In-page sections the header's anchor navigation bar scrolls to. New appearance only, and
+   * ignored when `tabs` are provided -- the header shows one or the other, never both.
+   */
+  anchors?: PageLayoutAnchor[]
   /** Providing this prop "marks" the current page as an entity page that can be added to shortcuts (favorites and recents) */
   pageShortcutData?: PageShortcutData
 }

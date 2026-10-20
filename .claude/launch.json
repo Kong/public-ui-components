@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "page-layout-sandbox",
+      "url": "http://localhost:5173",
+      "port": 5173
+    },
+    {
+      "name": "ai-management-prototype",
+      "url": "http://localhost:5174",
+      "port": 5174
+    }
+  ]
+}

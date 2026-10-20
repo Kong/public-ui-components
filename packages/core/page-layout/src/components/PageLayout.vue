@@ -89,6 +89,11 @@
           </div>
         </div>
 
+        <PageLayoutAnchorNavigation
+          v-if="hasAnchorNavigation"
+          :anchors="anchors"
+        />
+
         <div class="page-header-actions-container">
           <slot name="actions" />
           <div data-teleport-target="ask-kai" />
@@ -138,6 +143,7 @@ import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
+import PageLayoutAnchorNavigation from './PageLayoutAnchorNavigation.vue'
 import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon, ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
@@ -150,6 +156,7 @@ const {
   title,
   backTo,
   tabs = [],
+  anchors = [],
   pageShortcutData,
 } = defineProps<PageLayoutProps>()
 
@@ -172,6 +179,11 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 // `toValue` lets the host provide a plain boolean, a ref or a getter
 const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
+
+// The header carries either tabs or an anchor navigation bar, never both: tabs own the row they
+// render, and a page that declares both is treated as a tabbed page. The bar is part of the new
+// appearance's single-row header, so it is not rendered in the default appearance at all.
+const hasAnchorNavigation = computed((): boolean => newAppearance.value && !hasTabs.value && !!(anchors && anchors.length))
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
@@ -266,7 +278,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 // stays the most prominent item in the row without swallowing it.
 $page-layout-title-max-width: 40ch;
 // Height of the new appearance's single-row header. Only applied when there are no tabs.
-$page-layout-header-height: 45px;
+$page-layout-header-height: 44px;
 
 .kong-ui-public-page-layout {
   box-sizing: border-box;
