@@ -65,11 +65,22 @@ describe('<PluginList />', () => {
         history: createMemoryHistory(),
       })
 
-      // Mock data for each test in this block; doesn't matter if we use KM or Konnect
+      // Mock data for each test in this block. Konnect uses the redesigned table (read-only Scope/Status cells,
+      // toggle in the row actions), so tests asserting the legacy cells (badges, switch) run against Kong Manager.
       cy.intercept(
         {
           method: 'GET',
           url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
+        },
+        {
+          statusCode: 200,
+          body: plugins,
+        },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/plugins*`,
         },
         {
           statusCode: 200,
@@ -102,7 +113,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: baseConfigKonnect,
+          config: baseConfigKM,
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -136,7 +147,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: baseConfigKonnect,
+          config: baseConfigKM,
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -161,7 +172,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: baseConfigKonnect,
+          config: baseConfigKM,
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -178,7 +189,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: baseConfigKonnect,
+          config: baseConfigKM,
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -231,7 +242,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: { ...baseConfigKonnect, getToggleDisabledTooltip: () => kTooltipText },
+          config: { ...baseConfigKM, getToggleDisabledTooltip: () => kTooltipText },
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -344,7 +355,7 @@ describe('<PluginList />', () => {
           cy.mount(PluginList, {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
-              config: baseConfigKonnect,
+              config: baseConfigKM,
               canCreate: () => false,
               canEdit: () => expected,
               canDelete: () => false,
@@ -369,7 +380,7 @@ describe('<PluginList />', () => {
           cy.mount(PluginList, {
             props: {
               cacheIdentifier: `plugin-list-${uuidv4()}`,
-              config: baseConfigKonnect,
+              config: baseConfigKM,
               canCreate: () => false,
               canEdit: () => expected,
               canDelete: () => false,
@@ -1120,83 +1131,9 @@ describe('<PluginList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
     })
-
-    it('switches to /plugins/search once filtering, even without the pluginTableImprovements.filtering flag', () => {
-      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
-
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/plugins*`,
-        },
-        (req) => {
-          if (!req.url.includes('/plugins/search')) {
-            req.reply({ statusCode: 200, body: plugins })
-          }
-        },
-      ).as('listPlugins')
-
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/plugins/search*`,
-        },
-        { statusCode: 200, body: { data: plugins.data, offset: null } },
-      ).as('searchPlugins')
-
-      cy.mount(PluginList, {
-        props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: configWithWorkspace,
-          canCreate: () => false,
-          canEdit: () => false,
-          canDelete: () => false,
-          canRetrieve: () => false,
-        },
-      })
-
-      cy.wait('@listPlugins')
-      // Legacy EntityFilter (not PluginFilter) is used since the flag is off
-      cy.get('.kong-ui-entity-filter-input').should('exist')
-
-      cy.get('.kong-ui-entity-filter-input input').type('basic')
-      cy.wait('@searchPlugins').its('request.url').should('include', 'filter[name][contains]=basic')
-    })
   })
 
-  describe('plugin list redesign (isPluginTableEnhanced)', () => {
-    const redesignConfig: KonnectPluginListConfig = {
-      ...baseConfigKonnect,
-      pluginTableImprovements: { filtering: true },
-    }
-
-    it('omitting the flag keeps hitting the plain list endpoint, not /plugins/search', () => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
-        },
-        { statusCode: 200, body: plugins },
-      ).as('listPlugins')
-
-      cy.mount(PluginList, {
-        props: {
-          cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: baseConfigKonnect,
-          canCreate: () => false,
-          canEdit: () => false,
-          canDelete: () => false,
-          canRetrieve: () => false,
-          canToggle: () => false,
-        },
-      })
-
-      cy.wait('@listPlugins')
-      cy.get('table thead th').eq(0).should('contain.text', 'Name')
-      cy.get('table thead th').eq(1).should('contain.text', 'Applied to')
-      cy.get('.kong-ui-entity-filter-input').should('exist')
-    })
-
+  describe('Konnect - redesigned plugin list', () => {
     it('a plain unfiltered load keeps hitting the plain list endpoint, only switching to /plugins/search once the user actually searches/filters', () => {
       cy.intercept(
         {
@@ -1222,7 +1159,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: redesignConfig,
+          config: baseConfigKonnect,
           canCreate: () => false,
           canEdit: () => true,
           canDelete: () => false,
@@ -1312,7 +1249,7 @@ describe('<PluginList />', () => {
       cy.mount(PluginList, {
         props: {
           cacheIdentifier: `plugin-list-${uuidv4()}`,
-          config: redesignConfig,
+          config: baseConfigKonnect,
           canCreate: () => false,
           canEdit: () => false,
           canDelete: () => false,
@@ -1339,7 +1276,7 @@ describe('<PluginList />', () => {
 
     it('scopes the request to the entity and hides the Scope column/pill on a nested entity page', () => {
       const nestedConfig: KonnectPluginListConfig = {
-        ...redesignConfig,
+        ...baseConfigKonnect,
         entityType: 'routes',
         entityId: 'route-1',
       }

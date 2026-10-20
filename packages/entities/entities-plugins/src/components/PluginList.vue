@@ -23,7 +23,7 @@
       <!-- Filter -->
       <template #toolbar-filter>
         <PluginFilter
-          v-if="isPluginFilterEnhanced"
+          v-if="isKonnect"
           v-model="filterQuery"
           :entity-id="props.config?.entityId"
           :entity-type="props.config?.entityType"
@@ -120,7 +120,7 @@
             :size="24"
           />
           <div
-            v-if="isPluginFilterEnhanced"
+            v-if="isKonnect"
             class="info-wrapper"
           >
             <span class="info-name">{{ pluginMetaData.getDisplayName(row.name) }}</span>
@@ -158,7 +158,7 @@
             force-show
           >
             <template #default="{ isAllowed }">
-              <div v-if="isPluginFilterEnhanced">
+              <div v-if="isKonnect">
                 <RouterLink
                   v-if="isAllowed && tag.type && getScopedEntityViewRoute(tag.type, row)"
                   class="scope-link"
@@ -186,7 +186,7 @@
 
       <template #enabled="{ row }">
         <KBadge
-          v-if="isPluginFilterEnhanced"
+          v-if="isKonnect"
           :appearance="row.enabled ? 'success' : 'neutral'"
         >
           {{ row.enabled ? t('actions.enabled') : t('actions.disabled') }}
@@ -210,7 +210,7 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <span v-if="isPluginFilterEnhanced">
+        <span v-if="isKonnect">
           {{
             isEmpty(rowValue)
               ? t('plugins.list.table_headers.ordering_badge.static')
@@ -272,7 +272,7 @@
           />
         </PermissionsWrapper>
         <PermissionsWrapper
-          v-if="isPluginFilterEnhanced"
+          v-if="isKonnect"
           :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
           force-show
         >
@@ -500,19 +500,10 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
 })
 
 /**
- * Plugin list improvment (Konnect-only): search API, Name/Scope/Status/Ordering columns, KFilterGroup toolbar.
- * Gated by `config.pluginTableImprovements.filtering` - see PluginTableImprovementFlags for the other
- * (not yet implemented) flags this list will grow: `sorting`, `bulkActions`.
+ * Konnect uses the redesigned plugin list: search API, Name/Scope/Status/Ordering columns, KFilterGroup toolbar.
+ * Kong Manager keeps the legacy table.
  */
-const isPluginFilterEnhanced = computed<boolean>(() =>
-  props.config.app === 'konnect' && !!props.config.pluginTableImprovements?.filtering,
-)
-
-// Workspace-scoped Konnect lists should hit the search endpoint while filtering, regardless of
-// whether `pluginTableImprovements.filtering` is enabled - same as the other entity lists.
-const isKonnectWorkspaceScoped = computed<boolean>(() =>
-  props.config.app === 'konnect' && !!props.config.workspace,
-)
+const isKonnect = computed<boolean>(() => props.config.app === 'konnect')
 
 /**
  * Table Headers
@@ -521,26 +512,26 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
   name: {
-    label: isPluginFilterEnhanced.value ? t('plugins.list.table_headers.plugin') : t('plugins.list.table_headers.name'),
+    label: isKonnect.value ? t('plugins.list.table_headers.plugin') : t('plugins.list.table_headers.name'),
     searchable: true,
-    sortable: !isPluginFilterEnhanced.value,
+    sortable: !isKonnect.value,
     hidable: false,
   },
 }
 
-if (isPluginFilterEnhanced.value) {
+if (isKonnect.value) {
   // New column: the plugin instance's custom name, split out of the combined "Plugin" cell
   fields.instanceName = { label: t('plugins.list.table_headers.name'), sortable: false }
 }
 
 // conditional display of Applied To/Scope column - hide if on an entity's details page (ie. plugins card on route details view)
 if (!props.config?.entityId) {
-  fields.appliedTo = isPluginFilterEnhanced.value
+  fields.appliedTo = isKonnect.value
     ? { label: t('plugins.list.table_headers.scope'), sortable: false }
     : { label: t('plugins.list.table_headers.applied_to'), sortable: false }
 }
 
-fields.enabled = isPluginFilterEnhanced.value
+fields.enabled = isKonnect.value
   ? { label: t('plugins.list.table_headers.status'), sortable: false }
   : { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
 
@@ -607,10 +598,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 // Only hit the new search endpoint once the user is actually searching.
-// Workspace-scoped Konnect lists always use search, regardless of the `pluginTableImprovements.filtering` flag.
-const isSearchActive = computed((): boolean =>
-  (isPluginFilterEnhanced.value || isKonnectWorkspaceScoped.value) && !!filterQuery.value,
-)
+const isSearchActive = computed((): boolean => isKonnect.value && !!filterQuery.value)
 
 const activeFetcherUrl = computed<string>(() => {
   if (isSearchActive.value) {
@@ -627,9 +615,9 @@ const {
 } = useFetcher(computed(() => ({
   ...props.config,
   cacheIdentifier: props.cacheIdentifier,
-  // `PluginFilter` (used when `isPluginFilterEnhanced`) emits an already wire-ready query string,
+  // `PluginFilter` (used on Konnect) emits an already wire-ready query string,
   // which the fetcher must forward as-is rather than wrapping into an exact-match path segment.
-  ...(isPluginFilterEnhanced.value && isSearchActive.value ? { isExactMatch: false } : {}),
+  ...(isSearchActive.value ? { isExactMatch: false } : {}),
 })), activeFetcherUrl)
 
 const clearFilter = (): void => {
