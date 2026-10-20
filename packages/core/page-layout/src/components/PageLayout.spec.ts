@@ -5,7 +5,7 @@ import { createRouter, createMemoryHistory, type Router } from 'vue-router'
 import Kongponents from '@kong/kongponents'
 import PageLayout from './PageLayout.vue'
 import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
-import type { PageShortcutData } from '../types'
+import type { PageLayoutTab, PageShortcutData } from '../types'
 
 const validShortcutData: PageShortcutData = {
   label: 'My Service',
@@ -697,6 +697,64 @@ describe('<PageLayout />', () => {
 
         expect(wrapper.getTestId('kong-ui-public-page-layout').classes()).toContain('new-appearance')
         expect(wrapper.findTestId('page-layout-navigate-back').exists()).toBe(false)
+      })
+    })
+
+    describe('anchor navigation', () => {
+      const anchors = [
+        { key: 'usage', label: 'Usage', selector: '#usage' },
+        { key: 'policies', label: 'Policies', selector: '#policies' },
+      ]
+
+      const tabs: PageLayoutTab[] = [
+        { key: 'overview', label: 'Overview', to: '/overview' },
+      ]
+
+      it('renders the anchor navigation bar when anchors are provided', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', anchors },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(true)
+      })
+
+      it('does not render the anchor navigation bar when no anchors are provided', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(false)
+      })
+
+      it('does not render the anchor navigation bar in the default appearance', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', anchors },
+        })
+
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(false)
+      })
+
+      it('renders tabs instead of the anchor navigation bar when both are provided', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', anchors, tabs },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.findTestId('page-layout-tabs').exists()).toBe(true)
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(false)
+      })
+
+      it('renders the default slot alongside the anchor navigation bar', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title', anchors },
+          slots: { default: () => h('div', { 'data-testid': 'anchored-page-content' }, 'Page content') },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(true)
+        expect(wrapper.getTestId('anchored-page-content').text()).toBe('Page content')
       })
     })
   })
