@@ -35,11 +35,11 @@ const setSectionElement = (key: string, el: Element | ComponentPublicInstance | 
 const targetDescription = (section: SandboxAnchorSection): string => {
   switch (section.target) {
     case 'selector':
-      return `selector: '[data-section="${section.key}"]'`
+      return `id: '[data-section="${section.key}"]'`
     case 'element':
       return 'element: <template ref>'
     default:
-      return `selector: '#${section.key}'`
+      return `id: '#${section.key}'`
   }
 }
 

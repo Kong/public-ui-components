@@ -89,7 +89,7 @@ const buildAnchors = (count: number): PageLayoutAnchor[] =>
   Array.from({ length: count }, (_, index) => {
     addSection(index, { id: `section-${index}` })
 
-    return { key: `section-${index}`, label: `Section ${index}`, selector: `#section-${index}` }
+    return { id: `#section-${index}`, label: `Section ${index}` }
   })
 
 const mountBar = (anchors: PageLayoutAnchor[]) => mount(PageLayoutAnchorNavigation, {
@@ -212,13 +212,13 @@ describe('<PageLayoutAnchorNavigation />', () => {
       expect(wrapper.getTestId('page-layout-anchor-section-1').attributes('aria-current')).toBeUndefined()
     })
 
-    it('generates a data-testid from the key, and honours an explicit one', async () => {
+    it('generates a data-testid from the id, and honours an explicit one', async () => {
       addSection(0, { id: 'generated' })
       addSection(1, { id: 'explicit' })
 
       const wrapper = mountBar([
-        { key: 'generated', label: 'Generated', selector: '#generated' },
-        { key: 'explicit', label: 'Explicit', selector: '#explicit', dataTestId: 'my-own-testid' },
+        { id: '#generated', label: 'Generated' },
+        { id: '#explicit', label: 'Explicit', dataTestId: 'my-own-testid' },
       ])
 
       await settle()
@@ -244,7 +244,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
       addSection(0, { dataSection: 'by-attribute' })
 
       const wrapper = mountBar([
-        { key: 'by-attribute', label: 'By attribute', selector: '[data-section="by-attribute"]' },
+        { id: '[data-section="by-attribute"]', label: 'By attribute' },
       ])
 
       await settle()
@@ -255,16 +255,16 @@ describe('<PageLayoutAnchorNavigation />', () => {
     it('renders an anchor targeted by its element', async () => {
       const section = addSection(0)
 
-      const wrapper = mountBar([{ key: 'by-element', label: 'By element', element: section }])
+      const wrapper = mountBar([{ id: 'by-element', label: 'By element', element: section }])
 
       await settle()
 
       expect(pillLabels(wrapper)).toEqual(['By element'])
     })
 
-    it('drops anchors whose selector matches nothing', async () => {
+    it('drops anchors whose id matches no element on the page', async () => {
       const anchors = buildAnchors(2)
-      anchors.push({ key: 'missing', label: 'Missing', selector: '#not-on-the-page' })
+      anchors.push({ id: '#not-on-the-page', label: 'Missing' })
 
       const wrapper = mountBar(anchors)
 
@@ -275,7 +275,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
 
     it('drops anchors with an invalid selector rather than throwing', async () => {
       const anchors = buildAnchors(2)
-      anchors.push({ key: 'invalid', label: 'Invalid', selector: ':::not a selector' })
+      anchors.push({ id: ':::not a selector', label: 'Invalid' })
 
       const wrapper = mountBar(anchors)
 
@@ -284,21 +284,20 @@ describe('<PageLayoutAnchorNavigation />', () => {
       expect(pillLabels(wrapper)).toEqual(['Section 0', 'Section 1'])
     })
 
-    it('drops anchors that name neither a selector nor an element', async () => {
-      const anchors = buildAnchors(2)
-      anchors.push({ key: 'no-target', label: 'No target' })
+    it('looks a bare identifier up as an id', async () => {
+      addSection(0, { id: 'plain-identifier' })
 
-      const wrapper = mountBar(anchors)
+      const wrapper = mountBar([{ id: 'plain-identifier', label: 'Plain identifier' }])
 
       await settle()
 
-      expect(pillLabels(wrapper)).toEqual(['Section 0', 'Section 1'])
+      expect(pillLabels(wrapper)).toEqual(['Plain identifier'])
     })
 
     it('drops an anchor whose element is no longer on the page', async () => {
       const anchors = buildAnchors(2)
       const detached = document.createElement('section')
-      anchors.push({ key: 'detached', label: 'Detached', element: detached })
+      anchors.push({ id: 'detached', label: 'Detached', element: detached })
 
       const wrapper = mountBar(anchors)
 
@@ -309,7 +308,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
 
     it('picks up a section that only appears after mount', async () => {
       const anchors = buildAnchors(2)
-      anchors.push({ key: 'late', label: 'Arrives later', selector: '#late' })
+      anchors.push({ id: '#late', label: 'Arrives later' })
 
       const wrapper = mountBar(anchors)
 
@@ -346,7 +345,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
 
       addSection(2, { id: 'section-2' })
       await wrapper.setProps({
-        anchors: [...anchors, { key: 'section-2', label: 'Section 2', selector: '#section-2' }],
+        anchors: [...anchors, { id: '#section-2', label: 'Section 2' }],
       })
       await settle()
 
@@ -478,7 +477,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
       availableWidth = widthForPills(3)
 
       const anchors = buildAnchors(8)
-      anchors.push({ key: 'missing', label: 'Missing', selector: '#not-on-the-page' })
+      anchors.push({ id: '#not-on-the-page', label: 'Missing' })
 
       const wrapper = mountBar(anchors)
 
@@ -531,7 +530,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
     it('scrolls to the section of an anchor targeted by its element', async () => {
       const section = addSection(3)
 
-      const wrapper = mountBar([{ key: 'by-element', label: 'By element', element: section }])
+      const wrapper = mountBar([{ id: 'by-element', label: 'By element', element: section }])
 
       await settle()
       await wrapper.getTestId('page-layout-anchor-by-element').trigger('click')

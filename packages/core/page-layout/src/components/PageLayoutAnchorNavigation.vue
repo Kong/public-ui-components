@@ -22,12 +22,12 @@
 
       <li
         v-for="anchor in view.anchors"
-        :key="`${anchor.key}-anchor`"
+        :key="`${anchor.id}-anchor`"
       >
         <button
-          :aria-current="anchor.key === activeAnchorKey ? 'location' : undefined"
+          :aria-current="anchor.id === activeAnchorId ? 'location' : undefined"
           class="anchor-link"
-          :class="{ active: anchor.key === activeAnchorKey }"
+          :class="{ active: anchor.id === activeAnchorId }"
           :data-testid="anchorDataTestId(anchor)"
           :title="anchor.label"
           type="button"
@@ -72,10 +72,10 @@
           <template #items="{ closeDropdown }">
             <KDropdownItem
               v-for="overflowAnchor in resolvedAnchors"
-              :key="`${overflowAnchor.key}-dropdown-item`"
-              :aria-current="overflowAnchor.key === activeAnchorKey ? 'location' : undefined"
+              :key="`${overflowAnchor.id}-dropdown-item`"
+              :aria-current="overflowAnchor.id === activeAnchorId ? 'location' : undefined"
               :data-testid="anchorDataTestId(overflowAnchor)"
-              :selected="overflowAnchor.key === activeAnchorKey"
+              :selected="overflowAnchor.id === activeAnchorId"
               @click="onOverflowAnchorClick(overflowAnchor, closeDropdown)"
             >
               {{ overflowAnchor.label }}
@@ -120,21 +120,21 @@ type AnchorNavigationFit = 'all' | 'window-3' | 'window-2' | 'active-only' | 'hi
 // Starts on the full set: the walk below settles within a single task, before the browser paints,
 // and a measurement that never happens leaves the bar usable instead of blank.
 const fit = ref<AnchorNavigationFit>('all')
-const activeAnchorKey = ref<string>('')
+const activeAnchorId = ref<string>('')
 
 /**
- * Keys of the anchors that currently point at a section on the page, refreshed by
- * `readAnchorState` below. An anchor whose selector matches nothing, whose `element` has been
- * unmounted, or that names neither is dropped from the bar entirely rather than rendered as a
- * pill that does nothing when clicked.
+ * Ids of the anchors that currently point at a section on the page, refreshed by
+ * `readAnchorState` below. An anchor whose id matches nothing, or whose `element` has been
+ * unmounted, is dropped from the bar entirely rather than rendered as a pill that does nothing
+ * when clicked.
  */
-const resolvableAnchorKeys = ref<string[]>([])
+const resolvableAnchorIds = ref<string[]>([])
 
 const resolvedAnchors = computed((): PageLayoutAnchor[] =>
-  anchors.filter((anchor) => resolvableAnchorKeys.value.includes(anchor.key)))
+  anchors.filter((anchor) => resolvableAnchorIds.value.includes(anchor.id)))
 
 const activeAnchorIndex = computed((): number => {
-  const index = resolvedAnchors.value.findIndex((anchor) => anchor.key === activeAnchorKey.value)
+  const index = resolvedAnchors.value.findIndex((anchor) => anchor.id === activeAnchorId.value)
   return index === -1 ? 0 : index
 })
 
@@ -191,8 +191,10 @@ const view = computed((): AnchorNavigationView => {
   }
 })
 
+// `id` is a selector, so strip the punctuation out of it rather than minting testids like
+// `page-layout-anchor-[data-anchor="usage"]`
 const anchorDataTestId = (anchor: PageLayoutAnchor): string =>
-  anchor.dataTestId ?? `page-layout-anchor-${anchor.key}`
+  anchor.dataTestId ?? `page-layout-anchor-${anchor.id.replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '')}`
 
 /* ------------------------------------------------------------------ *
  * Resolving the sections on the page
@@ -223,14 +225,12 @@ const resolveAnchorElement = (anchor: PageLayoutAnchor): HTMLElement | null => {
     return anchor.element.isConnected ? anchor.element : null
   }
 
-  if (!anchor.selector) {
-    return null
-  }
-
   const root: HTMLElement | Document = scroller.value ?? document
 
   try {
-    return root.querySelector<HTMLElement>(anchor.selector)
+    // `id` is documented as a selector, but a bare identifier is the shape most hosts reach for
+    // first, so fall back to reading it as an `id` attribute rather than silently matching nothing.
+    return root.querySelector<HTMLElement>(anchor.id) ?? root.querySelector<HTMLElement>(`#${CSS.escape(anchor.id)}`)
   } catch {
     // An invalid selector is the host's mistake, but it should not take the whole bar down with it
     return null
@@ -359,7 +359,7 @@ useResizeObserver(rootRef, handleResize)
  * not light up every section the scroll passes on its way there. The person taking the scroll back
  * over ends the pin early.
  */
-let pinnedAnchorKey: string | null = null
+let pinnedAnchorId: string | null = null
 let pinTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Typed as `EventTarget` so `scrollend` -- which the DOM lib does not know about on `Window` yet --
@@ -367,7 +367,7 @@ let pinTimeout: ReturnType<typeof setTimeout> | null = null
 const scrollEventTarget = (): EventTarget => scroller.value ?? window
 
 const unpinAnchor = () => {
-  pinnedAnchorKey = null
+  pinnedAnchorId = null
 
   if (pinTimeout) {
     clearTimeout(pinTimeout)
@@ -380,9 +380,9 @@ const unpinAnchor = () => {
   target.removeEventListener('touchstart', unpinAnchor)
 }
 
-const pinAnchor = (id: string) => {
+const pinAnchor = (anchorId: string) => {
   unpinAnchor()
-  pinnedAnchorKey = id
+  pinnedAnchorId = anchorId
 
   const target = scrollEventTarget()
   target.addEventListener('scrollend', unpinAnchor, { once: true })
@@ -427,25 +427,25 @@ const readAnchorState = (): boolean => {
       continue
     }
 
-    resolvable.push(anchor.key)
-    lastResolvable = anchor.key
-    current ??= anchor.key
+    resolvable.push(anchor.id)
+    lastResolvable = anchor.id
+    current ??= anchor.id
 
     if (element.getBoundingClientRect().top - top <= (anchor.offset ?? offset) + 8) {
-      current = anchor.key
+      current = anchor.id
     }
   }
 
-  const resolvableChanged = resolvable.length !== resolvableAnchorKeys.value.length ||
-    resolvable.some((key, index) => key !== resolvableAnchorKeys.value[index])
+  const resolvableChanged = resolvable.length !== resolvableAnchorIds.value.length ||
+    resolvable.some((id, index) => id !== resolvableAnchorIds.value[index])
 
   if (resolvableChanged) {
-    resolvableAnchorKeys.value = resolvable
+    resolvableAnchorIds.value = resolvable
   }
 
   // A clicked item holds the bar until its scroll has settled, but the set of sections on the page
   // is read either way -- it is not the reader's doing
-  if (!pinnedAnchorKey) {
+  if (!pinnedAnchorId) {
     // The sections at the end of a page can never be brought up to the header, so the last one
     // takes the bar once the page has run out of scroll -- otherwise it could not be reached by
     // scrolling. Only ever a section that is actually there.
@@ -453,7 +453,7 @@ const readAnchorState = (): boolean => {
       current = lastResolvable
     }
 
-    activeAnchorKey.value = current ?? ''
+    activeAnchorId.value = current ?? ''
   }
 
   return resolvableChanged
@@ -481,8 +481,8 @@ const scrollToAnchor = (anchor: PageLayoutAnchor) => {
     return
   }
 
-  activeAnchorKey.value = anchor.key
-  pinAnchor(anchor.key)
+  activeAnchorId.value = anchor.id
+  pinAnchor(anchor.id)
 
   const offset = anchor.offset ?? defaultAnchorOffset()
   const el = scroller.value
@@ -532,8 +532,8 @@ onBeforeUnmount(() => {
 watch(() => anchors, () => {
   // `readAnchorState` settles the active item against whatever is on the page now; this just makes
   // sure a key that has gone entirely does not hold the bar in the meantime
-  if (!anchors.some((anchor) => anchor.key === activeAnchorKey.value)) {
-    activeAnchorKey.value = ''
+  if (!anchors.some((anchor) => anchor.id === activeAnchorId.value)) {
+    activeAnchorId.value = ''
   }
 
   readAnchorState()

@@ -702,8 +702,8 @@ describe('<PageLayout />', () => {
 
     describe('anchor navigation', () => {
       const anchors = [
-        { key: 'usage', label: 'Usage', selector: '#usage' },
-        { key: 'policies', label: 'Policies', selector: '#policies' },
+        { id: '#usage', label: 'Usage' },
+        { id: '#policies', label: 'Policies' },
       ]
 
       const tabs: PageLayoutTab[] = [

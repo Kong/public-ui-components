@@ -411,16 +411,16 @@ import { PageLayout } from '@kong-ui-public/page-layout'
 import type { PageLayoutAnchor } from '@kong-ui-public/page-layout'
 
 const anchors: PageLayoutAnchor[] = [
-  { key: 'usage', label: 'Usage', selector: '#usage' },
-  { key: 'target-models', label: 'Target models', selector: '#target-models' },
-  { key: 'policies', label: 'Policies', selector: '#policies' },
+  { id: '#usage', label: 'Usage' },
+  { id: '#target-models', label: 'Target models' },
+  { id: '#policies', label: 'Policies' },
 ]
 </script>
 ```
 
-An anchor can point at its section in two ways. `selector` is any CSS selector — an id is the usual choice, but a section that cannot own an id can be targeted by attribute (`[data-section="usage"]`). `element` takes the element itself, for a page that holds a template ref rather than a selector, and takes precedence over `selector`.
+`id` is both the anchor's unique key and the CSS selector it is found by — an `#id` selector is the usual choice, but a section that cannot own an id can be targeted by attribute (`[data-section="usage"]`), and a bare identifier (`usage`) is looked up as `#usage`. `element` takes the element itself, for a page that holds a template ref rather than a selector; it takes precedence over `id`, which is then only the item's key.
 
-**An anchor that resolves to nothing is dropped from the bar entirely** — from the pills, the dropdown and the overflow budget alike — rather than rendered as an item that does nothing when clicked. That covers a selector matching nothing, an invalid selector, an anchor naming neither target, and an `element` whose section has since unmounted. The page is re-read on every scroll frame, so a section that mounts late appears as soon as it exists, and one that is removed disappears.
+**An anchor that resolves to nothing is dropped from the bar entirely** — from the pills, the dropdown and the overflow budget alike — rather than rendered as an item that does nothing when clicked. That covers an id matching nothing, an invalid selector, and an `element` whose section has since unmounted. The page is re-read on every scroll frame, so a section that mounts late appears as soon as it exists, and one that is removed disappears.
 
 ### Anchor Overflow
 
@@ -457,31 +457,26 @@ Only the `all` configuration is measured, since it is the only one whose width d
 
 ```ts
 interface PageLayoutAnchor {
-  /** The unique kebab-case key of the anchor */
-  key: string
+  /** CSS selector matching the section, e.g. `#usage`. Doubles as the item's unique key. */
+  id: string
   /** The display text of the navigation item */
   label: string
-  /** CSS selector matching the section, e.g. `#usage`. Ignored when `element` is set. */
-  selector?: string
-  /** The section element itself. Takes precedence over `selector`. */
+  /** The section element itself. Takes precedence over `id`. */
   element?: HTMLElement | null
   /** Pixels between the top of the scrolling container and the section once scrolled to */
   offset?: number
-  /** The data-testid attribute; auto-generated as `page-layout-anchor-${key}` if not provided */
+  /** The data-testid attribute; auto-generated from `id` if not provided */
   dataTestId?: string
 }
 ```
 
 | Property     | Type                   | Required | Default                          | Description                                                                 |
 | ------------ | ---------------------- | -------- | -------------------------------- | --------------------------------------------------------------------------- |
-| `key`        | `string`               | Yes      | -                                | Unique kebab-case identifier for the anchor                                 |
+| `id`         | `string`               | Yes      | -                                | CSS selector for the section, and the item's unique key. A bare identifier is looked up as `#id`. |
 | `label`      | `string`               | Yes      | -                                | Display text of the item. Truncates with an ellipsis past `140px`.          |
-| `selector`   | `string`               | No\*     | `undefined`                      | CSS selector matching the section on the page                               |
-| `element`    | `HTMLElement \| null`  | No\*     | `undefined`                      | The section element; takes precedence over `selector`                       |
+| `element`    | `HTMLElement \| null`  | No       | `undefined`                      | The section element; takes precedence over `id`                             |
 | `offset`     | `number`               | No       | header height + `--kui-space-60` | Where the section lands when scrolled to, and when it becomes active        |
-| `dataTestId` | `string`               | No       | `page-layout-anchor-${key}`      | Custom `data-testid` attribute for testing                                  |
-
-\* One of `selector` or `element` must be provided, or the anchor resolves to nothing and is dropped from the bar.
+| `dataTestId` | `string`               | No       | generated from `id`              | Custom `data-testid` attribute for testing                                  |
 
 ## Nested PageLayout
 

@@ -4,16 +4,17 @@ import type { PageLayoutAnchor } from '../src'
  * How a sandbox section lets its anchor find it. Between them these cover every way
  * `PageLayoutAnchor` can point at a section:
  *
- * - `id`: the section carries an `id` attribute, and the anchor's `selector` is `#usage`.
- * - `selector`: the section carries a data attribute instead, and the anchor's `selector` is the
+ * - `id`: the section carries an `id` attribute, and the anchor's `id` is the `#usage` selector
+ *   for it.
+ * - `selector`: the section carries a data attribute instead, and the anchor's `id` is the
  *   attribute selector for it -- for sections that cannot own an `id`.
  * - `element`: the section carries neither, and the page hands `PageLayout` the element itself
- *   from a template ref, with no `selector` at all.
+ *   from a template ref. The anchor's `id` is then only its key.
  */
 export type SandboxAnchorTarget = 'id' | 'selector' | 'element'
 
 export interface SandboxAnchorSection {
-  /** Unique key: the anchor's `key`, and the section's `id` / data attribute value */
+  /** Unique key: the section's `id` / data attribute value, and the basis of the anchor's `id` */
   key: string
   label: string
   target: SandboxAnchorTarget
@@ -43,14 +44,14 @@ export const sandboxAnchorSections: SandboxAnchorSection[] = [
  */
 export const buildSandboxAnchors = (elements: Record<string, HTMLElement | null>): PageLayoutAnchor[] =>
   sandboxAnchorSections.map((section): PageLayoutAnchor => ({
-    key: section.key,
-    label: section.label,
-    // The `element`-targeted section gets no selector at all -- the ref is the only way to it
-    selector: section.target === 'id'
+    // The `element`-targeted section's id matches nothing on the page -- it is only a key there,
+    // and the ref is the only way to the section
+    id: section.target === 'id'
       ? `#${section.key}`
       : section.target === 'selector'
         ? `[data-section="${section.key}"]`
-        : undefined,
+        : section.key,
+    label: section.label,
     element: section.target === 'element' ? elements[section.key] ?? null : undefined,
     offset: section.offset,
   }))

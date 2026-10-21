@@ -1,17 +1,15 @@
 export interface PageLayoutAnchor {
-  /** The unique kebab-case key of the anchor */
-  key: string
+  /**
+   * A CSS selector matching the section this item scrolls to (`#usage`, `[data-anchor="usage"]`, ...).
+   * A bare identifier (`usage`) is also accepted and looked up as `#usage`.
+   * Doubles as the item's unique key, so it must be unique within the list.
+   */
+  id: string
   /** The display text of the navigation item */
   label: string
   /**
-   * A CSS selector matching the section this item scrolls to, e.g. `#usage` or
-   * `[data-anchor="usage"]`. Ignored when `element` is set; one of the two must be provided for
-   * the item to resolve to anything.
-   */
-  selector?: string
-  /**
    * The section element itself, for pages that hold a template ref rather than a selector.
-   * Takes precedence over `selector`.
+   * Takes precedence over `id`, which is then only used as the item's key.
    */
   element?: HTMLElement | null
   /**
