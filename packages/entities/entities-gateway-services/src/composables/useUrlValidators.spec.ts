@@ -35,6 +35,13 @@ describe('validateHost()', () => {
     expect(validateHost('192.168.1')).toBe('')
   })
 
+  it('should accept hostnames containing underscores', () => {
+    expect(validateHost('httpbin_test.org')).toBe('')
+    expect(validateHost('exam_ple.com')).toBe('')
+    expect(validateHost('_internal')).toBe('')
+    expect(validateHost('upstream_1.internal_zone')).toBe('')
+  })
+
   it('should reject empty or whitespace-only hosts', () => {
     expect(validateHost('')).toBe(emptyMessage)
     expect(validateHost('   ')).toBe(emptyMessage)
@@ -50,7 +57,6 @@ describe('validateHost()', () => {
     expect(validateHost('example-.com')).toBe(invalidMessage)
     expect(validateHost('example.com-')).toBe(invalidMessage)
     expect(validateHost('exam ple.com')).toBe(invalidMessage)
-    expect(validateHost('exam_ple.com')).toBe(invalidMessage)
     expect(validateHost('example.com!')).toBe(invalidMessage)
     expect(validateHost('example@.com')).toBe(invalidMessage)
   })
