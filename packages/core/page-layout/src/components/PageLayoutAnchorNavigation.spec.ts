@@ -650,6 +650,21 @@ describe('<PageLayoutAnchorNavigation />', () => {
       expect(markedSection()?.id).toBe('section-2')
     })
 
+    it('marks the newest pick when one click follows another mid-scroll', async () => {
+      giveScrollerRoom()
+
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+      await wrapper.getTestId('page-layout-anchor-section-3').trigger('click')
+
+      scroller.dispatchEvent(new Event('scrollend'))
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-3')
+    })
+
     it('calls the mark off when the reader takes the scroll over', async () => {
       giveScrollerRoom()
 
@@ -664,6 +679,37 @@ describe('<PageLayoutAnchorNavigation />', () => {
       await nextFrame()
 
       expect(markedSection()).toBeNull()
+    })
+
+    it('calls the mark off when the reader scrolls with the keyboard', async () => {
+      giveScrollerRoom()
+
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+
+      scroller.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageDown' }))
+      scroller.dispatchEvent(new Event('scrollend'))
+      await nextFrame()
+
+      expect(markedSection()).toBeNull()
+    })
+
+    it('keeps the mark when a keystroke does not scroll the page', async () => {
+      giveScrollerRoom()
+
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+
+      // Typing in the page content is not the reader taking the scroll over
+      scroller.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+      scroller.dispatchEvent(new Event('scrollend'))
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-2')
     })
 
     it('marks the section reached from the overflow dropdown', async () => {

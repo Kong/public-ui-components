@@ -427,7 +427,14 @@ const clearAttention = (): void => {
 // can be listened for on either the scrolling element or the document
 const scrollEventTarget = (): EventTarget => scroller.value ?? window
 
+/** The keys that scroll a page. Any other keystroke is someone typing, not taking the scroll over. */
+const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '])
+
 const unpinAnchor = (event?: Event) => {
+  if (event instanceof KeyboardEvent && !SCROLL_KEYS.has(event.key)) {
+    return
+  }
+
   // The reader taking the scroll back over also calls off the attention the click was heading for:
   // they are no longer going where it was taking them. A scroll that simply ended does not.
   if (event && event.type !== 'scrollend') {
@@ -445,6 +452,7 @@ const unpinAnchor = (event?: Event) => {
   target.removeEventListener('scrollend', unpinAnchor)
   target.removeEventListener('wheel', unpinAnchor)
   target.removeEventListener('touchstart', unpinAnchor)
+  target.removeEventListener('keydown', unpinAnchor)
 }
 
 const pinAnchor = (anchorId: string) => {
@@ -455,6 +463,7 @@ const pinAnchor = (anchorId: string) => {
   target.addEventListener('scrollend', unpinAnchor, { once: true })
   target.addEventListener('wheel', unpinAnchor, { passive: true })
   target.addEventListener('touchstart', unpinAnchor, { passive: true })
+  target.addEventListener('keydown', unpinAnchor, { passive: true })
   // `scrollend` is not everywhere yet (Safari), and a long smooth scroll outlasts a short wait
   pinTimeout = setTimeout(unpinAnchor, 1000)
 }
@@ -582,7 +591,10 @@ const scrollToAnchor = (anchor: PageLayoutAnchor) => {
   const settled = Math.min(Math.max(top, 0), Math.max(scrollHeight - clientHeight, 0))
   const moves = Math.abs(settled - scrollTop) >= 2
 
-  const run = attentionRun;
+  // Claim the run here, not in `drawAttention`: a second pick while the first scroll is still
+  // running must leave the first click's pending mark behind, or the older one lands on arrival
+  // and takes the ring to the section the reader walked away from.
+  const run = ++attentionRun;
 
   (el ?? window).scrollTo({ behavior: 'smooth', top })
 
