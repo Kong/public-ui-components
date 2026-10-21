@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.29.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.29.1...%40kong-ui-public%2Fentities-gateway-services%403.29.2) (2026-10-21)
+
+### Bug Fixes
+
+* **entities-gw-services:** allow underscore in service host ([#3952](https://github.com/Kong/public-ui-components/issues/3952)) ([7a1f3e1](https://github.com/Kong/public-ui-components/commit/7a1f3e17f41261697f7fea19e4a7af2fd66501d8)), closes [#2930](https://github.com/Kong/public-ui-components/issues/2930)
+
+
 ## [3.29.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.29.0...%40kong-ui-public%2Fentities-gateway-services%403.29.1) (2026-10-19)
 
 ### Bug Fixes
