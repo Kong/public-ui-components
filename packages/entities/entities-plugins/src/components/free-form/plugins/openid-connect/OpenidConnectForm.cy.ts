@@ -99,6 +99,7 @@ const CREDENTIAL_CLAIMS_SCHEMA_FIELD = {
         type: 'string',
       },
       description: 'A path of strings representing the location of the claim in a nested object.',
+      len_min: 1,
       type: 'array',
     },
     description: 'The claims used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin).',

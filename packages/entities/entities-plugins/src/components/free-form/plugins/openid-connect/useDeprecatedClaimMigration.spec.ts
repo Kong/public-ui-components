@@ -41,6 +41,12 @@ describe('migrateDeprecatedClaim', () => {
     it('returns null when claim is an empty string', () => {
       expect(migrateDeprecatedClaim({ claim: '', claims: null })).toBeNull()
     })
+
+    it('returns null when claim is an empty array', () => {
+      // The server shorthand keeps `credential_claim: []` / `consumer_claim: []`
+      // unwrapped, and empty claim paths fail the plural fields' len_min = 1.
+      expect(migrateDeprecatedClaim({ claim: [], claims: null })).toBeNull()
+    })
   })
 
   describe('immutability', () => {

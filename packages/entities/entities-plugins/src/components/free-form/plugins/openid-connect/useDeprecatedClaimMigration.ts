@@ -18,6 +18,13 @@ export function migrateDeprecatedClaim(opts: {
     return null
   }
 
+  // An empty array means "no claims" and must stay empty: the server shorthand keeps
+  // `credential_claim: []` / `consumer_claim: []` unwrapped, and the plural fields
+  // reject empty claim paths (elements.len_min = 1).
+  if (Array.isArray(claim) && claim.length === 0) {
+    return null
+  }
+
   const claimArray = Array.isArray(claim) ? claim : [claim]
   return [claimArray]
 }
