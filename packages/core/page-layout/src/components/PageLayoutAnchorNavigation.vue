@@ -295,6 +295,10 @@ const activeOnlyBudget = (): number =>
 let fitRun = 0
 const computeAnchorNavigationFit = async (): Promise<void> => {
   if (!resolvedAnchors.value.length) {
+    // Settle rather than leaving a window fit in place: `view` reads a stale window as "too few
+    // items to need ellipses, but still worth a dropdown" and renders a lone chevron over an
+    // empty list. Every trigger re-runs this, so the bar returns as soon as a section does.
+    fit.value = 'hidden'
     return
   }
 

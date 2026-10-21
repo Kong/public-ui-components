@@ -337,6 +337,32 @@ describe('<PageLayoutAnchorNavigation />', () => {
       expect(pillLabels(wrapper)).toEqual(['Section 0', 'Section 1'])
     })
 
+    it('leaves no dropdown behind when every section disappears', async () => {
+      availableWidth = widthForPills(3)
+
+      const wrapper = mountBar(buildAnchors(8))
+
+      await settle()
+
+      expect(wrapper.findTestId('anchor-navigation-overflow-dropdown-button').exists()).toBe(true)
+
+      // The host swaps the page content out while the `anchors` prop stays as it was
+      scroller.querySelectorAll('section').forEach((section) => section.remove())
+      await scrollToSection(0)
+
+      expect(pillLabels(wrapper)).toEqual([])
+      expect(wrapper.findTestId('anchor-navigation-overflow-dropdown-button').exists()).toBe(false)
+
+      // ...and comes back when the sections do
+      for (let index = 0; index < 8; index++) {
+        addSection(index, { id: `section-${index}` })
+      }
+      await scrollToSection(0)
+
+      expect(pillLabels(wrapper)).toHaveLength(3)
+      expect(wrapper.findTestId('anchor-navigation-overflow-dropdown-button').exists()).toBe(true)
+    })
+
     it('renders anchors added to the prop after mount', async () => {
       const anchors = buildAnchors(2)
       const wrapper = mountBar(anchors)
