@@ -9,5 +9,11 @@
       "label": "More",
       "aria_label": "More tabs"
     }
+  },
+  "anchor_navigation": {
+    "aria_label": "Page sections",
+    "more_button": {
+      "aria_label": "More page sections"
+    }
   }
 }

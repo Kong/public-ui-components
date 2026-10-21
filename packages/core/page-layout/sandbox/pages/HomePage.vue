@@ -1,6 +1,7 @@
 <template>
   <div class="page-layout-sandbox-wrapper">
     <PageLayout
+      :anchors="showAnchorNavigation ? anchors : []"
       back-to="/"
       :breadcrumbs="breadcrumbs"
       :page-shortcut-data="showFavoriteButton ? pageShortcutData : undefined"
@@ -31,7 +32,11 @@
         </KBadge>
       </template>
       <template #default>
-        <NestedPage />
+        <AnchorSections
+          v-if="showAnchorNavigation"
+          ref="anchor-sections"
+        />
+        <NestedPage v-else />
       </template>
       <template #tab-keys="{ tab }">
         {{ tab.label }}
@@ -77,14 +82,22 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, provide, reactive, ref } from 'vue'
+import { computed, onMounted, provide, reactive, ref, useTemplateRef } from 'vue'
 import { AboutCard, NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
-import type { AboutCardRow, PageLayoutTab, PageShortcutData } from '../../src'
+import type { AboutCardRow, PageLayoutAnchor, PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
+import AnchorSections from './AnchorSections.vue'
+import { buildSandboxAnchors } from '../anchors'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+const { newAppearance, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+
+// One section is targeted by its element rather than by a selector, so the anchors are rebuilt
+// once the sections have mounted and handed their refs up. PageLayout picks the change up on its
+// own -- it watches `anchors`.
+const anchorSectionsRef = useTemplateRef<InstanceType<typeof AnchorSections>>('anchor-sections')
+const anchors = computed<PageLayoutAnchor[]>(() => buildSandboxAnchors(anchorSectionsRef.value?.sectionElements ?? {}))
 
 const pageLayoutMounted = ref<boolean>(false)
 

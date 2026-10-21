@@ -13,6 +13,10 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Tab Overflow](#tab-overflow)
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
+- [Anchor Navigation](#anchor-navigation)
+  - [Anchor Overflow](#anchor-overflow)
+  - [Scroll Behavior](#scroll-behavior)
+  - [`PageLayoutAnchor` Interface](#pagelayoutanchor-interface)
 - [Nested PageLayout](#nested-pagelayout)
 - [Teleport targets](#teleport-targets)
 - [New Appearance](#new-appearance)
@@ -36,6 +40,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - A teleport target in the page header actions area for the host application's "Ask Kai" button
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
+- An anchor navigation bar (new appearance only) that scrolls the page to its in-page sections, follows the scroll position, and has its own overflow handling
 - Support for both Vue Router route objects and string URLs in tabs
 - `<router-view>` integration when tabs are present; falls back to a default slot otherwise
 - Skeleton loading state while the tab layout is being computed
@@ -81,6 +86,16 @@ An array of breadcrumb items passed to the Kongponents `KBreadcrumbs` component.
 - default: `[]`
 
 An array of `PageLayoutTab` objects that define the tabbed navigation displayed below the page title.
+
+#### `anchors`
+
+- type: `Array as PropType<PageLayoutAnchor[]>`
+- required: `false`
+- default: `[]`
+
+An array of `PageLayoutAnchor` objects describing the in-page sections the header's anchor navigation bar scrolls to. See [Anchor Navigation](#anchor-navigation).
+
+The bar is only rendered in the [new appearance](#new-appearance), and only when `tabs` is empty — the header shows tabs **or** anchor navigation, never both.
 
 #### `pageShortcutData`
 
@@ -370,6 +385,99 @@ interface PageLayoutTab {
 | `active`     | `boolean`                    | No       | `undefined`        | Whether the tab is currently active (highlighted)          |
 | `dataTestId` | `string`                     | No       | `${key}-tab-link`  | Custom `data-testid` attribute for testing                 |
 
+## Anchor Navigation
+
+A page whose content is one long scroll rather than a set of routes can give its header an anchor navigation bar instead of tabs: a row of section names that scroll the page to the matching section, and that highlights whichever section the reader is currently in.
+
+The bar renders inline in the header row, centred in the space between the breadcrumbs/title and the page actions. It requires the [new appearance](#new-appearance) and is ignored in the default one, which has no row to put it in.
+
+Because `PageLayout` only renders the `default` slot when `tabs` is empty, an anchored page is already a `default`-slot page — the sections live in the slot content and the bar points at them.
+
+```html
+<template>
+  <PageLayout
+    :anchors="anchors"
+    :breadcrumbs="breadcrumbs"
+    title="GPT-4o Multi-Purpose"
+  >
+    <section id="usage">...</section>
+    <section id="target-models">...</section>
+    <section id="policies">...</section>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout } from '@kong-ui-public/page-layout'
+import type { PageLayoutAnchor } from '@kong-ui-public/page-layout'
+
+const anchors: PageLayoutAnchor[] = [
+  { id: '#usage', label: 'Usage' },
+  { id: '#target-models', label: 'Target models' },
+  { id: '#policies', label: 'Policies' },
+]
+</script>
+```
+
+`id` is both the anchor's unique key and the CSS selector it is found by — an `#id` selector is the usual choice, but a section that cannot own an id can be targeted by attribute (`[data-section="usage"]`), and a bare identifier (`usage`) is looked up as `#usage`. `element` takes the element itself, for a page that holds a template ref rather than a selector; it takes precedence over `id`, which is then only the item's key.
+
+**An anchor that resolves to nothing is dropped from the bar entirely** — from the pills, the dropdown and the overflow budget alike — rather than rendered as an item that does nothing when clicked. That covers an id matching nothing, an invalid selector, and an `element` whose section has since unmounted. The page is re-read on every scroll frame, so a section that mounts late appears as soon as it exists, and one that is removed disappears.
+
+### Anchor Overflow
+
+The bar measures the space the header row leaves it on mount, on resize ([`useResizeObserver`](https://vueuse.org/core/useResizeObserver), debounced at 150ms), and whenever the set of resolvable anchors changes. It then settles on one of:
+
+| Fit | What the bar shows |
+| --- | --- |
+| `all` | every anchor, no dropdown |
+| `window-3` | a sliding window of 3 pills, an ellipsis on each side that has items out of view, and a dropdown |
+| `window-2` | the same with 2 pills |
+| `active-only` | the active pill and the dropdown, nothing else |
+| `hidden` | nothing — not even one pill and the dropdown fit |
+
+Within a window, the position follows the reader: pinned to the start while they are in the first N sections, pinned to the end once they reach the last N, and sliding in between — with the active pill in the **middle** of a three-pill window and **last** in a two-pill one.
+
+Three properties hold throughout:
+
+- **The dropdown always lists every resolved anchor**, the active one included, so it is always the one place the whole list can be reached from.
+- **The dropdown is always the last item** in the bar.
+- **The number of pills never changes as the reader scrolls.** The fit is measured independently of which anchor is active, so scrolling can slide the window but never resize it.
+
+That last property is why the overflow budget is built from **fixed** widths rather than measured ones: each pill slot reserves the truncation cap (`140px`) whatever its label, and **both** ellipses are paid for even in the configurations that only render one. Budgeting from real widths would let three short pills fit and then overflow the moment a longer one slid into the window, or the moment the second ellipsis appeared — dropping a pill mid-scroll. Reserving the worst case shows fewer pills on a narrow bar, deliberately, in exchange for a bar that does not jump.
+
+Only the `all` configuration is measured, since it is the only one whose width depends on the labels. Each step is a DOM write followed by a read in the same task, so the browser never paints an intermediate configuration.
+
+### Scroll Behavior
+
+- The bar scrolls the **nearest scrolling ancestor** of the layout, falling back to the document when there is none. This is the same element the sticky header is pinned to.
+- A section lands below the sticky header rather than under it: the default offset is the header's current height plus `--kui-space-60`. Override it per item with `offset`, which also shifts the point at which that section becomes the active one.
+- The active item follows the scroll position — the last section whose top has passed under the header. Once the page has been scrolled to the bottom, the last resolvable anchor takes over, so every section can be reached by scrolling.
+- A clicked item stays active until the smooth scroll it started has settled, so the bar does not light up every section on the way. Taking the scroll back over (wheel, touch) releases it early.
+
+### `PageLayoutAnchor` Interface
+
+```ts
+interface PageLayoutAnchor {
+  /** CSS selector matching the section, e.g. `#usage`. Doubles as the item's unique key. */
+  id: string
+  /** The display text of the navigation item */
+  label: string
+  /** The section element itself. Takes precedence over `id`. */
+  element?: HTMLElement | null
+  /** Pixels between the top of the scrolling container and the section once scrolled to */
+  offset?: number
+  /** The data-testid attribute; auto-generated from `id` if not provided */
+  dataTestId?: string
+}
+```
+
+| Property     | Type                   | Required | Default                          | Description                                                                 |
+| ------------ | ---------------------- | -------- | -------------------------------- | --------------------------------------------------------------------------- |
+| `id`         | `string`               | Yes      | -                                | CSS selector for the section, and the item's unique key. A bare identifier is looked up as `#id`. |
+| `label`      | `string`               | Yes      | -                                | Display text of the item. Truncates with an ellipsis past `140px`.          |
+| `element`    | `HTMLElement \| null`  | No       | `undefined`                      | The section element; takes precedence over `id`                             |
+| `offset`     | `number`               | No       | header height + `--kui-space-60` | Where the section lands when scrolled to, and when it becomes active        |
+| `dataTestId` | `string`               | No       | generated from `id`              | Custom `data-testid` attribute for testing                                  |
+
 ## Nested PageLayout
 
 `PageLayout` supports nesting. A common case is a parent route wrapping its children with `PageLayout` (for top-level breadcrumbs/tabs), while a child route's component also uses `PageLayout` for its own header. When this happens, the parent automatically detects the child and hides its own header and tabs (removing them from the DOM entirely), acting as a transparent pass-through. This ensures only the child's `PageLayout` header is visible. This is achieved via `provide` / `inject` internally.
@@ -408,9 +516,10 @@ Other differences from the default appearance:
 - The back button (`backTo`) is **not** rendered, regardless of whether `backTo` is provided. The favorite star button behaves as it does in the default appearance -- see [Page Shortcuts](#page-shortcuts).
 - The header uses tighter padding (`--kui-space-40` rather than `--kui-space-60`), and the tab row's horizontal padding matches it so the tabs line up with the breadcrumbs above them.
 - The header is `position: sticky` at the top of its nearest scrolling ancestor, so it (and its tab row) stays in view while the page content scrolls beneath it.
-- When there are no tabs the header is a single row with a fixed height of `45px`, including its 1px bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
+- When there are no tabs the header is a single row with a fixed height of `44px`, including its 1px bottom border, so it stays consistent whatever the row holds. With tabs the header has to grow to fit the tab row, so no height is set.
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
 - The [`aside` slot](#aside) is rendered. It is ignored in the default appearance.
+- The [anchor navigation bar](#anchor-navigation) is rendered when `anchors` is provided and `tabs` is not. It is ignored in the default appearance.
 
 Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
 
@@ -532,6 +641,7 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 
 ```ts
 import type {
+  PageLayoutAnchor,
   PageLayoutTab,
   PageLayoutProps,
   PageLayoutSlots,

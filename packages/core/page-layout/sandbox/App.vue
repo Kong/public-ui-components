@@ -22,6 +22,11 @@
                 label-before
               />
               <KInputSwitch
+                v-model="showAnchorNavigation"
+                label="Anchor navigation"
+                label-before
+              />
+              <KInputSwitch
                 v-model="showFavoriteButton"
                 label="Favorite button"
                 label-before
@@ -67,7 +72,7 @@
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { useSandboxControls } from './composables/useSandboxControls'
 
-const { newAppearance, showTabs, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+const { newAppearance, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>
