@@ -136,6 +136,20 @@ const dropdownLabels = async (wrapper: VueWrapper<any>): Promise<string[]> => {
   return wrapper.findAll('.k-dropdown-item').map((item) => item.text())
 }
 
+/** The section carrying the attention mark, if any */
+const markedSection = (): HTMLElement | null => scroller.querySelector('[data-anchor-attention]')
+
+/** The mark goes on a frame after the click, so the animation restarts on a repeat pick */
+const nextFrame = (): Promise<void> => new Promise((resolve) => {
+  requestAnimationFrame(() => resolve())
+})
+
+/** Gives the scroll container somewhere to scroll, so a click starts a scroll worth waiting for */
+const giveScrollerRoom = (): void => {
+  Object.defineProperty(scroller, 'clientHeight', { value: 500, configurable: true })
+  Object.defineProperty(scroller, 'scrollHeight', { value: 10000, configurable: true })
+}
+
 enableAutoUnmount(afterEach)
 
 describe('<PageLayoutAnchorNavigation />', () => {
@@ -176,6 +190,7 @@ describe('<PageLayoutAnchorNavigation />', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.useRealTimers()
     resizeObserverCallbacks.clear()
     document.body.innerHTML = ''
   })
@@ -578,6 +593,106 @@ describe('<PageLayoutAnchorNavigation />', () => {
 
       expect(scrollToCalls).toHaveLength(1)
       expect(scrollToCalls[0].top).toBe((6 * SECTION_SPACING) - 16)
+    })
+
+    it('marks the section it scrolls to, then clears the mark', async () => {
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+      // The page cannot move in this harness, so the mark goes on without waiting for a scroll
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-2')
+
+      // Real time rather than fake timers: faking them fakes `requestAnimationFrame` too, which
+      // the mark goes on in
+      await new Promise((resolve) => setTimeout(resolve, 1300))
+
+      expect(markedSection()).toBeNull()
+    })
+
+    it('restarts the mark when the same section is picked again', async () => {
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-1').trigger('click')
+      await nextFrame()
+
+      const first = markedSection()?.getAttribute('data-anchor-attention')
+
+      await wrapper.getTestId('page-layout-anchor-section-1').trigger('click')
+
+      // Dropped for a frame, so the animation starts over rather than doing nothing
+      expect(markedSection()).toBeNull()
+
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-1')
+      expect(markedSection()?.getAttribute('data-anchor-attention')).not.toBe(first)
+    })
+
+    it('waits for the scroll to settle before marking the section', async () => {
+      giveScrollerRoom()
+
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+      await nextFrame()
+
+      // The page is still on its way there
+      expect(markedSection()).toBeNull()
+
+      scroller.dispatchEvent(new Event('scrollend'))
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-2')
+    })
+
+    it('calls the mark off when the reader takes the scroll over', async () => {
+      giveScrollerRoom()
+
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+
+      // The reader scrolls somewhere else mid-flight
+      scroller.dispatchEvent(new Event('wheel'))
+      scroller.dispatchEvent(new Event('scrollend'))
+      await nextFrame()
+
+      expect(markedSection()).toBeNull()
+    })
+
+    it('marks the section reached from the overflow dropdown', async () => {
+      availableWidth = widthForPills(3)
+
+      const wrapper = mountBar(buildAnchors(8))
+
+      await settle()
+      await wrapper.getTestId('anchor-navigation-overflow-dropdown-button').trigger('click')
+      await flushPromises()
+      await wrapper.findAll('.k-dropdown-item')[6].find('.dropdown-item-trigger').trigger('click')
+      await flushPromises()
+      await nextFrame()
+
+      expect(markedSection()?.id).toBe('section-6')
+    })
+
+    it('takes the mark off the host markup when it unmounts', async () => {
+      const wrapper = mountBar(buildAnchors(4))
+
+      await settle()
+      await wrapper.getTestId('page-layout-anchor-section-2').trigger('click')
+      await nextFrame()
+
+      expect(markedSection()).not.toBeNull()
+
+      wrapper.unmount()
+
+      expect(markedSection()).toBeNull()
     })
 
     it('follows the reader as the page scrolls', async () => {

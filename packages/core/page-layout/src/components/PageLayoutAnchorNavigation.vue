@@ -366,11 +366,74 @@ useResizeObserver(rootRef, handleResize)
 let pinnedAnchorId: string | null = null
 let pinTimeout: ReturnType<typeof setTimeout> | null = null
 
+/* ------------------------------------------------------------------ *
+ * Section attention
+ *
+ * A section that has just been scrolled to draws the eye once. The animation itself is PageLayout's
+ * -- the section is the host's own markup, which this component's scoped styles cannot reach -- so
+ * all that happens here is the attribute going on and coming off again.
+ * ------------------------------------------------------------------ */
+
+/** Marks the section PageLayout draws the attention ring around. Also hardcoded in its styles. */
+const ANCHOR_ATTENTION_ATTRIBUTE = 'data-anchor-attention'
+
+/** How long the section keeps the attribute: a little longer than the animation it drives. */
+const ANCHOR_ATTENTION_MS = 1200
+/** How long a smooth scroll may take before the section it heads for draws attention anyway. */
+const ANCHOR_SCROLL_END_FALLBACK_MS = 1600
+
+let attentionRun = 0
+let attentionFrame = 0
+let attentionTimeout: ReturnType<typeof setTimeout> | null = null
+let attentionElement: HTMLElement | null = null
+
+/**
+ * Marks a section for one run of the attention animation. The mark is dropped for a frame first, so
+ * picking the same item twice restarts the animation instead of doing nothing.
+ */
+const drawAttention = (element: HTMLElement): void => {
+  const run = String(++attentionRun)
+
+  clearAttention()
+  attentionElement = element
+  element.removeAttribute(ANCHOR_ATTENTION_ATTRIBUTE)
+
+  attentionFrame = requestAnimationFrame(() => {
+    element.setAttribute(ANCHOR_ATTENTION_ATTRIBUTE, run)
+
+    attentionTimeout = setTimeout(() => {
+      // A newer mark owns the element now, and will clear up after itself
+      if (element.getAttribute(ANCHOR_ATTENTION_ATTRIBUTE) === run) {
+        element.removeAttribute(ANCHOR_ATTENTION_ATTRIBUTE)
+      }
+    }, ANCHOR_ATTENTION_MS)
+  })
+}
+
+/** Takes the mark off whatever carries it, so nothing is left behind on the host's markup. */
+const clearAttention = (): void => {
+  cancelAnimationFrame(attentionFrame)
+
+  if (attentionTimeout) {
+    clearTimeout(attentionTimeout)
+    attentionTimeout = null
+  }
+
+  attentionElement?.removeAttribute(ANCHOR_ATTENTION_ATTRIBUTE)
+  attentionElement = null
+}
+
 // Typed as `EventTarget` so `scrollend` -- which the DOM lib does not know about on `Window` yet --
 // can be listened for on either the scrolling element or the document
 const scrollEventTarget = (): EventTarget => scroller.value ?? window
 
-const unpinAnchor = () => {
+const unpinAnchor = (event?: Event) => {
+  // The reader taking the scroll back over also calls off the attention the click was heading for:
+  // they are no longer going where it was taking them. A scroll that simply ended does not.
+  if (event && event.type !== 'scrollend') {
+    attentionRun++
+  }
+
   pinnedAnchorId = null
 
   if (pinTimeout) {
@@ -479,6 +542,25 @@ const onScroll = () => {
   })
 }
 
+/** Runs `fn` once the scroll has come to rest, on `scrollend` where the browser has it. */
+const afterScrollEnds = (fn: () => void): void => {
+  const target = scrollEventTarget()
+  let done = false
+
+  const finish = (): void => {
+    if (done) {
+      return
+    }
+
+    done = true
+    target.removeEventListener('scrollend', finish)
+    fn()
+  }
+
+  target.addEventListener('scrollend', finish, { once: true })
+  window.setTimeout(finish, ANCHOR_SCROLL_END_FALLBACK_MS)
+}
+
 const scrollToAnchor = (anchor: PageLayoutAnchor) => {
   const element = resolveAnchorElement(anchor)
   if (!element) {
@@ -489,14 +571,34 @@ const scrollToAnchor = (anchor: PageLayoutAnchor) => {
   pinAnchor(anchor.id)
 
   const offset = anchor.offset ?? defaultAnchorOffset()
+  const { scrollTop, clientHeight, scrollHeight } = scrollMetrics()
   const el = scroller.value
+  const top = el
+    ? element.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - offset
+    : element.getBoundingClientRect().top + window.scrollY - offset
 
-  if (el) {
-    el.scrollTo({ behavior: 'smooth', top: element.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - offset })
+  // Where the scroll can actually come to rest: the last sections of a page can never be brought
+  // all the way up to the header, so a target past the end is not where the page will stop.
+  const settled = Math.min(Math.max(top, 0), Math.max(scrollHeight - clientHeight, 0))
+  const moves = Math.abs(settled - scrollTop) >= 2
+
+  const run = attentionRun;
+
+  (el ?? window).scrollTo({ behavior: 'smooth', top })
+
+  // The section draws attention where the scroll leaves it -- at once when the page cannot move,
+  // since no scroll is coming to wait for.
+  if (!moves) {
+    drawAttention(element)
     return
   }
 
-  window.scrollTo({ behavior: 'smooth', top: element.getBoundingClientRect().top + window.scrollY - offset })
+  afterScrollEnds(() => {
+    // A newer click, or the reader taking the scroll over, called this one off on the way
+    if (run === attentionRun) {
+      drawAttention(element)
+    }
+  })
 }
 
 const onOverflowAnchorClick = (anchor: PageLayoutAnchor, closeDropdown: () => void) => {
@@ -527,6 +629,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   scrollEventTarget().removeEventListener('scroll', onScroll)
   unpinAnchor()
+  // The section belongs to the host and outlives this component, so take the mark back off it
+  attentionRun++
+  clearAttention()
 
   if (resizeTimeout) {
     clearTimeout(resizeTimeout)
