@@ -22,7 +22,10 @@
               v-if="newAppearance"
               #divider
             >
-              <ChevronRightIcon decorative />
+              <ChevronRightIcon
+                decorative
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+              />
             </template>
           </KBreadcrumbs>
           <div class="title-container">
