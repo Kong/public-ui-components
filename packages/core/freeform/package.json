@@ -55,7 +55,7 @@
     "compare-versions": "^6.1.1",
     "dompurify": "^3.4.16",
     "lodash-es": "^4.18.1",
-    "marked": "^18.0.14"
+    "marked": "^18.1.0"
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
