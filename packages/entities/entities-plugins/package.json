@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "10.0.0",
+  "version": "10.0.2",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -148,6 +148,6 @@
     "@kong-ui-public/freeform": "workspace:^",
     "dompurify": "^3.4.16",
     "lodash-es": "^4.18.1",
-    "marked": "^18.0.14"
+    "marked": "^18.1.0"
   }
 }

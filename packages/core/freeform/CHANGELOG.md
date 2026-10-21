@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.1...%40kong-ui-public%2Ffreeform%400.5.2) (2026-10-21)
+
+### Bug Fixes
+
+* pnpm audit ([#3953](https://github.com/Kong/public-ui-components/issues/3953)) ([98b7568](https://github.com/Kong/public-ui-components/commit/98b75683c7b7efec42f5052bec86711d00e3c6bb))
+
+
 ## [0.5.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.0...%40kong-ui-public%2Ffreeform%400.5.1) (2026-10-19)
 
 ### Bug Fixes

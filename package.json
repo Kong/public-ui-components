@@ -68,7 +68,7 @@
     "typedoc-plugin-markdown": "^4.13.1",
     "typescript": "~5.9.3",
     "uuid": "^14.0.2",
-    "vite": "^7.3.6",
+    "vite": "^7.3.7",
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^8.2.1",
     "vitest": "^4.1.11",

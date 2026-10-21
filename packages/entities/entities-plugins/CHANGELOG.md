@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.1...%40kong-ui-public%2Fentities-plugins%4010.0.2) (2026-10-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [10.0.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.0...%40kong-ui-public%2Fentities-plugins%4010.0.1) (2026-10-21)
+
+### Bug Fixes
+
+* pnpm audit ([#3953](https://github.com/Kong/public-ui-components/issues/3953)) ([98b7568](https://github.com/Kong/public-ui-components/commit/98b75683c7b7efec42f5052bec86711d00e3c6bb))
+
+
 # [10.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.276.2...%40kong-ui-public%2Fentities-plugins%4010.0.0) (2026-10-20)
 
 * feat(entities-plugins)!: always use the redesigned Konnect plugin list (#3946) ([0cb1067](https://github.com/Kong/public-ui-components/commit/0cb106767b96b404b143a3cf6d423d8733d11cce)), closes [#3946](https://github.com/Kong/public-ui-components/issues/3946)
