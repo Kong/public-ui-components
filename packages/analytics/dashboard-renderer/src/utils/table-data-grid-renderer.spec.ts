@@ -1,10 +1,16 @@
 import { describe, expect, it, vi } from 'vitest'
+import { createI18n } from '@kong-ui-public/i18n'
 import type { DashboardRendererContext } from '../types'
 import type { PlatformDatasourceTabularQuery, PlatformUsageDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
   tableDataGridFetcherByDatasource,
   tableDataGridHeadersByDatasource,
 } from './table-data-grid-renderer'
+import { fieldLabel } from './field-label'
+import english from '../locales/en.json'
+
+const i18n = createI18n<typeof english>('en-us', english)
+const labelFor = (fieldTranslationMap: Map<string, string>) => (key: string) => fieldLabel(i18n, fieldTranslationMap, key)
 
 const context: DashboardRendererContext = {
   filters: [
@@ -53,43 +59,38 @@ const response: PlatformTabularResponse = {
 
 describe('table data grid renderer utilities', () => {
   it('builds translated headers from query columns and falls back to raw labels', () => {
-    const translate = (key: string): string => ({
-      'chartLabels.control_plane': 'Control plane',
-      'chartLabels.gateway_service': 'Gateway service',
-    })[key] ?? key
-
-    const canTranslate = (key: string): boolean => key !== 'chartLabels.unknown_column'
-
     const expected = [
       { key: 'control_plane', label: 'Control plane' },
       { key: 'gateway_service', label: 'Gateway service' },
       { key: 'unknown_column', label: 'unknown_column' },
     ]
-    const args = { columns: ['control_plane', 'gateway_service', 'unknown_column'], translate, canTranslate }
+    const args = { columns: ['control_plane', 'gateway_service', 'unknown_column'], fieldLabel: labelFor(new Map()) }
 
     expect(tableDataGridHeadersByDatasource.platform(args)).toEqual(expected)
     expect(tableDataGridHeadersByDatasource.platform_usage(args)).toEqual(expected)
   })
 
-  it('prefers datasource config labels over i18n translations', () => {
-    const translate = (key: string): string => ({
-      'chartLabels.control_plane': 'Control plane',
-    })[key] ?? key
-
-    const canTranslate = (key: string): boolean => key !== 'chartLabels.unknown_column'
+  it('prefers datasource config labels over i18n translations, skipping empty labels', () => {
     const fieldTranslationMap = new Map([
       ['control_plane', 'Custom control plane'],
       ['unknown_column', 'Custom unknown column'],
+      ['gateway_service', ''],
     ])
 
     const expected = [
       { key: 'control_plane', label: 'Custom control plane' },
       { key: 'unknown_column', label: 'Custom unknown column' },
     ]
-    const args = { columns: ['control_plane', 'unknown_column'], translate, canTranslate, fieldTranslationMap }
+    const args = { columns: ['control_plane', 'unknown_column'], fieldLabel: labelFor(fieldTranslationMap) }
 
     expect(tableDataGridHeadersByDatasource.platform(args)).toEqual(expected)
     expect(tableDataGridHeadersByDatasource.platform_usage(args)).toEqual(expected)
+
+    const emptyLabelArgs = { columns: ['gateway_service'], fieldLabel: labelFor(fieldTranslationMap) }
+
+    expect(tableDataGridHeadersByDatasource.platform(emptyLabelArgs)).toEqual([
+      { key: 'gateway_service', label: 'Gateway service' },
+    ])
   })
 
   it('selects the platform fetcher and fetches tabular data with a datasource-aware query', async () => {

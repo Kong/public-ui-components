@@ -155,6 +155,12 @@ describe('<CsvExportModal />', () => {
         showInUI: true,
         aggregation: true,
         group: false,
+      }, {
+        name: 'status_code',
+        label: '',
+        showInUI: true,
+        aggregation: false,
+        group: true,
       }],
       timeRangeOptions: [],
     }]
@@ -172,6 +178,39 @@ describe('<CsvExportModal />', () => {
         'UTC offset',
         'Status code',
         'Custom request count',
+      ])
+    })
+  })
+
+  it('falls back to the translation when a config label is an empty string', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+    // @ts-ignore - mock data
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'request_count',
+        label: '',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    mount({
+      exportState: { status: 'success', chartData: populatedExploreResult },
+      filename: 'Total requests',
+    })
+
+    cy.get('.k-table-data .table thead th').should(th => {
+      expect(Array.from(th, element => element.textContent)).to.deep.equal([
+        'Timestamp',
+        'UTC offset',
+        'Status code',
+        'Request count',
       ])
     })
   })

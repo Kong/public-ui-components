@@ -411,7 +411,7 @@ describe('<DashboardTile /> metric selector', () => {
 
   it('labels metric options with datasource config labels when available', async () => {
     const datasourceConfigStore = useDatasourceConfigStore()
-    // @ts-ignore - seeding the store for unit tests
+
     datasourceConfigStore.datasourceConfig = [{
       name: 'api_usage',
       showInUI: true,
@@ -421,10 +421,16 @@ describe('<DashboardTile /> metric selector', () => {
         showInUI: true,
         aggregation: true,
         group: false,
+      }, {
+        name: 'response_latency_average',
+        label: '',
+        showInUI: true,
+        aggregation: true,
+        group: false,
       }],
       timeRangeOptions: [],
     }]
-    // @ts-ignore - clear any load errors from outside-component store access
+
     datasourceConfigStore.datasourceConfigError = null
 
     const wrapper = mountTile('api_usage')

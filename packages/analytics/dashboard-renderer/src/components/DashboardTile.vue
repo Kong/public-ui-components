@@ -239,7 +239,6 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 import HeatmapRenderer from './HeatmapRenderer.vue'
 import TreemapRenderer from './TreemapRenderer.vue'
-import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -268,6 +267,8 @@ const {
   tileId: string | number
   tileType?: TileConfig['type']
 }>()
+
+const fieldLabel = composables.useFieldLabel()
 
 const { zoomConfiguration } = composables.useDashboardContext({
   context: computed(() => context),
@@ -523,14 +524,9 @@ const showMetricSelector = computed(() => (
   && Object.keys(chartData.value?.meta.display ?? {}).length > 0
 ))
 
-const isChartLabel = (name: string): name is keyof typeof english.chartLabels => Object.hasOwn(english.chartLabels, name)
-
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,
-  label: datasourceConfigStore.fieldTranslationMap.get(value)
-    ?? (isChartLabel(value)
-      ? i18n.t(`chartLabels.${value}`)
-      : value),
+  label: fieldLabel(value),
 })))
 
 const isAgedOutQuery = computed(() => {

@@ -48,6 +48,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
     fields: [
       {
         name: 'api_product',
+        label: 'API product',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -59,6 +60,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
       },
       {
         name: 'control_plane',
+        label: 'Control plane',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -70,6 +72,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
       },
       {
         name: 'gateway_service',
+        label: 'Gateway service',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -81,6 +84,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
       },
       {
         name: 'route',
+        label: 'Route',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -92,6 +96,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
       },
       {
         name: 'status_code',
+        label: 'Status code',
         showInUI: true,
         aggregation: false,
         group: true,
@@ -102,6 +107,7 @@ const mockDatasourceConfig: DatasourceConfig[] = [
         },
       },
     ],
+    timeRangeOptions: [],
   },
 ]
 

@@ -8,7 +8,6 @@ import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities
 import { computed } from 'vue'
 
 import { computePercentiles, scatterChartColors, withAlpha } from '../utils'
-import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import composables from '../composables'
 
 export const DEFAULT_POINT_RADIUS = 3
@@ -50,12 +49,7 @@ export default function useScatterDatasets(
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
-  const datasourceConfigStore = useDatasourceConfigStore()
-  const getChartLabel = (key: string): string =>
-    datasourceConfigStore.fieldTranslationMap.get(key) ||
-    // @ts-ignore - dynamic i18n key
-    (i18n.te(`chartLabels.${key}`) && i18n.t(`chartLabels.${key}`)) ||
-    key
+  const fieldLabel = composables.useFieldLabel()
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -78,7 +72,7 @@ export default function useScatterDatasets(
       }
 
       const { metric, dimension, display, xMetric, xMetricUnit } = data
-      const xMetricLabel: string = xMetric ? getChartLabel(xMetric) : ''
+      const xMetricLabel: string = xMetric ? fieldLabel(xMetric) : ''
 
       const scatter = deps.scatter || {}
       const jitterMs = scatter.jitterMs ?? 0
@@ -156,7 +150,7 @@ export default function useScatterDatasets(
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 
-        const label: string = getChartLabel(name)
+        const label: string = fieldLabel(name)
 
         datasets.push({
           dimension,

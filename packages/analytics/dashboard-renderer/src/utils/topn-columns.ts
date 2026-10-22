@@ -7,6 +7,7 @@ import type {
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import type { IntlShapeEx } from '@kong-ui-public/i18n'
 import type english from '../locales/en.json'
+import { fieldLabel } from './field-label'
 import type { TableDataGridHeader } from '@kong-ui-public/table-data-grid'
 import type { Component } from 'vue'
 import {
@@ -192,19 +193,8 @@ export const createTopNPresentation = ({
   const metricKeys = meta?.metric_names ?? []
   const firstMetric = metricKeys[0]
   const hasMultipleDimensions = displayKeys.length > 1
-  const getChartLabel = (key: string): string => {
-    const configLabel = fieldTranslationMap.get(key)
-
-    if (configLabel) {
-      return configLabel
-    }
-
-    const translationKey = `chartLabels.${key}`
-
-    return i18n.messages[translationKey]
-      ? i18n.formatMessage({ id: translationKey })
-      : key
-  }
+  const getChartLabel = (key: string): string =>
+    fieldLabel(i18n, fieldTranslationMap, key)
   const getColumnLabel = (key: string, fallback: string): string => {
     return getColumnOptions(columnOptions, key)?.label || fallback
   }

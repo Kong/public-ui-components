@@ -10,10 +10,10 @@ import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { color } from '@kong-ui-public/analytics-utilities/coordination'
 
 import useI18n from './useI18n'
-import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { isNoSuffixMetric } from '../utils'
 import { getColumnOptions, getColumnStats, getRelativeValue, getThresholdType, toNumber } from '../utils/topn-columns'
 import { EMPTY_DIMENSION_ID, OTHER_DIMENSION_ID } from '../constants'
+import composables from '../composables'
 
 const MIN_TINT = 18
 const MAX_TINT = 85
@@ -26,7 +26,7 @@ export default function useTopTalkersData(
 ) {
   const { i18n } = useI18n()
   const { formatUnit } = unitFormatter({ i18n })
-  const datasourceConfigStore = useDatasourceConfigStore()
+  const fieldLabel = composables.useFieldLabel()
 
   const paintColumn = (ordered: UnpaintedCell[]): TopTalkersCellData[] => {
     return ordered.map((cell) => {
@@ -87,13 +87,8 @@ export default function useTopTalkersData(
     })
   }
 
-  const getChartLabel = (key: string): string => {
-    return datasourceConfigStore.fieldTranslationMap.get(key) ||
-      (i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key)
-  }
-
   const getLabel = (key: string): string => {
-    return getColumnOptions(columnOptions.value, key)?.label || getChartLabel(key)
+    return getColumnOptions(columnOptions.value, key)?.label || fieldLabel(key)
   }
 
   // Sum across returned rows
@@ -131,7 +126,7 @@ export default function useTopTalkersData(
 
         return {
           id,
-          name: isOther ? getChartLabel(OTHER_DIMENSION_ID) : displayBlob.value[id]?.name || id,
+          name: isOther ? i18n.t(`chartLabels.${OTHER_DIMENSION_ID}`) : displayBlob.value[id]?.name || id,
           deleted: !!displayBlob.value[id]?.deleted,
           isOther,
           isEmpty: id === EMPTY_DIMENSION_ID,

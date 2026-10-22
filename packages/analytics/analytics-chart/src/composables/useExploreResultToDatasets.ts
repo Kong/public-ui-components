@@ -5,7 +5,6 @@ import type { AnalyticsChartColors, Dataset, ExploreToDatasetDeps, KChartData, D
 
 import { computed } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
-import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import composables from '../composables'
 
 function generateDatasets({
@@ -31,12 +30,7 @@ function generateDatasets({
   seriesDimension?: string
   uuid: string
 }): Dataset[] {
-  const { i18n } = composables.useI18n()
-  const datasourceConfigStore = useDatasourceConfigStore()
-
-  const fieldLabel = (key: string): string =>
-    datasourceConfigStore.fieldTranslationMap.get(key) ||
-    ((i18n && i18n.te(`chartLabels.${key}` as any) && i18n.t(`chartLabels.${key}` as any)) || key)
+  const fieldLabel = composables.useFieldLabel()
 
   if (isMultiMetric) {
     return metricNames.map((metric, i) => {
@@ -87,12 +81,7 @@ export default function useExploreResultToDatasets(
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
 
-  const { i18n } = composables.useI18n()
-  const datasourceConfigStore = useDatasourceConfigStore()
-
-  const fieldLabel = (key: string): string =>
-    datasourceConfigStore.fieldTranslationMap.get(key) ||
-    ((i18n && i18n.te(`chartLabels.${key}` as any) && i18n.t(`chartLabels.${key}` as any)) || key)
+  const fieldLabel = composables.useFieldLabel()
 
   const chartData: Ref<KChartData> = computed(() => {
 

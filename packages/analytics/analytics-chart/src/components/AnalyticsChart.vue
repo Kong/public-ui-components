@@ -195,6 +195,7 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+const fieldLabel = composables.useFieldLabel()
 
 const datasourceConfigStore = useDatasourceConfigStore()
 
@@ -443,20 +444,15 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
     return undefined
   }
 
-  const datasourceLabel = datasourceConfigStore.fieldTranslationMap.get(metricName)
+  if (isNoSuffixMetric(metricUnit)) {
+    const axisTitle = fieldLabel(metricName, { prefix: 'metricAxisTitles', fallback: '' })
 
-  if (datasourceLabel) {
-    return datasourceLabel
+    if (axisTitle) {
+      return axisTitle
+    }
   }
 
-  // @ts-ignore - dynamic i18n key
-  if (isNoSuffixMetric(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
-    // @ts-ignore - dynamic i18n key
-    return i18n.t(`metricAxisTitles.${metricName}`) || undefined
-  }
-
-  // @ts-ignore - dynamic i18n key
-  return i18n.te(`chartLabels.${metricName}`) ? i18n.t(`chartLabels.${metricName}`) : metricName
+  return fieldLabel(metricName)
 })
 
 const metricAxesTitle = computed<string | undefined>(() => {
@@ -513,28 +509,25 @@ const metricGroupTitle = (metricNames: string[], metricUnits: NonNullable<Shared
 }
 
 const metricTitle = (metricName: string, metricUnit: string): string | undefined => {
+  if (isNoSuffixMetric(metricUnit)) {
+    const axisTitle = fieldLabel(metricName, { prefix: 'metricAxisTitles' })
+
+    return axisTitle || undefined
+  }
+
+  // @ts-ignore - dynamic i18n key
+  const unit = i18n.te(`chartUnits.${metricUnit}`) ? i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) : metricUnit
+
   const datasourceLabel = datasourceConfigStore.fieldTranslationMap.get(metricName)
 
-  if (isNoSuffixMetric(metricUnit)) {
-    if (datasourceLabel) {
-      return datasourceLabel
-    }
+  if (datasourceLabel) {
+    return `${datasourceLabel} (${unit})`
+  }
 
+  // @ts-ignore - dynamic i18n key
+  if (i18n.te(`metricAxisTitles.${metricName}`)) {
     // @ts-ignore - dynamic i18n key
-    if (i18n.te(`metricAxisTitles.${metricName}`)) {
-      // @ts-ignore - dynamic i18n key
-      return i18n.t(`metricAxisTitles.${metricName}`) || undefined
-    }
-  } else {
-    // @ts-ignore - dynamic i18n key
-    const unit = i18n.te(`chartUnits.${metricUnit}`) ? i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) : metricUnit
-
-    if (datasourceLabel) {
-      return `${datasourceLabel} (${unit})`
-    } else {
-      // @ts-ignore - dynamic i18n key
-      return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
-    }
+    return i18n.t(`metricAxisTitles.${metricName}`, { unit }) || undefined
   }
 
   return metricName || undefined
@@ -552,9 +545,7 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
-  return datasourceConfigStore.fieldTranslationMap.get(dimension) ||
-    // @ts-ignore - dynamic i18n key
-    (i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension)
+  return fieldLabel(dimension)
 })
 
 const timestampAxisTitle = computed(() => {

@@ -86,9 +86,8 @@ import {
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import type { AlignX } from '../../types'
 import composables from '../../composables'
-import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
-const datasourceConfigStore = useDatasourceConfigStore()
+const fieldLabel = composables.useFieldLabel()
 
 const { i18n } = composables.useI18n()
 const { formatBytes, formatCost } = unitFormatter({ i18n })
@@ -143,16 +142,10 @@ const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const formattedMetricName = computed((): string => {
   if (metricName.value) {
-    const metricLabel = datasourceConfigStore.fieldTranslationMap.get(metricName.value)
-
-    if (metricLabel) {
-      return metricLabel
-    }
+    return fieldLabel(metricName.value, { fallback: '' })
   }
 
-  return i18n.te(`chartLabels.${metricName.value}` as any)
-    ? i18n.t(`chartLabels.${metricName.value}` as any)
-    : ''
+  return ''
 })
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
