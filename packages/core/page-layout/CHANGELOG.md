@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.1...%40kong-ui-public%2Fpage-layout%401.3.2) (2026-10-22)
+
+### Bug Fixes
+
+* **page-layout:** highlight anchor section when navigating [KHCP-22153] ([#3955](https://github.com/Kong/public-ui-components/issues/3955)) ([8f6b72e](https://github.com/Kong/public-ui-components/commit/8f6b72eb379103ee804c2030115529cd682eb63e))
+
+
 ## [1.3.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.0...%40kong-ui-public%2Fpage-layout%401.3.1) (2026-10-21)
 
 ### Bug Fixes
