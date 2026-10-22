@@ -6,18 +6,12 @@
     <div
       v-for="tile in props.tiles"
       :key="tile.id"
-      class="grid-stack-item"
       :data-id="`${tile.id}`"
       :data-testid="`grid-stack-item-${tile.id}`"
-      :gs-h="tile.layout.size.rows"
-      :gs-lazy-load="true"
-      :gs-w="tile.layout.size.cols"
-      :gs-x="tile.layout.position.col"
-      :gs-y="tile.layout.position.row"
     >
       <div class="grid-stack-item-content">
         <slot
-          :fit-to-content="false"
+          :fit-to-content="fitToContent(tile)"
           name="tile"
           :tile="tile"
         />
@@ -27,11 +21,15 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import { onMounted, onUnmounted, ref, watch, nextTick, watchEffect } from 'vue'
-import { GridStack } from 'gridstack'
-import type { GridStackNode } from 'gridstack'
+import type { GridItemHTMLElement, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack'
 import type { GridTile } from 'src/types'
-import { DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
+
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { GridStack } from 'gridstack'
+import { KUI_BREAKPOINT_PHABLET, KUI_SPACE_50 } from '@kong/design-tokens'
+
+import { CELLS_PER_ROW, DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
+import { calculateRowDefs } from './grid-utils'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
@@ -44,9 +42,11 @@ const props = withDefaults(defineProps<{
   tiles: Array<GridTile<T>>
   tileHeight?: number
   columns?: number
+  editable?: boolean
 }>(), {
   tileHeight: DEFAULT_TILE_HEIGHT,
   columns: DASHBOARD_COLS,
+  editable: false,
 })
 const emit = defineEmits<{
   (e: 'update-tiles', tiles: Array<GridTile<T>>): void
@@ -57,10 +57,46 @@ const gridContainer = ref<HTMLDivElement | null>(null)
 const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
 
 let grid: GridStack | null = null
+let isSyncing = false
 
 const makeSelector = (id: number | string) => {
   return `[data-id="${id}"]`
 }
+
+const rowDefs = computed(() => calculateRowDefs(props.tileHeight, props.tiles))
+
+const fitToContent = (tile: GridTile<T>): boolean => (
+  !props.editable && rowDefs.value[tile.layout.position.row] === 'auto'
+)
+
+// View mode splits each row into smaller cells so fit_to_content can shrink below the tileHeight
+const toCells = (rows: number): number => (
+  props.editable ? rows : rows * CELLS_PER_ROW
+)
+
+const toWidget = (tile: GridTile<T>): GridStackWidget => ({
+  id: `${tile.id}`,
+  x: tile.layout.position.col,
+  y: toCells(tile.layout.position.row),
+  w: tile.layout.size.cols,
+  h: toCells(tile.layout.size.rows),
+  sizeToContent: fitToContent(tile),
+})
+
+const gridOptions = (): GridStackOptions => ({
+  margin: parseInt(KUI_SPACE_50, 10) / 2,
+  column: props.columns,
+  cellHeight: props.tileHeight / toCells(1),
+  resizable: { handles: 'se, sw' },
+  handle: '.tile-header',
+  staticGrid: !props.editable,
+  ...(!props.editable && {
+    columnOpts: {
+      columnMax: props.columns,
+      breakpoints: [{ w: parseInt(KUI_BREAKPOINT_PHABLET, 10), c: 1, layout: 'list' }],
+    },
+  }),
+})
 
 const makeTilesFromGridItems = (items: GridStackNode[]) => {
   return items.map(item => {
@@ -70,7 +106,7 @@ const makeTilesFromGridItems = (items: GridStackNode[]) => {
         ...tile,
         layout: {
           position: { col: Number(item.x), row: Number(item.y) },
-          size: { cols: Number(item.w), rows: Number(item.h) },
+          size: { ...tile.layout.size, cols: Number(item.w), rows: Number(item.h) },
         },
       } satisfies GridTile<T>
     }
@@ -78,7 +114,7 @@ const makeTilesFromGridItems = (items: GridStackNode[]) => {
 }
 
 const updateTiles = (_: Event, items: GridStackNode[]) => {
-  if (grid) {
+  if (grid && !isSyncing) {
     const updates = makeTilesFromGridItems(items)
     updates.forEach((tile) => {
       tilesRef.value.set(`${tile.id}`, tile)
@@ -94,22 +130,100 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
   emit('update-tiles', Array.from(tilesRef.value.values()))
 }
 
+const contentObserver = new ResizeObserver(entries => {
+  window.requestAnimationFrame(() => {
+    entries.forEach(({ target }) => {
+      const item = target.closest<GridItemHTMLElement>('.grid-stack-item')
+      if (grid && item) {
+        grid.resizeToContent(item)
+      }
+    })
+  })
+})
+
+const observeFitTiles = () => {
+  contentObserver.disconnect()
+  props.tiles.filter(fitToContent).forEach(tile => {
+    const content = gridContainer.value?.querySelector(`${makeSelector(tile.id)} > .grid-stack-item-content > :first-child`)
+    if (content) {
+      contentObserver.observe(content)
+    }
+  })
+}
+
+const isInSync = (node: GridStackNode, widget: GridStackWidget): boolean => {
+  const samePosition = node.x === widget.x && node.y === widget.y
+  const sameWidth = node.w === widget.w
+  const sameHeight = !!node.sizeToContent || node.h === widget.h
+
+  return samePosition && sameWidth && sameHeight
+}
+
+// Brings the grid up to date when the tiles change, e.g. add, delete, undo/redo, etc.
+const syncTiles = () => {
+  if (!grid) {
+    return
+  }
+
+  const ids = new Set(props.tiles.map(t => `${t.id}`))
+  const nodes = new Map(grid.engine.nodes.map(n => [`${n.id}`, n]))
+
+  // When a tile is removed, gridstack forgets the tile exists but never removes it
+  nodes.forEach((node, id) => {
+    if (!ids.has(id) && node.el) {
+      grid!.removeWidget(node.el, false, false)
+      tilesRef.value.delete(id)
+    }
+  })
+
+  const existing = props.tiles.filter(t => nodes.has(`${t.id}`)).map(toWidget)
+
+  isSyncing = true
+
+  // A row only shrinks to fit its content if every tile in it has fit_to_content.
+  // So adding or removing one tile can make the others in its row shrink or grow, even though they didn't move.
+  // grid.load() won't handle this, it's skipped when nothing moved, and it keeps a fit_to_content tile's current height.
+  existing.forEach(w => {
+    const node = nodes.get(`${w.id}`)!
+
+    if (!!node.sizeToContent !== !!w.sizeToContent && node.el) {
+      grid!.update(node.el, { sizeToContent: w.sizeToContent, h: w.h })
+    }
+  })
+
+  if (existing.some(w => !isInSync(nodes.get(`${w.id}`)!, w))) {
+    grid.load(existing, false)
+  }
+
+  isSyncing = false
+
+  props.tiles.filter(t => !nodes.has(`${t.id}`)).forEach(tile => {
+    grid!.makeWidget(makeSelector(tile.id), { ...toWidget(tile), autoPosition: props.editable })
+  })
+
+  observeFitTiles()
+}
+
 onMounted(() => {
   if (gridContainer.value) {
-    grid = GridStack.init({
-      margin: 5,
-      column: props.columns,
-      cellHeight: props.tileHeight,
-      resizable: { handles: 'se, sw' },
-      handle: '.tile-header',
-    }, gridContainer.value)
-    grid.on('change', updateTiles)
-    grid.on('added', updateTiles)
-    grid.on('removed', removeHandler)
+    grid = GridStack.init(gridOptions(), gridContainer.value)
+
+    grid.batchUpdate()
+    props.tiles.forEach(tile => grid!.makeWidget(makeSelector(tile.id), toWidget(tile)))
+    grid.batchUpdate(false)
+    observeFitTiles()
+
+    if (props.editable) {
+      grid.on('change', updateTiles)
+      grid.on('added', updateTiles)
+      grid.on('removed', removeHandler)
+    }
   }
 })
 
 onUnmounted(() => {
+  contentObserver.disconnect()
+
   if (grid) {
     grid.destroy(false)
   }
@@ -124,20 +238,7 @@ const removeWidget = (id: number | string) => {
   }
 }
 
-watch(() => props.tiles.length, async (newLen, oldLen) => {
-  if (newLen > oldLen && grid) {
-    const tileToAdd = props.tiles.slice(oldLen)
-    for (const tile of tileToAdd) {
-      tilesRef.value.set(`${tile.id}`, tile)
-      await nextTick()
-      grid.makeWidget(makeSelector(tile.id), {
-        autoPosition: true,
-        w: tile.layout.size.cols,
-        h: tile.layout.size.rows,
-      })
-    }
-  }
-})
+watch(() => props.tiles.map(t => [t.id, t.layout]), syncTiles, { deep: true, flush: 'post' })
 
 // Keep tilesRef in sync with props.tiles
 watchEffect(() => {
@@ -152,10 +253,10 @@ defineExpose({ removeWidget })
 
 <style lang="scss" scoped>
 .grid-stack {
-  margin: 0 -5px;
+  margin: 0 calc(var(--kui-space-50, $kui-space-50) / -2);
 }
 
-:deep(.tile-header) {
+.grid-stack:not(.grid-stack-static) :deep(.tile-header) {
   cursor: move;
 }
 $rotate-values: (
