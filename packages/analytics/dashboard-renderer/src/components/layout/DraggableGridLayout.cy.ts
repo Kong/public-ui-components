@@ -141,7 +141,7 @@ describe('<DraggableGridLayout />', () => {
   })
 
   describe('fit to content', () => {
-    // Row 0 is all fit tiles, row 1 is a regular full width tile
+    // Row 0 is all fit content tiles, row 1 is a regular full width tile
     const fitTiles = (): Array<GridTile<string>> => [
       { id: '1', layout: { position: { col: 0, row: 0 }, size: { cols: 3, rows: 1, fit_to_content: true } } },
       { id: '2', layout: { position: { col: 3, row: 0 }, size: { cols: 3, rows: 1, fit_to_content: true } } },
@@ -173,7 +173,7 @@ describe('<DraggableGridLayout />', () => {
       cy.get('.grid-stack').should('have.class', 'grid-stack-static')
     })
 
-    it('sizes a row of fit tiles to their content', () => {
+    it('sizes a row of fit content tiles to their content', () => {
       mountLayout(fitTiles())
 
       cy.getTestId('grid-stack-item-1').should('have.attr', 'gs-h', `${cellsFor(50)}`)
@@ -184,7 +184,7 @@ describe('<DraggableGridLayout />', () => {
         .and('have.attr', 'gs-h', `${CELLS_PER_ROW}`)
     })
 
-    it('resizes fit tiles when their content changes', () => {
+    it('resizes fit content tiles when their content changes', () => {
       mountLayout(fitTiles())
 
       cy.getTestId('grid-stack-item-1').should('have.attr', 'gs-h', `${cellsFor(50)}`)
@@ -195,7 +195,7 @@ describe('<DraggableGridLayout />', () => {
       cy.getTestId('grid-stack-item-3').should('have.attr', 'gs-y', `${cellsFor(120)}`)
     })
 
-    it('keeps the full row height when a fit tile shares its row with a regular tile', () => {
+    it('keeps the full row height when a tile with the fit_to_content flag shares its row with a regular tile', () => {
       const tiles = fitTiles()
       delete tiles[1].layout.size.fit_to_content
       mountLayout(tiles)
@@ -235,6 +235,69 @@ describe('<DraggableGridLayout />', () => {
     })
   })
 
+  // Mirrors the Gateway Manager overview: two rows of fit content tiles with different content heights (meta, in px)
+  describe('fit content rows', () => {
+    const tileHeight = 185
+    const fit = { rows: 1, fit_to_content: true }
+    const overview = (topContentPx: number): Array<GridTile<number>> => [
+      { id: 'services', type: 'chart', layout: { position: { col: 0, row: 0 }, size: { cols: 3, ...fit } }, meta: topContentPx },
+      { id: 'routes', type: 'chart', layout: { position: { col: 3, row: 0 }, size: { cols: 3, ...fit } }, meta: topContentPx },
+      { id: 'plugins', type: 'slottable', layout: { position: { col: 0, row: 1 }, size: { cols: 3, ...fit } }, meta: 290 },
+      { id: 'consumers', type: 'chart', layout: { position: { col: 3, row: 1 }, size: { cols: 3, ...fit } }, meta: 210 },
+    ]
+
+    const cellsFor = (contentPx: number) => Math.ceil((contentPx + parseInt(KUI_SPACE_50, 10)) / (tileHeight / CELLS_PER_ROW))
+
+    const mountOverview = (tiles: Array<GridTile<number>>) => cy.mount(DraggableGridLayout, {
+      props: { tiles, tileHeight },
+      slots: {
+        tile: ({ tile }: { tile: GridTile<number> }) => h('div', { style: { height: `${tile.meta}px` } }),
+      },
+    })
+
+    const expectTopRowFirst = (topContentPx: number) => {
+      cy.getTestId('grid-stack-item-services').should('have.attr', 'gs-y', '0')
+      cy.getTestId('grid-stack-item-routes').should('have.attr', 'gs-y', '0')
+      cy.getTestId('grid-stack-item-plugins').should('have.attr', 'gs-y', `${cellsFor(topContentPx)}`)
+      cy.getTestId('grid-stack-item-consumers').should('have.attr', 'gs-y', `${cellsFor(topContentPx)}`)
+    }
+
+    beforeEach(() => {
+      cy.viewport(1200, 900)
+    })
+
+    it('keeps tiles in order when a fit content tile is taller than a row', () => {
+      mountOverview(overview(260))
+
+      expectTopRowFirst(260)
+    })
+
+    it('keeps tiles in order when a tile is added after mount', () => {
+      const tiles = overview(260)
+      mountOverview(tiles.filter(t => t.id !== 'consumers')).then(({ wrapper }) => {
+        cy.then(() => wrapper.setProps({ tiles }))
+
+        expectTopRowFirst(260)
+      })
+    })
+
+    it('gives every tile in a fit content row the height of its tallest tile', () => {
+      mountOverview(overview(120))
+
+      cy.getTestId('grid-stack-item-plugins').should('have.attr', 'gs-h', `${cellsFor(290)}`)
+      cy.getTestId('grid-stack-item-consumers').should('have.attr', 'gs-h', `${cellsFor(290)}`)
+    })
+
+    it('moves the rows below up when a fit content row shrinks', () => {
+      mountOverview(overview(260)).then(({ wrapper }) => {
+        expectTopRowFirst(260)
+        cy.then(() => wrapper.setProps({ tiles: overview(120) }))
+
+        expectTopRowFirst(120)
+      })
+    })
+  })
+
   describe('view mode', () => {
     beforeEach(() => {
       cy.viewport(1200, 800)
@@ -259,11 +322,14 @@ describe('<DraggableGridLayout />', () => {
         { id: '2', layout: { position: { col: 0, row: 1 }, size: { cols: 6, rows: 1 } } },
       ]
 
+      const replacement: GridTile<string> = { id: '3', layout: { position: { col: 0, row: 0 }, size: { cols: 6, rows: 1 } } }
+
       cy.mount(DraggableGridLayout, { props: { tiles: stacked } }).then(({ wrapper }) => {
-        cy.then(() => wrapper.setProps({ tiles: [stacked[1]] }))
-        cy.get('.grid-stack-item').should('have.length', 1)
-        // Only moves up if GridStack dropped tile 1 too
-        cy.getTestId('grid-stack-item-2').should('have.attr', 'gs-y', '0')
+        cy.then(() => wrapper.setProps({ tiles: [replacement, stacked[1]] }))
+        cy.get('.grid-stack-item').should('have.length', 2)
+        cy.getTestId('grid-stack-item-3').should('have.attr', 'gs-y', '0')
+        // If GridStack still had tile 1, placing tile 3 would push it into tile 2 and move tile 2 down
+        cy.getTestId('grid-stack-item-2').should('have.attr', 'gs-y', `${CELLS_PER_ROW}`)
       })
     })
 
@@ -273,6 +339,20 @@ describe('<DraggableGridLayout />', () => {
 
       cy.get('.grid-stack').should('have.class', 'gs-1')
       cy.getTestId('grid-stack-item-2').should('have.attr', 'gs-x', '0')
+    })
+
+    it('sizes regular tiles to their content in a single column', () => {
+      cy.viewport(600, 800)
+      // Like DashboardRenderer's tile: fills its cell, but its content (e.g. stacked golden signals) needs 300px
+      cy.mount(DraggableGridLayout, {
+        props: { tiles: [{ id: '1', type: 'chart', layout: { position: { col: 0, row: 0 }, size: { cols: 6, rows: 1 } } }] },
+        slots: {
+          tile: () => h('div', { style: { height: '100%' } }, [h('div', { style: { height: '300px' } })]),
+        },
+      })
+
+      const cells = Math.ceil((300 + parseInt(KUI_SPACE_50, 10)) / (DEFAULT_TILE_HEIGHT / CELLS_PER_ROW))
+      cy.getTestId('grid-stack-item-1').should('have.attr', 'gs-h', `${cells}`)
     })
 
     it('keeps the configured columns at wider widths', () => {

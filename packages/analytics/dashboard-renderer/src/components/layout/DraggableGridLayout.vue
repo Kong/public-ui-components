@@ -21,7 +21,7 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import type { GridItemHTMLElement, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack'
+import type { GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack'
 import type { GridTile } from 'src/types'
 
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
@@ -29,7 +29,7 @@ import { GridStack } from 'gridstack'
 import { KUI_BREAKPOINT_PHABLET, KUI_SPACE_50 } from '@kong/design-tokens'
 
 import { CELLS_PER_ROW, DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
-import { calculateRowDefs } from './grid-utils'
+import { calculateRowDefs, layoutRows } from './grid-utils'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
@@ -70,32 +70,50 @@ const fitToContent = (tile: GridTile<T>): boolean => (
 )
 
 // View mode splits each row into smaller cells so fit_to_content can shrink below the tileHeight
-const toCells = (rows: number): number => (
-  props.editable ? rows : rows * CELLS_PER_ROW
+const cellsPerRow = (): number => (
+  props.editable ? 1 : CELLS_PER_ROW
 )
 
-const toWidget = (tile: GridTile<T>): GridStackWidget => ({
-  id: `${tile.id}`,
-  x: tile.layout.position.col,
-  y: toCells(tile.layout.position.row),
-  w: tile.layout.size.cols,
-  h: toCells(tile.layout.size.rows),
-  sizeToContent: fitToContent(tile),
-})
+const margin = parseInt(KUI_SPACE_50, 10) / 2
+
+// Tile id mapped to its content height in cells
+const measured = ref<ReadonlyMap<string, number>>(new Map())
+
+const singleColumn = ref(false)
+
+// A single column sizes every tile to its content, not just fit content tiles
+const sizedToContent = (tile: GridTile<T>): boolean => (
+  singleColumn.value || fitToContent(tile)
+)
+
+// View mode places tiles by dashboard row instead of using gridstack's sizeToContent
+const viewLayout = computed(() => layoutRows(props.tiles, rowDefs.value, measured.value, {
+  cellsPerRow: CELLS_PER_ROW,
+  columns: singleColumn.value ? 1 : props.columns,
+}))
+
+const toWidget = (tile: GridTile<T>): GridStackWidget => {
+  if (!props.editable) {
+    return { id: `${tile.id}`, ...viewLayout.value.get(`${tile.id}`) }
+  }
+
+  return {
+    id: `${tile.id}`,
+    x: tile.layout.position.col,
+    y: tile.layout.position.row,
+    w: tile.layout.size.cols,
+    h: tile.layout.size.rows,
+  }
+}
 
 const gridOptions = (): GridStackOptions => ({
-  margin: parseInt(KUI_SPACE_50, 10) / 2,
+  margin,
   column: props.columns,
-  cellHeight: props.tileHeight / toCells(1),
+  cellHeight: props.tileHeight / cellsPerRow(),
   resizable: { handles: 'se, sw' },
   handle: '.tile-header',
   staticGrid: !props.editable,
-  ...(!props.editable && {
-    columnOpts: {
-      columnMax: props.columns,
-      breakpoints: [{ w: parseInt(KUI_BREAKPOINT_PHABLET, 10), c: 1, layout: 'list' }],
-    },
-  }),
+  float: !props.editable,
 })
 
 const makeTilesFromGridItems = (items: GridStackNode[]) => {
@@ -130,33 +148,56 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
   emit('update-tiles', Array.from(tilesRef.value.values()))
 }
 
-const contentObserver = new ResizeObserver(entries => {
-  window.requestAnimationFrame(() => {
-    entries.forEach(({ target }) => {
-      const item = target.closest<GridItemHTMLElement>('.grid-stack-item')
-      if (grid && item) {
-        grid.resizeToContent(item)
-      }
-    })
-  })
-})
+const contentOf = (id: number | string) => {
+  return gridContainer.value?.querySelector<HTMLElement>(`${makeSelector(id)} > .grid-stack-item-content > :first-child`)
+}
 
-const observeFitTiles = () => {
+// Content px maps to cells, adding the tile's top and bottom margin and rounding up, like gridstack's resizeToContent
+const toCellCount = (contentPx: number): number => (
+  Math.ceil((contentPx + 2 * margin) / (props.tileHeight / CELLS_PER_ROW))
+)
+
+const measureFitContentTiles = () => {
+  const next = new Map<string, number>()
+
+  props.tiles.filter(sizedToContent).forEach(tile => {
+    const content = contentOf(tile.id)
+
+    if (content) {
+      next.set(`${tile.id}`, toCellCount(content.getBoundingClientRect().height))
+    }
+  })
+
+  // Only replace the map on a real change, so an unchanged measurement doesn't relayout
+  const changed = next.size !== measured.value.size || [...next].some(([id, h]) => measured.value.get(id) !== h)
+
+  if (changed) {
+    measured.value = next
+  }
+}
+
+const contentObserver = new ResizeObserver(() => window.requestAnimationFrame(measureFitContentTiles))
+
+const observeFitContentTiles = () => {
   contentObserver.disconnect()
-  props.tiles.filter(fitToContent).forEach(tile => {
-    const content = gridContainer.value?.querySelector(`${makeSelector(tile.id)} > .grid-stack-item-content > :first-child`)
+  props.tiles.filter(sizedToContent).forEach(tile => {
+    const content = contentOf(tile.id)
+
     if (content) {
       contentObserver.observe(content)
     }
   })
 }
 
+const containerObserver = new ResizeObserver(([entry]) => {
+  singleColumn.value = !props.editable && entry.contentRect.width <= parseInt(KUI_BREAKPOINT_PHABLET, 10)
+})
+
 const isInSync = (node: GridStackNode, widget: GridStackWidget): boolean => {
   const samePosition = node.x === widget.x && node.y === widget.y
-  const sameWidth = node.w === widget.w
-  const sameHeight = !!node.sizeToContent || node.h === widget.h
+  const sameSize = node.w === widget.w && node.h === widget.h
 
-  return samePosition && sameWidth && sameHeight
+  return samePosition && sameSize
 }
 
 // Brings the grid up to date when the tiles change, e.g. add, delete, undo/redo, etc.
@@ -180,17 +221,7 @@ const syncTiles = () => {
 
   isSyncing = true
 
-  // A row only shrinks to fit its content if every tile in it has fit_to_content.
-  // So adding or removing one tile can make the others in its row shrink or grow, even though they didn't move.
-  // grid.load() won't handle this, it's skipped when nothing moved, and it keeps a fit_to_content tile's current height.
-  existing.forEach(w => {
-    const node = nodes.get(`${w.id}`)!
-
-    if (!!node.sizeToContent !== !!w.sizeToContent && node.el) {
-      grid!.update(node.el, { sizeToContent: w.sizeToContent, h: w.h })
-    }
-  })
-
+  // load() lifts every widget out before placing it again, so view mode's non overlapping positions never collide mid move
   if (existing.some(w => !isInSync(nodes.get(`${w.id}`)!, w))) {
     grid.load(existing, false)
   }
@@ -201,7 +232,7 @@ const syncTiles = () => {
     grid!.makeWidget(makeSelector(tile.id), { ...toWidget(tile), autoPosition: props.editable })
   })
 
-  observeFitTiles()
+  observeFitContentTiles()
 }
 
 onMounted(() => {
@@ -211,7 +242,8 @@ onMounted(() => {
     grid.batchUpdate()
     props.tiles.forEach(tile => grid!.makeWidget(makeSelector(tile.id), toWidget(tile)))
     grid.batchUpdate(false)
-    observeFitTiles()
+    observeFitContentTiles()
+    containerObserver.observe(gridContainer.value)
 
     if (props.editable) {
       grid.on('change', updateTiles)
@@ -223,6 +255,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   contentObserver.disconnect()
+  containerObserver.disconnect()
 
   if (grid) {
     grid.destroy(false)
@@ -238,7 +271,11 @@ const removeWidget = (id: number | string) => {
   }
 }
 
-watch(() => props.tiles.map(t => [t.id, t.layout]), syncTiles, { deep: true, flush: 'post' })
+// 'none' stops gridstack from rearranging tiles itself, syncTiles places them from viewLayout right after
+watch(singleColumn, single => grid?.column(single ? 1 : props.columns, 'none'))
+
+// viewLayout also changes when a fit content tile is measured or the grid switches to a single column
+watch(() => [props.tiles.map(t => [t.id, t.layout]), viewLayout.value], syncTiles, { deep: true, flush: 'post' })
 
 // Keep tilesRef in sync with props.tiles
 watchEffect(() => {
@@ -254,6 +291,16 @@ defineExpose({ removeWidget })
 <style lang="scss" scoped>
 .grid-stack {
   margin: 0 calc(var(--kui-space-50, $kui-space-50) / -2);
+}
+
+// Fit content tiles can be taller than their cell until they're measured
+.grid-stack-static :deep(.grid-stack-item-content) {
+  overflow-y: hidden;
+}
+
+// In a single column every tile takes its natural height so it can be measured
+.grid-stack-static.gs-1 :deep(.grid-stack-item-content > *) {
+  height: auto !important;
 }
 
 .grid-stack:not(.grid-stack-static) :deep(.tile-header) {
