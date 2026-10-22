@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.28.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-routes%403.28.1...%40kong-ui-public%2Fentities-routes%403.28.2) (2026-10-22)
+
+### Bug Fixes
+
+* **page-layout:** new appearance title font size ([#3958](https://github.com/Kong/public-ui-components/issues/3958)) ([8e79763](https://github.com/Kong/public-ui-components/commit/8e797631f0b732bdd732cdd71637f3102e061e05))
+
+
 ## [3.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-routes%403.28.0...%40kong-ui-public%2Fentities-routes%403.28.1) (2026-10-19)
 
 ### Bug Fixes

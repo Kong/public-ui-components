@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.2...%40kong-ui-public%2Ffreeform%400.5.3) (2026-10-22)
+
+### Bug Fixes
+
+* **page-layout:** new appearance title font size ([#3958](https://github.com/Kong/public-ui-components/issues/3958)) ([8e79763](https://github.com/Kong/public-ui-components/commit/8e797631f0b732bdd732cdd71637f3102e061e05))
+
+
 ## [0.5.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.1...%40kong-ui-public%2Ffreeform%400.5.2) (2026-10-21)
 
 ### Bug Fixes
