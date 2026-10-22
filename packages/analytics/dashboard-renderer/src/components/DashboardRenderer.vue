@@ -50,11 +50,11 @@
         </div>
         <DraggableGridLayout
           :key="`layout-${isEditing}`"
-          ref="gridLayoutRef"
+          :ref="(el) => setGridLayoutRef(index, el)"
           :columns="activeModel.columns"
           :editable="isEditing"
           :tile-height="activeModel.tile_height"
-          :tiles="getTiles(activeModel)"
+          :tiles="gridTiles[index]"
           @update-tiles="(tiles: any) => handleUpdateTiles(tiles, index)"
         >
           <template #tile="{ tile, fitToContent }">
@@ -83,7 +83,7 @@
               :tile-type="tile.type"
               @duplicate-tile="onDuplicateTile(tile, index)"
               @edit-tile="onEditTile(tile)"
-              @remove-tile="onRemoveTile(tile)"
+              @remove-tile="onRemoveTile(tile, index)"
               @tile-loaded="onTileLoaded(tile)"
               @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
             />
@@ -172,12 +172,19 @@ const nonSlottableTileCount = computed<number>(() => {
     }, [] as TileConfig[])
     : models.value.tiles
 
-  return tiles.filter((tile) => tile.type !== 'slottable').length
+  const isSlottableConfig = (tile: TileConfig): boolean => tile.type === 'slottable'
+    || ('definition' in tile && (tile.definition as ChartTileDefinition)?.chart?.type === 'slottable')
+
+  return tiles.filter((tile) => !isSlottableConfig(tile)).length
 })
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
-const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
+const gridLayoutRefs: Array<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null> = []
+
+const setGridLayoutRef = (index: number, el: Element | ComponentPublicInstance | null) => {
+  gridLayoutRefs[index] = el as ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null
+}
 
 const dashboardContainer = ref()
 const layoutContainer = ref<HTMLElement>()
@@ -276,6 +283,8 @@ const getTiles = (config: DashboardConfig): Array<GridTile<TileDefinition>> => {
   })
 }
 
+const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => modelRay.value.map(getTiles))
+
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
 
@@ -318,10 +327,8 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number) => {
   }
 }
 
-const onRemoveTile = (tile: GridTile<TileDefinition>) => {
-  if (gridLayoutRef.value) {
-    gridLayoutRef.value.removeWidget(tile.id)
-  }
+const onRemoveTile = (tile: GridTile<TileDefinition>, index: number) => {
+  gridLayoutRefs[index]?.removeWidget(tile.id)
   loadedTileIds.delete((tile.id as string))
 }
 
