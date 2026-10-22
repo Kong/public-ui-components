@@ -3,9 +3,10 @@ import type { SelectItem } from '@kong/kongponents'
 
 // originally from
 // https://github.com/kong-konnect/koko-private/blob/7ab99d8e4b/internal/gen/jsonschema/schemas/service.json#L54
-// but has been enhanced by removing the underscore character from the allowed characters in the domain name,
-// as it is not a valid character in hostnames according to RFC 952/1123
-const domainRegex = /^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?)*(\.)?$/
+// underscores are permitted even though RFC 952/1123 forbids them in hostnames, because
+// the service host often references an upstream by name and Kong Gateway accepts underscore
+// in upstream names
+const domainRegex = /^[a-zA-Z0-9_]([-a-zA-Z0-9_]*[a-zA-Z0-9_])?(\.[a-zA-Z0-9_]([-a-zA-Z0-9_]*[a-zA-Z0-9_])?)*(\.)?$/
 const ipv4Regex = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
 
 const looksLikeIPv6 = (host: string): boolean => {
