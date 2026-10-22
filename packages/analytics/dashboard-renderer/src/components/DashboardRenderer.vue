@@ -32,10 +32,21 @@
       >
         <a :id="`dash-${index}`" />
         <div
-          v-if="getSectionTitle(index)"
-          class="boundary-title"
+          v-if="context?.sectionsInfo?.[index]"
+          class="boundary-header"
         >
-          {{ getSectionTitle(index) }}
+          <div
+            v-if="getSectionTitle(index)"
+            class="boundary-title"
+          >
+            {{ getSectionTitle(index) }}
+          </div>
+          <div
+            v-if="getSectionDescription(index)"
+            class="boundary-description"
+          >
+            {{ getSectionDescription(index) }}
+          </div>
         </div>
         <component
           :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
@@ -407,6 +418,14 @@ const getSectionTitle = (index: number) => {
   }
 }
 
+const getSectionDescription = (index: number) => {
+  if (enrichedContext.value.sectionsInfo
+    && enrichedContext.value.sectionsInfo[index]
+    && enrichedContext.value.sectionsInfo[index].description) {
+    return enrichedContext.value.sectionsInfo[index].description
+  }
+}
+
 defineExpose({
   refresh: refreshTiles,
   toggleFullscreen,
@@ -450,23 +469,35 @@ defineExpose({
   }
 
   .dashboard-boundary.multiple {
-    margin-top: var(--kui-space-60, $kui-space-60);
-    padding: 2px;
-    border: 1px solid $kui-color-background-neutral-weaker;
-    border-radius: 12px;
     background: linear-gradient(
       var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker),
       var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)) padding-box;
+    border: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
+    margin-top: var(--kui-space-60, $kui-space-60);
+    padding: 2px;
 
     &:first-of-type {
       margin-top: 0;
     }
 
+    .boundary-header {
+      padding: var(--kui-space-30, $kui-space-30) 0;
+    }
+
     .boundary-title {
-      font-size: 14px;
-      font-weight: 600;
-      padding-left: 12px;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       padding-bottom: 2px;
+      padding-left: var(--kui-space-50, $kui-space-50);
+    }
+
+    .boundary-description {
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      padding-bottom: 2px;
+      padding-left: var(--kui-space-50, $kui-space-50);
     }
   }
 
