@@ -461,8 +461,8 @@ $page-layout-header-height: 44px;
             white-space: nowrap;
 
             > * {
-              font-size: var(--kui-font-size-30, $kui-font-size-30);
-              line-height: var(--kui-line-height-30, $kui-line-height-30);
+              font-size: var(--kui-font-size-20, $kui-font-size-20);
+              line-height: var(--kui-line-height-20, $kui-line-height-20);
               // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
               // Below this it truncates to whatever space the row leaves it; the ellipsis
               // itself comes from the default appearance's rules.
