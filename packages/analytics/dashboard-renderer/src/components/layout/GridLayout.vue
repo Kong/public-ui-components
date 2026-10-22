@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts" setup generic="T">
+// @deprecated: DashboardRenderer renders every dashboard with DraggableGridLayout
 import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
 import type { Cell, GridTile } from 'src/types'
 import { DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
