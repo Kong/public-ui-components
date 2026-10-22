@@ -17,6 +17,10 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
+  sectionsInfo?: Array<{
+    title?: string
+    description?: string
+  }>
 }
 
 export type ZoomConfiguration = {

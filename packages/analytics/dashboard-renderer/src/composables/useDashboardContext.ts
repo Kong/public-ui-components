@@ -136,13 +136,14 @@ export default function useDashboardContext({
 
   const enrichedContext = computed<DashboardRendererContext>(() => {
     return {
+      ...context.value,
       filters: filters.value,
       timeSpec: timeSpec.value,
       tz: tz.value,
       refreshInterval: refreshInterval.value,
       editable: editable.value,
       showTileActions: showTileActions.value,
-    }
+    } as DashboardRendererContext
   })
 
   const queryReady = computed<boolean>(() => {
