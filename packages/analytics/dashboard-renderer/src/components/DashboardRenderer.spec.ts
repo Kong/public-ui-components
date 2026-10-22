@@ -33,10 +33,6 @@ const createGridLayoutStub = vi.hoisted(() => (name: string) => {
   }
 })
 
-vi.mock('./layout/GridLayout.vue', () => ({
-  default: createGridLayoutStub('GridLayout'),
-}))
-
 vi.mock('./layout/DraggableGridLayout.vue', () => ({
   default: createGridLayoutStub('DraggableGridLayout'),
 }))
