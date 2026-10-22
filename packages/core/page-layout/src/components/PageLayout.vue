@@ -453,16 +453,16 @@ $page-layout-header-height: 44px;
             // Repeating the scale, cap and truncation here keeps raw text in parity, and
             // also makes the `ch` cap resolve against the same font size either way.
             color: var(--kui-color-text, $kui-color-text);
-            font-size: var(--kui-font-size-30, $kui-font-size-30);
+            font-size: var(--kui-font-size-20, $kui-font-size-20);
             font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            line-height: var(--kui-line-height-20, $kui-line-height-20);
             max-width: $page-layout-title-max-width;
             text-overflow: ellipsis;
             white-space: nowrap;
 
             > * {
-              font-size: var(--kui-font-size-30, $kui-font-size-30);
-              line-height: var(--kui-line-height-30, $kui-line-height-30);
+              font-size: var(--kui-font-size-20, $kui-font-size-20);
+              line-height: var(--kui-line-height-20, $kui-line-height-20);
               // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
               // Below this it truncates to whatever space the row leaves it; the ellipsis
               // itself comes from the default appearance's rules.
