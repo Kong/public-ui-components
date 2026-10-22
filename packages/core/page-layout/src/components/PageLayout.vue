@@ -453,16 +453,16 @@ $page-layout-header-height: 44px;
             // Repeating the scale, cap and truncation here keeps raw text in parity, and
             // also makes the `ch` cap resolve against the same font size either way.
             color: var(--kui-color-text, $kui-color-text);
-            font-size: var(--kui-font-size-30, $kui-font-size-30);
+            font-size: var(--kui-font-size-20, $kui-font-size-20);
             font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            line-height: var(--kui-line-height-20, $kui-line-height-20);
             max-width: $page-layout-title-max-width;
             text-overflow: ellipsis;
             white-space: nowrap;
 
             > * {
-              font-size: var(--kui-font-size-30, $kui-font-size-30);
-              line-height: var(--kui-line-height-30, $kui-line-height-30);
+              font-size: var(--kui-font-size-20, $kui-font-size-20);
+              line-height: var(--kui-line-height-20, $kui-line-height-20);
               // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
               // Below this it truncates to whatever space the row leaves it; the ellipsis
               // itself comes from the default appearance's rules.
@@ -538,6 +538,48 @@ $page-layout-header-height: 44px;
         width: 400px;
       }
     }
+  }
+
+  // The section the anchor navigation bar has just scrolled to draws the eye once: a brand ring
+  // swells from its edge and fades. `:deep()` because the section is the host's own slot content,
+  // which a scoped selector cannot reach otherwise. The ring replaces any box-shadow of its own
+  // for the length of the run.
+  :deep([data-anchor-attention]) {
+    animation: anchor-attention calc(var(--kui-animation-duration-20, #{$kui-animation-duration-20}) * 5) cubic-bezier(0.2, 0, 0, 1) both;
+
+    // Reduced motion keeps the ring, but holds it still and fades it out rather than swelling it
+    @media (prefers-reduced-motion: reduce) {
+      animation-name: anchor-attention-still;
+    }
+  }
+}
+
+@keyframes anchor-attention {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 80%, transparent);
+  }
+
+  18% {
+    box-shadow: 0 0 0 var(--kui-border-width-30, $kui-border-width-30) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 70%, transparent);
+  }
+
+  55% {
+    box-shadow: 0 0 0 calc(var(--kui-border-width-30, #{$kui-border-width-30}) * 2) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 28%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 calc(var(--kui-border-width-30, #{$kui-border-width-30}) * 3) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 0%, transparent);
+  }
+}
+
+@keyframes anchor-attention-still {
+  0%,
+  45% {
+    box-shadow: 0 0 0 var(--kui-border-width-20, $kui-border-width-20) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 70%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 var(--kui-border-width-20, $kui-border-width-20) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 0%, transparent);
   }
 }
 </style>

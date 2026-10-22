@@ -16,6 +16,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - [Anchor Navigation](#anchor-navigation)
   - [Anchor Overflow](#anchor-overflow)
   - [Scroll Behavior](#scroll-behavior)
+  - [Section Attention](#section-attention)
   - [`PageLayoutAnchor` Interface](#pagelayoutanchor-interface)
 - [Nested PageLayout](#nested-pagelayout)
 - [Teleport targets](#teleport-targets)
@@ -452,6 +453,26 @@ Only the `all` configuration is measured, since it is the only one whose width d
 - A section lands below the sticky header rather than under it: the default offset is the header's current height plus `--kui-space-60`. Override it per item with `offset`, which also shifts the point at which that section becomes the active one.
 - The active item follows the scroll position — the last section whose top has passed under the header. Once the page has been scrolled to the bottom, the last resolvable anchor takes over, so every section can be reached by scrolling.
 - A clicked item stays active until the smooth scroll it started has settled, so the bar does not light up every section on the way. Taking the scroll back over (wheel, touch) releases it early.
+- The section draws the eye once it is reached: a brand ring swells from its edge and fades. See [Section Attention](#section-attention).
+
+### Section Attention
+
+A section that has just been scrolled to is marked with `data-anchor-attention` for about 1.2 seconds, and `PageLayout` animates a brand ring around it for the first second. The mark goes on where the scroll comes to rest — at once when the page cannot move any further, otherwise on `scrollend`. Taking the scroll over, or picking another section, calls off a mark that has not landed yet. Picking the same section twice restarts the animation.
+
+Under `prefers-reduced-motion: reduce` the ring holds still and fades instead of swelling.
+
+The ring is drawn with `box-shadow`, so it replaces any `box-shadow` the section has of its own for the length of the run. Pick an anchor target that can carry it — an outer wrapper rather than the card itself, if the card has its own shadow.
+
+A host that wants more than the ring can style the same attribute:
+
+```html
+<style>
+/* The ring is PageLayout's; this adds to it */
+.my-section[data-anchor-attention] {
+  background-color: var(--kui-color-background-primary-weakest);
+}
+</style>
+```
 
 ### `PageLayoutAnchor` Interface
 

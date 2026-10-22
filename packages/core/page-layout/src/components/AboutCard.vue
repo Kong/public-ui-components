@@ -124,11 +124,6 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
 
 <style lang="scss" scoped>
 .kong-ui-public-about-card {
-  // KCard exposes these as theming hooks, so the card reads a touch more compact
-  // without us overriding any of its own rules.
-  --kui-card-gap: var(--kui-space-50, #{$kui-space-50});
-  --kui-card-title-font-size: var(--kui-font-size-30, #{$kui-font-size-30});
-
   // The card is typically rendered in a narrow aside, so the rows respond to the
   // card's own width rather than the viewport's.
   container-type: inline-size;
@@ -155,8 +150,10 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
   .about-card-row {
     align-items: center;
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    box-sizing: border-box;
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
+    min-height: 47px;
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
     &:last-child {
