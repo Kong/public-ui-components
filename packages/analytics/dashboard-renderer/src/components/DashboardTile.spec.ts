@@ -550,7 +550,7 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
   })
 
-  it('passes fitToContent to TopN tiles', () => {
+  it('passes fitToContent to TopN tiles and sizes the tile to its content', async () => {
     const topNDefinition: TileDefinition = {
       chart: { type: 'top_n', entity_link: '/services/{entity-id}' },
       query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'] },
@@ -572,6 +572,11 @@ describe('<DashboardTile /> table tiles', () => {
       fitToContent: true,
       query: topNDefinition.query,
     })
+    expect(wrapper.classes()).toContain('fit-to-content')
+
+    await wrapper.setProps({ fitToContent: false })
+
+    expect(wrapper.classes()).not.toContain('fit-to-content')
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {
