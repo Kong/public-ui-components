@@ -21,47 +21,63 @@
       >
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
-      <component
-        :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+      <div
+        v-for="(activeModel, index) in modelRay"
         v-else
-        ref="gridLayoutRef"
-        :columns="model.columns"
-        :tile-height="model.tile_height"
-        :tiles="gridTiles"
-        @update-tiles="handleUpdateTiles"
+        :key="`dash-${index}`"
+        class="dashboard-boundary"
+        :class="{
+          multiple: modelRay.length > 1,
+        }"
       >
-        <template #tile="{ tile, fitToContent }">
-          <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
-          <div
-            v-if="isSlottableTile(tile)"
-            class="tile-container slottable-tile"
-          >
-            <slot :name="getSlottableSlotName(tile)" />
-          </div>
-          <DashboardTile
-            v-else
-            :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
-            v-model:refresh-counter="refreshCounter"
-            class="tile-container"
-            :context="enrichedContext"
-            :definition="tile.meta as TileDefinition"
-            :fit-to-content="fitToContent"
-            :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
-            :hide-actions="!showTileActions"
-            :is-fullscreen="isFullscreen"
-            :preview="preview"
-            :query-ready="queryReady"
-            :tile-id="tile.id"
-            :tile-type="tile.type"
-            @duplicate-tile="onDuplicateTile(tile)"
-            @edit-tile="onEditTile(tile)"
-            @remove-tile="onRemoveTile(tile)"
-            @tile-loaded="onTileLoaded(tile)"
-            @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
-          />
-        </template>
-        <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
-      </component>
+        <a :id="`dash-${index}`" />
+        <div
+          v-if="getSectionTitle(index)"
+          class="boundary-title"
+        >
+          {{ getSectionTitle(index) }}
+        </div>
+        <component
+          :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+          ref="gridLayoutRef"
+          :columns="activeModel.columns"
+          :tile-height="activeModel.tile_height"
+          :tiles="getTiles(activeModel)"
+          @update-tiles="(tiles: any) => handleUpdateTiles(tiles, index)"
+        >
+          <template #tile="{ tile, fitToContent }">
+            <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
+            <div
+              v-if="isSlottableTile(tile)"
+              class="tile-container slottable-tile"
+            >
+              <slot :name="getSlottableSlotName(tile)" />
+            </div>
+            <DashboardTile
+              v-else
+              :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
+              v-model:refresh-counter="refreshCounter"
+              class="tile-container"
+              :context="getContextWithFilters(activeModel)"
+              :definition="tile.meta as TileDefinition"
+              :fit-to-content="fitToContent"
+              :height="tile.layout.size.rows * (activeModel.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+              :hide-actions="!showTileActions"
+              :is-fullscreen="isFullscreen"
+              :preview="preview"
+              :query-ready="queryReady"
+              :tile-id="tile.id"
+              :tile-type="tile.type"
+              @duplicate-tile="onDuplicateTile(tile, index)"
+              @edit-tile="onEditTile(tile)"
+              @remove-tile="onRemoveTile(tile)"
+              @tile-loaded="onTileLoaded(tile)"
+              @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
+            />
+          </template>
+          <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
+        </component>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +129,39 @@ const emit = defineEmits<{
   (e: 'tiles-loaded', done: boolean): void
 }>()
 
-const model = defineModel<DashboardConfig>({ required: true })
+const models = defineModel<DashboardConfig | DashboardConfig[]>({ required: true })
+
+const getModelByIndex = (index: number): DashboardConfig => {
+  if (Array.isArray(models.value)) {
+    return models.value[index]
+  }
+
+  return models.value
+}
+
+/**
+ * a helper that coerces our v-model into an array, used only for vue rendering
+ */
+const modelRay = computed<DashboardConfig[]>(() => {
+  if (Array.isArray(models.value)) {
+    return models.value
+  }
+
+  return [models.value]
+})
+
+const nonSlottableTileCount = computed<number>(() => {
+  const tiles: TileConfig[] = Array.isArray(models.value)
+    ? models.value.reduce((acc, currModel) => {
+      return [
+        ...acc,
+        ...currModel.tiles,
+      ]
+    }, [] as TileConfig[])
+    : models.value.tiles
+
+  return tiles.filter((tile) => tile.type !== 'slottable').length
+})
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
@@ -145,9 +193,7 @@ const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layo
 const onTileLoaded = (tile: GridTile<TileDefinition>) => {
   loadedTileIds.add((tile.id as string))
 
-  const expectedCount = gridTiles.value.filter(t => !isSlottableTile(t)).length
-
-  if (loadedTileIds.size >= expectedCount) {
+  if (loadedTileIds.size >= nonSlottableTileCount.value) {
     emit('tiles-loaded', true)
   }
 }
@@ -178,8 +224,8 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
   return a.layout.position.col - b.layout.position.col
 }
 
-const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
-  return model.value.tiles.map((tile: TileConfig) => {
+const getTiles = (config: DashboardConfig): Array<GridTile<TileDefinition>> => {
+  return config.tiles.map((tile: TileConfig) => {
     if (editable.value && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
@@ -216,7 +262,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       id: tile.id ?? crypto.randomUUID(),
     }
   })
-})
+}
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
@@ -247,12 +293,13 @@ const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefine
   return chart && isSlottable(chart) ? chart.id : undefined
 }
 
-const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
+const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number) => {
+  const model = getModelByIndex(index)
   try {
     const newTile = duplicateChartTile(tile)
 
     // deep cloning to avoid duplicated references
-    model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
+    model.tiles.push(JSON.parse(JSON.stringify(newTile)))
   } catch (e) {
     // this shouldn't happen, but we should always wrap JSON.parse/stringify in try catch
     console.warn(e)
@@ -271,7 +318,9 @@ const refreshTiles = () => {
   refreshCounter.value++
 }
 
-const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
+const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>, index: number) => {
+  const model = getModelByIndex(index)
+
   const updatedTiles = tiles.map(tile => {
     if (tile.type === 'slottable') {
       return {
@@ -289,7 +338,7 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
     } as TileConfig
   })
 
-  model.value.tiles = updatedTiles.sort(tileSortFn)
+  model.tiles = updatedTiles.sort(tileSortFn)
 }
 
 const updateScale = async () => {
@@ -324,10 +373,9 @@ const onFullscreenChange = () => {
   }
 }
 
-const globalFilters = computed<AllFilters[]>(() => {
-  return model.value.preset_filters as AllFilters[] ?? []
-})
-
+// All of these are the same regardless of which model(s) is used, with the
+// exception of enrichedContext.filters, which is handled in `getContextWithFilters`
+// below.
 const {
   editable,
   enrichedContext,
@@ -335,11 +383,29 @@ const {
   showTileActions,
   timeSpec,
 } = composables.useDashboardContext({
-  globalFilters,
+  globalFilters: computed(() => []),
   context: computed(() => context),
   isFullscreen,
   preview: computed(() => preview),
 })
+
+const getContextWithFilters = (config: DashboardConfig) => {
+  return {
+    ...enrichedContext.value,
+    filters: [
+      ...(context.filters ?? []),
+      ...(config.preset_filters as AllFilters[] ?? []),
+    ],
+  }
+}
+
+const getSectionTitle = (index: number) => {
+  if (enrichedContext.value.sectionsInfo
+    && enrichedContext.value.sectionsInfo[index]
+    && enrichedContext.value.sectionsInfo[index].title) {
+    return enrichedContext.value.sectionsInfo[index].title
+  }
+}
 
 defineExpose({
   refresh: refreshTiles,
@@ -380,6 +446,27 @@ defineExpose({
 
     .fullscreen-control {
       right: 16px;
+    }
+  }
+
+  .dashboard-boundary.multiple {
+    margin-top: var(--kui-space-60, $kui-space-60);
+    padding: 2px;
+    border: 1px solid $kui-color-background-neutral-weaker;
+    border-radius: 12px;
+    background: linear-gradient(
+      var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker),
+      var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest)) padding-box;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    .boundary-title {
+      font-size: 14px;
+      font-weight: 600;
+      padding-left: 12px;
+      padding-bottom: 2px;
     }
   }
 
