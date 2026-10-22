@@ -298,4 +298,25 @@ describe('<AnalyticsChart /> datasource config labels', () => {
     expect(wrapper.find('[data-testid="time-series-chart-stub"]').attributes('data-tooltip-metric-display'))
       .toBe('Response latency (avg)')
   })
+
+  it('uses the datasource config label for the metric axis title', async () => {
+    const datasourceConfig: DatasourceConfig[] = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'response_latency_average',
+        label: 'Custom latency label',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    const wrapper = mountChart({ chartData: singleMetricResult, datasourceConfig })
+    await flushPromises()
+
+    expect(wrapper.findComponent(TimeSeriesChartStub).props('metricAxesTitle'))
+      .toBe('Custom latency label (ms)')
+  })
 })
