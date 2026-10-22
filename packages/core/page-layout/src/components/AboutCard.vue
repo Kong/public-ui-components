@@ -155,8 +155,10 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
   .about-card-row {
     align-items: center;
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    box-sizing: border-box;
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
+    min-height: 47px;
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
     &:last-child {

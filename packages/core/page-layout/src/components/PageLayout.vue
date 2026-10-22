@@ -539,5 +539,47 @@ $page-layout-header-height: 44px;
       }
     }
   }
+
+  // The section the anchor navigation bar has just scrolled to draws the eye once: a brand ring
+  // swells from its edge and fades. `:deep()` because the section is the host's own slot content,
+  // which a scoped selector cannot reach otherwise. The ring replaces any box-shadow of its own
+  // for the length of the run.
+  :deep([data-anchor-attention]) {
+    animation: anchor-attention calc(var(--kui-animation-duration-20, #{$kui-animation-duration-20}) * 5) cubic-bezier(0.2, 0, 0, 1) both;
+
+    // Reduced motion keeps the ring, but holds it still and fades it out rather than swelling it
+    @media (prefers-reduced-motion: reduce) {
+      animation-name: anchor-attention-still;
+    }
+  }
+}
+
+@keyframes anchor-attention {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 80%, transparent);
+  }
+
+  18% {
+    box-shadow: 0 0 0 var(--kui-border-width-30, $kui-border-width-30) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 70%, transparent);
+  }
+
+  55% {
+    box-shadow: 0 0 0 calc(var(--kui-border-width-30, #{$kui-border-width-30}) * 2) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 28%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 calc(var(--kui-border-width-30, #{$kui-border-width-30}) * 3) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 0%, transparent);
+  }
+}
+
+@keyframes anchor-attention-still {
+  0%,
+  45% {
+    box-shadow: 0 0 0 var(--kui-border-width-20, $kui-border-width-20) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 70%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 var(--kui-border-width-20, $kui-border-width-20) color-mix(in srgb, var(--kui-color-brand, #{$kui-color-brand}) 0%, transparent);
+  }
 }
 </style>
