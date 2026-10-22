@@ -343,11 +343,11 @@ describe('<DashboardRenderer />', () => {
 
     // Only the second dashboard's gauge should carry its preset filter.
     cy.get('@fetcher').should('have.been.calledTwice')
-    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
-      query: {
-        filters: Cypress.sinon.match((filters: any[]) => filters.some(f => f.field === 'api_product')),
-      },
-    }))
+    cy.get('@fetcher').should((fetcher: any) => {
+      const withFilter = fetcher.getCalls()
+        .filter((call: any) => call.args[0]?.query?.filters?.some((f: any) => f.field === 'api_product'))
+      expect(withFilter).to.have.length(1)
+    })
   })
 
   it('Renders heatmap and treemap tiles through their renderers', () => {
