@@ -64,7 +64,7 @@
   "dependencies": {
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/icons": "^1.62.1",
+    "@kong/icons": "^1.64.0",
     "@vueuse/core": "^14.4.0",
     "approximate-number": "^3.0.1",
     "chart.js": "^4.5.1",

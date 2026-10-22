@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.62.1",
+    "@kong/icons": "^1.64.0",
     "@kong/markdown": "1.10.1"
   },
   "peerDependencies": {
