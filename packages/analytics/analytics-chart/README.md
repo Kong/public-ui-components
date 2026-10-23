@@ -120,6 +120,14 @@ The host owns the selection control and passes its value with `:active-metric="a
 - default: `false`
 - Enable zooming on timeseries charts
 
+#### `loading`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+- Set while newer data is loading and the current `chartData` is stale. After a short delay the chart dims, a spinner is shown over it, and interaction (tooltips, zoom, clicks) is blocked until `loading` is `false` again.
+- Not needed for the initial load, show your own placeholder until there is data to render.
+
 #### `showCenterMetric` (donut only)
 
 - type: `boolean`
