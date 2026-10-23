@@ -300,6 +300,56 @@ describe('<DashboardRenderer />', () => {
     cy.get('@fetcher').should('have.been.calledThrice')
   })
 
+  it('Renders multiple dashboards with section titles and per-dashboard filters', () => {
+    const makeConfig = (presetFilters?: any[]) => ({
+      ...(presetFilters ? { preset_filters: presetFilters } : {}),
+      tiles: [
+        {
+          definition: {
+            chart: { type: 'gauge', metricDisplay: 'full', reverseDataset: true, numerator: 0 },
+            query: { datasource: 'basic' },
+          },
+          layout: { position: { col: 0, row: 0 }, size: { cols: 2, rows: 2 } },
+        },
+      ],
+    })
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: { type: 'relative', time_range: '15m' },
+        sectionsInfo: [{ title: 'First section' }, { title: 'Second section' }],
+      },
+      modelValue: [
+        makeConfig(),
+        makeConfig([{ field: 'api_product', operator: 'in', value: ['some product'] }]),
+      ],
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    cy.get('.dashboard-boundary.multiple').should('have.length', 2)
+    cy.get('.boundary-title').should('have.length', 2)
+    cy.get('.boundary-title').first().should('have.text', 'First section')
+    cy.get('.boundary-title').last().should('have.text', 'Second section')
+    cy.get('.tile-boundary').should('have.length', 2)
+
+    // Only the second dashboard's gauge should carry its preset filter.
+    cy.get('@fetcher').should('have.been.calledTwice')
+    cy.get('@fetcher').should((fetcher: any) => {
+      const withFilter = fetcher.getCalls()
+        .filter((call: any) => call.args[0]?.query?.filters?.some((f: any) => f.field === 'api_product'))
+      expect(withFilter).to.have.length(1)
+    })
+  })
+
   it('Renders heatmap and treemap tiles through their renderers', () => {
     const models = { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } }
     const meta = {

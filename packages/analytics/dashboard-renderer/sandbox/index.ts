@@ -32,6 +32,11 @@ const router = createRouter({
       component: () => import('./pages/DynamicDashboardDemo.vue'),
     },
     {
+      path: '/multiple',
+      name: 'multiple',
+      component: () => import('./pages/MultipleDashboardsDemo.vue'),
+    },
+    {
       path: '/grid-layout',
       name: 'grid',
       component: () => import('./pages/GridDemo.vue'),
@@ -57,6 +62,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Dynamic Dashboard',
     to: { name: 'dynamic' },
+  },
+  {
+    name: 'Multiple Dashboards',
+    to: { name: 'multiple' },
   },
   {
     name: 'Grid Layout',
