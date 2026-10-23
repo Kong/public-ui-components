@@ -99,16 +99,54 @@ const DEFAULT_PRINCIPALS_MODEL = {
   principal_claim: null,
 }
 
+// The post-2.3 OIDC schema shape: `credential_claims` (string[][]) as a regular
+// field, the deprecated `credential_claim` demoted to shorthand_fields (mirrors
+// the kong-ee schema — including the old_default that predates the deprecation).
+const CREDENTIAL_CLAIMS_SCHEMA_FIELD = {
+  credential_claims: {
+    description: 'The claims used to derive a virtual credential, for example to be consumed by the rate-limiting plugin, when consumer mapping is not used. Each entry represents a claim path inside the token payload. The paths are evaluated in order, and the first matching claim is used.',
+    required: false,
+    type: 'array',
+    default: [['sub']],
+    elements: {
+      type: 'array',
+      description: 'A path of strings representing the location of the claim in a nested object. For example, to map to `account.id`, set `[ "account", "id" ]`.',
+      len_min: 1,
+      elements: { type: 'string' },
+    },
+  },
+}
+
+const CREDENTIAL_CLAIM_SHORTHAND = {
+  credential_claim: {
+    type: 'array',
+    elements: { type: 'string' },
+    deprecation: {
+      message: 'openid-connect: config.credential_claim is deprecated, please use config.credential_claims instead',
+      removal_in_version: '4.0',
+      old_default: ['sub'],
+    },
+  },
+}
+
 // Use the real OIDC fixture from the Kong Admin API as the FormSchema. The fixture
 // is the raw API response shape (`{ fields, entity_checks, supported_partials }`);
 // FormSchema additionally requires `type: 'record'` at the root. Run the same
 // schema-enhancement pipeline PluginEntityForm uses before passing into free-form
 // components so entity_checks land at the right nesting level.
-const createSchema = (withPrincipals = false): FormSchema => {
+const createSchema = (withPrincipals = false, withFreshCredentialClaims = false): FormSchema => {
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
+  }
+  if (withFreshCredentialClaims) {
+    // Demote the regular credential_claim to shorthand and add credential_claims —
+    // the shape AI Gateway serves from runtime 2.3 on.
+    const configField = (raw.fields as any[]).find(f => 'config' in f)
+    configField.config.fields = (configField.config.fields as any[]).filter(f => !('credential_claim' in f))
+    configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
+    configField.config.shorthand_fields.push(cloneDeep(CREDENTIAL_CLAIM_SHORTHAND))
   }
   return distributeEntityChecks(appendEntityChecksFromMetadata('openid-connect', raw))
 }
@@ -147,10 +185,10 @@ interface MountOptions {
   formsConfig?: Record<string, any>
   /** Append the 3.15 `config.principals` record to the schema */
   withPrincipals?: boolean
-  /** Provide the Identity Principals UI feature flag */
-  identityPrincipalsUi?: boolean
-  /** Opt in to SecretInput for encrypted free-form fields. */
-  useSecretInput?: boolean
+  /** Serve the post-2.3 credential shape: credential_claims regular, credential_claim shorthand */
+  withFreshCredentialClaims?: boolean
+  /** AIGW minimum runtime version (FormConfig.minRuntimeVersion) */
+  minRuntimeVersion?: string
 }
 
 const mountForm = (options: MountOptions = {}) => {
@@ -160,13 +198,16 @@ const mountForm = (options: MountOptions = {}) => {
     app = 'konnect',
     formsConfig = {},
     withPrincipals = false,
+    withFreshCredentialClaims = false,
+    minRuntimeVersion,
     identityPrincipalsUi = false,
     useSecretInput = false,
   } = options
 
   cy.mount(OpenidConnectForm, {
     props: {
-      schema: createSchema(withPrincipals),
+      schema: createSchema(withPrincipals, withFreshCredentialClaims),
+      formConfig: minRuntimeVersion ? { minRuntimeVersion } : undefined,
       formSchema: createFormSchema(),
       formModel: {},
       model,
@@ -717,6 +758,68 @@ describe('OpenidConnectForm', () => {
         )
         expect(hasMigrationCall).to.equal(false)
       })
+    })
+  })
+
+  // ── M: AIGW credential_claim ↔ credential_claims runtime swap ─────────────
+
+  describe('credential_claim swap by AIGW min runtime version', () => {
+    it('renders the deprecated credential_claim and hides credential_claims when minRuntimeVersion < 2.3 (fresh schema)', () => {
+      mountForm({
+        withFreshCredentialClaims: true,
+        minRuntimeVersion: '2.2',
+      })
+
+      clickTab('advanced')
+      // Lifted out of shorthand_fields with the pre-deprecation default (old_default)
+      cy.getTestId('ff-array-config.credential_claim').should('exist')
+      cy.getTestId('ff-array-config.credential_claims').should('not.exist')
+    })
+
+    it('reverse-migrates a saved credential_claims into credential_claim on mount in legacy mode', () => {
+      mountForm({
+        withFreshCredentialClaims: true,
+        minRuntimeVersion: '2.2',
+        model: createModel({
+          credential_claim: null,
+          credential_claims: [['account', 'id']],
+        }),
+      })
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const migrationCall = spy.args.find(
+          (args: any[]) => Array.isArray(args[0]?.config?.credential_claim),
+        )
+        expect(migrationCall, 'reverse migration call not found').not.to.equal(undefined)
+        expect(migrationCall[0].config.credential_claim).to.deep.equal(['account', 'id'])
+      })
+    })
+
+    it('renders credential_claims and no credential_claim when minRuntimeVersion >= 2.3', () => {
+      mountForm({
+        withFreshCredentialClaims: true,
+        minRuntimeVersion: '2.3',
+      })
+
+      clickTab('advanced')
+      cy.getTestId('ff-array-config.credential_claims').should('exist')
+      cy.getTestId('ff-array-config.credential_claim').should('not.exist')
+    })
+
+    it('fails open to the plural-only behavior when no minRuntimeVersion is set', () => {
+      mountForm({ withFreshCredentialClaims: true })
+
+      clickTab('advanced')
+      cy.getTestId('ff-array-config.credential_claims').should('exist')
+      cy.getTestId('ff-array-config.credential_claim').should('not.exist')
+    })
+
+    it('stale schema (regular credential_claim, no credential_claims) still renders credential_claim below 2.3', () => {
+      mountForm({ minRuntimeVersion: '2.2' })
+
+      clickTab('advanced')
+      cy.getTestId('ff-array-config.credential_claim').should('exist')
+      cy.getTestId('ff-array-config.credential_claims').should('not.exist')
     })
   })
 

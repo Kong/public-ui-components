@@ -2,7 +2,9 @@
   <DynamicLayout
     v-bind="props"
     :form-config="formConfig"
+    :on-form-change="handleFormChange"
     :render-rules="RENDER_RULES"
+    :schema="effectiveSchema"
   >
     <template #field-renderers>
       <FieldRenderer
@@ -156,8 +158,8 @@ import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { FEATURE_FLAGS } from '../../../../constants'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCredentialSecret } from '@kong-ui-public/freeform'
-import type { FormConfig, RenderRules } from '@kong-ui-public/freeform'
+import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCredentialSecret, isVersionSupported } from '@kong-ui-public/freeform'
+import type { FormConfig, FormSchema, RenderRules } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
@@ -280,8 +282,69 @@ const principalsMode = ref<PrincipalsMode | null>(null)
 // JWK members (alg, kid, x5t, ...) are case-sensitive technical identifiers — show the
 // raw field name instead of the prettified label.
 const CLIENT_JWK_ITEM_PATH = /^(?:\$\.)?config\.client_jwk\.\d+\.([^.]+)$/
-const formConfig: FormConfig = {
+// Spread the host's form config so its settings (notably the AI Gateway
+// `minRuntimeVersion`) reach the form engine; the JWK label transform stays local.
+const formConfig = computed<FormConfig>(() => ({
+  ...(props.formConfig as FormConfig | undefined),
   transformLabel: (label, fieldPath) => CLIENT_JWK_ITEM_PATH.exec(fieldPath)?.[1] ?? label,
+}))
+
+// AI Gateway 2.3 is the first runtime that understands credential_claims; older
+// runtimes only know the deprecated credential_claim. When the host pins such a
+// runtime, the form swaps the pair: credential_claims drops out of the schema
+// (it neither renders nor ships in the payload) and the deprecated
+// credential_claim is lifted from shorthand_fields back into config.fields —
+// with its pre-deprecation default when the schema records one
+// (deprecation.old_default). Absent version info (API Gateway) fails open to
+// the plural-only behavior.
+const CREDENTIAL_CLAIMS_MIN_AIGW_VERSION = '2.3'
+const minRuntimeVersion = computed(() =>
+  openidConnectContext?.minRuntimeVersion ?? formConfig.value.minRuntimeVersion,
+)
+const showLegacyCredentialClaim = computed(() =>
+  !!minRuntimeVersion.value
+  && !isVersionSupported(minRuntimeVersion.value, CREDENTIAL_CLAIMS_MIN_AIGW_VERSION),
+)
+const effectiveSchema = computed<FormSchema>(() => {
+  if (!showLegacyCredentialClaim.value) return props.schema
+
+  const fields = [...props.schema.fields]
+  const configIndex = fields.findIndex(f => 'config' in f)
+  if (configIndex === -1) return props.schema
+
+  const configField = { ...fields[configIndex] } as Record<string, any>
+  const config = { ...configField.config } as {
+    fields?: Array<Record<string, any>>
+    shorthand_fields?: Array<Record<string, any>>
+  }
+  if (!Array.isArray(config.fields)) return props.schema
+
+  config.fields = config.fields.filter(f => !('credential_claims' in f))
+  if (!config.fields.some(f => 'credential_claim' in f)) {
+    const shorthandDef = config.shorthand_fields?.find(f => 'credential_claim' in f)?.credential_claim
+    if (shorthandDef) {
+      const { deprecation, ...fieldDef } = shorthandDef
+      config.fields = [...config.fields, {
+        credential_claim: { ...fieldDef, required: false, default: deprecation?.old_default },
+      }]
+    }
+  }
+
+  configField.config = config
+  fields[configIndex] = configField
+  return { ...props.schema, fields }
+})
+
+// Pre-2.3 runtimes reject the unknown plural field, so it must never ship —
+// including a credential_claims saved earlier against a newer runtime.
+const handleFormChange = (value: Partial<Props['model']>, fields?: string[]) => {
+  const config = (value as Record<string, any>)?.config
+  if (showLegacyCredentialClaim.value && config && 'credential_claims' in config) {
+    const stripped = { ...config }
+    delete stripped.credential_claims
+    return props.onFormChange({ ...value, config: stripped } as Partial<Props['model']>, fields)
+  }
+  props.onFormChange(value, fields)
 }
 
 // Record-array fields rendered with the tabbed ArrayField, mapped to their item tab
@@ -334,6 +397,18 @@ onMounted(() => {
   })
   if (migratedClaims !== null) {
     props.onFormChange({ config: { consumer_claims: migratedClaims } } as any)
+  }
+
+  // AIGW runtime < 2.3: a credential_claims saved against a newer runtime is
+  // invisible in legacy mode (no schema field) — map its first claim path back
+  // into the deprecated credential_claim the runtime understands, mirroring the
+  // server's own reverse mapping (first entry wins).
+  if (showLegacyCredentialClaim.value && !config?.credential_claim) {
+    const savedClaims = config?.credential_claims
+    const firstClaim = Array.isArray(savedClaims) && savedClaims.length > 0 ? savedClaims[0] : null
+    if (firstClaim) {
+      handleFormChange({ config: { credential_claim: Array.isArray(firstClaim) ? firstClaim : [firstClaim] } } as Partial<Props['model']>)
+    }
   }
 
   // AI Manager needs a real salt from the start (not Kong's server-generated one) so it
