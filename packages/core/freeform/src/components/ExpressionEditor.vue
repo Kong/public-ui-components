@@ -20,18 +20,19 @@
       appearance="tertiary"
       class="ff-expression-editor-add"
       :data-testid="`ff-expression-add-${path}`"
+      :disabled="isLocked"
       @click="expanded = true"
     >
       <AddIcon />
       {{ i18n.t('expression.add') }}
     </KButton>
-
     <div
       v-else
       class="ff-expression-editor-expanded"
     >
       <StringField
         class="ff-expression-editor-input"
+        :disabled="isLocked"
         :label="i18n.t('expression.label')"
         :label-attributes="labelAttributes"
         multiline
@@ -40,6 +41,19 @@
         :rows="3"
         @update:model-value="rewriteThroughComposable"
       >
+        <template #tooltip>
+          <!-- Replaces StringField's own fallback (which reads the twin schema alone):
+               the pair locks as one, source first, so the note must come from the
+               combined lock. The info tooltip stays regardless. -->
+          <p
+            v-if="versionInfo"
+            class="ff-version-compatibility-note"
+          >
+            {{ versionInfo.tooltip }}
+          </p>
+          <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+          <div class="ff-label-tooltip-info" v-html="labelAttributes.info" />
+        </template>
         <template #help>
           <slot name="help">
             <i18nT keypath="expression.help.text">
@@ -64,6 +78,7 @@
         :aria-label="i18n.t('expression.remove')"
         class="ff-expression-editor-remove"
         :data-testid="`ff-expression-remove-${path}`"
+        :disabled="isLocked"
         icon
         @click="remove"
       >
@@ -109,6 +124,16 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
+
+/**
+ * Version lock for the value/expression pair, resolved by `useExpressionField`
+ * from the source field first, the twin second — the runtime cannot support the
+ * expression where it cannot support the field. Locks the trigger, textarea and
+ * remove button; the saved expression itself stays in the payload untouched,
+ * the same read-only contract as every other version-locked field.
+ */
+const versionInfo = computed(() => expression.versionInfo.value)
+const isLocked = computed(() => !!versionInfo.value)
 
 /**
  * The expression is collapsed behind a trigger while it has no value, so a
