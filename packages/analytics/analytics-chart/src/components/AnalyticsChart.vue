@@ -40,9 +40,10 @@
         {{ emptyStateDescription }}
       </template>
     </KEmptyState>
-    <div
+    <LoadingOverlay
       v-else
       class="analytics-chart-parent"
+      :loading="loading"
     >
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
@@ -123,7 +124,7 @@
         :x-metric="scatterData?.xMetric"
         :x-metric-unit="scatterData?.xMetricUnit"
       />
-    </div>
+    </LoadingOverlay>
   </div>
 </template>
 
@@ -154,6 +155,7 @@ import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import ScatterChart from './chart-types/ScatterChart.vue'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
+import LoadingOverlay from './LoadingOverlay.vue'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 interface ChartProps {
@@ -171,6 +173,7 @@ interface ChartProps {
   timeseriesZoom?: boolean
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+  loading?: boolean
 }
 
 const coordinator: InteractionCoordinator | undefined = inject(INJECT_DASHBOARD_COORDINATOR)
@@ -192,6 +195,7 @@ const props = withDefaults(defineProps<ChartProps>(), {
   timeseriesZoom: false,
   requestsLink: undefined,
   exploreLink: undefined,
+  loading: false,
 })
 
 const { i18n } = composables.useI18n()
