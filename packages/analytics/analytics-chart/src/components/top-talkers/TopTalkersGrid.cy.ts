@@ -2,6 +2,7 @@ import type { AllAggregations, ExploreResultV4, MetricUnit } from '@kong-ui-publ
 
 import TopTalkersGrid from './TopTalkersGrid.vue'
 import { OTHER_DIMENSION_ID } from '../../constants'
+import { createPinia, setActivePinia } from 'pinia'
 
 const makeResult = (dimension: string, rows: Array<[string, number, number?]>): ExploreResultV4 => ({
   data: rows.map(([id, requests, errorRate]) => ({
@@ -42,6 +43,10 @@ const columns = [
 ]
 
 describe('<TopTalkersGrid />', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders one column per dimension with its heading and total', () => {
     cy.mount(TopTalkersGrid, {
       props: { columns, sizeMetric: 'ai_request_count', title: 'Top 5 consumers by request' },

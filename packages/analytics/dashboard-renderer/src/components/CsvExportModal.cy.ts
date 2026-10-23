@@ -3,6 +3,8 @@ import type { VueWrapper } from '@vue/test-utils'
 import type { ComponentPublicInstance } from 'vue'
 
 import { formatTimestamp } from '@kong-ui-public/analytics-utilities'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import { createPinia, setActivePinia } from 'pinia'
 import CsvExportModal from './CsvExportModal.vue'
 
 const DOWNLOADS_FOLDER = Cypress.config('downloadsFolder')
@@ -76,6 +78,7 @@ describe('<CsvExportModal />', () => {
 
   beforeEach(() => {
     cy.viewport(800, 800)
+    setActivePinia(createPinia())
   })
 
   afterEach(() => {
@@ -138,6 +141,78 @@ describe('<CsvExportModal />', () => {
     })
     cy.get('.k-table-data .table tbody tr').should('have.length', 3)
     cy.getTestId('csv-download-button').should('not.be.disabled')
+  })
+
+  it('prefers datasource config labels for headers', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+    // @ts-ignore - mock data
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'request_count',
+        label: 'Custom request count',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }, {
+        name: 'status_code',
+        label: '',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    mount({
+      exportState: { status: 'success', chartData: populatedExploreResult },
+      filename: 'Total requests',
+    })
+
+    cy.get('.k-table-data .table thead th').should(th => {
+      expect(Array.from(th, element => element.textContent)).to.deep.equal([
+        'Timestamp',
+        'UTC offset',
+        'Status code',
+        'Custom request count',
+      ])
+    })
+  })
+
+  it('falls back to the translation when a config label is an empty string', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+    // @ts-ignore - mock data
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'request_count',
+        label: '',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    mount({
+      exportState: { status: 'success', chartData: populatedExploreResult },
+      filename: 'Total requests',
+    })
+
+    cy.get('.k-table-data .table thead th').should(th => {
+      expect(Array.from(th, element => element.textContent)).to.deep.equal([
+        'Timestamp',
+        'UTC offset',
+        'Status code',
+        'Request count',
+      ])
+    })
   })
 
   it('falls back to the raw ID for dimension values missing from the display', () => {

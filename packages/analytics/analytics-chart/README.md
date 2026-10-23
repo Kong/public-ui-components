@@ -17,7 +17,8 @@ Dynamic chart component for kong analytics.
 
 ## Requirements
 
-- `vue` must be initialized in the host application
+- `vue` must be initialized in the host application.
+- `pinia` must be initialized in the host application.  See the [analytics-config-store README](../analytics-config-store/README.md) for details.
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 
 

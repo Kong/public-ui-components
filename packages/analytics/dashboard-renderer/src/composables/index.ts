@@ -7,6 +7,7 @@ import useIssueRequestsQuery from './useIssueRequestsQuery'
 import useDashboardContext from './useDashboardContext'
 import useExportPdf from './useExportPdf'
 import useMetricFormatter from './useMetricFormatter'
+import useFieldLabel from './useFieldLabel'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -14,6 +15,7 @@ export default {
   useDashboardContext,
   useEvaluateFeatureFlag,
   useExportPdf,
+  useFieldLabel,
   useI18n,
   useIssueQuery,
   useIssueRequestsQuery,

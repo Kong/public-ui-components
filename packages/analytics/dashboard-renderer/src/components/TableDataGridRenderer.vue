@@ -49,7 +49,7 @@ const emit = defineEmits<{
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
-const { i18n } = composables.useI18n()
+const fieldLabel = composables.useFieldLabel()
 const abortController = new AbortController()
 const responseMetaColumns = ref<string[]>([])
 const hasError = ref(false)
@@ -89,8 +89,7 @@ const headers = computed(() => tableDataGridHeadersByDatasource[props.query.data
   // query.columns are optional in the API. If not provided, backend will return default columns.
   // If query columns are not provided, fallback to using columns from the response metadata for header configuration.
   columns: props.query.columns?.length ? props.query.columns : responseMetaColumns.value,
-  translate: key => i18n.t(key as any) as string,
-  canTranslate: key => i18n.te(key as any),
+  fieldLabel: key => fieldLabel(key),
 }))
 
 const fetcher = computed<TableDataGridFetcher<TableDataGridRow>>(() => async ({ cursor, pageSize }) => {

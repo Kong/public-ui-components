@@ -1,7 +1,9 @@
 import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import { describe, it, expect, vitest, vi } from 'vitest'
+import { describe, it, expect, vitest, beforeEach } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import {
   KUI_STATUS_COLOR_100,
   KUI_STATUS_COLOR_200,
@@ -22,6 +24,7 @@ describe('useVitalsExploreDatasets', () => {
 
   beforeEach(() => {
     vitest.restoreAllMocks()
+    setActivePinia(createPinia())
 
     _consoleErrorSpy = vitest.spyOn(global.console, 'error').mockImplementation(() => vitest.fn())
   })
@@ -406,6 +409,54 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value.datasets[0].label).toEqual('metric1')
     expect(result.value.datasets[1].label).toEqual('metric2')
+  })
+
+  it('prefers datasource config labels over i18n translations', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'metric1',
+        label: 'Custom metric one',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            metric1: 2,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
+        granularity_ms: 86400000,
+        metric_names: ['metric1'] as any as ExploreAggregations[],
+        display: {},
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
+      } as QueryResponseMeta,
+    }))
+    const result = useExploreResultToTimeDataset({ fill: false }, exploreResult)
+
+    expect(result.value.datasets[0].label).toEqual('Custom metric one')
   })
 
   it('Datasets sorted by total descending', () => {

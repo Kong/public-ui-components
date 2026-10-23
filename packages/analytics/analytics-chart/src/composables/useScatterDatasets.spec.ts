@@ -2,8 +2,10 @@ import type { DisplayBlob, ExploreResultV4, GroupByResult, MetricUnit, QueryResp
 import type { ComputedRef } from 'vue'
 import type { ScatterChartData } from '../types'
 
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, beforeEach } from 'vitest'
 import { computed, ref } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 import useScatterDatasets, { jitter } from './useScatterDatasets'
 import { exploreResultToScatterData, scatterChartColors } from '../utils'
@@ -37,6 +39,10 @@ const makeResult = (data: GroupByResult[], display: DisplayBlob = {} as DisplayB
  */
 const resolve = (option: unknown, raw?: unknown): unknown =>
   typeof option === 'function' ? option({ raw }) : option
+
+beforeEach(() => {
+  setActivePinia(createPinia())
+})
 
 describe('jitter', () => {
   const seeds = Array.from({ length: 50 }, (_, i) => 1718496000000 + i * 2)
@@ -81,6 +87,29 @@ describe('useScatterDatasets', () => {
     expect(datasets[0].data).toHaveLength(10)
     expect(datasets[0].data[0]).toEqual({ x: new Date('2024-06-16T00:00:00.000Z').valueOf(), y: 1 })
     expect(datasets[0].label).toBe('Costs')
+  })
+
+  it('prefers datasource config labels over i18n translations', () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'cost',
+        label: 'Custom cost label',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    const { datasets } = useScatterDatasets({}, makeResult(costRecords())).value
+
+    expect(datasets[0].label).toBe('Custom cost label')
   })
 
   it('groups points into a dataset per dimension value', () => {

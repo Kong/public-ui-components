@@ -30,13 +30,12 @@ function generateDatasets({
   seriesDimension?: string
   uuid: string
 }): Dataset[] {
-  const { i18n } = composables.useI18n()
+  const fieldLabel = composables.useFieldLabel()
 
   if (isMultiMetric) {
     return metricNames.map((metric, i) => {
       return {
-        // @ts-ignore - dynamic i18n key
-        label: (i18n && i18n.te(`chartLabels.${metric}`) && i18n.t(`chartLabels.${metric}`)) || metric,
+        label: fieldLabel(metric),
         backgroundColor: color({ discriminator: i }),
         data: rowLabels.map((rowPosition, i) => {
           return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${i},${metric}`] || null
@@ -57,8 +56,7 @@ function generateDatasets({
       dimension: seriesDimension,
       dimensionValue: dimension.id,
       // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
-      // @ts-ignore - dynamic i18n key
-      label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
+      label: fieldLabel(dimension.name),
       backgroundColor: color({
         ...(!coordinator?.color && { discriminator: i }),
         dimension: seriesDimension,
@@ -83,7 +81,8 @@ export default function useExploreResultToDatasets(
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
 
-  const { i18n } = composables.useI18n()
+  const fieldLabel = composables.useFieldLabel()
+
   const chartData: Ref<KChartData> = computed(() => {
 
     try {
@@ -178,10 +177,8 @@ export default function useExploreResultToDatasets(
 
         // The labels here are for the axes.  They don't impact the tooltip or legend.
         const labels = !hasDimensions
-          // @ts-ignore - dynamic i18n key
-          ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
-          // @ts-ignore - dynamic i18n key
-          : rowLabels.map(label => (i18n && i18n.te(`chartLabels.${label.name}`) && i18n.t(`chartLabels.${label.name}`)) || label.name)
+          ? metricNames.map(name => fieldLabel(name))
+          : rowLabels.map(label => fieldLabel(label.name))
 
         const isLabelEmpty = rowLabels.map(rowPosition => rowPosition.id === 'empty')
 

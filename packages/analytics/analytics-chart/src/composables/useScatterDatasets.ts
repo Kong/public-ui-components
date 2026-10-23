@@ -49,6 +49,7 @@ export default function useScatterDatasets(
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
   const { i18n } = composables.useI18n()
+  const fieldLabel = composables.useFieldLabel()
 
   const labelFor = (percentile: number, custom?: string): string => {
     if (custom) {
@@ -71,8 +72,7 @@ export default function useScatterDatasets(
       }
 
       const { metric, dimension, display, xMetric, xMetricUnit } = data
-      // @ts-ignore - dynamic i18n key
-      const xMetricLabel: string = xMetric ? (i18n.te(`chartLabels.${xMetric}`) && i18n.t(`chartLabels.${xMetric}`)) || xMetric : ''
+      const xMetricLabel: string = xMetric ? fieldLabel(xMetric) : ''
 
       const scatter = deps.scatter || {}
       const jitterMs = scatter.jitterMs ?? 0
@@ -150,8 +150,7 @@ export default function useScatterDatasets(
         // Translucent fill so overlapping points darken where the cloud is dense
         const fillColor = withAlpha(baseColor, pointOpacity)
 
-        // @ts-ignore - dynamic i18n key
-        const label: string = (i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name
+        const label: string = fieldLabel(name)
 
         datasets.push({
           dimension,

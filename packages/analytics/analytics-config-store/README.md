@@ -8,7 +8,7 @@ Cache analytics config information and conditionally render UI elements based on
 
 ## Features
 
-This package provides caches for analytics config information (including whether an organization has analytics, its data retention for various products, and datasource metadata). It does not fetch the information itself; instead, it relies on an analytics bridge to issue the necessary API calls. The cache ensures that the API calls don't need to be repeated for every component that needs the information.
+This package provides caches for analytics config information (including whether an organization has analytics, its data retention for various products, and datasource metadata including translated field names). It does not fetch the information itself; instead, it relies on an analytics bridge to issue the necessary API calls. The cache ensures that the API calls don't need to be repeated for every component that needs the information.
 
 This package also provides a UI component, `AnalyticsConfigCheck`, which makes it easier to hide or show elements in the UI based on the analytics config stored in the cache.
 

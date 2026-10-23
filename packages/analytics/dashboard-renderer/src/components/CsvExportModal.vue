@@ -121,6 +121,7 @@ import composables from '../composables'
 import type { CsvData, Header, TimeseriesColumn } from '../types/csv-export'
 
 const { i18n } = composables.useI18n()
+const fieldLabel = composables.useFieldLabel()
 
 const props = withDefaults(defineProps<{
   exportState: ExploreExportState
@@ -227,13 +228,11 @@ const tableData = computed(() => {
   const displayHeaders: Header[] = [
     ...timeseriesColumns,
     ...Object.keys(dimensions).map(key => ({
-      // @ts-ignore - dynamic i18n key
-      label: i18n.t(`chartLabels.${key}`),
+      label: fieldLabel(key),
       key,
     })),
     ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
-      // @ts-ignore - dynamic i18n key
-      label: i18n.t(`chartLabels.${key}`),
+      label: fieldLabel(key),
       key,
     })),
   ]

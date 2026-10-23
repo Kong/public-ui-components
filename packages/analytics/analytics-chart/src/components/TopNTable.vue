@@ -268,6 +268,7 @@ const props = withDefaults(defineProps<{
 
 const { i18n } = composables.useI18n()
 const { formatUnit } = unitFormatter({ i18n })
+const fieldLabel = composables.useFieldLabel()
 
 const records = computed((): AnalyticsExploreRecord[] => props.data.data)
 const hasData = computed((): boolean => !!(records.value?.length))
@@ -317,7 +318,7 @@ const columnName = computed((): string => {
     return ''
   }
 
-  return getChartLabel(columnKey.value)
+  return fieldLabel(columnKey.value)
 })
 
 /**
@@ -332,7 +333,7 @@ const tableHeaders = computed<TableHeader[]>(() => {
     return {
       key,
       columnKey: key,
-      label: getColumnLabel(key, hasMultipleDimensions.value ? getChartLabel(key) : i18n.t('topNTable.nameLabel') as string),
+      label: getColumnLabel(key, hasMultipleDimensions.value ? fieldLabel(key) : i18n.t('topNTable.nameLabel') as string),
       type: 'dimension',
     }
   })
@@ -354,7 +355,7 @@ const tableHeaders = computed<TableHeader[]>(() => {
     headers.push({
       key: metricKey,
       columnKey: metricKey,
-      label: getColumnLabel(metricKey, getChartLabel(metricKey)),
+      label: getColumnLabel(metricKey, fieldLabel(metricKey)),
       type: 'metric',
     })
   })
@@ -575,10 +576,6 @@ const getDimensionSlotRecord = (row: TopNRow, key: string) => {
     dimensions: row.dimensions,
     isEmpty: dimension?.id === 'empty',
   }
-}
-
-const getChartLabel = (key: string): string => {
-  return i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key
 }
 
 const translateChartUnit = (unit: string, value: number): string => {

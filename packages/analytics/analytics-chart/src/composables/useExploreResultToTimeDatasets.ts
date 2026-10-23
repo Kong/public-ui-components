@@ -10,7 +10,6 @@ import {
   defaultLineOptions,
   BORDER_WIDTH,
   NO_BORDER,
-  isChartLabel,
   RIGHT_Y_AXIS_ID,
 } from '../utils'
 import composables from '../composables'
@@ -67,7 +66,7 @@ export default function useExploreResultToTimeDataset(
   uuid: string,
   coordinator?: InteractionCoordinator,
 ): Ref<KChartData> {
-  const { i18n } = composables.useI18n()
+  const fieldLabel = composables.useFieldLabel()
 
   const chartData: Ref<KChartData> = computed(() => {
     try {
@@ -181,8 +180,8 @@ export default function useExploreResultToTimeDataset(
             chartUuid: uuid,
             customDimensionColors,
           })
-          const dimensionLabel = isChartLabel(dimensionName) ? i18n.t(`chartLabels.${dimensionName}`) : dimensionName
-          const metricLabel = isChartLabel(metric) ? i18n.t(`chartLabels.${metric}`) : metric
+          const dimensionLabel = fieldLabel(dimensionName)
+          const metricLabel = fieldLabel(metric)
           const metricIndex = metricNames.findIndex(name => name === metric)
           const isRightAxis = deps.metricAxisMap?.[metric] === 'right'
 

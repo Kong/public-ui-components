@@ -9,6 +9,7 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import Kongponents from '@kong/kongponents'
 
 vi.mock('./TimeseriesChartRenderer.vue', () => ({
@@ -406,6 +407,42 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
 describe('<DashboardTile /> metric selector', () => {
   beforeEach(() => {
     setupPiniaTestStore()
+  })
+
+  it('labels metric options with datasource config labels when available', async () => {
+    const datasourceConfigStore = useDatasourceConfigStore()
+
+    datasourceConfigStore.datasourceConfig = [{
+      name: 'api_usage',
+      showInUI: true,
+      fields: [{
+        name: 'response_latency_p99',
+        label: 'Custom p99 label',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }, {
+        name: 'response_latency_average',
+        label: '',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+      }],
+      timeRangeOptions: [],
+    }]
+
+    datasourceConfigStore.datasourceConfigError = null
+
+    const wrapper = mountTile('api_usage')
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    renderer.vm.$emit('chart-data', groupedMetricsResult)
+    await nextTick()
+
+    expect(wrapper.getTestId('metric-option-response_latency_average').text())
+      .toBe('Response latency (avg)')
+    expect(wrapper.getTestId('metric-option-response_latency_p99').text())
+      .toBe('Custom p99 label')
   })
 
   it('shows the grouped time series selector, owns its selection, and passes it to the renderer', async () => {
