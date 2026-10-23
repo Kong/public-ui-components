@@ -54,6 +54,7 @@
       :chart-data="displayData"
       :chart-options="options"
       legend-position="bottom"
+      :loading="isStale"
       :synthetics-data-key="chartOptions.synthetics_data_key"
       tooltip-title=""
     />
@@ -120,8 +121,9 @@ const queryKey = () => {
 
 const queryError = ref<QueryError | null>(null)
 
-const { data, error, isValidating } = useSWRV(queryKey, async () => {
-  const startKey = queryKey()
+const { data: keyedData, error, isValidating } = useSWRV<
+  { key: string, result: ScatterChartData | undefined } | undefined
+>(queryKey, async (startKey: string) => {
   const query = props.query as ApiRequestsQuery
 
   try {
@@ -134,7 +136,10 @@ const { data, error, isValidating } = useSWRV(queryKey, async () => {
 
     queryError.value = null
 
-    return requestsToScatterData(result, toRequestsScatterOptions(query))
+    return {
+      key: startKey,
+      result: requestsToScatterData(result, toRequestsScatterOptions(query)),
+    }
   } catch (e: any) {
     if (queryKey() !== startKey) {
       // This avoids an empty error state when a fetch has been aborted
@@ -155,7 +160,9 @@ const { data, error, isValidating } = useSWRV(queryKey, async () => {
   shouldRetryOnError: false,
 })
 
-const { state, swrvState: STATE } = useSwrvState(data, error, isValidating)
+const data = computed(() => keyedData.value?.result)
+
+const { state, swrvState: STATE } = useSwrvState(keyedData, error, isValidating)
 
 const oldData = ref<ScatterChartData | undefined>()
 const displayData = computed(() => data.value ?? oldData.value)
@@ -169,6 +176,8 @@ watch(data, newData => {
 const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
 
 const isLoading = computed(() => !hasError.value && (!props.queryReady || state.value === STATE.PENDING) && !displayData.value)
+
+const isStale = computed(() => !!displayData.value && keyedData.value?.key !== queryKey())
 
 const options = computed((): AnalyticsChartOptions => ({
   type: 'scatter',

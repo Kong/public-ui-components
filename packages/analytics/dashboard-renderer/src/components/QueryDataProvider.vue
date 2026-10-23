@@ -24,10 +24,12 @@
     </template>
   </KEmptyState>
 
-  <slot
+  <LoadingOverlay
     v-else-if="displayData"
-    :data="displayData"
-  />
+    :loading="isStale"
+  >
+    <slot :data="displayData" />
+  </LoadingOverlay>
 </template>
 <script setup lang="ts">
 /*
@@ -49,7 +51,7 @@ import type { DashboardRendererContext } from '../types'
 import { computed, inject, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
-import { handleQueryError } from '@kong-ui-public/analytics-chart'
+import { handleQueryError, LoadingOverlay } from '@kong-ui-public/analytics-chart'
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -82,9 +84,9 @@ const queryKey = () => {
   return null
 }
 
-const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
-  const startKey = queryKey()
-
+const { data: keyedData, error, isValidating } = useSWRV<
+  { key: string, result: ExploreResultV4 } | undefined
+>(queryKey, async (startKey: string) => {
   try {
     const result = await issueQuery(props.query, props.context, props.limitOverride)
 
@@ -95,7 +97,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 
     queryError.value = null
 
-    return result
+    return { key: startKey, result }
   } catch (e: any) {
     if (queryKey() !== startKey) {
       // This will avoid an empty error state when a query has been aborted
@@ -118,7 +120,9 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   shouldRetryOnError: false,
 })
 
-const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
+const v4Data = computed(() => keyedData.value?.result)
+
+const { state, swrvState: STATE } = useSwrvState(keyedData, error, isValidating)
 
 const queryError = ref<QueryError | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
@@ -128,6 +132,8 @@ const oldData = ref<ExploreResultV4 | undefined>()
 const displayData = computed(() => {
   return v4Data.value ?? (props.queryReady && state.value === STATE.PENDING ? oldData.value : undefined)
 })
+
+const isStale = computed(() => !!displayData.value && keyedData.value?.key !== queryKey())
 
 watch([() => v4Data.value, () => state.value], ([data, state]) => {
   if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS') && data !== oldData.value) {
