@@ -116,6 +116,38 @@ describe('<ScatterChartRenderer />', () => {
     cy.get('[data-testid="scatter-chart-empty-state"]').should('be.visible')
   })
 
+  it('dims the previous records with a spinner while a refresh is pending', () => {
+    let resolveRefresh!: (result: ApiRequestsResult) => void
+    let calls = 0
+
+    render({
+      requestsQueryFn: () => {
+        calls++
+
+        return calls === 1
+          ? Promise.resolve(requestsResult())
+          : new Promise(resolve => {
+            resolveRefresh = resolve
+          })
+      },
+    })
+
+    cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
+    cy.get('[data-testid="loading-overlay-spinner"]').should('not.exist')
+
+    // A new refresh counter is a new swrv key, as a manual refresh is
+    cy.then(() => Cypress.vueWrapper.setProps({ refreshCounter: ++refreshCounter }))
+
+    cy.get('[data-testid="loading-overlay"]').should('have.attr', 'aria-busy', 'true')
+    cy.get('[data-testid="loading-overlay-spinner"]').should('be.visible')
+    cy.get('[data-testid="scatter-chart-container"]').should('exist')
+
+    cy.then(() => resolveRefresh(requestsResult(5)))
+
+    cy.get('[data-testid="loading-overlay"]').should('have.attr', 'aria-busy', 'false')
+    cy.get('[data-testid="loading-overlay-spinner"]').should('not.exist')
+  })
+
   describe('explore-backed tiles', () => {
     const exploreQuery: ValidDashboardChartQuery = {
       datasource: 'api_usage',
@@ -130,6 +162,37 @@ describe('<ScatterChartRenderer />', () => {
       cy.get('@queryFn').should('have.been.calledOnce')
       cy.get('@requestsQueryFn').should('not.have.been.called')
       cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
+    })
+
+    it('dims the previous result with a spinner while a refresh is pending', () => {
+      let resolveRefresh!: (result: ExploreResultV4) => void
+      let calls = 0
+
+      render({
+        tileQuery: exploreQuery,
+        queryFn: () => {
+          calls++
+
+          return calls === 1
+            ? Promise.resolve(exploreResult())
+            : new Promise(resolve => {
+              resolveRefresh = resolve
+            })
+        },
+      })
+
+      cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
+      cy.get('[data-testid="loading-overlay-spinner"]').should('not.exist')
+
+      cy.then(() => Cypress.vueWrapper.setProps({ refreshCounter: ++refreshCounter }))
+
+      cy.get('[data-testid="loading-overlay"]').first().should('have.attr', 'aria-busy', 'true')
+      cy.get('[data-testid="loading-overlay-spinner"]').should('be.visible')
+
+      cy.then(() => resolveRefresh(exploreResult()))
+
+      cy.get('[data-testid="loading-overlay"]').first().should('have.attr', 'aria-busy', 'false')
+      cy.get('[data-testid="loading-overlay-spinner"]').should('not.exist')
     })
   })
 
