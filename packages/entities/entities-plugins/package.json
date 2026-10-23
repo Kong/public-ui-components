@@ -146,7 +146,7 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/freeform": "workspace:^",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "lodash-es": "^4.18.1",
     "marked": "^18.1.0"
   }
