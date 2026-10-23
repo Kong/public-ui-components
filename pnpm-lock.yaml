@@ -52,7 +52,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@24.19.2)(typescript@5.9.3)
       '@evilmartians/lefthook':
-        specifier: ^2.1.15
+        specifier: ^2.2.1
         version: 2.2.1
       '@kong/design-tokens':
         specifier: 3.4.4
@@ -79,10 +79,10 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@types/node':
-        specifier: ^24.19.0
+        specifier: ^24.19.2
         version: 24.19.2
       '@vitejs/plugin-vue':
-        specifier: ^6.0.9
+        specifier: ^6.0.10
         version: 6.0.10(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.105.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))
       '@vitejs/plugin-vue-jsx':
         specifier: ^5.1.6
@@ -115,7 +115,7 @@ importers:
         specifier: ^10.9.1
         version: 10.9.1(jiti@2.5.1)(supports-color@7.2.0)
       js-yaml:
-        specifier: ^5.4.2
+        specifier: ^5.4.3
         version: 5.4.3
       jsdom:
         specifier: ^30.0.1
@@ -127,10 +127,10 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       postcss:
-        specifier: ^8.5.28
+        specifier: ^8.5.29
         version: 8.5.29
       postcss-custom-properties:
-        specifier: ^15.0.3
+        specifier: ^15.0.4
         version: 15.0.4(postcss@8.5.29)
       postcss-html:
         specifier: ^2.0.0
@@ -483,7 +483,7 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-echarts:
-        specifier: ^8.3.1
+        specifier: ^8.3.2
         version: 8.3.2(echarts@6.1.0)(vue@3.5.43(typescript@5.9.3))
 
   packages/analytics/portal-analytics-bridge:
@@ -618,7 +618,7 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-echarts:
-        specifier: ^8.3.1
+        specifier: ^8.3.2
         version: 8.3.2(echarts@6.1.0)(vue@3.5.43(typescript@5.9.3))
 
   packages/core/entities-config-editor:
@@ -694,8 +694,8 @@ importers:
         specifier: ^1.64.0
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       dompurify:
-        specifier: ^3.4.16
-        version: 3.4.16
+        specifier: ^3.4.17
+        version: 3.4.17
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -740,8 +740,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       dompurify:
-        specifier: ^3.4.16
-        version: 3.4.16
+        specifier: ^3.4.17
+        version: 3.4.17
       lodash-es:
         specifier: ^4.18.1
         version: 4.18.1
@@ -1219,8 +1219,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/freeform
       dompurify:
-        specifier: ^3.4.16
-        version: 3.4.16
+        specifier: ^3.4.17
+        version: 3.4.17
       lodash-es:
         specifier: ^4.18.1
         version: 4.18.1
@@ -5675,8 +5675,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.4.16:
-    resolution: {integrity: sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==}
+  dompurify@3.4.17:
+    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -6817,8 +6817,8 @@ packages:
   iobuffer@5.4.0:
     resolution: {integrity: sha512-DRebOWuqDvxunfkNJAlc3IzWIPD5xVxwUNbHr7xKB8E6aLJxIPfNX3CoMJghcFjpv6RWQsrcJbghtEwSPoJqMA==}
 
-  ip-address@10.7.3:
-    resolution: {integrity: sha512-A1kdq/tSb5QjvKvAMgIoEvDBIgL7qaqVP/jkvSwYYRZ9iEzvPpopxp2wQfu3SuZRHtpHNxMn8Fs0bS+gf5Xmwg==}
+  ip-address@10.7.4:
+    resolution: {integrity: sha512-DWBMKyeM25D70nrIiTkgQth59/G+naKOTep6huF9j+GmeK3DMD60Zvxg5d5qQnz+38AHgou6ean2LECX+lrKDg==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -12023,7 +12023,7 @@ snapshots:
       '@sindresorhus/slugify': 3.0.0
       '@vueuse/core': 14.4.0(vue@3.5.43(typescript@5.9.3))
       buffer: 6.0.3
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       html-format: 1.1.7
       markdown-it: 14.3.3
       markdown-it-abbr: 2.0.0
@@ -15614,7 +15614,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.4.16:
+  dompurify@3.4.17:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -17075,7 +17075,7 @@ snapshots:
 
   iobuffer@5.4.0: {}
 
-  ip-address@10.7.3: {}
+  ip-address@10.7.4: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -17423,7 +17423,7 @@ snapshots:
     optionalDependencies:
       canvg: 3.0.11
       core-js: 3.49.0
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       html2canvas: 1.4.1
 
   jsprim@2.0.2:
@@ -17925,7 +17925,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.13
       dayjs: 1.11.21
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       elkjs: 0.9.3
       katex: 0.18.11
       khroma: 2.1.0
@@ -17953,7 +17953,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.14
       dayjs: 1.11.21
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       es-toolkit: 1.49.0
       fastdom: 1.0.12
       katex: 0.18.11
@@ -18248,7 +18248,7 @@ snapshots:
 
   monaco-editor@0.55.1:
     dependencies:
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       marked: 14.0.0
 
   mri@1.2.0: {}
@@ -19952,7 +19952,7 @@ snapshots:
 
   socks@2.8.7:
     dependencies:
-      ip-address: 10.7.3
+      ip-address: 10.7.4
       smart-buffer: 4.2.0
 
   sortablejs@1.15.7: {}
@@ -20323,7 +20323,7 @@ snapshots:
       classnames: 2.5.1
       css.escape: 1.5.1
       deep-extend: 0.6.0
-      dompurify: 3.4.16
+      dompurify: 3.4.17
       ieee754: 1.2.1
       immutable: 4.3.9
       js-file-download: 0.4.12
