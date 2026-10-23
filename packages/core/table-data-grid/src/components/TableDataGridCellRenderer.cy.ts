@@ -99,7 +99,7 @@ describe('<TableDataGridCellRenderer />', () => {
   it('clears the tooltip when resizing makes the full value fit', () => {
     const longValue = 'A gateway service name that initially overflows its table column'
 
-
+    // eslint-disable-next-line vue/one-component-per-file -- Cypress harness models the AG Grid cell boundary.
     cy.mount(defineComponent({
       name: 'TableDataGridCellRendererTestHarness',
       setup() {
