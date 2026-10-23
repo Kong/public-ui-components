@@ -76,6 +76,7 @@ export const aiExploreAggregations = [
   'time_to_first_token_p50',
   'time_to_first_token_p95',
   'time_to_first_token_p99',
+  'token_cache_hit_rate',
   'total_tokens',
   'total_tokens_per_minute',
 ] as const
