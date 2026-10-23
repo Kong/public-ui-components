@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.4.6...%40kong-ui-public%2Fdashboard-renderer%4010.0.0) (2026-10-23)
+
+### Features
+
+* use datasource config store for labels [MA-5474] ([#3942](https://github.com/Kong/public-ui-components/issues/3942)) ([de6dedb](https://github.com/Kong/public-ui-components/commit/de6dedb0bb7fc3cf58be1094f820a72ff54a9a0b))
+
+### BREAKING CHANGES
+
+* require Pinia as a peer dependency; require labels in the definition of a field.
+
+
 ## [9.4.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%409.4.5...%40kong-ui-public%2Fdashboard-renderer%409.4.6) (2026-10-23)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
