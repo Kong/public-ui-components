@@ -10,6 +10,7 @@ import type { DatasourceConfig } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 
 import AnalyticsChart from './AnalyticsChart.vue'
+import LoadingOverlay from './LoadingOverlay.vue'
 
 const TimeSeriesChartStub = defineComponent({
   name: 'TimeSeriesChart',
@@ -318,5 +319,24 @@ describe('<AnalyticsChart /> datasource config labels', () => {
 
     expect(wrapper.findComponent(TimeSeriesChartStub).props('metricAxesTitle'))
       .toBe('Custom latency label (ms)')
+  })
+})
+
+describe('<AnalyticsChart /> loading', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('passes loading through to the overlay around the chart', async () => {
+    const wrapper = mountChart()
+    const overlay = wrapper.findComponent(LoadingOverlay)
+
+    expect(overlay.exists()).toBe(true)
+    expect(overlay.props('loading')).toBe(false)
+    expect(overlay.findComponent(TimeSeriesChartStub).exists()).toBe(true)
+
+    await wrapper.setProps({ loading: true })
+
+    expect(overlay.props('loading')).toBe(true)
   })
 })
