@@ -456,4 +456,52 @@ describe('<SingleValue />', () => {
 
     cy.get('.single-value-metric-name').should('have.text', 'Requests per minute')
   })
+
+  describe('compact', () => {
+    it('shows the metric name only when not compact', () => {
+      cy.mount(SingleValue, {
+        props: {
+          data: buildExploreResult(),
+        },
+      }).then(({ wrapper }) => {
+        cy.get('.single-value-metric-name').should('exist')
+
+        cy.then(() => wrapper.setProps({ compact: true }))
+        cy.get('.single-value-metric-name').should('not.exist')
+        cy.getTestId('single-value-chart').should('be.visible')
+      })
+    })
+
+    it('uses a fixed value size regardless of container width', () => {
+      cy.mount(SingleValue, {
+        props: {
+          data: buildExploreResult(),
+        },
+      }).then(({ wrapper }) => {
+        // Sanity check: at this width the default layout scales the value past 24px.
+        cy.getTestId('single-value-chart').should('not.have.css', 'font-size', '24px')
+
+        cy.then(() => wrapper.setProps({ compact: true }))
+        cy.getTestId('single-value-chart').should('have.css', 'font-size', '24px')
+      })
+    })
+
+    it('colors the whole trend line by polarity and drops the pill background', () => {
+      cy.mount(SingleValue, {
+        props: {
+          data: buildExploreResult({ previous: 10, current: 100 }),
+          showTrend: true,
+          compact: true,
+        },
+      })
+
+      cy.get('.single-value-trend').should('have.class', 'positive')
+      cy.get('.trend-change').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+
+      // The range text inherits the same color as the change.
+      cy.get('.trend-change').invoke('css', 'color').then((changeColor) => {
+        cy.getTestId('single-value-trend-range').should('have.css', 'color', changeColor)
+      })
+    })
+  })
 })
