@@ -3,6 +3,7 @@
     class="tile-boundary"
     :class="{
       'editable': context.editable,
+      'fit-to-content': fitToContent,
       'headless': !hasTileHeader,
     }"
     :data-testid="`tile-${tileId}`"
@@ -686,6 +687,10 @@ defineExpose({ getExportData })
   flex-direction: column;
   height: v-bind('`${height}px`');
   overflow: hidden;
+
+  &.fit-to-content {
+    height: auto;
+  }
 
   &.editable:hover {
     .tile-header {
