@@ -3,8 +3,9 @@ import SimpleChart from './components/SimpleChart.vue'
 import SparklineChart from './components/SparklineChart.vue'
 import TopTalkersGrid from './components/top-talkers/TopTalkersGrid.vue'
 import TopTalkersColumn from './components/top-talkers/TopTalkersColumn.vue'
+import LoadingOverlay from './components/LoadingOverlay.vue'
 
-export { AnalyticsChart, SimpleChart, SparklineChart, TopTalkersGrid, TopTalkersColumn }
+export { AnalyticsChart, SimpleChart, SparklineChart, TopTalkersGrid, TopTalkersColumn, LoadingOverlay }
 export type { TopTalkersGridColumn } from './components/top-talkers/TopTalkersGrid.vue'
 
 /**
