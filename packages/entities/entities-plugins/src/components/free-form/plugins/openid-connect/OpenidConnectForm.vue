@@ -160,7 +160,7 @@ import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCre
 import type { FormConfig, RenderRules } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
-import { migrateConsumerClaim } from './useConsumerClaimMigration'
+import { migrateDeprecatedClaim } from './useDeprecatedClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
 import PrincipalsSection from './PrincipalsSection.vue'
@@ -264,10 +264,13 @@ const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager'
 // behave as if `principals` isn't in the schema and fall back to the plain common fields.
 const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
-const hasPrincipalsInSchema = computed(() => {
-  const configField = props.schema.fields.find(f => 'config' in f)?.config as { fields?: Array<Record<string, unknown>> } | undefined
-  return !!configField?.fields?.some(f => 'principals' in f)
-})
+const configSchemaFields = computed(() =>
+  (props.schema.fields.find(f => 'config' in f)?.config as { fields?: Array<Record<string, unknown>> } | undefined)?.fields,
+)
+
+const hasPrincipalsInSchema = computed(() =>
+  !!configSchemaFields.value?.some(f => 'principals' in f),
+)
 
 const showPrincipalsUi = computed(() =>
   isKonnect.value && identityPrincipalsUiEnabled && hasPrincipalsInSchema.value,
@@ -327,13 +330,26 @@ const TEXTAREA_FIELDS = new Set([
 onMounted(() => {
   const config = (props.model as any)?.config
 
-  // Migrate deprecated consumer_claim → consumer_claims
-  const migratedClaims = migrateConsumerClaim({
-    consumer_claim: config?.consumer_claim,
-    consumer_claims: config?.consumer_claims,
-  })
-  if (migratedClaims !== null) {
-    props.onFormChange({ config: { consumer_claims: migratedClaims } } as any)
+  // Migrate deprecated singular claim fields to their plural replacements:
+  // credential_claim → credential_claims, consumer_claim → consumer_claims.
+  // Only when the gateway schema has the plural field: against stale schemas
+  // (e.g. older ai-gateway releases where credential_claims doesn't exist yet)
+  // the singular field is still a regular field, and submitting the unknown
+  // plural field would be rejected on save.
+  for (const [claimField, claimsField] of [
+    ['credential_claim', 'credential_claims'],
+    ['consumer_claim', 'consumer_claims'],
+  ] as const) {
+    if (!configSchemaFields.value?.some(f => claimsField in f)) {
+      continue
+    }
+    const migratedClaims = migrateDeprecatedClaim({
+      claim: config?.[claimField],
+      claims: config?.[claimsField],
+    })
+    if (migratedClaims !== null) {
+      props.onFormChange({ config: { [claimsField]: migratedClaims } } as any)
+    }
   }
 
   // AI Manager needs a real salt from the start (not Kong's server-generated one) so it
