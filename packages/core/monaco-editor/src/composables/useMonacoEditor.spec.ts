@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useMonacoEditor } from './useMonacoEditor'
 import { mount } from '@vue/test-utils'
 
-// Mock shiki and shikijs/monaco
-vi.mock('shiki', () => ({
+// Mock shiki via the virtual specifier monaco-loader.ts actually imports and shikijs/monaco
+vi.mock('virtual:@kong-ui-public/monaco-editor/shiki', () => ({
   getSingletonHighlighter: vi.fn(() => Promise.resolve({
     getLoadedLanguages: vi.fn(() => ['javascript', 'typescript', 'json']),
   })),
