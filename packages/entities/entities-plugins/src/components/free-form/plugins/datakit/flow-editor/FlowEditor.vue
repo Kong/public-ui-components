@@ -26,9 +26,11 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExpandIcon } from '@kong/icons'
-import { watch } from 'vue'
+import { inject, toValue, watch } from 'vue'
+import type { MaybeRef } from 'vue'
 
 import english from '../../../../../locales/en.json'
+import { FEATURE_FLAGS } from '../../../../../constants'
 import { useFormShared } from '@kong-ui-public/freeform'
 import { provideEditorStore, useLeaveConfirmation } from '../composables'
 import FlowPanels from './FlowPanels.vue'
@@ -73,9 +75,12 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
   emit('change', nextConfig, nextUIData)
 }
 
+const enableCallErrorHandling = toValue(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_3444_GATEWAY_317, false))
+
 const { modalOpen, setPendingFitView } = provideEditorStore(getValue(), {
   onChange,
   isEditing,
+  enableCallErrorHandling,
 })
 
 watch(modalOpen, () => {

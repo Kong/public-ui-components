@@ -1555,7 +1555,21 @@
                 }
               }
             },
+            "error_handling": {
+              "label": "Error handling",
+              "error_output_hint": "The error output is only set when Continue on error is enabled. Without it, connected nodes always receive an empty value.",
+              "failure_hint": "To handle a failed call, add a jq node to define the failure condition, then connect it to a Branch node.",
+              "failure_example": "For example, to treat non-2xx responses or call errors as failures:",
+              "retry": "Retry failed calls",
+              "retry_count": "Number of retries",
+              "retry_interval": "Retry interval",
+              "seconds": "seconds",
+              "retry_status_codes": "Retry status codes",
+              "status_codes_help": "Enter the status codes that trigger a retry, separated by commas. Use an exact code such as 429, or a range such as 5xx.",
+              "retry_warning": "Retrying may repeat this operation. The upstream may have already processed the request."
+            },
             "errors": {
+              "invalid_status_codes": "{fieldName} must be exact codes such as 429, or ranges such as 5xx",
               "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
               "invalid_url_format": "Not a valid URL format",
               "not_empty": "{fieldName} is required",

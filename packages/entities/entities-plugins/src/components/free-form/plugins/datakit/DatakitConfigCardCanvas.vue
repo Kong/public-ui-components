@@ -36,13 +36,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, toValue } from 'vue'
+import type { MaybeRef } from 'vue'
 import { ConfigCardItem } from '@kong-ui-public/entities-shared'
 import type { DatakitPluginData } from './types'
 import type { RecordItem } from '@kong-ui-public/entities-shared'
 import FlowPanels from './flow-editor/FlowPanels.vue'
 import { provideEditorStore } from './composables'
 import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
+import { FEATURE_FLAGS } from '../../../../constants'
 
 const { pluginData, item } = defineProps<{
   pluginData: DatakitPluginData
@@ -53,7 +55,9 @@ const isCompat = computed(() => {
   return DatakitConfigCompatSchema.safeParse(pluginData?.config).success
 })
 
-provideEditorStore(pluginData)
+provideEditorStore(pluginData, {
+  enableCallErrorHandling: toValue(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_3444_GATEWAY_317, false)),
+})
 </script>
 
 <style lang="scss" scoped>
