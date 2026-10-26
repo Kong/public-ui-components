@@ -1,14 +1,20 @@
 <template>
   <component
-    :is="borderless ? 'div' : KCard"
+    :is="borderless ? 'div' : ObjectField"
     v-if="useRedisPartial"
     v-show="!hide"
+    v-bind="borderless ? {} : { name: formRedisPath, required: true }"
     class="redis-config-card"
     :class="{ 'redis-config-card--borderless': borderless }"
     data-testid="redis-config-card"
-    :title="borderless ? undefined : redisCardTitle"
   >
-    <!-- KCard renders `title` in its header; the borderless (div) variant renders it here. -->
+    <!-- ObjectField renders the title in its collapsible header; the borderless (div) variant renders it here. -->
+    <template
+      v-if="!borderless"
+      #label
+    >
+      {{ redisCardTitle }}
+    </template>
     <div
       v-if="borderless"
       class="redis-config-card-title"
@@ -112,7 +118,6 @@ import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG, hideNewRedis } from '@kong-ui-public/forms'
-import { KCard } from '@kong/kongponents'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis } from '../types'
 import { partialEndpoints, REDIS_PARTIAL_INFO } from '../const'
@@ -161,7 +166,7 @@ interface RedisSelectorProps {
   redisPath?: string
   /** Set by parent from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
-  /** Render the partial UI in a plain `div` (no KCard border/chrome) instead of a card */
+  /** Render the partial UI in a plain `div` instead of a collapsible record field */
   borderless?: boolean
 }
 
@@ -356,8 +361,6 @@ watch(() => hide?.value, (newHide) => {
 
 <style lang="scss" scoped>
 .redis-config-card {
-  margin-bottom: var(--kui-space-60, $kui-space-60);
-
   :deep(.form-group:last-child) {
     margin-bottom: 0;
   }
@@ -366,12 +369,9 @@ watch(() => hide?.value, (newHide) => {
     box-sizing: border-box;
   }
 
-  &--borderless {
-    margin-bottom: 0;
-  }
 }
 
-// Title for the borderless (div) variant, mirroring the KCard header.
+// Title for the borderless (div) variant.
 .redis-config-card-title {
   font-size: var(--kui-font-size-40, $kui-font-size-40);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
