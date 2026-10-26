@@ -51,7 +51,7 @@
           :aria-label="fieldAttrs.label"
           class="ff-object-field-toggle-btn"
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
-          :disabled="!added || isLocked"
+          :disabled="!realAdded || isLocked"
           type="button"
           @click.prevent.stop="toggleDisplay"
         >
