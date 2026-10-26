@@ -307,10 +307,10 @@ describe('expressible fields — version gating', () => {
       .map(entry => entry.expressions)
       .find((candidate): candidate is RecordFieldSchema => !!candidate && candidate.type === 'record')
     if (expressionsRecord) {
-      expressionsRecord.min_ai_gateway_version = '2.4'
+      expressionsRecord.min_ai_gateway_version = '2.3'
     }
 
-    mountForm({ schema, config: { minRuntimeVersion: '2.3' } })
+    mountForm({ schema, config: { minRuntimeVersion: '2.2' } })
 
     // The value inputs are fine — the runtime supports the fields — but
     // expressions as a feature arrived later, so every affordance locks.
