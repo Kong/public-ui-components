@@ -36,12 +36,14 @@ export default function useAxios() {
   }
 
   /**
-   * Get the `x-datadog-trace-id` header from the provided error, if it exists
+   * Get the trace ID header from the provided error, if it exists.
+   * Prefers `x-trace-id` and falls back to `x-datadog-trace-id`.
    * @param {AxiosError | any} error The response error
    * @returns {string} The trace ID
    */
   const getTraceIdFromError = (error: AxiosError | any): string => {
-    return error?.response?.headers['x-datadog-trace-id'] || ''
+    const headers = error?.response?.headers || {}
+    return headers['x-trace-id'] || headers['x-datadog-trace-id'] || ''
   }
 
   return {
