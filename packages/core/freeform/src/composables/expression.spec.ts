@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { KTooltip } from '@kong/kongponents'
 import { defineComponent, h } from 'vue'
 import Form from '../components/Form.vue'
 import Field from '../components/Field.vue'
@@ -445,13 +446,20 @@ describe('useExpressionField — version gating', () => {
     },
   }))
 
-  it('locks a directly placed array-element editor when the expressions record is version-locked', () => {
+  it('explains a twin-side lock on the collapsed trigger, where the editor never opens', () => {
+    // The lock comes from the expressions record, not the source field, so
+    // the source field's own tooltip stays empty and the version note in
+    // the expanded editor is unreachable — the trigger's tooltip is the
+    // only place the requirement is visible.
     const wrapper = mountDirectEditor({
       config: { minRuntimeVersion: '2.2' },
       data: { config: { limit: [10] } },
     })
 
     expect((wrapper.get('[data-testid="ff-expression-add-config.limit.0"]').element as HTMLButtonElement).disabled).toBe(true)
+
+    const tooltip = wrapper.getComponent(KTooltip)
+    expect(tooltip.props('text')).toContain('2.3')
   })
 
   it('leaves the directly placed editor usable once the runtime satisfies the record', async () => {
@@ -462,6 +470,8 @@ describe('useExpressionField — version gating', () => {
 
     const trigger = wrapper.get('[data-testid="ff-expression-add-config.limit.0"]')
     expect((trigger.element as HTMLButtonElement).disabled).toBe(false)
+    // No lock, no explanation owed: the trigger wears no tooltip.
+    expect(wrapper.findComponent(KTooltip).exists()).toBe(false)
 
     await trigger.trigger('click')
     await wrapper.get('textarea').setValue('req.size')

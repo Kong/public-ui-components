@@ -15,17 +15,28 @@
     :data-expression-for="expression.expressionPath.value"
     :data-testid="`ff-expression-${path}`"
   >
-    <KButton
+    <!--
+      A twin-side lock leaves no trace on the source field's own tooltip, and
+      the version note lives in the expanded editor a locked trigger can never
+      reach — without this wrapper the disabled trigger explains nothing.
+    -->
+    <component
+      :is="isLocked ? KTooltip : 'div'"
       v-if="!expanded"
-      appearance="tertiary"
-      class="ff-expression-editor-add"
-      :data-testid="`ff-expression-add-${path}`"
-      :disabled="isLocked"
-      @click="expanded = true"
+      max-width="300"
+      :text="versionInfo?.tooltip"
     >
-      <AddIcon />
-      {{ i18n.t('expression.add') }}
-    </KButton>
+      <KButton
+        appearance="tertiary"
+        class="ff-expression-editor-add"
+        :data-testid="`ff-expression-add-${path}`"
+        :disabled="isLocked"
+        @click="expanded = true"
+      >
+        <AddIcon />
+        {{ i18n.t('expression.add') }}
+      </KButton>
+    </component>
     <div
       v-else
       class="ff-expression-editor-expanded"
@@ -91,7 +102,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
-import { KButton, KExternalLink } from '@kong/kongponents'
+import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import externalLinks from '../external-links'
@@ -132,7 +143,7 @@ const expressionName = computed(() => utils.resolveRoot(expression.expressionPat
  * remove button; the saved expression itself stays in the payload untouched,
  * the same read-only contract as every other version-locked field.
  */
-const versionInfo = computed(() => expression.versionInfo.value)
+const versionInfo = expression.versionInfo
 const isLocked = computed(() => !!versionInfo.value)
 
 /**
