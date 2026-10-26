@@ -21,11 +21,12 @@
       >
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
-      <component
-        :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+      <DraggableGridLayout
         v-else
+        :key="`layout-${isEditing}`"
         ref="gridLayoutRef"
         :columns="model.columns"
+        :editable="isEditing"
         :tile-height="model.tile_height"
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"
@@ -35,6 +36,7 @@
           <div
             v-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
+            :class="{ 'fit-to-content': fitToContent }"
           >
             <slot :name="getSlottableSlotName(tile)" />
           </div>
@@ -61,7 +63,7 @@
           />
         </template>
         <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
-      </component>
+      </DraggableGridLayout>
     </div>
   </div>
 </template>
@@ -82,7 +84,6 @@ import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
 import { computed, inject, nextTick, provide, ref } from 'vue'
 import composables from '../composables'
-import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
@@ -317,6 +318,9 @@ const toggleFullscreen = () => {
 }
 
 const isFullscreen = ref(false)
+
+const isEditing = computed<boolean>(() => editable.value && !isFullscreen.value)
+
 const onFullscreenChange = () => {
   isFullscreen.value = document.fullscreenElement !== null
   if (isFullscreen.value) {
@@ -357,7 +361,10 @@ defineExpose({
     background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
-    height: 100%;
+
+    &:not(.fit-to-content) {
+      height: 100%;
+    }
 
     &.slottable-tile {
       padding: var(--kui-space-60, $kui-space-60);
