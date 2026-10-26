@@ -259,7 +259,6 @@ const entitlementAccessEndpointUrl = computed(() => {
 })
 
 const formConfig = {
-  hasValue: (data: any): boolean => !!data && Object.keys(data).length > 0,
   prepareFormData: (data: any): any => {
     if (props.isEditing) return data
 
