@@ -472,7 +472,8 @@ defineExpose({
     }
 
     .boundary-header {
-      padding: var(--kui-space-30, $kui-space-30) 0;
+      margin-bottom: -4px; // to handle the dashboard padding inherent in draggablegridlayout
+      padding: var(--kui-space-20, $kui-space-20) 0 0 0;
     }
 
     .boundary-title {
