@@ -143,7 +143,7 @@ export default function useDashboardContext({
       refreshInterval: refreshInterval.value,
       editable: editable.value,
       showTileActions: showTileActions.value,
-    } as DashboardRendererContext
+    }
   })
 
   const queryReady = computed<boolean>(() => {

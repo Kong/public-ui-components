@@ -17,7 +17,7 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  sectionsInfo?: Array<{
+  sectionsInfo?: ReadonlyArray<{
     title?: string
     description?: string
   }>

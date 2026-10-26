@@ -84,7 +84,7 @@
               @duplicate-tile="onDuplicateTile(tile, index)"
               @edit-tile="onEditTile(tile)"
               @remove-tile="onRemoveTile(tile, index)"
-              @tile-loaded="onTileLoaded(tile)"
+              @tile-loaded="onTileLoaded(tile, index)"
               @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
             />
           </template>
@@ -209,8 +209,9 @@ composables.useRequestQueue()
 
 const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
 
-const onTileLoaded = (tile: GridTile<TileDefinition>) => {
-  loadedTileIds.add((tile.id as string))
+const onTileLoaded = (tile: GridTile<TileDefinition>, dashboardIndex: number) => {
+  // tile ids are only unique within a dashboard, so scope the key by dashboard index
+  loadedTileIds.add(`${dashboardIndex}-${tile.id}`)
 
   if (loadedTileIds.size >= nonSlottableTileCount.value) {
     emit('tiles-loaded', true)
@@ -329,7 +330,7 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number) => {
 
 const onRemoveTile = (tile: GridTile<TileDefinition>, index: number) => {
   gridLayoutRefs[index]?.removeWidget(tile.id)
-  loadedTileIds.delete((tile.id as string))
+  loadedTileIds.delete(`${index}-${tile.id}`)
 }
 
 const refreshTiles = () => {
