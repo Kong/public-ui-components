@@ -222,6 +222,16 @@ export function initEditorState(
     }
     adjacencies.get(connection.target)!.add(connection.source)
 
+    // Keep the `error` output of a call node the config already connects, even when
+    // `enableCallErrorHandling` is off, or the edge would turn into a whole-node one.
+    if (
+      sourceNode.type === 'call'
+      && connection.sourceField === 'error'
+      && !findFieldByName(sourceNode, 'output', connection.sourceField)
+    ) {
+      sourceNode.fields.output.push(...toFieldArray([connection.sourceField]))
+    }
+
     edges.push({
       id: createId('edge'),
       source: sourceNode.id,

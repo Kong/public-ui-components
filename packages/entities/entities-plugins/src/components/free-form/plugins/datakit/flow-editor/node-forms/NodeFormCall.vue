@@ -148,7 +148,7 @@ import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../../composables/useI18n'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useEditorStore } from '../store/store'
-import { computed, inject, toValue, useTemplateRef } from 'vue'
+import { computed, inject, toValue, useTemplateRef, watch } from 'vue'
 import type { MaybeRef } from 'vue'
 import NameField from './NameField.vue'
 import type { NodeId } from '../../types'
@@ -269,6 +269,14 @@ const timeoutHandler = createFieldHandler('timeout', () => setConfig('timeout'))
 const retryCountHandler = createFieldHandler('retry_count', () => setConfig('retry.count'))
 const retryIntervalHandler = createFieldHandler('retry_interval', () => setConfig('retry.interval'))
 const retryStatusCodesHandler = createFieldHandler('retry_status_codes', () => setConfig('retry.status_codes'))
+
+// The retry fields unmount without a change event, so clear their errors when `retry` goes away
+watch(retryEnabled, (enabled) => {
+  if (enabled) return
+  retryCountHandler.value.validate()
+  retryIntervalHandler.value.validate()
+  retryStatusCodesHandler.value.validate()
+})
 </script>
 
 <style lang="scss" scoped>

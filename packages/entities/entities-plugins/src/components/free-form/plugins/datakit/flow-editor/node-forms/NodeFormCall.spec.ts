@@ -103,7 +103,7 @@ function mountCallForm({ flag = true, node = {}, otherNodes = [] }: {
 
   const callNode = () => store.state.value.nodes.find(({ name }) => name === 'CALL')!
 
-  return { wrapper, callNode }
+  return { wrapper, callNode, store }
 }
 
 describe('NodeFormCall', () => {
@@ -122,6 +122,20 @@ describe('NodeFormCall', () => {
       expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(true)
       expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(true)
       expect(callNode().fields.output.map(({ name }) => name)).toContain('error')
+    })
+
+    it('keeps a connected `error` output when the flag is off', () => {
+      const { callNode, store } = mountCallForm({
+        flag: false,
+        otherNodes: [{ type: 'jq', name: 'CHECK', jq: '.error', inputs: { error: 'CALL.error' } }],
+      })
+
+      const errorField = callNode().fields.output.find(({ name }) => name === 'error')
+      expect(errorField).toBeDefined()
+      expect(store.state.value.edges.some(({ sourceField }) => sourceField === errorField!.id)).toBe(true)
+      expect(store.toConfigNodes().find(({ name }) => name === 'CHECK')).toMatchObject({
+        inputs: { error: 'CALL.error' },
+      })
     })
   })
 
@@ -177,6 +191,20 @@ describe('NodeFormCall', () => {
 
       expect(callNode().config).not.toHaveProperty('retry')
       expect(wrapper.find('[data-testid="ff-retry.count"]').exists()).toBe(false)
+    })
+
+    it('clears retry validation errors when disabled', async () => {
+      const { wrapper, callNode, store } = mountCallForm({ node: { retry: { count: 3 } } })
+
+      const count = wrapper.get('[data-testid="ff-retry.count"]')
+      await count.setValue('11')
+      await count.trigger('blur')
+      await flushPromises()
+      expect(store.invalidConfigNodeIds.value.has(callNode().id)).toBe(true)
+
+      await wrapper.getTestId('dk-call-retry-toggle').setValue(false)
+      await flushPromises()
+      expect(store.invalidConfigNodeIds.value.has(callNode().id)).toBe(false)
     })
 
     it('splits comma-separated status codes', async () => {
