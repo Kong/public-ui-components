@@ -37,11 +37,6 @@ const router = createRouter({
       component: () => import('./pages/MultipleDashboardsDemo.vue'),
     },
     {
-      path: '/grid-layout',
-      name: 'grid',
-      component: () => import('./pages/GridDemo.vue'),
-    },
-    {
       path: '/tile-preview',
       name: 'preview',
       component: () => import('./pages/TilePreviewDemo.vue'),
@@ -66,10 +61,6 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Multiple Dashboards',
     to: { name: 'multiple' },
-  },
-  {
-    name: 'Grid Layout',
-    to: { name: 'grid' },
   },
   {
     name: 'Tile Preview Component',

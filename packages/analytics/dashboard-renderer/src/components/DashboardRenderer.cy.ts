@@ -324,11 +324,10 @@ describe('<DashboardRenderer />', () => {
       context: {
         filters: [],
         timeSpec: { type: 'relative', time_range: '15m' },
-        sectionsInfo: [{ title: 'First section' }, { title: 'Second section' }],
       },
       modelValue: [
-        makeConfig(),
-        makeConfig([{ field: 'api_product', operator: 'in', value: ['some product'] }]),
+        { title: 'First section', definition: makeConfig() },
+        { title: 'Second section', definition: makeConfig([{ field: 'api_product', operator: 'in', value: ['some product'] }]) },
       ],
     }
 

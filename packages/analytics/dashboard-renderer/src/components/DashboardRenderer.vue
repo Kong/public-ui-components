@@ -22,38 +22,42 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <div
-        v-for="(activeModel, index) in modelRay"
+        v-for="(section, index) in sections"
         v-else
         :key="`dash-${index}`"
         class="dashboard-boundary"
         :class="{
-          multiple: modelRay.length > 1,
+          multiple: sections.length > 1,
         }"
       >
-        <a :id="`dash-${index}`" />
+        <a
+          v-if="section.anchorId"
+          :id="section.anchorId"
+        />
         <div
-          v-if="context?.sectionsInfo?.[index]"
+          v-if="section.title || section.description"
           class="boundary-header"
         >
           <div
-            v-if="getSectionTitle(index)"
+            v-if="section.title"
             class="boundary-title"
           >
-            {{ getSectionTitle(index) }}
+            {{ section.title }}
           </div>
           <div
-            v-if="getSectionDescription(index)"
+            v-if="section.description"
             class="boundary-description"
           >
-            {{ getSectionDescription(index) }}
+            {{ section.description }}
           </div>
         </div>
         <DraggableGridLayout
           :key="`layout-${isEditing}`"
           :ref="(el) => setGridLayoutRef(index, el)"
-          :columns="activeModel.columns"
+          :bottom-trim="sections.length > 1 ? 4 : 0"
+          :columns="section.definition.columns"
           :editable="isEditing"
-          :tile-height="activeModel.tile_height"
+          :tile-height="section.definition.tile_height"
           :tiles="gridTiles[index]"
           @update-tiles="(tiles: any) => handleUpdateTiles(tiles, index)"
         >
@@ -71,10 +75,10 @@
               :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
               v-model:refresh-counter="refreshCounter"
               class="tile-container"
-              :context="getContextWithFilters(activeModel)"
+              :context="getContextWithFilters(section.definition)"
               :definition="tile.meta as TileDefinition"
               :fit-to-content="fitToContent"
-              :height="tile.layout.size.rows * (activeModel.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+              :height="tile.layout.size.rows * (section.definition.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
               :hide-actions="!showTileActions"
               :is-fullscreen="isFullscreen"
               :preview="preview"
@@ -96,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, DashboardSection, GridTile, TileZoomEvent } from '../types'
 import type {
   AllFilters,
   AnalyticsBridge,
@@ -141,36 +145,23 @@ const emit = defineEmits<{
   (e: 'tiles-loaded', done: boolean): void
 }>()
 
-const models = defineModel<DashboardConfig | DashboardConfig[]>({ required: true })
-
-const getModelByIndex = (index: number): DashboardConfig => {
-  if (Array.isArray(models.value)) {
-    return models.value[index]
-  }
-
-  return models.value
-}
+const models = defineModel<DashboardConfig | DashboardSection[]>({ required: true })
 
 /**
- * a helper that coerces our v-model into an array, used only for vue rendering
+ * a helper that coerces our v-model into an array of sections, used only for vue rendering
  */
-const modelRay = computed<DashboardConfig[]>(() => {
+const sections = computed<DashboardSection[]>(() => {
   if (Array.isArray(models.value)) {
     return models.value
   }
 
-  return [models.value]
+  return [{ definition: models.value }]
 })
 
+const getModelByIndex = (index: number): DashboardConfig => sections.value[index].definition
+
 const nonSlottableTileCount = computed<number>(() => {
-  const tiles: TileConfig[] = Array.isArray(models.value)
-    ? models.value.reduce((acc, currModel) => {
-      return [
-        ...acc,
-        ...currModel.tiles,
-      ]
-    }, [] as TileConfig[])
-    : models.value.tiles
+  const tiles: TileConfig[] = sections.value.flatMap(section => section.definition.tiles)
 
   const isSlottableConfig = (tile: TileConfig): boolean => tile.type === 'slottable'
     || ('definition' in tile && (tile.definition as ChartTileDefinition)?.chart?.type === 'slottable')
@@ -284,7 +275,7 @@ const getTiles = (config: DashboardConfig): Array<GridTile<TileDefinition>> => {
   })
 }
 
-const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => modelRay.value.map(getTiles))
+const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => sections.value.map(section => getTiles(section.definition)))
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
@@ -422,22 +413,6 @@ const getContextWithFilters = (config: DashboardConfig) => {
   }
 }
 
-const getSectionTitle = (index: number) => {
-  if (enrichedContext.value.sectionsInfo
-    && enrichedContext.value.sectionsInfo[index]
-    && enrichedContext.value.sectionsInfo[index].title) {
-    return enrichedContext.value.sectionsInfo[index].title
-  }
-}
-
-const getSectionDescription = (index: number) => {
-  if (enrichedContext.value.sectionsInfo
-    && enrichedContext.value.sectionsInfo[index]
-    && enrichedContext.value.sectionsInfo[index].description) {
-    return enrichedContext.value.sectionsInfo[index].description
-  }
-}
-
 defineExpose({
   refresh: refreshTiles,
   toggleFullscreen,
@@ -490,7 +465,7 @@ defineExpose({
     border: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
     border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
     margin-top: var(--kui-space-60, $kui-space-60);
-    padding: 2px;
+    padding: 2px 2px 0 2px;
 
     &:first-of-type {
       margin-top: 0;

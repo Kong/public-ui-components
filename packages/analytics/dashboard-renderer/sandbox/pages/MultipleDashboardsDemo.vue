@@ -6,9 +6,10 @@
     <div class="sandbox-container">
       <h2>Multiple Dashboards</h2>
       <p>
-        A single <code>DashboardRenderer</code> can take an array of dashboard configs as its
-        <code>v-model</code>. Each config renders in its own titled section (titles come from
-        <code>context.sectionsInfo</code>) and applies its own <code>preset_filters</code>.
+        A single <code>DashboardRenderer</code> can take an array of sections as its
+        <code>v-model</code>. Each section has an optional <code>title</code> and
+        <code>description</code> and a <code>definition</code> dashboard config, which applies
+        its own <code>preset_filters</code>.
       </p>
       <br>
       <div class="controls">
@@ -34,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext } from '../../src'
+import type { DashboardRendererContext, DashboardSection } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { computed, inject, ref } from 'vue'
-import type { DashboardConfig, TileConfig } from '@kong-ui-public/analytics-utilities'
+import type { TileConfig } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -54,11 +55,6 @@ const context = computed<DashboardRendererContext>(() => ({
   filters: [],
   refreshInterval: 0,
   editable: editable.value,
-  sectionsInfo: [
-    { title: 'Overview', description: 'High-level traffic health' },
-    { title: 'Routes (production only)' },
-    { title: 'Breakdown' },
-  ],
 }))
 
 const singleValueTile = (title: string, metric: string, col: number): TileConfig => ({
@@ -77,7 +73,8 @@ const singleValueTile = (title: string, metric: string, col: number): TileConfig
   },
   layout: {
     position: { col, row: 0 },
-    size: { cols: 2, rows: 1 },
+    // Compact single value: the row shrinks to fit its content.
+    size: { cols: 2, rows: 1, fit_to_content: true },
   },
 })
 
@@ -87,82 +84,93 @@ const overviewTiles: TileConfig[] = [
   singleValueTile('P99 latency', 'response_latency_p99', 4),
 ]
 
-const dashboardConfigs = ref<DashboardConfig[]>([
+const dashboardConfigs = ref<DashboardSection[]>([
   {
-    tile_height: 167,
-    tiles: overviewTiles,
+    title: 'Overview',
+    anchorId: 'overview',
+    description: 'High-level traffic health',
+    definition: {
+      tile_height: 167,
+      tiles: overviewTiles,
+    },
   },
   {
-    tile_height: 167,
-    // Applied only to tiles in this dashboard, merged with context.filters.
-    preset_filters: [
-      {
-        field: 'env',
-        operator: 'in',
-        value: ['prod'],
-      },
-    ],
-    tiles: [
-      {
-        type: 'chart',
-        definition: {
-          chart: {
-            type: 'table',
-            chart_title: 'Platform routes',
-          },
-          query: {
-            datasource: 'platform',
-            entity: 'route',
-            columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
-            page_size: 25,
-          },
+    title: 'Routes (production only)',
+    definition: {
+      tile_height: 167,
+      // Applied only to tiles in this dashboard, merged with context.filters.
+      preset_filters: [
+        {
+          field: 'env',
+          operator: 'in',
+          value: ['prod'],
         },
-        layout: {
-          position: { col: 0, row: 0 },
-          size: { cols: 6, rows: 3 },
-        },
-      } satisfies TileConfig,
-    ],
+      ],
+      tiles: [
+        {
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'table',
+              chart_title: 'Platform routes',
+            },
+            query: {
+              datasource: 'platform',
+              entity: 'route',
+              columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+              page_size: 25,
+            },
+          },
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 6, rows: 3 },
+          },
+        } satisfies TileConfig,
+      ],
+    },
   },
   {
-    tile_height: 167,
-    tiles: [
-      {
-        type: 'chart',
-        definition: {
-          chart: {
-            type: 'top_n',
-            chart_title: 'Top N chart of mock data',
+    title: 'Breakdown',
+    definition: {
+      tile_height: 167,
+      tiles: [
+        {
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'top_n',
+              chart_title: 'Top N chart of mock data',
+            },
+            query: {
+              datasource: 'basic',
+              limit: 3,
+            },
           },
-          query: {
-            datasource: 'basic',
-            limit: 3,
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 3, rows: 2 },
           },
-        },
-        layout: {
-          position: { col: 0, row: 0 },
-          size: { cols: 3, rows: 2 },
-        },
-      } satisfies TileConfig,
-      {
-        type: 'chart',
-        definition: {
-          chart: {
-            type: 'horizontal_bar',
-            chart_title: 'Requests by route',
+        } satisfies TileConfig,
+        {
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'horizontal_bar',
+              chart_title: 'Requests by route',
+            },
+            query: {
+              datasource: 'api_usage',
+              dimensions: ['route'],
+              metrics: ['request_count'],
+            },
           },
-          query: {
-            datasource: 'api_usage',
-            dimensions: ['route'],
-            metrics: ['request_count'],
+          layout: {
+            position: { col: 3, row: 0 },
+            size: { cols: 3, rows: 2 },
           },
-        },
-        layout: {
-          position: { col: 3, row: 0 },
-          size: { cols: 3, rows: 2 },
-        },
-      } satisfies TileConfig,
-    ],
+        } satisfies TileConfig,
+      ],
+    },
   },
 ])
 </script>
