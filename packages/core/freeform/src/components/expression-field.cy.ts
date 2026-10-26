@@ -296,6 +296,28 @@ describe('expressible fields — version gating', () => {
     cy.getTestId('ff-expression-add-config.minute').should('be.disabled')
   })
 
+  it('locks every expression affordance when the root expressions record is version-locked and no twin is tagged', () => {
+    // The shape the AI Gateway Plugin entity declares (kong-ee aigw-master):
+    // the root `expressions` record itself carries the requirement — the
+    // whole expression feature is version-gated — while neither the source
+    // fields nor their twins are tagged individually. Every twin must
+    // inherit the lock through the ancestor walk.
+    const schema = createExpressibleSchema()
+    const expressionsRecord = schema.fields
+      .map(entry => entry.expressions)
+      .find((candidate): candidate is RecordFieldSchema => !!candidate && candidate.type === 'record')
+    if (expressionsRecord) {
+      expressionsRecord.min_ai_gateway_version = '2.4'
+    }
+
+    mountForm({ schema, config: { minRuntimeVersion: '2.3' } })
+
+    // The value inputs are fine — the runtime supports the fields — but
+    // expressions as a feature arrived later, so every affordance locks.
+    cy.getTestId('ff-config.minute').should('not.be.disabled')
+    cy.getTestId('ff-expression-add-config.minute').should('be.disabled')
+  })
+
   it('fails open when no minRuntimeVersion is configured', () => {
     mountForm({ schema: createTaggedSchema('config', 'minute') })
 
