@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fcore%401.13.16...%40kong-ui-public%2Fcore%401.13.17) (2026-10-26)
+
+### Bug Fixes
+
+* trace id header name ([#3973](https://github.com/Kong/public-ui-components/issues/3973)) ([6885642](https://github.com/Kong/public-ui-components/commit/688564289f03852a58308c0684591a8eb650e74f))
+
+
 ## [1.13.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fcore%401.13.15...%40kong-ui-public%2Fcore%401.13.16) (2026-10-22)
 
 ### Bug Fixes
