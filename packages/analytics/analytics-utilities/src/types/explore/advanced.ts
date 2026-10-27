@@ -24,6 +24,7 @@ export const queryableExploreDimensions = [
   'realm',
   'portal_api',
   'principal',
+  'principal_group',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
