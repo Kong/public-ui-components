@@ -42,7 +42,7 @@ const callSchema = {
   ],
 }
 
-const pluginSchema = {
+const createPluginSchema = (call: typeof callSchema) => ({
   type: 'record',
   fields: [{
     config: {
@@ -53,15 +53,16 @@ const pluginSchema = {
           elements: {
             type: 'record',
             fields: [],
-            subschema_definitions: { call: callSchema },
+            subschema_definitions: { call },
           },
         },
       }],
     },
   }],
-} as unknown as FormSchema
+}) as unknown as FormSchema
 
-function mountCallForm({ node = {}, otherNodes = [] }: {
+function mountCallForm({ schema = callSchema, node = {}, otherNodes = [] }: {
+  schema?: typeof callSchema
   node?: Record<string, unknown>
   otherNodes?: Array<Record<string, unknown>>
 } = {}) {
@@ -82,7 +83,7 @@ function mountCallForm({ node = {}, otherNodes = [] }: {
   })
 
   const wrapper = mount(Form, {
-    props: { schema: pluginSchema },
+    props: { schema: createPluginSchema(schema) },
     slots: { default: () => h(Harness) },
     global: {
       provide: { [CONFIRM_MODAL_PROVIDE_KEY]: async () => true },
@@ -108,6 +109,19 @@ describe('NodeFormCall', () => {
     expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(true)
     expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(true)
     expect(callNode().fields.output.map(({ name }) => name)).toContain('error')
+  })
+
+  it('hides error handling when the call node schema has no such fields (Gateway < 3.17)', () => {
+    const { wrapper } = mountCallForm({
+      schema: {
+        ...callSchema,
+        fields: callSchema.fields.filter((field) => !('continue_on_error' in field) && !('retry' in field)),
+      },
+    })
+
+    expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(false)
+    expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('not found in schema')
   })
 
   it('keeps a connected `error` output when loading a config', () => {
