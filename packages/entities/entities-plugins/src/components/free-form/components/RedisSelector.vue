@@ -2,19 +2,12 @@
   <component
     :is="borderless ? 'div' : ObjectField"
     v-if="useRedisPartial"
-    v-show="!hide"
-    v-bind="borderless ? {} : { name: formRedisPath, required: true }"
+    v-bind="wrapperAttrs"
     class="redis-config-card"
     :class="{ 'redis-config-card--borderless': borderless }"
     data-testid="redis-config-card"
   >
     <!-- ObjectField renders the title in its collapsible header; the borderless (div) variant renders it here. -->
-    <template
-      v-if="!borderless"
-      #label
-    >
-      {{ redisCardTitle }}
-    </template>
     <div
       v-if="borderless"
       class="redis-config-card-title"
@@ -101,7 +94,6 @@
   </component>
   <ObjectField
     v-else
-    v-show="!hide"
     v-bind="props"
     :fields-order="redisFieldsOrder"
     hide-required-asterisk
@@ -212,6 +204,12 @@ const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FOR
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
 )
+
+// ObjectField is multi-root and hides itself via `hide`, so `v-show` can't be used on the wrapper;
+// only the borderless div needs to be hidden explicitly.
+const wrapperAttrs = computed(() => props.borderless
+  ? { style: hide?.value ? { display: 'none' } : undefined }
+  : { name: formRedisPath.value, required: true, label: redisCardTitle.value })
 
 const sharedRedisRadioDescription = computed(() =>
   props.isKonnectManagedRedisEnabled
