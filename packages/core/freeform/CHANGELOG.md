@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.7...%40kong-ui-public%2Ffreeform%400.6.0) (2026-10-27)
+
+### Features
+
+* **freeform:** version-gate expression fields via min_ai_gateway_version ([#3961](https://github.com/Kong/public-ui-components/issues/3961)) ([a27dd55](https://github.com/Kong/public-ui-components/commit/a27dd553a7d41b2f7c55b9d4e41f43f2d96dc2f8))
+
+
+## [0.5.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.6...%40kong-ui-public%2Ffreeform%400.5.7) (2026-10-26)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
+## [0.5.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.5...%40kong-ui-public%2Ffreeform%400.5.6) (2026-10-26)
+
+### Bug Fixes
+
+* **freeform:** keep ObjectField toggle enabled for required fields without a value ([#3970](https://github.com/Kong/public-ui-components/issues/3970)) ([021eb3f](https://github.com/Kong/public-ui-components/commit/021eb3fa6b23e6ca8a4de95ff125443d7872a22b))
+
+
 ## [0.5.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.4...%40kong-ui-public%2Ffreeform%400.5.5) (2026-10-25)
 
 **Note:** Version bump only for package @kong-ui-public/freeform

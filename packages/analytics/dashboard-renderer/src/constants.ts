@@ -1,6 +1,7 @@
 // Default tile height and width - approximated from the figma design.
 export const DEFAULT_TILE_HEIGHT = 170
 export const DASHBOARD_COLS = 6
+export const CELLS_PER_ROW = 20
 export const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 export const INJECT_DASHBOARD_COORDINATOR = 'analytics-dashboard-coordinator'
 export const ENTITY_ID_TOKEN = '{entity-id}'

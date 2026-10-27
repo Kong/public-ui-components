@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.4...%40kong-ui-public%2Fdashboard-renderer%4010.0.5) (2026-10-26)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [10.0.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.3...%40kong-ui-public%2Fdashboard-renderer%4010.0.4) (2026-10-26)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [10.0.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.2...%40kong-ui-public%2Fdashboard-renderer%4010.0.3) (2026-10-26)
+
+### Bug Fixes
+
+* **analytics:** add compact version of singlevalue chart [MA-5583] ([#3940](https://github.com/Kong/public-ui-components/issues/3940)) ([434b59d](https://github.com/Kong/public-ui-components/commit/434b59db30e27613d7bdc0b151a8cac95c2269c0))
+
+
 ## [10.0.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.1...%40kong-ui-public%2Fdashboard-renderer%4010.0.2) (2026-10-25)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

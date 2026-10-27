@@ -5,6 +5,7 @@ import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
@@ -550,7 +551,7 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
   })
 
-  it('passes fitToContent to TopN tiles', () => {
+  it('passes fitToContent to TopN tiles and sizes the tile to its content', async () => {
     const topNDefinition: TileDefinition = {
       chart: { type: 'top_n', entity_link: '/services/{entity-id}' },
       query: { datasource: 'basic', metrics: ['request_count'], dimensions: ['gateway_service'] },
@@ -572,6 +573,11 @@ describe('<DashboardTile /> table tiles', () => {
       fitToContent: true,
       query: topNDefinition.query,
     })
+    expect(wrapper.classes()).toContain('fit-to-content')
+
+    await wrapper.setProps({ fitToContent: false })
+
+    expect(wrapper.classes()).not.toContain('fit-to-content')
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {
@@ -662,5 +668,60 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findTestId('edit-tile-1').exists()).toBe(false)
     expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(true)
     expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
+  })
+})
+
+describe('<DashboardTile /> single value tiles', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks()
+    setupPiniaTestStore()
+  })
+
+  const mountSingleValue = (chartTitle?: string, fitToContent = false) => mount(DashboardTile, {
+    props: {
+      definition: {
+        ...baseDefinition,
+        chart: { type: 'single_value', chart_title: chartTitle },
+      } as TileDefinition,
+      fitToContent,
+      context: mockContext,
+      queryReady: true,
+      refreshCounter: 0,
+      tileId: '1',
+    },
+    shallow: true,
+    global: {
+      plugins: [Kongponents],
+      provide: {
+        [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+      },
+      stubs: {
+        KTooltip: false,
+      },
+    },
+  })
+
+  it('falls back to the metric name when there is no chart title', () => {
+    const wrapper = mountSingleValue()
+
+    expect(wrapper.find('.title').text()).toBe('Request count')
+  })
+
+  it('uses the chart title when one is provided', () => {
+    const wrapper = mountSingleValue('Total requests')
+
+    expect(wrapper.find('.title').text()).toBe('Total requests')
+  })
+
+  it('uses the compact layout only when the row fits its content', () => {
+    const fixed = mountSingleValue()
+
+    expect(fixed.classes()).not.toContain('compact-single_value')
+    expect(fixed.findComponent(SimpleChartRenderer).props('fitToContent')).toBe(false)
+
+    const fitted = mountSingleValue(undefined, true)
+
+    expect(fitted.classes()).toContain('compact-single_value')
+    expect(fitted.findComponent(SimpleChartRenderer).props('fitToContent')).toBe(true)
   })
 })

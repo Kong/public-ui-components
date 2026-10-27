@@ -115,7 +115,7 @@
       </div>
       <!-- Redis — shared (partial) vs dedicated. Rendered directly (rather than via
            `<Field name="config.redis" />`) so we can pass `borderless`, which drops
-           the surrounding KCard chrome to sit flush in the form. Still requires the
+           the collapsible record-field chrome to sit flush in the form. Still requires the
            schema to declare `supported_partials: { 'redis-ce': ['config.redis'] }`
            so REDIS_PARTIAL_INFO resolves this path. -->
       <RedisSelector
@@ -259,7 +259,6 @@ const entitlementAccessEndpointUrl = computed(() => {
 })
 
 const formConfig = {
-  hasValue: (data: any): boolean => !!data && Object.keys(data).length > 0,
   prepareFormData: (data: any): any => {
     if (props.isEditing) return data
 

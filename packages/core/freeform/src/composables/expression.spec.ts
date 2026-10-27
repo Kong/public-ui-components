@@ -1,11 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { KTooltip } from '@kong/kongponents'
 import { defineComponent, h } from 'vue'
 import Form from '../components/Form.vue'
 import Field from '../components/Field.vue'
+import ExpressionEditor from '../components/ExpressionEditor.vue'
 import { EXPRESSIONS_FIELD, toExpressionPath } from './expression-paths'
 
-import type { FormSchema } from '../form-schema'
+import type { FormSchema, RecordFieldSchema } from '../form-schema'
 import type { FormConfig } from '../types'
 
 /** Shaped like rate-limiting's: expressible fields in `config`, twins in `expressions`. */
@@ -403,5 +405,75 @@ describe('useExpressionField', () => {
     // The untouched slot holds `''` rather than being absent — see
     // "empty slots in a twin array" above.
     expect(lastChange().expressions.limit).toEqual(['', 'req.size'])
+  })
+})
+
+describe('useExpressionField — version gating', () => {
+  /**
+   * The AI Gateway Plugin entity shape: the root `expressions` record carries
+   * the requirement and no field or twin is tagged individually — every twin
+   * must inherit the lock through the ancestor walk.
+   */
+  const rootTaggedSchema = (): FormSchema => {
+    const clone = structuredClone(schema)
+    const expressionsRecord = clone.fields
+      .map(entry => entry[EXPRESSIONS_FIELD])
+      .find((candidate): candidate is RecordFieldSchema => !!candidate && candidate.type === 'record')
+    if (expressionsRecord) {
+      // The real value the AI Gateway Plugin entity declares (aigw-master).
+      expressionsRecord.min_ai_gateway_version = '2.3'
+    }
+    return clone
+  }
+
+  /**
+   * Mounts the editor the way rate-limiting-advanced's `RequestLimitsForm`
+   * does — placed directly for one array element, not through `Field` — so
+   * the lock must come from the composable inside the editor, not from any
+   * field-component wrapper.
+   */
+  const mountDirectEditor = (options: { config?: FormConfig, data?: Record<string, unknown> } = {}) => mount(defineComponent({
+    setup() {
+      return () => h(
+        Form,
+        {
+          schema: rootTaggedSchema(),
+          config: options.config,
+          data: options.data,
+        },
+        { default: () => h(ExpressionEditor, { name: '$.config.limit.0' }) },
+      )
+    },
+  }))
+
+  it('explains a twin-side lock on the collapsed trigger, where the editor never opens', () => {
+    // The lock comes from the expressions record, not the source field, so
+    // the source field's own tooltip stays empty and the version note in
+    // the expanded editor is unreachable — the trigger's tooltip is the
+    // only place the requirement is visible.
+    const wrapper = mountDirectEditor({
+      config: { minRuntimeVersion: '2.2' },
+      data: { config: { limit: [10] } },
+    })
+
+    expect((wrapper.get('[data-testid="ff-expression-add-config.limit.0"]').element as HTMLButtonElement).disabled).toBe(true)
+
+    const tooltip = wrapper.getComponent(KTooltip)
+    expect(tooltip.props('text')).toContain('2.3')
+  })
+
+  it('leaves the directly placed editor usable once the runtime satisfies the record', async () => {
+    const wrapper = mountDirectEditor({
+      config: { minRuntimeVersion: '2.3' },
+      data: { config: { limit: [10] } },
+    })
+
+    const trigger = wrapper.get('[data-testid="ff-expression-add-config.limit.0"]')
+    expect((trigger.element as HTMLButtonElement).disabled).toBe(false)
+    // No lock, no explanation owed: the trigger wears no tooltip.
+    expect(wrapper.findComponent(KTooltip).exists()).toBe(false)
+
+    await trigger.trigger('click')
+    await wrapper.get('textarea').setValue('req.size')
   })
 })

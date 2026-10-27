@@ -15,23 +15,35 @@
     :data-expression-for="expression.expressionPath.value"
     :data-testid="`ff-expression-${path}`"
   >
-    <KButton
+    <!--
+      A twin-side lock leaves no trace on the source field's own tooltip, and
+      the version note lives in the expanded editor a locked trigger can never
+      reach — without this wrapper the disabled trigger explains nothing.
+    -->
+    <component
+      :is="isLocked ? KTooltip : 'div'"
       v-if="!expanded"
-      appearance="tertiary"
-      class="ff-expression-editor-add"
-      :data-testid="`ff-expression-add-${path}`"
-      @click="expanded = true"
+      max-width="300"
+      :text="versionInfo?.tooltip"
     >
-      <AddIcon />
-      {{ i18n.t('expression.add') }}
-    </KButton>
-
+      <KButton
+        appearance="tertiary"
+        class="ff-expression-editor-add"
+        :data-testid="`ff-expression-add-${path}`"
+        :disabled="isLocked"
+        @click="expanded = true"
+      >
+        <AddIcon />
+        {{ i18n.t('expression.add') }}
+      </KButton>
+    </component>
     <div
       v-else
       class="ff-expression-editor-expanded"
     >
       <StringField
         class="ff-expression-editor-input"
+        :disabled="isLocked"
         :label="i18n.t('expression.label')"
         :label-attributes="labelAttributes"
         multiline
@@ -40,6 +52,19 @@
         :rows="3"
         @update:model-value="rewriteThroughComposable"
       >
+        <template #tooltip>
+          <!-- Replaces StringField's own fallback (which reads the twin schema alone):
+               the pair locks as one, source first, so the note must come from the
+               combined lock. The info tooltip stays regardless. -->
+          <p
+            v-if="versionInfo"
+            class="ff-version-compatibility-note"
+          >
+            {{ versionInfo.tooltip }}
+          </p>
+          <!-- eslint-disable-next-line vue/no-v-html, vue/max-attributes-per-line -->
+          <div class="ff-label-tooltip-info" v-html="labelAttributes.info" />
+        </template>
         <template #help>
           <slot name="help">
             <i18nT keypath="expression.help.text">
@@ -64,6 +89,7 @@
         :aria-label="i18n.t('expression.remove')"
         class="ff-expression-editor-remove"
         :data-testid="`ff-expression-remove-${path}`"
+        :disabled="isLocked"
         icon
         @click="remove"
       >
@@ -76,7 +102,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
-import { KButton, KExternalLink } from '@kong/kongponents'
+import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import externalLinks from '../external-links'
@@ -109,6 +135,16 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
+
+/**
+ * Version lock for the value/expression pair, resolved by `useExpressionField`
+ * from the source field first, the twin second — the runtime cannot support the
+ * expression where it cannot support the field. Locks the trigger, textarea and
+ * remove button; the saved expression itself stays in the payload untouched,
+ * the same read-only contract as every other version-locked field.
+ */
+const versionInfo = expression.versionInfo
+const isLocked = computed(() => !!versionInfo.value)
 
 /**
  * The expression is collapsed behind a trigger while it has no value, so a

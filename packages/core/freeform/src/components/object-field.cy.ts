@@ -86,6 +86,32 @@ describe('ObjectField', () => {
     })
   })
 
+  it('keeps the collapse toggle usable for a required object field without a value', () => {
+    cy.mount(Form, {
+      props: {
+        schema: {
+          type: 'record',
+          fields: [{
+            [FIELD_NAME]: {
+              type: 'record',
+              required: true,
+              fields: [{ foo: { type: 'string' } }],
+            },
+          }],
+        } as FormSchema,
+        // Non-empty data skips schema defaults, leaving the required object unset
+        data: { other: 'value' },
+      },
+    })
+
+    cy.getTestId(`ff-object-switch-${FIELD_NAME}`).should('not.exist')
+    cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).should('not.be.disabled')
+    cy.getTestId(`ff-object-content-${FIELD_NAME}`).should('exist')
+
+    cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).click({ force: true })
+    cy.getTestId(`ff-object-content-${FIELD_NAME}`).should('not.exist')
+  })
+
   describe('version compatibility', () => {
     function mountVersionCompatibilityForm(options: { config?: FormConfig } = {}) {
       cy.mount(Form, {
