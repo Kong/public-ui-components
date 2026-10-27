@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.8...%40kong-ui-public%2Fentities-plugins%4010.0.9) (2026-10-27)
+
+### Bug Fixes
+
+* **entities-plugins:** remove redundant hasValue from plugin form configs ([#3971](https://github.com/Kong/public-ui-components/issues/3971)) ([526405f](https://github.com/Kong/public-ui-components/commit/526405fd8c9e407fa2206ec3ea22d8576a3f04b7))
+
+
 ## [10.0.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.7...%40kong-ui-public%2Fentities-plugins%4010.0.8) (2026-10-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
