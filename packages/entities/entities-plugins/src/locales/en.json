@@ -1546,6 +1546,11 @@
             "branch": {
               "placeholder": "Select nodes"
             },
+            "xml_to_json": {
+              "force_array_paths": {
+                "placeholder": "e.g. store/product"
+              }
+            },
             "jwt": {
               "static_claims": {
                 "label": "Static claims",

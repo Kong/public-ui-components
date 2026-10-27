@@ -60,17 +60,18 @@
     <ArrayField
       v-if="supportsForceArrayPaths"
       name="force_array_paths"
-      @add="forceArrayPathsHandler.update"
-      @remove="forceArrayPathsHandler.update"
+      @add="setConfig('force_array_paths')"
+      @remove="removeForceArrayPath"
     >
       <template #item="{ fieldName, index, autofocus }">
         <StringField
           :autofocus="autofocus"
-          :error="forceArrayPathsHandler.error && !!forceArrayPathError(formData.force_array_paths?.[index])"
-          :error-message="forceArrayPathError(formData.force_array_paths?.[index])"
+          :error="!!forceArrayPathErrors[index]"
+          :error-message="forceArrayPathErrors[index]"
           :name="fieldName"
-          @blur="forceArrayPathsHandler.validate"
-          @update:model-value="forceArrayPathsHandler.update"
+          :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.xml_to_json.force_array_paths.placeholder')"
+          @blur="validateForceArrayPath(index)"
+          @update:model-value="updateForceArrayPath(index)"
         />
       </template>
     </ArrayField>
@@ -89,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
 import { Form, ArrayField, BooleanField, StringField } from '@kong-ui-public/freeform'
@@ -190,6 +191,33 @@ const attributesPrefixHandler = createFieldHandler('attributes_name_prefix', () 
 const textBlockHandler = createFieldHandler('text_block_name', () => setConfig('text_block_name'))
 const xpathHandler = createFieldHandler('xpath', () => setConfig('xpath'))
 const forceArrayPathsHandler = createFieldHandler('force_array_paths', () => setConfig('force_array_paths'))
+
+// Errors of the paths the user has touched, keyed by item index
+const forceArrayPathErrors = ref<Record<number, string>>({})
+
+const setForceArrayPathError = (index: number) => {
+  forceArrayPathErrors.value[index] = forceArrayPathError(formData.value.force_array_paths?.[index])
+}
+
+const validateForceArrayPath = (index: number) => {
+  forceArrayPathsHandler.value.validate()
+  setForceArrayPathError(index)
+}
+
+const updateForceArrayPath = (index: number) => {
+  forceArrayPathsHandler.value.update()
+  setForceArrayPathError(index)
+}
+
+const removeForceArrayPath = (removed: number) => {
+  // Keep the errors aligned with the remaining items
+  forceArrayPathErrors.value = Object.fromEntries(
+    Object.entries(forceArrayPathErrors.value)
+      .filter(([index]) => Number(index) !== removed)
+      .map(([index, error]) => [Number(index) > removed ? Number(index) - 1 : Number(index), error]),
+  )
+  forceArrayPathsHandler.value.update()
+}
 
 const validateAttributes = () => {
   attributesBlockHandler.value.validate()

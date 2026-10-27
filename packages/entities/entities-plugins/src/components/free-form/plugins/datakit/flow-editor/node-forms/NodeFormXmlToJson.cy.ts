@@ -115,6 +115,35 @@ describe('<NodeFormXmlToJson /> force_array_paths', () => {
     })
   })
 
+  it('does not flag a new path until it is touched', () => {
+    mountNodeForm().then((store) => {
+      addForceArrayPath()
+
+      forceArrayPathInput(0).should('be.focused')
+      forceArrayPathInput(0).parents('.k-input').should('not.have.class', 'input-error')
+      cy.wrap(store).should(() => {
+        expect(store.invalidConfigNodeIds.value.size).to.equal(0)
+      })
+
+      forceArrayPathInput(0).blur()
+
+      forceArrayPathInput(0).parents('.k-input').should('have.class', 'input-error')
+    })
+  })
+
+  it('keeps errors on the right items after a removal', () => {
+    mountNodeForm({ forceArrayPaths: ['store/product', '/bad', 'store/tags'] })
+
+    forceArrayPathInput(1).focus().blur()
+    forceArrayPathInput(1).parents('.k-input').should('have.class', 'input-error')
+
+    cy.get('[data-testid="ff-array-remove-item-btn-force_array_paths.0"]').click()
+
+    forceArrayPathInput(0).should('have.value', '/bad')
+    forceArrayPathInput(0).parents('.k-input').should('have.class', 'input-error')
+    forceArrayPathInput(1).parents('.k-input').should('not.have.class', 'input-error')
+  })
+
   it('flags paths the gateway would reject', () => {
     mountNodeForm().then((store) => {
       addForceArrayPath()
