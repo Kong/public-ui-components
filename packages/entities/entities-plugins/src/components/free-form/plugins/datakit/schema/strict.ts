@@ -246,11 +246,11 @@ export type JqNode = z.infer<typeof JqNodeSchema>
 const FORCE_ARRAY_PATH_SEGMENT = /^[a-zA-Z_][a-zA-Z0-9._:-]*$/
 
 /**
- * A plain '/'-separated element path, e.g. `store/product`.
+ * A plain '/'-separated element path of up to 256 characters, e.g. `store/product`.
  * Element names may keep their namespace prefix (e.g. `soap:Body`).
  */
 export function isValidForceArrayPath(path: string): boolean {
-  return path.split('/').every((segment) => FORCE_ARRAY_PATH_SEGMENT.test(segment))
+  return path.length <= 256 && path.split('/').every((segment) => FORCE_ARRAY_PATH_SEGMENT.test(segment))
 }
 
 export const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({

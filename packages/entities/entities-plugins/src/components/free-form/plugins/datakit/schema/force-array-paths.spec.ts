@@ -25,6 +25,7 @@ describe('xml_to_json force_array_paths', () => {
     '1store',
     'store/pro duct',
     'store/*',
+    'a'.repeat(257),
   ])('rejects the element path "%s"', (path) => {
     expect(isValidForceArrayPath(path)).toBe(false)
   })

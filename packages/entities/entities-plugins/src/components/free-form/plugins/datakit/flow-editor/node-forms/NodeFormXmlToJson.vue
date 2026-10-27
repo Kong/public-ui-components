@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
 import { Form, ArrayField, BooleanField, StringField } from '@kong-ui-public/freeform'
@@ -195,6 +195,13 @@ const forceArrayPathsHandler = createFieldHandler('force_array_paths', () => set
 // Errors of the paths the user has touched, keyed by item index
 const forceArrayPathErrors = ref<Record<number, string>>({})
 
+// Surface every invalid path once the whole field has been validated with errors,
+// so a node marked invalid always shows why
+const syncForceArrayPathErrors = () => {
+  if (!forceArrayPathsHandler.value.error) return
+  formData.value.force_array_paths?.forEach((_, index) => setForceArrayPathError(index))
+}
+
 const setForceArrayPathError = (index: number) => {
   forceArrayPathErrors.value[index] = forceArrayPathError(formData.value.force_array_paths?.[index])
 }
@@ -217,7 +224,11 @@ const removeForceArrayPath = (removed: number) => {
       .map(([index, error]) => [Number(index) > removed ? Number(index) - 1 : Number(index), error]),
   )
   forceArrayPathsHandler.value.update()
+  syncForceArrayPathErrors()
 }
+
+// Runs after the mount-time validation of `useFormValidation`, which honors `skipValidation`
+onMounted(syncForceArrayPathErrors)
 
 const validateAttributes = () => {
   attributesBlockHandler.value.validate()

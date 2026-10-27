@@ -144,6 +144,42 @@ describe('<NodeFormXmlToJson /> force_array_paths', () => {
     forceArrayPathInput(1).parents('.k-input').should('not.have.class', 'input-error')
   })
 
+  it('shows why a saved node is invalid when the form is opened', () => {
+    mountNodeForm({ forceArrayPaths: ['store/product', '/bad'] }).then((store) => {
+      forceArrayPathInput(0).parents('.k-input').should('not.have.class', 'input-error')
+      forceArrayPathInput(1).parents('.k-input').should('have.class', 'input-error')
+      cy.wrap(store).should(() => {
+        expect(store.invalidConfigNodeIds.value.size).to.equal(1)
+      })
+    })
+  })
+
+  it('shows the remaining invalid path after a removal', () => {
+    mountNodeForm({ forceArrayPaths: ['store/product'] }).then((store) => {
+      forceArrayPathInput(0).clear().type('/bad').blur()
+      addForceArrayPath()
+      forceArrayPathInput(1).should('be.focused')
+
+      // Remove without moving the focus, so the new empty path is never touched
+      cy.get('[data-testid="ff-array-remove-item-btn-force_array_paths.0"]').trigger('click')
+
+      forceArrayPathInput(0).should('have.value', '')
+      forceArrayPathInput(0).parents('.k-input').should('have.class', 'input-error')
+      cy.wrap(store).should(() => {
+        expect(store.invalidConfigNodeIds.value.size).to.equal(1)
+      })
+    })
+  })
+
+  it('flags paths longer than 256 characters', () => {
+    mountNodeForm().then(() => {
+      addForceArrayPath()
+      forceArrayPathInput(0).invoke('val', 'a'.repeat(257)).trigger('input').blur()
+
+      forceArrayPathInput(0).parents('.k-input').should('have.class', 'input-error')
+    })
+  })
+
   it('flags paths the gateway would reject', () => {
     mountNodeForm().then((store) => {
       addForceArrayPath()
