@@ -21,7 +21,9 @@
       @update:property-key="setConfig('property-key')"
     />
 
+    <!-- Only available on gateways that support it -->
     <BooleanField
+      v-if="supportsNonNil"
       name="non_nil"
       @update:model-value="setConfig('non_nil')"
     />
@@ -51,6 +53,7 @@ import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isW
 import { useEditorStore } from '../store/store'
 import NameField from './NameField.vue'
 import type { NodeId } from '../../types'
+import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import { useFormValidation } from '../composables/validation'
 import { notEmpty } from '../composables/validation'
 
@@ -68,6 +71,7 @@ const formRef = useTemplateRef('form')
 const { selectedNode, disconnectInEdges, disconnectOutEdges } = useEditorStore()
 
 const schema = useSubSchema('property')
+const supportsNonNil = computed(() => (schema.value as RecordFieldSchema).fields.some((field) => 'non_nil' in field))
 
 const {
   formData,
