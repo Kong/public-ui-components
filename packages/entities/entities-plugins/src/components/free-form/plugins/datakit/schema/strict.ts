@@ -129,8 +129,8 @@ export const HttpMethodSchema = z.enum(HTTP_METHODS)
 export const JWTAlgorithmSchema = z.enum(JWT_ALGORITHMS)
 
 /**
- * Standard HTTP/1.1 verbs accepted by the `call` node.
- * The string must contain only uppercase letters.
+ * Standard HTTP/1.1 verbs. The `call` node accepts any uppercase
+ * token up to 32 characters; see `CallNodeSchema.method`.
  */
 export type HttpMethod = z.infer<typeof HttpMethodSchema>
 export type JWTAlgorithm = z.infer<typeof JWTAlgorithmSchema>

@@ -112,6 +112,15 @@ describe('Datakit compat schema', () => {
       expect(issuesOf({ nodes: [], foo: 1 })).toContain('Unrecognized key: "foo"')
     })
 
+    it('connection to a field name containing dots', () => {
+      expect(issuesOf({
+        nodes: [
+          { type: 'static', name: 'S', values: { 'a.b': 1 } },
+          { type: 'jq', name: 'JQ', input: 'S.a.b' },
+        ],
+      })).toContain('Invalid connection')
+    })
+
     it('malformed connection', () => {
       expect(issuesOf({ nodes: [{ type: 'jq', name: 'JQ', input: 'request.' }] }))
         .toContain('Invalid connection')

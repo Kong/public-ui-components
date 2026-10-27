@@ -149,6 +149,15 @@ describe('<DatakitForm />', () => {
         .and('contain.text', 'Unrecognized key: "url"')
     })
 
+    it('does not render config content as HTML in the reason', () => {
+      mountForm()
+      setCode('config:\n  nodes:\n  - name: X\n    type: "<img src=x>"\n')
+
+      flowOption().find('.dk-option-label').trigger('mouseenter', { force: true })
+      cy.get('.popover-content').should('contain.text', 'unknown node type "<img src=x>"')
+      cy.get('.popover-content img').should('not.exist')
+    })
+
     it('blocks saving when the YAML cannot be parsed', () => {
       mountForm()
       setCode('config:\n  nodes: [\n')
