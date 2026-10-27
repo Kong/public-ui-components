@@ -146,7 +146,7 @@ import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../../composables/useI18n'
-import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
+import { useCallErrorHandlingSupport, useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useEditorStore } from '../store/store'
 import { computed, useTemplateRef, watch } from 'vue'
 import NameField from './NameField.vue'
@@ -174,11 +174,7 @@ const formRef = useTemplateRef('form')
 
 const schema = useSubSchema('call')
 
-/** Control planes before Gateway 3.17 have no error handling fields in the call node schema. */
-const hasErrorHandling = computed(() => {
-  const callSchema = schema.value
-  return 'fields' in callSchema && callSchema.fields.some((field) => 'continue_on_error' in field)
-})
+const hasErrorHandling = useCallErrorHandlingSupport()
 
 interface CallFormData extends BaseFormData {
   url: string

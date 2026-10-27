@@ -7,6 +7,7 @@ import type { FormSchema } from '@kong-ui-public/freeform'
 
 import NodeFormCall from './NodeFormCall.vue'
 import { provideEditorStore } from '../store/store'
+import { useCallErrorHandlingSupport } from '../composables/useNodeForm'
 import { CONFIRM_MODAL_PROVIDE_KEY } from '../constants'
 
 import type { DatakitPluginData, NodeId } from '../../types'
@@ -76,7 +77,8 @@ function mountCallForm({ schema = callSchema, node = {}, otherNodes = [] }: {
 
   const Harness = defineComponent({
     setup() {
-      store = provideEditorStore(pluginData)
+      // the same as `FlowEditor`
+      store = provideEditorStore(pluginData, { enableCallErrorHandling: useCallErrorHandlingSupport().value })
       const nodeId = store.state.value.nodes.find(({ name }) => name === 'CALL')!.id as NodeId
       return () => h(NodeFormCall, { nodeId })
     },
@@ -111,17 +113,34 @@ describe('NodeFormCall', () => {
     expect(callNode().fields.output.map(({ name }) => name)).toContain('error')
   })
 
-  it('hides error handling when the call node schema has no such fields (Gateway < 3.17)', () => {
-    const { wrapper } = mountCallForm({
-      schema: {
-        ...callSchema,
-        fields: callSchema.fields.filter((field) => !('continue_on_error' in field) && !('retry' in field)),
-      },
+  describe('Gateway < 3.17 (no error handling fields in the call node schema)', () => {
+    const legacyCallSchema = {
+      ...callSchema,
+      fields: callSchema.fields.filter((field) => !('continue_on_error' in field) && !('retry' in field)),
+    }
+
+    it('hides error handling and the `error` output', () => {
+      const { wrapper, callNode } = mountCallForm({ schema: legacyCallSchema })
+
+      expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(false)
+      expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(false)
+      expect(wrapper.text()).not.toContain('not found in schema')
+      expect(callNode().fields.output.map(({ name }) => name)).not.toContain('error')
     })
 
-    expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(false)
-    expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(false)
-    expect(wrapper.text()).not.toContain('not found in schema')
+    it('keeps a connected `error` output when loading a config', () => {
+      const { callNode, store } = mountCallForm({
+        schema: legacyCallSchema,
+        otherNodes: [{ type: 'jq', name: 'CHECK', jq: '.error', inputs: { error: 'CALL.error' } }],
+      })
+
+      const errorField = callNode().fields.output.find(({ name }) => name === 'error')
+      expect(errorField).toBeDefined()
+      expect(store.state.value.edges.some(({ sourceField }) => sourceField === errorField!.id)).toBe(true)
+      expect(store.toConfigNodes().find(({ name }) => name === 'CHECK')).toMatchObject({
+        inputs: { error: 'CALL.error' },
+      })
+    })
   })
 
   it('keeps a connected `error` output when loading a config', () => {

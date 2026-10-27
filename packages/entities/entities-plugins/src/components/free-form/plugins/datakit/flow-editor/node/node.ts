@@ -57,6 +57,7 @@ const CONFIG_NODE_CATALOG: Record<ConfigNodeType, ConfigNodeCatalogNode> = {
           { name: 'headers' },
           { name: 'body' },
           { name: 'status' },
+          // only exposed when the Gateway supports it, see `getFieldsFromMeta`
           { name: 'error' },
         ],
       } as IOMeta,

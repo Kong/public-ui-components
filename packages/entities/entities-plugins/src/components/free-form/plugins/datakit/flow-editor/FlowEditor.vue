@@ -31,6 +31,7 @@ import { watch } from 'vue'
 import english from '../../../../../locales/en.json'
 import { useFormShared } from '@kong-ui-public/freeform'
 import { provideEditorStore, useLeaveConfirmation } from '../composables'
+import { useCallErrorHandlingSupport } from './composables/useNodeForm'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
@@ -76,6 +77,7 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
 const { modalOpen, setPendingFitView } = provideEditorStore(getValue(), {
   onChange,
   isEditing,
+  enableCallErrorHandling: useCallErrorHandlingSupport().value,
 })
 
 watch(modalOpen, () => {
