@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.0.3...%40kong-ui-public%2Fanalytics-chart%4013.1.0) (2026-10-27)
+
+### Features
+
+* add principal group dimension ([#3978](https://github.com/Kong/public-ui-components/issues/3978)) ([cc230ef](https://github.com/Kong/public-ui-components/commit/cc230ef3ec0a02a610ea39c2a4f5988442435faa))
+
+
 ## [13.0.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.0.2...%40kong-ui-public%2Fanalytics-chart%4013.0.3) (2026-10-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
