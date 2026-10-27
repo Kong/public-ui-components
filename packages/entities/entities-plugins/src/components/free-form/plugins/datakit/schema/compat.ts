@@ -170,6 +170,7 @@ const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
   text_block_name: z.string().nullish(),
   text_as_property: z.boolean().nullish(),
   xpath: z.string().nullish(),
+  force_array_paths: z.array(z.string()).nullish(),
   inputs: z.never().nullish(),
   outputs: z.never().nullish(),
 })

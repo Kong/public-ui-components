@@ -1566,7 +1566,8 @@
               "number_range": "{fieldName} must be between {min} and {max}",
               "string_len_range": "{fieldName} must be between {minLength} and {maxLength} characters",
               "reserved_node_name": "\"{nodeName}\" is a reserved node name",
-              "attributes_required": "Provide at least one of attributes_block_name or attributes_name_prefix"
+              "attributes_required": "Provide at least one of attributes_block_name or attributes_name_prefix",
+              "invalid_force_array_path": "Must be a plain '/'-separated element path, for example 'store/product'"
             }
           },
           "error": {
