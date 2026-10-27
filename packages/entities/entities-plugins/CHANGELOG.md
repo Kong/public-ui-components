@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.0...%40kong-ui-public%2Fentities-plugins%4010.1.1) (2026-10-27)
+
+### Bug Fixes
+
+* **entities-plugins:** only show datakit ca_certificates and non_nil when supported ([#3976](https://github.com/Kong/public-ui-components/issues/3976)) ([a0e4212](https://github.com/Kong/public-ui-components/commit/a0e42123c62aaf10ba99d751a309b7ec9207bd36))
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.9...%40kong-ui-public%2Fentities-plugins%4010.1.0) (2026-10-27)
 
 ### Bug Fixes
