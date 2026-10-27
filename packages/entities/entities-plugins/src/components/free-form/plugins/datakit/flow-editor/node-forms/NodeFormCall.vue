@@ -45,86 +45,84 @@
       @update:model-value="setConfig('ssl_verify')"
     />
 
-    <template v-if="enableCallErrorHandling">
-      <NodeFormDivider />
+    <NodeFormDivider />
 
-      <KLabel class="dk-node-configuration-label">
-        {{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.label') }}
-      </KLabel>
+    <KLabel class="dk-node-configuration-label">
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.label') }}
+    </KLabel>
 
-      <BooleanField
-        name="continue_on_error"
-        @update:model-value="setConfig('continue_on_error')"
+    <BooleanField
+      name="continue_on_error"
+      @update:model-value="setConfig('continue_on_error')"
+    />
+
+    <KAlert
+      v-if="!formData.continue_on_error && isErrorOutputConnected"
+      appearance="warning"
+      data-testid="dk-call-error-output-hint"
+      :message="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.error_output_hint')"
+    />
+
+    <KAlert
+      v-if="formData.continue_on_error"
+      class="dk-call-failure-hint"
+      data-testid="dk-call-failure-hint"
+    >
+      <p>{{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.failure_hint') }}</p>
+      <p>{{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.failure_example') }}</p>
+      <div class="dk-call-failure-example">
+        <KCopy :text="FAILURE_CHECK_JQ" />
+      </div>
+    </KAlert>
+
+    <KCheckbox
+      data-testid="dk-call-retry-toggle"
+      :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry')"
+      :model-value="retryEnabled"
+      @update:model-value="setRetryEnabled"
+    />
+
+    <template v-if="retryEnabled">
+      <NumberField
+        :error="retryCountHandler.error"
+        :error-message="retryCountHandler.errorMessage"
+        :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_count')"
+        name="retry.count"
+        @blur="retryCountHandler.validate"
+        @update:model-value="retryCountHandler.update"
       />
 
-      <KAlert
-        v-if="!formData.continue_on_error && isErrorOutputConnected"
-        appearance="warning"
-        data-testid="dk-call-error-output-hint"
-        :message="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.error_output_hint')"
-      />
-
-      <KAlert
-        v-if="formData.continue_on_error"
-        class="dk-call-failure-hint"
-        data-testid="dk-call-failure-hint"
-      >
-        <p>{{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.failure_hint') }}</p>
-        <p>{{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.failure_example') }}</p>
-        <div class="dk-call-failure-example">
-          <KCopy :text="FAILURE_CHECK_JQ" />
-        </div>
-      </KAlert>
-
-      <KCheckbox
-        data-testid="dk-call-retry-toggle"
-        :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry')"
-        :model-value="retryEnabled"
-        @update:model-value="setRetryEnabled"
-      />
-
-      <template v-if="retryEnabled">
+      <div class="dk-call-retry-interval">
         <NumberField
-          :error="retryCountHandler.error"
-          :error-message="retryCountHandler.errorMessage"
-          :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_count')"
-          name="retry.count"
-          @blur="retryCountHandler.validate"
-          @update:model-value="retryCountHandler.update"
+          :error="retryIntervalHandler.error"
+          :error-message="retryIntervalHandler.errorMessage"
+          :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_interval')"
+          name="retry.interval"
+          @blur="retryIntervalHandler.validate"
+          @update:model-value="retryIntervalHandler.update"
         />
+        <span class="dk-call-retry-interval-unit">
+          {{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.seconds') }}
+        </span>
+      </div>
 
-        <div class="dk-call-retry-interval">
-          <NumberField
-            :error="retryIntervalHandler.error"
-            :error-message="retryIntervalHandler.errorMessage"
-            :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_interval')"
-            name="retry.interval"
-            @blur="retryIntervalHandler.validate"
-            @update:model-value="retryIntervalHandler.update"
-          />
-          <span class="dk-call-retry-interval-unit">
-            {{ t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.seconds') }}
-          </span>
-        </div>
+      <StringArrayField
+        :error="retryStatusCodesHandler.error"
+        :error-message="retryStatusCodesHandler.errorMessage"
+        :help="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.status_codes_help')"
+        :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_status_codes')"
+        name="retry.status_codes"
+        placeholder="429, 5xx"
+        @blur="retryStatusCodesHandler.validate"
+        @update:model-value="retryStatusCodesHandler.update"
+      />
 
-        <StringArrayField
-          :error="retryStatusCodesHandler.error"
-          :error-message="retryStatusCodesHandler.errorMessage"
-          :help="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.status_codes_help')"
-          :label="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_status_codes')"
-          name="retry.status_codes"
-          placeholder="429, 5xx"
-          @blur="retryStatusCodesHandler.validate"
-          @update:model-value="retryStatusCodesHandler.update"
-        />
-
-        <KAlert
-          v-if="!isIdempotentMethod"
-          appearance="warning"
-          data-testid="dk-call-retry-warning"
-          :message="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_warning')"
-        />
-      </template>
+      <KAlert
+        v-if="!isIdempotentMethod"
+        appearance="warning"
+        data-testid="dk-call-retry-warning"
+        :message="t('plugins.free-form.datakit.flow_editor.node_properties.error_handling.retry_warning')"
+      />
     </template>
 
     <NodeFormDivider />
@@ -148,22 +146,18 @@ import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../../composables/useI18n'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useEditorStore } from '../store/store'
-import { computed, inject, toValue, useTemplateRef, watch } from 'vue'
-import type { MaybeRef } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import NameField from './NameField.vue'
 import type { NodeId } from '../../types'
 import type { CallNode } from '../../schema/strict'
 import { useFormValidation } from '../composables/validation'
 import { notEmpty, compose, stringFormat, numberRange, numberFormat } from '../composables/validation'
-import { FEATURE_FLAGS } from '../../../../../../constants'
 
 const { nodeId } = defineProps<{
   nodeId: NodeId
 }>()
 
 const { i18n: { t } } = useI18n()
-
-const enableCallErrorHandling = computed(() => toValue(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_3444_GATEWAY_317, false)))
 
 /** Treats non-2xx responses or call errors as failures, see the ERD of the call node error handling. */
 const FAILURE_CHECK_JQ = '.error != null or (.status // 0) < 200 or (.status // 0) > 299'

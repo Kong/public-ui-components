@@ -12,7 +12,6 @@ import type {
   FieldName,
   DatakitUIData,
   NameConnection,
-  NodeFieldsOptions,
   NodeId,
   NodeInstance,
   NodeName,
@@ -33,7 +32,7 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { vaultConfigToResources, type VaultConfig } from '../node/vault'
 
-type CreateEditorStoreOptions = NodeFieldsOptions & {
+type CreateEditorStoreOptions = {
   /**
    * Whether the editor is in editing mode (versus the creation mode)
    */
@@ -48,7 +47,7 @@ type CreateEditorStoreOptions = NodeFieldsOptions & {
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(pluginData: DatakitPluginData, options: CreateEditorStoreOptions = {}) {
-    const state = ref<EditorState>(initEditorState(pluginData, false, options))
+    const state = ref<EditorState>(initEditorState(pluginData))
     const selection = ref<NodeId>()
     const portalSelection = ref<EdgeId>()
     const modalOpen = ref(false)
@@ -219,7 +218,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         position: payload.position,
         fields: payload.fields,
         config: payload.config,
-      }, options)
+      })
     }
 
     function addNode(payload: CreateNodePayload, commitNow = true): NodeId | undefined {
@@ -726,7 +725,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (keepHistory)
         history.commit()
 
-      state.value = initEditorState(pluginData, keepHistory, options)
+      state.value = initEditorState(pluginData, keepHistory)
 
       if (!keepHistory)
         history.clear()

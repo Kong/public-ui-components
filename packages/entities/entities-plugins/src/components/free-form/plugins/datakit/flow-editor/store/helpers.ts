@@ -18,7 +18,6 @@ import type {
   GroupId,
   GroupName,
   GroupInstance,
-  NodeFieldsOptions,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -87,17 +86,14 @@ export function getNodeMeta(type: NodeType) {
 }
 
 /** Default field names from node meta. */
-export function getFieldsFromMeta(type: NodeType, options: NodeFieldsOptions = {}): {
+export function getFieldsFromMeta(type: NodeType): {
   input: FieldName[]
   output: FieldName[]
 } {
   const meta = getNodeMeta(type)
 
   const input = meta.io?.input?.fields.map(({ name }) => name) ?? []
-  let output = meta.io?.output?.fields.map(({ name }) => name) ?? []
-  if (type === 'call' && !options.enableCallErrorHandling) {
-    output = output.filter((name) => name !== 'error')
-  }
+  const output = meta.io?.output?.fields.map(({ name }) => name) ?? []
   return { input, output }
 }
 

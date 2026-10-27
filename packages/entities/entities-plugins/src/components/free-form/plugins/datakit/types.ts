@@ -291,12 +291,6 @@ export interface MakeNodeInstancePayload {
   config?: Record<string, unknown>
 }
 
-/** Options that change the default fields of a node. */
-export interface NodeFieldsOptions {
-  /** Whether the `call` node exposes the `error` output (Gateway 3.17+). */
-  enableCallErrorHandling?: boolean
-}
-
 export interface CreateNodePayload extends MakeNodeInstancePayload {
   type: ConfigNodeType
 }

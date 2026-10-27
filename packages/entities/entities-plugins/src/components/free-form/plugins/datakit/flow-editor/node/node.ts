@@ -57,7 +57,6 @@ const CONFIG_NODE_CATALOG: Record<ConfigNodeType, ConfigNodeCatalogNode> = {
           { name: 'headers' },
           { name: 'body' },
           { name: 'status' },
-          // only exposed when `enableCallErrorHandling` is on, see `getFieldsFromMeta`
           { name: 'error' },
         ],
       } as IOMeta,

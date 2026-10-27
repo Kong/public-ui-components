@@ -8,7 +8,6 @@ import type {
   FieldName,
   ImplicitNodeName,
   MakeNodeInstancePayload,
-  NodeFieldsOptions,
   NodeId,
   NodeInstance,
   NodeName,
@@ -41,13 +40,11 @@ import {
  * @param uiNodes The UI nodes for the layout
  * @param keepHistoryAfterLayout Whether to keep the history after the layout. This is helpful when
  *                               loading another config after the initial state.
- * @param options Options that change the default fields of nodes
  * @returns The initial editor state
  */
 export function initEditorState(
   pluginData: DatakitPluginData,
   keepHistoryAfterLayout?: boolean,
-  options: NodeFieldsOptions = {},
 ): EditorState {
   const configNodes = pluginData.config?.nodes ?? []
   const uiNodes = pluginData.__ui_data?.nodes ?? []
@@ -109,7 +106,6 @@ export function initEditorState(
       configNode,
       uiNode,
       pluginData,
-      options,
     })
     nodes.push(node)
     nodesMap.set(node.name, node)
@@ -222,16 +218,6 @@ export function initEditorState(
     }
     adjacencies.get(connection.target)!.add(connection.source)
 
-    // Keep the `error` output of a call node the config already connects, even when
-    // `enableCallErrorHandling` is off, or the edge would turn into a whole-node one.
-    if (
-      sourceNode.type === 'call'
-      && connection.sourceField === 'error'
-      && !findFieldByName(sourceNode, 'output', connection.sourceField)
-    ) {
-      sourceNode.fields.output.push(...toFieldArray([connection.sourceField]))
-    }
-
     edges.push({
       id: createId('edge'),
       source: sourceNode.id,
@@ -267,12 +253,9 @@ export function initEditorState(
   }
 }
 
-export function makeNodeInstance(
-  payload: MakeNodeInstancePayload,
-  options: NodeFieldsOptions = {},
-): NodeInstance {
+export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
   const { type, name, phase, position, fields, config } = payload
-  const defaultFields = getFieldsFromMeta(type, options)
+  const defaultFields = getFieldsFromMeta(type)
   const meta = getNodeMeta(type)
 
   return {
@@ -303,13 +286,11 @@ export function buildNodeInstance({
   configNode,
   uiNode,
   pluginData,
-  options,
 }: {
   type: NodeType
   configNode?: ConfigNode
   uiNode?: UINode
   pluginData: DatakitPluginData
-  options?: NodeFieldsOptions
 }): NodeInstance {
   return makeNodeInstance({
     type,
@@ -328,7 +309,7 @@ export function buildNodeInstance({
       configNode,
       pluginData,
     }),
-  }, options)
+  })
 }
 
 /** Strip identity and IO fields. */

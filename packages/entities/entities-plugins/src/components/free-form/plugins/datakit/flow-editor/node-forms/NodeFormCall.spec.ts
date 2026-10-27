@@ -7,7 +7,6 @@ import type { FormSchema } from '@kong-ui-public/freeform'
 
 import NodeFormCall from './NodeFormCall.vue'
 import { provideEditorStore } from '../store/store'
-import { FEATURE_FLAGS } from '../../../../../../constants'
 import { CONFIRM_MODAL_PROVIDE_KEY } from '../constants'
 
 import type { DatakitPluginData, NodeId } from '../../types'
@@ -62,8 +61,7 @@ const pluginSchema = {
   }],
 } as unknown as FormSchema
 
-function mountCallForm({ flag = true, node = {}, otherNodes = [] }: {
-  flag?: boolean
+function mountCallForm({ node = {}, otherNodes = [] }: {
   node?: Record<string, unknown>
   otherNodes?: Array<Record<string, unknown>>
 } = {}) {
@@ -77,7 +75,7 @@ function mountCallForm({ flag = true, node = {}, otherNodes = [] }: {
 
   const Harness = defineComponent({
     setup() {
-      store = provideEditorStore(pluginData, { enableCallErrorHandling: flag })
+      store = provideEditorStore(pluginData)
       const nodeId = store.state.value.nodes.find(({ name }) => name === 'CALL')!.id as NodeId
       return () => h(NodeFormCall, { nodeId })
     },
@@ -87,10 +85,7 @@ function mountCallForm({ flag = true, node = {}, otherNodes = [] }: {
     props: { schema: pluginSchema },
     slots: { default: () => h(Harness) },
     global: {
-      provide: {
-        [FEATURE_FLAGS.KM_3444_GATEWAY_317]: flag,
-        [CONFIRM_MODAL_PROVIDE_KEY]: async () => true,
-      },
+      provide: { [CONFIRM_MODAL_PROVIDE_KEY]: async () => true },
       components: { KAlert, KCheckbox, KLabel },
       stubs: {
         InputsField: true,
@@ -107,35 +102,23 @@ function mountCallForm({ flag = true, node = {}, otherNodes = [] }: {
 }
 
 describe('NodeFormCall', () => {
-  describe('feature flag', () => {
-    it('hides error handling and the `error` output when the flag is off', () => {
-      const { wrapper, callNode } = mountCallForm({ flag: false })
+  it('renders error handling and exposes the `error` output', () => {
+    const { wrapper, callNode } = mountCallForm()
 
-      expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(false)
-      expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(false)
-      expect(callNode().fields.output.map(({ name }) => name)).not.toContain('error')
+    expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(true)
+    expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(true)
+    expect(callNode().fields.output.map(({ name }) => name)).toContain('error')
+  })
+
+  it('keeps a connected `error` output when loading a config', () => {
+    const { callNode, store } = mountCallForm({
+      otherNodes: [{ type: 'jq', name: 'CHECK', jq: '.error', inputs: { error: 'CALL.error' } }],
     })
 
-    it('shows error handling and the `error` output when the flag is on', () => {
-      const { wrapper, callNode } = mountCallForm()
-
-      expect(wrapper.find('[data-testid="ff-continue_on_error"]').exists()).toBe(true)
-      expect(wrapper.findTestId('dk-call-retry-toggle').exists()).toBe(true)
-      expect(callNode().fields.output.map(({ name }) => name)).toContain('error')
-    })
-
-    it('keeps a connected `error` output when the flag is off', () => {
-      const { callNode, store } = mountCallForm({
-        flag: false,
-        otherNodes: [{ type: 'jq', name: 'CHECK', jq: '.error', inputs: { error: 'CALL.error' } }],
-      })
-
-      const errorField = callNode().fields.output.find(({ name }) => name === 'error')
-      expect(errorField).toBeDefined()
-      expect(store.state.value.edges.some(({ sourceField }) => sourceField === errorField!.id)).toBe(true)
-      expect(store.toConfigNodes().find(({ name }) => name === 'CHECK')).toMatchObject({
-        inputs: { error: 'CALL.error' },
-      })
+    const errorField = callNode().fields.output.find(({ name }) => name === 'error')
+    expect(store.state.value.edges.some(({ sourceField }) => sourceField === errorField!.id)).toBe(true)
+    expect(store.toConfigNodes().find(({ name }) => name === 'CHECK')).toMatchObject({
+      inputs: { error: 'CALL.error' },
     })
   })
 
