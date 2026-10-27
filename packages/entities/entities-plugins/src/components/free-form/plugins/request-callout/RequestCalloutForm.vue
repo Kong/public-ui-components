@@ -95,7 +95,6 @@ function prepareFormData(data: RequestCalloutPlugin) {
 }
 
 const formConfig: FormConfig<RequestCalloutPlugin> = {
-  hasValue: (data?: RequestCalloutPlugin): boolean => !!data && Object.keys(data).length > 0,
   prepareFormData,
 }
 
