@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.9...%40kong-ui-public%2Fentities-plugins%4010.1.0) (2026-10-27)
+
+### Bug Fixes
+
+* **entities-plugins:** render free-form redis field as collapsible record field ([#3972](https://github.com/Kong/public-ui-components/issues/3972)) ([a32d055](https://github.com/Kong/public-ui-components/commit/a32d055936bd4da96bf5e326c4fc40fb7ade781f))
+
+### Features
+
+* **entities-plugins:** support datakit xml_to_json force_array_paths [KM-3521] ([#3974](https://github.com/Kong/public-ui-components/issues/3974)) ([579d28b](https://github.com/Kong/public-ui-components/commit/579d28ba7b75e43d1f716bd743baabfe240259b3))
+* **freeform:** version-gate expression fields via min_ai_gateway_version ([#3961](https://github.com/Kong/public-ui-components/issues/3961)) ([a27dd55](https://github.com/Kong/public-ui-components/commit/a27dd553a7d41b2f7c55b9d4e41f43f2d96dc2f8))
+
+
 ## [10.0.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.8...%40kong-ui-public%2Fentities-plugins%4010.0.9) (2026-10-27)
 
 ### Bug Fixes

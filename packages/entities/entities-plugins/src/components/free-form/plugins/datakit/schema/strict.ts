@@ -244,6 +244,16 @@ export const JqNodeSchema = ConfigNodeBaseSchema.safeExtend({
 /** Process data using `jq` syntax. */
 export type JqNode = z.infer<typeof JqNodeSchema>
 
+const FORCE_ARRAY_PATH_SEGMENT = /^[a-zA-Z_][a-zA-Z0-9._:-]*$/
+
+/**
+ * A plain '/'-separated element path of up to 256 characters, e.g. `store/product`.
+ * Element names may keep their namespace prefix (e.g. `soap:Body`).
+ */
+export function isValidForceArrayPath(path: string): boolean {
+  return path.length <= 256 && path.split('/').every((segment) => FORCE_ARRAY_PATH_SEGMENT.test(segment))
+}
+
 export const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('xml_to_json'),
   /**
@@ -264,6 +274,20 @@ export const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
   text_as_property: z.boolean().nullish().default(false),
   /** Optional XPath selector for filtering. */
   xpath: z.string().min(1).max(256).nullish(),
+  /**
+   * Element paths that always serialize as a JSON array, even when the element occurs once.
+   * Paths start at the document root, or at the matched node when `xpath` is set.
+   */
+  force_array_paths: z
+    .array(
+      z
+        .string()
+        .min(1)
+        .max(256)
+        .refine(isValidForceArrayPath, 'Must be a plain \'/\'-separated element path, for example \'store/product\''),
+    )
+    .nullish()
+    .default([]),
   inputs: z.never().nullish(),
   outputs: z.never().nullish(),
 })

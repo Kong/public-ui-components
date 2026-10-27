@@ -1,14 +1,13 @@
 <template>
   <component
-    :is="borderless ? 'div' : KCard"
+    :is="borderless ? 'div' : ObjectField"
     v-if="useRedisPartial"
-    v-show="!hide"
+    v-bind="wrapperAttrs"
     class="redis-config-card"
     :class="{ 'redis-config-card--borderless': borderless }"
     data-testid="redis-config-card"
-    :title="borderless ? undefined : redisCardTitle"
   >
-    <!-- KCard renders `title` in its header; the borderless (div) variant renders it here. -->
+    <!-- ObjectField renders the title in its collapsible header; the borderless (div) variant renders it here. -->
     <div
       v-if="borderless"
       class="redis-config-card-title"
@@ -95,7 +94,6 @@
   </component>
   <ObjectField
     v-else
-    v-show="!hide"
     v-bind="props"
     :fields-order="redisFieldsOrder"
     hide-required-asterisk
@@ -112,7 +110,6 @@ import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG, hideNewRedis } from '@kong-ui-public/forms'
-import { KCard } from '@kong/kongponents'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis } from '../types'
 import { partialEndpoints, REDIS_PARTIAL_INFO } from '../const'
@@ -161,7 +158,7 @@ interface RedisSelectorProps {
   redisPath?: string
   /** Set by parent from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
-  /** Render the partial UI in a plain `div` (no KCard border/chrome) instead of a card */
+  /** Render the partial UI in a plain `div` instead of a collapsible record field */
   borderless?: boolean
 }
 
@@ -207,6 +204,12 @@ const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FOR
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
 )
+
+// ObjectField is multi-root and hides itself via `hide`, so `v-show` can't be used on the wrapper;
+// only the borderless div needs to be hidden explicitly.
+const wrapperAttrs = computed(() => props.borderless
+  ? { style: hide?.value ? { display: 'none' } : undefined }
+  : { name: formRedisPath.value, required: true, label: redisCardTitle.value })
 
 const sharedRedisRadioDescription = computed(() =>
   props.isKonnectManagedRedisEnabled
@@ -356,8 +359,6 @@ watch(() => hide?.value, (newHide) => {
 
 <style lang="scss" scoped>
 .redis-config-card {
-  margin-bottom: var(--kui-space-60, $kui-space-60);
-
   :deep(.form-group:last-child) {
     margin-bottom: 0;
   }
@@ -366,12 +367,9 @@ watch(() => hide?.value, (newHide) => {
     box-sizing: border-box;
   }
 
-  &--borderless {
-    margin-bottom: 0;
-  }
 }
 
-// Title for the borderless (div) variant, mirroring the KCard header.
+// Title for the borderless (div) variant.
 .redis-config-card-title {
   font-size: var(--kui-font-size-40, $kui-font-size-40);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);

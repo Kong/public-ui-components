@@ -146,6 +146,13 @@ const { i18n } = useI18n()
 const useSecretInput = inject(USE_SECRET_INPUT_KEY, computed(() => false))
 
 interface StringFieldProps extends InputProps, BaseFieldProps {
+  /**
+   * Disables the input. Declared here rather than left to attr fallthrough —
+   * this component sets `inheritAttrs: false`, so an undeclared `disabled`
+   * would land on the root div and never reach the input (ExpressionEditor
+   * passes it to lock the expression textarea to the source field's version).
+   */
+  disabled?: boolean
   labelAttributes?: LabelAttributes
   multiline?: boolean
   showVaultSecretPicker?: boolean
@@ -183,7 +190,7 @@ defineSlots<{
 const { value: fieldValue, hide, versionInfo, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
-const isDisabled = computed(() => !!(props as { disabled?: boolean }).disabled || !!versionInfo?.value)
+const isDisabled = computed(() => props.disabled || !!versionInfo?.value)
 
 function handleUpdate(value: string) {
   fieldValue!.value = value === '' ? field.emptyValue!.value : value

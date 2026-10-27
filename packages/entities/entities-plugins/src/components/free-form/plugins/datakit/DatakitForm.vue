@@ -83,6 +83,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KCollapse, KSegmentedControl, KTooltip } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 import english from '../../../../locales/en.json'
@@ -172,6 +173,12 @@ const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
 
 const advancedCollapsed = ref(!(props.isEditing && !!props.model?.config?.ca_certificates?.length))
 
+// Gateways without CA certificate support (e.g. AI Gateway 2.x) don't have this field in their schema
+const supportsCaCertificates = computed(() => {
+  const configSchema = props.schema?.fields?.find((field) => 'config' in field)?.config as RecordFieldSchema | undefined
+  return !!configSchema?.fields?.some((field) => 'ca_certificates' in field)
+})
+
 const configSections = computed<ConfigSection[]>(() => {
   const sections: ConfigSection[] = [
     {
@@ -179,11 +186,15 @@ const configSections = computed<ConfigSection[]>(() => {
       title: t('plugins.free-form.datakit.flow_editor.mode'),
       description: t('plugins.free-form.datakit.description_flow'),
     },
-    {
+  ]
+
+  // The advanced section only holds `ca_certificates` for now
+  if (supportsCaCertificates.value) {
+    sections.push({
       name: 'advanced',
       title: t('plugins.free-form.datakit.advanced_configuration.title'),
-    },
-  ]
+    })
+  }
 
   return sections
 })
