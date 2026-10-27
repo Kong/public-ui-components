@@ -6,7 +6,8 @@ import rawSchema from '../../../../fixtures/schemas/rate-limiting'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../schema-enhancement'
 import ConfigForm from '../components/ConfigForm.vue'
 
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { VueWrapper } from '@vue/test-utils'
+import type { FormConfig, FormSchema, NamedFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 
 /**
  * Regression guard for the layout, not the field.
@@ -30,29 +31,39 @@ globalThis.ResizeObserver = class {
   disconnect() {}
 } as any
 
-function mountLayout(model: Record<string, any> = {}) {
-  const changes: any[] = []
+function mountLayout(
+  model: Record<string, unknown> = {},
+  options: { schema?: FormSchema, formConfig?: FormConfig } = {},
+) {
+  const changes: Array<Record<string, unknown>> = []
 
   const wrapper = mount(defineComponent({
     setup() {
       return () => h(
         StandardLayout,
         {
-          schema,
+          schema: options.schema ?? schema,
           model,
           pluginName: 'rate-limiting',
           isEditing: Object.keys(model).length > 0,
-          onFormChange: (value: any) => changes.push(value),
+          onFormChange: (value: Record<string, unknown>) => changes.push(value),
           formSchema: { fields: [] },
           formModel: {},
+          formConfig: options.formConfig,
         },
         { default: () => h(ConfigForm) },
       )
     },
   }))
 
-  return { wrapper, lastChange: () => changes[changes.length - 1] }
+  return { wrapper, lastChange: (): Record<string, unknown> => changes[changes.length - 1] }
 }
+
+function assertTriggerState(wrapper: VueWrapper, field: string, disabled: boolean) {
+  const button = wrapper.get(`[data-testid="ff-expression-add-config.${field}"]`).element as HTMLButtonElement
+  expect(button.disabled, `expected the config.${field} expression trigger to be ${disabled ? 'disabled' : 'enabled'}`).toBe(disabled)
+}
+
 
 const EXPRESSIBLE = ['second', 'minute', 'hour', 'day', 'month', 'year', 'custom_key']
 
@@ -98,5 +109,79 @@ describe('StandardLayout — expression fields', () => {
     await wrapper.get('[data-testid="ff-expressions.minute"]').setValue('req.size')
 
     expect(lastChange().expressions).toEqual({ minute: 'req.size' })
+  })
+})
+
+describe('StandardLayout — expression version gating by app mode', () => {
+  /**
+   * The AI Gateway schema shape (kong-ee aigw-master): the expressible
+   * `custom_key` carries its own requirement, and the root `expressions`
+   * record is tagged too, so untagged expressible fields inherit a lock.
+   * API Gateway schemas look the same minus the annotations.
+   *
+   * The two modes differ only in what the app passes:
+   * - API Gateway apps (gateway-manager, Kong Manager) pass no
+   *   `formConfig.minRuntimeVersion` — annotations must be inert.
+   * - AI Gateway apps (ai-manager) pass the gateway's `min_runtime_version`,
+   *   which is compared against the annotations.
+   */
+  const taggedSchema = (): FormSchema => {
+    const clone = structuredClone(schema)
+
+    const rootRecord = (name: string): RecordFieldSchema => {
+      const field = clone.fields.find(entry => name in entry)?.[name]
+      if (!field || field.type !== 'record') {
+        throw new Error(`test fixture: expected a root '${name}' record`)
+      }
+      return field
+    }
+
+    const target = (record: RecordFieldSchema, name: string): UnionFieldSchema => {
+      const field = record.fields.find((entry: NamedFieldSchema) => name in entry)?.[name]
+      if (!field) {
+        throw new Error(`test fixture: no '${name}' field in record`)
+      }
+      return field
+    }
+
+    target(rootRecord('config'), 'custom_key').min_ai_gateway_version = '2.3'
+    rootRecord('expressions').min_ai_gateway_version = '2.3'
+
+    return clone
+  }
+
+  it('API Gateway mode: no minRuntimeVersion, annotations are ignored entirely', () => {
+    const { wrapper } = mountLayout({}, { schema: taggedSchema() })
+
+    // custom_key is tagged and would lock at this runtime — but API Gateway
+    // never supplies one, so nothing gates.
+    assertTriggerState(wrapper, 'custom_key', false)
+    assertTriggerState(wrapper, 'minute', false)
+  })
+
+  it('AI Gateway mode: renders ungated when the gateway satisfies the requirement', () => {
+    const { wrapper } = mountLayout(
+      {},
+      { schema: taggedSchema(), formConfig: { minRuntimeVersion: '2.3' } },
+    )
+
+    assertTriggerState(wrapper, 'custom_key', false)
+    assertTriggerState(wrapper, 'minute', false)
+  })
+
+  it('AI Gateway mode: gates tagged and inheriting fields when the gateway is below the requirement', () => {
+    const { wrapper } = mountLayout(
+      {},
+      { schema: taggedSchema(), formConfig: { minRuntimeVersion: '2.2' } },
+    )
+
+    // custom_key: locked through its own annotation...
+    assertTriggerState(wrapper, 'custom_key', true)
+    // ...minute: no annotation of its own, inherits the root expressions
+    // record's lock — the expression feature itself is version-gated.
+    assertTriggerState(wrapper, 'minute', true)
+    // The value input of an untagged field stays usable even while its
+    // expression affordance is locked.
+    expect((wrapper.get('[data-testid="ff-config.minute"]').element as HTMLInputElement).disabled).toBe(false)
   })
 })

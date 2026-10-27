@@ -21,7 +21,7 @@ import type { EmptyValue } from '../types'
  * without the `$.` root prefix (e.g. `Field.vue` passes `field.path`).
  */
 export function useExpressionField(configPath: MaybeRefOrGetter<string>) {
-  const { getSchema, getEmptyValue, isFieldHidden, formData } = useFormShared()
+  const { getSchema, getEmptyValue, isFieldHidden, formData, getFieldVersionInfo } = useFormShared()
 
   const path = computed(() => utils.removeRootSymbol(toValue(configPath)))
   const expressionPath = computed(() => toExpressionPath(path.value))
@@ -122,6 +122,19 @@ export function useExpressionField(configPath: MaybeRefOrGetter<string>) {
   const hide = computed(() => isFieldHidden(path.value))
 
   /**
+   * Version lock for the pair, following the source field first: an expression
+   * overrides its source value on every request, so a runtime that cannot
+   * support the field cannot support its expression either — same direction as
+   * `hide`. Falls back to the twin's own requirement, so a schema that tags
+   * only the `expressions` record (inherited by every twin through the
+   * ancestor walk) or a single twin still locks the editor. `undefined` when
+   * neither half carries an unmet `min_ai_gateway_version` — the same
+   * fail-open contract as every other version-locked field.
+   */
+  const versionInfo = computed(() => getFieldVersionInfo(path.value)
+    ?? (expressionPath.value ? getFieldVersionInfo(expressionPath.value) : undefined))
+
+  /**
    * Whether this twin is an element of a twin array, which the Gateway pairs
    * with its source array by position rather than by name.
    */
@@ -158,5 +171,6 @@ export function useExpressionField(configPath: MaybeRefOrGetter<string>) {
     isArrayElement,
     emptyValue,
     clear,
+    versionInfo,
   }
 }
