@@ -2,6 +2,7 @@
   <div
     ref="gridContainer"
     class="grid-stack"
+    :style="{ marginBottom: `-${bottomTrim + slackPx}px` }"
   >
     <div
       v-for="tile in props.tiles"
@@ -43,10 +44,15 @@ const props = withDefaults(defineProps<{
   tileHeight?: number
   columns?: number
   editable?: boolean
+  /**
+   * px to pull the grid's bottom edge up by, to cancel out the bottom margin of its last row
+   */
+  bottomTrim?: number
 }>(), {
   tileHeight: DEFAULT_TILE_HEIGHT,
   columns: DASHBOARD_COLS,
   editable: false,
+  bottomTrim: 0,
 })
 const emit = defineEmits<{
   (e: 'update-tiles', tiles: Array<GridTile<T>>): void
@@ -79,6 +85,9 @@ const margin = parseInt(KUI_SPACE_50, 10) / 2
 // Tile id mapped to its content height in cells
 const measured = ref<ReadonlyMap<string, number>>(new Map())
 
+// Tile id mapped to its content height in px
+const measuredPx = ref<ReadonlyMap<string, number>>(new Map())
+
 const singleColumn = ref(false)
 
 // A single column sizes every tile to its content, not just fit content tiles
@@ -91,6 +100,30 @@ const viewLayout = computed(() => layoutRows(props.tiles, rowDefs.value, measure
   cellsPerRow: CELLS_PER_ROW,
   columns: singleColumn.value ? 1 : props.columns,
 }))
+
+// The grid reserves whole cells for the last row, so a fit content row is usually a little taller than its tile.
+// This is that leftover in px, which is also pulled off the grid's bottom edge.
+const slackPx = computed<number>(() => {
+  if (props.editable) {
+    return 0
+  }
+
+  const lastTiles = singleColumn.value
+    ? [...props.tiles].sort((a, b) => a.layout.position.row - b.layout.position.row || a.layout.position.col - b.layout.position.col).slice(-1)
+    : props.tiles.filter(t => t.layout.position.row === rowDefs.value.length - 1)
+  const tiles = lastTiles.filter(t => measured.value.has(`${t.id}`))
+
+  // A last row at a fixed height has no rounding leftover
+  if (!tiles.length || !tiles.every(sizedToContent)) {
+    return 0
+  }
+
+  const cells = Math.max(...tiles.map(t => measured.value.get(`${t.id}`)!))
+  const contentPx = Math.max(...tiles.map(t => measuredPx.value.get(`${t.id}`)!))
+  const slack = cells * (props.tileHeight / CELLS_PER_ROW) - (contentPx + 2 * margin)
+
+  return Math.max(0, Math.round(slack * 100) / 100)
+})
 
 const toWidget = (tile: GridTile<T>): GridStackWidget => {
   if (!props.editable) {
@@ -159,12 +192,16 @@ const toCellCount = (contentPx: number): number => (
 
 const measureFitContentTiles = () => {
   const next = new Map<string, number>()
+  const nextPx = new Map<string, number>()
 
   props.tiles.filter(sizedToContent).forEach(tile => {
     const content = contentOf(tile.id)
 
     if (content) {
-      next.set(`${tile.id}`, toCellCount(content.getBoundingClientRect().height))
+      const { height } = content.getBoundingClientRect()
+
+      next.set(`${tile.id}`, toCellCount(height))
+      nextPx.set(`${tile.id}`, height)
     }
   })
 
@@ -173,6 +210,13 @@ const measureFitContentTiles = () => {
 
   if (changed) {
     measured.value = next
+  }
+
+  // Sub-cell height changes don't change the cell count, but they do change the leftover
+  const pxChanged = nextPx.size !== measuredPx.value.size || [...nextPx].some(([id, h]) => measuredPx.value.get(id) !== h)
+
+  if (pxChanged) {
+    measuredPx.value = nextPx
   }
 }
 

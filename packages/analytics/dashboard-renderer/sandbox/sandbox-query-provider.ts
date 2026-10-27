@@ -3,6 +3,7 @@ import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
 import { generateCrossSectionalData, generateData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import type {
+  AllAggregations,
   AnalyticsBridge,
   AnalyticsConfigV2,
   DatasourceAwareQuery,
@@ -14,14 +15,14 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 
-const singleValueTrendExploreResponse: ExploreResultV4 = {
+const singleValueTrendExploreResponse = (metric: AllAggregations, values: [number, number], unit: string): ExploreResultV4 => ({
   data: [
     {
-      event: { request_count: 7_812 },
+      event: { [metric]: values[0] },
       timestamp: '2024-01-31T18:00:00.000Z',
     },
     {
-      event: { request_count: 8_412 },
+      event: { [metric]: values[1] },
       timestamp: '2024-01-31T19:00:00.000Z',
     },
   ],
@@ -29,12 +30,18 @@ const singleValueTrendExploreResponse: ExploreResultV4 = {
     display: {},
     end: '2024-01-31T20:00:00.000Z',
     granularity_ms: 60 * 60 * 1000,
-    metric_names: ['request_count'],
-    metric_units: { request_count: 'count' },
+    metric_names: [metric],
+    metric_units: { [metric]: unit },
     query_id: 'single-value-trend',
     start: '2024-01-31T18:00:00.000Z',
     truncated: false,
   },
+})
+
+const singleValueTrendMocks: Record<string, ExploreResultV4> = {
+  request_count: singleValueTrendExploreResponse('request_count', [7_812, 8_412], 'count'),
+  response_latency_average: singleValueTrendExploreResponse('response_latency_average', [182, 164], 'ms'),
+  response_latency_p99: singleValueTrendExploreResponse('response_latency_p99', [640, 702], 'ms'),
 }
 
 const aiProviderExploreResponse: ExploreResultV4 = {
@@ -170,9 +177,9 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     && query.query.dimensions?.length === 1
     && query.query.dimensions[0] === 'time'
     && query.query.metrics?.length === 1
-    && query.query.metrics[0] === 'request_count'
+    && singleValueTrendMocks[query.query.metrics[0]]
   ) {
-    return await delayedResponse(singleValueTrendExploreResponse)
+    return await delayedResponse(singleValueTrendMocks[query.query.metrics[0]])
   }
 
   // Model usage: a heatmap over time, or a treemap of provider → model
