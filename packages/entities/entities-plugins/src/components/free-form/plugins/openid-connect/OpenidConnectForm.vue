@@ -458,6 +458,24 @@ onMounted(() => {
     }
   }
 
+  // AIGW runtime < 2.3 on create: pre-fill the deprecated singular with its
+  // pre-deprecation default (['sub']). The engine's schema-default fill is
+  // skipped whenever the host's draft already carries config keys (hasValue),
+  // so the fill is emitted explicitly.
+  if (
+    showLegacyCredentialClaim.value
+    && !props.isEditing
+    && !config?.credential_claim
+    && !config?.credential_claims
+  ) {
+    const liftedDefault = (effectiveConfigSchema.value?.fields?.find(f => 'credential_claim' in f)?.credential_claim as
+      | { default?: string[] }
+      | undefined)?.default
+    if (liftedDefault) {
+      emitMountConfigUpdate({ credential_claim: liftedDefault })
+    }
+  }
+
   // AI Manager needs a real salt from the start (not Kong's server-generated one) so it
   // can key its token cache before the plugin is ever saved.
   if (isAiManager.value && !props.isEditing && !config?.cache_tokens_salt) {

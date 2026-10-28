@@ -147,12 +147,13 @@ const createSchema = (
     configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
   }
   if (withCredentialClaims) {
-    // Fresh shape: the plural field plus the deprecated singular demoted to
-    // shorthand_fields with replaced_with pointing at the plural — the shape
-    // gateways serve once credential_claim is deprecated (mirrors kong-ee).
+    // Fresh shape: the plural replaces the deprecated singular IN PLACE (as
+    // kong-ee does) and the singular is demoted to shorthand_fields with
+    // replaced_with pointing at the plural.
     const configField = (raw.fields as any[]).find(f => 'config' in f)
-    configField.config.fields = (configField.config.fields as any[]).filter(f => !('credential_claim' in f))
-    configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
+    const fields = configField.config.fields as any[]
+    const claimIndex = fields.findIndex(f => 'credential_claim' in f)
+    fields.splice(claimIndex, 1, cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
     configField.config.shorthand_fields.push(cloneDeep(CREDENTIAL_CLAIM_SHORTHAND))
   }
   if (withUnmarkedCredentialClaims) {
@@ -851,6 +852,44 @@ describe('OpenidConnectForm', () => {
       clickTab('advanced')
       cy.getTestId('ff-array-config.credential_claims').should('exist')
       cy.getTestId('ff-array-config.credential_claim').should('not.exist')
+    })
+
+    it('lifts credential_claim back into its old position, under consumer_optional', () => {
+      mountForm({
+        withCredentialClaims: true,
+        minRuntimeVersion: '2.2',
+      })
+
+      clickTab('advanced')
+      cy.getTestId('ff-config.consumer_optional').should('exist')
+      cy.getTestId('ff-array-config.credential_claim').then(($claim) => {
+        cy.getTestId('ff-config.consumer_optional').then(($optional) => {
+          // consumer_optional must render directly before the lifted field
+          // (the fresh schema replaced the singular with the plural in place).
+          expect(
+            ($optional[0] as HTMLElement).compareDocumentPosition($claim[0]) & Node.DOCUMENT_POSITION_FOLLOWING,
+            'credential_claim renders after consumer_optional',
+          ).to.not.equal(0)
+        })
+      })
+    })
+
+    it('pre-fills the lifted credential_claim with the pre-deprecation default on create', () => {
+      // The draft already carries config keys (auth_methods), so the engine's
+      // schema-default fill is skipped (hasValue) — the fill must be explicit.
+      mountForm({
+        withCredentialClaims: true,
+        minRuntimeVersion: '2.2',
+        model: createModel(),
+      })
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const fillCall = spy.args.find(
+          (args: any[]) => Array.isArray(args[0]?.config?.credential_claim),
+        )
+        expect(fillCall, 'default fill emission not found').not.to.equal(undefined)
+        expect(fillCall[0].config.credential_claim).to.deep.equal(['sub'])
+      })
     })
 
     it('stale schema (regular credential_claim, no credential_claims) still renders credential_claim below 2.3', () => {

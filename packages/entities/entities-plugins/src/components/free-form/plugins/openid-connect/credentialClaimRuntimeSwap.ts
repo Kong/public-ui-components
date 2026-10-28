@@ -42,14 +42,25 @@ export function swapConfigRecordForLegacyRuntime(
   }
   if (!Array.isArray(swapped.fields)) return config
 
-  swapped.fields = swapped.fields.filter(f => !('credential_claims' in f))
+  // The fresh schema replaced the deprecated singular with the plural in
+  // place — lift the singular back into that exact slot so the field renders
+  // in its old position (e.g. right under consumer_optional).
+  swapped.fields = [...swapped.fields]
+  const claimsIndex = swapped.fields.findIndex(f => 'credential_claims' in f)
+  if (claimsIndex !== -1) {
+    swapped.fields.splice(claimsIndex, 1)
+  }
+
   if (!swapped.fields.some(f => 'credential_claim' in f)) {
     const shorthandDef = swapped.shorthand_fields?.find(f => 'credential_claim' in f)?.credential_claim
     if (shorthandDef) {
       const { deprecation, ...fieldDef } = shorthandDef
-      swapped.fields = [...swapped.fields, {
-        credential_claim: { ...fieldDef, required: false, default: deprecation?.old_default },
-      }]
+      // Pre-2.3 runtimes defaulted credential_claim to ['sub']; the schema
+      // records the pre-deprecation default in old_default when it kept one.
+      const lifted = {
+        credential_claim: { ...fieldDef, required: false, default: deprecation?.old_default ?? ['sub'] },
+      }
+      swapped.fields.splice(claimsIndex !== -1 ? claimsIndex : swapped.fields.length, 0, lifted)
     }
   }
 
