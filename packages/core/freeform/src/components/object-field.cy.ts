@@ -60,6 +60,15 @@ describe('ObjectField', () => {
     assertLastChange({ [FIELD_NAME]: null })
   })
 
+  it('hides the collapse toggle until an optional object field is added', () => {
+    mountObjectForm({})
+
+    cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).should('have.css', 'visibility', 'hidden')
+
+    cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
+    cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).should('have.css', 'visibility', 'visible')
+  })
+
   describe('emptyFieldValue config', () => {
     it('should emit undefined when toggling an optional object field off with emptyFieldValue: undefined', () => {
       mountObjectForm({
