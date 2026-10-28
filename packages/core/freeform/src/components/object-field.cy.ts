@@ -67,6 +67,9 @@ describe('ObjectField', () => {
 
     cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
     cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).should('have.css', 'visibility', 'visible')
+
+    cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
+    cy.getTestId(`ff-object-toggle-btn-${FIELD_NAME}`).should('have.css', 'visibility', 'hidden')
   })
 
   describe('emptyFieldValue config', () => {
