@@ -8,6 +8,7 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import schemaNestedMixed from '../../fixtures/schemas/nested-mixed'
 import schemaOpentelemetry from '../../fixtures/schemas/opentelemetry'
 import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
+import type { KonnectPluginFormConfig } from '../types'
 
 const baseConfig: KonnectPluginFormConfig = {
   app: 'konnect',
