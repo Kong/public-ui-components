@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.3...%40kong-ui-public%2Fentities-plugins%4010.2.0) (2026-10-28)
+
+### Features
+
+* **entities-plugins:** swap credential_claim/credential_claims by AIGW runtime version ([#3969](https://github.com/Kong/public-ui-components/issues/3969)) ([e95e525](https://github.com/Kong/public-ui-components/commit/e95e525b0af88487072756aece044c1cf217a5d9))
+
+
 ## [10.1.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.2...%40kong-ui-public%2Fentities-plugins%4010.1.3) (2026-10-28)
 
 ### Bug Fixes
