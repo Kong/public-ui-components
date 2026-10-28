@@ -89,6 +89,7 @@ const PRINCIPALS_SCHEMA_FIELD = {
   },
 }
 
+
 const DEFAULT_PRINCIPALS_MODEL = {
   directory: 'default',
   enabled: false,
@@ -122,6 +123,7 @@ const CREDENTIAL_CLAIM_SHORTHAND = {
     type: 'array',
     elements: { type: 'string' },
     deprecation: {
+      replaced_with: [{ path: ['credential_claims'] }],
       message: 'openid-connect: config.credential_claim is deprecated, please use config.credential_claims instead',
       removal_in_version: '4.0',
       old_default: ['sub'],
@@ -134,19 +136,30 @@ const CREDENTIAL_CLAIM_SHORTHAND = {
 // FormSchema additionally requires `type: 'record'` at the root. Run the same
 // schema-enhancement pipeline PluginEntityForm uses before passing into free-form
 // components so entity_checks land at the right nesting level.
-const createSchema = (withPrincipals = false, withFreshCredentialClaims = false): FormSchema => {
+const createSchema = (
+  withPrincipals = false,
+  withCredentialClaims = false,
+  withUnmarkedCredentialClaims = false,
+): FormSchema => {
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
   }
-  if (withFreshCredentialClaims) {
-    // Demote the regular credential_claim to shorthand and add credential_claims —
-    // the shape AI Gateway serves from runtime 2.3 on.
+  if (withCredentialClaims) {
+    // Fresh shape: the plural field plus the deprecated singular demoted to
+    // shorthand_fields with replaced_with pointing at the plural — the shape
+    // gateways serve once credential_claim is deprecated (mirrors kong-ee).
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields = (configField.config.fields as any[]).filter(f => !('credential_claim' in f))
     configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
     configField.config.shorthand_fields.push(cloneDeep(CREDENTIAL_CLAIM_SHORTHAND))
+  }
+  if (withUnmarkedCredentialClaims) {
+    // The plural field alone — a schema that carries credential_claims but
+    // does NOT formally deprecate the singular. Migration must not fire.
+    const configField = (raw.fields as any[]).find(f => 'config' in f)
+    configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
   }
   return distributeEntityChecks(appendEntityChecksFromMetadata('openid-connect', raw))
 }
@@ -185,8 +198,10 @@ interface MountOptions {
   formsConfig?: Record<string, any>
   /** Append the 3.15 `config.principals` record to the schema */
   withPrincipals?: boolean
-  /** Serve the post-2.3 credential shape: credential_claims regular, credential_claim shorthand */
-  withFreshCredentialClaims?: boolean
+  /** Serve the post-2.3 credential shape: credential_claims regular, credential_claim demoted to a deprecated shorthand entry */
+  withCredentialClaims?: boolean
+  /** Append `config.credential_claims` WITHOUT the deprecation metadata (plural alone) */
+  withUnmarkedCredentialClaims?: boolean
   /** AIGW minimum runtime version (FormConfig.minRuntimeVersion) */
   minRuntimeVersion?: string
   /** Provide the Identity Principals UI feature flag */
@@ -202,7 +217,8 @@ const mountForm = (options: MountOptions = {}) => {
     app = 'konnect',
     formsConfig = {},
     withPrincipals = false,
-    withFreshCredentialClaims = false,
+    withCredentialClaims = false,
+    withUnmarkedCredentialClaims = false,
     minRuntimeVersion,
     identityPrincipalsUi = false,
     useSecretInput = false,
@@ -210,7 +226,7 @@ const mountForm = (options: MountOptions = {}) => {
 
   cy.mount(OpenidConnectForm, {
     props: {
-      schema: createSchema(withPrincipals, withFreshCredentialClaims),
+      schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims),
       formConfig: minRuntimeVersion ? { minRuntimeVersion } : undefined,
       formSchema: createFormSchema(),
       formModel: {},
@@ -770,7 +786,7 @@ describe('OpenidConnectForm', () => {
   describe('credential_claim swap by AIGW min runtime version', () => {
     it('renders the deprecated credential_claim and hides credential_claims when minRuntimeVersion < 2.3 (fresh schema)', () => {
       mountForm({
-        withFreshCredentialClaims: true,
+        withCredentialClaims: true,
         minRuntimeVersion: '2.2',
       })
 
@@ -782,7 +798,7 @@ describe('OpenidConnectForm', () => {
 
     it('reverse-migrates a saved credential_claims into credential_claim, riding the full engine value', () => {
       mountForm({
-        withFreshCredentialClaims: true,
+        withCredentialClaims: true,
         minRuntimeVersion: '2.2',
         model: createModel({
           credential_claim: null,
@@ -811,7 +827,7 @@ describe('OpenidConnectForm', () => {
 
     it('renders credential_claims and no credential_claim when minRuntimeVersion >= 2.3', () => {
       mountForm({
-        withFreshCredentialClaims: true,
+        withCredentialClaims: true,
         minRuntimeVersion: '2.3',
       })
 
@@ -821,7 +837,7 @@ describe('OpenidConnectForm', () => {
     })
 
     it('fails open to the plural-only behavior when no minRuntimeVersion is set', () => {
-      mountForm({ withFreshCredentialClaims: true })
+      mountForm({ withCredentialClaims: true })
 
       clickTab('advanced')
       cy.getTestId('ff-array-config.credential_claims').should('exist')
@@ -834,6 +850,99 @@ describe('OpenidConnectForm', () => {
       clickTab('advanced')
       cy.getTestId('ff-array-config.credential_claim').should('exist')
       cy.getTestId('ff-array-config.credential_claims').should('not.exist')
+    })
+  })
+
+  describe('credential_claim → credential_claims migration', () => {
+    it('calls onFormChange with migrated credential_claims on mount when the schema has credential_claims', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const migrationCall = spy.args.find(
+          (args: any[]) => Array.isArray(args[0]?.config?.credential_claims)
+            && args[0].config.credential_claims.length > 0,
+        )
+        expect(migrationCall, 'migration call not found').not.to.equal(undefined)
+        expect(migrationCall[0].config.credential_claims).to.deep.equal([['sub']])
+      })
+    })
+
+    it('does not overwrite existing credential_claims', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: [['username']],
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        for (const args of spy.args) {
+          if (args[0]?.config?.credential_claims !== undefined) {
+            expect(args[0].config.credential_claims).to.deep.equal([['username']])
+          }
+        }
+      })
+    })
+
+    it('does not call onFormChange for migration when credential_claim is null', () => {
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          credential_claim: null,
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall).to.equal(false)
+      })
+    })
+
+    it('does not migrate when the schema has no credential_claims (stale ai-gateway schema)', () => {
+      mountForm({
+        // Base fixture predates credential_claims — same as stale ai-gateway schemas.
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall, 'must not submit unknown credential_claims field').to.equal(false)
+      })
+    })
+
+    it('does not migrate when the singular is not formally deprecated (plural alone, no replaced_with)', () => {
+      mountForm({
+        // A schema that carries credential_claims but does NOT mark
+        // credential_claim as deprecated+replaced — the migration must not
+        // second-guess the schema's own deprecation metadata.
+        withUnmarkedCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall, 'migration requires the deprecation metadata').to.equal(false)
+      })
     })
   })
 
