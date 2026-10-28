@@ -189,6 +189,10 @@ interface MountOptions {
   withFreshCredentialClaims?: boolean
   /** AIGW minimum runtime version (FormConfig.minRuntimeVersion) */
   minRuntimeVersion?: string
+  /** Provide the Identity Principals UI feature flag */
+  identityPrincipalsUi?: boolean
+  /** Opt in to SecretInput for encrypted free-form fields. */
+  useSecretInput?: boolean
 }
 
 const mountForm = (options: MountOptions = {}) => {
@@ -776,7 +780,7 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('ff-array-config.credential_claims').should('not.exist')
     })
 
-    it('reverse-migrates a saved credential_claims into credential_claim on mount in legacy mode', () => {
+    it('reverse-migrates a saved credential_claims into credential_claim, riding the full engine value', () => {
       mountForm({
         withFreshCredentialClaims: true,
         minRuntimeVersion: '2.2',
@@ -786,12 +790,22 @@ describe('OpenidConnectForm', () => {
         }),
       })
 
+      // Guarantee at least one engine change so a pending reverse migration
+      // flushes even if the mount produced no emission.
+      cy.getTestId('ff-config.issuer').type('-edited')
+
       cy.get('@onFormChange').should((spy: any) => {
         const migrationCall = spy.args.find(
           (args: any[]) => Array.isArray(args[0]?.config?.credential_claim),
         )
         expect(migrationCall, 'reverse migration call not found').not.to.equal(undefined)
         expect(migrationCall[0].config.credential_claim).to.deep.equal(['account', 'id'])
+        // A bare partial would let wholesale-replacing hosts (PluginEntityForm)
+        // collapse the payload and wipe every other config field — the migration
+        // must ship inside a full engine value, carrying the untouched fields.
+        expect(migrationCall[0].config.auth_methods).to.deep.equal(createModel().config.auth_methods)
+        expect(migrationCall[0].config.audience_claim).to.deep.equal(createModel().config.audience_claim)
+        expect(migrationCall[0].config, 'no credential_claims may ship below 2.3').not.to.have.property('credential_claims')
       })
     })
 

@@ -158,10 +158,11 @@ import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { FEATURE_FLAGS } from '../../../../constants'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCredentialSecret, isVersionSupported } from '@kong-ui-public/freeform'
+import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCredentialSecret } from '@kong-ui-public/freeform'
 import type { FormConfig, FormSchema, RenderRules } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
+import { isLegacyCredentialClaimRuntime, swapCredentialClaimForLegacyRuntime } from './credentialClaimRuntimeSwap'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
@@ -291,60 +292,49 @@ const formConfig = computed<FormConfig>(() => ({
 
 // AI Gateway 2.3 is the first runtime that understands credential_claims; older
 // runtimes only know the deprecated credential_claim. When the host pins such a
-// runtime, the form swaps the pair: credential_claims drops out of the schema
-// (it neither renders nor ships in the payload) and the deprecated
-// credential_claim is lifted from shorthand_fields back into config.fields —
-// with its pre-deprecation default when the schema records one
-// (deprecation.old_default). Absent version info (API Gateway) fails open to
-// the plural-only behavior.
-const CREDENTIAL_CLAIMS_MIN_AIGW_VERSION = '2.3'
+// runtime, the form swaps the pair (see credentialClaimRuntimeSwap.ts):
+// credential_claims drops out of the schema (it neither renders nor ships in
+// the payload) and the deprecated credential_claim is lifted from
+// shorthand_fields back into config.fields — with its pre-deprecation default
+// when the schema records one (deprecation.old_default). Absent version info
+// (API Gateway) fails open to the plural-only behavior.
 const minRuntimeVersion = computed(() =>
   openidConnectContext?.minRuntimeVersion ?? formConfig.value.minRuntimeVersion,
 )
 const showLegacyCredentialClaim = computed(() =>
-  !!minRuntimeVersion.value
-  && !isVersionSupported(minRuntimeVersion.value, CREDENTIAL_CLAIMS_MIN_AIGW_VERSION),
+  isLegacyCredentialClaimRuntime(minRuntimeVersion.value),
 )
-const effectiveSchema = computed<FormSchema>(() => {
-  if (!showLegacyCredentialClaim.value) return props.schema
+const effectiveSchema = computed<FormSchema>(() =>
+  swapCredentialClaimForLegacyRuntime(props.schema, showLegacyCredentialClaim.value),
+)
 
-  const fields = [...props.schema.fields]
-  const configIndex = fields.findIndex(f => 'config' in f)
-  if (configIndex === -1) return props.schema
-
-  const configField = { ...fields[configIndex] } as Record<string, any>
-  const config = { ...configField.config } as {
-    fields?: Array<Record<string, any>>
-    shorthand_fields?: Array<Record<string, any>>
-  }
-  if (!Array.isArray(config.fields)) return props.schema
-
-  config.fields = config.fields.filter(f => !('credential_claims' in f))
-  if (!config.fields.some(f => 'credential_claim' in f)) {
-    const shorthandDef = config.shorthand_fields?.find(f => 'credential_claim' in f)?.credential_claim
-    if (shorthandDef) {
-      const { deprecation, ...fieldDef } = shorthandDef
-      config.fields = [...config.fields, {
-        credential_claim: { ...fieldDef, required: false, default: deprecation?.old_default },
-      }]
-    }
-  }
-
-  configField.config = config
-  fields[configIndex] = configField
-  return { ...props.schema, fields }
-})
+// The last full engine change handleFormChange forwarded. Mounted migrations
+// must ride on a full value instead of emitting bare partials: hosts that
+// replace form state wholesale (PluginEntityForm) would collapse the payload to
+// the partial and wipe every other config field on save.
+let lastFullFormValue: Partial<Props['model']> | undefined
+// A reverse migration computed on mount that couldn't be delivered yet (no
+// full engine value had flowed through). Flushed into the next full change.
+let pendingLegacyCredentialClaim: string[] | null = null
 
 // Pre-2.3 runtimes reject the unknown plural field, so it must never ship —
-// including a credential_claims saved earlier against a newer runtime.
+// including a credential_claims saved earlier against a newer runtime. The
+// pending reverse-migration (if any) lands here with the next full change.
 const handleFormChange = (value: Partial<Props['model']>, fields?: string[]) => {
-  const config = (value as Record<string, any>)?.config
-  if (showLegacyCredentialClaim.value && config && 'credential_claims' in config) {
-    const stripped = { ...config }
-    delete stripped.credential_claims
-    return props.onFormChange({ ...value, config: stripped } as Partial<Props['model']>, fields)
+  lastFullFormValue = value
+
+  if (!showLegacyCredentialClaim.value) {
+    return props.onFormChange(value, fields)
   }
-  props.onFormChange(value, fields)
+
+  const config = { ...((value as Record<string, any>)?.config ?? {}) }
+  if (pendingLegacyCredentialClaim !== null) {
+    config.credential_claim = pendingLegacyCredentialClaim
+    pendingLegacyCredentialClaim = null
+  }
+  delete config.credential_claims
+
+  props.onFormChange({ ...value, config } as Partial<Props['model']>, fields)
 }
 
 // Record-array fields rendered with the tabbed ArrayField, mapped to their item tab
@@ -401,13 +391,27 @@ onMounted(() => {
 
   // AIGW runtime < 2.3: a credential_claims saved against a newer runtime is
   // invisible in legacy mode (no schema field) — map its first claim path back
-  // into the deprecated credential_claim the runtime understands, mirroring the
-  // server's own reverse mapping (first entry wins).
+  // into the deprecated credential_claim the runtime understands, mirroring
+  // the server's own reverse mapping (first entry wins). Delivered as part of
+  // the last full engine value (or the next one, if none has flowed yet) — a
+  // bare partial would replace wholesale-replacing hosts' form state and wipe
+  // every other config field from the payload.
   if (showLegacyCredentialClaim.value && !config?.credential_claim) {
     const savedClaims = config?.credential_claims
     const firstClaim = Array.isArray(savedClaims) && savedClaims.length > 0 ? savedClaims[0] : null
     if (firstClaim) {
-      handleFormChange({ config: { credential_claim: Array.isArray(firstClaim) ? firstClaim : [firstClaim] } } as Partial<Props['model']>)
+      const claim = Array.isArray(firstClaim) ? firstClaim : [firstClaim]
+      if (lastFullFormValue) {
+        handleFormChange({
+          ...lastFullFormValue,
+          config: {
+            ...((lastFullFormValue as Record<string, any>)?.config ?? {}),
+            credential_claim: claim,
+          },
+        } as Partial<Props['model']>)
+      } else {
+        pendingLegacyCredentialClaim = claim
+      }
     }
   }
 
