@@ -2130,8 +2130,8 @@ describe('<PluginForm />', () => {
             method: 'GET',
             url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/cloned-plugins/${params.pluginName}`,
           },
-          params.status === 404
-            ? { statusCode: 404, body: { message: 'Not found' } }
+          params.status
+            ? { statusCode: params.status, body: { message: 'Error' } }
             : {
               statusCode: 200,
               body: {
@@ -2170,6 +2170,33 @@ describe('<PluginForm />', () => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
         // Freeform renders cards with data-testid="ff-*"
+        cy.get('[data-testid^="ff-"]').should('exist')
+      })
+
+      it('still renders the form when the cloned plugin lookup fails', () => {
+        // A bundled plugin missing from PLUGIN_METADATA is treated as custom, and the backend
+        // rejects bundled names on the cloned-plugins endpoint with a 400.
+        const pluginType = 'my-custom-plugin'
+        interceptKonnectSchema({ mockData: customPluginSchema })
+        interceptClonedPlugin({ pluginName: pluginType, status: 400 })
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+              [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getClonedPlugin'])
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        cy.getTestId('plugin-form-schema-error').should('not.exist')
         cy.get('[data-testid^="ff-"]').should('exist')
       })
 

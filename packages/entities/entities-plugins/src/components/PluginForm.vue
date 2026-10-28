@@ -1674,7 +1674,9 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
     if (isAxiosError(error) && error.response?.status === 404) {
       return
     }
-    throw error
+    // Any other failure (e.g. a 400 for a bundled plugin missing from PLUGIN_METADATA) should not
+    // block the form — treat the plugin as not a clone.
+    console.warn(`Failed to resolve cloned plugin "${clonedPluginName}"`, error)
   }
 }
 </script>
