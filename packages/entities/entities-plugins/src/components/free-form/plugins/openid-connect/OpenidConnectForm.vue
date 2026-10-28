@@ -307,9 +307,10 @@ const formConfig = computed<FormConfig>(() => ({
 // shorthand_fields back into config.fields — with its pre-deprecation default
 // when the schema records one (deprecation.old_default). Absent version info
 // (API Gateway) fails open to the plural-only behavior.
-const minRuntimeVersion = computed(() =>
-  openidConnectContext?.minRuntimeVersion ?? formConfig.value.minRuntimeVersion,
-)
+// The host pins the AIGW runtime through the free-form formConfig (the same
+// channel the version-gating feature family uses); API Gateway hosts never
+// set it, failing open to the plural-only behavior.
+const minRuntimeVersion = computed(() => formConfig.value.minRuntimeVersion)
 const showLegacyCredentialClaim = computed(() =>
   isLegacyCredentialClaimRuntime(minRuntimeVersion.value),
 )

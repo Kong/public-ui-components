@@ -153,8 +153,6 @@ import CommonForm from './free-form/components/CommonForm.vue'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
-import { PLUGIN_CONTEXT_KEY } from './free-form/plugin-context'
-import { isLegacyCredentialClaimRuntime, swapConfigRecordForLegacyRuntime } from './free-form/plugins/openid-connect/credentialClaimRuntimeSwap'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
 const emit = defineEmits<{
@@ -915,31 +913,11 @@ const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | unde
   return result
 }
 
-// The host may pin a pre-2.3 AIGW runtime for the OIDC free-form through the
-// plugin context (see OpenidConnectForm). Read the store directly rather than
-// via usePluginContext, which warns on hosts that adopted the mechanism but
-// have no openid-connect context to provide.
-const openidConnectContext = inject(PLUGIN_CONTEXT_KEY, null)?.['openid-connect']
-
 const getConfigSubschema = (): UnionFieldSchema | undefined => {
   const fields = props.rawSchema?.fields
   if (!Array.isArray(fields)) return undefined
   const configField = fields.find((f: Record<string, any>) => f?.config)
-  let config = configField?.config
-
-  // The OIDC free-form swaps credential_claim in for credential_claims when the
-  // host pins a pre-2.3 AIGW runtime (see OpenidConnectForm /
-  // credentialClaimRuntimeSwap). The walker must whitelist the same field the
-  // form renders — otherwise the lifted credential_claim is dropped as
-  // "unknown" and the user's claim silently vanishes from the payload.
-  if (
-    effectivePluginName.value === 'openid-connect'
-    && isLegacyCredentialClaimRuntime(openidConnectContext?.minRuntimeVersion)
-  ) {
-    config = swapConfigRecordForLegacyRuntime(config, true)
-  }
-
-  return config
+  return configField?.config
 }
 
 // Plugins whose schemas use polymorphic-record patterns (e.g. datakit's `nodes[].type`
