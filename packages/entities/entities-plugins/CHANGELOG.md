@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.2...%40kong-ui-public%2Fentities-plugins%4010.1.3) (2026-10-28)
+
+### Bug Fixes
+
+* **entities-plugins:** do not fail plugin form when cloned plugin lookup errors ([#3982](https://github.com/Kong/public-ui-components/issues/3982)) ([6dc8be2](https://github.com/Kong/public-ui-components/commit/6dc8be2fd07da3e3b7efbb6c43ecffba3f850c19))
+
+
 ## [10.1.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.1...%40kong-ui-public%2Fentities-plugins%4010.1.2) (2026-10-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
