@@ -27,7 +27,6 @@ jobs:
       pull-requests: write
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
-      unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
 
     steps:
@@ -200,14 +199,12 @@ jobs:
           buildFilter=$(selectors '...{./' '}...' "${changedPkgs[@]}")
           unitTestFilter=$(selectors './' '' "${unitTestPkgs[@]}")
 
-          # matrices in the format json.parse understands; unit test paths are relative to `packages/`
-          unitTestMatrix=$(jsonArray "${unitTestPkgs[@]#packages/}")
+          # matrix in the format json.parse understands
           componentTestMatrix=$(jsonArray "${componentTestPkgs[@]}")
 
           echo "filter=${filter}"
           echo "buildFilter=${buildFilter}"
           echo "unitTestFilter=${unitTestFilter}"
-          echo "unitTestMatrix=${unitTestMatrix}"
           echo "componentTestMatrix=${componentTestMatrix}"
 
           # this is to pass to `pnpm` to run a command on all changed packages
@@ -218,9 +215,6 @@ jobs:
 
           # this is changed packages that do have unit tests - to be passed to `pnpm`
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
-
-          # this is unit tests in the format json.parse understands
-          echo "unitTestMatrix=${unitTestMatrix}" >> $GITHUB_OUTPUT
 
           # this is component tests in the format json.parse understands
           echo "componentTestMatrix=${componentTestMatrix}" >> $GITHUB_OUTPUT
