@@ -27,9 +27,7 @@ jobs:
       pull-requests: write
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
-      unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
       unitTestMatrix: ${{steps.changed_packages.outputs.unitTestMatrix}}
-      componentTestFilter: ${{steps.changed_packages.outputs.componentTestFilter}}
       componentTestMatrix: ${{steps.changed_packages.outputs.componentTestMatrix}}
 
     steps:
@@ -138,11 +136,9 @@ jobs:
 
           echo "lernaCommand: ${lernaCommand}"
 
-          filter=""
-          unitTestFilter=""
-          unitTestMatrix=""
-          componentTestFilter=""
-          componentTestMatrix=""
+          changedPkgs=()
+          unitTestPkgs=()
+          componentTestPkgs=()
 
           lernaOutput=$(pnpm --silent lerna ${lernaCommand} --l --json 2>lerna_error.txt| jq -r '.[].location' || true)
           if [[ $(cat lerna_error.txt|grep "ERR!") ]]; then
@@ -157,84 +153,96 @@ jobs:
             # remove current folder from the location path
             pkgFolder="${pkgFolder/$(pwd)\//}"
 
-            # add package path to pnpm filter
-            filter="${filter}${pkgFolder}|"
+            changedPkgs+=("${pkgFolder}")
 
             # if there is cypress tests in the package, add package path to cypress spec
             findRes=$(find "${pkgFolder}" -name "*.cy.ts" || true)
             if [[ -n "${findRes}" ]]; then
-                componentTestFilter="${componentTestFilter}${pkgFolder},"
-                componentTestMatrix="${componentTestMatrix}\"${pkgFolder}\","
+                componentTestPkgs+=("${pkgFolder}")
             fi
 
             # we will keep the list of packages that do require unit tests based on the fact that we
             # detecting UT files
             findRes=$(find "${pkgFolder}" -name "*.spec.ts" || true)
             if [[ -n "${findRes}" ]]; then
-                unitTestFilter="${unitTestFilter}${pkgFolder}|"
+                unitTestPkgs+=("${pkgFolder}")
             fi
           done
 
-          # remove trailing '|' from pnpm filter
-          filter="{("$(echo "${filter}" | sed 's/|$//')")}"
-
-          if [[ "${filter}" == "{()}" ]]; then
-            filter=""
-          fi
-          echo "filter=${filter}"
-
-          unitTestFilter="{("$(echo "${unitTestFilter}" | sed 's/|$//')")}"
-          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${unitTestFilter}" == "{()}" ]]; then
-            unitTestFilter=""
-          fi
-          echo "unitTestFilter=${unitTestFilter}"
-
-          unitTestMatrix=$(echo "${unitTestFilter}"| sed 's/{(/\[\"/'| sed 's/)}/\"\]'/|sed 's/|/\"\,\"/g'| sed 's/packages\///g')
-          echo "unitTestMatrix=${unitTestMatrix}"
-
-
-          # remove trailing ',' from cypress spec filter
-          componentTestFilter=$(echo "${componentTestFilter}" | sed 's/,$//')
           if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" ]]; then
-            componentTestFilter=""
+            unitTestPkgs=()
+            componentTestPkgs=()
           fi
-          echo "componentTestFilter=${componentTestFilter}"
 
-          # remove trailing ',' from cypress spec matrix
-          componentTestMatrix="[$(echo "${componentTestMatrix}" | sed 's/,$//')]"
-          if [[ "${{steps.run-tests.outputs.run-tests}}" != "true" || "${componentTestFilter}" == "" ]]; then
-            componentTestMatrix=""
-          fi
+          # pnpm 12 matches `{<dir>}` as a glob (see `legacyDirFiltering`), so the `{(<path>|<path>)}`
+          # group selector no longer matches anything. Pass one `--filter` per package instead.
+          # Paths are given as `./<path>` so they are read as directories rather than package names.
+          # Usage: selectors <prefix> <suffix> <path>...
+          # Prints nothing for an empty list, which the `if` conditions below rely on.
+          selectors() {
+            local prefix="$1" suffix="$2" out="" path
+            shift 2
+            for path in "$@"; do
+              out="${out} --filter ${prefix}${path}${suffix}"
+            done
+            echo "${out# }"
+          }
+
+          # JSON array of the given strings, or nothing at all when there are none
+          jsonArray() {
+            if [[ $# -gt 0 ]]; then
+              jq -cn '$ARGS.positional' --args "$@"
+            fi
+          }
+
+          filter=$(selectors './' '' "${changedPkgs[@]}")
+          # `...{<path>}...` selects the package together with its dependencies and dependents
+          buildFilter=$(selectors '...{./' '}...' "${changedPkgs[@]}")
+          unitTestFilter=$(selectors './' '' "${unitTestPkgs[@]}")
+
+          # matrices in the format json.parse understands; unit test paths are relative to `packages/`
+          unitTestMatrix=$(jsonArray "${unitTestPkgs[@]#packages/}")
+          componentTestMatrix=$(jsonArray "${componentTestPkgs[@]}")
+
+          echo "filter=${filter}"
+          echo "buildFilter=${buildFilter}"
+          echo "unitTestFilter=${unitTestFilter}"
+          echo "unitTestMatrix=${unitTestMatrix}"
           echo "componentTestMatrix=${componentTestMatrix}"
 
-
-          # this is to pass to `pnpm --filter` to run pnpm command on all changed packages
+          # this is to pass to `pnpm` to run a command on all changed packages
           echo "filter=${filter}" >> $GITHUB_OUTPUT
 
-          # this is changed packages that do have unit tests - to be passed to `pnpm test:unit`
+          # same as above, but the packages are selected together with their dependencies and dependents
+          echo "buildFilter=${buildFilter}" >> $GITHUB_OUTPUT
+
+          # this is changed packages that do have unit tests - to be passed to `pnpm`
           echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
           # this is unit tests in the format json.parse understands
           echo "unitTestMatrix=${unitTestMatrix}" >> $GITHUB_OUTPUT
-
-          # this is changed packages that do have component tests - to be passed to `pnpm test:component`
-          echo "unitTestFilter=${unitTestFilter}" >> $GITHUB_OUTPUT
 
           # this is component tests in the format json.parse understands
           echo "componentTestMatrix=${componentTestMatrix}" >> $GITHUB_OUTPUT
 
       - name: Stylelint Packages
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.filter}}" run stylelint
+        env:
+          PNPM_FILTER: ${{ steps.changed_packages.outputs.filter }}
+        run: pnpm --fail-if-no-match --parallel --stream $PNPM_FILTER run stylelint
 
       - name: Lint Packages
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.filter}}" run lint
+        env:
+          PNPM_FILTER: ${{ steps.changed_packages.outputs.filter }}
+        run: pnpm --fail-if-no-match --parallel --stream $PNPM_FILTER run lint
 
       - name: Build Packages
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        # The `...` syntax tells pnpm to include dependent packages
-        run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
+        # The `...{<path>}...` syntax tells pnpm to include dependent and dependency packages
+        env:
+          PNPM_FILTER: ${{ steps.changed_packages.outputs.buildFilter }}
+        run: pnpm --fail-if-no-match --stream $PNPM_FILTER run build
 
       - name: Check dist bundle size against max-limit
         if: ${{ steps.changed_packages.outputs.filter != '' }}
@@ -307,7 +315,9 @@ jobs:
 
       - name: Run Unit Tests
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
-        run: pnpm --parallel --stream --filter "${{steps.changed_packages.outputs.unitTestFilter}}" run test:unit
+        env:
+          PNPM_FILTER: ${{ steps.changed_packages.outputs.unitTestFilter }}
+        run: pnpm --fail-if-no-match --parallel --stream $PNPM_FILTER run test:unit
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
