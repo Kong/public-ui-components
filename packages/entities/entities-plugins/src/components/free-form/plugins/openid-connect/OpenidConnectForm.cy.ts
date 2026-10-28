@@ -796,11 +796,12 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('ff-array-config.credential_claims').should('not.exist')
     })
 
-    it('reverse-migrates a saved credential_claims into credential_claim, riding the full engine value', () => {
+    it('reverse-migrates a saved credential_claims into credential_claim, and the migration survives user edits', () => {
       mountForm({
         withCredentialClaims: true,
         minRuntimeVersion: '2.2',
         model: createModel({
+          issuer: 'https://issuer.example.com',
           credential_claim: null,
           credential_claims: [['account', 'id']],
         }),
@@ -822,6 +823,14 @@ describe('OpenidConnectForm', () => {
         expect(migrationCall[0].config.auth_methods).to.deep.equal(createModel().config.auth_methods)
         expect(migrationCall[0].config.audience_claim).to.deep.equal(createModel().config.audience_claim)
         expect(migrationCall[0].config, 'no credential_claims may ship below 2.3').not.to.have.property('credential_claims')
+
+        // The migration must also survive the next engine emission: the engine
+        // re-seeds only through its model prop, so the patch has to reach the
+        // engine-visible model — the FINAL post-edit emission keeps the claim.
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.config.credential_claim).to.deep.equal(['account', 'id'])
+        expect(lastCall.config.issuer).to.contain('issuer.example.com')
+        expect(lastCall.config, 'no credential_claims may ship below 2.3').not.to.have.property('credential_claims')
       })
     })
 
@@ -942,6 +951,28 @@ describe('OpenidConnectForm', () => {
           (args: any[]) => args[0]?.config?.credential_claims != null,
         )
         expect(hasMigrationCall, 'migration requires the deprecation metadata').to.equal(false)
+      })
+    })
+
+    it('the migrated credential_claims survives user edits (engine re-seed)', () => {
+      // The engine re-seeds only through its model prop; without the patch
+      // reaching the engine-visible model, the first user edit would emit the
+      // stale engine state (credential_claims: null) over the migrated value.
+      mountForm({
+        withCredentialClaims: true,
+        model: createModel({
+          issuer: 'https://issuer.example.com',
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.getTestId('ff-config.issuer').type('-edited')
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.config.credential_claims).to.deep.equal([['sub']])
+        expect(lastCall.config.issuer).to.contain('issuer.example.com')
       })
     })
   })

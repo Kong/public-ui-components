@@ -2,6 +2,7 @@
   <DynamicLayout
     v-bind="props"
     :form-config="formConfig"
+    :model="modelState"
     :on-form-change="handleFormChange"
     :render-rules="RENDER_RULES"
     :schema="effectiveSchema"
@@ -331,10 +332,17 @@ const effectiveConfigSchema = computed(() =>
 // for mount-time config updates.
 let lastFullFormValue: Partial<Props['model']> | undefined
 
+// Engine-visible model. The engine re-seeds only when its `model` prop changes
+// (form-context's propsData watch) and every engine change replaces the host's
+// state wholesale — so mount patches must land here, not only in the host,
+// or the next user edit emits the stale engine state and drops them.
+const modelState = ref<Partial<Props['model']>>(props.model)
+
 // Pre-2.3 runtimes reject the unknown plural field, so it must never ship —
 // including a credential_claims saved earlier against a newer runtime.
 const handleFormChange = (value: Partial<Props['model']>, fields?: string[]) => {
   lastFullFormValue = value
+  modelState.value = value
 
   if (!showLegacyCredentialClaim.value) {
     return props.onFormChange(value, fields)
@@ -347,14 +355,18 @@ const handleFormChange = (value: Partial<Props['model']>, fields?: string[]) => 
 }
 
 // Mount-time config updates (deprecated-claim migrations, the ai-manager salt
-// prefill) must ship inside a complete config: hosts that replace form state
-// wholesale (PluginEntityForm) would collapse a bare partial to it and wipe
-// every other config field on save. Base it on the last full engine value when
-// one has flowed, else on the initial model.
+// prefill) must survive the next engine emission: they ship inside a complete
+// config — wholesale-replacing hosts (PluginEntityForm) would collapse a bare
+// partial to it and wipe every other field — and merge into the engine-visible
+// model so the engine re-seeds with them.
 const emitMountConfigUpdate = (patch: Record<string, any>) => {
   const base = (lastFullFormValue as Record<string, any> | undefined)?.config
     ?? (props.model as Record<string, any>)?.config
     ?? {}
+  modelState.value = {
+    ...modelState.value,
+    config: { ...base, ...patch },
+  } as Partial<Props['model']>
   handleFormChange({ config: { ...base, ...patch } } as Partial<Props['model']>)
 }
 
