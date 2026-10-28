@@ -52,6 +52,7 @@
           class="ff-object-field-toggle-btn"
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
           :disabled="!realAdded || isLocked"
+          :style="{ visibility: realAdded ? undefined : 'hidden' }"
           type="button"
           @click.prevent.stop="toggleDisplay"
         >
