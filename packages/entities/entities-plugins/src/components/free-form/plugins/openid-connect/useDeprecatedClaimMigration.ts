@@ -28,3 +28,22 @@ export function migrateDeprecatedClaim(opts: {
   const claimArray = Array.isArray(claim) ? claim : [claim]
   return [claimArray]
 }
+
+/**
+ * Whether the schema formally deprecates `claim` in favor of `claims`: the
+ * `shorthand_fields` entry for `claim` carries a `deprecation` whose
+ * `replaced_with` points at `claims`. Only then is the singular→plural
+ * migration correct — a schema that still carries the singular as a regular
+ * field (stale gateways) must keep showing and saving it unchanged.
+ */
+export function isSingularClaimDeprecated(
+  shorthandFields: Array<Record<string, any>> | undefined,
+  claim: string,
+  claims: string,
+): boolean {
+  const deprecation = shorthandFields?.find(f => claim in f)?.[claim]?.deprecation as
+    | { replaced_with?: Array<{ path?: string[] }> }
+    | undefined
+
+  return !!deprecation?.replaced_with?.some(r => r?.path?.includes(claims))
+}

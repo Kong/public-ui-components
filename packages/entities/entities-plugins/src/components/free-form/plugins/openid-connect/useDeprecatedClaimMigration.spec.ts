@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { migrateDeprecatedClaim } from './useDeprecatedClaimMigration'
+import { isSingularClaimDeprecated, migrateDeprecatedClaim } from './useDeprecatedClaimMigration'
 
 describe('migrateDeprecatedClaim', () => {
   describe('migration triggers', () => {
@@ -55,5 +55,40 @@ describe('migrateDeprecatedClaim', () => {
       migrateDeprecatedClaim(input)
       expect(input.claims).toBeNull()
     })
+  })
+})
+
+describe('isSingularClaimDeprecated', () => {
+  const deprecatedShorthand = [{
+    credential_claim: {
+      type: 'array',
+      elements: { type: 'string' },
+      deprecation: {
+        replaced_with: [{ path: ['credential_claims'] }],
+        message: 'openid-connect: config.credential_claim is deprecated, please use config.credential_claims instead',
+        removal_in_version: '4.0',
+      },
+    },
+  }]
+
+  it('is true when the shorthand entry is deprecated with replaced_with pointing at the plural', () => {
+    expect(isSingularClaimDeprecated(deprecatedShorthand, 'credential_claim', 'credential_claims')).toBe(true)
+  })
+
+  it('is false when there is no shorthand entry (stale schema keeps the singular as a regular field)', () => {
+    expect(isSingularClaimDeprecated(undefined, 'credential_claim', 'credential_claims')).toBe(false)
+    expect(isSingularClaimDeprecated([], 'credential_claim', 'credential_claims')).toBe(false)
+  })
+
+  it('is false when the entry is not deprecated', () => {
+    expect(isSingularClaimDeprecated([{ credential_claim: { type: 'array' } }], 'credential_claim', 'credential_claims')).toBe(false)
+  })
+
+  it('is false when replaced_with points at a different field', () => {
+    expect(isSingularClaimDeprecated(deprecatedShorthand, 'credential_claim', 'some_other_field')).toBe(false)
+  })
+
+  it('is false for a different singular name', () => {
+    expect(isSingularClaimDeprecated(deprecatedShorthand, 'consumer_claim', 'consumer_claims')).toBe(false)
   })
 })

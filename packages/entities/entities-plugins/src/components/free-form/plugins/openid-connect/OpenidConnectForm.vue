@@ -160,7 +160,7 @@ import { ArrayField, Field, FieldRenderer, ObjectField, StringField, generateCre
 import type { FormConfig, RenderRules } from '@kong-ui-public/freeform'
 import { FORM_EDITING } from '../../const'
 import { usePluginContext } from '../../plugin-context'
-import { migrateDeprecatedClaim } from './useDeprecatedClaimMigration'
+import { isSingularClaimDeprecated, migrateDeprecatedClaim } from './useDeprecatedClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
 import PrincipalsSection from './PrincipalsSection.vue'
@@ -264,9 +264,14 @@ const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager'
 // behave as if `principals` isn't in the schema and fall back to the plain common fields.
 const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
-const configSchemaFields = computed(() =>
-  (props.schema.fields.find(f => 'config' in f)?.config as { fields?: Array<Record<string, unknown>> } | undefined)?.fields,
+const configSchema = computed(() =>
+  props.schema.fields.find(f => 'config' in f)?.config as {
+    fields?: Array<Record<string, any>>
+    shorthand_fields?: Array<Record<string, any>>
+  } | undefined,
 )
+
+const configSchemaFields = computed(() => configSchema.value?.fields)
 
 const hasPrincipalsInSchema = computed(() =>
   !!configSchemaFields.value?.some(f => 'principals' in f),
@@ -332,15 +337,19 @@ onMounted(() => {
 
   // Migrate deprecated singular claim fields to their plural replacements:
   // credential_claim → credential_claims, consumer_claim → consumer_claims.
-  // Only when the gateway schema has the plural field: against stale schemas
-  // (e.g. older ai-gateway releases where credential_claims doesn't exist yet)
-  // the singular field is still a regular field, and submitting the unknown
-  // plural field would be rejected on save.
+  // Only when the schema formally deprecates the singular — its shorthand_fields
+  // entry is marked deprecated with replaced_with pointing at the plural — AND
+  // the plural actually renders. Stale schemas still carry the singular as a
+  // regular field: migrating there would submit an unknown field the gateway
+  // rejects, so it keeps showing and saving the singular unchanged.
   for (const [claimField, claimsField] of [
     ['credential_claim', 'credential_claims'],
     ['consumer_claim', 'consumer_claims'],
   ] as const) {
-    if (!configSchemaFields.value?.some(f => claimsField in f)) {
+    if (
+      !isSingularClaimDeprecated(configSchema.value?.shorthand_fields, claimField, claimsField)
+      || !configSchemaFields.value?.some(f => claimsField in f)
+    ) {
       continue
     }
     const migratedClaims = migrateDeprecatedClaim({

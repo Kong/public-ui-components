@@ -89,9 +89,11 @@ const PRINCIPALS_SCHEMA_FIELD = {
   },
 }
 
-// `config.credential_claims` from newer OIDC schemas (string[][]). The base fixture
-// predates the field — the same stale shape older ai-gateway releases serve — so
-// migration-positive tests append it to the config record.
+// The post-deprecation OIDC schema shape: `config.credential_claims` (string[][])
+// as a regular field plus the deprecated `credential_claim` demoted to
+// shorthand_fields with replaced_with pointing at the plural (mirrors kong-ee).
+// The base fixture predates both — the same stale shape older gateways serve —
+// so migration-positive tests append them to the config record.
 const CREDENTIAL_CLAIMS_SCHEMA_FIELD = {
   credential_claims: {
     elements: {
@@ -105,6 +107,18 @@ const CREDENTIAL_CLAIMS_SCHEMA_FIELD = {
     description: 'The claims used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin).',
     required: false,
     type: 'array',
+  },
+}
+
+const CREDENTIAL_CLAIM_SHORTHAND = {
+  credential_claim: {
+    type: 'array',
+    elements: { type: 'string' },
+    deprecation: {
+      replaced_with: [{ path: ['credential_claims'] }],
+      message: 'openid-connect: config.credential_claim is deprecated, please use config.credential_claims instead',
+      removal_in_version: '4.0',
+    },
   },
 }
 
@@ -123,13 +137,26 @@ const DEFAULT_PRINCIPALS_MODEL = {
 // FormSchema additionally requires `type: 'record'` at the root. Run the same
 // schema-enhancement pipeline PluginEntityForm uses before passing into free-form
 // components so entity_checks land at the right nesting level.
-const createSchema = (withPrincipals = false, withCredentialClaims = false): FormSchema => {
+const createSchema = (
+  withPrincipals = false,
+  withCredentialClaims = false,
+  withUnmarkedCredentialClaims = false,
+): FormSchema => {
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
   }
   if (withCredentialClaims) {
+    // Fresh shape: the plural field plus the deprecated singular demoted to
+    // shorthand_fields with replaced_with pointing at the plural.
+    const configField = (raw.fields as any[]).find(f => 'config' in f)
+    configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
+    configField.config.shorthand_fields.push(cloneDeep(CREDENTIAL_CLAIM_SHORTHAND))
+  }
+  if (withUnmarkedCredentialClaims) {
+    // The plural field alone — a schema that carries credential_claims but
+    // does NOT formally deprecate the singular. Migration must not fire.
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
   }
@@ -170,8 +197,10 @@ interface MountOptions {
   formsConfig?: Record<string, any>
   /** Append the 3.15 `config.principals` record to the schema */
   withPrincipals?: boolean
-  /** Append `config.credential_claims` to the schema (base fixture predates it) */
+  /** Append `config.credential_claims` + the deprecated shorthand entry to the schema */
   withCredentialClaims?: boolean
+  /** Append `config.credential_claims` WITHOUT the deprecation metadata (plural alone) */
+  withUnmarkedCredentialClaims?: boolean
   /** Provide the Identity Principals UI feature flag */
   identityPrincipalsUi?: boolean
   /** Opt in to SecretInput for encrypted free-form fields. */
@@ -186,13 +215,14 @@ const mountForm = (options: MountOptions = {}) => {
     formsConfig = {},
     withPrincipals = false,
     withCredentialClaims = false,
+    withUnmarkedCredentialClaims = false,
     identityPrincipalsUi = false,
     useSecretInput = false,
   } = options
 
   cy.mount(OpenidConnectForm, {
     props: {
-      schema: createSchema(withPrincipals, withCredentialClaims),
+      schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims),
       formSchema: createFormSchema(),
       formModel: {},
       model,
@@ -815,6 +845,26 @@ describe('OpenidConnectForm', () => {
           (args: any[]) => args[0]?.config?.credential_claims != null,
         )
         expect(hasMigrationCall, 'must not submit unknown credential_claims field').to.equal(false)
+      })
+    })
+
+    it('does not migrate when the singular is not formally deprecated (plural alone, no replaced_with)', () => {
+      mountForm({
+        // A schema that carries credential_claims but does NOT mark
+        // credential_claim as deprecated+replaced — the migration must not
+        // second-guess the schema's own deprecation metadata.
+        withUnmarkedCredentialClaims: true,
+        model: createModel({
+          credential_claim: ['sub'],
+          credential_claims: null,
+        }),
+      })
+
+      cy.get('@onFormChange').then((spy: any) => {
+        const hasMigrationCall = spy.args.some(
+          (args: any[]) => args[0]?.config?.credential_claims != null,
+        )
+        expect(hasMigrationCall, 'migration requires the deprecation metadata').to.equal(false)
       })
     })
   })
