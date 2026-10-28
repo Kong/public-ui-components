@@ -357,17 +357,18 @@ const handleFormChange = (value: Partial<Props['model']>, fields?: string[]) => 
 // Mount-time config updates (deprecated-claim migrations, the ai-manager salt
 // prefill) must survive the next engine emission: they ship inside a complete
 // config — wholesale-replacing hosts (PluginEntityForm) would collapse a bare
-// partial to it and wipe every other field — and merge into the engine-visible
-// model so the engine re-seeds with them.
+// partial to it and wipe every other field — and they reach the engine-visible
+// model so the engine re-seeds with them. The full root (e.g. a saved
+// `expressions` record) rides along: handleFormChange replaces modelState
+// wholesale, so a bare { config } would wipe every other root key.
 const emitMountConfigUpdate = (patch: Record<string, any>) => {
   const base = (lastFullFormValue as Record<string, any> | undefined)?.config
     ?? (props.model as Record<string, any>)?.config
     ?? {}
-  modelState.value = {
+  handleFormChange({
     ...modelState.value,
     config: { ...base, ...patch },
-  } as Partial<Props['model']>
-  handleFormChange({ config: { ...base, ...patch } } as Partial<Props['model']>)
+  } as Partial<Props['model']>)
 }
 
 // Record-array fields rendered with the tabbed ArrayField, mapped to their item tab

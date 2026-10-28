@@ -975,6 +975,32 @@ describe('OpenidConnectForm', () => {
         expect(lastCall.config.issuer).to.contain('issuer.example.com')
       })
     })
+
+    it('mount migrations preserve root-level keys (e.g. a saved expressions record)', () => {
+      // handleFormChange replaces the engine-visible modelState wholesale — a
+      // mount emission carrying only { config } would wipe every other root
+      // key from the engine's state, silently dropping a saved expressions
+      // record from the payload.
+      mountForm({
+        withCredentialClaims: true,
+        model: {
+          ...createModel({
+            issuer: 'https://issuer.example.com',
+            credential_claim: ['sub'],
+            credential_claims: null,
+          }),
+          expressions: { minute: 'req.size' },
+        },
+      })
+
+      cy.getTestId('ff-config.issuer').type('-edited')
+
+      cy.get('@onFormChange').should((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.expressions).to.deep.equal({ minute: 'req.size' })
+        expect(lastCall.config.credential_claims).to.deep.equal([['sub']])
+      })
+    })
   })
 
   // ── N: Kong Identity Principals UI ─────────────────────────────────────────
