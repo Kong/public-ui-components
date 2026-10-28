@@ -1,4 +1,5 @@
 export { default as Form } from './components/Form.vue'
+export * from './version'
 export { default as Field } from './components/Field.vue'
 export { default as FieldRenderer } from './components/FieldRenderer.vue'
 export { default as ExpressionEditor } from './components/ExpressionEditor.vue'
