@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.6.0...%40kong-ui-public%2Ffreeform%400.6.1) (2026-10-28)
+
+### Bug Fixes
+
+* **freeform:** hide object field collapse toggle until added ([#3981](https://github.com/Kong/public-ui-components/issues/3981)) ([a182bb9](https://github.com/Kong/public-ui-components/commit/a182bb9ef311366c8bb6535961df460b4f274bf9))
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.5.7...%40kong-ui-public%2Ffreeform%400.6.0) (2026-10-27)
 
 ### Features
