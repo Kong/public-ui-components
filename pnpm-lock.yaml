@@ -190,6 +190,7 @@ overrides:
   qs@>=2.2.5 <6.16.0: ^6.16.0
   qs@>=6.14.2 <=6.15.3: ^6.16.0
   smol-toml@<=1.7.0: ^1.9.0
+  systeminformation@<5.33.16: ^5.33.16
   tmp@<0.2.6: ^0.2.7
   undici@>=8.0.0 <8.12.2: ^8.12.2
   uuid@<11.1.1: ^11.1.1
@@ -9736,8 +9737,8 @@ packages:
     resolution: {integrity: sha512-eNRKgb3z66Yp3D2CixVujOUvXLFUTij/zVnV8KRyvFdQwpz7I5DS8UfRkTeLzb64u+dkzDSdelE24izu+zSSUg==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  systeminformation@5.33.1:
-    resolution: {integrity: sha512-DEN6ICHk3Tk0Uf/hrAHh7xlt7iL5CJFBtPZinA0H62DrGG/KPKqq/Nzj6lCXPS4Ay/sf/14zNnk9LpqKzBIc+w==}
+  systeminformation@5.33.17:
+    resolution: {integrity: sha512-rHj5RG1XHWNSZrwr6hJqxlu3Lq/srdyFEKcLTRCwwXd38qL8fZ/jDyoBKWpYBrb8w9KjgQJnHFQybYYHP353rg==}
     engines: {node: '>=10.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
@@ -15363,7 +15364,7 @@ snapshots:
       proxy-from-env: 1.0.0
       request-progress: 3.0.0
       supports-color: 8.1.1
-      systeminformation: 5.33.1
+      systeminformation: 5.33.17
       tmp: 0.2.7
       tree-kill: 1.2.2
       untildify: 4.0.0
@@ -20547,7 +20548,7 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.3.6
 
-  systeminformation@5.33.1: {}
+  systeminformation@5.33.17: {}
 
   tabbable@6.5.0: {}
 
