@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.1.0...%40kong-ui-public%2Fdashboard-renderer%4010.2.0) (2026-10-27)
+
+### Features
+
+* add principal group dimension ([#3978](https://github.com/Kong/public-ui-components/issues/3978)) ([cc230ef](https://github.com/Kong/public-ui-components/commit/cc230ef3ec0a02a610ea39c2a4f5988442435faa))
+
+
+# [10.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.5...%40kong-ui-public%2Fdashboard-renderer%4010.1.0) (2026-10-27)
+
+### Features
+
+* **analytics:** support multiple dashboards in dashboard renderer MA-5587 ([#3959](https://github.com/Kong/public-ui-components/issues/3959)) ([9c8cda9](https://github.com/Kong/public-ui-components/commit/9c8cda9c9f8fdf359ebdc616fdafb0ccc9d23a0b))
+
+
 ## [10.0.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.0.4...%40kong-ui-public%2Fdashboard-renderer%4010.0.5) (2026-10-26)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

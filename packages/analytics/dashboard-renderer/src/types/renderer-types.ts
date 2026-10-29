@@ -2,6 +2,7 @@ import type {
   AllAggregations,
   AllFilters,
   ApiRequestsQuery,
+  DashboardConfig,
   ScatterChartOptions,
   TimeRangeV4,
   ValidDashboardChartQuery,
@@ -17,6 +18,21 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
+}
+
+/**
+ * One section of a multi-dashboard renderer: a dashboard definition with an
+ * optional title and description displayed above it.
+ */
+export interface DashboardSection {
+  title?: string
+  description?: string
+  /**
+   * Rendered as the `id` of an anchor element at the top of the section, so it
+   * can be linked to (e.g. `#my-section`). No anchor is rendered when omitted.
+   */
+  anchorId?: string
+  definition: DashboardConfig
 }
 
 export type ZoomConfiguration = {

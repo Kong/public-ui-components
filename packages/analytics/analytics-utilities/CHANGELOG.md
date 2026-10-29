@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.1.0...%40kong-ui-public%2Fanalytics-utilities%4014.2.0) (2026-10-27)
+
+### Features
+
+* add principal group dimension ([#3978](https://github.com/Kong/public-ui-components/issues/3978)) ([cc230ef](https://github.com/Kong/public-ui-components/commit/cc230ef3ec0a02a610ea39c2a4f5988442435faa))
+
+
 # [14.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.0.0...%40kong-ui-public%2Fanalytics-utilities%4014.1.0) (2026-10-23)
 
 ### Features

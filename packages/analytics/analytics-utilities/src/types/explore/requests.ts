@@ -44,6 +44,7 @@ export const queryableRequestDimensions = [
   'oidc_credential',
   'portal',
   'principal',
+  'principal_group',
   'realm',
   'request_id',
   'request_uri',

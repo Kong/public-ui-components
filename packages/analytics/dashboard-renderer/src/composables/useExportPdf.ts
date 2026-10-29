@@ -86,15 +86,14 @@ function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
   pdf.text(ctx.pageLabel, pageWidth - margin, footerBaseline, { align: 'right' })
 }
 
-// Measures the top and bottom of every tile row relative to the container.
+// Measures the top and bottom of every tile row, across every grid in the container, relative to the container.
 export function getRowBoundaries(container: HTMLElement): RowBoundary[] {
-  const gridLayout = container.querySelector<HTMLElement>('.kong-ui-public-grid-layout, .grid-stack')
+  const gridLayouts = container.querySelectorAll<HTMLElement>('.kong-ui-public-grid-layout, .grid-stack')
 
-  if (!gridLayout) {
-    return []
-  }
-
-  const cells = gridLayout.querySelectorAll<HTMLElement>(':scope > .grid-cell:not(.empty-cell), :scope > .grid-stack-item')
+  const cells: HTMLElement[] = []
+  gridLayouts.forEach(gridLayout => {
+    cells.push(...gridLayout.querySelectorAll<HTMLElement>(':scope > .grid-cell:not(.empty-cell), :scope > .grid-stack-item'))
+  })
 
   if (!cells.length) {
     return []

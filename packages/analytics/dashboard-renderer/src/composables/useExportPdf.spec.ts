@@ -166,6 +166,25 @@ describe('getRowBoundaries', () => {
     ])
   })
 
+  it('collects rows from every grid in the container', () => {
+    const container = buildGrid('kong-ui-public-grid-layout', 'grid-cell', [
+      { top: 0, height: 200 },
+    ])
+
+    const secondGrid = document.createElement('div')
+    secondGrid.className = 'kong-ui-public-grid-layout'
+    const cell = document.createElement('div')
+    cell.className = 'grid-cell'
+    stubRect(cell, 400, 300)
+    secondGrid.appendChild(cell)
+    container.appendChild(secondGrid)
+
+    expect(getRowBoundaries(container)).toEqual([
+      { top: 0, bottom: 200 },
+      { top: 400, bottom: 700 },
+    ])
+  })
+
   it('ignores empty cells', () => {
     const container = buildGrid('kong-ui-public-grid-layout', 'grid-cell', [
       { top: 0, height: 200 },

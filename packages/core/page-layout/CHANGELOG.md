@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.3...%40kong-ui-public%2Fpage-layout%401.3.4) (2026-10-27)
+
+### Bug Fixes
+
+* **page-layout:** reduce about card content margin ([#3979](https://github.com/Kong/public-ui-components/issues/3979)) ([e9757c9](https://github.com/Kong/public-ui-components/commit/e9757c96e511780306c7bca7908a132e9f2b2a1a))
+
+
 ## [1.3.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.2...%40kong-ui-public%2Fpage-layout%401.3.3) (2026-10-22)
 
 ### Bug Fixes

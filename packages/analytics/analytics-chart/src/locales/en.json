@@ -251,6 +251,7 @@
     "plugin_count": "Plugin count",
     "node_count": "Data plane node count",
     "principal": "Principal",
+    "principal_group": "Principal group",
     "virtual_cluster_id": "Virtual cluster",
     "backend_cluster_id": "Backend cluster",
     "listener_id": "Listener",

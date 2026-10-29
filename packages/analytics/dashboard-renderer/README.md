@@ -48,7 +48,7 @@ Render Analytics charts on a page from a JSON definition.
 
 This component takes two properties:
 
-- [modelValue](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard configuration and layout are provided as a two-way binding using `v-model`. When in editable mode, changes to tiles or the layout will automatically update the reactive reference bound to `v-model`.
+- [modelValue](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard configuration and layout are provided as a two-way binding using `v-model`. When in editable mode, changes to tiles or the layout will automatically update the reactive reference bound to `v-model`. The value may be a single `DashboardConfig`, or an array of `DashboardSection` objects to render several dashboards in one renderer (see [Multiple dashboards](#multiple-dashboards)).
 - [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, and editing configuration.
 
 #### Context Properties
@@ -479,6 +479,36 @@ watch(() => config.value.tiles, (tiles) => {
 Note: These events are only emitted when the dashboard is in editable mode (`context.editable = true`).
 
 Note: When using editable dashboards, each tile should have a unique `id` property to properly track changes and handle events correctly. If no `id` is provided, one will be generated automatically, but this may lead to unexpected behavior when tracking changes to the tile.
+
+## Multiple dashboards
+
+To render several dashboards in a single renderer (and a single PDF export), bind an array of `DashboardSection` objects to `v-model`. Each section renders its own optional `title` and `description` above its `definition`, and a `definition`'s `preset_filters` apply only to that section.
+
+```typescript
+import type { DashboardSection } from '@kong-ui-public/dashboard-renderer'
+
+const sections = ref<DashboardSection[]>([
+  {
+    title: 'Overview',
+    description: 'High-level traffic health',
+    anchorId: 'overview',
+    definition: { tiles: [/* ... */] },
+  },
+  {
+    title: 'Routes',
+    definition: { preset_filters: [/* ... */], tiles: [/* ... */] },
+  },
+])
+```
+
+```typescript
+interface DashboardSection {
+  title?: string
+  description?: string
+  anchorId?: string // Optional id for an anchor element rendered above the section
+  definition: DashboardConfig
+}
+```
 
 ## Dashboard Config Schema
 
