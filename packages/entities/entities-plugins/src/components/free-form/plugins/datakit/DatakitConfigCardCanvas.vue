@@ -43,17 +43,22 @@ import type { RecordItem } from '@kong-ui-public/entities-shared'
 import FlowPanels from './flow-editor/FlowPanels.vue'
 import { provideEditorStore } from './composables'
 import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
+import { supportsCallErrorHandling } from './flow-editor/composables/useNodeForm'
 
-const { pluginData, item } = defineProps<{
+const { pluginData, item, schema } = defineProps<{
   pluginData: DatakitPluginData
   item: RecordItem
+  /** The datakit plugin schema */
+  schema?: Record<string, any>
 }>()
 
 const isCompat = computed(() => {
   return DatakitConfigCompatSchema.safeParse(pluginData?.config).success
 })
 
-provideEditorStore(pluginData)
+provideEditorStore(pluginData, {
+  enableCallErrorHandling: supportsCallErrorHandling(schema),
+})
 </script>
 
 <style lang="scss" scoped>

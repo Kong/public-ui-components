@@ -1,8 +1,27 @@
 import { describe, expect, it } from 'vitest'
-import { CallNodeSchema } from './strict'
+import { CallNodeSchema, DatakitConfigSchema } from './strict'
 import { DatakitConfigSchema as DatakitConfigCompatSchema } from './compat'
 
 const callNode = (fields: Record<string, unknown>) => ({ type: 'call', name: 'CALL', ...fields })
+
+/** A failover flow: the call node handles its own failure and a jq node reads `PRIMARY.error`. */
+const failoverConfig = {
+  nodes: [
+    {
+      type: 'call',
+      name: 'PRIMARY',
+      url: 'https://api1.example.com/orders',
+      continue_on_error: true,
+      retry: { count: 2, interval: 1, status_codes: ['5xx'] },
+    },
+    {
+      type: 'jq',
+      name: 'PRIMARY_FAILED',
+      inputs: { status: 'PRIMARY.status', error: 'PRIMARY.error' },
+      jq: '.error != null or (.status // 0) < 200 or (.status // 0) > 299',
+    },
+  ],
+}
 
 describe('call node schema', () => {
   describe('strict', () => {
@@ -14,6 +33,10 @@ describe('call node schema', () => {
       }))
 
       expect(result.success).toBe(true)
+    })
+
+    it('accepts a failover flow reading the `error` output', () => {
+      expect(DatakitConfigSchema.safeParse(failoverConfig).success).toBe(true)
     })
 
     it.each([
@@ -42,6 +65,10 @@ describe('call node schema', () => {
       })
 
       expect(result.success).toBe(true)
+    })
+
+    it('keeps a failover flow reading the `error` output available in the flow editor', () => {
+      expect(DatakitConfigCompatSchema.safeParse(failoverConfig).success).toBe(true)
     })
   })
 })
