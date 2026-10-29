@@ -683,7 +683,7 @@ $anchor-link-max-width: 140px;
   ul {
     align-items: center;
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
     display: flex;
     // Keep the list at its natural width while it overflows, so it can be measured
     flex-shrink: 0;
