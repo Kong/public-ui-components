@@ -37,7 +37,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Actions slot for placing buttons or controls in the page header, aligned to the right
 - Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
 - An opt-in new appearance that renders the title inline with the breadcrumbs
-- Aside slot (new appearance only) for a secondary column beside the page content, which collapses below the content when the layout is too narrow for it. The aside is rendered first in the DOM — so its headings rank early in the document outline — and the container's reversed flex direction places it visually to the right of, or beneath, the content
+- Aside slot (new appearance only) for a secondary column beside the page content, which collapses below the content when the layout is too narrow for it. Beside the content, the aside stays in view while the page scrolls. The aside is rendered first in the DOM — so its headings rank early in the document outline — and the container's reversed flex direction places it visually to the right of, or beneath, the content
 - A teleport target in the page header actions area for the host application's "Ask Kai" button
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
@@ -167,6 +167,8 @@ Layout:
 - The aside is **400px wide** and sits to the right of the page content when the layout is at least `$kui-breakpoint-tablet` (`1024px`) wide.
 - Below that, the aside becomes full width and stacks **below** the page content.
 - The threshold is measured against the **width of the `PageLayout` itself**, not the viewport, using a CSS container query. A page rendered next to a wide app sidebar therefore collapses its aside earlier than the raw viewport width would suggest. Nested `PageLayout` components each register their own container, so an inner layout responds to its own width.
+- Beside the content, the aside is **sticky**: it stays in view below the sticky header while the page content scrolls. All elements in the slot stick together as one column, in their source order. The offset follows the header's measured height, so it is correct with or without a tab row.
+- If the aside is taller than the scroll area, its lower part is only visible when the page scrolls to its end.
 
 #### `tab-${tab.key}` (dynamic)
 
@@ -309,6 +311,10 @@ const breadcrumbs = [
   >
     <template #aside>
       <KCard title="Summary">
+        <!-- Supporting content -->
+      </KCard>
+      <!-- More elements stack below, and stick together with the first -->
+      <KCard title="Spend limit">
         <!-- Supporting content -->
       </KCard>
     </template>
