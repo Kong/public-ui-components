@@ -65,6 +65,19 @@
             <KBadge>env: production</KBadge>
           </template>
         </AboutCard>
+
+        <!-- A second card, to show that every element in the aside sticks, in order -->
+        <KCard title="Spend limit">
+          <p>$62,400 of $100,000</p>
+          <KBadge appearance="info">
+            62% consumed
+          </KBadge>
+          <p>From Engineering (inherited through Platform engineering).</p>
+          <KButton appearance="secondary">
+            <AddIcon decorative />
+            Set spend limit
+          </KButton>
+        </KCard>
       </template>
     </PageLayout>
 
@@ -85,7 +98,7 @@
 import { computed, onMounted, provide, reactive, ref, useTemplateRef } from 'vue'
 import { AboutCard, NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
 import type { AboutCardRow, PageLayoutAnchor, PageLayoutTab, PageShortcutData } from '../../src'
-import { MoreIcon } from '@kong/icons'
+import { AddIcon, MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
 import AnchorSections from './AnchorSections.vue'
 import { buildSandboxAnchors } from '../anchors'

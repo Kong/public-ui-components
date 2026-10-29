@@ -659,6 +659,23 @@ describe('<PageLayout />', () => {
         expect(children[0].getAttribute('data-testid')).toBe('page-layout-aside')
         expect(children[1].classList.contains('page-layout-content')).toBe(true)
       })
+
+      it('offsets the sticky aside by the header height, so the header does not cover it', () => {
+        // jsdom has no layout; `useElementSize` reads the header's `offsetHeight` on mount
+        const offsetHeight = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(92)
+
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          slots: asideSlot,
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        // Vitest does not process styles, so the `v-bind()` custom property is never set on the
+        // element. Read the bound value instead.
+        expect((wrapper.vm as any).asideStickyTop).toBe('calc(92px + var(--kui-space-60, 16px))')
+
+        offsetHeight.mockRestore()
+      })
     })
 
     describe('appearance injection', () => {

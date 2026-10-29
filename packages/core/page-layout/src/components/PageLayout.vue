@@ -6,6 +6,7 @@
   >
     <div
       v-if="!hasNestedPageLayout"
+      ref="page-layout-header"
       class="page-layout-header"
       data-testid="page-layout-header"
     >
@@ -142,16 +143,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, toValue, watch } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, toValue, useTemplateRef, watch } from 'vue'
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import PageLayoutAnchorNavigation from './PageLayoutAnchorNavigation.vue'
 import { NEW_APPEARANCE_INJECTION_KEY, nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon, ChevronRightIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_30, KUI_SPACE_60 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, useElementSize } from '@vueuse/core'
 import composables from '../composables'
 
 const {
@@ -187,6 +188,12 @@ const newAppearance = computed((): boolean => toValue(newAppearanceInjection) ==
 // render, and a page that declares both is treated as a tabbed page. The bar is part of the new
 // appearance's single-row header, so it is not rendered in the default appearance at all.
 const hasAnchorNavigation = computed((): boolean => newAppearance.value && !hasTabs.value && !!(anchors && anchors.length))
+
+// The sticky aside must clear the sticky header, whose height changes with the tab row.
+// The extra space keeps the gap the content container's padding gives it at rest.
+const headerRef = useTemplateRef<HTMLElement>('page-layout-header')
+const { height: headerHeight } = useElementSize(headerRef, undefined, { box: 'border-box' })
+const asideStickyTop = computed((): string => `calc(${headerHeight.value}px + var(--kui-space-60, ${KUI_SPACE_60}))`)
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
@@ -538,7 +545,12 @@ $page-layout-header-height: 44px;
       @container page-layout (min-width: #{$kui-breakpoint-tablet}) {
         // The content's `width: 100%` overflows the row on its own, so without this the
         // aside gives up part of its 400px to absorb the overflow instead of the content
+        // Stick the container, not each child: sibling offsets would need their heights.
+        // `align-self` stops the row stretching the aside, which leaves it no room to stick.
+        align-self: flex-start;
         flex-shrink: 0;
+        position: sticky;
+        top: v-bind(asideStickyTop);
         width: 400px;
       }
     }
