@@ -682,13 +682,15 @@ $anchor-link-max-width: 140px;
 
   ul {
     align-items: center;
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
     // Keep the list at its natural width while it overflows, so it can be measured
     flex-shrink: 0;
     gap: var(--kui-space-10, $kui-space-10);
     list-style: none;
     margin: var(--kui-space-0, $kui-space-0);
-    padding: var(--kui-space-0, $kui-space-0);
+    padding: var(--kui-space-20, $kui-space-20);
 
     // Not even one pill and the dropdown fit
     &.layout-hidden {
@@ -703,7 +705,7 @@ $anchor-link-max-width: 140px;
   .anchor-link {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: none;
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     // So the cap above is the pill's whole width, padding included, and matches what the overflow
     // budget reserves for it
     box-sizing: border-box;
@@ -716,13 +718,12 @@ $anchor-link-max-width: 140px;
     max-width: $anchor-link-max-width;
     outline: none;
     overflow: hidden;
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
     text-overflow: ellipsis;
     transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in;
     white-space: nowrap;
 
     &:hover {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
       color: var(--kui-color-text, $kui-color-text);
     }
 
@@ -733,7 +734,7 @@ $anchor-link-max-width: 140px;
     // The active section reads as the brand-coloured pill the sidebar's current item wears
     &.active {
       background-color: var(--kui-color-brand, $kui-color-brand);
-      color: var(--kui-color-text, $kui-color-text);
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
     }
   }
 
