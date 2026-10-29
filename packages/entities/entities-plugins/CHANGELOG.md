@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.2.0...%40kong-ui-public%2Fentities-plugins%4010.2.1) (2026-10-29)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3984](https://github.com/Kong/public-ui-components/issues/3984)) ([f56d9eb](https://github.com/Kong/public-ui-components/commit/f56d9ebdcb28ec4a26e63bfef2ebc4ace1ae3fec))
+* **entities-plugins:** keep datakit configs unsupported by flow editor in code editor ([#3975](https://github.com/Kong/public-ui-components/issues/3975)) ([f349fe6](https://github.com/Kong/public-ui-components/commit/f349fe6381f60228090ce00ca0a005e2f4e81109))
+
+
 # [10.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.3...%40kong-ui-public%2Fentities-plugins%4010.2.0) (2026-10-28)
 
 ### Features

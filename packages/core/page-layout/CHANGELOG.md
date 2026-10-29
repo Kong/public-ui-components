@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.4...%40kong-ui-public%2Fpage-layout%401.3.5) (2026-10-29)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3984](https://github.com/Kong/public-ui-components/issues/3984)) ([f56d9eb](https://github.com/Kong/public-ui-components/commit/f56d9ebdcb28ec4a26e63bfef2ebc4ace1ae3fec))
+* **page-layout:** anchor nav fixes, sticky aside slot content [KHCP-22216] ([#3987](https://github.com/Kong/public-ui-components/issues/3987)) ([bfbed89](https://github.com/Kong/public-ui-components/commit/bfbed89e3c238e88c59194f2639c3632c9b238cf))
+
+
 ## [1.3.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.3...%40kong-ui-public%2Fpage-layout%401.3.4) (2026-10-27)
 
 ### Bug Fixes
