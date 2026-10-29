@@ -136,6 +136,7 @@ export default function useDashboardContext({
 
   const enrichedContext = computed<DashboardRendererContext>(() => {
     return {
+      ...context.value,
       filters: filters.value,
       timeSpec: timeSpec.value,
       tz: tz.value,

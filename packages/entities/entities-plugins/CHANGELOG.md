@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.3...%40kong-ui-public%2Fentities-plugins%4010.2.0) (2026-10-28)
+
+### Features
+
+* **entities-plugins:** swap credential_claim/credential_claims by AIGW runtime version ([#3969](https://github.com/Kong/public-ui-components/issues/3969)) ([e95e525](https://github.com/Kong/public-ui-components/commit/e95e525b0af88487072756aece044c1cf217a5d9))
+
+
+## [10.1.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.2...%40kong-ui-public%2Fentities-plugins%4010.1.3) (2026-10-28)
+
+### Bug Fixes
+
+* **entities-plugins:** do not fail plugin form when cloned plugin lookup errors ([#3982](https://github.com/Kong/public-ui-components/issues/3982)) ([6dc8be2](https://github.com/Kong/public-ui-components/commit/6dc8be2fd07da3e3b7efbb6c43ecffba3f850c19))
+
+
+## [10.1.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.1...%40kong-ui-public%2Fentities-plugins%4010.1.2) (2026-10-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.1.0...%40kong-ui-public%2Fentities-plugins%4010.1.1) (2026-10-27)
+
+### Bug Fixes
+
+* **entities-plugins:** only show datakit ca_certificates and non_nil when supported ([#3976](https://github.com/Kong/public-ui-components/issues/3976)) ([a0e4212](https://github.com/Kong/public-ui-components/commit/a0e42123c62aaf10ba99d751a309b7ec9207bd36))
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.0.9...%40kong-ui-public%2Fentities-plugins%4010.1.0) (2026-10-27)
 
 ### Bug Fixes

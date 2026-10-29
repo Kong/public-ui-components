@@ -210,7 +210,7 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
   }
 
   .about-card-content {
-    margin-top: var(--kui-space-60, $kui-space-60);
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   // Below this the two columns no longer leave the value a usable amount of

@@ -25,6 +25,7 @@ export const queryableAiExploreDimensions = [
   'llm_embeddings_provider',
   'oidc_credential',
   'principal',
+  'principal_group',
   'realm',
   'response_source',
   'route',
