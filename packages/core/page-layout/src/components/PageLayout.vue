@@ -415,89 +415,89 @@ $page-layout-header-height: 44px;
   // New appearance: the title moves up into the breadcrumb row, sitting after the caret
   // that KBreadcrumbs renders following the last crumb.
   &.new-appearance {
-    .page-layout-content-container {
-      background-color: var(--kui-color-background, $kui-color-background);
+    // Keep the header (and its tab row) in view while the page content scrolls beneath
+    // it. The header already paints its own background, so content does not show through.
+    .page-layout-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
 
-      // Keep the header (and its tab row) in view while the page content scrolls beneath
-      // it. The header already paints its own background, so content does not show through.
-      .page-layout-header {
-        position: sticky;
-        top: 0;
-        z-index: 3;
-      }
+    // Selectors mirror the default appearance's nesting depth so these rules win on
+    // specificity rather than relying on source order.
+    .page-layout-header .page-header-container {
+      align-items: center;
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
-      // Selectors mirror the default appearance's nesting depth so these rules win on
-      // specificity rather than relying on source order.
-      .page-layout-header .page-header-container {
+      .page-header-start {
         align-items: center;
-        padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
+        display: flex;
+        // Mirrors the spacing Kongponents puts between a divider and the crumb that
+        // follows it, so the title keeps the row's rhythm. Only applies when there are
+        // breadcrumbs to sit next to.
+        gap: var(--kui-space-20, $kui-space-20);
 
-        .page-header-start {
+        .title-container {
           align-items: center;
-          display: flex;
-          // Mirrors the spacing Kongponents puts between a divider and the crumb that
-          // follows it, so the title keeps the row's rhythm. Only applies when there are
-          // breadcrumbs to sit next to.
-          gap: var(--kui-space-20, $kui-space-20);
+          // As a flex item the title container defaults to `min-width: auto`, which
+          // refuses to shrink below its content. Without this a long title pushes the
+          // header wider than its container and runs under the page actions instead of
+          // truncating.
+          min-width: 0;
 
-          .title-container {
-            align-items: center;
-            // As a flex item the title container defaults to `min-width: auto`, which
-            // refuses to shrink below its content. Without this a long title pushes the
-            // header wider than its container and runs under the page actions instead of
-            // truncating.
-            min-width: 0;
+          // The title reads as the last item in the breadcrumb row: same size as the
+          // crumbs (whose scale comes from Kongponents), just heavier and darker.
+          .page-layout-title-wrapper {
+            // The `> *` rule below covers both the default `<h1>` and any element slotted
+            // into `#title`, but a slot holding a bare text node has no element to match.
+            // Repeating the scale, cap and truncation here keeps raw text in parity, and
+            // also makes the `ch` cap resolve against the same font size either way.
+            color: var(--kui-color-text, $kui-color-text);
+            font-size: var(--kui-font-size-20, $kui-font-size-20);
+            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+            line-height: var(--kui-line-height-20, $kui-line-height-20);
+            max-width: $page-layout-title-max-width;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
-            // The title reads as the last item in the breadcrumb row: same size as the
-            // crumbs (whose scale comes from Kongponents), just heavier and darker.
-            .page-layout-title-wrapper {
-              // The `> *` rule below covers both the default `<h1>` and any element slotted
-              // into `#title`, but a slot holding a bare text node has no element to match.
-              // Repeating the scale, cap and truncation here keeps raw text in parity, and
-              // also makes the `ch` cap resolve against the same font size either way.
-              color: var(--kui-color-text, $kui-color-text);
+            > * {
               font-size: var(--kui-font-size-20, $kui-font-size-20);
-              font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
               line-height: var(--kui-line-height-20, $kui-line-height-20);
+              // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
+              // Below this it truncates to whatever space the row leaves it; the ellipsis
+              // itself comes from the default appearance's rules.
               max-width: $page-layout-title-max-width;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-
-              > * {
-                font-size: var(--kui-font-size-20, $kui-font-size-20);
-                line-height: var(--kui-line-height-20, $kui-line-height-20);
-                // Cap the title so it cannot crowd out the breadcrumbs on a wide viewport.
-                // Below this it truncates to whatever space the row leaves it; the ellipsis
-                // itself comes from the default appearance's rules.
-                max-width: $page-layout-title-max-width;
-              }
             }
           }
+        }
 
-          // Keep the breadcrumbs and any title-after content intact; the title is the
-          // element that gives up space when the row runs out of room.
-          .header-breadcrumbs,
-          .title-after-container {
-            flex-shrink: 0;
-          }
+        // Keep the breadcrumbs and any title-after content intact; the title is the
+        // element that gives up space when the row runs out of room.
+        .header-breadcrumbs,
+        .title-after-container {
+          flex-shrink: 0;
         }
       }
+    }
 
-      // Without tabs the header is a single row, fixed to the height of the top bar it
-      // mirrors so it stays consistent whatever the row holds. With tabs it has to grow to
-      // fit the tab row, so no height is set there.
-      // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
-      .page-layout-header:not(:has(.page-layout-tabs)) {
-        // Set on the container rather than the header: the container is what carries the
-        // bottom border and the padding in this case, so sizing the header alone would
-        // just let the container overflow it.
-        .page-header-container {
-          // Border-box so this is the rendered height, bottom border included
-          box-sizing: border-box;
-          height: $page-layout-header-height;
-          padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
-        }
+    // Without tabs the header is a single row, fixed to the height of the top bar it
+    // mirrors so it stays consistent whatever the row holds. With tabs it has to grow to
+    // fit the tab row, so no height is set there.
+    // Mirrors the default appearance's own `:not(:has())` rule so this wins on specificity.
+    .page-layout-header:not(:has(.page-layout-tabs)) {
+      // Set on the container rather than the header: the container is what carries the
+      // bottom border and the padding in this case, so sizing the header alone would
+      // just let the container overflow it.
+      .page-header-container {
+        // Border-box so this is the rendered height, bottom border included
+        box-sizing: border-box;
+        height: $page-layout-header-height;
+        padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
       }
+    }
+
+    .page-layout-content-container {
+      background-color: var(--kui-color-background, $kui-color-background);
     }
   }
 
