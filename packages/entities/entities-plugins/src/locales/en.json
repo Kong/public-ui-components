@@ -1132,6 +1132,19 @@
             "link": "Learn how to link a consumer group."
           }
         },
+        "jit": {
+          "toggle_label": "Just-in-time principal provisioning",
+          "toggle_info": "Create or update the Kong Identity principal from token claims as requests arrive, so identities don't need to be provisioned in advance.",
+          "all_claims": {
+            "label": "Share all token claims",
+            "description": "Share every claim from the token when creating or updating a principal."
+          },
+          "claims": {
+            "label": "Token claims",
+            "placeholder": "e.g., sub, email",
+            "help": "Share the listed claims from the token when creating or updating a principal. Separate multiple claims with commas."
+          }
+        },
         "advanced_fields": {
           "client_jwk_link_label": "Client JWK",
           "verify_signature_description": "JSON Web Keys are automatically fetched from the issuer's well-known endpoint. Enter a JWKS URI below to override this."

@@ -148,6 +148,59 @@
           </template>
         </KCheckbox>
       </div>
+
+      <!-- principals.jit — AI-Gateway-only (ai-manager host + schema presence);
+           version-gated like every other min_ai_gateway_version field: below 2.3
+           the group stays rendered but disabled. Independent of the lookup toggle
+           above: jit writes principals from token claims rather than resolving
+           them, so it is not inert when lookup is off. -->
+      <div
+        v-if="showJitSettings"
+        class="principals-field-group"
+      >
+        <KInputSwitch
+          data-testid="principals-jit-toggle"
+          :disabled="jitDisabled"
+          :disabled-tooltip-text="jitVersionInfo?.tooltip"
+          :model-value="jitEnabled"
+          @update:model-value="handleJitToggle"
+        >
+          <template #label>
+            <KLabel
+              :info="t('plugins.free-form.openid-connect.jit.toggle_info')"
+              :tooltip-attributes="{ maxWidth: '300' }"
+            >
+              {{ t('plugins.free-form.openid-connect.jit.toggle_label') }}
+            </KLabel>
+          </template>
+        </KInputSwitch>
+
+        <template v-if="jitEnabled">
+          <KCheckbox
+            data-testid="principals-jit-all-claims"
+            :disabled="jitDisabled"
+            :model-value="allClaims ?? false"
+            @update:model-value="allClaims = $event"
+          >
+            {{ t('plugins.free-form.openid-connect.jit.all_claims.label') }}
+            <template #description>
+              {{ t('plugins.free-form.openid-connect.jit.all_claims.description') }}
+            </template>
+          </KCheckbox>
+
+          <KInput
+            v-if="!allClaims"
+            class="principals-jit-claims-input"
+            data-testid="principals-jit-claims"
+            :disabled="jitDisabled"
+            :help="t('plugins.free-form.openid-connect.jit.claims.help')"
+            :label="t('plugins.free-form.openid-connect.jit.claims.label')"
+            :model-value="claimsInput"
+            :placeholder="t('plugins.free-form.openid-connect.jit.claims.placeholder')"
+            @update:model-value="handleClaimsChange"
+          />
+        </template>
+      </div>
     </template>
 
     <!-- Host slot for sibling advanced settings (the OIDC auth methods + session
@@ -164,12 +217,13 @@ import { isEqual } from 'lodash-es'
 import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSelect } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '@kong-ui-public/freeform'
-import type { EmptyValue } from '@kong-ui-public/freeform'
+import type { EmptyValue, RecordFieldSchema } from '@kong-ui-public/freeform'
+import { usePluginContext } from '../../plugin-context'
 import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { OidcConfigSubset, OidcPrincipals } from './types'
+import type { OidcConfigSubset, OidcPrincipals, OidcPrincipalsJit } from './types'
 
 const { showPrincipalsFields = true, ...props } = defineProps<{
   /** Whether the fields are gated (loading, or no principals exist in the directory yet). */
@@ -192,7 +246,7 @@ const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, unde
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // sibling advanced settings rendered in the default slot (e.g. OIDC auth methods).
-const { formData, getEmptyValue } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getEmptyValue, getSchema, getDefault, getFieldVersionInfo } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 function usePrincipalsField<K extends keyof OidcPrincipals>(key: K) {
   return computed<OidcPrincipals[K] | undefined>({
@@ -211,6 +265,77 @@ const principalClaim = usePrincipalsField('principal_claim')
 const errorOnMiss = usePrincipalsField('error_on_miss')
 const matchConsumer = usePrincipalsField('match_consumer')
 const matchConsumerGroups = usePrincipalsField('match_consumer_groups')
+
+// ── JIT provisioning (config.principals.jit) ──────────────────────────────────
+
+// AI-Gateway-only feature. The record appears in the schema as it rolls out
+// (dev first, then production), so rendering is schema-driven — but the
+// gateway-manager host must never render or deal with jit even if a shared
+// dev schema carries the record, hence the explicit ai-manager check.
+const openidConnectContext = usePluginContext('openid-connect')
+const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager')
+const jitSchema = computed(() => getSchema('$.config.principals.jit') as RecordFieldSchema | undefined)
+const showJitSettings = computed(() => isAiManager.value && !!jitSchema.value)
+
+// Version gating follows the min_ai_gateway_version family: below the
+// requirement (AI Gateway 2.3) the group stays rendered but disabled, with
+// the standard version tooltip. Fails open when the host pins no runtime
+// version — gateway-manager never gets here (showJitSettings is false).
+const jitVersionInfo = computed(() => getFieldVersionInfo('$.config.principals.jit'))
+const jitDisabled = computed(() => props.disabled || !!jitVersionInfo.value)
+
+// jit has no on/off flag of its own — the record's presence is the switch.
+const jitEnabled = computed(() => !!formData.config?.principals?.jit)
+
+function handleJitToggle(enabled: boolean) {
+  const principals = formData.config?.principals
+  if (!principals) return
+  // On: seed from the schema so all_claims starts at its recorded default
+  // (false) and claims at the empty value. Off: explicit null (absent would
+  // also read as off, but the record key already exists in the model).
+  principals.jit = enabled ? getDefault('$.config.principals.jit') as OidcPrincipalsJit : null
+}
+
+function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
+  return computed<OidcPrincipalsJit[K] | undefined>({
+    get: () => formData.config?.principals?.jit?.[key],
+    set: (value) => {
+      const jit = formData.config?.principals?.jit
+      if (jit) {
+        jit[key] = value as OidcPrincipalsJit[K]
+      }
+    },
+  })
+}
+
+const allClaims = useJitField('all_claims')
+const jitClaims = useJitField('claims')
+
+const encodeClaims = (claims: string[] | null | undefined): string =>
+  Array.isArray(claims) ? claims.filter(Boolean).join(', ') : ''
+
+function parseClaims(value: string): string[] | EmptyValue {
+  const parts = value.split(',').map(part => part.trim()).filter(Boolean)
+  return parts.length > 0 ? parts : getEmptyValue()
+}
+
+// The input binds to the raw string and the model derives from it one-way:
+// re-encoding the display on every keystroke would eat the separator the
+// user is still typing (e.g. the trailing comma of "sub, ").
+const claimsInput = ref(encodeClaims(jitClaims.value))
+
+function handleClaimsChange(rawValue: string) {
+  claimsInput.value = rawValue
+  jitClaims.value = parseClaims(rawValue)
+}
+
+// Re-sync the display only when the model changes from elsewhere (e.g. the
+// toggle recreates the jit record), never while it reflects the user's typing.
+watch(jitClaims, (claims) => {
+  if (!isEqual(claims ?? null, parseClaims(claimsInput.value) ?? null)) {
+    claimsInput.value = encodeClaims(claims)
+  }
+})
 
 const lookupMethodItems = [
   {
@@ -355,7 +480,8 @@ function handleEnableToggle(enabled: boolean) {
   gap: var(--kui-space-40, $kui-space-40);
 
   .principals-token-claim-input,
-  .principals-custom-identity-name-input {
+  .principals-custom-identity-name-input,
+  .principals-jit-claims-input {
     margin-top: var(--kui-space-40, $kui-space-40);
   }
 
