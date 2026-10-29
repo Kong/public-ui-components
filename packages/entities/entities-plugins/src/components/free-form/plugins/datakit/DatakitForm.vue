@@ -140,6 +140,21 @@ const icons: Record<EditorMode, Component> = {
 const flowAvailable = ref<boolean>(true)
 const flowUnavailableReason = ref<string>('')
 
+/**
+ * The flow editor only supports a subset of Datakit configs.
+ * Configs it cannot represent must stay in the code editor, otherwise unsupported fields would be dropped.
+ */
+function checkFlowCompat(config: unknown) {
+  const { success, error } = DatakitConfigCompatSchema.safeParse(config)
+  flowUnavailableReason.value = success || !error ? '' : getSchemaErrorMessage(error)
+  flowAvailable.value = success
+}
+
+// Check before the first render so the flow editor never loads an incompatible config
+if (formConfig.app === 'konnect') {
+  checkFlowCompat(props.model?.config)
+}
+
 const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
   const modes: Array<SegmentedControlOption<EditorMode>> = [
     {
@@ -261,9 +276,7 @@ function handleCodeChange(newConfig: unknown) {
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(uncheckedConfig)
 
-  const { success: compatSuccess, error: compatError } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
-  flowUnavailableReason.value = compatSuccess || !compatError ? '' : getSchemaErrorMessage(compatError)
-  flowAvailable.value = compatSuccess
+  checkFlowCompat(uncheckedConfig)
 
   // props.onValidityChange?.({
   //   model: 'config',

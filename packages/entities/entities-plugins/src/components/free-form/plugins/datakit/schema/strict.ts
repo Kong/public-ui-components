@@ -65,7 +65,8 @@ export const NameConnectionSchema = z
   .max(255)
   .refine((s) => {
     if (NodeNameSchema.safeParse(s).success) return true
-    const m = s.match(/^([^.]+)\.([^.]+)$/)
+    // Only the first dot separates the node from the field, field names may contain dots
+    const m = s.match(/^([^.]+)\.(.+)$/)
     if (!m) return false
     const [, node, field] = m
     return (
@@ -128,8 +129,8 @@ export const HttpMethodSchema = z.enum(HTTP_METHODS)
 export const JWTAlgorithmSchema = z.enum(JWT_ALGORITHMS)
 
 /**
- * Standard HTTP/1.1 verbs accepted by the `call` node.
- * The string must contain only uppercase letters.
+ * Standard HTTP/1.1 verbs. The `call` node accepts any uppercase
+ * token up to 32 characters; see `CallNodeSchema.method`.
  */
 export type HttpMethod = z.infer<typeof HttpMethodSchema>
 export type JWTAlgorithm = z.infer<typeof JWTAlgorithmSchema>
@@ -183,7 +184,7 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * A string representing an HTTP method, such as GET, POST, PUT, or DELETE.
    * The string must contain only uppercase letters.
    */
-  method: HttpMethodSchema.default('GET').nullish(),
+  method: z.string().min(1).max(32).regex(/^[A-Z]+$/).default('GET').nullish(),
   /** A string representing an SNI (server name indication) value for TLS. */
   ssl_server_name: z.string().nullish(),
   /** Whether to verify the TLS certificate when making HTTPS requests. */
@@ -639,8 +640,8 @@ const CacheRedisSchema = z
 
 export const CacheSchema = z.object({
   strategy: z.enum(['memory', 'redis']).nullish(),
-  memory: CacheMemorySchema,
-  redis: CacheRedisSchema,
+  memory: CacheMemorySchema.nullish(),
+  redis: CacheRedisSchema.nullish(),
 })
 
 export const ResourcesSchema = z.object({
