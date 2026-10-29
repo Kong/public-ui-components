@@ -31,7 +31,8 @@ const LooseConnectionSchema = z.string().refine((s) => {
   if (i === -1) return true
   const left = s.slice(0, i)
   const right = s.slice(i + 1)
-  return left.length > 0 && right.length > 0
+  // The flow editor cannot represent field names containing dots (e.g. `NODE.a.b`)
+  return left.length > 0 && right.length > 0 && !right.includes('.')
 }, 'Invalid connection')
 
 const CallInputsSchema = z

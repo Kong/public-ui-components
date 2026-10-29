@@ -19,6 +19,10 @@ import type {
   GroupName,
   GroupInstance,
   NodeFieldsOptions,
+  ConfigNode,
+  DatakitConfig,
+  DatakitPluginData,
+  DatakitUIData,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -227,4 +231,37 @@ export function toGroupInstance(
     position: layout?.position ? { ...layout.position } : undefined,
     dimensions: layout?.dimensions ? { ...layout.dimensions } : undefined,
   }
+}
+
+/**
+ * Merge the serialized editor state into the plugin form data.
+ * Config fields not managed by the flow editor (e.g. `debug`) are kept as-is.
+ */
+export function mergeFlowChange(
+  formData: DatakitPluginData,
+  configNodes: ConfigNode[],
+  uiData: DatakitUIData,
+  resources: DatakitConfig['resources'],
+  partialId?: string,
+): DatakitPluginData {
+  const nextConfig = { ...formData.config, nodes: configNodes }
+  if (resources !== undefined) nextConfig.resources = resources
+  const nextUIData: DatakitUIData = {
+    ...formData.__ui_data,
+    ...uiData,
+  }
+  const nextFormData = {
+    ...formData,
+    config: nextConfig,
+    __ui_data: nextUIData,
+  }
+  if (partialId != null) {
+    nextFormData.partials = [{ id: partialId }]
+  } else if (nextFormData.partials) {
+    // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
+    // so undefined won't clear existing partials. Intentionally NOT
+    // `FormConfig.emptyFieldValue`-aware, for the same reason.
+    nextFormData.partials = null
+  }
+  return nextFormData
 }

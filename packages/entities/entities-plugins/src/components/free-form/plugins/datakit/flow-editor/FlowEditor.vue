@@ -34,6 +34,7 @@ import { provideEditorStore, useLeaveConfirmation } from '../composables'
 import { useCallErrorHandlingSupport } from './composables/useNodeForm'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
+import { mergeFlowChange } from './store/helpers'
 
 import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData } from '../types'
 
@@ -51,27 +52,9 @@ const emit = defineEmits<{
 }>()
 
 function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: DatakitConfig['resources'], partialId?: string) {
-  const nextConfig = { ...formData.config, nodes: configNodes }
-  if (resources !== undefined) nextConfig.resources = resources
-  const nextUIData: DatakitUIData = {
-    ...formData.__ui_data,
-    ...uiData,
-  }
-  const nextFormData = {
-    ...formData,
-    config: nextConfig,
-    __ui_data: nextUIData,
-  }
-  if (partialId != null) {
-    nextFormData.partials = [{ id: partialId }]
-  } else if (nextFormData.partials) {
-    // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
-    // so undefined won't clear existing partials. Intentionally NOT
-    // `FormConfig.emptyFieldValue`-aware, for the same reason.
-    nextFormData.partials = null
-  }
+  const nextFormData = mergeFlowChange(formData, configNodes, uiData, resources, partialId)
   setValue(nextFormData)
-  emit('change', nextConfig, nextUIData)
+  emit('change', nextFormData.config!, nextFormData.__ui_data!)
 }
 
 const { modalOpen, setPendingFitView } = provideEditorStore(getValue(), {

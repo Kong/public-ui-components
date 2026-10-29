@@ -10,6 +10,7 @@
     "src/**/*.spec.ts",
     "src/components/free-form/core/components/test-utils.ts",
     "src/components/free-form/core/filler/**",
+    "src/components/free-form/plugins/datakit/test-utils/**",
     "sandbox",
     "dist"
   ]

@@ -790,6 +790,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       toUINodes,
       toUIGroups,
       toUIData,
+      toResources,
       load,
 
       // history
