@@ -80,7 +80,7 @@
     "@kong/icons": "^1.64.0",
     "@kong/kongponents": "9.66.7",
     "@peculiar/x509": "^2.0.0",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.64.1",
     "@shikijs/core": "^4.4.3",
     "@shikijs/engine-javascript": "^4.4.3",
     "@shikijs/langs": "^4.4.3",
