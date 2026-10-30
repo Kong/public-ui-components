@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.2.1...%40kong-ui-public%2Fdashboard-renderer%4010.2.2) (2026-10-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [10.2.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.2.0...%40kong-ui-public%2Fdashboard-renderer%4010.2.1) (2026-10-29)
 
 ### Bug Fixes
