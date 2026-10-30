@@ -241,7 +241,13 @@ export function mergeFlowChange(
   partialId?: string,
 ): DatakitPluginData {
   const nextConfig = { ...formData.config, nodes: configNodes }
-  if (resources !== undefined) nextConfig.resources = resources
+  if (resources !== undefined) {
+    nextConfig.resources = resources
+  } else if (nextConfig.resources) {
+    // All resources were removed in the editor. Clear them with null, because the plugin entity
+    // form **merges** free-form data and VFG data, so a missing field won't clear existing resources.
+    nextConfig.resources = null
+  }
   const nextUIData: DatakitUIData = {
     ...formData.__ui_data,
     ...uiData,
