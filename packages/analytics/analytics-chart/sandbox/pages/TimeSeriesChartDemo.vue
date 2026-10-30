@@ -22,6 +22,7 @@
             :chart-data="(exploreResult)"
             :chart-options="analyticsChartOptions"
             :legend-position="legendPosition"
+            :loading="loadingToggle"
             :requests-link="{
               href: '#requests',
             }"
@@ -179,6 +180,12 @@
         </div>
         <div>
           <KInputSwitch
+            v-model="loadingToggle"
+            :label="loadingToggle ? 'Loading (stale data)' : 'Not loading'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
             v-model="thresholdToggle"
             :label="thresholdToggle ? 'Threshold enabled' : 'Threshold disabled'"
           />
@@ -273,6 +280,7 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const thresholdToggle = ref(false)
+const loadingToggle = ref(false)
 const chartType = ref<ChartType>('timeseries_line')
 const legendPosition = ref(ChartLegendPosition.Bottom)
 const selectedMetricNames = ref<Metrics[]>([Metrics.TotalRequests])

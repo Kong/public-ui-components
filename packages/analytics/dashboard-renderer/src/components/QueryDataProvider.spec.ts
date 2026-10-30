@@ -11,9 +11,10 @@ const swrvError = ref<any>(null)
 const swrvIsValidating = ref(false)
 
 let mockedFetcher: (() => Promise<any>) | undefined
+let mockedKey: (() => string | null) | undefined
 
 function setSwrvState(opts: { data?: any, error?: any, isValidating?: boolean } = {}) {
-  swrvData.value = opts.data
+  swrvData.value = opts.data && { key: mockedKey?.(), result: opts.data }
   swrvError.value = opts.error
   swrvIsValidating.value = !!opts.isValidating
 }
@@ -23,8 +24,10 @@ function resetSwrvState() {
 }
 
 vi.mock('swrv', () => ({
-  default: (_key: any, fetcher: any) => {
-    mockedFetcher = fetcher
+  default: (key: any, fetcher: any) => {
+    mockedKey = key
+    // Like swrv, call the fetcher with the key resolved at fetch time
+    mockedFetcher = () => fetcher(key())
 
     return {
       data: swrvData,
@@ -99,6 +102,7 @@ describe('QueryDataProvider', () => {
   beforeEach(() => {
     resetSwrvState()
     mockedFetcher = undefined
+    mockedKey = undefined
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
       datasourceConfigMap: ref({}),
       isReady: vi.fn().mockResolvedValue(undefined),
@@ -179,6 +183,43 @@ describe('QueryDataProvider', () => {
     expect(wrapper.findTestId('slot-content').exists()).toBe(true)
     expect(wrapper.findTestId('slot-content').text()).toContain('now')
     expect(wrapper.findTestId('chart-skeleton').exists()).toBe(false)
+  })
+
+  it('marks previous data as loading until the new query resolves', async () => {
+    const wrapper = mountProvider()
+
+    setSwrvState({ data: { data: [{ timestamp: 'now' }], meta: {} } })
+    await flushPromises()
+
+    expect(wrapper.findTestId('loading-overlay').attributes('aria-busy')).toBe('false')
+
+    // swrv keeps the previous key's data while the new key is fetched
+    swrvIsValidating.value = true
+    await wrapper.setProps({ query: { ...defaultProps.query, dimensions: ['route'] } })
+    await flushPromises()
+
+    expect(wrapper.findTestId('slot-content').text()).toContain('now')
+    expect(wrapper.findTestId('loading-overlay').attributes('aria-busy')).toBe('true')
+
+    setSwrvState({ data: { data: [{ timestamp: 'later' }], meta: {} } })
+    await flushPromises()
+
+    expect(wrapper.findTestId('slot-content').text()).toContain('later')
+    expect(wrapper.findTestId('loading-overlay').attributes('aria-busy')).toBe('false')
+  })
+
+  it('does not mark data as loading during a background revalidation', async () => {
+    const result = { data: [{ timestamp: 'now' }], meta: {} }
+    const wrapper = mountProvider()
+
+    setSwrvState({ data: result })
+    await flushPromises()
+
+    // Autorefresh keeps the current data while revalidating
+    setSwrvState({ data: result, isValidating: true })
+    await flushPromises()
+
+    expect(wrapper.findTestId('loading-overlay').attributes('aria-busy')).toBe('false')
   })
 
   it('shows the skeleton instead of previous data when the query is not ready', async () => {
