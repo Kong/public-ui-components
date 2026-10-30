@@ -1140,9 +1140,9 @@
             "description": "Share every claim from the token when creating or updating a principal."
           },
           "claims": {
-            "label": "Token claims",
-            "placeholder": "e.g., sub, email",
-            "help": "Share the listed claims from the token when creating or updating a principal. Separate multiple claims with commas."
+            "label": "Claims to share",
+            "placeholder": "e.g., email, department",
+            "help": "The token claims Kong writes onto the principal when creating or updating it just in time. Separate multiple claims with commas."
           }
         },
         "advanced_fields": {
