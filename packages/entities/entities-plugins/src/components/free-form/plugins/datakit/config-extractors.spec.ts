@@ -70,6 +70,10 @@ config:
       expect(curlExtractor.extract(`curl -X POST http://localhost:8001/plugins --data '${body}'`)).toEqual({ name: 'datakit', config })
     })
 
+    it.each(['--data-raw', '--data-binary'])('extracts a %s body (Copy as cURL)', (flag) => {
+      expect(curlExtractor.extract(`curl -X POST http://localhost:8001/plugins ${flag} '${body}'`)).toEqual({ name: 'datakit', config })
+    })
+
     it('extracts a double-quoted -d body with escaped quotes', () => {
       const escaped = body.replace(/"/g, '\\"')
       expect(curlExtractor.extract(`curl -X POST http://localhost:8001/plugins -d "${escaped}"`)).toEqual({ name: 'datakit', config })

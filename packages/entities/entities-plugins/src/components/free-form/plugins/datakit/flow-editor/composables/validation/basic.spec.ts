@@ -9,7 +9,8 @@ describe('basic validators', () => {
   })
 
   describe('stringFormat', () => {
-    // Same pattern as the backend node name (kong-ee `typedefs.lua` KEBAB_CASE)
+    // Node names: a letter or "_" first, then letters, digits, "_" or "-".
+    // Same rule as the backend node name pattern `[A-Za-z_][A-Za-z0-9_-]*` (kong-ee `typedefs.lua`).
     it.each([
       ['NODE', true],
       ['_node-1', true],
