@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "3.4.5",
-    "@kong/kongponents": "9.66.7",
+    "@kong/design-tokens": "3.4.6",
+    "@kong/kongponents": "9.66.11",
     "@types/geobuf": "^4.0.0",
     "@types/geojson": "^7946.0.16",
     "maplibre-gl": "^6.8.0",

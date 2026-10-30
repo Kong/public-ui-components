@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "3.4.5",
-    "@kong/kongponents": "9.66.7",
+    "@kong/design-tokens": "3.4.6",
+    "@kong/kongponents": "9.66.11",
     "echarts": "^6.1.0",
     "vue": "^3.5.43",
     "vue-echarts": "^8.3.2"
