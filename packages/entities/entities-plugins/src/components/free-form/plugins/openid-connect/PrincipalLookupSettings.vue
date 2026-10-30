@@ -174,32 +174,35 @@
             </KLabel>
           </template>
         </KInputSwitch>
+      </div>
 
-        <template v-if="jitEnabled">
-          <KCheckbox
-            data-testid="principals-jit-all-claims"
-            :disabled="jitDisabled"
-            :model-value="allClaims ?? false"
-            @update:model-value="allClaims = $event"
-          >
-            {{ t('plugins.free-form.openid-connect.jit.all_claims.label') }}
-            <template #description>
-              {{ t('plugins.free-form.openid-connect.jit.all_claims.description') }}
-            </template>
-          </KCheckbox>
+      <div
+        v-if="showJitSettings && jitEnabled"
+        class="principals-field-group"
+      >
+        <KCheckbox
+          data-testid="principals-jit-all-claims"
+          :disabled="jitDisabled"
+          :model-value="allClaims ?? false"
+          @update:model-value="allClaims = $event"
+        >
+          {{ t('plugins.free-form.openid-connect.jit.all_claims.label') }}
+          <template #description>
+            {{ t('plugins.free-form.openid-connect.jit.all_claims.description') }}
+          </template>
+        </KCheckbox>
 
-          <KInput
-            v-if="!allClaims"
-            class="principals-jit-claims-input"
-            data-testid="principals-jit-claims"
-            :disabled="jitDisabled"
-            :help="t('plugins.free-form.openid-connect.jit.claims.help')"
-            :label="t('plugins.free-form.openid-connect.jit.claims.label')"
-            :model-value="claimsInput"
-            :placeholder="t('plugins.free-form.openid-connect.jit.claims.placeholder')"
-            @update:model-value="handleClaimsChange"
-          />
-        </template>
+        <KInput
+          v-if="!allClaims"
+          class="principals-jit-claims-input"
+          data-testid="principals-jit-claims"
+          :disabled="jitDisabled"
+          :help="t('plugins.free-form.openid-connect.jit.claims.help')"
+          :label="t('plugins.free-form.openid-connect.jit.claims.label')"
+          :model-value="claimsInput"
+          :placeholder="t('plugins.free-form.openid-connect.jit.claims.placeholder')"
+          @update:model-value="handleClaimsChange"
+        />
       </div>
     </template>
 
