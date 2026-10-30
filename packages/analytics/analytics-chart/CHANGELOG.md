@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.1.2...%40kong-ui-public%2Fanalytics-chart%4013.2.0) (2026-10-30)
+
+### Features
+
+* **analytics:** add loading overlay to charts [MA-5603] ([#3962](https://github.com/Kong/public-ui-components/issues/3962)) ([64d6e9e](https://github.com/Kong/public-ui-components/commit/64d6e9eecc1f76de179df874b7263d0f5b60d39f))
+
+
 ## [13.1.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.1.1...%40kong-ui-public%2Fanalytics-chart%4013.1.2) (2026-10-30)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
