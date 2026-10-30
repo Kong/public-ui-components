@@ -6,6 +6,7 @@ import type { FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../../const'
 import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../../schema-enhancement'
+import { PLUGIN_CONTEXT_KEY } from '../../plugin-context'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
 
@@ -89,6 +90,23 @@ const PRINCIPALS_SCHEMA_FIELD = {
   },
 }
 
+// `config.principals.jit` from the AI Gateway 2.3 OIDC schema (x-property-annotations
+// dropped). The record is tagged with the runtime that introduced it — the same
+// min_ai_gateway_version family credential_claims uses — so the form can keep the
+// group rendered but disabled below 2.3.
+const JIT_SCHEMA_FIELD = {
+  jit: {
+    description: 'Configure claims used to create and update Kong Identity principals just in time.',
+    min_ai_gateway_version: '2.3',
+    required: false,
+    type: 'record',
+    fields: [
+      { all_claims: { default: false, description: 'When true, share all token claims when creating or updating a principal.', min_ai_gateway_version: '2.3', type: 'boolean' } },
+      { claims: { description: 'Token claims to share when creating or updating a principal.', elements: { type: 'string' }, min_ai_gateway_version: '2.3', required: false, type: 'array' } },
+    ],
+  },
+}
+
 
 const DEFAULT_PRINCIPALS_MODEL = {
   directory: 'default',
@@ -98,6 +116,7 @@ const DEFAULT_PRINCIPALS_MODEL = {
   match_consumer_groups: true,
   principal_by: null,
   principal_claim: null,
+  jit: null,
 }
 
 // The post-2.3 OIDC schema shape: `credential_claims` (string[][]) as a regular
@@ -140,11 +159,16 @@ const createSchema = (
   withPrincipals = false,
   withCredentialClaims = false,
   withUnmarkedCredentialClaims = false,
+  withJit = false,
 ): FormSchema => {
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
-    configField.config.fields.push(cloneDeep(PRINCIPALS_SCHEMA_FIELD))
+    const principals = cloneDeep(PRINCIPALS_SCHEMA_FIELD)
+    if (withJit) {
+      principals.principals.fields.push(cloneDeep(JIT_SCHEMA_FIELD))
+    }
+    configField.config.fields.push(principals)
   }
   if (withCredentialClaims) {
     // Fresh shape: the plural replaces the deprecated singular IN PLACE (as
@@ -203,6 +227,10 @@ interface MountOptions {
   withCredentialClaims?: boolean
   /** Append `config.credential_claims` WITHOUT the deprecation metadata (plural alone) */
   withUnmarkedCredentialClaims?: boolean
+  /** Append the AI Gateway 2.3 `config.principals.jit` record to the principals schema */
+  withJit?: boolean
+  /** Provide the ai-manager plugin context (AI Gateway host) */
+  aiManager?: boolean
   /** AIGW minimum runtime version (FormConfig.minRuntimeVersion) */
   minRuntimeVersion?: string
   /** Provide the Identity Principals UI feature flag */
@@ -220,6 +248,8 @@ const mountForm = (options: MountOptions = {}) => {
     withPrincipals = false,
     withCredentialClaims = false,
     withUnmarkedCredentialClaims = false,
+    withJit = false,
+    aiManager = false,
     minRuntimeVersion,
     identityPrincipalsUi = false,
     useSecretInput = false,
@@ -227,7 +257,7 @@ const mountForm = (options: MountOptions = {}) => {
 
   cy.mount(OpenidConnectForm, {
     props: {
-      schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims),
+      schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims, withJit),
       formConfig: minRuntimeVersion ? { minRuntimeVersion } : undefined,
       formSchema: createFormSchema(),
       formModel: {},
@@ -255,6 +285,7 @@ const mountForm = (options: MountOptions = {}) => {
           controlPlaneId: '123',
           ...formsConfig,
         },
+        ...(aiManager ? { [PLUGIN_CONTEXT_KEY]: { 'openid-connect': { source: 'ai-manager' } } } : {}),
         [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: identityPrincipalsUi,
         [USE_SECRET_INPUT_KEY as symbol]: ref(useSecretInput),
       },
@@ -1495,6 +1526,109 @@ describe('OpenidConnectForm', () => {
       expandSettings()
       cy.getTestId('use-principal-lookup').click({ force: true })
       cy.getTestId('principals-create-guide').should('be.visible')
+    })
+  })
+
+  // ── P: Just-in-time principal provisioning (principals.jit) ─────────────────
+
+  describe('just-in-time principal provisioning (principals.jit)', () => {
+    const expandSettings = () => {
+      cy.getTestId('principals-advanced-settings').findTestId('collapse-trigger-content').click()
+    }
+
+    it('does not render outside ai-manager (gateway-manager), even when the schema carries jit', () => {
+      mountPrincipalsForm({ withJit: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').should('not.exist')
+    })
+
+    it('does not render in ai-manager when the schema has no principals.jit record (schema not rolled out)', () => {
+      mountPrincipalsForm({ aiManager: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').should('not.exist')
+    })
+
+    it('renders the group but disabled when the runtime is below 2.3', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true, minRuntimeVersion: '2.2' })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').should('exist')
+      // KInputSwitch forwards attrs (incl. the testid) onto the checkbox input itself
+      cy.getTestId('principals-jit-toggle').should('be.disabled')
+    })
+
+    it('renders the group enabled when the runtime meets 2.3', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true, minRuntimeVersion: '2.3' })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').should('not.be.disabled')
+    })
+
+    it('toggling jit on seeds the schema defaults; toggling off nulls the record', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').click({ force: true })
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: null })
+      })
+
+      cy.getTestId('principals-jit-toggle').click({ force: true })
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.equal(null)
+      })
+    })
+
+    it('share-all-claims replaces the claims input and writes all_claims', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').click({ force: true })
+      cy.getTestId('principals-jit-claims').should('be.visible')
+
+      cy.getTestId('principals-jit-all-claims').check({ force: true })
+      cy.getTestId('principals-jit-claims').should('not.exist')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit.all_claims).to.equal(true)
+      })
+    })
+
+    it('writes comma-separated claims as a string array and nulls them when cleared', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-toggle').click({ force: true })
+      cy.getTestId('principals-jit-claims').type('sub, email')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit.claims).to.deep.equal(['sub', 'email'])
+      })
+
+      cy.getTestId('principals-jit-claims').clear()
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit.claims).to.equal(null)
+      })
+    })
+
+    it('restores a saved jit record on edit', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        withJit: true,
+        aiManager: true,
+        model: createPrincipalsModel({
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: true, claims: null } },
+        }),
+      })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('be.checked')
+      cy.getTestId('principals-jit-claims').should('not.exist')
     })
   })
 })
