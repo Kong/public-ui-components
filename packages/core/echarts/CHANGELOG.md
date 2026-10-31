@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fecharts%400.8.5...%40kong-ui-public%2Fecharts%400.8.6) (2026-10-31)
+
+**Note:** Version bump only for package @kong-ui-public/echarts
+
+
+
+
+
 ## [0.8.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fecharts%400.8.4...%40kong-ui-public%2Fecharts%400.8.5) (2026-10-30)
 
 **Note:** Version bump only for package @kong-ui-public/echarts
