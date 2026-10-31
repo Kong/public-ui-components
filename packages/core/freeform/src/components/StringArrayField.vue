@@ -11,8 +11,9 @@
     v-show="!hide"
     :data-testid="`ff-tag-${field.path.value}`"
   >
+    <!-- `fieldAttrs` only snapshots `$attrs` on setup, bind `$attrs` again to keep e.g. `error` reactive -->
     <EnhancedInput
-      v-bind="fieldAttrs"
+      v-bind="{ ...fieldAttrs, ...$attrs }"
       class="ff-tag-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="autofocus ? 'true' : undefined"

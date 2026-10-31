@@ -137,10 +137,19 @@ const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   ssl_verify: z.boolean().nullish(),
   timeout: z.union([z.number(), z.string()]).nullish(),
   url: z.string().nullish(),
+  continue_on_error: z.boolean().nullish(),
+  retry: z
+    .object({
+      count: z.union([z.number(), z.string()]).nullish(),
+      interval: z.union([z.number(), z.string()]).nullish(),
+      status_codes: z.array(z.string()).nullish(),
+    })
+    .nullish(),
   inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
       body: LooseConnectionSchema.nullish(),
+      error: LooseConnectionSchema.nullish(),
       headers: LooseConnectionSchema.nullish(),
       status: LooseConnectionSchema.nullish(),
     })

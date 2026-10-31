@@ -178,6 +178,22 @@ export const ConfigNodeBaseGuard = z
     }
   })
 
+/** An exact status code (e.g. `404`) or a status class (e.g. `5xx`). */
+export const CallStatusCodeSchema = z.string().regex(/^[1-5](\d{2}|xx)$/, {
+  message: 'must be an exact status code (e.g. \'404\') or a status class (e.g. \'5xx\')',
+})
+
+export const CallRetrySchema = z
+  .object({
+    /** The number of extra attempts to make after the first attempt. */
+    count: z.number().int().min(0).max(10).default(0).nullish(),
+    /** The wait, in seconds, before each extra attempt. */
+    interval: z.number().min(0).max(30).default(0).nullish(),
+    /** Response status codes that trigger a retry. */
+    status_codes: z.array(CallStatusCodeSchema).min(1).max(32).nullish(),
+  })
+  .strict()
+
 export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('call'),
   /**
@@ -199,10 +215,17 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * https://example.com/path/to/resource?q=search
    */
   url: z.url().nullish(),
+  /**
+   * Whether the node completes and continues the flow after a failed call,
+   * instead of stopping the flow with an error.
+   */
+  continue_on_error: z.boolean().default(false).nullish(),
+  retry: CallRetrySchema.nullish(),
   inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
       body: NullishNameConnectionSchema,
+      error: NullishNameConnectionSchema,
       headers: NullishNameConnectionSchema,
       raw_body: NullishNameConnectionSchema,
       status: NullishNameConnectionSchema,
