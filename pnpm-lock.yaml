@@ -230,8 +230,8 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(stylelint@17.16.0(supports-color@7.2.0)(typescript@5.9.3))
       '@types/flat':
-        specifier: ^5.0.5
-        version: 5.0.5
+        specifier: ^6.0.1
+        version: 6.0.1
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -4014,8 +4014,9 @@ packages:
   '@types/file-saver@2.0.7':
     resolution: {integrity: sha512-dNKVfHd/jk0SkR/exKGj2ggkB45MAkzvWCaqLUUgkyjITkGNzH8H+yUwr+BLJUBjZOe9w8X3wgmXhZDRg1ED6A==}
 
-  '@types/flat@5.0.5':
-    resolution: {integrity: sha512-nPLljZQKSnac53KDUDzuzdRfGI0TDb5qPrb+SrQyN3MtdQrOnGsKniHN1iYZsJEBIVQve94Y6gNz22sgISZq+Q==}
+  '@types/flat@6.0.1':
+    resolution: {integrity: sha512-gbCQ9uq4joBt2StDLinB8u8kEo2RkVf1MqCGJYqVXrZwfBMy86i4RzW7hH6Hp5c1ymB1ZrA+SJx2NyQuGqtEqg==}
+    deprecated: This is a stub types definition. flat provides its own type definitions, so you do not need this installed.
 
   '@types/geobuf@4.0.0':
     resolution: {integrity: sha512-BKsoRcwHiALsjafOiyyoEaN36aPAHqmqGggjaAQZaEX/5+dbrR8U97f8lxAg2QV67pdqeVcrVWD+Jfkeb0Zjng==}
@@ -13660,7 +13661,9 @@ snapshots:
 
   '@types/file-saver@2.0.7': {}
 
-  '@types/flat@5.0.5': {}
+  '@types/flat@6.0.1':
+    dependencies:
+      flat: 6.0.1
 
   '@types/geobuf@4.0.0':
     dependencies:
