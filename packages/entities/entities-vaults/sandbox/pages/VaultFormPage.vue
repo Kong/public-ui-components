@@ -1,4 +1,12 @@
 <template>
+  <h2>Edit an externally loaded Vault (initialization GET disabled)</h2>
+  <VaultForm
+    :key="externalVault.id"
+    :config="konnectConfig"
+    :fetch-on-mount="false"
+    :initial-record="externalVault"
+    :vault-id="externalVault.id"
+  />
   <h2>Konnect API</h2>
   <VaultForm
     :config="konnectConfig"
@@ -31,6 +39,7 @@ import type { AxiosError } from 'axios'
 import type { KonnectVaultFormConfig, KongManagerVaultFormConfig } from '../../src'
 import { VaultForm } from '../../src'
 
+const externalVault = { id: 'example', name: 'env', prefix: 'example-vault', config: { prefix: 'ENV_' } }
 const route = useRoute()
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''

@@ -105,3 +105,7 @@ import type {
   SecretStateFields,
   SecretState
 } from '@kong-ui-public/entities-vaults'
+
+## Supplying the config store directly
+
+`configStoreId?: string | null` bypasses the preliminary Vault GET when a valid ID is supplied. Null/empty values render no inner form and do not fall back. Omitted/undefined retains automatic Vault resolution. For asynchronous data, mount only after the store ID is valid. Changing the Vault/store/API/Secret identity rebuilds inner state and invalidates stale Vault responses. Secret edit reads and writes still occur. See the [external-data migration guide](../../../../docs/record-driven-config-cards.md#vault-edit-and-secret-components).

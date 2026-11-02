@@ -1,60 +1,51 @@
 <template>
-  <div class="kong-ui-vault-entity-config-card">
-    <EntityBaseConfigCard
-      :code-block-record-formatter="codeBlockRecordFormatter"
-      :config="config"
-      :config-card-doc="configCardDoc"
-      :config-schema="configSchema"
-      :entity-type="SupportedEntityType.Vault"
-      :fetch-url="fetchUrl"
-      :formats-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
-      :hide-title="hideTitle"
-      :record-resolver="recordResolver"
-      @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="(entity: any) => $emit('fetch:success', entity)"
-      @loading="(val: boolean) => $emit('loading', val)"
-    >
-      <template #config="{ rowValue }">
-        <ConfigCardItem
-          v-for="propKey in Object.keys(rowValue).sort()"
-          :key="propKey"
-          :item="{
-            key: propKey,
-            value: SENSITIVE_KEYS.includes(propKey) ? SENSITIVE_MASK : getPropValue(propKey, rowValue),
-            label: getMetadataLabel(propKey),
-          }"
-        />
-      </template>
-    </EntityBaseConfigCard>
-  </div>
+  <EntityBaseConfigCard
+    :config="config"
+    :config-card-doc="configCardDoc"
+    :entity-type="SupportedEntityType.Vault"
+    :fetch-url="fetchUrl"
+    :hide-title="hideTitle"
+    @fetch:error="(err: any) => emit('fetch:error', err)"
+    @fetch:success="(entity: any) => emit('fetch:success', entity)"
+    @loading="(val: boolean) => emit('loading', val)"
+  >
+    <template #default="{ record, requestUrl }">
+      <VaultConfigCardView
+        v-bind="props"
+        :config="viewConfig"
+        :record="record"
+        :request-url="requestUrl"
+      >
+        <template
+          v-for="slotKey in Object.keys($slots)"
+          :key="slotKey"
+          #[slotKey]="slotProps"
+        >
+          <slot
+            :name="slotKey"
+            v-bind="slotProps"
+          />
+        </template>
+      </VaultConfigCardView>
+    </template>
+  </EntityBaseConfigCard>
 </template>
 
 <script setup lang="ts">
-import {
-  EntityBaseConfigCard,
-  ConfigurationSchemaSection,
-  ConfigurationSchemaType,
-  ConfigCardItem,
-  SupportedEntityType,
-  useStringHelpers,
-  useHelpers,
-} from '@kong-ui-public/entities-shared'
-import type { AxiosError } from 'axios'
+import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
+import type { AxiosError } from 'axios'
+import { EntityBaseConfigCard, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig } from '../types'
 import endpoints from '../vaults-endpoints'
-import { fromAiGatewayVault } from '../ai-gateway-mappers'
-import '@kong-ui-public/entities-shared/dist/style.css'
-import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, VaultConfigurationSchema } from '../types'
-import composables from '../composables'
-
-defineEmits<{
+import VaultConfigCardView from './VaultConfigCardView.vue'
+const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
   (e: 'fetch:success', data: Record<string, any>): void
 }>()
 
-// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
@@ -85,71 +76,11 @@ const props = defineProps({
     default: false,
   },
 })
-
-// Keys masked in the displayed config. The record is reverse-mapped to gateway field
-// names (via recordResolver) before rendering, so gateway names cover AI Gateway too.
-const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key', 'aws_access_key_id', 'aws_secret_access_key', 'aws_auth_nonce', 'cert_auth_cert_key', 'oauth2_client_secret']
-const SENSITIVE_MASK = '************'
-
-const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
 const fetchUrl = computed((): string => {
   const url = isAiGateway.value ? endpoints.form.aiGateway?.edit : endpoints.form[props.config?.app]?.edit
   return url?.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
 })
+const isAiGateway = computed(() => props.config.apiType === 'aiGateway')
 
-// AI Gateway returns a different vault shape; reshape it to the gateway-named record the
-// schema and config slot expect.
-const recordResolver = (data: Record<string, any>) => isAiGateway.value ? fromAiGatewayVault(data) : data
-
-const { i18n: { t } } = composables.useI18n()
-const { convertKeyToTitle } = useStringHelpers()
-const { getPropValue } = useHelpers()
-
-const configSchema = computed<Partial<VaultConfigurationSchema>>(() => ({
-  id: {},
-  name: {
-    label: t(isAiGateway.value ? 'labels.vault_type_ai_gateway' : 'labels.vault_type'),
-  },
-  updated_at: {},
-  created_at: {},
-  prefix: {
-    order: 5,
-    section: ConfigurationSchemaSection.Basic,
-    label: isAiGateway.value ? t('labels.vault_name_ai_gateway') : undefined,
-  },
-  description: {
-    order: 6,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  ...(isAiGateway.value ? {} : {
-    tags: {
-      order: 7,
-    },
-  }),
-  config: {
-    order: 8,
-    type: ConfigurationSchemaType.Json,
-  },
-}))
-
-const codeBlockRecordFormatter = (record: Record<string, any>) => {
-  const maskedConfig = { ...record.config }
-  SENSITIVE_KEYS.forEach(key => {
-    if (key in maskedConfig) {
-      maskedConfig[key] = SENSITIVE_MASK
-    }
-  })
-  const masked: Record<string, any> = { ...record, config: maskedConfig }
-  if (isAiGateway.value) {
-    // Restore AI Gateway field names so the code view matches the actual API response.
-    const result: Record<string, any> = { ...masked, type: masked.name, name: masked.prefix }
-    delete result.prefix
-    return result
-  }
-  return masked
-}
-
-const getMetadataLabel = (propKey: string) => {
-  return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
-}
+const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

@@ -76,7 +76,7 @@
   />
   <DeckCodeBlock
     v-if="format === 'deck' && entityRecord"
-    :app="config.app"
+    :app="config.app || 'konnect'"
     :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
     :customization-options="deckCustomizationOptions"
     :entity-record="entityRecord"
@@ -92,13 +92,11 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, inject } from 'vue'
 import {
   CONFIG_CARD_FORMATS,
   type ConfigCardCodeFormat,
   type ConfigCardFormat,
-  type KongManagerBaseEntityConfig,
-  type KonnectBaseEntityConfig,
   type RecordItem,
   type SupportedEntityDeck,
   type SupportedEntityType,
@@ -110,6 +108,8 @@ import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
+import type { ConfigCardDisplayConfig } from '../../utils/config-card'
+import { LEGACY_CONFIG_CARD_DECK_OPTIONS } from './legacy-deck-config'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -120,7 +120,7 @@ export interface PropList {
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+    type: Object as PropType<ConfigCardDisplayConfig>,
     required: false,
     default: () => ({}),
   },
@@ -244,12 +244,13 @@ const fetchUrlJsonBlock = computed(() => {
     .replace(/(\?|&)__ui_data=true/, '')
 })
 
+const legacyDeckOptions = inject(LEGACY_CONFIG_CARD_DECK_OPTIONS, undefined)
 const {
   isDeckEnabled,
   deckCustomizationOptions,
   deckCalloutPreferenceKey,
 } = composables.useBaseEntityDeckOptions(
-  () => props.config,
+  () => ({ ...props.config, enableDeckConfig: legacyDeckOptions?.value ?? props.config.enableDeckConfig }),
   () => props.entityType,
 )
 </script>

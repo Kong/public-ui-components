@@ -66,3 +66,7 @@ provide('app:konnectColorMode', colorMode)
 - [`<PluginConfigCard.vue />`](docs/plugin-config-card.md)
 - [`<CustomPluginForm.vue />`](docs/custom-plugin-form.md)
 - [`<AuthPluginOnboardingCard.vue />`](docs/auth-plugin-onboarding-card.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

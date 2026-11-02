@@ -48,3 +48,7 @@ import '@kong-ui-public/entities-keys/dist/style.css'
 - [`<KeyList.vue />`](docs/key-list.md)
 - [`<KeyForm.vue />`](docs/key-form.md)
 - [`<KeyConfigCard.vue />`](docs/key-config-card.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

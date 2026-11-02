@@ -1,9 +1,10 @@
 <template>
   <div class="kong-ui-entities-secrets-list">
     <SecretListInner
-      v-if="configStoreId"
+      v-if="resolvedConfigStoreId"
+      :key="innerKey"
       v-bind="props"
-      :config-store-id="configStoreId"
+      :config-store-id="resolvedConfigStoreId"
       @delete:success="handleDeleteSuccess"
       @error="handleError"
     />
@@ -12,7 +13,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import SecretListInner from './SecretListInner.vue'
@@ -32,6 +33,12 @@ const emit = defineEmits<{
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
+  /** Resolved store. Null/empty disables rendering without falling back to a Vault GET. */
+  configStoreId: {
+    type: String as PropType<string | null>,
+    default: undefined,
+    validator: (value: string | null) => value === null || value.trim().length > 0,
+  },
   /** The base konnect config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectSecretListConfig>,
@@ -82,7 +89,12 @@ const handleDeleteSuccess = (route: SecretEntityRow): void => {
 }
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const configStoreId = ref<string>('')
+const fetchedConfigStoreId = ref('')
+const resolvedConfigStoreId = computed(() => props.configStoreId !== undefined
+  ? props.configStoreId?.trim() || ''
+  : fetchedConfigStoreId.value)
+const innerKey = computed(() => [props.config.app, props.config.apiType, props.config.apiBaseUrl,
+  props.config.controlPlaneId, props.config.aiGatewayId, props.config.workspace, props.vaultId, resolvedConfigStoreId.value].join(':'))
 
 const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
   ? endpoints.getVault.aiGateway
@@ -96,14 +108,21 @@ const fetchVaultUrl = computed<string>(() => {
     .replace(/{id}/gi, props.vaultId)
 })
 
-onBeforeMount(async () => {
+// Ignore a stale Vault response after the store or business identity changes.
+watch([fetchVaultUrl, () => props.configStoreId], async ([url, explicitId], _, onCleanup) => {
+  let current = true
+  onCleanup(() => {
+    current = false
+  })
+  fetchedConfigStoreId.value = ''
+  if (explicitId !== undefined) return
   try {
-    const { data } = await axiosInstance.get(fetchVaultUrl.value)
-    configStoreId.value = data?.config?.config_store_id
+    const { data } = await axiosInstance.get(url)
+    if (current) fetchedConfigStoreId.value = data?.config?.config_store_id || ''
   } catch (err: any) {
-    emit('error', err)
+    if (current) emit('error', err)
   }
-})
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

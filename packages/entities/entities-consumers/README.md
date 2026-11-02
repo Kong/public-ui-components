@@ -45,3 +45,7 @@ import '@kong-ui-public/entities-consumers/dist/style.css'
 - [`<ConsumerList.vue />`](docs/consumer-list.md)
 - [`<ConsumerForm.vue />`](docs/consumer-form.md)
 - [`<ConsumerConfigCard.vue />`](docs/consumer-config-card.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

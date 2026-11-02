@@ -260,3 +260,7 @@ import type {
   ConfigurationSchemaSection,
 } from '@kong-ui-public/entities-shared'
 ```
+
+## Already loaded records
+
+Use the public `EntityConfigCardView` for records loaded by the host. It includes the full card shell and shares presentation with this reader. See the [record-driven interface and migration guide](../../../../docs/record-driven-config-cards.md). The existing reader's response resolvers and request events retain their behavior.

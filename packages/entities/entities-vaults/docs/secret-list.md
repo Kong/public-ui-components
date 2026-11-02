@@ -142,3 +142,7 @@ import type {
   KonnectSecretListConfig,
   SecretEntityRow,
 } from '@kong-ui-public/entities-vaults'
+
+## Supplying the config store directly
+
+`configStoreId?: string | null` bypasses the preliminary Vault GET when valid. Null/empty values render no inner list and do not fall back; omitted/undefined retains the previous resolution path. Mount after asynchronous store resolution. Store/Vault/API identity changes rebuild the list and stale Vault responses are ignored. Secret list reads and deletion remain active. See the [external-data migration guide](../../../../docs/record-driven-config-cards.md#vault-edit-and-secret-components).

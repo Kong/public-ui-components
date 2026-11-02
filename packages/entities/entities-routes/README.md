@@ -70,3 +70,7 @@ As of now, `<RouteForm.vue />` is the only component with Expressions features(c
 - [`<RouteList.vue />`](docs/route-list.md)
 - [`<RouteForm.vue />`](docs/route-form.md)
 - [`<RouteConfigCard.vue />`](docs/route-config-card.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

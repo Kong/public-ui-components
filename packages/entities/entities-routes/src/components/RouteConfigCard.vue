@@ -1,62 +1,48 @@
 <template>
-  <div class="kong-ui-entities-route-entity-config-card">
-    <EntityBaseConfigCard
-      :config="config"
-      :config-card-doc="configCardDoc"
-      :config-schema="configSchema"
-      :entity-type="SupportedEntityType.Route"
-      :fetch-url="fetchUrl"
-      :hide-title="hideTitle"
-      @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="handleSuccess"
-      @loading="(val: boolean) => $emit('loading', val)"
-    >
-      <template #service="{ row }">
-        <!-- Loading -->
-        <KSkeleton
-          v-if="isServiceNameLoading"
-          data-testid="service-name-loader"
-          type="spinner"
-        />
-        <InternalLinkItem
-          v-else-if="row.value && row.value.id === internalServiceId && serviceName"
-          :item="{
-            key: row.value.id,
-            value: serviceName,
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
-          @navigation-click="() => $emit('navigation-click', row.value.id, 'services')"
-        />
-        <div
-          v-else
+  <EntityBaseConfigCard
+    :config="config"
+    :config-card-doc="configCardDoc"
+    :entity-type="SupportedEntityType.Route"
+    :fetch-url="fetchUrl"
+    :hide-title="hideTitle"
+    @fetch:error="(err: any) => emit('fetch:error', err)"
+    @fetch:success="handleSuccess"
+    @loading="(val: boolean) => emit('loading', val)"
+  >
+    <template #default="{ record, requestUrl }">
+      <RouteConfigCardView
+        v-bind="props"
+        :config="viewConfig"
+        :record="record"
+        :request-url="requestUrl"
+        :service-name="serviceName"
+        :service-name-loading="isServiceNameLoading"
+        @navigation-click="(id: string, entityType: any) => emit('navigation-click', id, entityType)"
+      >
+        <template
+          v-for="slotKey in Object.keys($slots)"
+          :key="slotKey"
+          #[slotKey]="slotProps"
         >
-          {{ '-' }}
-        </div>
-      </template>
-    </EntityBaseConfigCard>
-  </div>
+          <slot
+            :name="slotKey"
+            v-bind="slotProps"
+          />
+        </template>
+      </RouteConfigCardView>
+    </template>
+  </EntityBaseConfigCard>
 </template>
 
 <script setup lang="ts">
+import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import {
-  useAxios,
-  ConfigurationSchemaSection,
-  ConfigurationSchemaType,
-  EntityBaseConfigCard,
-  InternalLinkItem,
-  SupportedEntityType,
-} from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, SupportedEntityType, useAxios } from '@kong-ui-public/entities-shared'
+import type { KongManagerRouteEntityConfig, KonnectRouteEntityConfig } from '../types'
 import endpoints from '../routes-endpoints'
-import composables from '../composables'
-import type {
-  KongManagerRouteEntityConfig, KonnectRouteEntityConfig, RouteConfigurationSchema,
-} from '../types'
-
-import '@kong-ui-public/entities-shared/dist/style.css'
-
+import RouteConfigCardView from './RouteConfigCardView.vue'
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
@@ -64,7 +50,6 @@ const emit = defineEmits<{
   (e: 'navigation-click', id: string, entityType: string): void
 }>()
 
-// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
@@ -100,17 +85,14 @@ const props = defineProps({
     default: null,
   },
 })
-
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { i18n: { t } } = composables.useI18n()
-const internalServiceId = ref('')
-const serviceName = ref('')
-const isServiceNameLoading = ref(false)
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config?.app]?.[props.serviceId ? 'forGatewayService' : 'all']
     .replace(/{serviceId}/gi, props.serviceId ?? ''),
 )
-
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const internalServiceId = ref('')
+const serviceName = ref('')
+const isServiceNameLoading = ref(false)
 const fetchServiceName = computed<string>(() => endpoints.item[props.config.app]?.getService)
 
 const handleSuccess = async (entity: any) => {
@@ -143,97 +125,6 @@ const handleSuccess = async (entity: any) => {
   }
 }
 
-const configSchema = ref<RouteConfigurationSchema>({
-  id: {},
-  name: {
-    tooltip: t('form.fields.name.tooltip'),
-  },
-  created_at: {},
-  updated_at: {},
-  service: {
-    label: t('form.fields.service.label'),
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.service.tooltip'),
-    order: 5,
-  },
-  tags: {
-    tooltip: t('form.fields.tags.tooltip'),
-    order: 6,
-  },
-  protocols: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.protocols.tooltip'),
-    type: ConfigurationSchemaType.BadgeTag,
-    order: 7,
-  },
-  paths: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.paths.tooltip'),
-    type: ConfigurationSchemaType.CopyBadge,
-    order: 8,
-  },
-  hosts: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.hosts.tooltip'),
-    type: ConfigurationSchemaType.CopyBadge,
-    order: 9,
-  },
-  snis: {
-    label: t('form.fields.snis.label'),
-    tooltip: t('form.fields.snis.tooltip'),
-    order: 10,
-  },
-  headers: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.headers.tooltip'),
-    order: 11,
-  },
-  methods: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.methods.tooltip'),
-    type: ConfigurationSchemaType.BadgeMethod,
-    order: 12,
-  },
-  sources: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.sources.tooltip'),
-    type: ConfigurationSchemaType.JsonArray,
-    order: 13,
-  },
-  destinations: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.destinations.tooltip'),
-    type: ConfigurationSchemaType.JsonArray,
-    order: 14,
-  },
-  // advanced fields
-  https_redirect_status_code: {
-    tooltip: t('form.fields.https_redirect_status_code.tooltip'),
-    order: 1,
-  },
-  regex_priority: {
-    tooltip: t('form.fields.regex_priority.tooltip'),
-    order: 2,
-  },
-  strip_path: {
-    tooltip: t('form.fields.strip_path.tooltip'),
-    order: 3,
-  },
-  preserve_host: {
-    tooltip: t('form.fields.preserve_host.tooltip'),
-    order: 4,
-  },
-  request_buffering: {
-    tooltip: t('form.fields.request_buffering.tooltip'),
-    order: 5,
-  },
-  response_buffering: {
-    tooltip: t('form.fields.response_buffering.tooltip'),
-    order: 6,
-  },
-  path_handling: {
-    tooltip: t('form.fields.path_handling.tooltip'),
-    order: 7,
-  },
-})
+
+const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

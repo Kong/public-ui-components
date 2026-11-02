@@ -186,6 +186,8 @@ const emit = defineEmits<{
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
+  /** Disable the legacy initialization GET when the host owns entity loading. */
+  fetchOnMount: { type: Boolean, default: true },
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectBaseFormConfig | KongManagerBaseFormConfig>,
@@ -467,7 +469,7 @@ watch(() => isLoading.value, (val: boolean) => {
 
 onBeforeMount(async () => {
   // If props.editId is provided, fetch the entity details for the edit form
-  if (props.editId) {
+  if (props.editId && props.fetchOnMount) {
     try {
       fetchDetailsError.value = false
       isLoading.value = true

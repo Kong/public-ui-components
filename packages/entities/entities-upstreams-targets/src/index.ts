@@ -1,3 +1,4 @@
+import UpstreamsConfigCardView from './components/UpstreamsConfigCardView.vue'
 import UpstreamsList from './components/UpstreamsList.vue'
 import TargetsList from './components/TargetsList.vue'
 import TargetForm from './components/TargetForm.vue'
@@ -11,3 +12,6 @@ export { UpstreamsForm }
 export { UpstreamsConfigCard }
 
 export * from './types'
+
+export { UpstreamsConfigCardView }
+export type UpstreamsConfigCardViewProps = InstanceType<typeof UpstreamsConfigCardView>['$props']

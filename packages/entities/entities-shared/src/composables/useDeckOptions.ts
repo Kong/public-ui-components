@@ -4,17 +4,16 @@ import { DECK_COMMAND_EDITOR_KEY, DECK_COMMAND_EDITOR_MISSING_WARNING } from '..
 import { isSupportedDeckEntityType } from '../types'
 
 import type { MaybeRefOrGetter } from 'vue'
+import type { ConfigCardDisplayConfig } from '../utils/config-card'
 
 import type {
-  KongManagerBaseEntityConfig,
   KongManagerBaseFormConfig,
-  KonnectBaseEntityConfig,
   KonnectBaseFormConfig,
   SupportedEntityType,
 } from '../types'
 
 export function useBaseEntityDeckOptions(
-  config: MaybeRefOrGetter<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+  config: MaybeRefOrGetter<ConfigCardDisplayConfig>,
   entityType: MaybeRefOrGetter<SupportedEntityType>,
 ) {
   const deckCommandEditor = inject(DECK_COMMAND_EDITOR_KEY, null)

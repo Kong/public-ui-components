@@ -199,3 +199,15 @@ export type ConfigCardFormat = (typeof CONFIG_CARD_FORMATS)[number]
 
 // JSON/ YAML/ TR/ Deck tabs only- excludes structured (used for `codeBlockRecordFormatter`)
 export type ConfigCardCodeFormat = Exclude<ConfigCardFormat, 'structured'>
+
+/** Presentation context: no entity identifier, endpoint, or HTTP client is required. */
+export interface EntityConfigCardViewConfig {
+  app?: 'konnect' | 'kongManager'
+  formatPreferenceKey?: string
+  enableDeckConfig?: boolean | { customization?: boolean, calloutPreferenceKey?: string }
+  deckCalloutPreferenceKey?: string
+  controlPlaneName?: string
+  geoApiServerUrl?: string
+  apiBaseUrl?: string
+  workspace?: string | null
+}

@@ -50,3 +50,7 @@ import '@kong-ui-public/entities-vaults/dist/style.css'
 - [`<VaultForm.vue />`](docs/vault-form.md)
 - [`<VaultConfigCard.vue />`](docs/vault-config-card.md)
 - [`<VaultSecretPicker.vue />`](docs/vault-secret-picker.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

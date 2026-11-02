@@ -191,3 +191,7 @@ import type {
   VaultLabelItem
 } from '@kong-ui-public/entities-vaults'
 ```
+
+## Initializing from an existing record
+
+`initialRecord?: Record<string, any>` initializes an independent edit draft once. Providing a ready record skips the initialization Vault GET. `fetchOnMount?: boolean` defaults to `true`; set it to `false` whenever an external owner loads the record, including while the record is still undefined. Late records initialize once and subsequent refreshes preserve edits. Mount with `:key="vault.id"` when changing objects. Existing save/config-store creation requests and events remain active. See the [complete external-data example](../../../../docs/record-driven-config-cards.md#vault-edit-and-secret-components).

@@ -69,3 +69,7 @@ import '@kong-ui-public/entities-gateway-services/dist/style.css'
 - [`<GatewayServiceForm.vue />`](docs/gateway-service-form.md)
 - [`<GatewayServiceConfigCard.vue />`](docs/gateway-service-config-card.md)
 - [`urlValidator()`](docs/url-validator.md)
+
+## Record-driven configuration cards
+
+This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).

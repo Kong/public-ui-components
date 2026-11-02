@@ -35,65 +35,26 @@
         <EntityBaseConfigCard
           v-if="activeSegment === 'cache'"
           :key="cacheConfigCardKey"
-          :code-block-record-formatter="addOnCodeFmt"
-          :code-block-record-resolver="addOnCodeRslv"
           :config="addOnCardRuntimeConfig"
           :config-card-doc="configCardDoc"
-          :config-schema="managedAddOnConfigSchema"
           :entity-type="SupportedEntityType.CloudGatewayAddon"
           fetch-url="/v2/cloud-gateways/add-ons/{id}"
           :formats-to-hide="['yaml']"
           :hide-title="false"
           :preserve-code-block-timestamps="true"
-          :record-resolver="addOnRecordResolver"
           @fetch:error="onFetchError"
           @fetch:success="onCacheAddOnLoaded"
           @loading="onLoadingChange"
         >
-          <template #title>
-            {{ t('config_card.sections.cache_configuration') }}
-          </template>
-          <template #type>
-            <div>{{ t('list.type.konnect_managed_redis') }}</div>
-          </template>
-          <!-- One JSON blob per group -->
-          <template #data_plane_groups="{ row }">
-            <div
-              class="dpg-stack"
-              data-testid="dpg-display"
-            >
-              <template v-if="!dataPlaneGroupEntries(row.value).length">
-                –
-              </template>
-              <template v-else>
-                <div
-                  v-for="(entry, idx) in dataPlaneGroupEntries(row.value)"
-                  :key="idx"
-                  class="dpg-sub-row"
-                  :data-testid="`dpg-sub-row-${idx}`"
-                >
-                  <div
-                    class="dpg-sub-label"
-                    :data-testid="`dpg-item-heading-${idx}`"
-                  >
-                    {{ dataPlaneGroupItemHeading(entry, idx) }}
-                  </div>
-                  <div
-                    class="dpg-sub-value"
-                    :data-testid="`dpg-entry-blob-${idx}`"
-                  >
-                    <KCodeBlock
-                      :id="`dpg-${dataPlaneGroupsInstanceId}-${idx}`"
-                      :code="jsonStringifyDpgEntryForBlob(entry)"
-                      language="json"
-                      max-height="480px"
-                      :show-line-numbers="false"
-                      @code-block-render="highlightCodeBlock"
-                    />
-                  </div>
-                </div>
-              </template>
-            </div>
+          <template #default="{ record, requestUrl }">
+            <RedisConfigurationConfigCardView
+              :config="{ ...addOnCardRuntimeConfig, enableDeckConfig: getConfigCardViewConfig(addOnCardRuntimeConfig).enableDeckConfig }"
+              :config-card-doc="configCardDoc"
+              :hide-title="false"
+              :record="record"
+              record-kind="managed-cache"
+              :request-url="requestUrl"
+            />
           </template>
         </EntityBaseConfigCard>
         <RedisConfigurationConfigCard
@@ -116,82 +77,55 @@
     <!-- Legacy card hides YAML only for nested managed-partial detail; default legacy Konnect/KM passes [ ] -->
     <EntityBaseConfigCard
       v-if="showLegacyConfigCard"
-      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
-      :config-schema="configSchema"
       :entity-type="SupportedEntityType.Partial"
       :fetch-url="fetchUrl"
       :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
-      :record-resolver="recordResolver"
       @fetch:error="onFetchError"
       @fetch:success="handleData"
       @loading="onLoadingChange"
     >
-      <template #type>
-        <div>{{ redisTypeText }}</div>
-      </template>
-      <template
-        v-if="$slots.title"
-        #title
-      >
-        <slot name="title" />
+      <template #default="{ record, requestUrl }">
+        <RedisConfigurationConfigCardView
+          v-bind="props"
+          :config="viewConfig"
+          :record="record"
+          :request-url="requestUrl"
+        >
+          <template
+            v-for="slotKey in Object.keys($slots)"
+            :key="slotKey"
+            #[slotKey]="slotProps"
+          >
+            <slot
+              :name="slotKey"
+              v-bind="slotProps"
+            />
+          </template>
+        </RedisConfigurationConfigCardView>
       </template>
     </EntityBaseConfigCard>
   </div>
 </template>
 
 <script setup lang="ts">
+import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
+import RedisConfigurationConfigCardView from './RedisConfigurationConfigCardView.vue'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, onMounted, ref, useId, watch } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
-import type {
-  ConfigurationSchema,
-  ConfigurationSchemaItem,
-  ConfigCardCodeFormat,
-} from '@kong-ui-public/entities-shared'
-import {
-  ConfigurationSchemaSection,
-  ConfigurationSchemaType,
-  EntityBaseConfigCard,
-  SupportedEntityType,
-  highlightCodeBlock,
-  useAxios,
-} from '@kong-ui-public/entities-shared'
-import { KCodeBlock, KSegmentedControl, KSkeleton, KTooltip } from '@kong/kongponents'
+import { EntityBaseConfigCard, SupportedEntityType, useAxios } from '@kong-ui-public/entities-shared'
+import { KSegmentedControl, KSkeleton, KTooltip } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
-import type {
-  DetailLayout,
-  KonnectRedisConfigurationEntityConfig,
-  KongManagerRedisConfigurationEntityConfig,
-  RedisConfigurationResponse,
-  RedisConfigurationConfigDTO,
-} from '../types'
-import { RedisType } from '../types'
-import type {
-  AddOnRecord,
-  AddOnValue,
-  CloudGatewaysAddOnResponse,
-  CloudGatewaysAddOnState,
-  ManagedCacheAddOn,
-} from '../types/cloud-gateways-add-on'
+import type { DetailLayout, KonnectRedisConfigurationEntityConfig, KongManagerRedisConfigurationEntityConfig, RedisConfigurationResponse } from '../types'
+import type { AddOnRecord, CloudGatewaysAddOnState, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
-import { getRedisType, isKonnectManagedRedisEnabled } from '../helpers'
-import {
-  addOnApiResponseToDisplayRecord,
-  fetchAllManagedCacheAddOns,
-  fetchManagedCacheAddOnById,
-  fetchRedisPartialForConfigCard,
-  getCacheConfigId,
-  isManagedCacheAddOn,
-} from '../helpers/managed-cache-add-on'
-import { cloudAuthenticationObjectForDisplay } from '../helpers/managed-cache-add-on-display'
-import { pickManagedAddOnCardRecord } from '../helpers/managed-add-on-config-schema'
-import { addOnToTerraformArgs, cloneAddOnResponseForConfigTabs } from '../helpers/managed-cache-add-on-tab-payloads'
-import { DEFAULT_REDIS_TYPE } from '../constants'
+import { isKonnectManagedRedisEnabled } from '../helpers'
+import { fetchAllManagedCacheAddOns, fetchManagedCacheAddOnById, fetchRedisPartialForConfigCard, getCacheConfigId, isManagedCacheAddOn } from '../helpers/managed-cache-add-on'
 
 /**
  * Managed Konnect detail flow:
@@ -254,51 +188,11 @@ const onLoadingChange = (isLoading: boolean): void => {
 }
 
 const { i18n: { t } } = composables.useI18n()
-const dataPlaneGroupsInstanceId = useId()
 
-// Shaped add-on/cache values use `AddOnRecord`; `row.value` is typed `any` on the shared card, we only accept add-on shapes here
-const isDataPlaneGroupObject = (v: AddOnValue | undefined): v is AddOnRecord =>
-  v !== null && typeof v === 'object' && !Array.isArray(v)
-
-const dataPlaneGroupEntries = (value: AddOnValue | undefined): AddOnRecord[] => {
-  if (value === undefined || value === null) {
-    return []
-  }
-
-  if (Array.isArray(value)) {
-    return value.filter(isDataPlaneGroupObject)
-  }
-
-  if (isDataPlaneGroupObject(value)) {
-    return [value]
-  }
-
-  return []
-}
-
-const dataPlaneGroupItemHeading = (entry: AddOnRecord, index: number): string => {
-  const name = entry.name
-  if (typeof name === 'string' && name.trim() !== '') {
-    return name
-  }
-
-  return t('config_card.managed_dpg.entry_heading', { n: index + 1 })
-}
-
-// Omit UI-only `name` before JSON blob; everything else stays on the payload
-const jsonStringifyDpgEntryForBlob = (entry: AddOnRecord): string => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `name` is UI-only; rest is serialized
-  const { name, ...payload } = entry
-  return JSON.stringify(payload, null, 2)
-}
-
-const { managedAddOnConfigSchema, setManagedAddOnSchemaFromDisplayRecord } = composables.useManagedCacheAddOnDisplaySchema()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 
-// Show cloud auth fields only when enabled in config
-const konnectCloudAuthAvailable = computed((): boolean => props.config.cloudAuthAvailable === true )
 
 // Konnect managed Redis only. Excludes self-managed Redis, Kong Manager, and legacy Konnect partial detail
 const isManagedKonnectDetailEnabled = computed((): boolean =>
@@ -375,22 +269,6 @@ watch(managedAddOnState, (state) => {
     activeSegment.value = 'cache'
   }
 })
-
-// The same Cloud Gateway add-on response powers 3 outputs:
-// Structured tab: `addOnRecordResolver` maps and filters API fields for card display
-// JSON tab: `addOnCodeRslv` preserves original GET payload including timestamps
-// TR tab: `addOnCodeFmt` transforms that payload via `addOnToTerraformArgs`
-const addOnCodeRslv = (raw: Record<string, any>): Record<string, any> =>
-  cloneAddOnResponseForConfigTabs(raw as CloudGatewaysAddOnResponse)
-
-// Keep only fields shown on the managed cache card
-const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
-  const full = addOnApiResponseToDisplayRecord(data, {
-    cloudAuthAvailable: konnectCloudAuthAvailable.value,
-  })
-  // allowlist filter for add-on cache data
-  return pickManagedAddOnCardRecord(full)
-}
 
 // Show a skeleton first so legacy card does not flash
 onBeforeMount(() => {
@@ -491,23 +369,9 @@ const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfi
   }
 })
 
-// Wire add-on JSON- pass through for JSON tab; TR uses `konnect_cloud_gateway_addon` map
-const addOnCodeFmt = (
-  record: Record<string, any>,
-  codeFormat: ConfigCardCodeFormat,
-): Record<string, any> => {
-  const addOn = record as CloudGatewaysAddOnResponse
-  return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : cloneAddOnResponseForConfigTabs(addOn)
-}
-
 // Konnect-managed: refresh display schema from API row; notify hosts via add-on-only event
 const onCacheAddOnLoaded = (data: Record<string, any>): void => {
   const row = data as AddOnRecord
-  const display = addOnApiResponseToDisplayRecord(row, {
-    cloudAuthAvailable: konnectCloudAuthAvailable.value,
-  })
-  setManagedAddOnSchemaFromDisplayRecord(display)
-
   if (isManagedCacheAddOn(row)) {
     managedAddOnState.value = row.state ?? null
     const partialId = getCacheConfigId(row)
@@ -522,378 +386,14 @@ const onPartialLoaded = (data: RedisConfigurationResponse): void => {
   emit('fetch:success', data)
 }
 
-const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
 
 // Legacy partial config card
 const handleData = (payload: Record<string, any>): void => {
   const row = payload as RedisConfigurationResponse
-  redisType.value = getRedisType(row)
   emit('fetch:success', row)
 }
 
-// Labels used in legacy detail mode
-const redisTypeText = computed(() => {
-  const suffix = redisType.value === RedisType.HOST_PORT_CE
-    ? t('form.options.type.suffix_open_source')
-    : t('form.options.type.suffix_enterprise')
-  let prefix = ''
-  switch (redisType.value) {
-    case RedisType.HOST_PORT_CE:
-      prefix = t('form.options.type.host_port')
-      break
-    case RedisType.HOST_PORT_EE:
-      prefix = t('form.options.type.host_port')
-      break
-    case RedisType.CLUSTER:
-      prefix = t('form.options.type.cluster')
-      break
-    case RedisType.SENTINEL:
-      prefix = t('form.options.type.sentinel')
-      break
-  }
-  return `${prefix}${suffix}`
-})
-
-// Flatten the config object to display in the structure tab
-const recordResolver = (payload: Record<string, any>): AddOnRecord => {
-  const row = payload as RedisConfigurationResponse
-  const partialConfig = row.config ?? {}
-  const rawCloudAuth = partialConfig.cloud_authentication
-
-  const cloudAuthForDisplay = props.config.cloudAuthAvailable
-    ? cloudAuthenticationObjectForDisplay(
-      rawCloudAuth !== null &&
-        typeof rawCloudAuth === 'object' &&
-        !Array.isArray(rawCloudAuth)
-        ? (rawCloudAuth as AddOnRecord)
-        : {},
-      true,
-    ) : null
-
-  // The flat display drops nested objects; keep the whole `oauth` record so it renders as a JSON code block
-  if (
-    cloudAuthForDisplay &&
-    rawCloudAuth !== null &&
-    typeof rawCloudAuth === 'object' &&
-    !Array.isArray(rawCloudAuth) &&
-    rawCloudAuth.oauth
-  ) {
-    cloudAuthForDisplay.oauth = rawCloudAuth.oauth as AddOnValue
-  }
-
-  return {
-    id: row.id,
-    name: row.name,
-    tags: row.tags,
-    created_at: row.created_at,
-    updated_at: row.updated_at,
-    type: row.type,
-    ...partialConfig,
-    ...(props.config.cloudAuthAvailable
-      ? { cloud_authentication: cloudAuthForDisplay }
-      : {}
-    ),
-  }
-}
-
-/**
- * Put config details into `config` object to display in the code block tab
- */
-const codeBlockRecordFormatter = (record: AddOnRecord, codeFormat: ConfigCardCodeFormat): AddOnRecord => {
-  if (!record || Object.keys(record).length === 0) {
-    return {}
-  }
-
-  const { id, name, created_at, updated_at, type, tags, ...config } = record
-  if (codeFormat === 'terraform') {
-    const typeKey = typeof type === 'string' ? type.replaceAll('-', '_') : 'partial'
-    return {
-      [typeKey]: {
-        id, name, tags, created_at, updated_at, config,
-      },
-    }
-  }
-  return {
-    id, name, tags, created_at, updated_at, type, config,
-  }
-}
-
-type BasicFields = {
-  id: string
-  name: string
-  updated_at: string | number
-  created_at: string | number
-  type: string
-  tags: string[]
-}
-type Fields = RedisConfigurationConfigDTO & BasicFields
-
-/**
- * Configuration schema for all fields
- */
-const schemaFieldConfigs: {
-  [key in keyof Fields]: ConfigurationSchemaItem
-} = {
-  id: {},
-  name: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.name.label'),
-  },
-  tags: {
-    type: ConfigurationSchemaType.BadgeTag,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.tags.label'),
-    tooltip: t('form.fields.tags.tooltip'),
-  },
-  updated_at: {},
-  created_at: {},
-  type: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.type.label'),
-  },
-  cluster_max_redirections: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.cluster_max_redirections.tooltip'),
-    label: t('form.fields.cluster_max_redirections.label'),
-  },
-  cluster_nodes: {
-    type: ConfigurationSchemaType.JsonArray,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.cluster_nodes.title'),
-    tooltip: t('form.fields.cluster_nodes.tooltip'),
-  },
-  connect_timeout: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.connect_timeout.label'),
-    tooltip: t('form.fields.connect_timeout.tooltip'),
-  },
-  connection_is_proxied: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.connection_is_proxied.label'),
-    tooltip: t('form.fields.connection_is_proxied.tooltip'),
-  },
-  database: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.database.label'),
-    tooltip: t('form.fields.database.tooltip'),
-  },
-  host: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.host.label'),
-    tooltip: t('form.fields.host.tooltip'),
-  },
-  keepalive_backlog: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.keepalive_backlog.label'),
-    tooltip: t('form.fields.keepalive_backlog.tooltip'),
-  },
-  keepalive_pool_size: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.keepalive_pool_size.label'),
-    tooltip: t('form.fields.keepalive_pool_size.tooltip'),
-  },
-  password: {
-    type: ConfigurationSchemaType.Redacted,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.password.label'),
-    tooltip: t('form.fields.password.tooltip'),
-  },
-  port: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.port.label'),
-    tooltip: t('form.fields.port.tooltip'),
-  },
-  read_timeout: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.read_timeout.label'),
-    tooltip: t('form.fields.read_timeout.tooltip'),
-  },
-  send_timeout: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.send_timeout.label'),
-    tooltip: t('form.fields.send_timeout.tooltip'),
-  },
-  sentinel_master: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.sentinel_master.label'),
-    tooltip: t('form.fields.sentinel_master.tooltip'),
-  },
-  sentinel_nodes: {
-    type: ConfigurationSchemaType.JsonArray,
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.sentinel_nodes.tooltip'),
-  },
-  sentinel_password: {
-    type: ConfigurationSchemaType.Redacted,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.sentinel_password.label'),
-    tooltip: t('form.fields.sentinel_password.tooltip'),
-  },
-  sentinel_role: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.sentinel_role.label'),
-    tooltip: t('form.fields.sentinel_role.tooltip'),
-  },
-  sentinel_username: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.sentinel_username.label'),
-    tooltip: t('form.fields.sentinel_username.tooltip'),
-  },
-  server_name: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.server_name.label'),
-    tooltip: t('form.fields.server_name.tooltip'),
-  },
-  ssl_verify: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.ssl_verify.label'),
-    tooltip: t('form.fields.ssl_verify.tooltip'),
-  },
-  ssl: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.ssl.label'),
-    tooltip: t('form.fields.ssl.tooltip'),
-  },
-  timeout: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.timeout.label'),
-    tooltip: t('form.fields.timeout.tooltip'),
-  },
-  username: {
-    type: ConfigurationSchemaType.Text,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.fields.username.label'),
-    tooltip: t('form.fields.username.tooltip'),
-  },
-  cloud_authentication: {
-    type: ConfigurationSchemaType.Json,
-    section: ConfigurationSchemaSection.Basic,
-    label: t('form.sections.cloud_auth.title'),
-  },
-}
-
-/**
- * Pick fields to display in the configuration schema
- */
-const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
-  const schema: ConfigurationSchema = {}
-  const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
-  for (const field of keys) {
-    if (fields.includes(field)) {
-      schema[field] = {
-        ...schemaFieldConfigs[field],
-        order: fields.indexOf(field) + 1,
-      }
-    } else {
-      schema[field] = {
-        ...schemaFieldConfigs[field],
-        hidden: true,
-      }
-    }
-  }
-  return schema
-}
-
-/**
- * Pick fields to display in the configuration card based on the Redis type
- */
-const configSchema = computed<ConfigurationSchema>(() => {
-  const commonFields: Array<keyof Fields> = ['id', 'name', 'tags', 'type', 'updated_at', 'created_at']
-  switch (redisType.value) {
-    case RedisType.HOST_PORT_CE:
-      return pickSchemaFields([
-        ...commonFields,
-        'host',
-        'port',
-        'timeout',
-        'database',
-        'username',
-        'password',
-        'ssl',
-        'ssl_verify',
-        'server_name',
-        'cloud_authentication',
-      ])
-    case RedisType.HOST_PORT_EE:
-      return pickSchemaFields([
-        ...commonFields,
-        'host',
-        'port',
-        'connection_is_proxied',
-        'database',
-        'username',
-        'password',
-        'ssl',
-        'ssl_verify',
-        'server_name',
-        'keepalive_backlog',
-        'keepalive_pool_size',
-        'read_timeout',
-        'send_timeout',
-        'connect_timeout',
-        'cloud_authentication',
-      ])
-    case RedisType.CLUSTER:
-      return pickSchemaFields([
-        ...commonFields,
-        'cluster_nodes',
-        'cluster_max_redirections',
-        'database',
-        'username',
-        'password',
-        'ssl',
-        'ssl_verify',
-        'server_name',
-        'keepalive_backlog',
-        'keepalive_pool_size',
-        'read_timeout',
-        'send_timeout',
-        'connect_timeout',
-        'cloud_authentication',
-      ])
-    case RedisType.SENTINEL:
-      return pickSchemaFields([
-        ...commonFields,
-        'sentinel_master',
-        'sentinel_role',
-        'sentinel_nodes',
-        'sentinel_username',
-        'sentinel_password',
-        'database',
-        'username',
-        'password',
-        'ssl',
-        'ssl_verify',
-        'server_name',
-        'keepalive_backlog',
-        'keepalive_pool_size',
-        'read_timeout',
-        'send_timeout',
-        'connect_timeout',
-      ])
-    default:
-      throw new Error('Invalid Redis type')
-  }
-})
+const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>
 
 <style lang="scss" scoped>
@@ -908,40 +408,5 @@ const configSchema = computed<ConfigurationSchema>(() => {
     }
   }
 
-  // Fills the config card value column
-  .dpg-stack {
-    width: 100%;
-  }
-
-  // Mirror `ConfigCardItem`’s default label/value split
-  .dpg-sub-row {
-    align-items: flex-start;
-    border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-    box-sizing: border-box;
-    display: flex;
-    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
-    width: 100%;
-  }
-
-  .dpg-sub-label {
-    box-sizing: border-box;
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    padding-right: var(--kui-space-60, $kui-space-60);
-    width: 25%;
-  }
-
-  .dpg-sub-value {
-    box-sizing: border-box;
-    flex: 1;
-    min-width: 0;
-    width: 75%;
-  }
-
-  /* JsonArray fieldset legends (e.g. data plane groups): medium weight; keep global JsonCardItem unchanged */
-  :deep(.config-card-fieldset-title b) {
-    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-  }
 }
 </style>

@@ -1,0 +1,412 @@
+import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import type { ConfigurationSchema, ConfigurationSchemaItem, ConfigCardCodeFormat } from '@kong-ui-public/entities-shared'
+import { ConfigurationSchemaSection, ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
+import type { RedisConfigurationConfigDTO, RedisConfigurationResponse } from '../types'
+import { RedisType } from '../types'
+import type { AddOnRecord, AddOnValue, CloudGatewaysAddOnResponse } from '../types/cloud-gateways-add-on'
+import { getRedisType } from '../helpers'
+import { addOnApiResponseToDisplayRecord } from '../helpers/managed-cache-add-on'
+import { cloudAuthenticationObjectForDisplay } from '../helpers/managed-cache-add-on-display'
+import { pickManagedAddOnCardRecord, buildManagedAddOnCardSchema } from '../helpers/managed-add-on-config-schema'
+import { addOnToTerraformArgs, cloneAddOnResponseForConfigTabs } from '../helpers/managed-cache-add-on-tab-payloads'
+import composables from '../composables'
+
+export default function useRedisConfigCardPresentation(
+  record: MaybeRefOrGetter<Record<string, any>>,
+  cloudAuthAvailable: MaybeRefOrGetter<boolean>,
+) {
+  const { i18n: { t } } = composables.useI18n()
+  const redisType = computed(() => getRedisType(toValue(record) as RedisConfigurationResponse))
+  // Labels used in legacy detail mode
+  const redisTypeText = computed(() => {
+    const suffix = redisType.value === RedisType.HOST_PORT_CE
+      ? t('form.options.type.suffix_open_source')
+      : t('form.options.type.suffix_enterprise')
+    let prefix = ''
+    switch (redisType.value) {
+      case RedisType.HOST_PORT_CE:
+        prefix = t('form.options.type.host_port')
+        break
+      case RedisType.HOST_PORT_EE:
+        prefix = t('form.options.type.host_port')
+        break
+      case RedisType.CLUSTER:
+        prefix = t('form.options.type.cluster')
+        break
+      case RedisType.SENTINEL:
+        prefix = t('form.options.type.sentinel')
+        break
+    }
+    return `${prefix}${suffix}`
+  })
+
+  // Flatten the config object to display in the structure tab
+  const recordResolver = (payload: Record<string, any>): AddOnRecord => {
+    const row = payload as RedisConfigurationResponse
+    const partialConfig = row.config ?? {}
+    const rawCloudAuth = partialConfig.cloud_authentication
+
+    const cloudAuthForDisplay = toValue(cloudAuthAvailable)
+      ? cloudAuthenticationObjectForDisplay(
+        rawCloudAuth !== null &&
+        typeof rawCloudAuth === 'object' &&
+        !Array.isArray(rawCloudAuth)
+          ? (rawCloudAuth as AddOnRecord)
+          : {},
+        true,
+      ) : null
+
+    // The flat display drops nested objects; keep the whole `oauth` record so it renders as a JSON code block
+    if (
+      cloudAuthForDisplay &&
+    rawCloudAuth !== null &&
+    typeof rawCloudAuth === 'object' &&
+    !Array.isArray(rawCloudAuth) &&
+    rawCloudAuth.oauth
+    ) {
+      cloudAuthForDisplay.oauth = rawCloudAuth.oauth as AddOnValue
+    }
+
+    return {
+      id: row.id,
+      name: row.name,
+      tags: row.tags,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+      type: row.type,
+      ...partialConfig,
+      ...(toValue(cloudAuthAvailable)
+        ? { cloud_authentication: cloudAuthForDisplay }
+        : {}
+      ),
+    }
+  }
+
+  /**
+ * Put config details into `config` object to display in the code block tab
+ */
+  const codeBlockRecordFormatter = (record: AddOnRecord, codeFormat: ConfigCardCodeFormat): AddOnRecord => {
+    if (!record || Object.keys(record).length === 0) {
+      return {}
+    }
+
+    const { id, name, created_at, updated_at, type, tags, ...config } = record
+    if (codeFormat === 'terraform') {
+      const typeKey = typeof type === 'string' ? type.replaceAll('-', '_') : 'partial'
+      return {
+        [typeKey]: {
+          id, name, tags, created_at, updated_at, config,
+        },
+      }
+    }
+    return {
+      id, name, tags, created_at, updated_at, type, config,
+    }
+  }
+
+  type BasicFields = {
+    id: string
+    name: string
+    updated_at: string | number
+    created_at: string | number
+    type: string
+    tags: string[]
+  }
+  type Fields = RedisConfigurationConfigDTO & BasicFields
+
+  /**
+ * Configuration schema for all fields
+ */
+  const schemaFieldConfigs: {
+    [key in keyof Fields]: ConfigurationSchemaItem
+  } = {
+    id: {},
+    name: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.name.label'),
+    },
+    tags: {
+      type: ConfigurationSchemaType.BadgeTag,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.tags.label'),
+      tooltip: t('form.fields.tags.tooltip'),
+    },
+    updated_at: {},
+    created_at: {},
+    type: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.type.label'),
+    },
+    cluster_max_redirections: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      tooltip: t('form.fields.cluster_max_redirections.tooltip'),
+      label: t('form.fields.cluster_max_redirections.label'),
+    },
+    cluster_nodes: {
+      type: ConfigurationSchemaType.JsonArray,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.cluster_nodes.title'),
+      tooltip: t('form.fields.cluster_nodes.tooltip'),
+    },
+    connect_timeout: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.connect_timeout.label'),
+      tooltip: t('form.fields.connect_timeout.tooltip'),
+    },
+    connection_is_proxied: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.connection_is_proxied.label'),
+      tooltip: t('form.fields.connection_is_proxied.tooltip'),
+    },
+    database: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.database.label'),
+      tooltip: t('form.fields.database.tooltip'),
+    },
+    host: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.host.label'),
+      tooltip: t('form.fields.host.tooltip'),
+    },
+    keepalive_backlog: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.keepalive_backlog.label'),
+      tooltip: t('form.fields.keepalive_backlog.tooltip'),
+    },
+    keepalive_pool_size: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.keepalive_pool_size.label'),
+      tooltip: t('form.fields.keepalive_pool_size.tooltip'),
+    },
+    password: {
+      type: ConfigurationSchemaType.Redacted,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.password.label'),
+      tooltip: t('form.fields.password.tooltip'),
+    },
+    port: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.port.label'),
+      tooltip: t('form.fields.port.tooltip'),
+    },
+    read_timeout: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.read_timeout.label'),
+      tooltip: t('form.fields.read_timeout.tooltip'),
+    },
+    send_timeout: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.send_timeout.label'),
+      tooltip: t('form.fields.send_timeout.tooltip'),
+    },
+    sentinel_master: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.sentinel_master.label'),
+      tooltip: t('form.fields.sentinel_master.tooltip'),
+    },
+    sentinel_nodes: {
+      type: ConfigurationSchemaType.JsonArray,
+      section: ConfigurationSchemaSection.Basic,
+      tooltip: t('form.fields.sentinel_nodes.tooltip'),
+    },
+    sentinel_password: {
+      type: ConfigurationSchemaType.Redacted,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.sentinel_password.label'),
+      tooltip: t('form.fields.sentinel_password.tooltip'),
+    },
+    sentinel_role: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.sentinel_role.label'),
+      tooltip: t('form.fields.sentinel_role.tooltip'),
+    },
+    sentinel_username: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.sentinel_username.label'),
+      tooltip: t('form.fields.sentinel_username.tooltip'),
+    },
+    server_name: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.server_name.label'),
+      tooltip: t('form.fields.server_name.tooltip'),
+    },
+    ssl_verify: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.ssl_verify.label'),
+      tooltip: t('form.fields.ssl_verify.tooltip'),
+    },
+    ssl: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.ssl.label'),
+      tooltip: t('form.fields.ssl.tooltip'),
+    },
+    timeout: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.timeout.label'),
+      tooltip: t('form.fields.timeout.tooltip'),
+    },
+    username: {
+      type: ConfigurationSchemaType.Text,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.fields.username.label'),
+      tooltip: t('form.fields.username.tooltip'),
+    },
+    cloud_authentication: {
+      type: ConfigurationSchemaType.Json,
+      section: ConfigurationSchemaSection.Basic,
+      label: t('form.sections.cloud_auth.title'),
+    },
+  }
+
+  /**
+ * Pick fields to display in the configuration schema
+ */
+  const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
+    const schema: ConfigurationSchema = {}
+    const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
+    for (const field of keys) {
+      if (fields.includes(field)) {
+        schema[field] = {
+          ...schemaFieldConfigs[field],
+          order: fields.indexOf(field) + 1,
+        }
+      } else {
+        schema[field] = {
+          ...schemaFieldConfigs[field],
+          hidden: true,
+        }
+      }
+    }
+    return schema
+  }
+
+  /**
+ * Pick fields to display in the configuration card based on the Redis type
+ */
+  const configSchema = computed<ConfigurationSchema>(() => {
+    const commonFields: Array<keyof Fields> = ['id', 'name', 'tags', 'type', 'updated_at', 'created_at']
+    switch (redisType.value) {
+      case RedisType.HOST_PORT_CE:
+        return pickSchemaFields([
+          ...commonFields,
+          'host',
+          'port',
+          'timeout',
+          'database',
+          'username',
+          'password',
+          'ssl',
+          'ssl_verify',
+          'server_name',
+          'cloud_authentication',
+        ])
+      case RedisType.HOST_PORT_EE:
+        return pickSchemaFields([
+          ...commonFields,
+          'host',
+          'port',
+          'connection_is_proxied',
+          'database',
+          'username',
+          'password',
+          'ssl',
+          'ssl_verify',
+          'server_name',
+          'keepalive_backlog',
+          'keepalive_pool_size',
+          'read_timeout',
+          'send_timeout',
+          'connect_timeout',
+          'cloud_authentication',
+        ])
+      case RedisType.CLUSTER:
+        return pickSchemaFields([
+          ...commonFields,
+          'cluster_nodes',
+          'cluster_max_redirections',
+          'database',
+          'username',
+          'password',
+          'ssl',
+          'ssl_verify',
+          'server_name',
+          'keepalive_backlog',
+          'keepalive_pool_size',
+          'read_timeout',
+          'send_timeout',
+          'connect_timeout',
+          'cloud_authentication',
+        ])
+      case RedisType.SENTINEL:
+        return pickSchemaFields([
+          ...commonFields,
+          'sentinel_master',
+          'sentinel_role',
+          'sentinel_nodes',
+          'sentinel_username',
+          'sentinel_password',
+          'database',
+          'username',
+          'password',
+          'ssl',
+          'ssl_verify',
+          'server_name',
+          'keepalive_backlog',
+          'keepalive_pool_size',
+          'read_timeout',
+          'send_timeout',
+          'connect_timeout',
+        ])
+      default:
+        throw new Error('Invalid Redis type')
+    }
+  })
+  // The same Cloud Gateway add-on response powers 3 outputs:
+  // Structured tab: `addOnRecordResolver` maps and filters API fields for card display
+  // JSON tab: `addOnCodeRslv` preserves original GET payload including timestamps
+  // TR tab: `addOnCodeFmt` transforms that payload via `addOnToTerraformArgs`
+  const addOnCodeRslv = (raw: Record<string, any>): Record<string, any> =>
+    cloneAddOnResponseForConfigTabs(raw as CloudGatewaysAddOnResponse)
+
+  // Keep only fields shown on the managed cache card
+  const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
+    const full = addOnApiResponseToDisplayRecord(data, {
+      cloudAuthAvailable: toValue(cloudAuthAvailable),
+    })
+    // allowlist filter for add-on cache data
+    return pickManagedAddOnCardRecord(full)
+  }
+
+  // Wire add-on JSON- pass through for JSON tab; TR uses `konnect_cloud_gateway_addon` map
+  const addOnCodeFmt = (
+    record: Record<string, any>,
+    codeFormat: ConfigCardCodeFormat,
+  ): Record<string, any> => {
+    const addOn = record as CloudGatewaysAddOnResponse
+    return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : cloneAddOnResponseForConfigTabs(addOn)
+  }
+
+
+  const managedRecord = computed(() => addOnRecordResolver(toValue(record)))
+  const managedSchema = computed(() => buildManagedAddOnCardSchema(managedRecord.value, path => t(path as never)))
+  return { redisTypeText, recordResolver, codeBlockRecordFormatter, configSchema, addOnCodeRslv, addOnCodeFmt, managedRecord, managedSchema }
+}

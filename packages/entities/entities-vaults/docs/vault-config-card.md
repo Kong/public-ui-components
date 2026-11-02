@@ -114,3 +114,7 @@ import type {
  KongManagerVaultEntityConfig,
 } from '@kong-ui-public/entities-vaults'
 ```
+
+## VaultConfigCardView
+
+Import `VaultConfigCardView` and `VaultConfigCardViewProps` from the package root to display an already resolved Vault. `record` is required; optional `config` contains presentation context only. Set `config.apiType` to `aiGateway` for local domain mapping, labels and AI Gateway export restrictions. No request configuration or IDs are required. The View preserves unconditional masking across structured and code formats. See the [migration guide](../../../../docs/record-driven-config-cards.md).

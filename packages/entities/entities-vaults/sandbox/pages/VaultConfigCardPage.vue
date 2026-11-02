@@ -1,4 +1,9 @@
 <template>
+  <h2>Record-driven AI Gateway Vault (local mapping and masking)</h2>
+  <VaultConfigCardView
+    :config="{ apiType: 'aiGateway' }"
+    :record="{ id: 'example', type: 'hcv', name: 'example-vault', config: { auth_method: 'cert', key: 'masked-example' } }"
+  />
   <h2>Konnect API</h2>
   <VaultConfigCard
     :config="konnectConfig"
@@ -6,8 +11,9 @@
     @fetch:success="onSuccess"
   />
   <SecretList
-    v-if="konnectVaultRecord?.name === VaultProviders.KONNECT"
+    v-if="konnectVaultRecord?.name === VaultProviders.KONNECT && konnectVaultRecord.config?.config_store_id"
     :config="konnectConfigForSecret"
+    :config-store-id="konnectVaultRecord.config.config_store_id"
     :vault-id="id"
   />
 
@@ -25,8 +31,9 @@
     @fetch:success="onAiGatewaySuccess"
   />
   <SecretList
-    v-if="aiGatewayVaultRecord?.name === VaultProviders.KONNECT"
+    v-if="aiGatewayVaultRecord?.type === VaultProviders.KONNECT && aiGatewayVaultRecord.config?.config_store_id"
     :config="aiGatewayConfigForSecret"
+    :config-store-id="aiGatewayVaultRecord.config.config_store_id"
     :vault-id="id"
   />
 </template>
@@ -34,6 +41,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, KonnectSecretListConfig } from '../../src'
+import { VaultConfigCardView } from '../../src'
 import { VaultProviders } from '../../src/types'
 import VaultConfigCard from '../../src/components/VaultConfigCard.vue'
 import SecretList from '../../src/components/SecretList.vue'

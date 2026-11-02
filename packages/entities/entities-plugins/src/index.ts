@@ -1,3 +1,4 @@
+import PluginConfigCardView from './components/PluginConfigCardView.vue'
 import FlowCanvas from './components/free-form/plugins/datakit/flow-editor/FlowCanvas.vue'
 import NodeBadge from './components/free-form/plugins/datakit/flow-editor/node/NodeBadge.vue'
 import CustomPluginForm from './components/CustomPluginForm.vue'
@@ -86,3 +87,7 @@ export * from './constants'
 export { getPluginIconURL, PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 
 export * from './freeform'
+
+export { PluginConfigCardView }
+export type { PluginConfigCardViewConfig } from './components/PluginConfigCardView.vue'
+export type PluginConfigCardViewProps = InstanceType<typeof PluginConfigCardView>['$props']

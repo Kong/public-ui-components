@@ -6,6 +6,7 @@
       :edit-id="vaultId"
       :entity-type="SupportedEntityType.Vault"
       :error-message="form.errorMessage"
+      :fetch-on-mount="fetchOnMount && !initialRecord"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
@@ -1068,7 +1069,7 @@ import '@kong-ui-public/misc-widgets/dist/style.css'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import type {
   ConfigStoreConfig,
   KongVaultConfig,
@@ -1120,6 +1121,10 @@ interface ConfigFields {
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
+  /** Resolved Vault used once for an independent edit draft. Remount when vaultId changes. */
+  initialRecord: { type: Object as PropType<Record<string, any>>, default: undefined },
+  /** False disables initialization GET even while initialRecord is pending. */
+  fetchOnMount: { type: Boolean, default: true },
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectVaultFormConfig | KongManagerVaultFormConfig>,
@@ -1580,6 +1585,7 @@ const getProviderDescription = (providerName: VaultProviders) => {
 }
 
 const updateFormValues = (rawData: Record<string, any>): void => {
+  rawData = rawData && JSON.parse(JSON.stringify(rawData))
   // AI Gateway returns a different vault shape (type/name/renamed hcv fields);
   // normalize it to the gateway shape the rest of this function expects.
   const data = isAiGateway.value ? fromAiGatewayVault(rawData?.item ?? rawData) : rawData
@@ -1610,6 +1616,13 @@ const updateFormValues = (rawData: Record<string, any>): void => {
     form.errorMessage = 'Error loading vault config'
   }
 }
+
+let initializedFromRecord = false
+watch(() => props.initialRecord, (record) => {
+  if (!record || !props.vaultId || initializedFromRecord) return
+  initializedFromRecord = true
+  updateFormValues(record)
+}, { immediate: true })
 
 // return true if the value is one of '', undefined or null
 const isEmpty = (v: unknown): boolean => v === '' || v == null

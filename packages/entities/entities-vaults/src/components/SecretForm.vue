@@ -1,9 +1,10 @@
 <template>
   <div class="kong-ui-entities-secret-form">
     <SecretFormInner
-      v-if="configStoreId"
+      v-if="resolvedConfigStoreId"
+      :key="innerKey"
       v-bind="props"
-      :config-store-id="configStoreId"
+      :config-store-id="resolvedConfigStoreId"
       @error="handleError"
       @loading="handleLoading"
       @update="handleUpdate"
@@ -15,7 +16,7 @@
 import { useAxios } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   SecretStateFields,
@@ -25,6 +26,12 @@ import endpoints from '../secrets-endpoints'
 import SecretFormInner from './SecretFormInner.vue'
 
 const props = defineProps({
+  /** Resolved store. Null/empty disables rendering without falling back to a Vault GET. */
+  configStoreId: {
+    type: String as PropType<string | null>,
+    default: undefined,
+    validator: (value: string | null) => value === null || value.trim().length > 0,
+  },
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectSecretFormConfig>,
@@ -70,7 +77,12 @@ const handleLoading = (isLoading: boolean): void => {
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const configStoreId = ref<string>('')
+const fetchedConfigStoreId = ref('')
+const resolvedConfigStoreId = computed(() => props.configStoreId !== undefined
+  ? props.configStoreId?.trim() || ''
+  : fetchedConfigStoreId.value)
+const innerKey = computed(() => [props.config.app, props.config.apiType, props.config.apiBaseUrl,
+  props.config.controlPlaneId, props.config.aiGatewayId, props.config.workspace, props.vaultId, resolvedConfigStoreId.value, props.secretId].join(':'))
 
 const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
   ? endpoints.getVault.aiGateway
@@ -84,14 +96,21 @@ const fetchVaultUrl = computed<string>(() => {
     .replace(/{id}/gi, props.vaultId)
 })
 
-onBeforeMount(async () => {
+// Ignore a stale Vault response after the store or business identity changes.
+watch([fetchVaultUrl, () => props.configStoreId], async ([url, explicitId], _, onCleanup) => {
+  let current = true
+  onCleanup(() => {
+    current = false
+  })
+  fetchedConfigStoreId.value = ''
+  if (explicitId !== undefined) return
   try {
-    const { data } = await axiosInstance.get(fetchVaultUrl.value)
-    configStoreId.value = data?.config?.config_store_id
+    const { data } = await axiosInstance.get(url)
+    if (current) fetchedConfigStoreId.value = data?.config?.config_store_id || ''
   } catch (err: any) {
-    emit('error', err)
+    if (current) emit('error', err)
   }
-})
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
