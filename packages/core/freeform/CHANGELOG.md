@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.7.4...%40kong-ui-public%2Ffreeform%400.8.0) (2026-11-02)
+
+### Features
+
+* **entities-plugins:** add datakit call node error handling [KM-3270] ([#3967](https://github.com/Kong/public-ui-components/issues/3967)) ([46026d3](https://github.com/Kong/public-ui-components/commit/46026d315c7fe2b619a1f0738d89f4a4a21df69a))
+
+
 ## [0.7.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.7.3...%40kong-ui-public%2Ffreeform%400.7.4) (2026-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/freeform

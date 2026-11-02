@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.2.6...%40kong-ui-public%2Fentities-plugins%4010.3.0) (2026-11-02)
+
+### Features
+
+* **entities-plugins:** add datakit call node error handling [KM-3270] ([#3967](https://github.com/Kong/public-ui-components/issues/3967)) ([46026d3](https://github.com/Kong/public-ui-components/commit/46026d315c7fe2b619a1f0738d89f4a4a21df69a))
+
+
 ## [10.2.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.2.5...%40kong-ui-public%2Fentities-plugins%4010.2.6) (2026-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
