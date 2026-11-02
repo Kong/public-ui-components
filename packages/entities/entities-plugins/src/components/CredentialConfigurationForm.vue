@@ -108,7 +108,19 @@ const initialModel = (): Record<string, any> => {
 const credentialModel = ref<Record<string, any>>(initialModel())
 const handleFormChange = (value: Record<string, any>): void => {
   credentialModel.value = value
-  emit('update:modelValue', value)
+  emit('update:modelValue', omitHiddenFields(value))
+}
+
+// JWT: freeform resets the hidden `rsa_public_key` to empty. Leave it out instead, so a stored key
+// is kept when the algorithm doesn't use it.
+const omitHiddenFields = (value: Record<string, any>): Record<string, any> => {
+  if (credentialType === 'jwt' && !ASYMMETRIC_JWT_ALGORITHMS.includes(value.algorithm)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { rsa_public_key, ...rest } = value
+    return rest
+  }
+
+  return value
 }
 
 const fieldRenderers = computed((): FieldRendererRule[] => [

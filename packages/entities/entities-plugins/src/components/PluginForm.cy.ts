@@ -855,6 +855,81 @@ describe('<PluginForm />', () => {
         })
       })
 
+      it('should not send the blank password when editing other basic-auth credential fields', () => {
+        const credential = {
+          id: 'basic-auth-credential-id',
+          consumer: { id: scopedConsumer.item.id },
+          created_at: 1700516447,
+          username: 'kai',
+          password: 'hashed-password',
+          tags: ['tag1'],
+        }
+        interceptKMSchema({ credential: true, mockData: basicAuthCredentialSchema })
+        cy.intercept('GET', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('getCredential')
+        cy.intercept('PATCH', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('updateCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'basic-auth',
+            pluginId: credential.id,
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getCredential'])
+
+        cy.getTestId('ff-username').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled').click()
+
+        cy.wait('@updateCredential').its('request.body').should('deep.equal', {
+          username: 'kai-edited',
+          tags: ['tag1'],
+          consumer: { id: scopedConsumer.item.id },
+        })
+      })
+
+      it('should keep the stored RSA public key when editing a JWT credential with a symmetric algorithm', () => {
+        const credential = {
+          id: 'jwt-credential-id',
+          consumer: { id: scopedConsumer.item.id },
+          created_at: 1700516447,
+          key: 'jwt-key',
+          algorithm: 'HS256',
+          secret: 'jwt-secret',
+          rsa_public_key: '-----BEGIN PUBLIC KEY-----',
+          tags: ['tag1'],
+        }
+        interceptKMSchema({ credential: true, mockData: jwtCredentialSchema })
+        cy.intercept('GET', credentialUrl('jwt', credential.id), { statusCode: 200, body: credential }).as('getCredential')
+        cy.intercept('PATCH', credentialUrl('jwt', credential.id), { statusCode: 200, body: credential }).as('updateCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'jwt',
+            pluginId: credential.id,
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getCredential'])
+
+        cy.getTestId('ff-rsa_public_key').should('not.be.visible')
+        cy.getTestId('ff-tags').clear()
+        cy.getTestId('ff-tags').type('tag2')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled').click()
+
+        cy.wait('@updateCredential').its('request.body').should((body) => {
+          expect(body).to.not.have.property('rsa_public_key')
+          expect(body.tags).to.deep.equal(['tag2'])
+        })
+      })
+
       it('should only show the RSA public key for asymmetric JWT algorithms', () => {
         cy.viewport(800, 1200)
         interceptKMSchema({ credential: true, mockData: jwtCredentialSchema })

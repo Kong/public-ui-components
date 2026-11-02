@@ -209,7 +209,7 @@ import type { Tab } from '@kong/kongponents'
 import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
 import DOMPurify from 'dompurify'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, toRef, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -242,7 +242,7 @@ import { EXPRESSIONS_FIELD } from '@kong-ui-public/freeform'
 import type { GlobalAction } from '@kong-ui-public/freeform'
 import { BEFORE_SAVE_KEY } from './const'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
-import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
@@ -454,6 +454,9 @@ const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
 })
 
 const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
+
+// `PluginEntityForm` provides this for plugin forms; the credential form is rendered without it
+provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
 
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
@@ -1376,22 +1379,27 @@ const handleUpdate = (payload: Record<string, any>) => {
 
 // fired whenever the credential form data is modified
 const handleCredentialUpdate = (model: Record<string, any>) => {
-  const original = record.value ?? {}
-
-  // The form emits `null` for every empty field. Only submit those that are explicitly cleared,
-  // i.e. had a value in the existing credential.
-  submitPayload.value = Object.fromEntries(
-    Object.entries(model).filter(([key, value]) => value != null || original[key] != null),
-  )
-
   form.fields = { ...form.fields, ...model, id: record.value?.id || undefined }
 
   // The first emission is the form's initial value, use it as the baseline for change detection.
+  // The baseline is also reset after each save.
   if (!credentialBaselineSet.value) {
     credentialBaselineSet.value = true
     Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
     Object.assign(formFieldsOriginal, form.fields)
   }
+
+  const original: Record<string, any> = formFieldsOriginal
+  const isEmpty = (value: unknown): boolean => value == null || value === ''
+
+  // The form emits `null` for every empty field. Only submit those that are explicitly cleared,
+  // i.e. had a value in the baseline, and send them as `null`.
+  // An empty field without a baseline value is left out, e.g. the password blanked on edit (FTI-6248).
+  submitPayload.value = Object.fromEntries(
+    Object.entries(model)
+      .filter(([key, value]) => !isEmpty(value) || !isEmpty(original[key]))
+      .map(([key, value]) => [key, isEmpty(value) ? null : value]),
+  )
 
   if (props.isWizardStep) {
     emit('model-updated', {
