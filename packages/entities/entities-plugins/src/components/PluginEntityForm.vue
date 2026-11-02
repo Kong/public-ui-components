@@ -219,13 +219,6 @@ const props = defineProps({
     default: false,
   },
   /**
-   * Plugin credential form
-   */
-  credential: {
-    type: Boolean,
-    default: false,
-  },
-  /**
    * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
    */
   enableVaultSecretPicker: {
@@ -281,7 +274,6 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
-  credential: props.credential,
   enableRedisPartial: props.enableRedisPartial,
   experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
@@ -966,17 +958,7 @@ const initFormModel = (): void => {
       ...(props.record.tags && { tags: props.record.tags }),
     })
 
-    // handle credentials
-    if (props.credential) {
-      // scope
-      if (props.record.consumer_id || props.record.consumer) {
-        updateModel({
-          consumer_id: props.record.consumer_id || props.record.consumer,
-        })
-      }
-
-      updateModel(props.record)
-    } else if (props.record.config) { // typical plugins
+    if (props.record.config) { // typical plugins
       // scope fields
       if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
         (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
@@ -1016,18 +998,6 @@ const initFormModel = (): void => {
       if (Object.prototype.hasOwnProperty.call(formModel, key)) {
         updateFields[key] = id
       }
-    }
-
-    updateModel(updateFields)
-  }
-
-  // credentials don't recognize field with -id, so for now set it like
-  // ex. consumer: <entityId>
-  // we'll fix this on submit
-  if (props.entityMap.consumer?.id && props.schema && props.credential) {
-    const updateFields: Record<string, any> = {}
-    if (Object.prototype.hasOwnProperty.call(formModel, 'consumer')) {
-      updateFields.consumer = props.entityMap.consumer.id
     }
 
     updateModel(updateFields)

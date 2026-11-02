@@ -44,9 +44,22 @@
         @submit="saveFormData"
       />
 
+      <template v-if="treatAsCredential">
+        <CredentialConfigurationForm
+          v-if="loadedSchema && (formType === EntityBaseFormType.Create || record)"
+          :config="config"
+          :credential-type="(pluginType as CredentialType)"
+          :editing="formType === EntityBaseFormType.Edit"
+          :record="record"
+          :schema="loadedSchema"
+          @update:loading="(val: boolean) => formLoading = val"
+          @update:model-value="handleCredentialUpdate"
+        />
+      </template>
+
       <PluginEntityForm
+        v-else
         :config="config"
-        :credential="treatAsCredential"
         :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
@@ -216,9 +229,11 @@ import {
   type PluginFormState,
   type PluginOrdering,
   type CustomSchemas,
+  type CredentialType,
   type PluginValidityChangeEvent,
   type EntityCreateEvent,
 } from '../types'
+import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
@@ -386,7 +401,6 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { customSchemas, typedefs } = composables.useSchemas({
   app: props.config.app,
-  credential: props.credential,
   experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
@@ -717,7 +731,6 @@ const getArrayType = (list: unknown[]): string => {
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
   const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-  const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
@@ -1063,18 +1076,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       }
     }
 
-    if (treatAsCredential.value && credentialSchema) {
-      for (let i = 0; i < credentialSchema.length; i++) {
-        if (credentialSchema[i][field]) {
-          initialFormSchema[field] = {
-            ...initialFormSchema[field],
-            ...credentialSchema[i][field],
-          }
-          break
-        }
-      }
-    }
-
     if (scheme.required && scheme.type !== 'boolean') {
       initialFormSchema[field].required = true
       initialFormSchema[field].selectOptions = {
@@ -1338,7 +1339,7 @@ const dynamicOrdering = ref<PluginOrdering>()
 // We need to wait for this before we start attempting to build the schema
 const initForm = (data: Record<string, any>): void => {
   // FIXME: This is a workaround for the issue FTI-6248, it should be replaced with a better solution
-  // When editing a credential, ff the user saves the password without changing it, the password will be changed to the hashed password returned by the backend
+  // When editing a credential, if the user saves the password without changing it, the password will be changed to the hashed password returned by the backend
   // The modification here is to force users to reset the password
   if (props.credential && data.password) {
     data.password = ''
@@ -1355,6 +1356,7 @@ const initForm = (data: Record<string, any>): void => {
 }
 
 const submitPayload = ref<Record<string, any>>({})
+const credentialBaselineSet = ref(false)
 // fired whenever form data is modified
 const handleUpdate = (payload: Record<string, any>) => {
   form.fields = payload.model
@@ -1367,6 +1369,34 @@ const handleUpdate = (payload: Record<string, any>) => {
     emit('model-updated', {
       model: form.fields,
       data: payload.data,
+      resourceEndpoint: resourceEndpoint.value,
+    })
+  }
+}
+
+// fired whenever the credential form data is modified
+const handleCredentialUpdate = (model: Record<string, any>) => {
+  const original = record.value ?? {}
+
+  // The form emits `null` for every empty field. Only submit those that are explicitly cleared,
+  // i.e. had a value in the existing credential.
+  submitPayload.value = Object.fromEntries(
+    Object.entries(model).filter(([key, value]) => value != null || original[key] != null),
+  )
+
+  form.fields = { ...form.fields, ...model, id: record.value?.id || undefined }
+
+  // The first emission is the form's initial value, use it as the baseline for change detection.
+  if (!credentialBaselineSet.value) {
+    credentialBaselineSet.value = true
+    Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
+    Object.assign(formFieldsOriginal, form.fields)
+  }
+
+  if (props.isWizardStep) {
+    emit('model-updated', {
+      model: form.fields,
+      data: submitPayload.value,
       resourceEndpoint: resourceEndpoint.value,
     })
   }
@@ -1466,19 +1496,15 @@ const isCustomPlugin = computed((): boolean => {
 })
 
 const getRequestBody = computed((): Record<string, any> => {
-  const requestBody: Record<string, any> = submitPayload.value
+  const requestBody: Record<string, any> = treatAsCredential.value ? { ...submitPayload.value } : submitPayload.value
 
-  // credentials incorrectly build the entity id object
   if (treatAsCredential.value) {
-    for (const key in PluginScope) {
-      const entityKey = PluginScope[key as keyof typeof PluginScope]
-      // ex. { consumer: '1234-567-899' } => { consumer: { id: '1234-567-899' } }
-      if (requestBody[entityKey] && !requestBody[entityKey].id) {
-        requestBody[entityKey] = { id: props.config.entityId }
-      }
+    // The credential is already scoped by the request URL, the consumer is also sent to keep the payload the same as before.
+    // ex. { consumer: { id: '1234-567-899' } }
+    const consumerId = entityMap.value.consumer?.id
+    if (consumerId) {
+      requestBody.consumer = { id: consumerId }
     }
-
-    delete requestBody.created_at
   }
 
   // if a partial value is passed, set the redis path of requestBody to null, in this way we override the redis fields
@@ -1521,6 +1547,10 @@ const saveFormData = async (): Promise<void> => {
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
     const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
+    if (treatAsCredential.value && props.config.app === 'kongManager' && ['key-auth', 'key-auth-enc'].includes(props.pluginType) && typeof payload.ttl !== 'number') {
+      // Kong Manager rejects an empty `ttl`, `0` means no expiration.
+      payload.ttl = 0
+    }
     if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
@@ -1580,15 +1610,17 @@ onBeforeMount(async () => {
   schemaLoading.value = true
 
   try {
-    // handling for plugin credentials (Konnect)
-    if (treatAsCredential.value && props.config.app === 'konnect') {
-      // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
-      const pluginType = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
-      const data = CREDENTIAL_SCHEMAS[pluginType]
-      credentialType.value = pluginType
+    // handling for plugin credentials
+    if (treatAsCredential.value) {
+      const schemaEndpoint = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
 
-      finalSchema.value = buildFormSchema('', data, {})
-      schemaLoading.value = false
+      if (props.config.app === 'konnect') {
+        // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
+        credentialType.value = schemaEndpoint
+        loadedSchema.value = CREDENTIAL_SCHEMAS[schemaEndpoint]
+      } else {
+        loadedSchema.value = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      }
     } else { // handling for standard plugins
       // When the cloned-plugin feature flag is on and the plugin isn't a built-in,
       // resolve its source plugin in parallel with the schema fetch (404 = not a clone).
@@ -1603,55 +1635,49 @@ onBeforeMount(async () => {
       loadedSchema.value = data
 
       if (data) {
-        if (treatAsCredential.value) {
-          // credential schema response is structured differently, no `config` object or default schema
-          finalSchema.value = buildFormSchema('', data, {})
-          schemaLoading.value = false
-        } else {
-          // start from the config part of the schema
-          const configField = data.fields.find((field: Record<string, any>) => field.config)
-          configResponse.value = configField ? configField.config : data
-          if (data.supported_partials) {
-            pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
-            pluginRedisPath.value = data.supported_partials[pluginPartialType.value]?.[0]
+        // start from the config part of the schema
+        const configField = data.fields.find((field: Record<string, any>) => field.config)
+        configResponse.value = configField ? configField.config : data
+        if (data.supported_partials) {
+          pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
+          pluginRedisPath.value = data.supported_partials[pluginPartialType.value]?.[0]
+        }
+
+        // scoping and global field setup
+        initScopeFields()
+
+        const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
+
+        if (protocolsField) {
+          const { default: defaultValues = [], elements = {} } = protocolsField
+
+          defaultFormSchema.protocols.default = defaultValues
+
+          // Konnect API respects default values if the field is not set, so display them in the placeholder
+          defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
+            ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+              protocols: defaultValues.join(', '),
+            })
+            : t('plugins.form.fields.protocols.placeholder')
+
+          if (elements.one_of?.length) {
+            defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
           }
+        }
 
-          // scoping and global field setup
-          initScopeFields()
-
-          const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
-
-          if (protocolsField) {
-            const { default: defaultValues = [], elements = {} } = protocolsField
-
-            defaultFormSchema.protocols.default = defaultValues
-
-            // Konnect API respects default values if the field is not set, so display them in the placeholder
-            defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
-              ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
-                protocols: defaultValues.join(', '),
-              })
-              : t('plugins.form.fields.protocols.placeholder')
-
-            if (elements.one_of?.length) {
-              defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
-            }
+        // if editing, wait for record to load before building schema
+        if (initialized.value || formType.value === EntityBaseFormType.Create) {
+          const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
+          // pass the redis partial type and redis path in plugin with the schema
+          if (pluginPartialType.value) {
+            initialFormSchema._supported_redis_partial_type = pluginPartialType.value
           }
-
-          // if editing, wait for record to load before building schema
-          if (initialized.value || formType.value === EntityBaseFormType.Create) {
-            const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-            // pass the redis partial type and redis path in plugin with the schema
-            if (pluginPartialType.value) {
-              initialFormSchema._supported_redis_partial_type = pluginPartialType.value
-            }
-            // pass whether the plugin is a custom plugin to the form schema
-            if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-            if (isClonedPlugin.value && clonedSourcePlugin.value) {
-              initialFormSchema._sourcePlugin = clonedSourcePlugin.value
-            }
-            finalSchema.value = initialFormSchema
+          // pass whether the plugin is a custom plugin to the form schema
+          if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+          if (isClonedPlugin.value && clonedSourcePlugin.value) {
+            initialFormSchema._sourcePlugin = clonedSourcePlugin.value
           }
+          finalSchema.value = initialFormSchema
         }
       }
     }

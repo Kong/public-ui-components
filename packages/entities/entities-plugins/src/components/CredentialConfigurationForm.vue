@@ -10,18 +10,20 @@
     :model="credentialModel"
     :on-form-change="handleFormChange"
     :plugin-name="credentialType"
+    :render-rules="renderRules"
     :schema="credentialSchema"
   />
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { pick } from 'lodash-es'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import CredentialSecretField from './free-form/components/CredentialSecretField.vue'
 import PluginConfigurationForm from './free-form/components/PluginConfigurationForm.vue'
-import { StringArrayField } from '@kong-ui-public/freeform'
-import type { FieldRendererRule } from '@kong-ui-public/freeform'
+import { StringArrayField, StringField } from '@kong-ui-public/freeform'
+import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import { resolvePluginConfigUrl } from '../utils/resolve-url'
@@ -32,11 +34,23 @@ import type { CredentialType, KongManagerPluginFormConfig, KonnectPluginFormConf
 // can't filter generically on the `auto` flag - only these specific fields are excluded.)
 const OMITTED_CREDENTIAL_FIELDS = new Set(['id', 'created_at', 'consumer'])
 
+// JWT algorithms that verify tokens with `rsa_public_key` (RS*, PS*, ES* and EdDSA).
+const ASYMMETRIC_JWT_ALGORITHMS = [
+  ...['RS', 'PS', 'ES'].flatMap((prefix) => ['256', '384', '512'].map((bits) => `${prefix}${bits}`)),
+  'EdDSA',
+]
+
 const { i18n: { t } } = composables.useI18n()
 
-const { config, credentialType } = defineProps<{
+const { config, credentialType, schema, record, editing = false } = defineProps<{
   config: KonnectPluginFormConfig | KongManagerPluginFormConfig
   credentialType: CredentialType
+  /** An already-loaded credential schema. When provided, the schema is not fetched again. */
+  schema?: Record<string, any>
+  /** The existing credential record to prefill the form with (edit mode). */
+  record?: Record<string, any>
+  /** Render secret fields (`key`, `secret`) masked, with a "Rotate key" action. */
+  editing?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -47,18 +61,15 @@ const emit = defineEmits<{
 
 const { axiosInstance } = useAxios(config?.axiosRequestConfig)
 
-// Stable object reference: passed as `PluginConfigurationForm`'s `model`, mutated in place via
-// `handleFormChange` so unrelated re-renders don't reset it.
-const credentialModel = ref<Record<string, any>>({})
-const handleFormChange = (value: Record<string, any>): void => {
-  credentialModel.value = value
-  emit('update:modelValue', value)
-}
-
 const schemaLoading = ref(false)
 watch(schemaLoading, (loading) => emit('update:loading', loading), { immediate: true })
 
-const rawCredentialSchema = ref<Record<string, any>>()
+const rawCredentialSchema = ref<Record<string, any> | undefined>(schema)
+watch(() => schema, (newSchema) => {
+  if (newSchema) {
+    rawCredentialSchema.value = newSchema
+  }
+})
 
 const fieldName = (field: Record<string, any>): string => Object.keys(field)[0]
 const credentialSchema = computed(() => {
@@ -82,7 +93,25 @@ const credentialSchema = computed(() => {
   }
 })
 
-const fieldRenderers: FieldRendererRule[] = [
+// Only the schema fields are part of the model: backend-only properties (`updated_at`, etc.) of an
+// existing record must not be sent back.
+const initialModel = (): Record<string, any> => {
+  if (!record || !credentialSchema.value) {
+    return {}
+  }
+
+  return pick(record, credentialSchema.value.fields.map(fieldName))
+}
+
+// The model passed to `PluginConfigurationForm`, replaced with the latest form value on every
+// change (the form ignores an equal value, so this doesn't reset it).
+const credentialModel = ref<Record<string, any>>(initialModel())
+const handleFormChange = (value: Record<string, any>): void => {
+  credentialModel.value = value
+  emit('update:modelValue', value)
+}
+
+const fieldRenderers = computed((): FieldRendererRule[] => [
   {
     match: 'tags',
     component: StringArrayField,
@@ -94,15 +123,36 @@ const fieldRenderers: FieldRendererRule[] = [
   {
     match: 'key',
     component: CredentialSecretField,
+    propsOverrides: { mode: editing ? 'edit' : 'create' },
   },
   {
     match: 'secret',
     component: CredentialSecretField,
     propsOverrides: {
       labels: { generateLabel: t('plugins.form.fields.secret.generateLabel') },
+      mode: editing ? 'edit' : 'create',
     },
   },
-]
+  // JWT: PEM-formatted public key
+  {
+    match: 'rsa_public_key',
+    component: StringField,
+    propsOverrides: { multiline: true, rows: 10 },
+  },
+])
+
+// JWT: the public key is only relevant for the asymmetric algorithms.
+const renderRules = computed((): RenderRules | undefined => {
+  if (credentialType !== 'jwt') {
+    return undefined
+  }
+
+  return {
+    dependencies: {
+      rsa_public_key: ['algorithm', ASYMMETRIC_JWT_ALGORITHMS],
+    },
+  }
+})
 
 const schemaEndpoint = computed(() => CREDENTIAL_METADATA[credentialType]?.schemaEndpoint)
 
@@ -112,6 +162,10 @@ const schemaUrl = computed((): string => {
 })
 
 const loadCredentialSchema = async (): Promise<void> => {
+  if (rawCredentialSchema.value) {
+    return
+  }
+
   schemaLoading.value = true
 
   try {
@@ -121,6 +175,10 @@ const loadCredentialSchema = async (): Promise<void> => {
     } else {
       const { data } = await axiosInstance.get(schemaUrl.value)
       rawCredentialSchema.value = data
+    }
+
+    if (record) {
+      credentialModel.value = initialModel()
     }
   } catch (error: any) {
     emit('error:fetch-schema', error)
