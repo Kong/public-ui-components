@@ -184,7 +184,7 @@
           data-testid="principals-jit-all-claims"
           :disabled="jitDisabled"
           :model-value="allClaims ?? false"
-          @update:model-value="allClaims = $event"
+          @update:model-value="handleAllClaimsChange"
         >
           {{ t('plugins.free-form.openid-connect.jit.all_claims.label') }}
           <template #description>
@@ -313,6 +313,15 @@ function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
 
 const allClaims = useJitField('all_claims')
 const jitClaims = useJitField('claims')
+
+// Checking "share all" makes the claims list meaningless — null it out so the
+// payload never ships a value the (now hidden) input last held.
+function handleAllClaimsChange(checked: boolean) {
+  allClaims.value = checked
+  if (checked) {
+    jitClaims.value = getEmptyValue()
+  }
+}
 
 const encodeClaims = (claims: string[] | null | undefined): string =>
   Array.isArray(claims) ? claims.filter(Boolean).join(', ') : ''

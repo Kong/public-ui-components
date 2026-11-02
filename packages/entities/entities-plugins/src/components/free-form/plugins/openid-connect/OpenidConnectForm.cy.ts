@@ -1583,19 +1583,28 @@ describe('OpenidConnectForm', () => {
       })
     })
 
-    it('share-all-claims replaces the claims input and writes all_claims', () => {
+    it('share-all-claims hides the claims input and nulls its value in the payload', () => {
       mountPrincipalsForm({ withJit: true, aiManager: true })
 
       expandSettings()
       cy.getTestId('principals-jit-toggle').click({ force: true })
-      cy.getTestId('principals-jit-claims').should('be.visible')
+      cy.getTestId('principals-jit-claims').type('sub, email')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit.claims).to.deep.equal(['sub', 'email'])
+      })
 
       cy.getTestId('principals-jit-all-claims').check({ force: true })
       cy.getTestId('principals-jit-claims').should('not.exist')
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit.all_claims).to.equal(true)
+        expect(payload.config.principals.jit.claims).to.equal(null)
       })
+
+      // Unchecking brings the input back, cleared
+      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
+      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', '')
     })
 
     it('writes comma-separated claims as a string array and nulls them when cleared', () => {
