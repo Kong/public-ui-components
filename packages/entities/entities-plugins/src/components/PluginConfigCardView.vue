@@ -109,6 +109,7 @@
         #config-card-item-nodes="slotProps"
       >
         <DatakitConfigCardCanvas
+          :key="datakitRecordKey"
           :item="slotProps.row"
           :plugin-data="slotProps.record"
           :schema="schema"
@@ -198,6 +199,9 @@ const { i18n: { t } } = composables.useI18n()
 const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
+
+// The local canvas initializes its graph once; refresh it when its resolved inputs change.
+const datakitRecordKey = computed(() => JSON.stringify([props.record.id, props.record.config, props.record.__ui_data, props.record.partials, props.schema]))
 
 /**
  * KM-2996 rollout gate — see `showScopeName` on the config. Read through a computed so a host

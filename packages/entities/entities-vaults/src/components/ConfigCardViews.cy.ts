@@ -72,4 +72,23 @@ describe('business View public exports', () => {
       cy.get('.kong-ui-entity-base-config-card').should('not.exist')
     })
   })
+
+  it('passes the resolved Plugin schema to the local Datakit canvas', () => {
+    const schema = { fields: [{ config: { type: 'record', fields: [{ nodes: {
+      type: 'array', elements: { type: 'record', fields: [], subschema_definitions: {
+        call: { type: 'record', fields: [{ url: { type: 'string' } }, { continue_on_error: { type: 'boolean' } }] },
+      } },
+    } }] } }] }
+    cy.mount(PluginConfigCardView, { props: {
+      config: { app: 'konnect', pluginType: 'datakit' }, schema,
+      record: { id: 'datakit', name: 'datakit', config: { nodes: [{ name: 'CALL', type: 'call', url: 'https://example.com' }] } },
+    } }).then(({ wrapper }) => {
+      expect(wrapper.findComponent({ name: 'DatakitConfigCardCanvas' }).props('schema')).to.deep.equal(schema)
+      cy.get('.dk-flow-node .name').should('contain.text', 'CALL')
+      cy.then(() => wrapper.setProps({ record: {
+        id: 'datakit', name: 'datakit', config: { nodes: [{ name: 'UPDATED', type: 'call', url: 'https://example.com' }] },
+      } }))
+      cy.get('.dk-flow-node .name').should('contain.text', 'UPDATED').and('not.contain.text', 'CALL')
+    })
+  })
 })
