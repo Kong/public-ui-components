@@ -14,7 +14,6 @@
 
     <h2>Record-driven plugin with externally supplied schema and service name</h2>
     <PluginConfigCardView
-      :config="{ pluginType: 'key-auth', showScopeName: true }"
       :record="{ id: 'example', name: 'key-auth', service: { id: 'service' }, config: { key_names: ['apikey'] } }"
       :reference-entities="{ service: { id: 'service', name: 'Already loaded service' } }"
       :schema="{ fields: [{ config: { type: 'record', fields: [{ key_names: { type: 'array', elements: { type: 'string' } } }] } }] }"

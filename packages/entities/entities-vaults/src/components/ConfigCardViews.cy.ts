@@ -1,4 +1,5 @@
 import { h, type Component } from 'vue'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { ConsumerConfigCardView } from '@kong-ui-public/entities-consumers'
 import { ConsumerGroupConfigCardView } from '@kong-ui-public/entities-consumer-groups'
 import { GatewayServiceConfigCardView } from '@kong-ui-public/entities-gateway-services'
@@ -30,9 +31,13 @@ describe('business View public exports', () => {
   }))
   for (const [name, view, props] of views) {
     it(`${name} renders one real card with field slots and local code formats`, () => {
-      cy.mount(view, { props, slots: { id: ({ record, rowValue }: any) => h('span', `slot:${record.id}:${rowValue}`) } })
+      cy.mount(view, { props, slots: {
+        actions: () => h('a', { href: '/docs' }, 'Documentation'),
+        id: ({ record, rowValue }: any) => h('span', `slot:${record.id}:${rowValue}`),
+      } })
       cy.get('.kong-ui-entity-base-config-card').should('have.length', 1)
       cy.getTestId('id-property-value').should('contain.text', `slot:${props.record.id}:${props.record.id}`)
+      cy.get('.config-card-actions a[href="/docs"]').should('contain.text', 'Documentation')
       cy.getTestId('select-config-format').click()
       cy.getTestId('select-item-json').click()
       cy.get('#json-codeblock').should('contain.text', props.record.id)
@@ -68,11 +73,16 @@ describe('business View public exports', () => {
   it('requires Plugin schema and uses identity-checked external association names', () => {
     const record = { id: 'plugin', name: 'key-auth', service: { id: 'service' }, config: { token: 'secret-token' } }
     const schema = Object.freeze({ fields: [{ config: { type: 'record', fields: [{ token: { type: 'string', encrypted: true } }] } }] })
-    cy.mount(PluginConfigCardView, { props: { record, schema, config: { showScopeName: true }, showNameAsLink: true } }).then(({ wrapper }) => {
+    const router = createRouter({ history: createMemoryHistory(), routes: [
+      { path: '/', component: { template: '<div />' } },
+      { path: '/services/:id', component: { template: '<div />' } },
+    ] })
+    cy.mount(PluginConfigCardView, { router, props: { record, schema, showNameAsLink: true } }).then(({ wrapper }) => {
       cy.getTestId('service-property-value').should('contain.text', 'service')
       cy.getTestId('token-property-value').should('not.contain.text', 'secret-token')
-      cy.then(() => wrapper.setProps({ referenceEntities: { service: { id: 'service', name: 'resolved-name' } } }))
+      cy.then(() => wrapper.setProps({ referenceEntities: { service: { id: 'service', name: 'resolved-name', to: '/services/service' } } }))
       cy.getTestId('service-property-value').should('contain.text', 'resolved-name')
+      cy.getTestId('service-property-value').find('a').should('have.attr', 'href', '/services/service')
       cy.then(() => wrapper.setProps({ referenceEntities: { service: { id: 'other', name: 'stale-name' } } }))
       cy.getTestId('service-property-value').should('not.contain.text', 'stale-name')
       cy.then(() => wrapper.setProps({ schema: {} }))
@@ -88,7 +98,7 @@ describe('business View public exports', () => {
       } },
     } }] } }] }
     cy.mount(PluginConfigCardView, { props: {
-      config: { app: 'konnect', pluginType: 'datakit' }, schema,
+      config: { app: 'konnect' }, schema,
       record: { id: 'datakit', name: 'datakit', config: { nodes: [{ name: 'CALL', type: 'call', url: 'https://example.com' }] } },
     } }).then(({ wrapper }) => {
       expect(wrapper.findComponent({ name: 'DatakitConfigCardCanvas' }).props('schema')).to.deep.equal(schema)

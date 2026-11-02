@@ -2,7 +2,6 @@
   <div class="kong-ui-consumer-entity-config-card">
     <EntityConfigCardView
       :config="config"
-      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Consumer"
       :hide-title="hideTitle"
@@ -58,14 +57,6 @@ defineProps({
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),
-  },
-  /**
-   * External link for documentation that determines visibility of Documentation button
-   */
-  configCardDoc: {
-    type: String,
-    default: '',
-    required: false,
   },
   /**
    * Control visibility of card title content

@@ -11,8 +11,8 @@
   >
     <template #default="{ record, config: viewConfig }">
       <KeyConfigCardView
-        v-bind="props"
         :config="viewConfig"
+        :hide-title="hideTitle"
         :key-set="{ id: record.set?.id || keySetId || '', name: keySetName, loading: isKeySetNameLoading }"
         :record="record"
         @error:parse="(err: any) => emit('fetch:error', err)"

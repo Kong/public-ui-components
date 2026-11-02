@@ -33,11 +33,12 @@
     >
       <template #default="{ record, config: viewConfig }">
         <PluginConfigCardView
-          v-bind="props"
-          :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
+          :config="viewConfig"
+          :hide-title="hideTitle"
           :record="record"
           :reference-entities="referenceEntities"
           :schema="schema"
+          :show-name-as-link="showNameAsLink"
           @navigation-click="(id, direction) => emit('navigation-click', id, direction)"
         >
           <template
@@ -163,12 +164,22 @@ const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = comp
 })
 
 const referenceRecord = ref<Record<string, any>>({})
-const referenceEntities = computed(() => Object.fromEntries(
-  (['service', 'route', 'consumer', 'consumer_group'] as const).map(field => [field, {
-    id: referenceRecord.value[field]?.id,
-    name: getReferenceName(field),
-    loading: isReferenceNameLoading(field),
-  }]),
+const referenceEntities = computed(() => !scopeNameEnabled.value ? {} : Object.fromEntries(
+  (['service', 'route', 'consumer', 'consumer_group'] as const).map(field => {
+    const id = referenceRecord.value[field]?.id
+    const getViewRoute = {
+      service: props.config.getServiceViewRoute,
+      route: props.config.getRouteViewRoute,
+      consumer: props.config.getConsumerViewRoute,
+      consumer_group: props.config.getConsumerGroupViewRoute,
+    }[field]
+    return [field, {
+      id,
+      name: getReferenceName(field),
+      loading: isReferenceNameLoading(field),
+      to: props.showNameAsLink && id ? getViewRoute?.(id) : undefined,
+    }]
+  }),
 ))
 
 const handleFetchSuccess = (entity: Record<string, any>) => {

@@ -11,8 +11,8 @@
   >
     <template #default="{ record, config: viewConfig }">
       <VaultConfigCardView
-        v-bind="props"
-        :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
+        :config="{ ...viewConfig, apiType: config.apiType }"
+        :hide-title="hideTitle"
         :record="record"
       >
         <template

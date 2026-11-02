@@ -3,7 +3,6 @@
     <EntityConfigCardView
       :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
-      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Vault"
       :formats-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
@@ -51,14 +50,6 @@ const props = defineProps({
   config: {
     type: Object as PropType<EntityConfigCardViewConfig & { apiType?: 'aiGateway' | 'gateway' }>,
     default: () => ({}),
-  },
-  /**
-   * External link for documentation that determines visibility of Documentation button
-   */
-  configCardDoc: {
-    type: String,
-    default: '',
-    required: false,
   },
   /**
    * Control visibility of card title content

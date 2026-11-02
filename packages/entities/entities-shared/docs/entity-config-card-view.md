@@ -33,8 +33,6 @@ import type { EntityConfigCardViewProps, EntityConfigCardViewConfig } from '@kon
 | `preserveCodeBlockTimestamps` | `boolean` | `false` | Keep `created_at` and `updated_at` in code formats. |
 | `hideTitle` | `boolean` | `false` | Hide the title and title slot. |
 | `titleTag` | `HeaderTag` | `'h2'` | Title heading tag. |
-| `label` | `string` | `'Format: '` | Format-selector label. |
-| `configCardDoc` | `string` | `''` | HTTP(S) or relative documentation URL. Invalid URLs and other schemes hide the button. |
 | `formatsToHide` | `ConfigCardCodeFormat[]` | `[]` | Hide code formats; structured display remains available. |
 
 Only `record` is required. Entity type and subtype describe local export conversion, not HTTP endpoints. Omitting `entityType` disables Terraform and decK; business Views supply their own fixed type. Removing metadata for the selected export returns to structured display.
@@ -43,9 +41,42 @@ Field configuration uses the same [schema and section semantics as EntityBaseCon
 
 ### Presentation context
 
-`EntityConfigCardViewConfig` accepts optional `app`, `formatPreferenceKey`, `enableDeckConfig`, `deckCalloutPreferenceKey`, `controlPlaneName`, `geoApiServerUrl`, `apiBaseUrl` and `workspace`. App/export metadata selects applicable formats and builds displayed commands; it does not enable requests.
+`config` contains only product/export context. None of these values can be recovered reliably from a Consumer, Route or other standalone entity record, and none authorizes HTTP requests.
 
-`enableDeckConfig` accepts a boolean or `{ customization?: boolean, calloutPreferenceKey?: string }`. Terraform, YAML and decK conversion and command editing are local. decK customization uses the existing optional editor provider. Token generation remains in reader containers; an external data owner can supply its own control in the actions slot. Legacy request metadata, resolver ordering and token callbacks are handled privately by reader containers; no adaptation helper is required by View callers.
+| Field | Why it is an input |
+| --- | --- |
+| `app` | Select Konnect/Kong Manager export conventions and applicable certificate metadata. |
+| `enableDeckConfig` | Boolean opt-in to decK for Konnect; Kong Manager already supports it. |
+| `controlPlaneName` | Add the Konnect control-plane name to generated decK YAML. Entity records do not include it. |
+| `geoApiServerUrl` | Supply the regional `--konnect-addr` in generated commands. |
+| `apiBaseUrl` | Supply the Kong Manager `--kong-addr` in generated commands. It is never requested. |
+| `workspace` | Write the target workspace into decK YAML; individual records do not identify their workspace. |
+
+The existing optional editor provider enables local Konnect command editing. Views accept no customization callbacks or editor switch. Format persistence, callout preference keys, custom format-selector labels and automatic documentation actions remain private reader compatibility behavior. Compose external actions through the `actions` slot.
+
+### Why the other inputs remain
+
+The boundary is the existing detail-card functionality: field presentation, masking, local code conversion and accessible composition. These inputs each supply information that the renderer cannot safely infer.
+
+| Input | Concrete requirement |
+| --- | --- |
+| `record` | The resolved entity being rendered. |
+| `schema` | API sensitivity/type metadata, including encrypted nested fields; values alone cannot identify secrets. |
+| `configSchema` | Caller-owned labels, order, field types and visibility; business Views supply their own schemas. |
+| `codeBlockRecord` | Preserve an independent export shape after a lossy structured-record transformation. |
+| `entityType` | Choose a Terraform resource/decK collection; an arbitrary record shape cannot identify an entity reliably. |
+| `subEntityType` | Identify Event Gateway Terraform policy subtypes with the same parent entity type. |
+| `pluginConfigKey` | Select the nested record to expand into the Plugin section. |
+| `pluginConfigSchema` | Describe the expanded Plugin fields independently of top-level fields. |
+| `policyConfigKey` | Select the nested record to expand into the Policy section. |
+| `policyConfigSchema` | Describe the expanded Policy fields independently of top-level fields. |
+| `codeBlockRecordFormatter` | Preserve per-format business conversions: Redis Terraform shaping and Vault unconditional masking, including copied content. |
+| `preserveCodeBlockTimestamps` | Managed-cache exports preserve the raw timestamps; ordinary entity exports strip them. |
+| `hideTitle` | Avoid a duplicate heading when composing a card beneath an existing page/section title. |
+| `titleTag` | Let the owner choose the correct heading level for its document structure. |
+| `formatsToHide` | Omit formats unavailable for the record or host capabilities, such as AI Gateway Vault Terraform/decK. |
+
+`configSchema` entries retain seven independent display decisions: `label` (text), `tooltip` (help), `type` (renderer and masking), `order` (position), `hidden` (visibility), `section` (group), and `forceShow` (render missing fields). Plugin/Policy entries reuse these decisions except `section`, which is fixed by the selected group. They carry no transport or lifecycle options.
 
 ### Code representation and sensitive fields
 

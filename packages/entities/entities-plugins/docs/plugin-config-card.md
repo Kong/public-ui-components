@@ -253,8 +253,7 @@ import type { PluginConfigCardViewProps } from '@kong-ui-public/entities-plugins
 | Prop | Type | Required / default | Description |
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
-| `config` | `PluginConfigCardViewConfig` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
 | `schema` | `Record<string, any>` | Required | Already resolved plugin API schema. |
 | `referenceEntities` | Association map | `{}` | Resolved names/loading states, described below. |
@@ -262,9 +261,18 @@ import type { PluginConfigCardViewProps } from '@kong-ui-public/entities-plugins
 
 Schema is a separate required input. The View neither fetches schema nor renders a potentially sensitive plugin record when schema fields are unavailable. It preserves plugin field types, unsupported-scope filtering, icons and local Datakit display. Datakit receives the resolved schema and refreshes its graph when configuration, layout, partials or schema inputs change.
 
-`PluginConfigCardViewConfig` adds optional `pluginType`, `showScopeName`, `getConsumerViewRoute`, `getRouteViewRoute`, `getServiceViewRoute` and `getConsumerGroupViewRoute` to the shared presentation context. Route builders only construct routes and must not perform reads.
+The plugin type is derived from `record.name`. Application rollout gates and route-builder callbacks stay in the data owner.
 
-`referenceEntities` maps `service`, `route`, `consumer`, and `consumer_group` to `{ id: string, name?: string, loading?: boolean }`. A name is used only when its ID matches the record, `showNameAsLink` is true and `config.showScopeName` is enabled. Missing names display IDs; delayed association updates do not trigger reads.
+`referenceEntities` maps `service`, `route`, `consumer`, and `consumer_group` to `{ id: string, name?: string, loading?: boolean, to?: RouteLocationRaw }`:
+
+| Field | Why it is an input |
+| --- | --- |
+| `id` | Match asynchronously resolved data to the record's current association; ignore stale names/links. |
+| `name` | The entity record contains only the association ID. |
+| `loading` | Distinguish an unfinished association lookup from an ID-only result. |
+| `to` | A resolved route gives the link a real href, supporting open-in-new-tab and copy-link behavior. |
+
+Providing association data enables name/subtitle presentation. Missing names display IDs. `showNameAsLink` selects interactive reference presentation; otherwise the existing copyable UUID representation remains available. Loading, names and routes are all resolved by the owner. The View never calls a route builder or performs a lookup.
 
 See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
 
@@ -280,7 +288,6 @@ The View accepts title, actions and field-slot overrides with the existing `reco
   :key="record.id"
   :record="record"
   :schema="pluginSchema"
-  :config="{ pluginType: record.name, showScopeName: true }"
   :reference-entities="referenceEntities"
   show-name-as-link
 />

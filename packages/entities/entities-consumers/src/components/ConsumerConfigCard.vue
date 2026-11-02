@@ -11,8 +11,8 @@
   >
     <template #default="{ record, config: viewConfig }">
       <ConsumerConfigCardView
-        v-bind="props"
         :config="viewConfig"
+        :hide-title="hideTitle"
         :record="record"
       >
         <template

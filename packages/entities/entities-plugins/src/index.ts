@@ -89,5 +89,4 @@ export { getPluginIconURL, PluginIcon } from '@kong-ui-public/entities-plugins-i
 export * from './freeform'
 
 export { PluginConfigCardView }
-export type { PluginConfigCardViewConfig } from './components/PluginConfigCardView.vue'
 export type PluginConfigCardViewProps = InstanceType<typeof PluginConfigCardView>['$props']

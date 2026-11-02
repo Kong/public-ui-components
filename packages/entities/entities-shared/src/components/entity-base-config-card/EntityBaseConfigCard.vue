@@ -297,6 +297,10 @@ provide(LEGACY_CONFIG_CARD_CONTEXT, computed(() => ({
   requestUrl: fetcherUrl.value,
   formatsToHide: props.formatsToHide,
   deckOptions: props.config.app === 'konnect' ? props.config.enableDeckConfig : undefined,
+  formatPreferenceKey: props.config.formatPreferenceKey,
+  deckCalloutPreferenceKey: props.config.app === 'kongManager' ? props.config.deckCalloutPreferenceKey : undefined,
+  configCardDoc: props.configCardDoc,
+  label: props.label,
   // Business Views own their masking; this override only preserves the base reader's resolver order.
   redactedCodeBlockRecord: slots.default ? undefined : redactedCodeBlockRecord.value,
 })))
@@ -313,8 +317,6 @@ const viewProps = computed(() => ({
   codeBlockRecordFormatter: props.codeBlockRecordFormatter,
   preserveCodeBlockTimestamps: props.preserveCodeBlockTimestamps,
   hideTitle: props.hideTitle,
-  label: props.label,
-  configCardDoc: props.configCardDoc,
   titleTag: props.titleTag,
   formatsToHide: props.formatsToHide,
   record: record.value,

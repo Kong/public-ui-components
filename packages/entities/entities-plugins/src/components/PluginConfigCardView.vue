@@ -5,7 +5,6 @@
       v-if="schema?.fields"
       :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
-      :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Plugin"
       :hide-title="hideTitle"
@@ -31,7 +30,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="referenceLinkItem('consumer', getPropValue('rowValue', slotProps).id, config.getConsumerViewRoute)"
+          :item="referenceLinkItem('consumer', getPropValue('rowValue', slotProps).id)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
         <KCopy
@@ -46,7 +45,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="referenceLinkItem('route', getPropValue('rowValue', slotProps).id, config.getRouteViewRoute)"
+          :item="referenceLinkItem('route', getPropValue('rowValue', slotProps).id)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
         />
         <KCopy
@@ -60,7 +59,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="referenceLinkItem('service', getPropValue('rowValue', slotProps).id, config.getServiceViewRoute)"
+          :item="referenceLinkItem('service', getPropValue('rowValue', slotProps).id)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
         />
         <KCopy
@@ -74,7 +73,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="referenceLinkItem('consumer_group', getPropValue('rowValue', slotProps).id, config.getConsumerGroupViewRoute)"
+          :item="referenceLinkItem('consumer_group', getPropValue('rowValue', slotProps).id)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
         />
         <KCopy
@@ -104,7 +103,7 @@
       </template>
 
       <template
-        v-if="config.pluginType === 'datakit' && config.app === 'konnect'"
+        v-if="record.name === 'datakit' && config.app === 'konnect'"
         #config-card-item-nodes="slotProps"
       >
         <DatakitConfigCardCanvas
@@ -151,9 +150,6 @@ import type { PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
 import type { EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
-import type { KongManagerPluginEntityConfig } from '../types'
-export type PluginConfigCardViewConfig = EntityConfigCardViewConfig & Partial<Pick<KongManagerPluginEntityConfig,
-  'pluginType' | 'showScopeName' | 'getConsumerViewRoute' | 'getRouteViewRoute' | 'getServiceViewRoute' | 'getConsumerGroupViewRoute'>>
 
 
 const PLUGIN_CONFIG_KEY = 'config'
@@ -165,18 +161,10 @@ defineEmits<{
 const props = defineProps({
   record: { type: Object as PropType<Record<string, any>>, required: true },
   schema: { type: Object as PropType<Record<string, any>>, required: true },
-  referenceEntities: { type: Object as PropType<Partial<Record<ReferenceField, { id: string, name?: string, loading?: boolean }>>>, default: () => ({}) },
+  referenceEntities: { type: Object as PropType<Partial<Record<ReferenceField, { id: string, name?: string, loading?: boolean, to?: RouteLocationRaw }>>>, default: () => ({}) },
   config: {
-    type: Object as PropType<PluginConfigCardViewConfig>,
+    type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),
-  },
-  /**
-   * External link for documentation that determines visibility of Documentation button
-   */
-  configCardDoc: {
-    type: String,
-    default: '',
-    required: false,
   },
   showNameAsLink: {
     type: Boolean,
@@ -200,11 +188,8 @@ const { getPropValue } = useHelpers()
 // The local canvas initializes its graph once; refresh it when its resolved inputs change.
 const datakitRecordKey = computed(() => JSON.stringify([props.record.id, props.record.config, props.record.__ui_data, props.record.partials, props.schema]))
 
-/**
- * KM-2996 rollout gate — see `showScopeName` on the config. Read through a computed so a host
- * that flips it once its flag service resolves re-renders the rows.
- */
-const scopeNameEnabled = computed<boolean>(() => !!props.config.showScopeName)
+// Supplying resolved association data opts into names; rollout flags stay in the owner.
+const scopeNameEnabled = computed(() => Object.keys(props.referenceEntities).length > 0)
 
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
@@ -293,7 +278,7 @@ const pluginConfigSchema = computed((): PluginConfigurationSchema => {
 })
 
 const resolveRecord = (data: Record<string, any>): Record<string, any> => {
-  const scopes: PluginScope[] | undefined = pluginMetaData.pluginMetaData[props.config.pluginType || props.record.name]?.scope
+  const scopes: PluginScope[] | undefined = pluginMetaData.pluginMetaData[props.record.name]?.scope
 
   // Missing `scope` indicates an unknown plugin. We'd better not touch the data.
   if (!scopes)
@@ -333,15 +318,10 @@ const isReferenceNameLoading = (field: ReferenceField): boolean => {
   return entity?.id === props.record[field]?.id && !!entity?.loading
 }
 
-/**
- * With `showScopeName` on, the resolved name surfaces as a router-link with the id underneath for
- * reference, falling back to the bare id until (or unless) a name is available.
- * With it off, we keep the pre-KM-2996 behavior: the bare id as an emit-only button, no name lookup.
- */
-const referenceLinkItem = (field: ReferenceField, id: string, getViewRoute?: (id: string) => RouteLocationRaw): RecordItem => ({
+const referenceLinkItem = (field: ReferenceField, id: string): RecordItem => ({
   key: id,
   value: scopeNameEnabled.value ? getReferenceName(field) || id : id,
-  to: scopeNameEnabled.value ? getViewRoute?.(id) : undefined,
+  to: props.referenceEntities[field]?.id === id ? props.referenceEntities[field]?.to : undefined,
   subtitle: scopeNameEnabled.value && getReferenceName(field) ? id : undefined,
   subtitleLoading: scopeNameEnabled.value && isReferenceNameLoading(field),
   type: ConfigurationSchemaType.LinkInternal,

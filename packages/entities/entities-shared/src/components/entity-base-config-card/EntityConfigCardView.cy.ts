@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import { EntityConfigCardView, ConfigurationSchemaSection, ConfigurationSchemaType, SupportedEntityType } from '../../index'
+import { EntityBaseConfigCard, EntityConfigCardView, ConfigurationSchemaSection, ConfigurationSchemaType, SupportedEntityType } from '../../index'
 
 const configSchema = {
   secret: { type: ConfigurationSchemaType.Redacted, section: ConfigurationSchemaSection.Basic },
@@ -77,7 +77,7 @@ describe('EntityConfigCardView public record interface', () => {
     localStorage.setItem('optional-type', 'terraform')
     cy.mount(EntityConfigCardView, { props: {
       record: { id: 'consumer', username: 'user' },
-      config: { app: 'konnect', enableDeckConfig: true, formatPreferenceKey: 'optional-type' },
+      config: { app: 'konnect', enableDeckConfig: true },
     } }).then(({ wrapper }) => {
       cy.getTestId('username-property-value').should('contain.text', 'user')
       cy.getTestId('select-config-format').click()
@@ -87,6 +87,7 @@ describe('EntityConfigCardView public record interface', () => {
       cy.get('#json-codeblock').should('contain.text', 'user')
       select('yaml')
       cy.get('#yaml-codeblock').should('contain.text', 'user')
+      cy.then(() => expect(localStorage.getItem('optional-type')).to.equal('terraform'))
       cy.then(() => wrapper.setProps({ entityType: SupportedEntityType.Consumer }))
       select('terraform')
       cy.get('#terraform-codeblock').should('contain.text', 'konnect_gateway_consumer')
@@ -130,10 +131,14 @@ describe('EntityConfigCardView public record interface', () => {
     select('json')
     cy.get('#json-codeblock').should('not.contain.text', 'scalar-secret').and('not.contain.text', 'set-secret').and('not.contain.text', 'nested-secret')
   })
+})
 
+describe('legacy documentation action', () => {
   it('allows web and relative documentation links and rejects dangerous or malformed URLs', () => {
-    cy.mount(EntityConfigCardView, { props: {
-      record: { id: 'consumer' }, entityType: SupportedEntityType.Consumer,
+    cy.intercept('GET', '/docs/consumer', { id: 'consumer' })
+    cy.mount(EntityBaseConfigCard, { props: {
+      config: { app: 'konnect', apiBaseUrl: '/docs', controlPlaneId: 'cp', entityId: 'consumer' },
+      fetchUrl: '/consumer', entityType: SupportedEntityType.Consumer,
       configCardDoc: 'https://example.com/docs',
     } }).then(({ wrapper }) => {
       cy.getTestId('book-icon').find('a').should('have.attr', 'href', 'https://example.com/docs')

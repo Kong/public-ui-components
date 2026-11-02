@@ -131,7 +131,6 @@ import type { CertificateConfigCardViewProps } from '@kong-ui-public/entities-ce
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
 
 Certificate parsing is a deterministic local operation and remains in the View. Server-provided metadata must already be present in the record. Use `config.app: 'kongManager'` for the existing locally parsed metadata fields.

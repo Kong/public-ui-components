@@ -7,7 +7,6 @@
       :code-block-record="isManagedCache ? addOnCodeRslv(record) : undefined"
       :code-block-record-formatter="isManagedCache ? addOnCodeFmt : codeBlockRecordFormatter"
       :config="config"
-      :config-card-doc="configCardDoc"
       :config-schema="isManagedCache ? managedSchema : configSchema"
       :entity-type="isManagedCache ? SupportedEntityType.CloudGatewayAddon : SupportedEntityType.Partial"
       :formats-to-hide="isManagedCache ? ['yaml'] : []"
@@ -92,7 +91,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 const props = defineProps({
   record: { type: Object as PropType<Record<string, any>>, required: true },
   config: { type: Object as PropType<EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }>, default: () => ({}) },
-  configCardDoc: { type: String, default: '' },
   hideTitle: { type: Boolean, default: true },
 })
 const isManagedCache = computed(() => !!props.record.config && isManagedCacheAddOn(props.record))

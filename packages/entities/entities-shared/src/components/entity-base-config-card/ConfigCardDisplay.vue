@@ -250,7 +250,11 @@ const {
   deckCustomizationOptions,
   deckCalloutPreferenceKey,
 } = composables.useBaseEntityDeckOptions(
-  () => ({ ...props.config, enableDeckConfig: legacyContext?.value.deckOptions ?? props.config.enableDeckConfig }),
+  () => ({
+    ...props.config,
+    enableDeckConfig: legacyContext?.value.deckOptions ?? props.config.enableDeckConfig,
+    deckCalloutPreferenceKey: legacyContext?.value.deckCalloutPreferenceKey ?? props.config.deckCalloutPreferenceKey,
+  }),
   () => props.entityType,
 )
 </script>

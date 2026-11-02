@@ -203,9 +203,7 @@ export type ConfigCardCodeFormat = Exclude<ConfigCardFormat, 'structured'>
 /** Presentation context: no entity identifier, endpoint, or HTTP client is required. */
 export interface EntityConfigCardViewConfig {
   app?: 'konnect' | 'kongManager'
-  formatPreferenceKey?: string
-  enableDeckConfig?: boolean | { customization?: boolean, calloutPreferenceKey?: string }
-  deckCalloutPreferenceKey?: string
+  enableDeckConfig?: boolean
   controlPlaneName?: string
   geoApiServerUrl?: string
   apiBaseUrl?: string

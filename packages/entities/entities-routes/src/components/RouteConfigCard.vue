@@ -11,8 +11,8 @@
   >
     <template #default="{ record, config: viewConfig }">
       <RouteConfigCardView
-        v-bind="props"
         :config="viewConfig"
+        :hide-title="hideTitle"
         :record="record"
         :service="{ id: internalServiceId, name: serviceName, loading: isServiceNameLoading }"
         @navigation-click="(id: string, entityType: any) => emit('navigation-click', id, entityType)"

@@ -7,6 +7,10 @@ interface LegacyConfigCardContext {
   formatsToHide: ConfigCardCodeFormat[]
   deckOptions?: boolean | DeckConfigOptions
   redactedCodeBlockRecord?: Record<string, any>
+  formatPreferenceKey?: string
+  deckCalloutPreferenceKey?: string
+  configCardDoc?: string
+  label?: string
 }
 
 export const LEGACY_CONFIG_CARD_CONTEXT: InjectionKey<Readonly<Ref<LegacyConfigCardContext>>> = Symbol('legacy-config-card-context')

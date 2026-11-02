@@ -40,7 +40,7 @@
             class="config-format-select-label"
             data-testid="config-format-select-label"
           >
-            {{ label }}
+            {{ legacyContext?.label ?? t('baseConfigCard.general.formatLabel') }}
           </KLabel>
           <KSelect
             v-model="configFormat"
@@ -120,6 +120,7 @@
 
 <script setup lang="ts">
 import { getConfigCardViewConfig } from '../../utils/config-card'
+import type { ConfigCardDisplayConfig } from '../../utils/config-card'
 import { withForceShowFields, redactConfigCardRecord } from './record'
 import type { PropType } from 'vue'
 import { computed, ref, watch, onMounted, provide, inject } from 'vue'
@@ -138,7 +139,7 @@ import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTyp
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { LEGACY_CONFIG_CARD_CONTEXT } from './legacy-config-card'
-import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
+import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS, DECK_COMMAND_EDITOR_KEY } from '../../constants'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { HeaderTag } from '@kong/kongponents'
@@ -147,9 +148,8 @@ const emit = defineEmits<{
   (e: 'configFormatChange', format: ConfigCardFormat): void
 }>()
 
-// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
+  /** Product and local export context. */
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),
@@ -234,22 +234,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * The label text to show for the select Format element
-   */
-  label: {
-    type: String,
-    default: 'Format: ',
-    required: false,
-  },
-  /**
-   * External link for documentation
-   */
-  configCardDoc: {
-    type: String,
-    default: '',
-    required: false,
-  },
   titleTag: {
     type: String as PropType<HeaderTag>,
     default: 'h2',
@@ -266,8 +250,9 @@ const props = defineProps({
 
 const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = composables.useStringHelpers()
+const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
 const documentationUrl = computed(() => {
-  const value = props.configCardDoc?.trim()
+  const value = legacyContext?.value.configCardDoc?.trim()
   if (!value) return undefined
   try {
     // Keep relative documentation links, while rejecting executable/non-web schemes.
@@ -286,8 +271,16 @@ const isManagedByEnabled = composables.useManagedByEnabled()
 if (props.pluginConfigKey) composables.useSubSchema(props.pluginConfigKey, schema)
 
 
-const displayConfig = computed(() => getConfigCardViewConfig(props.config))
-const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
+const deckCommandEditor = inject(DECK_COMMAND_EDITOR_KEY, null)
+const displayConfig = computed<ConfigCardDisplayConfig>(() => {
+  const config = getConfigCardViewConfig(props.config)
+  return {
+    ...config,
+    enableDeckConfig: legacyContext
+      ? legacyContext.value.deckOptions
+      : config.enableDeckConfig && deckCommandEditor ? { customization: true } : config.enableDeckConfig,
+  }
+})
 const isDeckCustomizationVisible = ref(false)
 
 const {
@@ -358,23 +351,25 @@ const persistFormat = (localStorageKey: string, format: ConfigCardFormat): void 
 }
 
 watch(configFormat, (format: ConfigCardFormat) => {
-  if (props.config.formatPreferenceKey) {
-    persistFormat(props.config.formatPreferenceKey, format)
+  const key = legacyContext?.value.formatPreferenceKey
+  if (key) {
+    persistFormat(key, format)
   }
 })
 
 // Restore last format from localStorage if still allowed and not removed by `formatsToHide`
 // Otherwise fall back to the first dropdown option (always `structured`)
 onMounted(() => {
-  if (props.config.formatPreferenceKey) {
-    const storedFormat = localStorage.getItem(props.config.formatPreferenceKey)
+  const key = legacyContext?.value.formatPreferenceKey
+  if (key) {
+    const storedFormat = localStorage.getItem(key)
     const items = configFormatItems.value
     if (storedFormat && items.some(item => item.value === storedFormat)) {
       configFormat.value = storedFormat as ConfigCardFormat
     } else {
       configFormat.value = items[0]?.value as ConfigCardFormat ?? 'structured'
     }
-    persistFormat(props.config.formatPreferenceKey, configFormat.value)
+    persistFormat(key, configFormat.value)
   }
 })
 

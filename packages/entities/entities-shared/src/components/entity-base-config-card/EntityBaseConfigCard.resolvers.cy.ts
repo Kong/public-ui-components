@@ -7,6 +7,20 @@ const selectJson = () => {
   cy.getTestId('select-item-json').click()
 }
 describe('EntityBaseConfigCard response boundary', () => {
+  it('preserves reader-owned format persistence and custom selector text', () => {
+    localStorage.setItem('legacy-reader-format', 'yaml')
+    cy.intercept('GET', '/resolvers/record/entity', { id: 'entity', name: 'consumer' })
+    cy.mount(EntityBaseConfigCard, { props: {
+      config: { ...config, formatPreferenceKey: 'legacy-reader-format' },
+      fetchUrl: '/record/{id}', entityType: SupportedEntityType.Consumer,
+      label: 'Render as:',
+    } })
+    cy.get('#yaml-codeblock').should('contain.text', 'consumer')
+    cy.get('.config-format-select-label').should('contain.text', 'Render as:')
+    selectJson()
+    cy.then(() => expect(localStorage.getItem('legacy-reader-format')).to.equal('json'))
+  })
+
   it('preserves raw fetch payload, dataKey precedence, and one initialization GET', () => {
     const payload = { item: { id: 'entity', name: 'selected' }, metadata: 'raw' }
     cy.intercept('GET', '/resolvers/record/entity', payload).as('get')

@@ -143,7 +143,6 @@ import type { KeyConfigCardViewProps } from '@kong-ui-public/entities-keys'
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
 | `keySet` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Resolved association display state. Omission displays the ID from the record. |
 

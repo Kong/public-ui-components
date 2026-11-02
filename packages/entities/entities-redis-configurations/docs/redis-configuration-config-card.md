@@ -140,10 +140,11 @@ import type { RedisConfigurationConfigCardViewProps } from '@kong-ui-public/enti
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
 | `config` | `EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `true` | Hide the card title. |
 
 Pass the resolved raw record. The existing `config.kind` discriminator identifies managed-cache add-ons; no separate mode prop is needed. It applies the existing partial flattening, cloud-auth display rules, managed field allowlisting, raw JSON/timestamp preservation and local Terraform transforms. If a page displays both cache and linked-partial segments, its data owner loads those records and owns segment loading. Changing View inputs never requests the other source.
+
+`config.cloudAuthAvailable` selects the supported cloud-authentication display contract and normalization. It is independent of Redis type and cannot be inferred from whether credential fields happen to be present.
 
 See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
 

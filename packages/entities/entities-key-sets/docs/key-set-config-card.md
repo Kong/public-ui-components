@@ -131,7 +131,6 @@ import type { KeySetConfigCardViewProps } from '@kong-ui-public/entities-key-set
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
 
 Key Set field presentation and tooltips are built in.

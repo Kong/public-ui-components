@@ -1,6 +1,8 @@
 import type { DeckConfigOptions, EntityConfigCardViewConfig } from '../types'
 
 export type ConfigCardDisplayConfig = Omit<EntityConfigCardViewConfig, 'enableDeckConfig'> & {
+  formatPreferenceKey?: string
+  deckCalloutPreferenceKey?: string
   enableDeckConfig?: boolean | DeckConfigOptions
 }
 
@@ -9,15 +11,10 @@ export function getConfigCardViewConfig(config: ConfigCardDisplayConfig): Entity
   const deck = config.enableDeckConfig
   return {
     app: config.app,
-    formatPreferenceKey: config.formatPreferenceKey,
-    deckCalloutPreferenceKey: config.deckCalloutPreferenceKey,
     controlPlaneName: config.controlPlaneName,
     geoApiServerUrl: config.geoApiServerUrl,
     apiBaseUrl: config.apiBaseUrl,
     workspace: config.workspace,
-    enableDeckConfig: typeof deck === 'object' ? {
-      calloutPreferenceKey: deck.calloutPreferenceKey,
-      customization: Boolean(deck.customization),
-    } : deck,
+    enableDeckConfig: typeof deck === 'object' ? true : deck,
   }
 }

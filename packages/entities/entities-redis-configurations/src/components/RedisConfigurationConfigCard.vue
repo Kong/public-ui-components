@@ -48,8 +48,7 @@
         >
           <template #default="{ record, config: viewConfig }">
             <RedisConfigurationConfigCardView
-              :config="{ ...addOnCardRuntimeConfig, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
-              :config-card-doc="configCardDoc"
+              :config="{ ...viewConfig, cloudAuthAvailable: config.cloudAuthAvailable }"
               :hide-title="false"
               :record="record"
             />
@@ -87,8 +86,8 @@
     >
       <template #default="{ record, config: viewConfig }">
         <RedisConfigurationConfigCardView
-          v-bind="props"
-          :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
+          :config="{ ...viewConfig, cloudAuthAvailable: config.cloudAuthAvailable }"
+          :hide-title="hideTitle"
           :record="record"
         >
           <template

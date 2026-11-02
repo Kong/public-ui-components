@@ -131,7 +131,6 @@ import type { UpstreamsConfigCardViewProps } from '@kong-ui-public/entities-upst
 | --- | --- | --- | --- |
 | `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
 
 Health-check, hash-field and nested-field presentation are built in. The public View preserves the existing plural `Upstreams` spelling.
