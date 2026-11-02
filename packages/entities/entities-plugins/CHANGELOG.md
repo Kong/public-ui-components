@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.3.0...%40kong-ui-public%2Fentities-plugins%4010.4.0) (2026-11-02)
+
+### Features
+
+* **entities-plugins:** add OIDC principals.jit (AI Gateway JIT provisioning) ([#3983](https://github.com/Kong/public-ui-components/issues/3983)) ([8ec3452](https://github.com/Kong/public-ui-components/commit/8ec345211636b1a96e0bb0150c10b4c4e6d6fc5b))
+
+
 # [10.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.2.6...%40kong-ui-public%2Fentities-plugins%4010.3.0) (2026-11-02)
 
 ### Features

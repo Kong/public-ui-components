@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fcli%402.3.1...%40kong-ui-public%2Fcli%402.3.2) (2026-11-02)
+
+**Note:** Version bump only for package @kong-ui-public/cli
+
+
+
+
+
 ## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/cli@2.3.0...@kong-ui-public/cli@2.3.1) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/cli
