@@ -85,7 +85,7 @@
     >
       <slot name="content">
         <ConfigCardDisplay
-          :code-block-record="codeBlockRecordFromApi"
+          :code-block-record="codeBlockRecord"
           :code-block-record-formatter="codeBlockRecordFormatter"
           :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
           :config="displayConfig"
@@ -432,7 +432,6 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
 
 // Add missing forceShow fields to a derived record, never to caller-owned data.
 const record = computed(() => withForceShowFields(props.record, props.configSchema))
-const codeBlockRecordFromApi = computed(() => props.codeBlockRecord)
 
 const apiScalarType = (key: string, parentKey?: string) => {
   const fields = parentKey ? getApiSchemaField(schema.value?.fields, parentKey)?.fields : schema.value?.fields
@@ -446,15 +445,11 @@ provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, showSensitiveFields)
 
 
 const redactedCodeBlockRecord = computed(() => props.codeBlockRecordRedacted ??
-  redactConfigCardRecord(codeBlockRecordFromApi.value || record.value, schema.value, props.configSchema),
+  redactConfigCardRecord(props.codeBlockRecord || record.value, schema.value, props.configSchema),
 )
 
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {
-  if (!record.value) {
-    return []
-  }
-
   // each item is an array of the key and the order
   // ex. [ ['id', 1], ['description', 5], ... ]
   const sortableKeys = []
@@ -507,19 +502,19 @@ const orderedRecordArray = computed((): RecordItem[] => {
   }).filter(item => !item.hidden && item.key !== props.pluginConfigKey) // strip hidden & plugin config fields
 })
 
-// Handle sorting by 'order' prop
-const orderedPluginConfigArray = computed((): RecordItem[] => {
-  if (!record.value || !props.pluginConfigKey) {
+// Plugin and policy fields share ordering and display semantics.
+const getConfigFields = (configKey: string, configSchema: PluginConfigurationSchema, section: ConfigurationSchemaSection): RecordItem[] => {
+  if (!configKey) {
     return []
   }
 
   // each item is an array of the key and the order
   // ex. [ ['id', 1], ['description', 5], ... ]
-  const configRecord = record.value[props.pluginConfigKey] || {}
+  const configRecord = record.value[configKey] || {}
   const fieldCount = Object.keys(configRecord).length
   const sortableKeys = []
   for (const key in configRecord) {
-    const configOrder = props.pluginConfigSchema?.[key]?.order
+    const configOrder = configSchema?.[key]?.order
     const recEntry = configRecord[key]
     // if no order provided, prioritize entries that have values
     let order = recEntry !== null && recEntry !== undefined && recEntry !== '' ? fieldCount - 1 : fieldCount
@@ -541,98 +536,37 @@ const orderedPluginConfigArray = computed((): RecordItem[] => {
   return sortableKeys.map((sKey: Array<string | number>) => {
     const key = sKey[0] as string
     const recordEntry = configRecord[key]
-    const configEntry = props.pluginConfigSchema?.[key] || {}
+    const configEntry = configSchema?.[key] || {}
 
     return {
       key,
       value: recordEntry,
       hidden: configEntry.hidden || false,
-      type: configEntry.type ?? apiScalarType(key, props.pluginConfigKey) ?? ConfigurationSchemaType.Text,
+      type: configEntry.type ?? apiScalarType(key, configKey) ?? ConfigurationSchemaType.Text,
       label: configEntry.label ?? convertKeyToTitle(key),
       tooltip: configEntry.tooltip ?? undefined,
-      section: ConfigurationSchemaSection.Plugin,
+      section,
     } as RecordItem
   }).filter(item => !item.hidden) // strip hidden fields
-})
+}
 
-const orderedPolicyConfigArray = computed((): RecordItem[] => {
-  if (!record.value || !props.policyConfigKey) {
-    return []
-  }
-
-  // each item is an array of the key and the order
-  // ex. [ ['id', 1], ['description', 5], ... ]
-  const configRecord = record.value[props.policyConfigKey] || {}
-  const fieldCount = Object.keys(configRecord).length
-  const sortableKeys = []
-  for (const key in configRecord) {
-    const configOrder = props.policyConfigSchema?.[key]?.order
-    const recEntry = configRecord[key]
-    // if no order provided, prioritize entries that have values
-    let order = recEntry !== null && recEntry !== undefined && recEntry !== '' ? fieldCount - 1 : fieldCount
-
-    // check if order exists in config
-    // config order overrides default order
-    if (configOrder) {
-      // -1 means send it to the end
-      order = configOrder === -1 ? fieldCount + 1 : configOrder
-    }
-
-    sortableKeys.push([key, order])
-  }
-
-  sortableKeys.sort(function(a, b) {
-    return (a[1] as number) - (b[1] as number)
-  })
-
-  return sortableKeys.map((sKey: Array<string | number>) => {
-    const key = sKey[0] as string
-    const recordEntry = configRecord[key]
-    const configEntry = props.policyConfigSchema?.[key] || {}
-
-    return {
-      key,
-      value: recordEntry,
-      hidden: configEntry.hidden || false,
-      type: configEntry.type ?? apiScalarType(key, props.policyConfigKey) ?? ConfigurationSchemaType.Text,
-      label: configEntry.label ?? convertKeyToTitle(key),
-      tooltip: configEntry.tooltip ?? undefined,
-      section: ConfigurationSchemaSection.Policy,
-    } as RecordItem
-  }).filter(item => !item.hidden) // strip hidden fields
-})
+const orderedPluginConfigArray = computed(() => getConfigFields(props.pluginConfigKey, props.pluginConfigSchema, ConfigurationSchemaSection.Plugin))
+const orderedPolicyConfigArray = computed(() => getConfigFields(props.policyConfigKey, props.policyConfigSchema, ConfigurationSchemaSection.Policy))
 
 // Split ordered rows by schema section so ConfigCardDisplay can render basic vs advanced vs plugin vs policy
 const propertyLists = computed((): { basic: RecordItem[], advanced: RecordItem[], plugin: RecordItem[], policy: RecordItem[] } => {
   return {
-    basic: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Basic),
-    advanced: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Advanced),
-    plugin: orderedPluginConfigArray.value?.concat(orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Plugin)),
-    policy: orderedPolicyConfigArray.value?.concat(orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Policy)),
+    basic: orderedRecordArray.value.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Basic),
+    advanced: orderedRecordArray.value.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Advanced),
+    plugin: orderedPluginConfigArray.value.concat(orderedRecordArray.value.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Plugin)),
+    policy: orderedPolicyConfigArray.value.concat(orderedRecordArray.value.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Policy)),
   }
 })
 
-const propListTypes = computed((): string[] => {
-  const types = []
-
-  if (propertyLists.value.basic.length) {
-    types.push('basic')
-  }
-
-  if (propertyLists.value.advanced.length) {
-    types.push('advanced')
-  }
-
-  if (propertyLists.value.plugin.length) {
-    types.push('plugin')
-  }
-
-  if (propertyLists.value.policy.length) {
-    types.push('policy')
-  }
-
-  return types
-})
+const propListTypes = computed(() => Object.entries(propertyLists.value)
+  .filter(([, rows]) => rows.length > 0)
+  .map(([section]) => section),
+)
 
 // Refreshes of the same entity preserve the user's display choices.
 watch(() => props.record.id, () => {

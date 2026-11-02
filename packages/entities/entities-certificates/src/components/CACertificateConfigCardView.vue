@@ -7,7 +7,7 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.CaCertificate"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template #cert="slotProps">
@@ -187,7 +187,6 @@ const configSchema = ref<CACertificateConfigurationSchema>({
     tooltip: t('ca-certificates.form.fields.tags.tooltip'),
   },
 })
-const displayRecord = computed(() => props.record)
 </script>
 
 <style lang="scss" scoped>

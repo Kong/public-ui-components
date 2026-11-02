@@ -7,7 +7,7 @@
       :config-schema="(configSchema as any)"
       :entity-type="SupportedEntityType.Certificate"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template #cert-label-tooltip>
@@ -301,7 +301,6 @@ const getMetadataLabel = (propKey: string) => {
   return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
 }
 
-const displayRecord = computed(() => props.record)
 </script>
 
 <style lang="scss" scoped>

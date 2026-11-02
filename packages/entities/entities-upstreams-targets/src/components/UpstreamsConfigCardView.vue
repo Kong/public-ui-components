@@ -6,7 +6,7 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Upstream"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template #name-label-tooltip>
@@ -208,13 +208,13 @@
 <script setup lang="ts">
 import type { EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import type { UpstreamsConfigurationSchema } from '../types'
 import { EntityConfigCardView, ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityType, useHelpers } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
-const props = defineProps({
+defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   record: { type: Object as PropType<Record<string, any>>, required: true },
   requestUrl: { type: String, default: '' },
@@ -317,5 +317,4 @@ const configSchema = ref<UpstreamsConfigurationSchema>({
     tooltip: t('upstreams.form.hash_tooltips.client_certificate'),
   },
 })
-const displayRecord = computed(() => props.record)
 </script>

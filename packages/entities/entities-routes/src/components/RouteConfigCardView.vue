@@ -6,13 +6,13 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Route"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template #service="{ row }">
         <!-- Loading -->
         <KSkeleton
-          v-if="isServiceNameLoading"
+          v-if="serviceNameLoading"
           data-testid="service-name-loader"
           type="spinner"
         />
@@ -95,7 +95,6 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const internalServiceId = computed(() => props.serviceId || props.record.service?.id || '')
 const serviceName = computed(() => props.serviceName ?? internalServiceId.value)
-const isServiceNameLoading = computed(() => props.serviceNameLoading)
 
 const configSchema = ref<RouteConfigurationSchema>({
   id: {},
@@ -190,5 +189,4 @@ const configSchema = ref<RouteConfigurationSchema>({
     order: 7,
   },
 })
-const displayRecord = computed(() => props.record)
 </script>

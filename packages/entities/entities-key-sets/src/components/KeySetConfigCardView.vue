@@ -6,7 +6,7 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.KeySet"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import type { EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { EntityConfigCardView, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import type { KeySetConfigurationSchema } from '../types'
 import composables from '../composables'
@@ -34,7 +34,7 @@ import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 
-const props = defineProps({
+defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   record: { type: Object as PropType<Record<string, any>>, required: true },
   requestUrl: { type: String, default: '' },
@@ -70,5 +70,4 @@ const configSchema = ref<KeySetConfigurationSchema>({
     tooltip: t('keySets.form.fields.tags.tooltip'),
   },
 })
-const displayRecord = computed(() => props.record)
 </script>

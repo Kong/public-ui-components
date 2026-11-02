@@ -6,13 +6,13 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Key"
       :hide-title="hideTitle"
-      :record="displayRecord"
+      :record="record"
       :request-url="requestUrl"
     >
       <template #set="{ row }">
         <!-- Loading -->
         <KSkeleton
-          v-if="isKeySetNameLoading"
+          v-if="keySetNameLoading"
           data-testid="key-set-name-loader"
           type="spinner"
         />
@@ -33,7 +33,7 @@
       </template>
 
       <template
-        v-if="currentKey?.jwk"
+        v-if="record?.jwk"
         #jwk
       >
         <ConfigCardItem
@@ -48,7 +48,7 @@
         />
       </template>
       <template
-        v-if="currentKey?.pem"
+        v-if="record?.pem"
         #pem
       >
         <ConfigCardItem
@@ -126,10 +126,8 @@ const props = defineProps({
 
 const { convertKeyToTitle } = useStringHelpers()
 const { i18n: { t } } = composables.useI18n()
-const currentKey = computed(() => props.record)
 const entityKeySetId = computed(() => props.record.set?.id || props.keySetId || '')
 const keySetName = computed(() => props.keySetName ?? entityKeySetId.value)
-const isKeySetNameLoading = computed(() => props.keySetNameLoading)
 const result = computed<Record<string, any>>(() => {
   if (props.record.jwk) {
     try {
@@ -174,5 +172,4 @@ const configSchema = ref<KeyConfigurationSchema>({
     type: ConfigurationSchemaType.Json,
   },
 })
-const displayRecord = computed(() => props.record)
 </script>

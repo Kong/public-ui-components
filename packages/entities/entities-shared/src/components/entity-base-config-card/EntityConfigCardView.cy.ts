@@ -71,16 +71,21 @@ describe('EntityConfigCardView public record interface', () => {
     cy.then(() => expect(codeBlockRecord).not.to.have.property('format'))
   })
 
-  it('keeps empty arrays and stable null ordering in plugin sections with readonly API schemas', () => {
-    const pluginRecord = Object.freeze({ id: 'p', config: Object.freeze({ absent: null, empty: '', array: Object.freeze([]), value: 1 }) })
-    cy.mount(EntityConfigCardView, { props: {
-      record: pluginRecord, entityType: SupportedEntityType.Plugin, pluginConfigKey: 'config',
-      pluginConfigSchema: { value: { order: 1 }, absent: { order: -1 } },
-    } })
-    cy.getTestId('config-card-details-plugin-props').find('.config-card-details-row').first().should('contain.text', 'Value')
-    cy.getTestId('array-property-value').should('exist')
-    cy.getTestId('config-card-details-plugin-props').find('.config-card-details-row').last().should('contain.text', 'Absent')
-  })
+  for (const section of ['plugin', 'policy'] as const) {
+    it(`keeps empty arrays and stable null ordering in ${section} sections with readonly records`, () => {
+      const pluginRecord = Object.freeze({ id: 'p', config: Object.freeze({ absent: null, empty: '', array: Object.freeze([]), value: 1 }) })
+      cy.mount(EntityConfigCardView, { props: {
+        record: pluginRecord, entityType: SupportedEntityType.Plugin,
+        pluginConfigKey: section === 'plugin' ? 'config' : '',
+        policyConfigKey: section === 'policy' ? 'config' : '',
+        pluginConfigSchema: { value: { order: 1 }, absent: { order: -1 } },
+        policyConfigSchema: { value: { order: 1 }, absent: { order: -1 } },
+      } })
+      cy.getTestId(`config-card-details-${section}-props`).find('.config-card-details-row').first().should('contain.text', 'Value')
+      cy.getTestId('array-property-value').should('exist')
+      cy.getTestId(`config-card-details-${section}-props`).find('.config-card-details-row').last().should('contain.text', 'Absent')
+    })
+  }
 
   it('redacts resolved API-schema scalars, encrypted sets and nested arrays without mutating the schema', () => {
     const schema = Object.freeze({ fields: [

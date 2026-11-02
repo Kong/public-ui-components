@@ -13,16 +13,15 @@
 </template>
 
 <script lang="ts" setup>
-import { useAxios } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   SecretStateFields,
   KonnectSecretFormConfig,
 } from '../types'
-import endpoints from '../secrets-endpoints'
+import composables from '../composables'
 import SecretFormInner from './SecretFormInner.vue'
 
 const props = defineProps({
@@ -75,42 +74,8 @@ const handleLoading = (isLoading: boolean): void => {
   emit('loading', isLoading)
 }
 
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-
-const fetchedConfigStoreId = ref('')
-const resolvedConfigStoreId = computed(() => props.configStoreId !== undefined
-  ? props.configStoreId?.trim() || ''
-  : fetchedConfigStoreId.value)
-const innerKey = computed(() => [props.config.app, props.config.apiType, props.config.apiBaseUrl,
-  props.config.controlPlaneId, props.config.aiGatewayId, props.config.workspace, props.vaultId, resolvedConfigStoreId.value, props.secretId].join(':'))
-
-const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
-  ? endpoints.getVault.aiGateway
-  : endpoints.getVault[props.config.app])
-
-const fetchVaultUrl = computed<string>(() => {
-  return `${props.config.apiBaseUrl}${getVaultEndpoint.value}`
-    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
-    .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-    .replace(/{id}/gi, props.vaultId)
-})
-
-// Ignore a stale Vault response after the store or business identity changes.
-watch([fetchVaultUrl, () => props.configStoreId], async ([url, explicitId], _, onCleanup) => {
-  let current = true
-  onCleanup(() => {
-    current = false
-  })
-  fetchedConfigStoreId.value = ''
-  if (explicitId !== undefined) return
-  try {
-    const { data } = await axiosInstance.get(url)
-    if (current) fetchedConfigStoreId.value = data?.config?.config_store_id || ''
-  } catch (err: any) {
-    if (current) emit('error', err)
-  }
-}, { immediate: true })
+const { configStoreId: resolvedConfigStoreId, storeKey } = composables.useSecretConfigStore(props, handleError)
+const innerKey = computed(() => [storeKey.value, props.secretId].join(':'))
 </script>
 
 <style lang="scss" scoped>
