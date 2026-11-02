@@ -85,7 +85,7 @@
     "@playwright/test": "^1.64.1",
     "@vueuse/core": "^14.4.0",
     "vue": "^3.5.43",
-    "vue-router": "^5.3.1"
+    "vue-router": "^5.4.0"
   },
   "repository": {
     "type": "git",

@@ -82,18 +82,18 @@
     "@kong/design-tokens": "3.5.1",
     "@kong/icons": "^1.64.0",
     "@kong/kongponents": "9.66.12",
-    "@peculiar/x509": "^2.0.0",
+    "@peculiar/x509": "^2.2.0",
     "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
     "reflect-metadata": "^0.2.2",
-    "shiki": "^4.4.3",
+    "shiki": "^4.5.0",
     "vue": "^3.5.43",
     "yaml": "^2.9.1",
     "zod": "^4.5.4"
   },
   "dependencies": {
-    "@shikijs/monaco": "^4.4.3",
+    "@shikijs/monaco": "^4.5.0",
     "@vueuse/core": "^14.4.0",
-    "shiki-codegen": "^4.4.3"
+    "shiki-codegen": "^4.5.0"
   }
 }

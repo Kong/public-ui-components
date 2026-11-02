@@ -68,6 +68,6 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "3.5.1",
     "@kong/kongponents": "9.66.12",
-    "pinia": "^4.0.3"
+    "pinia": "^4.1.0"
   }
 }

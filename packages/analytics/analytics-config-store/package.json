@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "pinia": "^4.0.3",
+    "pinia": "^4.1.0",
     "vue": "^3.5.43"
   },
   "repository": {
