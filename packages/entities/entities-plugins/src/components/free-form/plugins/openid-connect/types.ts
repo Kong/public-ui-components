@@ -1,5 +1,14 @@
 export type PrincipalsMode = 'kong-identity' | 'external'
 
+/**
+ * Claims shared when creating or updating a Kong Identity principal just in
+ * time (AI Gateway 2.3+; `x-min-runtime-version`-gated in the schema).
+ */
+export interface OidcPrincipalsJit {
+  all_claims?: boolean | null
+  claims?: string[] | null
+}
+
 export interface OidcPrincipals {
   directory?: string | null
   enabled?: boolean | null
@@ -9,6 +18,7 @@ export interface OidcPrincipals {
   principal_by?: string | null
   /** string[] in the schema; legacy records may carry a plain string */
   principal_claim?: string[] | string | null
+  jit?: OidcPrincipalsJit | null
 }
 
 export interface OidcConfigSubset {
