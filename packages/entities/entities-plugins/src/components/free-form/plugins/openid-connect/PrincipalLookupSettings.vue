@@ -163,6 +163,7 @@
           :disabled="jitDisabled"
           :disabled-tooltip-text="jitVersionInfo?.tooltip"
           :model-value="jitEnabled"
+          :tooltip-attributes="{ maxWidth: '300' }"
           @update:model-value="handleJitToggle"
         >
           <template #label>
@@ -183,6 +184,7 @@
         <KCheckbox
           data-testid="principals-jit-all-claims"
           :disabled="jitDisabled"
+          :label-attributes="jitVersionLabelAttributes"
           :model-value="allClaims ?? false"
           @update:model-value="handleAllClaimsChange"
         >
@@ -199,6 +201,7 @@
           :disabled="jitDisabled"
           :help="t('plugins.free-form.openid-connect.jit.claims.help')"
           :label="t('plugins.free-form.openid-connect.jit.claims.label')"
+          :label-attributes="jitVersionLabelAttributes"
           :model-value="claimsInput"
           :placeholder="t('plugins.free-form.openid-connect.jit.claims.placeholder')"
           @update:model-value="handleClaimsChange"
@@ -286,6 +289,13 @@ const showJitSettings = computed(() => isAiManager.value && !!jitSchema.value)
 // version — gateway-manager never gets here (showJitSettings is false).
 const jitVersionInfo = computed(() => getFieldVersionInfo('$.config.principals.jit'))
 const jitDisabled = computed(() => props.disabled || !!jitVersionInfo.value)
+
+// The version-lock tooltip for the subfields, as a label info icon — same
+// treatment the toggle gets via its disabled tooltip. Undefined unless the
+// runtime is below 2.3, so an unlocked form shows no extra icon.
+const jitVersionLabelAttributes = computed(() => jitVersionInfo.value
+  ? { info: jitVersionInfo.value.tooltip, tooltipAttributes: { maxWidth: '300' } }
+  : undefined)
 
 // jit has no on/off flag of its own — the record's presence is the switch.
 const jitEnabled = computed(() => !!formData.config?.principals?.jit)
