@@ -194,7 +194,3 @@ import type {
   EntityBaseFormType,
 } from '@kong-ui-public/entities-shared'
 ```
-
-## External initialization
-
-`fetchOnMount` is an optional boolean, defaulting to `true`. Set it to `false` to skip the initialization GET even when `editId` is supplied. It does not alter submit, loading/error events for real requests, or the form shell. The owning business form initializes its own draft; this base component does not interpret external query state.

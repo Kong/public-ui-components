@@ -1,10 +1,9 @@
 <template>
   <div class="kong-ui-entities-secret-form">
     <SecretFormInner
-      v-if="resolvedConfigStoreId"
-      :key="innerKey"
+      v-if="configStoreId"
       v-bind="props"
-      :config-store-id="resolvedConfigStoreId"
+      :config-store-id="configStoreId"
       @error="handleError"
       @loading="handleLoading"
       @update="handleUpdate"
@@ -13,24 +12,19 @@
 </template>
 
 <script lang="ts" setup>
+import { useAxios } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   SecretStateFields,
   KonnectSecretFormConfig,
 } from '../types'
-import composables from '../composables'
+import endpoints from '../secrets-endpoints'
 import SecretFormInner from './SecretFormInner.vue'
 
 const props = defineProps({
-  /** Resolved store. Null/empty disables rendering without falling back to a Vault GET. */
-  configStoreId: {
-    type: String as PropType<string | null>,
-    default: undefined,
-    validator: (value: string | null) => value === null || value.trim().length > 0,
-  },
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectSecretFormConfig>,
@@ -74,8 +68,30 @@ const handleLoading = (isLoading: boolean): void => {
   emit('loading', isLoading)
 }
 
-const { configStoreId: resolvedConfigStoreId, storeKey } = composables.useSecretConfigStore(props, handleError)
-const innerKey = computed(() => [storeKey.value, props.secretId].join(':'))
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const configStoreId = ref<string>('')
+
+const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
+  ? endpoints.getVault.aiGateway
+  : endpoints.getVault[props.config.app])
+
+const fetchVaultUrl = computed<string>(() => {
+  return `${props.config.apiBaseUrl}${getVaultEndpoint.value}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+    .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.vaultId)
+})
+
+onBeforeMount(async () => {
+  try {
+    const { data } = await axiosInstance.get(fetchVaultUrl.value)
+    configStoreId.value = data?.config?.config_store_id
+  } catch (err: any) {
+    emit('error', err)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

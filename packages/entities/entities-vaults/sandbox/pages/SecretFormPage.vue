@@ -1,10 +1,4 @@
 <template>
-  <h2>Secret with an externally resolved config store</h2>
-  <SecretForm
-    :config="konnectConfig"
-    config-store-id="example-store"
-    vault-id="example-vault"
-  />
   <h2>Konnect API</h2>
   <SecretForm
     :config="konnectConfig"

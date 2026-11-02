@@ -1,10 +1,9 @@
 <template>
   <div class="kong-ui-entities-secrets-list">
     <SecretListInner
-      v-if="resolvedConfigStoreId"
-      :key="storeKey"
+      v-if="configStoreId"
       v-bind="props"
-      :config-store-id="resolvedConfigStoreId"
+      :config-store-id="configStoreId"
       @delete:success="handleDeleteSuccess"
       @error="handleError"
     />
@@ -13,9 +12,11 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
+import { useAxios } from '@kong-ui-public/entities-shared'
 import SecretListInner from './SecretListInner.vue'
-import composables from '../composables'
+import endpoints from '../secrets-endpoints'
 
 import type {
   KonnectSecretListConfig,
@@ -31,12 +32,6 @@ const emit = defineEmits<{
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
-  /** Resolved store. Null/empty disables rendering without falling back to a Vault GET. */
-  configStoreId: {
-    type: String as PropType<string | null>,
-    default: undefined,
-    validator: (value: string | null) => value === null || value.trim().length > 0,
-  },
   /** The base konnect config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectSecretListConfig>,
@@ -86,7 +81,29 @@ const handleDeleteSuccess = (route: SecretEntityRow): void => {
   emit('delete:success', route)
 }
 
-const { configStoreId: resolvedConfigStoreId, storeKey } = composables.useSecretConfigStore(props, handleError)
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const configStoreId = ref<string>('')
+
+const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
+  ? endpoints.getVault.aiGateway
+  : endpoints.getVault[props.config.app])
+
+const fetchVaultUrl = computed<string>(() => {
+  return `${props.config.apiBaseUrl}${getVaultEndpoint.value}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+    .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.vaultId)
+})
+
+onBeforeMount(async () => {
+  try {
+    const { data } = await axiosInstance.get(fetchVaultUrl.value)
+    configStoreId.value = data?.config?.config_store_id
+  } catch (err: any) {
+    emit('error', err)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

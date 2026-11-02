@@ -10,7 +10,6 @@ A form component for Vaults.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
-- [Initializing from an existing record](#initializing-from-an-existing-record)
 
 ## Requirements
 
@@ -192,25 +191,3 @@ import type {
   VaultLabelItem
 } from '@kong-ui-public/entities-vaults'
 ```
-
-## Initializing from an existing record
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `initialRecord` | `Record<string, any>` | `undefined` | Already resolved Vault used once to initialize an independent edit draft. |
-| `fetchOnMount` | `boolean` | `true` | Enable the legacy initialization Vault GET. |
-
-A ready `initialRecord` skips the initialization GET. Set `fetchOnMount=false` explicitly when an external owner loads the record, including while it is still undefined. A late record initializes once; subsequent query refreshes do not overwrite edits. Remount with `:key="vault.id"` when changing objects. The form clones input before initialization and preserves config-store creation, validation, write-only fields, submit requests and update/error behavior. It does not emit a fabricated fetch-success event for external initialization.
-
-```vue
-<VaultForm
-  v-if="vault"
-  :key="vault.id"
-  :config="formConfig"
-  :vault-id="vault.id"
-  :initial-record="vault"
-  :fetch-on-mount="false"
-/>
-```
-
-Keep loading/error/retry handling in the external data owner. Upgrade compatible released `entities-vaults` and `entities-shared` packages before replacing a temporary initialization adapter with these props. Existing callers can omit both props and retain automatic initialization.
