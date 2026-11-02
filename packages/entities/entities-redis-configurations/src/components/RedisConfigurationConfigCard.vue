@@ -46,14 +46,12 @@
           @fetch:success="onCacheAddOnLoaded"
           @loading="onLoadingChange"
         >
-          <template #default="{ record, requestUrl }">
+          <template #default="{ record, config: viewConfig }">
             <RedisConfigurationConfigCardView
-              :config="{ ...addOnCardRuntimeConfig, enableDeckConfig: getConfigCardViewConfig(addOnCardRuntimeConfig).enableDeckConfig }"
+              :config="{ ...addOnCardRuntimeConfig, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
               :config-card-doc="configCardDoc"
               :hide-title="false"
               :record="record"
-              record-kind="managed-cache"
-              :request-url="requestUrl"
             />
           </template>
         </EntityBaseConfigCard>
@@ -87,12 +85,11 @@
       @fetch:success="handleData"
       @loading="onLoadingChange"
     >
-      <template #default="{ record, requestUrl }">
+      <template #default="{ record, config: viewConfig }">
         <RedisConfigurationConfigCardView
           v-bind="props"
-          :config="viewConfig"
+          :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
           :record="record"
-          :request-url="requestUrl"
         >
           <template
             v-for="slotKey in Object.keys($slots)"
@@ -111,7 +108,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import RedisConfigurationConfigCardView from './RedisConfigurationConfigCardView.vue'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, ref, watch } from 'vue'
@@ -393,7 +389,6 @@ const handleData = (payload: Record<string, any>): void => {
   emit('fetch:success', row)
 }
 
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>
 
 <style lang="scss" scoped>

@@ -57,18 +57,45 @@ describe('EntityConfigCardView public record interface', () => {
     })
   })
 
-  it('keeps explicit code payloads, formatter ordering, timestamps and display URL metadata', () => {
-    const codeBlockRecord = Object.freeze({ envelope: { renamed: 'value' }, created_at: 'kept' })
+  it('keeps explicit code payloads, formatter ordering and timestamps', () => {
+    const codeBlockRecord = Object.freeze({ envelope: Object.freeze({ renamed: 'value', secret: 'raw-secret' }), created_at: 'kept' })
     cy.mount(EntityConfigCardView, { props: {
       record: { id: 'one', name: 'structured-name' }, codeBlockRecord,
+      schema: { fields: [{ envelope: { type: 'record', fields: [{ secret: { type: 'string', encrypted: true } }] } }] },
       entityType: SupportedEntityType.Consumer, preserveCodeBlockTimestamps: true,
-      requestUrl: '/display-only/record',
       codeBlockRecordFormatter: (input, format) => ({ ...input, format }),
     } })
     select('json')
-    cy.get('#json-codeblock').should('contain.text', 'envelope').and('contain.text', 'kept').and('contain.text', 'json').and('not.contain.text', 'structured-name')
-    cy.get('#json-endpoint-codeblock').should('contain.text', '/display-only/record')
+    cy.get('#json-codeblock').should('contain.text', 'envelope').and('contain.text', 'kept').and('contain.text', 'json').and('not.contain.text', 'structured-name').and('not.contain.text', 'raw-secret')
+    cy.get('#json-endpoint-codeblock').should('not.exist')
+    cy.getTestId('sensitive-fields-checkbox').check({ force: true })
+    cy.get('#json-codeblock').should('contain.text', 'raw-secret')
     cy.then(() => expect(codeBlockRecord).not.to.have.property('format'))
+  })
+
+  it('needs only a record and enables typed exports only while entity metadata is available', () => {
+    localStorage.setItem('optional-type', 'terraform')
+    cy.mount(EntityConfigCardView, { props: {
+      record: { id: 'consumer', username: 'user' },
+      config: { app: 'konnect', enableDeckConfig: true, formatPreferenceKey: 'optional-type' },
+    } }).then(({ wrapper }) => {
+      cy.getTestId('username-property-value').should('contain.text', 'user')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-terraform').should('not.exist')
+      cy.getTestId('select-item-deck').should('not.exist')
+      cy.getTestId('select-item-json').click()
+      cy.get('#json-codeblock').should('contain.text', 'user')
+      select('yaml')
+      cy.get('#yaml-codeblock').should('contain.text', 'user')
+      cy.then(() => wrapper.setProps({ entityType: SupportedEntityType.Consumer }))
+      select('terraform')
+      cy.get('#terraform-codeblock').should('contain.text', 'konnect_gateway_consumer')
+      select('deck')
+      cy.get('#deck-codeblock').should('exist')
+      cy.then(() => wrapper.setProps({ entityType: undefined }))
+      cy.getTestId('username-property-value').should('contain.text', 'user')
+      cy.get('#deck-codeblock').should('not.exist')
+    })
   })
 
   for (const section of ['plugin', 'policy'] as const) {

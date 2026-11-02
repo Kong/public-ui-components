@@ -7,12 +7,11 @@
       :entity-type="SupportedEntityType.Key"
       :hide-title="hideTitle"
       :record="record"
-      :request-url="requestUrl"
     >
       <template #set="{ row }">
         <!-- Loading -->
         <KSkeleton
-          v-if="keySetNameLoading"
+          v-if="keySet?.loading && keySet.id === entityKeySetId"
           data-testid="key-set-name-loader"
           type="spinner"
         />
@@ -91,11 +90,9 @@ const emit = defineEmits<{
 }>()
 
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
-  keySetName: { type: String, default: undefined },
-  keySetNameLoading: { type: Boolean, default: false },
+  /** Resolved association display state; defaults to the ID in record.set. */
+  keySet: { type: Object as PropType<{ id: string, name?: string, loading?: boolean }>, default: undefined },
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  requestUrl: { type: String, default: '' },
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),
@@ -115,19 +112,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * Keyset id for scoped key entity
-   */
-  keySetId: {
-    type: String as PropType<string | null>,
-    default: null,
-  },
 })
 
 const { convertKeyToTitle } = useStringHelpers()
 const { i18n: { t } } = composables.useI18n()
-const entityKeySetId = computed(() => props.record.set?.id || props.keySetId || '')
-const keySetName = computed(() => props.keySetName ?? entityKeySetId.value)
+const entityKeySetId = computed(() => props.record.set?.id || props.keySet?.id || '')
+const keySetName = computed(() => props.keySet?.id === entityKeySetId.value
+  ? props.keySet?.name ?? entityKeySetId.value
+  : entityKeySetId.value)
 const result = computed<Record<string, any>>(() => {
   if (props.record.jwk) {
     try {

@@ -8,7 +8,6 @@
       :entity-type="SupportedEntityType.CaCertificate"
       :hide-title="hideTitle"
       :record="record"
-      :request-url="requestUrl"
     >
       <template #cert="slotProps">
         <KCodeBlock
@@ -87,9 +86,7 @@ const HIDDEN_METADATA = ['dns_names', 'san_names', 'subject']
 
 
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  requestUrl: { type: String, default: '' },
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),

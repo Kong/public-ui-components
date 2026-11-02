@@ -142,11 +142,8 @@ import type { RedisConfigurationConfigCardViewProps } from '@kong-ui-public/enti
 | `config` | `EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `true` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
-| `recordKind` | `'partial' \| 'managed-cache'` | `'partial'` | Shape of the resolved record. |
-| `disableKonnectManagedDetail` | `boolean` | `false` | Preserve the nested-partial display convention of hiding YAML. It performs no lookup. |
 
-Resolve whether the detail is a partial or managed cache before mounting the View. It applies the existing partial flattening, cloud-auth display rules, managed field allowlisting, raw JSON/timestamp preservation and local Terraform transforms. If a page displays both cache and linked-partial segments, its data owner loads those records and owns segment loading. Changing View inputs never requests the other source.
+Pass the resolved raw record. The existing `config.kind` discriminator identifies managed-cache add-ons; no separate mode prop is needed. It applies the existing partial flattening, cloud-auth display rules, managed field allowlisting, raw JSON/timestamp preservation and local Terraform transforms. If a page displays both cache and linked-partial segments, its data owner loads those records and owns segment loading. Changing View inputs never requests the other source.
 
 See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
 
@@ -161,7 +158,6 @@ The View accepts title, actions and field-slot overrides with the existing `reco
   v-if="record"
   :key="record.id"
   :record="record"
-  :record-kind="recordKind"
   :config="{ app: 'konnect', cloudAuthAvailable: true }"
 />
 ```

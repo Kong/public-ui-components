@@ -19,6 +19,8 @@ describe('EntityBaseConfigCard response boundary', () => {
     cy.get('@success').should('have.been.calledOnceWith', payload)
     cy.get('@get.all').should('have.length', 1)
     cy.get('.kong-ui-entity-base-config-card').should('have.length', 1)
+    selectJson()
+    cy.get('#json-endpoint-codeblock').should('contain.text', '/resolvers/record/entity')
   })
 
   it('retains non-invertible structured resolution and legacy resolver-after-redaction ordering', () => {

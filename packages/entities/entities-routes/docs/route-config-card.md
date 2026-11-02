@@ -145,10 +145,7 @@ import type { RouteConfigCardViewProps } from '@kong-ui-public/entities-routes'
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
-| `serviceId` | `string \| null` | `null` | Optional associated service ID. |
-| `serviceName` | `string` | `undefined` | Resolved name; omission falls back to the service ID. |
-| `serviceNameLoading` | `boolean` | `false` | Display the service-name loading indicator. |
+| `service` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Resolved association display state. Omission displays the ID from the record. |
 
 Supply the associated service name or loading state explicitly. The View never resolves a service.
 
@@ -165,8 +162,7 @@ The View accepts title, actions and field-slot overrides with the existing `reco
   v-if="record"
   :key="record.id"
   :record="record"
-  :service-name="service?.name"
-  :service-name-loading="serviceLoading"
+  :service="record.service ? { id: record.service.id, name: service?.name, loading: serviceLoading } : undefined"
 />
 ```
 

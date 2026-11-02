@@ -133,7 +133,6 @@ import type { UpstreamsConfigCardViewProps } from '@kong-ui-public/entities-upst
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Health-check, hash-field and nested-field presentation are built in. The public View preserves the existing plural `Upstreams` spelling.
 

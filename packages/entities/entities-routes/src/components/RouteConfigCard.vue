@@ -9,14 +9,12 @@
     @fetch:success="handleSuccess"
     @loading="(val: boolean) => emit('loading', val)"
   >
-    <template #default="{ record, requestUrl }">
+    <template #default="{ record, config: viewConfig }">
       <RouteConfigCardView
         v-bind="props"
         :config="viewConfig"
         :record="record"
-        :request-url="requestUrl"
-        :service-name="serviceName"
-        :service-name-loading="isServiceNameLoading"
+        :service="{ id: internalServiceId, name: serviceName, loading: isServiceNameLoading }"
         @navigation-click="(id: string, entityType: any) => emit('navigation-click', id, entityType)"
       >
         <template
@@ -35,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
@@ -126,5 +123,4 @@ const handleSuccess = async (entity: any) => {
 }
 
 
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

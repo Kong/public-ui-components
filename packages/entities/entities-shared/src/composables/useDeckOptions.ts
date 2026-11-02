@@ -14,14 +14,15 @@ import type {
 
 export function useBaseEntityDeckOptions(
   config: MaybeRefOrGetter<ConfigCardDisplayConfig>,
-  entityType: MaybeRefOrGetter<SupportedEntityType>,
+  entityType: MaybeRefOrGetter<SupportedEntityType | undefined>,
 ) {
   const deckCommandEditor = inject(DECK_COMMAND_EDITOR_KEY, null)
 
   const isDeckEnabled = computed(() => {
     const c = toValue(config)
     const enabled = c.app === 'kongManager' || Boolean(c.app === 'konnect' && c.enableDeckConfig)
-    return enabled && isSupportedDeckEntityType(toValue(entityType))
+    const type = toValue(entityType)
+    return enabled && type !== undefined && isSupportedDeckEntityType(type)
   })
 
   const deckCustomizationOptions = computed(() => {

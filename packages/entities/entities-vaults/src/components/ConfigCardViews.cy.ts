@@ -42,18 +42,26 @@ describe('business View public exports', () => {
   it('updates Route association input without reading its service', () => {
     cy.mount(RouteConfigCardView, { props: { record: { id: 'route', service: { id: 'service' } } } }).then(({ wrapper }) => {
       cy.getTestId('service-property-value').should('contain.text', 'service')
-      cy.then(() => wrapper.setProps({ serviceName: 'resolved-service', serviceNameLoading: false }))
+      cy.then(() => wrapper.setProps({ service: { id: 'service', loading: true } }))
+      cy.getTestId('service-name-loader').should('exist')
+      cy.then(() => wrapper.setProps({ service: { id: 'service', name: 'resolved-service' } }))
       cy.getTestId('service-property-value').should('contain.text', 'resolved-service')
+      cy.then(() => wrapper.setProps({ service: { id: 'other', name: 'stale-service' } }))
+      cy.getTestId('service-property-value').should('not.contain.text', 'stale-service')
     })
   })
 
   it('updates Key association and JWK representation without retaining previous parsed fields', () => {
     cy.mount(KeyConfigCardView, { props: { record: { id: 'key', set: { id: 'set' }, jwk: '{"kty":"RSA","old":"field"}' } } }).then(({ wrapper }) => {
       cy.getTestId('jwk.old-plain-text').should('contain.text', 'field')
-      cy.then(() => wrapper.setProps({ keySetName: 'resolved-set', record: { id: 'key', set: { id: 'set' }, jwk: '{"kty":"EC"}' } }))
+      cy.then(() => wrapper.setProps({ keySet: { id: 'set', loading: true } }))
+      cy.getTestId('key-set-name-loader').should('exist')
+      cy.then(() => wrapper.setProps({ keySet: { id: 'set', name: 'resolved-set' }, record: { id: 'key', set: { id: 'set' }, jwk: '{"kty":"EC"}' } }))
       cy.getTestId('set-property-value').should('contain.text', 'resolved-set')
       cy.getTestId('jwk.old-plain-text').should('not.exist')
       cy.getTestId('jwk.kty-plain-text').should('contain.text', 'EC')
+      cy.then(() => wrapper.setProps({ keySet: { id: 'other', name: 'stale-set' } }))
+      cy.getTestId('set-property-value').should('contain.text', 'set').and('not.contain.text', 'stale-set')
     })
   })
 

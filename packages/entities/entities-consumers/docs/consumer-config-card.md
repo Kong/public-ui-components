@@ -133,7 +133,6 @@ import type { ConsumerConfigCardViewProps } from '@kong-ui-public/entities-consu
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Consumer field tooltips and hidden-field rules are built in.
 

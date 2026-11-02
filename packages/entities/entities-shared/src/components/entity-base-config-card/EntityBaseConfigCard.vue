@@ -37,16 +37,15 @@
   </EntityConfigCardView>
   <slot
     v-else
-    :code-block-record="codeBlockRecordFromApi"
+    :config="viewProps.config"
     :record="record"
-    :request-url="fetcherUrl"
   />
 </template>
 
 <script setup lang="ts">
 import { withForceShowFields, redactConfigCardRecord } from './record'
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, provide } from 'vue'
+import { computed, ref, onBeforeMount, watch, provide, useSlots } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, ConfigCardCodeFormat, ConfigCardFormat, PluginConfigurationSchema, SupportedEntityType, PolicyConfigurationSchema } from '../../types'
 import { SupportedEntityTypesArray } from '../../types'
@@ -54,7 +53,7 @@ import type { HeaderTag } from '@kong/kongponents'
 import composables from '../../composables'
 import EntityConfigCardView from './EntityConfigCardView.vue'
 import { getConfigCardViewConfig } from '../../utils/config-card'
-import { LEGACY_CONFIG_CARD_DECK_OPTIONS } from './legacy-deck-config'
+import { LEGACY_CONFIG_CARD_CONTEXT } from './legacy-config-card'
 
 defineOptions({ inheritAttrs: false })
 
@@ -212,8 +211,6 @@ const props = defineProps({
   },
 })
 
-provide(LEGACY_CONFIG_CARD_DECK_OPTIONS, computed(() => props.config.app === 'konnect' ? props.config.enableDeckConfig : undefined))
-
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
@@ -295,6 +292,15 @@ const redactedCodeBlockRecord = computed(() => {
   return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(redacted) : redacted
 })
 
+const slots = useSlots()
+provide(LEGACY_CONFIG_CARD_CONTEXT, computed(() => ({
+  requestUrl: fetcherUrl.value,
+  formatsToHide: props.formatsToHide,
+  deckOptions: props.config.app === 'konnect' ? props.config.enableDeckConfig : undefined,
+  // Business Views own their masking; this override only preserves the base reader's resolver order.
+  redactedCodeBlockRecord: slots.default ? undefined : redactedCodeBlockRecord.value,
+})))
+
 const viewProps = computed(() => ({
   config: getConfigCardViewConfig(props.config),
   configSchema: props.configSchema,
@@ -313,8 +319,5 @@ const viewProps = computed(() => ({
   formatsToHide: props.formatsToHide,
   record: record.value,
   codeBlockRecord: codeBlockRecordFromApi.value,
-  // Preserve the legacy resolver-after-redaction ordering, including non-idempotent resolvers.
-  codeBlockRecordRedacted: redactedCodeBlockRecord.value,
-  requestUrl: fetcherUrl.value,
 }))
 </script>

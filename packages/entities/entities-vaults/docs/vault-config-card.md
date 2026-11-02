@@ -133,7 +133,6 @@ import type { VaultConfigCardViewProps } from '@kong-ui-public/entities-vaults'
 | `config` | `EntityConfigCardViewConfig & { apiType?: 'gateway' \| 'aiGateway' }` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Pass the business API record without pre-mapping it through internal helpers. `config.apiType: 'aiGateway'` enables the existing auth-method-specific HashiCorp field mapping, labels, ordering and AI Gateway format restrictions. HTTP envelope unwrapping remains in the data owner. Sensitive config values stay masked in structured display and all supported code/copy/export formats, including when the generic sensitive-field checkbox is selected.
 

@@ -7,7 +7,6 @@
       :entity-type="SupportedEntityType.GatewayService"
       :hide-title="hideTitle"
       :record="record"
-      :request-url="requestUrl"
     >
       <template #enabled-label-tooltip>
         <i18nT
@@ -84,9 +83,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 
 defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  requestUrl: { type: String, default: '' },
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),

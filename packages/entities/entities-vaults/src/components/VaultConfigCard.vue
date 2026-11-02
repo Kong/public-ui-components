@@ -9,12 +9,11 @@
     @fetch:success="(entity: any) => emit('fetch:success', entity)"
     @loading="(val: boolean) => emit('loading', val)"
   >
-    <template #default="{ record, requestUrl }">
+    <template #default="{ record, config: viewConfig }">
       <VaultConfigCardView
         v-bind="props"
-        :config="viewConfig"
+        :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
         :record="record"
-        :request-url="requestUrl"
       >
         <template
           v-for="slotKey in Object.keys($slots)"
@@ -32,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { AxiosError } from 'axios'
@@ -82,5 +80,4 @@ const fetchUrl = computed((): string => {
 })
 const isAiGateway = computed(() => props.config.apiType === 'aiGateway')
 
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

@@ -1,33 +1,32 @@
 <template>
   <div
     class="kong-ui-consumer-group-entity-config-card"
-    :class="{ 'managed-konnect-redis-detail': recordKind === 'managed-cache' }"
+    :class="{ 'managed-konnect-redis-detail': isManagedCache }"
   >
     <EntityConfigCardView
-      :code-block-record="recordKind === 'managed-cache' ? addOnCodeRslv(record) : undefined"
-      :code-block-record-formatter="recordKind === 'managed-cache' ? addOnCodeFmt : codeBlockRecordFormatter"
+      :code-block-record="isManagedCache ? addOnCodeRslv(record) : undefined"
+      :code-block-record-formatter="isManagedCache ? addOnCodeFmt : codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
-      :config-schema="recordKind === 'managed-cache' ? managedSchema : configSchema"
-      :entity-type="recordKind === 'managed-cache' ? SupportedEntityType.CloudGatewayAddon : SupportedEntityType.Partial"
-      :formats-to-hide="recordKind === 'managed-cache' || disableKonnectManagedDetail ? ['yaml'] : []"
+      :config-schema="isManagedCache ? managedSchema : configSchema"
+      :entity-type="isManagedCache ? SupportedEntityType.CloudGatewayAddon : SupportedEntityType.Partial"
+      :formats-to-hide="isManagedCache ? ['yaml'] : []"
       :hide-title="hideTitle"
-      :preserve-code-block-timestamps="recordKind === 'managed-cache'"
-      :record="recordKind === 'managed-cache' ? managedRecord : recordResolver(record)"
-      :request-url="requestUrl"
+      :preserve-code-block-timestamps="isManagedCache"
+      :record="isManagedCache ? managedRecord : recordResolver(record)"
     >
       <template
-        v-if="recordKind === 'managed-cache'"
+        v-if="isManagedCache"
         #title
       >
         {{ t('config_card.sections.cache_configuration') }}
       </template>
       <template #type>
-        <div>{{ recordKind === 'managed-cache' ? t('list.type.konnect_managed_redis') : redisTypeText }}</div>
+        <div>{{ isManagedCache ? t('list.type.konnect_managed_redis') : redisTypeText }}</div>
       </template>
       <!-- One JSON blob per group -->
       <template
-        v-if="recordKind === 'managed-cache'"
+        v-if="isManagedCache"
         #data_plane_groups="{ row }"
       >
         <div
@@ -82,22 +81,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useId, type PropType } from 'vue'
+import { computed, useId, type PropType } from 'vue'
 import { EntityConfigCardView, SupportedEntityType, highlightCodeBlock, type EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import { KCodeBlock } from '@kong/kongponents'
 import type { AddOnRecord, AddOnValue } from '../types/cloud-gateways-add-on'
 import useRedisConfigCardPresentation from '../composables/useRedisConfigCardPresentation'
 import composables from '../composables'
+import { isManagedCacheAddOn } from '../helpers/managed-cache-add-on-parse'
 import '@kong-ui-public/entities-shared/dist/style.css'
 const props = defineProps({
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  recordKind: { type: String as PropType<'partial' | 'managed-cache'>, default: 'partial' },
   config: { type: Object as PropType<EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }>, default: () => ({}) },
-  requestUrl: { type: String, default: '' },
   configCardDoc: { type: String, default: '' },
   hideTitle: { type: Boolean, default: true },
-  disableKonnectManagedDetail: { type: Boolean, default: false },
 })
+const isManagedCache = computed(() => !!props.record.config && isManagedCacheAddOn(props.record))
 const { i18n: { t } } = composables.useI18n()
 const dataPlaneGroupsInstanceId = useId()
 const { redisTypeText, recordResolver, codeBlockRecordFormatter, configSchema, addOnCodeRslv, addOnCodeFmt, managedRecord, managedSchema } = useRedisConfigCardPresentation(() => props.record, () => !!props.config.cloudAuthAvailable)

@@ -9,7 +9,6 @@
       :formats-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
       :hide-title="hideTitle"
       :record="displayRecord"
-      :request-url="requestUrl"
     >
       <template #config="{ rowValue }">
         <ConfigCardItem
@@ -48,9 +47,7 @@ import composables from '../composables'
 
 
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  requestUrl: { type: String, default: '' },
   config: {
     type: Object as PropType<EntityConfigCardViewConfig & { apiType?: 'aiGateway' | 'gateway' }>,
     default: () => ({}),

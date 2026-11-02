@@ -70,7 +70,7 @@
   <TerraformCodeBlock
     v-if="format === 'terraform' && entityRecord"
     :entity-record="entityRecord"
-    :entity-type="props.entityType"
+    :entity-type="(props.entityType as SupportedEntityType)"
     :sub-entity-type="props.subEntityType"
     :unredacted-record="unredactedEntityRecord"
   />
@@ -109,7 +109,7 @@ import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
 import type { ConfigCardDisplayConfig } from '../../utils/config-card'
-import { LEGACY_CONFIG_CARD_DECK_OPTIONS } from './legacy-deck-config'
+import { LEGACY_CONFIG_CARD_CONTEXT } from './legacy-config-card'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -126,7 +126,7 @@ const props = defineProps({
   },
   entityType: {
     type: String as PropType<SupportedEntityType>,
-    required: true,
+    default: undefined,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   subEntityType: {
@@ -244,13 +244,13 @@ const fetchUrlJsonBlock = computed(() => {
     .replace(/(\?|&)__ui_data=true/, '')
 })
 
-const legacyDeckOptions = inject(LEGACY_CONFIG_CARD_DECK_OPTIONS, undefined)
+const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
 const {
   isDeckEnabled,
   deckCustomizationOptions,
   deckCalloutPreferenceKey,
 } = composables.useBaseEntityDeckOptions(
-  () => ({ ...props.config, enableDeckConfig: legacyDeckOptions?.value ?? props.config.enableDeckConfig }),
+  () => ({ ...props.config, enableDeckConfig: legacyContext?.value.deckOptions ?? props.config.enableDeckConfig }),
   () => props.entityType,
 )
 </script>

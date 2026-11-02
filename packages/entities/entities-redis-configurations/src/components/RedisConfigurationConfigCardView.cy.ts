@@ -16,7 +16,7 @@ describe('managed Redis record-driven presentation', () => {
     cy.intercept({ resourceType: /xhr|fetch/ }, req => {
       throw new Error(`Unexpected View request ${req.url}`)
     })
-    cy.mount(RedisConfigurationConfigCardView, { props: { record, recordKind: 'managed-cache', config: { app: 'konnect' }, hideTitle: false } }).then(({ wrapper }) => {
+    cy.mount(RedisConfigurationConfigCardView, { props: { record, config: { app: 'konnect' }, hideTitle: false } }).then(({ wrapper }) => {
       cy.getTestId('future_api_field-property-value').should('not.exist')
       select('json')
       cy.get('#json-codeblock .highlighted-code-block code').invoke('text').then(text => expect(JSON.parse(text)).to.deep.equal(record))
@@ -39,5 +39,23 @@ describe('managed Redis record-driven presentation', () => {
     cy.get('@success').should('have.been.calledOnceWith', record)
     select('json')
     cy.get('#json-codeblock').should('contain.text', 'preserve-in-code-only')
+    cy.get('#json-endpoint-codeblock').should('contain.text', '/managed/v2/cloud-gateways/add-ons/addon')
+  })
+
+  it('derives partial display from the record and keeps legacy nested YAML suppression in the reader', () => {
+    const partial = { id: 'partial', name: 'cache', type: 'redis-ce', config: { host: 'localhost' } }
+    cy.mount(RedisConfigurationConfigCardView, { props: { record: partial } })
+    select('yaml')
+    cy.get('#yaml-codeblock').should('contain.text', 'localhost')
+    cy.intercept('GET', '**/partials/partial', partial).as('partial')
+    cy.mount(RedisConfigurationConfigCard, { props: {
+      config: { app: 'konnect', controlPlaneId: 'cp', apiBaseUrl: '/partial', entityId: 'partial' },
+      disableKonnectManagedDetail: true,
+    } })
+    cy.wait('@partial')
+    cy.getTestId('select-config-format').click()
+    cy.getTestId('select-item-yaml').should('not.exist')
+    cy.getTestId('select-item-json').click()
+    cy.get('#json-codeblock').should('contain.text', 'localhost')
   })
 })

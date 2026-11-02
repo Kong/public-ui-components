@@ -133,7 +133,6 @@ import type { KeySetConfigCardViewProps } from '@kong-ui-public/entities-key-set
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Key Set field presentation and tooltips are built in.
 

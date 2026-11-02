@@ -31,13 +31,12 @@
       @fetch:success="handleFetchSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
-      <template #default="{ record, requestUrl }">
+      <template #default="{ record, config: viewConfig }">
         <PluginConfigCardView
           v-bind="props"
-          :config="viewConfig"
+          :config="{ ...config, ...viewConfig, enableDeckConfig: viewConfig.enableDeckConfig }"
           :record="record"
           :reference-entities="referenceEntities"
-          :request-url="requestUrl"
           :schema="schema"
           @navigation-click="(id, direction) => emit('navigation-click', id, direction)"
         >
@@ -58,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import PluginConfigCardView from './PluginConfigCardView.vue'
 import { EntityBaseConfigCard, SupportedEntityType, useAxios, useErrors, useSchemaProvider } from '@kong-ui-public/entities-shared'
 import { computed, onBeforeMount, ref } from 'vue'
@@ -216,5 +214,4 @@ onBeforeMount(async () => {
     schemaLoading.value = false
   }
 })
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

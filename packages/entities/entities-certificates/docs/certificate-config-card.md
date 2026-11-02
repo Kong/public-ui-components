@@ -133,7 +133,6 @@ import type { CertificateConfigCardViewProps } from '@kong-ui-public/entities-ce
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Certificate parsing is a deterministic local operation and remains in the View. Server-provided metadata must already be present in the record. Use `config.app: 'kongManager'` for the existing locally parsed metadata fields.
 

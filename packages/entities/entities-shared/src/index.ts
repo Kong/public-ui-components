@@ -48,6 +48,3 @@ export { getManagedByLabel, getManagedByFieldLabel, MANAGED_BY_LABELS } from './
 export type { ManagedBy } from './utils/managed-by'
 
 export type EntityConfigCardViewProps = InstanceType<typeof EntityConfigCardView>['$props']
-
-export { getConfigCardViewConfig } from './utils/config-card'
-export type { ConfigCardDisplayConfig } from './utils/config-card'

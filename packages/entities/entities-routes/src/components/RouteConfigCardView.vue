@@ -7,12 +7,11 @@
       :entity-type="SupportedEntityType.Route"
       :hide-title="hideTitle"
       :record="record"
-      :request-url="requestUrl"
     >
       <template #service="{ row }">
         <!-- Loading -->
         <KSkeleton
-          v-if="serviceNameLoading"
+          v-if="service?.loading && service.id === internalServiceId"
           data-testid="service-name-loader"
           type="spinner"
         />
@@ -60,11 +59,9 @@ defineEmits<{
 }>()
 
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
-  serviceName: { type: String, default: undefined },
-  serviceNameLoading: { type: Boolean, default: false },
+  /** Resolved association display state; defaults to the ID in record.service. */
+  service: { type: Object as PropType<{ id: string, name?: string, loading?: boolean }>, default: undefined },
   record: { type: Object as PropType<Record<string, any>>, required: true },
-  requestUrl: { type: String, default: '' },
   config: {
     type: Object as PropType<EntityConfigCardViewConfig>,
     default: () => ({}),
@@ -84,17 +81,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /** The id of the service with which the route is associated */
-  serviceId: {
-    type: String as PropType<string | null>,
-    required: false,
-    default: null,
-  },
 })
 
 const { i18n: { t } } = composables.useI18n()
-const internalServiceId = computed(() => props.serviceId || props.record.service?.id || '')
-const serviceName = computed(() => props.serviceName ?? internalServiceId.value)
+const internalServiceId = computed(() => props.service?.id || props.record.service?.id || '')
+const serviceName = computed(() => props.service?.name ?? internalServiceId.value)
 
 const configSchema = ref<RouteConfigurationSchema>({
   id: {},

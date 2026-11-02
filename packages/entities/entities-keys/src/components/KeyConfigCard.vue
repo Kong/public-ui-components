@@ -9,14 +9,12 @@
     @fetch:success="handleSuccess"
     @loading="(val: boolean) => emit('loading', val)"
   >
-    <template #default="{ record, requestUrl }">
+    <template #default="{ record, config: viewConfig }">
       <KeyConfigCardView
         v-bind="props"
         :config="viewConfig"
-        :key-set-name="keySetName"
-        :key-set-name-loading="isKeySetNameLoading"
+        :key-set="{ id: record.set?.id || keySetId || '', name: keySetName, loading: isKeySetNameLoading }"
         :record="record"
-        :request-url="requestUrl"
         @error:parse="(err: any) => emit('fetch:error', err)"
         @navigation-click="(id: string, entityType: any) => emit('navigation-click', id, entityType)"
       >
@@ -36,7 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
@@ -136,5 +133,4 @@ watch(entityKeySetId, async () => {
 }, { immediate: true })
 
 
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

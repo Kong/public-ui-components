@@ -10,12 +10,11 @@
     @fetch:success="(entity: any) => emit('fetch:success', entity)"
     @loading="(val: boolean) => emit('loading', val)"
   >
-    <template #default="{ record, requestUrl }">
+    <template #default="{ record, config: viewConfig }">
       <ConsumerGroupConfigCardView
         v-bind="props"
         :config="viewConfig"
         :record="record"
-        :request-url="requestUrl"
       >
         <template
           v-for="slotKey in Object.keys($slots)"
@@ -33,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { getConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { AxiosError } from 'axios'
@@ -78,5 +76,4 @@ const props = defineProps({
 })
 const fetchUrl = computed((): string => endpoints.item[props.config.app])
 
-const viewConfig = computed(() => ({ ...props.config, enableDeckConfig: getConfigCardViewConfig(props.config).enableDeckConfig }))
 </script>

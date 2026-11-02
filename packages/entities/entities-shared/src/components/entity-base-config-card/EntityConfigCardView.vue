@@ -90,7 +90,7 @@
           :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
           :config="displayConfig"
           :entity-type="entityType"
-          :fetcher-url="requestUrl"
+          :fetcher-url="legacyContext?.requestUrl"
           :format="configFormat"
           :is-deck-customization-visible="isDeckCustomizationVisible"
           :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
@@ -122,7 +122,7 @@
 import { getConfigCardViewConfig } from '../../utils/config-card'
 import { withForceShowFields, redactConfigCardRecord } from './record'
 import type { PropType } from 'vue'
-import { computed, ref, watch, onMounted, provide } from 'vue'
+import { computed, ref, watch, onMounted, provide, inject } from 'vue'
 import type {
   EntityConfigCardViewConfig,
   ConfigurationSchema,
@@ -137,6 +137,7 @@ import type {
 import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import { LEGACY_CONFIG_CARD_CONTEXT } from './legacy-config-card'
 import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
@@ -163,13 +164,6 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: undefined,
   },
-  /** Optional pre-redacted code representation, resolved by a legacy container. */
-  codeBlockRecordRedacted: {
-    type: Object as PropType<Record<string, any>>,
-    default: undefined,
-  },
-  /** Display metadata only; never requested by this component. */
-  requestUrl: { type: String, default: '' },
   /** Resolved API schema. No schema lookup is performed. */
   schema: { type: Object as PropType<Record<string, any>>, default: undefined },
   /** Schema to configure display of fields */
@@ -179,11 +173,11 @@ const props = defineProps({
     default: () => ({}),
   },
   /**
-   * Entity type, required to generate terraform code
+   * Optional entity type. Terraform and decK are available only when provided.
    */
   entityType: {
     type: String as PropType<SupportedEntityType>,
-    required: true,
+    default: undefined,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   /**
@@ -293,6 +287,7 @@ if (props.pluginConfigKey) composables.useSubSchema(props.pluginConfigKey, schem
 
 
 const displayConfig = computed(() => getConfigCardViewConfig(props.config))
+const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
 const isDeckCustomizationVisible = ref(false)
 
 const {
@@ -322,7 +317,7 @@ const configFormatItems = computed(() => {
   ]
 
   // terraform only supported in konnect
-  if (props.config.app === 'konnect') {
+  if (props.config.app === 'konnect' && props.entityType) {
     // insert terraform as the third option
     items.splice(2, 0, {
       label: t('baseForm.configuration.terraform'),
@@ -337,13 +332,21 @@ const configFormatItems = computed(() => {
     })
   }
 
-  const hidden = new Set(props.formatsToHide)
+  const hidden = new Set([...props.formatsToHide, ...(legacyContext?.value.formatsToHide ?? [])])
   return items.filter((item) => item.value === 'structured' || !hidden.has(item.value as ConfigCardCodeFormat))
 })
 
 // Initial tab matches the first format item- `structured`.onMounted may replace this from localStorage
 // when `config.formatPreferenceKey` is set
 const configFormat = ref<ConfigCardFormat>('structured')
+
+// Removing export metadata must not leave an unavailable format selected.
+watch(configFormatItems, (items) => {
+  if (!items.some(item => item.value === configFormat.value)) {
+    configFormat.value = 'structured'
+    isDeckCustomizationVisible.value = false
+  }
+})
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
@@ -444,7 +447,7 @@ const showSensitiveFields = ref(false)
 provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, showSensitiveFields)
 
 
-const redactedCodeBlockRecord = computed(() => props.codeBlockRecordRedacted ??
+const redactedCodeBlockRecord = computed(() => legacyContext?.value.redactedCodeBlockRecord ??
   redactConfigCardRecord(props.codeBlockRecord || record.value, schema.value, props.configSchema),
 )
 

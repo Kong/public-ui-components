@@ -256,7 +256,6 @@ import type { PluginConfigCardViewProps } from '@kong-ui-public/entities-plugins
 | `config` | `PluginConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 | `schema` | `Record<string, any>` | Required | Already resolved plugin API schema. |
 | `referenceEntities` | Association map | `{}` | Resolved names/loading states, described below. |
 | `showNameAsLink` | `boolean` | `false` | Display scoped entities as links. |

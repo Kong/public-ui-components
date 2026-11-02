@@ -133,7 +133,6 @@ import type { ConsumerGroupConfigCardViewProps } from '@kong-ui-public/entities-
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
 
 Pass the resolved consumer group, not an envelope containing `consumer_group`.
 

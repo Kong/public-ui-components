@@ -145,10 +145,7 @@ import type { KeyConfigCardViewProps } from '@kong-ui-public/entities-keys'
 | `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
 | `configCardDoc` | `string` | `''` | Documentation button URL. |
 | `hideTitle` | `boolean` | `false` | Hide the card title. |
-| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
-| `keySetId` | `string \| null` | `null` | Optional scoped Key Set ID. |
-| `keySetName` | `string` | `undefined` | Resolved name; omission falls back to the Key Set ID. |
-| `keySetNameLoading` | `boolean` | `false` | Display the Key Set-name loading indicator. |
+| `keySet` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Resolved association display state. Omission displays the ID from the record. |
 
 JWK/PEM expansion is local and updates with the record. Supply associated Key Set information explicitly; the View never resolves it.
 
@@ -165,8 +162,7 @@ The View accepts title, actions and field-slot overrides with the existing `reco
   v-if="record"
   :key="record.id"
   :record="record"
-  :key-set-name="keySet?.name"
-  :key-set-name-loading="keySetLoading"
+  :key-set="record.set ? { id: record.set.id, name: keySet?.name, loading: keySetLoading } : undefined"
 />
 ```
 
