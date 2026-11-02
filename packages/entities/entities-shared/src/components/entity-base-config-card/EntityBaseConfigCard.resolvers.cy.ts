@@ -1,4 +1,6 @@
+import { h } from 'vue'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
+import EntityConfigCardView from './EntityConfigCardView.vue'
 import { ConfigurationSchemaType, SupportedEntityType } from '../../types'
 
 const config = { app: 'konnect' as const, apiBaseUrl: '/resolvers', controlPlaneId: 'cp', entityId: 'entity' }
@@ -7,6 +9,21 @@ const selectJson = () => {
   cy.getTestId('select-item-json').click()
 }
 describe('EntityBaseConfigCard response boundary', () => {
+  it('keeps a nested View independent of the reader record and request metadata', () => {
+    cy.intercept('GET', '/resolvers/record/entity', { id: 'entity', name: 'parent-record' }).as('parent')
+    cy.mount(EntityBaseConfigCard, {
+      props: { config, fetchUrl: '/record/{id}', entityType: SupportedEntityType.Consumer, configCardDoc: '/parent-docs' },
+      slots: { actions: () => h(EntityConfigCardView, { record: { id: 'child', name: 'child-record' } }) },
+    })
+    cy.wait('@parent')
+    cy.get('.config-card-actions .kong-ui-entity-base-config-card').within(() => {
+      selectJson()
+      cy.get('#json-codeblock').should('contain.text', 'child-record').and('not.contain.text', 'parent-record')
+      cy.get('#json-endpoint-codeblock').should('not.exist')
+      cy.getTestId('book-icon').should('not.exist')
+    })
+  })
+
   it('preserves reader-owned format persistence and custom selector text', () => {
     localStorage.setItem('legacy-reader-format', 'yaml')
     cy.intercept('GET', '/resolvers/record/entity', { id: 'entity', name: 'consumer' })

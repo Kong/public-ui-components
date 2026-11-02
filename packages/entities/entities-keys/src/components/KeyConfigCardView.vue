@@ -31,23 +31,9 @@
       </template>
 
       <template
-        v-if="record?.jwk"
-        #jwk
-      >
-        <ConfigCardItem
-          v-for="propKey in Object.keys(result)"
-          :key="propKey"
-          :data-testid="`${propKey}`"
-          :item="{
-            key: propKey,
-            label: convertKeyToTitle(propKey),
-            value: result[propKey],
-          }"
-        />
-      </template>
-      <template
-        v-if="record?.pem"
-        #pem
+        v-for="keyFormat in ['jwk', 'pem'].filter(format => record[format])"
+        :key="keyFormat"
+        #[keyFormat]
       >
         <ConfigCardItem
           v-for="propKey in Object.keys(result)"

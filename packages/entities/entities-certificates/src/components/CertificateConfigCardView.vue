@@ -3,7 +3,7 @@
     <EntityConfigCardView
       :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
-      :config-schema="(configSchema as any)"
+      :config-schema="configSchema"
       :entity-type="SupportedEntityType.Certificate"
       :hide-title="hideTitle"
       :record="record"
@@ -142,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
+import type { ConfigurationSchema, EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { CertificateConfigurationSchema, EntityRow } from '../types'
@@ -174,7 +174,7 @@ const { getCertificateData } = composables.useCertificate()
 
 const record = computed(() => props.record as EntityRow)
 
-const configSchema = ref<CertificateConfigurationSchema>({
+const configSchema = ref<ConfigurationSchema>({
   // basic fields
   id: {},
   cert: {
@@ -202,7 +202,6 @@ const configSchema = ref<CertificateConfigurationSchema>({
     expiry: {
       section: ConfigurationSchemaSection.Basic,
       label: t('certificates.list.table_headers.expiry'),
-      // @ts-ignore TODO: Confirm if this is correct
       forceShow: true,
     },
     issuer: {
@@ -232,9 +231,7 @@ const configSchema = ref<CertificateConfigurationSchema>({
     section: ConfigurationSchemaSection.Advanced,
     type: ConfigurationSchemaType.Redacted,
   },
-})
-
-// because we need record data to parse cert data, assign it to local ref
+} satisfies CertificateConfigurationSchema)
 
 const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
   const propValue = getPropValue('rowValue', slotProps)
@@ -285,8 +282,7 @@ const getMetadataLabel = (propKey: string) => {
     return t('certificates.list.table_headers.san')
   }
 
-  // @ts-ignore - TODO: Fix type interface
-  return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
+  return configSchema.value[propKey]?.label || convertKeyToTitle(propKey)
 }
 
 </script>

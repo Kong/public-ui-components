@@ -54,6 +54,8 @@ Field configuration uses the same [schema and section semantics as EntityBaseCon
 
 The existing optional editor provider enables local Konnect command editing. Views accept no customization callbacks or editor switch. Format persistence, callout preference keys, custom format-selector labels and automatic documentation actions remain private reader compatibility behavior. Compose external actions through the `actions` slot.
 
+Reader compatibility is scoped to its own presentation. Independent Views nested in a title, action or field slot use their own records and export options; they do not inherit the reader's payload, request metadata or token-generation control.
+
 ### Why the other inputs remain
 
 The boundary is the existing detail-card functionality: field presentation, masking, local code conversion and accessible composition. These inputs each supply information that the renderer cannot safely infer.

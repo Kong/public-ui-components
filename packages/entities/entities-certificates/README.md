@@ -24,7 +24,6 @@ Certificates and CA Certificates entities components.
 - `CACertificateForm`
 - `CertificateConfigCard`
 - `CertificateConfigCardView`
-
 - `CACertificateConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.

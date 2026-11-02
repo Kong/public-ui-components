@@ -251,6 +251,8 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = composables.useStringHelpers()
 const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
+// Compatibility belongs to this card, not independent Views composed in its slots.
+provide(LEGACY_CONFIG_CARD_CONTEXT, undefined)
 const documentationUrl = computed(() => {
   const value = legacyContext?.value.configCardDoc?.trim()
   if (!value) return undefined
@@ -265,17 +267,17 @@ const documentationUrl = computed(() => {
 const { getApiSchemaField } = composables.useHelpers()
 const inheritedSchema = composables.useSchema()
 const schema = computed(() => props.schema ?? inheritedSchema?.value)
-composables.useSchemaProvider(schema)
+composables.useSchemaProvider(computed(() => props.pluginConfigKey
+  ? getApiSchemaField(schema.value?.fields, props.pluginConfigKey)
+  : schema.value))
 const isManagedByEnabled = composables.useManagedByEnabled()
-
-if (props.pluginConfigKey) composables.useSubSchema(props.pluginConfigKey, schema)
-
 
 const deckCommandEditor = inject(DECK_COMMAND_EDITOR_KEY, null)
 const displayConfig = computed<ConfigCardDisplayConfig>(() => {
   const config = getConfigCardViewConfig(props.config)
   return {
     ...config,
+    deckCalloutPreferenceKey: legacyContext?.value.deckCalloutPreferenceKey,
     enableDeckConfig: legacyContext
       ? legacyContext.value.deckOptions
       : config.enableDeckConfig && deckCommandEditor ? { customization: true } : config.enableDeckConfig,

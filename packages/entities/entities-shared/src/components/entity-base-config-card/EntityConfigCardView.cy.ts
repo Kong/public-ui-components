@@ -131,6 +131,22 @@ describe('EntityConfigCardView public record interface', () => {
     select('json')
     cy.get('#json-codeblock').should('not.contain.text', 'scalar-secret').and('not.contain.text', 'set-secret').and('not.contain.text', 'nested-secret')
   })
+
+  it('updates nested structured-field redaction when the selected config key changes', () => {
+    const groupSchema = (key: string, encrypted: boolean) => ({ type: 'record', fields: [
+      { nested: { type: 'record', fields: [{ [key]: { type: 'string', encrypted } }] } },
+    ] })
+    cy.mount(EntityConfigCardView, { props: {
+      record: { id: 'plugin', first: { nested: { first_field: 'first-public' } }, second: { nested: { second_secret: 'second-private' } } },
+      schema: { fields: [{ first: groupSchema('first_field', false) }, { second: groupSchema('second_secret', true) }] },
+      configSchema: { first: { hidden: true }, second: { hidden: true } },
+      pluginConfigKey: 'first', pluginConfigSchema: { nested: { type: ConfigurationSchemaType.Json } },
+    } }).then(({ wrapper }) => {
+      cy.getTestId('first_field-property-value').should('contain.text', 'first-public')
+      cy.then(() => wrapper.setProps({ pluginConfigKey: 'second' }))
+      cy.getTestId('second_secret-property-value').should('not.contain.text', 'second-private')
+    })
+  })
 })
 
 describe('legacy documentation action', () => {

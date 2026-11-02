@@ -8,7 +8,7 @@ import { getRedisType } from '../helpers'
 import { addOnApiResponseToDisplayRecord } from '../helpers/managed-cache-add-on'
 import { cloudAuthenticationObjectForDisplay } from '../helpers/managed-cache-add-on-display'
 import { pickManagedAddOnCardRecord, buildManagedAddOnCardSchema } from '../helpers/managed-add-on-config-schema'
-import { addOnToTerraformArgs, cloneAddOnResponseForConfigTabs } from '../helpers/managed-cache-add-on-tab-payloads'
+import { addOnToTerraformArgs } from '../helpers/managed-cache-add-on-tab-payloads'
 import composables from '../composables'
 
 export default function useRedisConfigCardPresentation(
@@ -41,8 +41,8 @@ export default function useRedisConfigCardPresentation(
   })
 
   // Flatten the config object to display in the structure tab
-  const recordResolver = (payload: Record<string, any>): AddOnRecord => {
-    const row = payload as RedisConfigurationResponse
+  const partialRecord = computed((): AddOnRecord => {
+    const row = toValue(record) as RedisConfigurationResponse
     const partialConfig = row.config ?? {}
     const rawCloudAuth = partialConfig.cloud_authentication
 
@@ -80,12 +80,10 @@ export default function useRedisConfigCardPresentation(
         : {}
       ),
     }
-  }
+  })
 
-  /**
- * Put config details into `config` object to display in the code block tab
- */
-  const codeBlockRecordFormatter = (record: AddOnRecord, codeFormat: ConfigCardCodeFormat): AddOnRecord => {
+  // Restore the nested API config for code formats; Terraform uses the Redis type as its key.
+  const formatPartialRecord = (record: AddOnRecord, codeFormat: ConfigCardCodeFormat): AddOnRecord => {
     if (!record || Object.keys(record).length === 0) {
       return {}
     }
@@ -114,9 +112,7 @@ export default function useRedisConfigCardPresentation(
   }
   type Fields = RedisConfigurationConfigDTO & BasicFields
 
-  /**
- * Configuration schema for all fields
- */
+  // Configuration schema for all supported partial fields.
   const schemaFieldConfigs: {
     [key in keyof Fields]: ConfigurationSchemaItem
   } = {
@@ -277,9 +273,7 @@ export default function useRedisConfigCardPresentation(
     },
   }
 
-  /**
- * Pick fields to display in the configuration schema
- */
+  // Keep omitted fields hidden while retaining their masking configuration.
   const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
     const schema: ConfigurationSchema = {}
     const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
@@ -299,10 +293,8 @@ export default function useRedisConfigCardPresentation(
     return schema
   }
 
-  /**
- * Pick fields to display in the configuration card based on the Redis type
- */
-  const configSchema = computed<ConfigurationSchema>(() => {
+  // Partial fields depend on the Redis topology.
+  const partialSchema = computed<ConfigurationSchema>(() => {
     const commonFields: Array<keyof Fields> = ['id', 'name', 'tags', 'type', 'updated_at', 'created_at']
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
@@ -380,33 +372,20 @@ export default function useRedisConfigCardPresentation(
         throw new Error('Invalid Redis type')
     }
   })
-  // The same Cloud Gateway add-on response powers 3 outputs:
-  // Structured tab: `addOnRecordResolver` maps and filters API fields for card display
-  // JSON tab: `addOnCodeRslv` preserves original GET payload including timestamps
-  // TR tab: `addOnCodeFmt` transforms that payload via `addOnToTerraformArgs`
-  const addOnCodeRslv = (raw: Record<string, any>): Record<string, any> =>
-    cloneAddOnResponseForConfigTabs(raw as CloudGatewaysAddOnResponse)
+  const managedRecord = computed(() => pickManagedAddOnCardRecord(addOnApiResponseToDisplayRecord(toValue(record), {
+    cloudAuthAvailable: toValue(cloudAuthAvailable),
+  })))
 
-  // Keep only fields shown on the managed cache card
-  const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
-    const full = addOnApiResponseToDisplayRecord(data, {
-      cloudAuthAvailable: toValue(cloudAuthAvailable),
-    })
-    // allowlist filter for add-on cache data
-    return pickManagedAddOnCardRecord(full)
-  }
-
-  // Wire add-on JSON- pass through for JSON tab; TR uses `konnect_cloud_gateway_addon` map
-  const addOnCodeFmt = (
+  // ConfigCardDisplay supplies an independent clone before this per-format conversion.
+  const formatManagedRecord = (
     record: Record<string, any>,
     codeFormat: ConfigCardCodeFormat,
   ): Record<string, any> => {
     const addOn = record as CloudGatewaysAddOnResponse
-    return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : cloneAddOnResponseForConfigTabs(addOn)
+    return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : record
   }
 
 
-  const managedRecord = computed(() => addOnRecordResolver(toValue(record)))
   const managedSchema = computed(() => buildManagedAddOnCardSchema(managedRecord.value, path => t(path as never)))
-  return { redisTypeText, recordResolver, codeBlockRecordFormatter, configSchema, addOnCodeRslv, addOnCodeFmt, managedRecord, managedSchema }
+  return { redisTypeText, partialRecord, partialSchema, formatPartialRecord, managedRecord, managedSchema, formatManagedRecord }
 }

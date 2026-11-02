@@ -13,4 +13,4 @@ interface LegacyConfigCardContext {
   label?: string
 }
 
-export const LEGACY_CONFIG_CARD_CONTEXT: InjectionKey<Readonly<Ref<LegacyConfigCardContext>>> = Symbol('legacy-config-card-context')
+export const LEGACY_CONFIG_CARD_CONTEXT: InjectionKey<Readonly<Ref<LegacyConfigCardContext>> | undefined> = Symbol('legacy-config-card-context')

@@ -4,15 +4,15 @@
     :class="{ 'managed-konnect-redis-detail': isManagedCache }"
   >
     <EntityConfigCardView
-      :code-block-record="isManagedCache ? addOnCodeRslv(record) : undefined"
-      :code-block-record-formatter="isManagedCache ? addOnCodeFmt : codeBlockRecordFormatter"
+      :code-block-record="isManagedCache ? record : undefined"
+      :code-block-record-formatter="isManagedCache ? formatManagedRecord : formatPartialRecord"
       :config="config"
-      :config-schema="isManagedCache ? managedSchema : configSchema"
+      :config-schema="isManagedCache ? managedSchema : partialSchema"
       :entity-type="isManagedCache ? SupportedEntityType.CloudGatewayAddon : SupportedEntityType.Partial"
       :formats-to-hide="isManagedCache ? ['yaml'] : []"
       :hide-title="hideTitle"
       :preserve-code-block-timestamps="isManagedCache"
-      :record="isManagedCache ? managedRecord : recordResolver(record)"
+      :record="isManagedCache ? managedRecord : partialRecord"
     >
       <template
         v-if="isManagedCache"
@@ -96,7 +96,7 @@ const props = defineProps({
 const isManagedCache = computed(() => !!props.record.config && isManagedCacheAddOn(props.record))
 const { i18n: { t } } = composables.useI18n()
 const dataPlaneGroupsInstanceId = useId()
-const { redisTypeText, recordResolver, codeBlockRecordFormatter, configSchema, addOnCodeRslv, addOnCodeFmt, managedRecord, managedSchema } = useRedisConfigCardPresentation(() => props.record, () => !!props.config.cloudAuthAvailable)
+const { redisTypeText, partialRecord, partialSchema, formatPartialRecord, managedRecord, managedSchema, formatManagedRecord } = useRedisConfigCardPresentation(() => props.record, () => !!props.config.cloudAuthAvailable)
 // Shaped add-on/cache values use `AddOnRecord`; `row.value` is typed `any` on the shared card, we only accept add-on shapes here
 const isDataPlaneGroupObject = (v: AddOnValue | undefined): v is AddOnRecord =>
   v !== null && typeof v === 'object' && !Array.isArray(v)

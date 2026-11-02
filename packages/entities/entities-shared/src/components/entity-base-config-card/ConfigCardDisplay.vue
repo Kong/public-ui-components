@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, useSlots, inject } from 'vue'
+import { computed, useSlots } from 'vue'
 import {
   CONFIG_CARD_FORMATS,
   type ConfigCardCodeFormat,
@@ -109,7 +109,6 @@ import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
 import type { ConfigCardDisplayConfig } from '../../utils/config-card'
-import { LEGACY_CONFIG_CARD_CONTEXT } from './legacy-config-card'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -244,17 +243,12 @@ const fetchUrlJsonBlock = computed(() => {
     .replace(/(\?|&)__ui_data=true/, '')
 })
 
-const legacyContext = inject(LEGACY_CONFIG_CARD_CONTEXT, undefined)
 const {
   isDeckEnabled,
   deckCustomizationOptions,
   deckCalloutPreferenceKey,
 } = composables.useBaseEntityDeckOptions(
-  () => ({
-    ...props.config,
-    enableDeckConfig: legacyContext?.value.deckOptions ?? props.config.enableDeckConfig,
-    deckCalloutPreferenceKey: legacyContext?.value.deckCalloutPreferenceKey ?? props.config.deckCalloutPreferenceKey,
-  }),
+  () => props.config,
   () => props.entityType,
 )
 </script>

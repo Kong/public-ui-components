@@ -70,6 +70,18 @@ describe('business View public exports', () => {
     })
   })
 
+  it('expands PEM fields and switches to JWK without retaining the previous format', () => {
+    cy.mount(KeyConfigCardView, { props: {
+      record: { id: 'key', pem: { public_key: 'public-pem', private_key: 'private-pem' } },
+    } }).then(({ wrapper }) => {
+      cy.getTestId('pem.public_key-plain-text').should('contain.text', 'public-pem')
+      cy.getTestId('pem.private_key-plain-text').should('contain.text', 'private-pem')
+      cy.then(() => wrapper.setProps({ record: { id: 'key', jwk: '{"kty":"RSA"}' } }))
+      cy.getTestId('jwk.kty-plain-text').should('contain.text', 'RSA')
+      cy.getTestId('pem.public_key-plain-text').should('not.exist')
+    })
+  })
+
   it('requires Plugin schema and uses identity-checked external association names', () => {
     const record = { id: 'plugin', name: 'key-auth', service: { id: 'service' }, config: { token: 'secret-token' } }
     const schema = Object.freeze({ fields: [{ config: { type: 'record', fields: [{ token: { type: 'string', encrypted: true } }] } }] })

@@ -9,6 +9,19 @@ const customize = () => {
 }
 
 describe('local View export boundary', () => {
+  it('does not inherit a reader token-generation control in a nested View', () => {
+    cy.intercept('GET', '/deck/consumers/consumer', { id: 'consumer', username: 'parent' })
+    cy.mount(EntityBaseConfigCard, { global, props: {
+      config: { app: 'konnect', apiBaseUrl: '/deck', entityId: 'consumer', controlPlaneId: 'cp', enableDeckConfig: { customization: { generateKonnectPat: cy.spy() } } },
+      fetchUrl: '/consumers/{id}', entityType: SupportedEntityType.Consumer,
+    }, slots: { actions: () => h(EntityConfigCardView, {
+      record: { id: 'child', username: 'child' }, entityType: SupportedEntityType.Consumer,
+      config: { app: 'konnect', enableDeckConfig: true },
+    }) } })
+    cy.get('.config-card-actions .kong-ui-entity-base-config-card').within(() => customize())
+    cy.getTestId('generate-konnect-pat-button').should('not.exist')
+  })
+
   for (const app of ['konnect', 'kongManager'] as const) {
     it(`preserves reader-owned decK callout preferences for ${app}`, () => {
       const key = `legacy-callout-${app}`

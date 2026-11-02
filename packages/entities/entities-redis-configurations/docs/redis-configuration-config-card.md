@@ -116,7 +116,7 @@ Please refer to the [sandbox](../sandbox/pages/RedisConfigurationDetail.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](../src/types/redis-confiugration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](../src/types/redis-configuration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
