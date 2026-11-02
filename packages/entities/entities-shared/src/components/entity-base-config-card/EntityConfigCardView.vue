@@ -61,13 +61,13 @@
         </KButton>
 
         <KButton
-          v-if="configCardDoc"
+          v-if="documentationUrl"
           appearance="tertiary"
           class="book-icon"
           data-testid="book-icon"
         >
           <a
-            :href="configCardDoc"
+            :href="documentationUrl"
             rel="noopener"
             target="_blank"
           >
@@ -272,6 +272,17 @@ const props = defineProps({
 
 const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = composables.useStringHelpers()
+const documentationUrl = computed(() => {
+  const value = props.configCardDoc?.trim()
+  if (!value) return undefined
+  try {
+    // Keep relative documentation links, while rejecting executable/non-web schemes.
+    const { protocol } = new URL(value, 'https://documentation.invalid/')
+    return protocol === 'https:' || protocol === 'http:' ? value : undefined
+  } catch {
+    return undefined
+  }
+})
 const { getApiSchemaField } = composables.useHelpers()
 const inheritedSchema = composables.useSchema()
 const schema = computed(() => props.schema ?? inheritedSchema?.value)

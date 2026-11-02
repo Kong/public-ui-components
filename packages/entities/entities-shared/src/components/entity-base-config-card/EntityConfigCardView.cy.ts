@@ -98,4 +98,23 @@ describe('EntityConfigCardView public record interface', () => {
     select('json')
     cy.get('#json-codeblock').should('not.contain.text', 'scalar-secret').and('not.contain.text', 'set-secret').and('not.contain.text', 'nested-secret')
   })
+
+  it('allows web and relative documentation links and rejects dangerous or malformed URLs', () => {
+    cy.mount(EntityConfigCardView, { props: {
+      record: { id: 'consumer' }, entityType: SupportedEntityType.Consumer,
+      configCardDoc: 'https://example.com/docs',
+    } }).then(({ wrapper }) => {
+      cy.getTestId('book-icon').find('a').should('have.attr', 'href', 'https://example.com/docs')
+      for (const url of ['http://example.com/docs', '/docs/consumer', './docs', '//example.com/docs']) {
+        cy.then(() => wrapper.setProps({ configCardDoc: url }))
+        cy.getTestId('book-icon').find('a').should('have.attr', 'href', url)
+      }
+      for (const url of ['javascript:alert(1)', '  JaVaScRiPt:alert(1)', 'java\nscript:alert(1)', 'data:text/html,<script>alert(1)</script>', 'vbscript:msgbox(1)', 'file:///etc/passwd', 'https://[', '', null as unknown as string]) {
+        cy.then(() => wrapper.setProps({ configCardDoc: url }))
+        cy.getTestId('book-icon').should('not.exist')
+      }
+      cy.then(() => wrapper.setProps({ configCardDoc: 'https://example.com/restored' }))
+      cy.getTestId('book-icon').find('a').should('have.attr', 'href', 'https://example.com/restored')
+    })
+  })
 })

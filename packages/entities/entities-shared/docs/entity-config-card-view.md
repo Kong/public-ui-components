@@ -36,7 +36,7 @@ import type { EntityConfigCardViewProps, EntityConfigCardViewConfig } from '@kon
 | `hideTitle` | `boolean` | `false` | Hide the title and title slot. |
 | `titleTag` | `HeaderTag` | `'h2'` | Title heading tag. |
 | `label` | `string` | `'Format: '` | Format-selector label. |
-| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `configCardDoc` | `string` | `''` | HTTP(S) or relative documentation URL. Invalid URLs and other schemes hide the button. |
 | `formatsToHide` | `ConfigCardCodeFormat[]` | `[]` | Hide code formats; structured display remains available. |
 
 Field configuration uses the same [schema and section semantics as EntityBaseConfigCard](entity-base-config-card.md#configschema). Missing `forceShow` fields are added to a derived record; caller records and schemas are never modified. Existing null/empty-value ordering, timestamps and managed-field behavior are preserved.
