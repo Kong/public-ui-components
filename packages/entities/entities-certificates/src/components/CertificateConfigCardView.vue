@@ -91,7 +91,6 @@
         v-if="hasCertAlt"
         #cert_alt="slotProps"
       >
-        >
         <KCodeBlock
           v-if="getPropValue('rowValue', slotProps)"
           :id="`certificate-${record.id}-cert-alt-codeblock`"
