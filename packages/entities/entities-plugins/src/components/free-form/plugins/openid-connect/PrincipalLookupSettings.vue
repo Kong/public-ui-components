@@ -315,11 +315,24 @@ const allClaims = useJitField('all_claims')
 const jitClaims = useJitField('claims')
 
 // Checking "share all" makes the claims list meaningless — null it out so the
-// payload never ships a value the (now hidden) input last held.
+// payload never ships a value the (now hidden) input last held. The typed
+// claims are cached so unchecking restores them instead of losing the input —
+// the same stash/restore contract as PrincipalsSection's issuer mode cache.
+let cachedClaims: string[] | null = null
+
 function handleAllClaimsChange(checked: boolean) {
   allClaims.value = checked
   if (checked) {
+    cachedClaims = Array.isArray(jitClaims.value) && jitClaims.value.length > 0
+      ? [...jitClaims.value]
+      : null
     jitClaims.value = getEmptyValue()
+  } else if (cachedClaims) {
+    jitClaims.value = cachedClaims
+    // Sync the display eagerly; the watcher would too, but this keeps the
+    // restore deterministic and avoids a flash of the stale (cleared) text.
+    claimsInput.value = encodeClaims(cachedClaims)
+    cachedClaims = null
   }
 }
 

@@ -1583,7 +1583,7 @@ describe('OpenidConnectForm', () => {
       })
     })
 
-    it('share-all-claims hides the claims input and nulls its value in the payload', () => {
+    it('share-all-claims hides the claims input and nulls it in the payload, restoring it when unchecked', () => {
       mountPrincipalsForm({ withJit: true, aiManager: true })
 
       expandSettings()
@@ -1602,9 +1602,13 @@ describe('OpenidConnectForm', () => {
         expect(payload.config.principals.jit.claims).to.equal(null)
       })
 
-      // Unchecking brings the input back, cleared
+      // Unchecking restores the claims the user had typed before share-all
       cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
-      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', '')
+      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', 'sub, email')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['sub', 'email'] })
+      })
     })
 
     it('writes comma-separated claims as a string array and nulls them when cleared', () => {
