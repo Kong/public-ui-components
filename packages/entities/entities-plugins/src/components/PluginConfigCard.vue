@@ -132,6 +132,7 @@
         <DatakitConfigCardCanvas
           :item="slotProps.row"
           :plugin-data="slotProps.record"
+          :schema="schema"
         />
       </template>
     </EntityBaseConfigCard>

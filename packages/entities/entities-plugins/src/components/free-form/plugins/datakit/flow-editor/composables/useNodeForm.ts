@@ -433,3 +433,22 @@ export function useSubSchema(subSchemaName: Exclude<NodeType, 'request' | 'servi
     }
   })
 }
+
+/**
+ * Whether the Gateway supports call node error handling (`continue_on_error`, `retry` and the
+ * `error` output). Control planes before Gateway 3.17 have no such fields in the call node schema.
+ *
+ * @param pluginSchema The datakit plugin schema
+ */
+export function supportsCallErrorHandling(pluginSchema?: Record<string, any> | null): boolean {
+  const config = pluginSchema?.fields?.find((field: Record<string, any>) => 'config' in field)?.config
+  const nodes = config?.fields?.find((field: Record<string, any>) => 'nodes' in field)?.nodes
+  const callSchema = nodes?.elements?.subschema_definitions?.call
+  return !!callSchema?.fields?.some((field: Record<string, any>) => 'continue_on_error' in field)
+}
+
+/** {@link supportsCallErrorHandling} for the datakit plugin form. */
+export function useCallErrorHandlingSupport() {
+  const { getSchema } = useFormShared()
+  return computed(() => supportsCallErrorHandling(getSchema()))
+}

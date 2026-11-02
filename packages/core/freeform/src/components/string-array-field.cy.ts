@@ -1,3 +1,4 @@
+import { h, ref } from 'vue'
 import Form from './Form.vue'
 import StringArrayField from './StringArrayField.vue'
 import type { FormSchema } from '../form-schema'
@@ -83,6 +84,25 @@ describe('StringArrayField', () => {
       cy.getTestId(`ff-label-${FIELD_NAME}`)
         .find('[data-testid="custom-label"]')
         .should('have.text', 'Custom: Tags')
+    })
+  })
+
+  describe('fallthrough attrs', () => {
+    it('should keep the error state in sync with the attrs', () => {
+      const error = ref(false)
+
+      cy.mount(Form, {
+        props: { schema: createTagSchema() },
+        slots: {
+          default: () => h(StringArrayField, { name: FIELD_NAME, error: error.value, errorMessage: 'Invalid tags' }),
+        },
+      })
+
+      cy.contains('Invalid tags').should('not.exist')
+      cy.then(() => {
+        error.value = true
+      })
+      cy.contains('Invalid tags').should('be.visible')
     })
   })
 
