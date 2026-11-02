@@ -10,6 +10,7 @@ A config card component for plugins. Configuration section properties will be or
   - [Adopting `showScopeName`](#adopting-showscopename)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [PluginConfigCardView](#pluginconfigcardview)
 
 ## Requirements
 
@@ -237,3 +238,53 @@ import type {
   KongManagerPluginEntityConfig,
 } from '@kong-ui-public/entities-plugins'
 ```
+
+## PluginConfigCardView
+
+Use `PluginConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `PluginConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { PluginConfigCardView } from '@kong-ui-public/entities-plugins'
+import type { PluginConfigCardViewProps } from '@kong-ui-public/entities-plugins'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `PluginConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
+| `schema` | `Record<string, any>` | Required | Already resolved plugin API schema. |
+| `referenceEntities` | Association map | `{}` | Resolved names/loading states, described below. |
+| `showNameAsLink` | `boolean` | `false` | Display scoped entities as links. |
+
+Schema is a separate required input. The View neither fetches schema nor renders a potentially sensitive plugin record when schema fields are unavailable. It preserves plugin field types, unsupported-scope filtering, icons and local Datakit display. Datakit receives the resolved schema and refreshes its graph when configuration, layout, partials or schema inputs change.
+
+`PluginConfigCardViewConfig` adds optional `pluginType`, `showScopeName`, `getConsumerViewRoute`, `getRouteViewRoute`, `getServiceViewRoute` and `getConsumerGroupViewRoute` to the shared presentation context. Route builders only construct routes and must not perform reads.
+
+`referenceEntities` maps `service`, `route`, `consumer`, and `consumer_group` to `{ id: string, name?: string, loading?: boolean }`. A name is used only when its ID matches the record, `showNameAsLink` is true and `config.showScopeName` is enabled. Missing names display IDs; delayed association updates do not trigger reads.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. `navigation-click` supplies the ID and one of `route`, `consumer`, `consumer_group`, `service` or `partial`. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<PluginConfigCardView
+  v-if="record && pluginSchema"
+  :key="record.id"
+  :record="record"
+  :schema="pluginSchema"
+  :config="{ pluginType: record.name, showScopeName: true }"
+  :reference-entities="referenceEntities"
+  show-name-as-link
+/>
+```
+
+Existing `PluginConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

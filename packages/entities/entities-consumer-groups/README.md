@@ -18,6 +18,7 @@ Check the [individual component docs](#individual-component-documentation) for m
 - `ConsumerGroupList`
 - `ConsumerGroupForm`
 - `ConsumerGroupConfigCard`
+- `ConsumerGroupConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -45,8 +46,4 @@ import '@kong-ui-public/entities-consumer-groups/dist/style.css'
 - [`<ConsumerGroupList.vue />`](docs/consumer-group-list.md)
 - [`<ConsumerGroupForm.vue />`](docs/consumer-group-form.md)
 - [`<ConsumerGroupConfigCard.vue />`](docs/consumer-group-config-card.md)
-
-
-## Record-driven configuration cards
-
-This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).
+- [`<ConsumerGroupConfigCardView />`](docs/consumer-group-config-card.md#consumergroupconfigcardview) — display an already loaded record.

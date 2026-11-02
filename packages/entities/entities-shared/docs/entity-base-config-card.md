@@ -263,4 +263,4 @@ import type {
 
 ## Already loaded records
 
-Use the public `EntityConfigCardView` for records loaded by the host. It includes the full card shell and shares presentation with this reader. See the [record-driven interface and migration guide](../../../../docs/record-driven-config-cards.md). The existing reader's response resolvers and request events retain their behavior.
+Use the public [EntityConfigCardView](entity-config-card-view.md) for a record loaded by the host. It includes the full card shell and shares presentation with this reader. The existing reader's response resolvers and request events retain their behavior.

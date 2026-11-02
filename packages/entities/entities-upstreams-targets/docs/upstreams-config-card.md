@@ -9,6 +9,7 @@ A config card component for Upstream.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [UpstreamsConfigCardView](#upstreamsconfigcardview)
 
 ## Requirements
 
@@ -114,3 +115,42 @@ import type {
  KongManagerUpstreamsEntityConfig,
 } from '@kong-ui-public/entities-upstreams-targets'
 ```
+
+## UpstreamsConfigCardView
+
+Use `UpstreamsConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `UpstreamsConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { UpstreamsConfigCardView } from '@kong-ui-public/entities-upstreams-targets'
+import type { UpstreamsConfigCardViewProps } from '@kong-ui-public/entities-upstreams-targets'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
+
+Health-check, hash-field and nested-field presentation are built in. The public View preserves the existing plural `Upstreams` spelling.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<UpstreamsConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+/>
+```
+
+Existing `UpstreamsConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

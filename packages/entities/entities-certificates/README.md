@@ -23,6 +23,9 @@ Certificates and CA Certificates entities components.
 - `CertificateForm`
 - `CACertificateForm`
 - `CertificateConfigCard`
+- `CertificateConfigCardView`
+
+- `CACertificateConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -60,7 +63,5 @@ import '@kong-ui-public/entities-certificates/dist/style.css'
 - [`<CertificateForm.vue />`](docs/certificate-form.md)
 - [`<CACertificateForm.vue />`](docs/ca-certificate-form.md)
 - [`<CertificateConfigCard.vue />`](docs/certificate-config-card.md)
-
-## Record-driven configuration cards
-
-This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).
+- [`<CertificateConfigCardView />`](docs/certificate-config-card.md#certificateconfigcardview) — display an already loaded record.
+- [`<CACertificateConfigCardView />`](docs/ca-certificate-config-card.md#cacertificateconfigcardview) — display an already loaded record.

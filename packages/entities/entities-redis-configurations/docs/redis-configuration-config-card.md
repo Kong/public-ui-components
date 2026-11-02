@@ -9,6 +9,7 @@ A config card component for Redis Configurations.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [RedisConfigurationConfigCardView](#redisconfigurationconfigcardview)
 
 ## Requirements
 
@@ -123,3 +124,46 @@ import type {
   KongManagerRedisConfigurationEntityConfig,
 } from '@kong-ui-public/entities-redis-configurations'
 ```
+
+## RedisConfigurationConfigCardView
+
+Use `RedisConfigurationConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `RedisConfigurationConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { RedisConfigurationConfigCardView } from '@kong-ui-public/entities-redis-configurations'
+import type { RedisConfigurationConfigCardViewProps } from '@kong-ui-public/entities-redis-configurations'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }` | `{}` | Optional presentation context. |
+| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `hideTitle` | `boolean` | `true` | Hide the card title. |
+| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
+| `recordKind` | `'partial' \| 'managed-cache'` | `'partial'` | Shape of the resolved record. |
+| `disableKonnectManagedDetail` | `boolean` | `false` | Preserve the nested-partial display convention of hiding YAML. It performs no lookup. |
+
+Resolve whether the detail is a partial or managed cache before mounting the View. It applies the existing partial flattening, cloud-auth display rules, managed field allowlisting, raw JSON/timestamp preservation and local Terraform transforms. If a page displays both cache and linked-partial segments, its data owner loads those records and owns segment loading. Changing View inputs never requests the other source.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<RedisConfigurationConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+  :record-kind="recordKind"
+  :config="{ app: 'konnect', cloudAuthAvailable: true }"
+/>
+```
+
+Existing `RedisConfigurationConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

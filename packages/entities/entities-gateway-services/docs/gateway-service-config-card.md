@@ -9,6 +9,7 @@ A config card component for gateway services.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [GatewayServiceConfigCardView](#gatewayserviceconfigcardview)
 
 ## Requirements
 
@@ -114,3 +115,42 @@ import type {
   KongManagerGatewayServiceEntityConfig,
 } from '@kong-ui-public/entities-gateway-services'
 ```
+
+## GatewayServiceConfigCardView
+
+Use `GatewayServiceConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `GatewayServiceConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { GatewayServiceConfigCardView } from '@kong-ui-public/entities-gateway-services'
+import type { GatewayServiceConfigCardViewProps } from '@kong-ui-public/entities-gateway-services'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
+
+TLS verification labels, client-certificate display and field tooltips are built in.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<GatewayServiceConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+/>
+```
+
+Existing `GatewayServiceConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

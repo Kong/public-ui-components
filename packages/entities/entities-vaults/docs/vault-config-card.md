@@ -9,6 +9,7 @@ A config card component for Vaults.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [VaultConfigCardView](#vaultconfigcardview)
 
 ## Requirements
 
@@ -117,4 +118,40 @@ import type {
 
 ## VaultConfigCardView
 
-Import `VaultConfigCardView` and `VaultConfigCardViewProps` from the package root to display an already resolved Vault. `record` is required; optional `config` contains presentation context only. Set `config.apiType` to `aiGateway` for local domain mapping, labels and AI Gateway export restrictions. No request configuration or IDs are required. The View preserves unconditional masking across structured and code formats. See the [migration guide](../../../../docs/record-driven-config-cards.md).
+Use `VaultConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `VaultConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { VaultConfigCardView } from '@kong-ui-public/entities-vaults'
+import type { VaultConfigCardViewProps } from '@kong-ui-public/entities-vaults'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig & { apiType?: 'gateway' \| 'aiGateway' }` | `{}` | Optional presentation context. |
+| `configCardDoc` | `string` | `''` | Documentation button URL. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `requestUrl` | `string` | `''` | JSON panel display metadata only; never requested. |
+
+Pass the business API record without pre-mapping it through internal helpers. `config.apiType: 'aiGateway'` enables the existing auth-method-specific HashiCorp field mapping, labels, ordering and AI Gateway format restrictions. HTTP envelope unwrapping remains in the data owner. Sensitive config values stay masked in structured display and all supported code/copy/export formats, including when the generic sensitive-field checkbox is selected.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<VaultConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+  :config="{ apiType: 'aiGateway' }"
+/>
+```
+
+Existing `VaultConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

@@ -9,6 +9,7 @@ A form component for Konnect config store secrets. *This component should only b
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [Supplying the config store directly](#supplying-the-config-store-directly)
 
 ## Requirements
 
@@ -105,7 +106,22 @@ import type {
   SecretStateFields,
   SecretState
 } from '@kong-ui-public/entities-vaults'
+```
 
 ## Supplying the config store directly
 
-`configStoreId?: string | null` bypasses the preliminary Vault GET when a valid ID is supplied. Null/empty values render no inner form and do not fall back. Omitted/undefined retains automatic Vault resolution. For asynchronous data, mount only after the store ID is valid. Changing the Vault/store/API/Secret identity rebuilds inner state and invalidates stale Vault responses. Secret edit reads and writes still occur. See the [external-data migration guide](../../../../docs/record-driven-config-cards.md#vault-edit-and-secret-components).
+`configStoreId?: string | null` defaults to `undefined`. A valid supplied ID bypasses the preliminary Vault GET. Null/empty values render no inner component and do not fall back. Omitted/undefined retains automatic Vault resolution; passing undefined is not a way to disable it.
+
+For asynchronous data, mount only after the store ID is valid. Changes to store, Vault, API scope or Secret identity rebuild inner state, and stale Vault responses are ignored. Secret edit reads and create/update requests still occur on the configured API's existing config-store paths. This component retains data behavior and does not have a View suffix.
+
+```vue
+<SecretForm
+  v-if="vault?.config?.config_store_id"
+  :config="secretConfig"
+  :vault-id="vault.id"
+  :config-store-id="vault.config.config_store_id"
+  :secret-id="secretId"
+/>
+```
+
+When migrating an existing page, reuse the store ID from its resolved Vault and remove the extra Vault-resolution adapter. Existing callers that omit `configStoreId` keep the previous behavior.

@@ -100,6 +100,7 @@ provide('app:konnectColorMode', colorMode)
 - [`<EntityLink.vue />`](docs/entity-link.md)
 - [`<EntityToggleModal.vue />`](docs/entity-toggle-modal.md)
 - [`<EntityBaseConfigCard.vue />`](docs/entity-base-config-card.md)
+- [`<EntityConfigCardView.vue />`](docs/entity-config-card-view.md)
 - [`<SensitiveInput.vue />`](docs/sensitive-input.md)
 
 ## Individual composables documentation
@@ -111,7 +112,3 @@ provide('app:konnectColorMode', colorMode)
 The individual entities sandboxes all share some common components/utilities which lives in the `/packages/entities/entities-shared/sandbox/shared` folder and can be imported via the `@entities-shared-sandbox/...` alias. Those components **are not** getting exported by the package and are only available in "dev" environment.
 
 [Docs](https://github.com/Kong/public-ui-components/blob/main/packages/entities/entities-shared/sandbox/shared/docs/sandbox-shared.md).
-
-## Record-driven configuration cards
-
-This package exports record-driven `*ConfigCardView` components alongside the existing fetching cards. Views share the same domain presentation and accept already loaded records without entity, schema or association reads. See the [public interfaces and migration guide](../../../docs/record-driven-config-cards.md).
