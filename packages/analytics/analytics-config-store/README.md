@@ -30,6 +30,13 @@ The config store uses the host app's Pinia instance, and must only be used after
 
 When the store is first instantiated, it makes a call to retrieve the org's analytics config (using the `configFn` from `AnalyticsBridge`). Because the `AnalyticsBridge` is injected using Vue's `provide` / `inject` mechanism, the store must be instantiated either from a component's `setup` block or by using [`app.runWithContext`](https://vuejs.org/api/application.html#app-runwithcontext). Until the call to retrieve analytics config resolves, the store will return `null` for `analyticsConfig` and default values for the various computed properties.
 
+#### Initialization timing
+
+The store calls `configFn` only once, when the store is first created. Pinia keeps the store for the life of the app, so the store never fetches the config again, and a failed fetch is not retried.
+
+- Create the store only when the bridge can serve `configFn`. If the bridge's requests need host state that is set later in the app's lifecycle, wait for that state before the first call to `useAnalyticsConfigStore()`. This matters most in early code such as router guards and store setup.
+- `isReady()` resolves when the request succeeds and also when it fails. After a failure, `configError` holds the error, and the computed properties return their defaults (for example, `analytics` and `percentiles` are `false`). Check `configError` when a failed request must not read as "no analytics".
+
 The store exposes several computed properties that attempt to standardize common questions asked of an org's analytics config:
 
 - `loading` -- whether the call to retrieve config has resolved
@@ -50,7 +57,10 @@ The datasource config store exposes:
 - `datasourceConfigMap` -- datasource config keyed by datasource name, with a `fieldsMap` for fast field lookups
 - `getFieldDataSources` -- a getter that returns all datasource names containing a field
 - `loading` -- whether the datasource config request is still pending
-- `isReady` -- a promise that resolves when datasource config loading succeeds and rejects if datasource config loading fails
+- `datasourceConfigError` -- the error from the datasource config request, or `null`
+- `isReady` -- a promise that resolves when the datasource config request finishes, whether it succeeds or fails. After a failure, `datasourceConfig` is an empty array and `datasourceConfigError` holds the error.
+
+Like the analytics config store, this store fetches only once, when it is first created. The [initialization timing](#initialization-timing) notes apply to it as well.
 
 ### Using `AnalyticsConfigCheck`
 

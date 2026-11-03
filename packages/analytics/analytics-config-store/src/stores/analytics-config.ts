@@ -12,6 +12,14 @@ const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
 export type ConfigStoreState = null | AnalyticsConfigV2
 
+/**
+ * Caches the org's analytics config, which it gets from the injected `AnalyticsBridge.configFn`.
+ *
+ * The store calls `configFn` only once, when the store is first created. Pinia keeps the store
+ * for the life of the app, so the store never fetches again. Create the store only when the
+ * bridge can serve `configFn`: if the bridge's requests need host state that is set later in
+ * the app's lifecycle, wait for that state first. A failed fetch is not retried.
+ */
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const analyticsConfig = ref<ConfigStoreState>(null)
   const configError = ref<Error | null>(null)
@@ -58,7 +66,13 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const percentiles = computed<boolean>(() => !!analyticsConfig.value?.analytics?.percentiles)
 
   /**
-   * An awaitable getter that returns when loading is finished
+   * Waits until the config request finishes.
+   *
+   * Resolves when the request succeeds and also when it fails. After a failure, `configError`
+   * holds the error and the getters return their defaults, for example `false` for `analytics`
+   * and `percentiles`. Check `configError` when a failed request must not read as "no analytics".
+   *
+   * @returns {Promise<void>} A promise that resolves when `loading` is `false`.
    */
   const isReady = (): Promise<void> => {
     return new Promise((resolve) => {
