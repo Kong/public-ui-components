@@ -280,7 +280,20 @@
     "time_per_token_average": "Time per token (avg)",
     "time_per_token_p99": "Time per token (p99)",
     "time_per_token_p95": "Time per token (p95)",
-    "time_per_token_p50": "Time per token (p50)"
+    "time_per_token_p50": "Time per token (p50)",
+    "ape_decision": "Access policy decision",
+    "ape_determining_policies": "Determining access policies",
+    "compression_provider": "Compression provider",
+    "compression_compress_type": "Compression type",
+    "guardrail_block_source": "Guardrail block source",
+    "guardrail_block_direction": "Guardrail block direction",
+    "compression_original_token_count": "Compression original token count",
+    "compression_compress_token_count": "Compression compressed token count",
+    "compression_save_token_count": "Compression saved token count",
+    "compression_compressed_message_count": "Compressed message count",
+    "compression_duration": "Compression duration (sum)",
+    "image_count": "Image count",
+    "audio_duration_seconds": "Audio duration (sum)"
   },
   "metricAxisTitles": {
     "cache_hit_rate": "Cache hit rate {unit}",
@@ -389,7 +402,14 @@
     "time_per_token_p99": "Time per token (p99)",
     "time_per_token_p95": "Time per token (p95)",
     "time_per_token_p50": "Time per token (p50)",
-    "total_tokens_per_minute": "Total tokens per minute"
+    "total_tokens_per_minute": "Total tokens per minute",
+    "compression_original_token_count": "Compression original token count",
+    "compression_compress_token_count": "Compression compressed token count",
+    "compression_save_token_count": "Compression saved token count",
+    "compression_compressed_message_count": "Compressed message count",
+    "compression_duration": "Compression duration (sum) in {unit}",
+    "image_count": "Image count",
+    "audio_duration_seconds": "Audio duration (sum) in {unit}"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",
