@@ -13,7 +13,7 @@
     class="ff-credential-secret-field"
     :data-testid="`ff-${field.path.value}`"
     :generator="generator ?? generateCredentialSecret"
-    mode="create"
+    :mode="mode"
     :model-value="fieldValue ?? ''"
     :use-secret-input="useSecretInput"
     @update:model-value="handleUpdate"
@@ -51,8 +51,10 @@ interface CredentialSecretFieldProps extends BaseFieldProps {
   labels?: SensitiveInputLabels
 }
 
-const { name, generator, ...props } = defineProps<CredentialSecretFieldProps & {
+const { name, generator, mode = 'create', ...props } = defineProps<CredentialSecretFieldProps & {
   generator?: () => string | Promise<string>
+  /** `edit` renders the existing secret masked, with a "Rotate key" action to change it. */
+  mode?: 'create' | 'edit'
 }>()
 const emit = defineEmits<{
   'update:modelValue': [value: string | EmptyValue]

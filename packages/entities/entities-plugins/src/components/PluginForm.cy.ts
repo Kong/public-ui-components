@@ -18,6 +18,9 @@ import schemaOidc from '../../fixtures/schemas/oidc'
 import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
+import basicAuthCredentialSchema from '../definitions/schemas/credentials/mockedBasicAuthSchema.json'
+import jwtCredentialSchema from '../definitions/schemas/credentials/mockedJwtSchema.json'
+import keyAuthCredentialSchema from '../definitions/schemas/credentials/mockedKeyAuthSchema.json'
 import { EXPERIMENTAL_FREE_FORM_PROVIDER, FEATURE_FLAGS } from '../constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
@@ -572,8 +575,8 @@ describe('<PluginForm />', () => {
       cy.get('.plugin-protocols-select').should('not.exist')
 
       // form fields
-      cy.get('#group').should('be.visible')
-      cy.get('#tags').should('be.visible')
+      cy.getTestId('ff-group').should('be.visible')
+      cy.getTestId('ff-tags').should('be.visible')
     })
 
     it('should change entity id in scope selection when props.config.entityId specified', () => {
@@ -652,11 +655,15 @@ describe('<PluginForm />', () => {
 
       cy.wait('@getPluginSchema')
 
-      cy.get('#group').type('kai_group')
-      cy.get('#tags').type('tag1,tag2')
+      cy.getTestId('ff-group').type('kai_group')
+      cy.getTestId('ff-tags').type('tag1,tag2')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait('@createPlugin')
+      cy.wait('@createPlugin').its('request.body').should('deep.equal', {
+        group: 'kai_group',
+        tags: ['tag1', 'tag2'],
+        consumer: { id: scopedConsumer.item.id },
+      })
     })
 
     it('should show edit form', () => {
@@ -765,8 +772,8 @@ describe('<PluginForm />', () => {
     it('should pick correct submit url while editing plugin credential', () => {
       const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKMSchema({ credential: true, mockData: credentialSchema })
-      interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
-      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
+      interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id, mockData: aclCredential1 })
+      interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id, mockData: aclCredential1 })
       const pluginType = 'acl'
 
       cy.mount(PluginForm, {
@@ -783,10 +790,205 @@ describe('<PluginForm />', () => {
       cy.wait(['@getPluginSchema', '@getPlugin']).then(() => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-        cy.get('#group').type('-edited')
+        cy.getTestId('ff-group').should('have.value', aclCredential1.group)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
+        cy.getTestId('ff-group').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
 
         cy.getTestId('plugin-edit-form-submit').click()
-        cy.wait('@updatePlugin')
+        cy.wait('@updatePlugin').its('request.body').should('deep.equal', {
+          group: `${aclCredential1.group}-edited`,
+          consumer: { id: scopedConsumer.item.id },
+        })
+      })
+    })
+
+    describe('credentials', () => {
+      const credentialConfig: KongManagerPluginFormConfig = {
+        ...baseConfigKM,
+        entityId: scopedConsumer.item.id,
+        entityType: 'consumers',
+      }
+      const credentialUrl = (endpoint: string, id?: string): string =>
+        `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/consumers/${scopedConsumer.item.id}/${endpoint}${id ? `/${id}` : ''}`
+
+      it('should blank the password and only enable save after changes when editing basic-auth credential', () => {
+        const credential = {
+          id: 'basic-auth-credential-id',
+          consumer: { id: scopedConsumer.item.id },
+          created_at: 1700516447,
+          username: 'kai',
+          password: 'hashed-password',
+          tags: ['tag1'],
+        }
+        interceptKMSchema({ credential: true, mockData: basicAuthCredentialSchema })
+        cy.intercept('GET', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('getCredential')
+        cy.intercept('PATCH', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('updateCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'basic-auth',
+            pluginId: credential.id,
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getCredential'])
+
+        cy.getTestId('ff-username').should('have.value', 'kai')
+        // FTI-6248: the hashed password returned by the backend must not be shown or sent back
+        cy.getTestId('ff-password').should('have.value', '')
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
+        cy.getTestId('ff-password').type('new-password')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled').click()
+
+        cy.wait('@updateCredential').its('request.body').should('deep.equal', {
+          username: 'kai',
+          password: 'new-password',
+          tags: ['tag1'],
+          consumer: { id: scopedConsumer.item.id },
+        })
+      })
+
+      it('should not send the blank password when editing other basic-auth credential fields', () => {
+        const credential = {
+          id: 'basic-auth-credential-id',
+          consumer: { id: scopedConsumer.item.id },
+          created_at: 1700516447,
+          username: 'kai',
+          password: 'hashed-password',
+          tags: ['tag1'],
+        }
+        interceptKMSchema({ credential: true, mockData: basicAuthCredentialSchema })
+        cy.intercept('GET', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('getCredential')
+        cy.intercept('PATCH', credentialUrl('basic-auth', credential.id), { statusCode: 200, body: credential }).as('updateCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'basic-auth',
+            pluginId: credential.id,
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getCredential'])
+
+        cy.getTestId('ff-username').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled').click()
+
+        cy.wait('@updateCredential').its('request.body').should('deep.equal', {
+          username: 'kai-edited',
+          tags: ['tag1'],
+          consumer: { id: scopedConsumer.item.id },
+        })
+      })
+
+      it('should keep the stored RSA public key when editing a JWT credential with a symmetric algorithm', () => {
+        const credential = {
+          id: 'jwt-credential-id',
+          consumer: { id: scopedConsumer.item.id },
+          created_at: 1700516447,
+          key: 'jwt-key',
+          algorithm: 'HS256',
+          secret: 'jwt-secret',
+          rsa_public_key: '-----BEGIN PUBLIC KEY-----',
+          tags: ['tag1'],
+        }
+        interceptKMSchema({ credential: true, mockData: jwtCredentialSchema })
+        cy.intercept('GET', credentialUrl('jwt', credential.id), { statusCode: 200, body: credential }).as('getCredential')
+        cy.intercept('PATCH', credentialUrl('jwt', credential.id), { statusCode: 200, body: credential }).as('updateCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'jwt',
+            pluginId: credential.id,
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getCredential'])
+
+        cy.getTestId('ff-rsa_public_key').should('not.be.visible')
+        cy.getTestId('ff-tags').clear()
+        cy.getTestId('ff-tags').type('tag2')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled').click()
+
+        cy.wait('@updateCredential').its('request.body').should((body) => {
+          expect(body).to.not.have.property('rsa_public_key')
+          expect(body.tags).to.deep.equal(['tag2'])
+        })
+      })
+
+      it('should only show the RSA public key for asymmetric JWT algorithms', () => {
+        cy.viewport(800, 1200)
+        interceptKMSchema({ credential: true, mockData: jwtCredentialSchema })
+        cy.intercept('POST', credentialUrl('jwt'), { statusCode: 200, body: { id: 'jwt-credential-id' } }).as('createCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'jwt',
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+
+        // `HS256` is the default algorithm
+        cy.getTestId('ff-rsa_public_key').should('not.be.visible')
+
+        cy.getTestId('ff-algorithm').click()
+        cy.getTestId('select-item-RS256').scrollIntoView()
+        cy.getTestId('select-item-RS256').click()
+        cy.getTestId('ff-rsa_public_key').should('be.visible')
+        cy.getTestId('ff-rsa_public_key').type('-----BEGIN PUBLIC KEY-----', { delay: 0 })
+
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createCredential').its('request.body').should('deep.include', {
+          algorithm: 'RS256',
+          rsa_public_key: '-----BEGIN PUBLIC KEY-----',
+        })
+
+        cy.getTestId('ff-algorithm').click()
+        cy.getTestId('select-item-HS384').scrollIntoView()
+        cy.getTestId('select-item-HS384').click()
+        cy.getTestId('ff-rsa_public_key').should('not.be.visible')
+      })
+
+      it('should submit key-auth credential with `ttl: 0` when ttl is cleared', () => {
+        interceptKMSchema({ credential: true, mockData: keyAuthCredentialSchema })
+        cy.intercept('POST', credentialUrl('key-auth'), { statusCode: 200, body: { id: 'key-auth-credential-id' } }).as('createCredential')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: credentialConfig,
+            credential: true,
+            pluginType: 'key-auth',
+            hideScopeSelection: true,
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+
+        cy.getTestId('ff-ttl').type('10')
+        cy.getTestId('ff-ttl').clear()
+
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createCredential').its('request.body').should('deep.include', { ttl: 0 })
       })
     })
 
@@ -1504,8 +1706,8 @@ describe('<PluginForm />', () => {
       cy.get('.plugin-protocols-select').should('not.exist')
 
       // form fields
-      cy.get('#group').should('be.visible')
-      cy.get('#tags').should('be.visible')
+      cy.getTestId('ff-group').should('be.visible')
+      cy.getTestId('ff-tags').should('be.visible')
     })
 
     it('should change entity id in scope selection when props.config.entityId specified', () => {
@@ -1580,11 +1782,15 @@ describe('<PluginForm />', () => {
 
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-      cy.get('#group').type('kai_group')
-      cy.get('#tags').type('tag1,tag2')
+      cy.getTestId('ff-group').type('kai_group')
+      cy.getTestId('ff-tags').type('tag1,tag2')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait('@createPlugin')
+      cy.wait('@createPlugin').its('request.body').should('deep.equal', {
+        group: 'kai_group',
+        tags: ['tag1', 'tag2'],
+        consumer: { id: scopedConsumer.item.id },
+      })
     })
 
     it('should show edit form', () => {
@@ -1693,8 +1899,8 @@ describe('<PluginForm />', () => {
     it('should pick correct submit url while editing plugin credential', () => {
       const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       const pluginType = 'acl'
-      interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
-      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
+      interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id, mockData: aclCredential1 })
+      interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id, mockData: aclCredential1 })
 
       cy.mount(PluginForm, {
         props: {
@@ -1710,10 +1916,17 @@ describe('<PluginForm />', () => {
       cy.wait(['@getPlugin']).then(() => {
         cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
-        cy.get('#group').type('-edited')
+        cy.getTestId('ff-group').should('have.value', aclCredential1.group)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
+        cy.getTestId('ff-group').type('-edited')
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
 
         cy.getTestId('plugin-edit-form-submit').click()
-        cy.wait('@updatePlugin')
+        cy.wait('@updatePlugin').its('request.body').should('deep.equal', {
+          group: `${aclCredential1.group}-edited`,
+          consumer: { id: scopedConsumer.item.id },
+        })
       })
     })
 

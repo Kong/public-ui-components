@@ -30,7 +30,6 @@ import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
 import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
-import { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
 import { confluentSchema } from '../definitions/schemas/Confluent'
 import { confluentConsumeSchema } from '../definitions/schemas/ConfluentConsume'
 import { kafkaConsumeSchema } from '../definitions/schemas/KafkaConsume'
@@ -77,11 +76,6 @@ export interface UseSchemasOptions {
    */
   entityId?: string
 
-  /**
-   * If the schema is for a plugin credential.
-   * @defaultValue false
-   */
-  credential?: boolean
   /**
    * Whether to enable the Redis partial in form.
    * @defaultValue false
@@ -259,8 +253,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'key-auth': genKeyAuthSchema(options),
 
-    'key-auth-enc': genKeyAuthEncSchema(options),
-
     'confluent': {
       ...confluentSchema,
     },
@@ -352,12 +344,11 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(effectivePluginName) || shouldUseFreeForm(effectivePluginName, experimentalFreeForms, engine) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(effectivePluginName) || shouldUseFreeForm(effectivePluginName, experimentalFreeForms, engine) || metadata?.useLegacyForm) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
        * - The plugin is explicitly marked to use legacy form
-       * - Rendering a form for a plugin credential
        */
 
       // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled

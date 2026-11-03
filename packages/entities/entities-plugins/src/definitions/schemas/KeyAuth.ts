@@ -37,11 +37,6 @@ export const genKeyAuthSchema = (options?: UseSchemasOptions): KeyAuthSchema => 
   if (options?.app === 'kongManager') {
     return {
       fieldsToDelete: ['config-identity_realms'],
-      shamefullyTransformPayload: ({ payload }) => {
-        if (options?.credential && typeof payload.ttl !== 'number' || Number.isNaN(payload.ttl)) {
-          payload.ttl = 0
-        }
-      },
     }
   } else {
     const ffOn = options?.experimentalRenders?.keyAuthIdentityRealms ?? false

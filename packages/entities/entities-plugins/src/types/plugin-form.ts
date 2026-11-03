@@ -24,7 +24,6 @@ import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
 import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
 import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
-import type { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
 import type { ConfluentSchema } from './plugins/confluent'
 import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
 import type { KafkaConsumeSchema } from './plugins/kafka-consume'
@@ -308,7 +307,6 @@ export interface CustomSchemas {
   'injection-protection': InjectionProtectionSchema
   'kafka-upstream': KafkaUpstreamSchema
   'key-auth': ReturnType<typeof genKeyAuthSchema>
-  'key-auth-enc': ReturnType<typeof genKeyAuthEncSchema>
   'confluent': ConfluentSchema
   'confluent-consume': ConfluentConsumeSchema
   'kafka-consume': KafkaConsumeSchema
