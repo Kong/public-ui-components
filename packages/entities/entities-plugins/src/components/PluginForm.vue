@@ -69,7 +69,6 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
-        :use-secret-input="useSecretInput"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -455,7 +454,7 @@ const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
 
 const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
 
-// `PluginEntityForm` provides this for plugin forms; the credential form is rendered without it
+// Used by both the plugin form (`PluginEntityForm`) and the credential form
 provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
 
 provide(REDIS_PARTIAL_INFO, {
@@ -1382,7 +1381,7 @@ const handleCredentialUpdate = (model: Record<string, any>) => {
   form.fields = { ...form.fields, ...model, id: record.value?.id || undefined }
 
   // The first emission is the form's initial value, use it as the baseline for change detection.
-  // The baseline is also reset after each save.
+  // After a save, `saveFormData` updates the baseline with the saved values.
   if (!credentialBaselineSet.value) {
     credentialBaselineSet.value = true
     Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])

@@ -111,8 +111,9 @@ const handleFormChange = (value: Record<string, any>): void => {
   emit('update:modelValue', omitHiddenFields(value))
 }
 
-// JWT: freeform resets the hidden `rsa_public_key` to empty. Leave it out instead, so a stored key
-// is kept when the algorithm doesn't use it.
+// JWT: freeform resets the hidden `rsa_public_key` to empty. Leave it out instead, so Kong Manager
+// (PATCH) keeps a stored key when the algorithm doesn't use it. Konnect edits with PUT, so the key
+// is cleared there, which is fine since symmetric algorithms don't use it.
 const omitHiddenFields = (value: Record<string, any>): Record<string, any> => {
   if (credentialType === 'jwt' && !ASYMMETRIC_JWT_ALGORITHMS.includes(value.algorithm)) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
