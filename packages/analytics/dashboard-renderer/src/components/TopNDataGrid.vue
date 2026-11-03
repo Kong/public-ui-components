@@ -46,7 +46,7 @@
         #[header.key]="{ row }"
       >
         <AsyncEntityLink
-          v-if="getEntityLink(header.key) && row[header.key] !== 'empty'"
+          v-if="getEntityLink(header.key) && isEntity(row, header.key)"
           class="top-n-entity-link"
           :entity-link-data="presentation.getDimension(row, header.key)"
           :external-link="parseLink(row, header.key)"
@@ -60,14 +60,18 @@
 <script setup lang="ts">
 import type { AnalyticsBridge, ExploreResultV4, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
 import type { TableDataGridConfig } from '@kong-ui-public/table-data-grid'
+import type { TopNGridRow } from '../utils/topn-columns'
+
 import { computed, defineAsyncComponent, inject } from 'vue'
 import { TableDataGrid } from '@kong-ui-public/table-data-grid'
-import '@kong-ui-public/table-data-grid/dist/style.css'
 import { WarningOutlineIcon } from '@kong/icons'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
+import '@kong-ui-public/table-data-grid/dist/style.css'
+
 import composables from '../composables'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
-import { createTopNGridRows, createTopNPresentation, getTopNProviderIcon, type TopNGridRow } from '../utils/topn-columns'
+import { createTopNGridRows, createTopNPresentation, getTopNProviderIcon } from '../utils/topn-columns'
 import FallbackEntityLink from './FallbackEntityLink.vue'
 
 const { chartOptions, data, fitToContent = false, height } = defineProps<{
@@ -132,6 +136,11 @@ const getMappedEntityLink = (dimension: string): string => {
 
 const getEntityLink = (dimension: string): string => {
   return getMappedEntityLink(dimension) || (dimensionHeaders.value[0]?.key === dimension ? chartOptions.entity_link || '' : '')
+}
+
+// The empty and OTHER buckets are not considered "real" entities
+const isEntity = (row: TopNGridRow, dimension: string): boolean => {
+  return row[dimension] !== 'empty' && row[dimension] !== OTHER_DIMENSION_ID
 }
 
 const parseLink = (row: TopNGridRow, dimension: string) => {

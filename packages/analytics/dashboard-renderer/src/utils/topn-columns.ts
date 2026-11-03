@@ -4,12 +4,14 @@ import type {
   ExploreResultV4,
   TopNColumnOptions,
 } from '@kong-ui-public/analytics-utilities'
-import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import type { IntlShapeEx } from '@kong-ui-public/i18n'
-import type english from '../locales/en.json'
-import { fieldLabel } from './field-label'
-import type { TableDataGridHeader } from '@kong-ui-public/table-data-grid'
 import type { Component } from 'vue'
+import type { IntlShapeEx } from '@kong-ui-public/i18n'
+import type { TableDataGridHeader } from '@kong-ui-public/table-data-grid'
+import type english from '../locales/en.json'
+
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
+import { fieldLabel } from './field-label'
 import {
   AmazonBedrockIcon,
   AnthropicIcon,
@@ -256,7 +258,7 @@ export const createTopNPresentation = ({
 
     return {
       id,
-      label: idRecord?.name || '-',
+      label: id === OTHER_DIMENSION_ID ? i18n.t('chartLabels.____OTHER____') : idRecord?.name || '-',
       deleted: !!idRecord?.deleted,
     }
   }

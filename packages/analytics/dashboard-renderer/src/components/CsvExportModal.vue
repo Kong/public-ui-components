@@ -103,22 +103,17 @@
 </template>
 
 <script setup lang="ts">
+import type { AllAggregations, ExploreExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import type { CsvData, Header, TimeseriesColumn } from '../types/csv-export'
+
 import { computed, ref, watch } from 'vue'
 import { format } from 'date-fns-tz'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
-import {
-  EXPORT_RECORD_LIMIT,
-  formatTimestamp,
-  type AllAggregations,
-  type ExploreExportState,
-  type ExploreResultV4,
-  type GroupByResult,
-  type RecordEvent,
-} from '@kong-ui-public/analytics-utilities'
+import { EXPORT_RECORD_LIMIT, formatTimestamp } from '@kong-ui-public/analytics-utilities'
+import { OTHER_DIMENSION_ID } from '@kong-ui-public/analytics-chart'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
-import type { CsvData, Header, TimeseriesColumn } from '../types/csv-export'
 
 const { i18n } = composables.useI18n()
 const fieldLabel = composables.useFieldLabel()
@@ -193,8 +188,10 @@ const tableData = computed(() => {
       if (key in chartData.meta.display) {
         const dimensionId = result.event[key]
         const displayEntry = chartData.meta.display[key]
+        const eventKey = (dimensionId && displayEntry?.[dimensionId]?.name) || result.event[key]
+
         // IDs that can't be resolved will not have a display entry (e.g. deleted platform entities), this falls back to the raw ID
-        acc[key] = (dimensionId && displayEntry?.[dimensionId]?.name) || result.event[key]
+        acc[key] = dimensionId === OTHER_DIMENSION_ID ? i18n.t('chartLabels.____OTHER____') : eventKey
       } else {
         acc[key] = result.event[key]
       }
