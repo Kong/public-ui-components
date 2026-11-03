@@ -736,6 +736,20 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
     gatewayVersion: '3.16',
   },
+  'hmac-signature-validator': {
+    name: 'HMAC Signature Validator',
+    description: 'Verify the authenticity and integrity of API requests using HMAC signatures.',
+    group: PluginGroup.SECURITY,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.17',
+  },
+  'circuit-breaker': {
+    name: 'Circuit Breaker',
+    description: 'Protect upstream services by automatically stopping requests at the Service or Route level when failures or upstream latency exceed configured thresholds, allowing unhealthy backends time to recover.',
+    group: PluginGroup.TRAFFIC_CONTROL,
+    scope: [PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.17',
+  },
 } satisfies Record<string, {
   name: string
   description: string
@@ -749,7 +763,8 @@ export const GATEWAY_VERSION_TIMESTAMP_MAP: Record<string, number> = {
   '3.12': 1759519200000,
   '3.13': 1766156460000,
   '3.14': 1774742400000,
-  // todo: add 3.16 release timestamp when available
+  '3.16': 1789747200000,
+  // todo: add 3.17 release timestamp when available
 }
 
 export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP
