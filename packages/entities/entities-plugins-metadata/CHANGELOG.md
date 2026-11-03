@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.16.0...%40kong-ui-public%2Fentities-plugins-metadata%401.17.0) (2026-11-03)
+
+### Features
+
+* **entities-plugins:** add hmac-signature-validator and circuit-breaker plugin metadata ([#4009](https://github.com/Kong/public-ui-components/issues/4009)) ([ff5af7c](https://github.com/Kong/public-ui-components/commit/ff5af7cf81b8382555f5d2533035e5235a6f7841))
+
+
 # [1.16.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.15.1...%40kong-ui-public%2Fentities-plugins-metadata%401.16.0) (2026-08-24)
 
 ### Features

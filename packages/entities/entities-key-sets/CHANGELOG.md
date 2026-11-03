@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.15.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.15.8...%40kong-ui-public%2Fentities-key-sets%403.15.9) (2026-11-03)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3997](https://github.com/Kong/public-ui-components/issues/3997)) ([d3930a6](https://github.com/Kong/public-ui-components/commit/d3930a66727db8eeb1f127fd3b8fa50041981582))
+
+
 ## [3.15.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-key-sets%403.15.7...%40kong-ui-public%2Fentities-key-sets%403.15.8) (2026-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

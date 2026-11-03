@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-config-store%402.0.5...%40kong-ui-public%2Fanalytics-config-store%402.0.6) (2026-11-03)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3997](https://github.com/Kong/public-ui-components/issues/3997)) ([d3930a6](https://github.com/Kong/public-ui-components/commit/d3930a66727db8eeb1f127fd3b8fa50041981582))
+
+
 ## [2.0.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-config-store%402.0.4...%40kong-ui-public%2Fanalytics-config-store%402.0.5) (2026-10-31)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
