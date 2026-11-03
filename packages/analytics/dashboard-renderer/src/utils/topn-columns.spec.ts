@@ -115,6 +115,33 @@ describe('createTopNPresentation', () => {
     expect(presentation.headers.find(header => header.key === 'REQUEST_COUNT')?.valueFormatter?.(rows[0].REQUEST_COUNT, rows[0])).toBe('–')
   })
 
+  it('translates the OTHER bucket in every dimension column, keeping its raw id', () => {
+    const otherData: ExploreResultV4 = {
+      ...data,
+      meta: {
+        ...data.meta,
+        display: {
+          ROUTE: { ____OTHER____: { name: '____OTHER____', is_other_group: true } },
+          GATEWAY_SERVICE: { service1: { name: 'Service 1' }, ____OTHER____: { name: '____OTHER____', is_other_group: true } },
+        },
+      },
+      data: [
+        { event: { ROUTE: '____OTHER____', GATEWAY_SERVICE: 'service1', REQUEST_COUNT: 75, '4XX': 5 }, timestamp: '' },
+        { event: { ROUTE: '____OTHER____', GATEWAY_SERVICE: '____OTHER____', REQUEST_COUNT: 25, '4XX': 1 }, timestamp: '' },
+      ],
+    }
+    const rows = createTopNGridRows(otherData)
+    const presentation = createTopNPresentation({ data: otherData, i18n, fieldTranslationMap: emptyLabelMapping })
+    const format = (key: string, rowIndex: number) =>
+      presentation.headers.find(header => header.key === key)?.valueFormatter?.(rows[rowIndex][key], rows[rowIndex])
+
+    expect(format('ROUTE', 0)).toBe('Others')
+    expect(format('GATEWAY_SERVICE', 0)).toBe('Service 1')
+    expect(format('GATEWAY_SERVICE', 1)).toBe('Others')
+    // The grid row keeps the raw id so entity links and lookups aren't affected by the translation.
+    expect(presentation.getDimension(rows[1], 'ROUTE')).toMatchObject({ id: '____OTHER____', label: 'Others' })
+  })
+
   it('translates lowercase dimensions and preserves custom labels with renderer i18n', () => {
     const lowercaseData: ExploreResultV4 = {
       ...data,

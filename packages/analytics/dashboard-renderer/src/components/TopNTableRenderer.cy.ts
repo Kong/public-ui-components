@@ -321,4 +321,16 @@ describe('<TopNTableRenderer /> grid integration', () => {
     cell(0, 'request_count').should('contain.text', '–')
     cell(1, 'gateway_service').should('contain.text', 'delet (deleted)').find('a').should('not.exist')
   })
+
+  it('renders the OTHER bucket as translated text without a navigable link', () => {
+    mountRenderer({ data: {
+      data: [
+        { timestamp: '', event: { gateway_service: 'service-1', request_count: 10 } },
+        { timestamp: '', event: { gateway_service: '____OTHER____', request_count: 5 } },
+      ],
+      meta: { ...result.meta, display: { gateway_service: { 'service-1': { name: 'Service 1' }, ____OTHER____: { name: '____OTHER____', is_other_group: true } } } },
+    } })
+    cell(0, 'gateway_service').find('a').should('exist')
+    cell(1, 'gateway_service').should('have.text', 'Others').find('a').should('not.exist')
+  })
 })

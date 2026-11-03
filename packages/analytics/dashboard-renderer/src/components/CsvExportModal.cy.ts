@@ -293,4 +293,33 @@ describe('<CsvExportModal />', () => {
       expect(contents).to.contain('500,10023')
     })
   })
+
+  it('translates the OTHER bucket in the preview and downloaded CSV', () => {
+    const { start } = populatedExploreResult.meta
+
+    mount({
+      exportState: {
+        status: 'success',
+        chartData: {
+          ...populatedExploreResult,
+          data: [
+            { timestamp: start, event: { status_code: '200', request_count: 10 } },
+            { timestamp: start, event: { status_code: '____OTHER____', request_count: 5 } },
+          ],
+          meta: {
+            ...populatedExploreResult.meta,
+            display: { status_code: { 200: { name: '200' }, ____OTHER____: { name: '____OTHER____', is_other_group: true } } },
+          },
+        },
+      },
+      filename: 'Other bucket',
+    })
+
+    cy.get('.k-table-data .table tbody tr').eq(1).should('contain.text', 'Others')
+    cy.getTestId('csv-download-button').click()
+    cy.readFile(`${DOWNLOADS_FOLDER}/other-bucket-${new Date().toISOString().slice(0, 10)}.csv`).then(contents => {
+      expect(contents).to.contain('Others,5')
+      expect(contents).not.to.contain('____OTHER____')
+    })
+  })
 })
