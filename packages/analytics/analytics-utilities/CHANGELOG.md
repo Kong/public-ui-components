@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.3.0...%40kong-ui-public%2Fanalytics-utilities%4014.4.0) (2026-11-04)
+
+### Features
+
+* **analytics:** add compression, media, guardrail and APE fields [MA-5643] ([#4014](https://github.com/Kong/public-ui-components/issues/4014)) ([d589c3f](https://github.com/Kong/public-ui-components/commit/d589c3fafe4071f3f6d4d292c988a875da42f4e3))
+
+
 # [14.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.2.3...%40kong-ui-public%2Fanalytics-utilities%4014.3.0) (2026-11-04)
 
 ### Features
