@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.0...%40kong-ui-public%2Fentities-plugins%4011.0.1) (2026-11-04)
+
+### Bug Fixes
+
+* **entities-plugins:** show datakit vault names instead of key ids in code editor [KM-3604] ([#4019](https://github.com/Kong/public-ui-components/issues/4019)) ([1b7269d](https://github.com/Kong/public-ui-components/commit/1b7269db33ed03fc1cf81dfb43b9151b033de8a0))
+
+
 # [11.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.2...%40kong-ui-public%2Fentities-plugins%4011.0.0) (2026-11-04)
 
 * feat(entities-plugins)!: render every plugin form with freeform [KM-3584] (#4015) ([0d27370](https://github.com/Kong/public-ui-components/commit/0d27370e1b64f75c3703774ee2cbe5f5806e45cb)), closes [#4015](https://github.com/Kong/public-ui-components/issues/4015)
