@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.72.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.71.9...%40kong-ui-public%2Fentities-shared%403.72.0) (2026-11-04)
+
+### Features
+
+* **entities-shared:** label kongctl and kong ingress controller owners ([#4010](https://github.com/Kong/public-ui-components/issues/4010)) ([91cf4d7](https://github.com/Kong/public-ui-components/commit/91cf4d7fcba1edc57bf060ce98950e777325c746)), closes [kongctl#2471](https://github.com/kongctl/issues/2471)
+
+
 ## [3.71.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.71.8...%40kong-ui-public%2Fentities-shared%403.71.9) (2026-11-03)
 
 ### Bug Fixes
