@@ -2,8 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { createApp, defineComponent, h } from 'vue'
 import { useSchemas } from './useSchemas'
 
-// useSchemas calls useExperimentalFreeForms which uses inject().
-// withSetup provides a valid Vue instance so inject() doesn't warn.
+// withSetup provides a valid Vue instance for the composables used by useSchemas.
 function withSetup<T>(fn: () => T): T {
   let result!: T
   const app = createApp(defineComponent({
@@ -35,8 +34,7 @@ describe('useSchemas', () => {
       expect(fieldModels).not.toContain('_sourcePlugin')
     })
 
-    it('generates flat fields schema when _sourcePlugin is a shared-form plugin (openid-connect)', () => {
-      // openid-connect → getSharedFormName returns 'OIDCForm' → parseSchema should produce flat fields
+    it('generates flat fields schema for a cloned plugin', () => {
       const { parseSchema } = withSetup(() => useSchemas())
       const schema = makeSchema({ _sourcePlugin: 'openid-connect' })
 
@@ -46,15 +44,15 @@ describe('useSchemas', () => {
       expect(result.schema).not.toHaveProperty('groups')
     })
 
-    it('generates grouped schema for a plain custom plugin without _sourcePlugin', () => {
-      // No _sourcePlugin, unknown plugin name → grouped schema (default VFG layout)
+    it('generates flat fields schema for a plain custom plugin without _sourcePlugin', () => {
+      // Every plugin is rendered with free-form, so the grouped VFG schema is never generated
       const { parseSchema } = withSetup(() => useSchemas())
       const schema = makeSchema()
 
       const result = parseSchema(schema)
 
-      expect(result.schema).toHaveProperty('groups')
-      expect(result.schema).not.toHaveProperty('fields')
+      expect(result.schema).toHaveProperty('fields')
+      expect(result.schema).not.toHaveProperty('groups')
     })
   })
 })

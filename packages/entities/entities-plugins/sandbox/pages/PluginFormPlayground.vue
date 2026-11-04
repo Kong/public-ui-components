@@ -96,14 +96,8 @@ import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
 } from '../../src'
-import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
+import { PluginForm } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
-
-// Opt experimental free-form plugins into rendering in the playground so they
-// can be previewed with a hand-pasted schema (no backend required).
-useProvideExperimentalFreeForms([
-  'governance',
-])
 
 function save(type: 'pluginType' | 'schema', value: unknown) {
   localStorage.setItem(`plugin-form-playground:${type}`, JSON.stringify(value))

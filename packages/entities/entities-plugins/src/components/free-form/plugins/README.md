@@ -1,26 +1,15 @@
 # Free-form Plugin Configs
 
-Each free-form plugin is registered by adding one config module in this directory. The registry auto-discovers both `plugins/*.ts` and `plugins/*/index.ts`.
+Every plugin is rendered with free-form. A plugin without a config module here is rendered with `CommonForm`, so a new plugin needs no registration.
 
-## Add a Plugin
+Add a config module only when the plugin needs customization: render rules, field renderers, or a custom form component. The registry auto-discovers both `plugins/*.ts` and `plugins/*/index.ts`.
+
+## Add a Plugin Config
 
 1. Create a new config file whose kebab-case file or folder name maps to the plugin name.
 2. Export the config with `definePluginConfig()`.
-3. Use a top-level `.ts` file for simple plugins, or a folder with `index.ts` when the plugin needs a dedicated Vue form component.
+3. Use a top-level `.ts` file for render rules or field renderers, or a folder with `index.ts` when the plugin needs a dedicated Vue form component.
 4. Omit `component` when `CommonForm` is enough; `definePluginConfig()` will supply it automatically.
-5. Mark `experimental: true` only when the plugin should be gated behind the experimental free-form allowlist.
-
-## Simple Plugin
-
-```ts
-import { definePluginConfig } from '../define-plugin-config'
-
-export default definePluginConfig({
-  experimental: true,
-})
-```
-
-This resolves to `CommonForm` unless you provide a custom `component`.
 
 ## Plugin With Render Rules
 
@@ -28,7 +17,6 @@ This resolves to `CommonForm` unless you provide a custom `component`.
 import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
-  experimental: true,
   renderRules: {
     bundles: [
       ['config.strategy', 'config.redis'],
@@ -47,7 +35,6 @@ import StringField from '../core/components/StringField.vue'
 import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
-  experimental: true,
   fieldRenderers: [
     {
       match: 'config.example',
@@ -69,7 +56,6 @@ import KeyAuthForm from './KeyAuthForm.vue'
 import { definePluginConfig } from '../../define-plugin-config'
 
 export default definePluginConfig({
-  experimental: true,
   component: KeyAuthForm,
 })
 ```

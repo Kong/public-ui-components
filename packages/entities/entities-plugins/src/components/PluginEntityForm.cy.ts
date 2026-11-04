@@ -48,7 +48,6 @@ const mountForm = (opts: {
       schema: buildPropSchema(opts.pluginName),
       rawSchema: opts.rawSchema,
       editing: opts.editing ?? true,
-      engine: 'freeform',
       onModelUpdated: cy.spy().as('modelUpdatedSpy'),
     },
     router: opts.router,

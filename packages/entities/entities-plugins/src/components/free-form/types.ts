@@ -178,8 +178,7 @@ type RuleBasedConfig = {
 
 export type PluginFormConfig = {
   /**
-   * Whether the plugin is experimental.
-   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
+   * @deprecated Ignored. Every plugin is rendered with free-form. Will be removed.
    */
   experimental?: boolean
 } & (ComponentBasedConfig | RuleBasedConfig)
