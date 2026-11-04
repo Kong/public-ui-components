@@ -238,6 +238,12 @@ jobs:
           PNPM_FILTER: ${{ steps.changed_packages.outputs.buildFilter }}
         run: pnpm --fail-if-no-match --stream $PNPM_FILTER run build
 
+      - name: Type-check Test Files
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
+        env:
+          PNPM_FILTER: ${{ steps.changed_packages.outputs.filter }}
+        run: pnpm --fail-if-no-match --parallel --stream $PNPM_FILTER run --if-present typecheck:tests
+
       - name: Check dist bundle size against max-limit
         if: ${{ steps.changed_packages.outputs.filter != '' }}
         uses: Kong/github-action-dist-size-checker@4a3422fbaa0ab9fced4959078dbb69d157db873e # main

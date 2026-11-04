@@ -2,6 +2,9 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      "@entities-shared-sandbox/*": ["../entities-shared/sandbox/shared/*"]
+    },
     "outDir": "dist",
     "declarationDir": "dist/types",
     "types": [

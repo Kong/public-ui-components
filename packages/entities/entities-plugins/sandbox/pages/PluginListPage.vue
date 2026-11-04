@@ -54,8 +54,8 @@ import type { AxiosError } from 'axios'
 import SandboxPage from '../SandboxPage.vue'
 import { PluginList } from '../../src'
 import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
-import type { PermissionsActions } from '../../../entities-shared/sandbox/shared/components/SandboxPermissionsControl.vue'
-import SandboxPermissionsControl from '../../../entities-shared/sandbox/shared/components/SandboxPermissionsControl.vue'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
