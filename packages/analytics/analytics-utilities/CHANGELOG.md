@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.2.3...%40kong-ui-public%2Fanalytics-utilities%4014.3.0) (2026-11-04)
+
+### Features
+
+* **component:** adding translation for new AIGW2.3 fields [MA-5626] ([#4013](https://github.com/Kong/public-ui-components/issues/4013)) ([d26acbc](https://github.com/Kong/public-ui-components/commit/d26acbc64382e82e72d56ce36afe3478660e067d))
+
+
 ## [14.2.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.2.2...%40kong-ui-public%2Fanalytics-utilities%4014.2.3) (2026-10-31)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
