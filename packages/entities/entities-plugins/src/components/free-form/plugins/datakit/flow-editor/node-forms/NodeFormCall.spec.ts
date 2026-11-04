@@ -197,7 +197,7 @@ describe('NodeFormCall', () => {
       await wrapper.getTestId('dk-call-retry-toggle').setValue(true)
       await flushPromises()
 
-      expect(callNode().config.retry).toEqual({ count: 0, interval: 0 })
+      expect(callNode().config?.retry).toEqual({ count: 0, interval: 0 })
       expect(wrapper.find('[data-testid="ff-retry.count"]').exists()).toBe(true)
       expect(wrapper.find('[data-testid="ff-retry.interval"]').exists()).toBe(true)
       expect(wrapper.find('[data-testid="ff-retry.status_codes"]').exists()).toBe(true)
@@ -228,7 +228,7 @@ describe('NodeFormCall', () => {
 
       await wrapper.get('[data-testid="ff-retry.status_codes"]').setValue('429, 5xx')
 
-      expect((callNode().config.retry as Record<string, unknown>).status_codes).toEqual(['429', '5xx'])
+      expect((callNode().config?.retry as Record<string, unknown>).status_codes).toEqual(['429', '5xx'])
     })
 
     it('rejects an invalid status code', async () => {

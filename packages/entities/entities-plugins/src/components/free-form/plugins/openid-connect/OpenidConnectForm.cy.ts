@@ -164,7 +164,7 @@ const createSchema = (
   const raw: FormSchema = cloneDeep({ type: 'record', ...(schemaOidc as any) })
   if (withPrincipals) {
     const configField = (raw.fields as any[]).find(f => 'config' in f)
-    const principals = cloneDeep(PRINCIPALS_SCHEMA_FIELD)
+    const principals: Record<string, any> = cloneDeep(PRINCIPALS_SCHEMA_FIELD)
     if (withJit) {
       principals.principals.fields.push(cloneDeep(JIT_SCHEMA_FIELD))
     }
@@ -255,7 +255,7 @@ const mountForm = (options: MountOptions = {}) => {
     useSecretInput = false,
   } = options
 
-  cy.mount(OpenidConnectForm, {
+  cy.mount(OpenidConnectForm as any, {
     props: {
       schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims, withJit),
       formConfig: minRuntimeVersion ? { minRuntimeVersion } : undefined,
@@ -893,8 +893,8 @@ describe('OpenidConnectForm', () => {
 
       clickTab('advanced')
       cy.getTestId('ff-config.consumer_optional').should('exist')
-      cy.getTestId('ff-array-config.credential_claim').then(($claim) => {
-        cy.getTestId('ff-config.consumer_optional').then(($optional) => {
+      cy.get('[data-testid="ff-array-config.credential_claim"]').then(($claim) => {
+        cy.get('[data-testid="ff-config.consumer_optional"]').then(($optional) => {
           // consumer_optional must render directly before the lifted field
           // (the fresh schema replaced the singular with the plural in place).
           expect(

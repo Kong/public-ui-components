@@ -1,7 +1,7 @@
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FormSchema, ForeignFieldSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 // Mirrors the real Kong Gateway ACL plugin schema (`kong.plugins.acl.schema`).
-const aclSchema: FormSchema = {
+const aclSchema = {
   type: 'record',
   entity_checks: [
     {
@@ -15,7 +15,7 @@ const aclSchema: FormSchema = {
         eq: null,
         type: 'foreign',
         reference: 'consumers',
-      },
+      } as ForeignFieldSchema,
     },
     {
       consumer_group: {
@@ -23,7 +23,7 @@ const aclSchema: FormSchema = {
         eq: null,
         type: 'foreign',
         reference: 'consumer_groups',
-      },
+      } as ForeignFieldSchema,
     },
     {
       protocols: {
@@ -99,13 +99,13 @@ const aclSchema: FormSchema = {
       },
     },
   ],
-}
+} as FormSchema
 
 export default aclSchema
 
 // A Gateway version that predates the `allow_when`/`deny_when` schema fields, so
 // ACLModeCard should only offer the allow/deny modes.
-export const aclSchemaWithoutWhenModes: FormSchema = {
+export const aclSchemaWithoutWhenModes = {
   ...aclSchema,
   entity_checks: [
     {
@@ -118,10 +118,10 @@ export const aclSchemaWithoutWhenModes: FormSchema = {
     return {
       config: {
         ...field.config,
-        fields: field.config.fields.filter((configField: Record<string, unknown>) => (
+        fields: (field.config as RecordFieldSchema).fields.filter((configField: Record<string, unknown>) => (
           !('allow_when' in configField) && !('deny_when' in configField)
         )),
       },
     }
   }),
-}
+} as FormSchema

@@ -1,11 +1,11 @@
 import type { AxiosInstance } from 'axios'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { useReferenceEntityNames } from './useReferenceEntityNames'
 import type { KonnectPluginEntityConfig } from '../types'
 
 describe('useReferenceEntityNames', () => {
   let axiosInstance: Pick<AxiosInstance, 'get'>
-  let onError: ReturnType<typeof vi.fn>
+  let onError: Mock<(error: unknown) => void>
 
   const konnectConfig: KonnectPluginEntityConfig = {
     app: 'konnect',
@@ -17,7 +17,7 @@ describe('useReferenceEntityNames', () => {
 
   beforeEach(() => {
     axiosInstance = { get: vi.fn() }
-    onError = vi.fn()
+    onError = vi.fn<(error: unknown) => void>()
   })
 
   it('fetches the name for each reference field present on the entity', async () => {

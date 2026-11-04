@@ -135,7 +135,7 @@ describe('<PluginForm />', () => {
             },
           },
         ).as(`getEntity-${entityType}`)
-        return `@getEntity-${entityType}`
+        return `@getEntity-${entityType}` as const
       })
 
       return alias
@@ -1314,7 +1314,7 @@ describe('<PluginForm />', () => {
             },
           },
         ).as(`getEntity-${entityType}`)
-        return `@getEntity-${entityType}`
+        return `@getEntity-${entityType}` as const
       })
 
       return alias

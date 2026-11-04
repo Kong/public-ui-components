@@ -1,4 +1,4 @@
-export default {
+const oidcSchema = {
   'entity_checks': [
     {
       'custom_entity_check': {
@@ -4368,4 +4368,6 @@ export default {
       'config.redis',
     ],
   },
-}
+} as Record<string, unknown>
+
+export default oidcSchema

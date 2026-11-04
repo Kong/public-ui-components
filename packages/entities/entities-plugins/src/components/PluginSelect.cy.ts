@@ -85,7 +85,7 @@ describe('<PluginSelect />', {
     it('should show the select page', () => {
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
         },
@@ -112,7 +112,7 @@ describe('<PluginSelect />', {
     it('should show highlighted plugins', () => {
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
           highlightedPluginIds: ['basic-auth'],
@@ -136,7 +136,7 @@ describe('<PluginSelect />', {
 
       const highlightedPluginIds = ['basic-auth', 'hmac-auth', 'ip-restriction', 'rate-limiting', 'syslog']
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
           highlightedPluginIds,
@@ -170,7 +170,7 @@ describe('<PluginSelect />', {
 
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
           disabledPlugins,
@@ -192,7 +192,7 @@ describe('<PluginSelect />', {
 
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
           ignoredPlugins,
@@ -223,7 +223,7 @@ describe('<PluginSelect />', {
         },
       })
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
         },
@@ -241,7 +241,7 @@ describe('<PluginSelect />', {
     it('should allow filtering of plugins', () => {
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
         },
@@ -272,7 +272,7 @@ describe('<PluginSelect />', {
         },
       ).as('getAvailablePlugins2')
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
         },
@@ -287,7 +287,7 @@ describe('<PluginSelect />', {
     it('should handle empty state - invalid plugin name', () => {
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
         },
@@ -308,7 +308,7 @@ describe('<PluginSelect />', {
     it('click event should be emitted when Plugin was clicked and navigateOnClick is false', () => {
       interceptKM()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKM,
           onPluginClicked: cy.spy().as('onPluginClickedSpy'),
@@ -370,7 +370,7 @@ describe('<PluginSelect />', {
     it('should show the select page tabs', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           customPluginSupport: 'schema',
@@ -418,7 +418,7 @@ describe('<PluginSelect />', {
     it('should hide custom plugins tab', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           customPluginSupport: 'none',
@@ -434,7 +434,7 @@ describe('<PluginSelect />', {
     it('should show disabled custom plugins tab', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           customPluginSupport: 'disabled',
@@ -452,7 +452,7 @@ describe('<PluginSelect />', {
     it('should show highlighted plugins', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           highlightedPluginIds: ['basic-auth'],
@@ -476,7 +476,7 @@ describe('<PluginSelect />', {
 
       const highlightedPluginIds = ['basic-auth', 'hmac-auth', 'ip-restriction', 'rate-limiting', 'syslog']
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           highlightedPluginIds,
@@ -510,7 +510,7 @@ describe('<PluginSelect />', {
 
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           disabledPlugins,
@@ -533,7 +533,7 @@ describe('<PluginSelect />', {
 
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           ignoredPlugins,
@@ -554,7 +554,7 @@ describe('<PluginSelect />', {
     it('should allow filtering of plugins', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
         },
@@ -586,7 +586,7 @@ describe('<PluginSelect />', {
         },
       ).as('getAvailablePlugins')
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
         },
@@ -602,7 +602,7 @@ describe('<PluginSelect />', {
     it('should handle empty state - invalid plugin name', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
         },
@@ -624,7 +624,7 @@ describe('<PluginSelect />', {
     it('click event should be emitted when Plugin was clicked and navigateOnClick is false', () => {
       interceptKonnect()
 
-      cy.mount(PluginSelect, {
+      cy.mount(PluginSelect as any, {
         props: {
           config: baseConfigKonnect,
           onPluginClicked: cy.spy().as('onPluginClickedSpy'),
@@ -649,7 +649,7 @@ describe('<PluginSelect />', {
       it('should correctly render custom plugin actions', () => {
         interceptKonnect()
 
-        cy.mount(PluginSelect, {
+        cy.mount(PluginSelect as any, {
           props: {
             config: baseConfigKonnect,
             customPluginSupport: 'schema',
@@ -677,7 +677,7 @@ describe('<PluginSelect />', {
       it('should render create card if user has create rights', () => {
         interceptKonnect()
 
-        cy.mount(PluginSelect, {
+        cy.mount(PluginSelect as any, {
           props: {
             config: baseConfigKonnect,
             customPluginSupport: 'streaming',

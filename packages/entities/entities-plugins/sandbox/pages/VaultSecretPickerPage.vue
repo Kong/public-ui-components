@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import type { KongManagerConfig, KonnectConfig } from '@kong-ui-public/entities-shared'
 import { ref } from 'vue'
-import VaultSecretPicker from '../../src/components/VaultSecretPicker.vue'
+import { VaultSecretPicker } from '@kong-ui-public/entities-vaults'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
@@ -103,11 +103,11 @@ const useKongManagerSecretRef = (secretRef: string) => {
 
 <style lang="scss" scoped>
 .look-up-key {
-  font-size: $kui-font-size-20;
-  margin: $kui-space-40 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  margin: var(--kui-space-40, $kui-space-40) 0;
 
   &-action {
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
   }
 }

@@ -54,7 +54,7 @@ const mountForm = (options: {
     ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}) }
     : { app: 'kongManager' as const, apiBaseUrl: '/kong-manager' }
 
-  cy.mount(MeteringAndBillingForm, {
+  cy.mount(MeteringAndBillingForm as any, {
     props: {
       schema: createSchema(),
       formSchema: {},

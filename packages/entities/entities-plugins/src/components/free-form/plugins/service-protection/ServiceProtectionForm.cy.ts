@@ -25,7 +25,7 @@ const mockPartials = () => {
 }
 
 const mountForm = (config: Record<string, any>, { isEditing = false } = {}) => {
-  cy.mount(ServiceProtectionForm, {
+  cy.mount(ServiceProtectionForm as any, {
     props: {
       schema: { type: 'record', ...schema } as unknown as FormSchema,
       formSchema: { fields: [] },
@@ -63,7 +63,7 @@ describe('<ServiceProtectionForm />', () => {
   it('renders the redis settings right under the strategy', () => {
     mountForm({ strategy: 'redis', redis })
 
-    cy.getTestId('view-advanced').then(($advanced) => {
+    cy.get('[data-testid="view-advanced"]').then(($advanced) => {
       // Top-level config fields plus the redis card, in document order
       const order = [...$advanced[0].querySelectorAll('[data-testid]')]
         .map(el => el.getAttribute('data-testid')!)
