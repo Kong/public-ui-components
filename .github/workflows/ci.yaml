@@ -350,7 +350,9 @@ jobs:
         uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
           install: false
-          command: pnpm run test:component:ci --spec "${{ matrix.container.spec }}"
+          # cypress-io/github-action splits `command` on whitespace instead of running it
+          # through a shell, so quotes around the spec list would reach Cypress verbatim.
+          command: pnpm run test:component:ci --spec ${{ matrix.container.spec }}
 
       - name: Upload Component Test Results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
