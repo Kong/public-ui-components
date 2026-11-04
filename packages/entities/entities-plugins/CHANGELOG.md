@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.2...%40kong-ui-public%2Fentities-plugins%4011.0.0) (2026-11-04)
+
+* feat(entities-plugins)!: render every plugin form with freeform [KM-3584] (#4015) ([0d27370](https://github.com/Kong/public-ui-components/commit/0d27370e1b64f75c3703774ee2cbe5f5806e45cb)), closes [#4015](https://github.com/Kong/public-ui-components/issues/4015)
+
+### BREAKING CHANGES
+
+* plugin forms always render with freeform. The `engine`
+  prop of `PluginForm` and the `EXPERIMENTAL_FREE_FORM_PROVIDER` export are
+  removed, `useProvideExperimentalFreeForms()` has no effect, and
+  `hideScopeSelection` no longer hides the scope section of plugin forms.
+
+  * test(entities-plugins): fix type errors in PluginForm tests [KM-3584]
+
+  - remove the fixtures only used by the deleted VFG tests
+  - type the scoped entity aliases as `@${string}` so `cy.wait()` accepts them
+
+  * fix(entities-plugins): keep experimental on ResolvedPluginFormConfig [KM-3584]
+
+  ai-manager builds `ResolvedPluginFormConfig` entries with
+  `experimental: false`. Keep the field as an optional, deprecated and
+  ignored property, like `PluginFormConfig.experimental`, so hosts keep
+  compiling until they drop it.
+
+
 ## [10.4.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.1...%40kong-ui-public%2Fentities-plugins%4010.4.2) (2026-11-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
