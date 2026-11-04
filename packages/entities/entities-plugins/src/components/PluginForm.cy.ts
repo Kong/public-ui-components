@@ -9,9 +9,7 @@ import {
   scopedService,
   scopedConsumer,
   customPluginSchema,
-  nestedArrayWithOneOfSchema,
 } from '../../fixtures/mockData'
-import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
 import schemaCors from '../../fixtures/schemas/cors'
 import schemaMocking from '../../fixtures/schemas/mocking'
 import schemaOidc from '../../fixtures/schemas/oidc'
@@ -135,7 +133,7 @@ describe('<PluginForm />', () => {
             },
           },
         ).as(`getEntity-${entityType}`)
-        return `@getEntity-${entityType}`
+        return `@getEntity-${entityType}` as const
       })
 
       return alias
@@ -1083,7 +1081,7 @@ describe('<PluginForm />', () => {
             },
           },
         ).as(`getEntity-${entityType}`)
-        return `@getEntity-${entityType}`
+        return `@getEntity-${entityType}` as const
       })
 
       return alias
