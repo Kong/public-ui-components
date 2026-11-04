@@ -5,10 +5,6 @@ import type { PluginFormConfig, PluginFormLayoutComponent } from './types'
 
 export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
-  /**
-   * @deprecated Ignored. Every plugin is rendered with free-form. Will be removed.
-   */
-  experimental?: boolean
   renderRules?: RenderRules
   fieldRenderers: FieldRendererRule[]
 }

@@ -2,7 +2,6 @@ import { definePluginConfig } from '../define-plugin-config.ts'
 import { ArrayField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
-  experimental: true,
   fieldRenderers: [
     {
       match: 'config.metrics',

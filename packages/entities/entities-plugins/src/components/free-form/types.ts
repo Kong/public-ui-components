@@ -176,9 +176,4 @@ type RuleBasedConfig = {
   fieldRenderers?: FieldRendererRule[]
 }
 
-export type PluginFormConfig = {
-  /**
-   * @deprecated Ignored. Every plugin is rendered with free-form. Will be removed.
-   */
-  experimental?: boolean
-} & (ComponentBasedConfig | RuleBasedConfig)
+export type PluginFormConfig = ComponentBasedConfig | RuleBasedConfig
