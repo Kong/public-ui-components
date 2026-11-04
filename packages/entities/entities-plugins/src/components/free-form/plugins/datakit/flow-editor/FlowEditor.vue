@@ -40,7 +40,8 @@ import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData } from
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData, setValue, getValue } = useFormShared<DatakitPluginData>()
+// Read the data with `getValue()`: `formData` keys map entries by internal ids (`kid:N`), e.g. `resources.vault`
+const { setValue, getValue } = useFormShared<DatakitPluginData>()
 
 const { isEditing } = defineProps<{
   isEditing?: boolean
@@ -52,7 +53,7 @@ const emit = defineEmits<{
 }>()
 
 function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: DatakitConfig['resources'], partialId?: string) {
-  const nextFormData = mergeFlowChange(formData, configNodes, uiData, resources, partialId)
+  const nextFormData = mergeFlowChange(getValue(), configNodes, uiData, resources, partialId)
   setValue(nextFormData)
   emit('change', nextFormData.config!, nextFormData.__ui_data!)
 }
