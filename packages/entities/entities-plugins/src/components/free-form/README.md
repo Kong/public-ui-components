@@ -86,11 +86,10 @@ Note that `StringField`/`NumberField` resolve their own path and hand `Expressio
 
 #### Adopting it in a consuming app
 
-For the default `StandardLayout`, nothing — but three things are worth checking:
+For the default `StandardLayout`, nothing — but two things are worth checking:
 
 1. **The payload gains a root-level `expressions` key** alongside `config`. Anything that whitelists, diffs, or transforms root keys before submitting needs to allow it through.
-2. **Both plugins are `experimental`**, so they render VueFormGenerator (no expression UI at all) unless opted in — `useProvideExperimentalFreeForms([...])` in an ancestor of the form, or `engine="freeform"` on `PluginForm`/`PluginEntityForm`. Not `config.experimentalRenders`; that map feeds schema-level flags such as `keyAuthIdentityRealms`, not the engine choice.
-3. **Konnect currently rejects the payload.** koko compiles the `""` padding and fails with `kcel: compile: ERROR: <input>:1:0: mismatched input '<EOF>'`. The Gateway accepts it; the Gateway's own guards skip `nil`/`null`/`""` before compiling. Until koko does the same, expressions work against a direct Admin API but not through Konnect. Note that no client payload avoids this — the schema right-pads a short array with `""` before validating.
+2. **Konnect currently rejects the payload.** koko compiles the `""` padding and fails with `kcel: compile: ERROR: <input>:1:0: mismatched input '<EOF>'`. The Gateway accepts it; the Gateway's own guards skip `nil`/`null`/`""` before compiling. Until koko does the same, expressions work against a direct Admin API but not through Konnect. Note that no client payload avoids this — the schema right-pads a short array with `""` before validating.
 
 **If you provide your own layout** via `FREE_FORM_PLUGIN_LAYOUT`, you must pass `expressions` through in two places, or every expression control silently disappears with no error:
 
@@ -117,7 +116,6 @@ In `src/components/free-form/plugins/`, one config module determines how each pl
 
 ```typescript
 export default definePluginConfig({
-  experimental: true,
   component: KeyAuthForm,
   renderRules: {
     dependencies: {
@@ -134,10 +132,8 @@ export default definePluginConfig({
 })
 ```
 
+- Every plugin is rendered with free-form. A plugin without a registry entry is rendered with `CommonForm`, so a config is only needed for customization.
 - `definePluginConfig()` defaults `component` to `CommonForm`, so simple plugins only need overrides.
-- `experimental` defaults to `false` when the registry is resolved.
-- Experimental forms require opt-in via the injected experimental free-form allowlist (`config.experimentalRenders` in Konnect flows).
-- When `engine: 'freeform'` is forced, `PluginEntityForm` still renders `CommonForm` for plugins that do not have a registry entry.
 
 ### Plugin Overview
 
