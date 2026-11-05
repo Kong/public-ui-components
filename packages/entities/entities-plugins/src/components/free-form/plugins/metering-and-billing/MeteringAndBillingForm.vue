@@ -134,13 +134,21 @@
     >
       <Field name="config.meter_api_requests" />
       <Field name="config.meter_ai_token_usage" />
-      <StringArrayField
+      <ArrayField
         v-if="supportsAllowStatusCodes"
-        :help="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.help')"
+        :add-item-label="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.add')"
         :label="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.label')"
+        :label-attributes="{ info: t('plugins.free-form.metering-and-billing.fields.allow_status_codes.info') }"
         name="config.allow_status_codes"
-        :placeholder="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.placeholder')"
-      />
+      >
+        <template #item="{ autofocus, fieldName }">
+          <StringField
+            :autofocus="autofocus"
+            :name="fieldName"
+            :placeholder="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.placeholder')"
+          />
+        </template>
+      </ArrayField>
     </CollapsibleSection>
 
     <!-- Subject — ObjectField native collapse, 2-column content -->
@@ -212,7 +220,7 @@ import { computed, inject, provide, ref } from 'vue'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { KLabel } from '@kong/kongponents'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { FieldRenderer, Field, BooleanField, EnumField, NumberField, ArrayField, ObjectField, StringArrayField, StringField } from '@kong-ui-public/freeform'
+import { FieldRenderer, Field, BooleanField, EnumField, NumberField, ArrayField, ObjectField, StringField } from '@kong-ui-public/freeform'
 import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import AdvancedFields from '../../components/AdvancedFields.vue'
 import CollapsibleSection from '../../components/CollapsibleSection.vue'

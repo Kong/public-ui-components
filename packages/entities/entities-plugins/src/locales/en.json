@@ -1190,8 +1190,9 @@
           },
           "allow_status_codes": {
             "label": "Allowed status codes",
-            "placeholder": "e.g., 200-299, 400-499",
-            "help": "Only meter responses whose status code falls within these ranges. Use comma to separate ranges. Leave empty to meter all responses."
+            "info": "Only meter responses whose status code falls within these ranges. Leave empty to meter all responses.",
+            "placeholder": "e.g., 200-299",
+            "add": "Add status code range"
           },
           "ingest_endpoint": {
             "description": "The URL of the metering data ingest endpoint.",

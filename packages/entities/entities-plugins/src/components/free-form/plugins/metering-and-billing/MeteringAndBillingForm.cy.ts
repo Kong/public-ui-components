@@ -141,13 +141,17 @@ describe('MeteringAndBillingForm - allow_status_codes', () => {
       model: { config: { allow_status_codes: ['200-299', '400-499'] } },
     })
 
-    cy.getTestId('ff-config.allow_status_codes').should('have.value', '200-299, 400-499')
+    cy.getTestId('ff-config.allow_status_codes.0').should('have.value', '200-299')
+    cy.getTestId('ff-config.allow_status_codes.1').should('have.value', '400-499')
   })
 
-  it('writes comma-separated input back as an array', () => {
+  it('writes each added range back as an array item', () => {
     mountForm({})
 
-    cy.getTestId('ff-config.allow_status_codes').type('200-299, 500-599')
+    cy.getTestId('ff-add-item-btn-config.allow_status_codes').click()
+    cy.getTestId('ff-config.allow_status_codes.0').type('200-299')
+    cy.getTestId('ff-add-item-btn-config.allow_status_codes').click()
+    cy.getTestId('ff-config.allow_status_codes.1').type('500-599')
 
     cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
       expect(payload.config.allow_status_codes).to.deep.equal(['200-299', '500-599'])
@@ -158,7 +162,7 @@ describe('MeteringAndBillingForm - allow_status_codes', () => {
     mountForm({ withAllowStatusCodes: false })
 
     cy.getTestId('ff-config.meter_ai_token_usage').should('exist')
-    cy.getTestId('ff-config.allow_status_codes').should('not.exist')
+    cy.getTestId('ff-array-config.allow_status_codes').should('not.exist')
     cy.contains('is not found in schema').should('not.exist')
   })
 })
