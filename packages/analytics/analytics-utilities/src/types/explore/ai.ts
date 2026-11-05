@@ -39,7 +39,6 @@ export const queryableAiExploreDimensions = [
   'status_code_grouped',
   'time',
   'tool_name',
-  'tool_type',
   'upstream_status_code',
   'upstream_status_code_grouped',
 ] as const
