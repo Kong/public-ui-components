@@ -802,9 +802,18 @@ describe('<PluginForm />', () => {
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
         cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
 
+        // disables save when form has no changes
+        cy.getTestId('ff-instance_name').should('have.value', plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
         // enables save when form has changes
         cy.getTestId('ff-instance_name').type('-edited')
         cy.getTestId('plugin-edit-form-submit').should('be.enabled')
+
+        // disables save again when the change is reverted
+        cy.getTestId('ff-instance_name').clear()
+        cy.getTestId('ff-instance_name').type(plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
@@ -1550,9 +1559,18 @@ describe('<PluginForm />', () => {
         cy.getTestId('plugin-edit-form-submit').should('be.visible')
         cy.getTestId('plugin-edit-form-cancel').should('be.enabled')
 
+        // disables save when form has no changes
+        cy.getTestId('ff-instance_name').should('have.value', plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
+
         // enables save when form has changes
         cy.getTestId('ff-instance_name').type('-edited')
         cy.getTestId('plugin-edit-form-submit').should('be.enabled')
+
+        // disables save again when the change is reverted
+        cy.getTestId('ff-instance_name').clear()
+        cy.getTestId('ff-instance_name').type(plugin1.instance_name)
+        cy.getTestId('plugin-edit-form-submit').should('be.disabled')
       })
     })
 
