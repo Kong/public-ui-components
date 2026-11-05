@@ -1,16 +1,15 @@
-// Import through `shiki`'s own subpaths (not `@shikijs/*` directly) so these always resolve to the
-// same `@shikijs/*` copies as the host app's `shiki`. The bare `shiki` entry is avoided on purpose:
-// the monaco-editor Vite plugin replaces it with a trimmed, generated module.
-import { createHighlighterCoreSync } from 'shiki/core'
-import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
-import json from 'shiki/langs/json.mjs'
-import yaml from 'shiki/langs/yaml.mjs'
-import terraform from 'shiki/langs/terraform.mjs'
-import shellscript from 'shiki/langs/shellscript.mjs'
-import powershell from 'shiki/langs/powershell.mjs'
-import materialThemeDarker from 'shiki/themes/material-theme-darker.mjs'
-import catppuccinLatte from 'shiki/themes/catppuccin-latte.mjs'
-import type { HighlighterCore, CodeToHastOptions } from 'shiki/core'
+// `@shikijs/*` is deliberately not a peer dependency: it is installed by the host app's `shiki` (our
+// peer). Declaring it separately lets it resolve to a different version than that `shiki`.
+import { createHighlighterCoreSync } from '@shikijs/core'
+import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
+import json from '@shikijs/langs/json'
+import yaml from '@shikijs/langs/yaml'
+import terraform from '@shikijs/langs/terraform'
+import shellscript from '@shikijs/langs/shellscript'
+import powershell from '@shikijs/langs/powershell'
+import materialThemeDarker from '@shikijs/themes/material-theme-darker'
+import catppuccinLatte from '@shikijs/themes/catppuccin-latte'
+import type { HighlighterCore, CodeToHastOptions } from '@shikijs/core'
 
 let highlighter: HighlighterCore | null = null
 
