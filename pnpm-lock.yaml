@@ -816,9 +816,6 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
-      '@kong-ui-public/monaco-editor':
-        specifier: workspace:^
-        version: link:../monaco-editor
       '@kong/icons':
         specifier: ^1.64.0
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
@@ -826,6 +823,9 @@ importers:
         specifier: ^14.0.2
         version: 14.0.2
     devDependencies:
+      '@kong-ui-public/monaco-editor':
+        specifier: workspace:^
+        version: link:../monaco-editor
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
