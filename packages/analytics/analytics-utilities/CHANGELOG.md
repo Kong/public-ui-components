@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.4.0...%40kong-ui-public%2Fanalytics-utilities%4014.5.0) (2026-11-05)
+
+### Features
+
+* add `service_tier` and `speed` field [MA-5627] ([#4021](https://github.com/Kong/public-ui-components/issues/4021)) ([cf58ac7](https://github.com/Kong/public-ui-components/commit/cf58ac7dd22e452dbc4261b0f498369daabfa21f))
+
+
 # [14.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.3.0...%40kong-ui-public%2Fanalytics-utilities%4014.4.0) (2026-11-04)
 
 ### Features
