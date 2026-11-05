@@ -40,74 +40,6 @@
           />
         </template>
       </component>
-      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
-      <component
-        :is="(sharedForms as any)[sharedFormName]"
-        v-else-if="sharedFormName"
-        :enable-redis-partial="enableRedisPartial"
-        :form-model="formModel"
-        :form-options="formOptions"
-        :form-schema="formSchema"
-        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
-        :is-editing="editing"
-        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
-        :on-model-updated="onModelUpdated"
-        :on-partial-toggled="onPartialToggled"
-        :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
-        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
-        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
-      >
-        <template
-          v-if="enableVaultSecretPicker"
-          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
-        >
-          <VaultSecretPickerProvider
-            v-if="slotProps.schema.referenceable"
-            v-bind="slotProps"
-            @open="setUpVaultSecretPicker"
-          />
-        </template>
-      </component>
-
-      <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
-      <VueFormGenerator
-        v-else
-        :enable-redis-partial="enableRedisPartial"
-        :is-editing="editing"
-        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
-        :model="formModel"
-        :options="formOptions"
-        :schema="formSchema"
-        @model-updated="onModelUpdated"
-        @partial-toggled="onPartialToggled"
-        @refresh-model="getModel"
-        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
-      >
-        <template #plugin-config-empty-state>
-          <div class="plugin-config-empty-state">
-            {{ t('plugins.form.grouping.plugin_configuration.empty') }}
-          </div>
-        </template>
-
-        <!-- For the opentelemetry plugin, we only need to show rule alerts with its new schema -->
-        <template
-          v-if="PLUGIN_METADATA[formModel.name]?.fieldRules && (props.config.isNewOtelSchema || formModel.name !== 'opentelemetry')"
-          #plugin-config-before-content
-        >
-          <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
-        </template>
-
-        <template
-          v-if="enableVaultSecretPicker"
-          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
-        >
-          <VaultSecretPickerProvider
-            v-if="slotProps.schema.referenceable"
-            v-bind="slotProps"
-            @open="setUpVaultSecretPicker"
-          />
-        </template>
-      </VueFormGenerator>
     </div>
   </div>
 
@@ -132,9 +64,6 @@ import {
   FORMS_CONFIG,
   REDIS_CREATE_SLIDEOUT,
   customFields,
-  getSharedFormName,
-  sharedForms,
-  VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
@@ -143,12 +72,9 @@ import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
-import useI18n from '../composables/useI18n'
 import { useToaster } from '../composables/useToaster'
-import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
-import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
@@ -163,7 +89,6 @@ const emit = defineEmits<{
       data: Record<string, any>
     }
   ): void
-  (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'click:learn-more', entity: string): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
@@ -224,14 +149,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * Control if the redis partial is enabled for plugins.
-   */
-  enableRedisPartial: {
-    type: Boolean,
-    default: false,
-  },
-
   /** For Kong Manager portal developers */
   developer: {
     type: Boolean,
@@ -248,17 +165,10 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
-// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
-// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
-// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
-const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
-
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
-  enableRedisPartial: props.enableRedisPartial,
-  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
@@ -270,7 +180,6 @@ const setPluginFormLayoutState = (value: boolean) => {
 }
 
 const { objectsAreEqual } = useHelpers()
-const { i18n: { t } } = useI18n()
 
 const mapControlPlane = (url: string) => {
   let urlString = url
@@ -440,14 +349,11 @@ provide(REDIS_CREATE_SLIDEOUT, {
   toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
 })
 
-const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
 const freeformComponent = shallowRef<any>()
-const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
-const formOptions = computed(() => form.value?.options)
 const freeformSchema = computed(() => {
   const enhanced = appendEntityChecksFromMetadata(
     formModel.name,
@@ -471,7 +377,6 @@ const syncFormRenderingMode = (pluginName?: string) => {
   if (!pluginName) {
     pluginConfig.value = undefined
     freeformComponent.value = undefined
-    sharedFormName.value = ''
 
     setPluginFormLayoutState(false)
 
@@ -482,7 +387,6 @@ const syncFormRenderingMode = (pluginName?: string) => {
   const effectivePluginName = props.schema?._sourcePlugin || pluginName
   pluginConfig.value = getPluginConfig(effectivePluginName)
   freeformComponent.value = getFreeFormComponent(effectivePluginName)
-  sharedFormName.value = getSharedFormName(effectivePluginName)
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
@@ -726,22 +630,6 @@ const getModel = (freeformFields?: string[]): Record<string, any> => {
 
 const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
   dismissField(formModel, additionalModel, dismissSchemaField, props.editing)
-  emit('model-updated', {
-    model: formModel,
-    originalModel,
-    data: getModel(),
-  })
-}
-
-// fired whenever the form data is modified
-const onModelUpdated = (model: any, schema: string) => {
-  const newData = { [schema]: model }
-  if (typeof props.schema[schema]?.modelTransformer === 'function') {
-    newData[schema] = props.schema[schema].modelTransformer(model)
-  }
-  const newModel = Object.assign({}, formModel, newData)
-
-  Object.assign(formModel, newModel)
   emit('model-updated', {
     model: formModel,
     originalModel,
@@ -1011,11 +899,11 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema)
+  const form = parseSchema(props.schema)
 
-  Object.assign(formModel, form.value?.model || {})
-  formSchema.value = form.value?.schema || {}
-  syncFormRenderingMode(form.value?.model?.name)
+  Object.assign(formModel, form.model)
+  formSchema.value = form.schema
+  syncFormRenderingMode(form.model.name)
 
   initFormModel()
 })
@@ -1037,127 +925,6 @@ onBeforeUnmount(() => {
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
-  }
-
-  .entity-form {
-    .plugin-config-empty-state {
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-      font-size: var(--kui-font-size-30, $kui-font-size-30);
-      font-style: italic;
-      margin-bottom: var(--kui-space-60, $kui-space-60);
-    }
-  }
-
-  :deep(.vue-form-generator) {
-    > fieldset {
-      .form-group:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    .k-collapse.root-level-collapse {
-      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      margin-top: var(--kui-space-80, $kui-space-80);
-      padding-top: var(--kui-space-80, $kui-space-80);
-    }
-
-    fieldset {
-      border: none;
-      margin-left: var(--kui-space-0, $kui-space-0);
-      padding: var(--kui-space-0, $kui-space-0);
-    }
-
-    .bottom-border {
-      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      padding-bottom: var(--kui-space-80, $kui-space-80);
-    }
-
-    .top-border {
-      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-      padding-top: var(--kui-space-80, $kui-space-80);
-    }
-
-    .form-group.kong-form-hidden-field-wrapper {
-      display: none;
-    }
-
-    .form-group hr.divider {
-      border-color: var(--kui-color-border, $kui-color-border);
-      opacity: 0.3;
-    }
-
-    .form-group hr.wide-divider {
-      border-color: var(--kui-color-border, $kui-color-border);
-      opacity: 0.6;
-    }
-
-    .form-group.field-textArea textarea {
-      resize: vertical;
-    }
-
-    .hint {
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
-      margin-bottom: 10px;
-      margin-top: 5px;
-      opacity: 0.6;
-    }
-
-    .k-select-item button,
-    .k-multiselect-item button {
-      border: none;
-
-      .k-select-item-label .first-part,
-      .k-multiselect-item-label {
-        display: block;
-        text-align: start;
-      }
-    }
-
-    .field-radios .radio-list label input[type="radio"] {
-      margin-right: 10px;
-    }
-
-    label {
-      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-    }
-
-    .form-group.field-array label,
-    .form-group.field-select label,
-    .form-group.field-multiselect label {
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .kong-form-array-field {
-      width: 100%;
-
-      .kong-form-array-field-item {
-        margin-bottom: var(--kui-space-40, $kui-space-40);
-
-        .k-button.delete {
-          align-self: center;
-        }
-      }
-    }
-  }
-
-  .global-fields {
-    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  }
-
-  .general-settings {
-    .form-group label {
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .form-group .field-wrap button {
-      margin-top: var(--kui-space-30, $kui-space-30);
-    }
-
-    .link-wrapper {
-      margin-top: var(--kui-space-60, $kui-space-60);
-    }
   }
 }
 </style>

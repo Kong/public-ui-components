@@ -369,7 +369,6 @@ describe('<PluginForm />', () => {
           config,
           pluginType,
           credential: true,
-          hideScopeSelection: true,
         },
         router,
       })
@@ -452,7 +451,6 @@ describe('<PluginForm />', () => {
           config,
           credential: true,
           pluginType,
-          hideScopeSelection: true,
         },
         router,
       })
@@ -570,7 +568,6 @@ describe('<PluginForm />', () => {
           credential: true,
           pluginType,
           pluginId: aclCredential1.id,
-          hideScopeSelection: true,
         },
         router,
       })
@@ -620,7 +617,6 @@ describe('<PluginForm />', () => {
             credential: true,
             pluginType: 'basic-auth',
             pluginId: credential.id,
-            hideScopeSelection: true,
           },
           router,
         })
@@ -662,7 +658,6 @@ describe('<PluginForm />', () => {
             credential: true,
             pluginType: 'basic-auth',
             pluginId: credential.id,
-            hideScopeSelection: true,
           },
           router,
         })
@@ -700,7 +695,6 @@ describe('<PluginForm />', () => {
             credential: true,
             pluginType: 'jwt',
             pluginId: credential.id,
-            hideScopeSelection: true,
           },
           router,
         })
@@ -728,7 +722,6 @@ describe('<PluginForm />', () => {
             config: credentialConfig,
             credential: true,
             pluginType: 'jwt',
-            hideScopeSelection: true,
           },
           router,
         })
@@ -765,7 +758,6 @@ describe('<PluginForm />', () => {
             config: credentialConfig,
             credential: true,
             pluginType: 'key-auth',
-            hideScopeSelection: true,
           },
           router,
         })
@@ -1315,7 +1307,6 @@ describe('<PluginForm />', () => {
           config,
           pluginType: 'acl',
           credential: true,
-          hideScopeSelection: true,
         },
         router,
       })
@@ -1394,7 +1385,6 @@ describe('<PluginForm />', () => {
           config,
           credential: true,
           pluginType: 'acl',
-          hideScopeSelection: true,
         },
         router,
       })
@@ -1509,7 +1499,6 @@ describe('<PluginForm />', () => {
           credential: true,
           pluginType,
           pluginId: aclCredential1.id,
-          hideScopeSelection: true,
         },
         router,
       })

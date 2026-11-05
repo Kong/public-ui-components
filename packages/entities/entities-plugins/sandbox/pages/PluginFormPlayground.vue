@@ -55,7 +55,6 @@
       <PluginForm
         :key="formKey"
         :config="konnectConfig"
-        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -67,7 +66,6 @@
       <PluginForm
         :key="formKey"
         :config="kongManagerConfig"
-        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -177,9 +175,6 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'home' },
-  experimentalRenders: {
-    keyAuthIdentityRealms: true,
-  },
   geoApiServerUrl: 'https://us.api.konghq.tech',
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
