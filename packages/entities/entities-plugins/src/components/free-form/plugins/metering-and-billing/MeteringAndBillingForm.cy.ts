@@ -16,6 +16,7 @@ const createSchema = (): FormSchema => ({
         { ssl_verify: { type: 'boolean', default: true } },
         { timeout: { type: 'integer', default: 10000 } },
         { keepalive: { type: 'integer', default: 60000 } },
+        { allow_status_codes: { type: 'array', elements: { type: 'string' } } },
         {
           subject: {
             type: 'record',
@@ -129,5 +130,30 @@ describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
     mountForm({ app: 'kongManager' })
 
     cy.getTestId('ff-config.ingest_endpoint').should('have.value', '')
+  })
+})
+
+describe('MeteringAndBillingForm - allow_status_codes', () => {
+  it('renders existing status code ranges in edit mode', () => {
+    mountForm({
+      isEditing: true,
+      model: { config: { allow_status_codes: ['200-299', '400-499'] } },
+    })
+
+    cy.getTestId('ff-config.allow_status_codes.0').should('have.value', '200-299')
+    cy.getTestId('ff-config.allow_status_codes.1').should('have.value', '400-499')
+  })
+
+  it('writes each added range back as an array item', () => {
+    mountForm({})
+
+    cy.getTestId('ff-add-item-btn-config.allow_status_codes').click()
+    cy.getTestId('ff-config.allow_status_codes.0').type('200-299')
+    cy.getTestId('ff-add-item-btn-config.allow_status_codes').click()
+    cy.getTestId('ff-config.allow_status_codes.1').type('500-599')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
+      expect(payload.config.allow_status_codes).to.deep.equal(['200-299', '500-599'])
+    })
   })
 })

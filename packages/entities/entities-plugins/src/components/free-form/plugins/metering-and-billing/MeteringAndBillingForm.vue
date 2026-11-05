@@ -134,6 +134,20 @@
     >
       <Field name="config.meter_api_requests" />
       <Field name="config.meter_ai_token_usage" />
+      <ArrayField
+        :add-item-label="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.add')"
+        :label="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.label')"
+        :label-attributes="{ info: t('plugins.free-form.metering-and-billing.fields.allow_status_codes.info') }"
+        name="config.allow_status_codes"
+      >
+        <template #item="{ autofocus, fieldName }">
+          <StringField
+            :autofocus="autofocus"
+            :name="fieldName"
+            :placeholder="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.placeholder')"
+          />
+        </template>
+      </ArrayField>
     </CollapsibleSection>
 
     <!-- Subject — ObjectField native collapse, 2-column content -->
