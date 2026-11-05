@@ -1,38 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { CustomPluginType, EntityType } from './plugin'
-import type { CommonSchemaFields } from './plugins/shared'
-import type { ApplicationRegistrationSchema } from './plugins/application-registration-schema'
-import type { StatsDSchema } from './plugins/stats-d'
-import type { MockingSchema } from './plugins/mocking'
-import type { DatadogSchema } from './plugins/datadog-schema'
-import type { ExitTransformerSchema } from './plugins/exit-transformer'
-import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
-import type { UpstreamTlsSchema } from './plugins/upstream-tls'
-import type { RateLimitingSchema } from './plugins/rate-limiting'
-import type { RouteByHeaderSchema } from './plugins/route-by-header'
-import type { AIPromptDecoratorSchema } from './plugins/ai-prompt-decorator'
-import type { AIPromptTemplateSchema } from './plugins/ai-prompt-template'
-import type { AILLMAsJudgeSchema } from './plugins/ai-llm-as-judge'
-import type { ResponseTransformerSchema } from './plugins/response-transformer'
-import type { ResponseTransformerAdvancedSchema } from './plugins/response-transformer-advanced'
-import type { VaultAuthSchema } from './plugins/vault-auth'
-import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
-import type { SAMLSchema } from './plugins/saml'
-import type { OasValidationSchema } from './plugins/oas-validation'
-import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
-import type { InjectionProtectionSchema } from './plugins/injection-protection'
-import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
-import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
-import type { ConfluentSchema } from './plugins/confluent'
-import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
-import type { KafkaConsumeSchema } from './plugins/kafka-consume'
-import type { SolaceConsumeSchema } from './plugins/solace-consume'
-import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
-import type { OIDCSchema } from './plugins/oidc'
-import type { OTELSchema } from './plugins/otel'
-import type { KonnectApplicationAuthSchema } from './plugins/konnect-application-auth'
-import type { AIMCPOauth2Schema } from './plugins/ai-mcp-oauth2'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -52,10 +20,6 @@ export interface BasePluginFormConfig {
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
-  /** Whether to use the new OpenTelemetry schema introduced in https://github.com/Kong/kong-ee/pull/9399/files#diff-8d295aaa72ee8a0a18dcb8010b0a73ac36a92e1e825b3202b1d1736d07d7e514 */
-  isNewOtelSchema?: boolean
-  /** Whether to enable the experimental renders */
-  experimentalRenders?: Record<string, boolean>
 
   viewServiceRoute?: (id: string) => RouteLocationRaw
   viewRouteRoute?: (id: string) => RouteLocationRaw
@@ -273,49 +237,6 @@ interface ArrayItem {
 }
 
 export type ReturnArrayItem = ArrayItem & Item
-
-export interface CustomSchemas {
-  'application-registration': ApplicationRegistrationSchema
-  datadog: DatadogSchema
-  'exit-transformer': ExitTransformerSchema
-  'upstream-tls': UpstreamTlsSchema
-  statsd: StatsDSchema
-  'statsd-advanced': StatsDAdvancedSchema
-  mocking: MockingSchema
-  'rate-limiting': RateLimitingSchema
-  'rate-limiting-advanced': RateLimitingSchema
-  'route-by-header': RouteByHeaderSchema
-  'ai-prompt-decorator': AIPromptDecoratorSchema
-  'ai-prompt-template': AIPromptTemplateSchema
-  'ai-proxy-advanced': CommonSchemaFields
-  'ai-rag-injector': CommonSchemaFields
-  'ai-llm-as-judge': AILLMAsJudgeSchema
-  'vault-auth': VaultAuthSchema
-  'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
-  'response-ratelimiting': RateLimitingSchema
-  'pre-function': CommonSchemaFields & Record<string, any>
-  'post-function': CommonSchemaFields & Record<string, any>
-  'request-transformer-advanced': CommonSchemaFields & Record<string, any>
-  'response-transformer': ResponseTransformerSchema
-  'response-transformer-advanced': ResponseTransformerAdvancedSchema
-  'solace-consume': SolaceConsumeSchema
-  'solace-upstream': SolaceUpstreamSchema
-  zipkin: CommonSchemaFields & Record<string, any>
-  saml: SAMLSchema
-  'oas-validation': OasValidationSchema
-  'upstream-oauth': UpstreamOauthSchema
-  'injection-protection': InjectionProtectionSchema
-  'kafka-upstream': KafkaUpstreamSchema
-  'key-auth': ReturnType<typeof genKeyAuthSchema>
-  'confluent': ConfluentSchema
-  'confluent-consume': ConfluentConsumeSchema
-  'kafka-consume': KafkaConsumeSchema
-  'kafka-log': CommonSchemaFields
-  'openid-connect': OIDCSchema
-  'opentelemetry': OTELSchema
-  'konnect-application-auth': KonnectApplicationAuthSchema
-  'ai-mcp-oauth2': AIMCPOauth2Schema
-}
 
 export enum PluginPartialType {
   REDIS_CE = 'redis-ce',

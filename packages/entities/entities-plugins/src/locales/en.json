@@ -880,22 +880,10 @@
         }
       },
       "grouping": {
-        "plugin_configuration": {
-          "title": "Plugin configuration",
-          "description": "Configuration parameters for this plugin. View advanced parameters for extended configuration.",
-          "empty": "This plugin does not have required parameters."
-        },
         "advanced_parameters": {
           "view": "Show additional settings",
           "hide": "Hide additional settings"
         }
-      },
-      "field_rules": {
-        "at_least_one_of": "At least one of the following values is required: {parameters}.",
-        "only_one_of": "Exactly one of these parameters is required: {parameters}",
-        "mutually_required": "These values must be used together: {parameters}.",
-        "mutually_exclusive": "Only one of these values can be used: {parameters}.",
-        "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       },
       "sections": {
         "plugin_scope": {

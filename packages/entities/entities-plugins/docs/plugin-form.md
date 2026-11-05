@@ -93,12 +93,6 @@ When `true`, generic encrypted free-form plugin fields use `SecretInput`. This o
     - default: `false`
     - *Specific to Kong Manager*. Whether or not to hide the consumer group scope field.
 
-  - `isNewOtelSchema`:
-    - type: `boolean`
-    - required: `false`
-    - default: `false`
-    - Whether to use the new OpenTelemetry schema.
-
 The base konnect or kongManger config.
 
 #### `pluginType`
@@ -116,14 +110,6 @@ Ex. `'acl'`
 - default: `''`
 
 If showing the `Edit` type form, the ID of the plugin.
-
-#### `hideScopeSelection`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Manually toggle visibility of plugin scope selection control.
 
 #### `credential`
 

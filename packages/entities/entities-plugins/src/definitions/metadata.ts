@@ -230,7 +230,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-template': {
     descriptionKey: 'plugins.meta.ai-prompt-template.description',
     nameKey: 'plugins.meta.ai-prompt-template.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-template'],
   },
   'ai-prompt-guard': {
@@ -256,7 +255,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-azure-content-safety': {
     descriptionKey: 'plugins.meta.ai-azure-content-safety.description',
     nameKey: 'plugins.meta.ai-azure-content-safety.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-azure-content-safety'],
   },
   'aws-lambda': {
@@ -514,7 +512,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-proxy-advanced': {
     descriptionKey: 'plugins.meta.ai-proxy-advanced.description',
     nameKey: 'plugins.meta.ai-proxy-advanced.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-proxy-advanced'],
   },
   'ai-semantic-cache': {
@@ -583,13 +580,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-sanitizer': {
     descriptionKey: 'plugins.meta.ai-sanitizer.description',
     nameKey: 'plugins.meta.ai-sanitizer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-sanitizer'],
   },
   'ai-rag-injector': {
     descriptionKey: 'plugins.meta.ai-rag-injector.description',
     nameKey: 'plugins.meta.ai-rag-injector.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
   },
   'datakit': {
@@ -601,7 +596,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-compressor': {
     descriptionKey: 'plugins.meta.ai-prompt-compressor.description',
     nameKey: 'plugins.meta.ai-prompt-compressor.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-compressor'],
   },
   'solace-upstream': {
@@ -612,7 +606,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-aws-guardrails': {
     descriptionKey: 'plugins.meta.ai-aws-guardrails.description',
     nameKey: 'plugins.meta.ai-aws-guardrails.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-aws-guardrails'],
   },
   'ace': {
@@ -633,13 +626,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-llm-as-judge': {
     descriptionKey: 'plugins.meta.ai-llm-as-judge.description',
     nameKey: 'plugins.meta.ai-llm-as-judge.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-llm-as-judge'],
   },
   'ai-mcp-proxy': {
     descriptionKey: 'plugins.meta.ai-mcp-proxy.description',
     nameKey: 'plugins.meta.ai-mcp-proxy.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-proxy'],
   },
   'ai-gcp-model-armor': {
@@ -665,13 +656,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-a2a-proxy': {
     descriptionKey: 'plugins.meta.ai-a2a-proxy.description',
     nameKey: 'plugins.meta.ai-a2a-proxy.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-a2a-proxy'],
   },
   'ai-custom-guardrail': {
     descriptionKey: 'plugins.meta.ai-custom-guardrail.description',
     nameKey: 'plugins.meta.ai-custom-guardrail.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-custom-guardrail'],
   },
   'metering-and-billing': {

@@ -40,7 +40,6 @@
       <h2>Konnect API</h2>
       <PluginForm
         :config="konnectConfig"
-        enable-redis-partial
         enable-vault-secret-picker
         :plugin-id="id"
         :plugin-type="plugin"
@@ -53,7 +52,6 @@
       <h2>Kong Manager API</h2>
       <PluginForm
         :config="kongManagerConfig"
-        enable-redis-partial
         enable-vault-secret-picker
         :plugin-id="id"
         :plugin-type="plugin"
@@ -141,9 +139,6 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
-  experimentalRenders: {
-    keyAuthIdentityRealms: true,
-  },
   // isKongIdentityAuthServersAvailable: false,
   canCreateAuthServer: false,
   enableDeckTab: {

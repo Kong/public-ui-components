@@ -62,7 +62,6 @@
         :config="config"
         :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
-        :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
@@ -73,7 +72,6 @@
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
-        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
         @validity-change="handleValidityChange"
       />
 
@@ -226,7 +224,6 @@ import {
   type PluginFormFields,
   type PluginFormState,
   type PluginOrdering,
-  type CustomSchemas,
   type CredentialType,
   type PluginValidityChangeEvent,
   type EntityCreateEvent,
@@ -266,7 +263,6 @@ const emit = defineEmits<{
       resourceEndpoint: string
     }
   ): void
-  (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'click:learn-more', entity: string): void
@@ -296,12 +292,6 @@ const props = defineProps({
   pluginId: {
     type: String as PropType<string | null>,
     default: null,
-  },
-
-  /** Rather than using internal logic to determine whether or not to hide scope, force it */
-  hideScopeSelection: {
-    type: Boolean,
-    default: false,
   },
 
   /** Disable scope selection due to the plugin is configured under an entity */
@@ -373,13 +363,6 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: null,
   },
-  /**
-   * Control if the redis partial is enabled for plugins.
-   */
-  enableRedisPartial: {
-    type: Boolean,
-    default: false,
-  },
   scopedEntitiesPermissions: {
     type: Object as PropType<ScopedEntitiesPermissions>,
     default: null,
@@ -388,10 +371,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas({
-  app: props.config.app,
-  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
-})
+const { typedefs } = composables.useSchemas()
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
@@ -424,10 +404,6 @@ const pluginRedisPath = ref<string | undefined>() // specify the path to the red
 const clonedSourcePlugin = ref<string | null>(null)
 
 const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
-
-const effectivePluginType = computed(() =>
-  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
-)
 
 // Used by both the plugin form (`PluginEntityForm`) and the credential form
 provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
@@ -634,7 +610,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
   },
   // plugin scoping
   selectionGroup: {
-    type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
+    type: 'selectionGroup',
     disabled: props.disableScopeSelection,
     inputType: 'hidden',
     styleClasses: 'hide-label',
@@ -707,7 +683,6 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
   if (Array.isArray(schema)) {
@@ -750,12 +725,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
-
-    // the field is marked for deletion in the frontend schema
-    if (pluginSchema?.fieldsToDelete?.includes(field)) {
-      unset(initialFormSchema, field)
-      return
-    }
 
     // Required, omit keys with overwrite and hidden attributes for Kong Cloud
     if (Object.prototype.hasOwnProperty.call(scheme, 'overwrite') || scheme.hidden) {
@@ -942,23 +911,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     if (scheme.hint) {
       initialFormSchema[field].hint = DOMPurify.sanitize(scheme.hint)
-    }
-
-    // Custom frontend schema override
-    if (pluginSchema && !pluginSchema.overwriteDefault) {
-      Object.keys(pluginSchema).forEach(plugin => {
-        // Check if current plugin matches any of custom schema keys
-        if (plugin === field) {
-          // Use custom defined schema instead of building from default && set field label
-          const { help, label, hint, values, referenceable, elements } = initialFormSchema[field]
-          const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
-          initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
-          // Eagerly replace the help text because we are overriding
-          if (typeof helpOverride === 'string') {
-            initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions) as string)
-          }
-        }
-      })
     }
 
     // Apply descriptions from BE schema
@@ -1290,13 +1242,6 @@ const initScopeFields = (): void => {
     })
 
     defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
-  }
-
-  // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[effectivePluginType.value as keyof CustomSchemas] && customSchemas[effectivePluginType.value as keyof CustomSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[effectivePluginType.value as keyof CustomSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[effectivePluginType.value as keyof CustomSchemas].formSchema)
-    }
   }
 }
 

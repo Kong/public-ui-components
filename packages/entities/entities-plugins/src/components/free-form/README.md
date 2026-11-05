@@ -167,9 +167,8 @@ Simple plugins and custom plugins follow different patterns:
 
 ```
 PluginEntityForm.vue
-  |-- if freeformComponent -> render free-form component (from ./free-form/plugins/*)
-  |-- elif sharedFormName -> render shared form (legacy)
-  |-- else               -> render VueFormGenerator (legacy)
+  |-- render the free-form component from `getFreeFormComponent(pluginName)`
+      (the plugin's registered component, or `CommonForm` when it has no config)
 ```
 
 Key props passed to free-form components:

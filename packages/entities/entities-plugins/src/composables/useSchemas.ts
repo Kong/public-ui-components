@@ -1,47 +1,9 @@
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { customFields } from '@kong-ui-public/forms'
-import { PLUGIN_METADATA } from '../definitions/metadata'
-import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
-import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
-import { aiProxyAdvancedSchema } from '../definitions/schemas/AIProxyAdvanced'
-import { aiPagInjectorSchema } from '../definitions/schemas/AIRagInjector'
-import { aiLlmAsJudgeSchema } from '../definitions/schemas/AILLMAsJudge'
-import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
-import { dataDogSchema } from '../definitions/schemas/Datadog'
-import { exitTransformerSchema } from '../definitions/schemas/ExitTransformer'
-import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
-import { injectionProtectionSchema } from '../definitions/schemas/InjectionProtection'
-import { mockingSchema } from '../definitions/schemas/Mocking'
-import { oasValidationSchema } from '../definitions/schemas/OASValidation'
-import { preFunctionSchema } from '../definitions/schemas/PreFunction'
-import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
-import { requestTransformerAdvancedSchema } from '../definitions/schemas/RequestTransformerAdvanced'
-import { responseTransformerSchema } from '../definitions/schemas/ResponseTransformer'
-import { responseTransformerAdvancedSchema } from '../definitions/schemas/ResponseTransformerAdvanced'
-import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
-import { samlSchema } from '../definitions/schemas/SAML'
-import { solaceConsumeSchema } from '../definitions/schemas/SolaceConsume'
-import { solaceUpstreamSchema } from '../definitions/schemas/SolaceUpstream'
-import { statsDSchema } from '../definitions/schemas/StatsD'
-import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
-import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
-import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
-import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
-import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
-import { confluentSchema } from '../definitions/schemas/Confluent'
-import { confluentConsumeSchema } from '../definitions/schemas/ConfluentConsume'
-import { kafkaConsumeSchema } from '../definitions/schemas/KafkaConsume'
-import { kafkaLogSchema } from '../definitions/schemas/KafkaLog'
-import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
-import { type CustomSchemas } from '../types'
 import usePluginHelpers from './usePluginHelpers'
 import type { UnionFieldSchema } from '@kong-ui-public/freeform'
-import { oidcSchema } from '../definitions/schemas/OIDC'
-import { otelSchema } from '../definitions/schemas/OTEL'
-import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
-import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -51,205 +13,19 @@ export interface Field extends Record<string, any> {
 
 export interface Schema {
   fields?: Field[]
-  _supported_redis_partial_type?: string
-  _redis_partial_path?: string
 }
 
 export interface UseSchemasOptions {
-  app?: 'konnect' | 'kongManager'
-
   /**
    * The id of the entity associated with the plugin.
    * @defaultValue undefined
    */
   entityId?: string
-
-  /**
-   * Whether to enable the Redis partial in form.
-   * @defaultValue false
-   */
-  enableRedisPartial?: boolean
-  /**
-   * Whether to enable the experimental renders.
-   */
-  experimentalRenders?: Record<string, boolean>
 }
 
 export const useSchemas = (options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
-
-  const customSchemas: CustomSchemas = {
-    'application-registration': {
-      overwriteDefault: true,
-      formSchema: {
-        ...applicationRegistrationSchema,
-      },
-    },
-
-    datadog: {
-      ...dataDogSchema,
-    },
-
-    'exit-transformer': {
-      ...exitTransformerSchema,
-    },
-
-    'upstream-tls': {
-      'config-trusted_certificates': {
-        type: 'textArea',
-        valueType: 'array',
-        rows: 4,
-        help: 'A comma separated list of certificate values',
-      },
-    },
-
-    statsd: {
-      ...statsDSchema,
-    },
-
-    'statsd-advanced': {
-      ...statsDAdvancedSchema,
-    },
-
-    'route-by-header': {
-      ...routeByHeaderSchema,
-    },
-
-    'ai-prompt-decorator': {
-      ...aiPromptDecoratorSchema,
-    },
-
-    'ai-prompt-template': {
-      ...aiPromptTemplateSchema,
-    },
-
-    'ai-proxy-advanced': {
-      ...aiProxyAdvancedSchema,
-    },
-
-    'ai-rag-injector': {
-      ...aiPagInjectorSchema,
-    },
-
-    'ai-llm-as-judge': {
-      ...aiLlmAsJudgeSchema,
-    },
-
-    'vault-auth': {
-      ...vaultAuthSchema,
-    },
-
-    'oas-validation': {
-      ...oasValidationSchema,
-    },
-
-    mocking: {
-      ...mockingSchema,
-    },
-
-    'rate-limiting': {
-      ...rateLimitingSchema,
-    },
-
-    'rate-limiting-advanced': options?.app === 'kongManager'
-      ? {
-        'config-consumer_groups': rateLimitingSchema['config-consumer_groups'],
-      }
-      : {
-        ...rateLimitingSchema,
-      },
-
-    'graphql-rate-limiting-advanced': {
-      ...graphqlRateLimitingAdvancedSchema,
-    },
-
-    'injection-protection': {
-      ...injectionProtectionSchema,
-    },
-
-    'response-ratelimiting': {
-      ...rateLimitingSchema,
-    },
-
-    'pre-function': {
-      ...preFunctionSchema,
-    },
-    // both post and pre function plugin forms need identical schema overrides, so we use PreFunction for both
-    'post-function': {
-      ...preFunctionSchema,
-    },
-
-    'request-transformer-advanced': {
-      ...requestTransformerAdvancedSchema,
-    },
-
-    'response-transformer': {
-      ...responseTransformerSchema,
-    },
-
-    'response-transformer-advanced': {
-      ...responseTransformerAdvancedSchema,
-    },
-
-    zipkin: {
-      ...ZipkinSchema,
-    },
-
-    'upstream-oauth': {
-      ...upstreamOauthSchema,
-    },
-
-    saml: {
-      ...samlSchema,
-    },
-
-    'kafka-upstream': {
-      ...kafkaUpstreamSchema,
-    },
-
-    'solace-consume': {
-      ...solaceConsumeSchema,
-    },
-
-    'solace-upstream': {
-      ...solaceUpstreamSchema,
-    },
-
-    'key-auth': genKeyAuthSchema(options),
-
-    'confluent': {
-      ...confluentSchema,
-    },
-
-    'confluent-consume': {
-      ...confluentConsumeSchema,
-    },
-
-    'kafka-consume': {
-      ...kafkaConsumeSchema,
-    },
-
-    'kafka-log': {
-      ...kafkaLogSchema,
-    },
-
-    'openid-connect': {
-      ...oidcSchema,
-    },
-
-    'opentelemetry': {
-      ...otelSchema,
-    },
-
-    'konnect-application-auth': {
-      ...konnectApplicationAuthSchema,
-    },
-
-    'ai-mcp-oauth2': {
-      ...aiMCPOauth2Schema,
-    },
-  }
 
   /**
    * a list of form fields not to render across all entity forms
@@ -289,46 +65,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       buildFormSchema(inputSchema[fieldName], fieldName, inputSchema, formModel, formSchema, frontendSchema)
     })
 
-    const pluginName = formModel.name
-    // For cloned plugins, use the source plugin name for rendering decisions
-    const effectivePluginName = currentSchema._sourcePlugin || pluginName
-    const metadata = PLUGIN_METADATA[effectivePluginName]
-
-
-    const redisFields = []
-    const isRedisField = (field: Field): boolean => {
-      const excludePatterns = ['cluster-cache']
-      for (const pattern of excludePatterns) {
-        if (field.model.includes(pattern)) {
-          return false
-        }
-      }
-      return /(?<=-redis-).*/.test(field.model)
-    }
-
-    formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
-    formSchema._redis_partial_path = currentSchema._redis_partial_path
-
-    // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
-    if (metadata?.useLegacyForm && options?.enableRedisPartial && currentSchema._supported_redis_partial_type) {
-      for (const field of formSchema.fields!) {
-        if (isRedisField(field)) {
-          redisFields.push(field)
-          continue
-        }
-      }
-      formSchema.fields = formSchema.fields!.filter((field) => !isRedisField(field))
-      // Add redis fields to advanced fields
-      if (redisFields.length) formSchema.fields!.push({
-        id: '_redis',
-        fields: redisFields,
-        model: '__redis_partial',
-        pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
-        redisType: currentSchema._supported_redis_partial_type,
-        redisPath: currentSchema._redis_partial_path,
-      })
-    }
-
     // Assume the fields are sorted, unless they have an `order` property
     formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
       a.order = a.order || 0
@@ -340,10 +76,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     return {
       schema: formSchema,
       model: formModel,
-      options: {
-        noneSelectedText: 'Nothing Selected...',
-        helpAsHtml: true,
-      },
     }
   }
 
@@ -643,7 +375,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
   return {
     buildFormSchema,
     parseSchema,
-    customSchemas,
     typedefs,
     pruneRecord,
   }
