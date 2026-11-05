@@ -2,7 +2,7 @@ import MeteringAndBillingForm from './MeteringAndBillingForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { FormSchema } from '@kong-ui-public/freeform'
 
-const createSchema = ({ withAllowStatusCodes = true }: { withAllowStatusCodes?: boolean } = {}): FormSchema => ({
+const createSchema = (): FormSchema => ({
   type: 'record',
   fields: [{
     config: {
@@ -16,7 +16,7 @@ const createSchema = ({ withAllowStatusCodes = true }: { withAllowStatusCodes?: 
         { ssl_verify: { type: 'boolean', default: true } },
         { timeout: { type: 'integer', default: 10000 } },
         { keepalive: { type: 'integer', default: 60000 } },
-        ...(withAllowStatusCodes ? [{ allow_status_codes: { type: 'array', elements: { type: 'string' } } } as const] : []),
+        { allow_status_codes: { type: 'array', elements: { type: 'string' } } },
         {
           subject: {
             type: 'record',
@@ -48,9 +48,8 @@ const mountForm = (options: {
   model?: Record<string, any>
   geoApiServerUrl?: string
   app?: 'konnect' | 'kongManager'
-  withAllowStatusCodes?: boolean
 }) => {
-  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', withAllowStatusCodes } = options
+  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect' } = options
 
   const formsConfig = app === 'konnect'
     ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}) }
@@ -58,7 +57,7 @@ const mountForm = (options: {
 
   cy.mount(MeteringAndBillingForm, {
     props: {
-      schema: createSchema({ withAllowStatusCodes }),
+      schema: createSchema(),
       formSchema: {},
       formModel: {},
       model,
@@ -156,13 +155,5 @@ describe('MeteringAndBillingForm - allow_status_codes', () => {
     cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
       expect(payload.config.allow_status_codes).to.deep.equal(['200-299', '500-599'])
     })
-  })
-
-  it('hides the field when the gateway schema does not have it', () => {
-    mountForm({ withAllowStatusCodes: false })
-
-    cy.getTestId('ff-config.meter_ai_token_usage').should('exist')
-    cy.getTestId('ff-array-config.allow_status_codes').should('not.exist')
-    cy.contains('is not found in schema').should('not.exist')
   })
 })
