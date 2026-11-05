@@ -2,7 +2,6 @@ import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 import { usePluginMetaData } from './usePluginMeta'
 import { useSchemas } from './useSchemas'
-import { useProvideExperimentalFreeForms } from './useExperimentalFreeForms'
 import { useCustomPluginApi } from './useCustomPluginApi'
 import { useReferenceEntityNames } from './useReferenceEntityNames'
 
@@ -12,7 +11,6 @@ export default {
   usePluginMetaData,
   usePluginHelpers,
   useSchemas,
-  useProvideExperimentalFreeForms,
   useCustomPluginApi,
   useReferenceEntityNames,
 }
