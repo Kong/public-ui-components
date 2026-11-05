@@ -62,8 +62,11 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
 Install the package in your host application
 
 ```sh
-pnpm add @kong-ui-public/monaco-editor
+pnpm add @kong-ui-public/monaco-editor monaco-editor shiki @shikijs/monaco
 ```
+
+> [!IMPORTANT]
+> `shiki` and `@shikijs/monaco` are peer dependencies and must be kept on the **same version** in the host application. `@shikijs/monaco` pins its own `@shikijs/core`, so a version mismatch puts two copies of Shiki's TextMate engine in the bundle and breaks syntax highlighting.
 
 Import the styles in your application:
 

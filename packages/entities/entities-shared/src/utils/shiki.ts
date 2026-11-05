@@ -1,3 +1,5 @@
+// `@shikijs/*` is deliberately not a peer dependency: it is installed by the host app's `shiki` (our
+// peer). Declaring it separately lets it resolve to a different version than that `shiki`.
 import { createHighlighterCoreSync } from '@shikijs/core'
 import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
 import json from '@shikijs/langs/json'
