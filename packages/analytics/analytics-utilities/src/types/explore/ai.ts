@@ -35,6 +35,8 @@ export const queryableAiExploreDimensions = [
   'realm',
   'response_source',
   'route',
+  'service_tier',
+  'speed',
   'status_code',
   'status_code_grouped',
   'time',
