@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.5.0...%40kong-ui-public%2Fanalytics-utilities%4014.6.0) (2026-11-05)
+
+### Features
+
+* **analytics:** add MCP protocol, cache hit and error code to agentic [MA-5655] ([#4027](https://github.com/Kong/public-ui-components/issues/4027)) ([60fe7ee](https://github.com/Kong/public-ui-components/commit/60fe7eea54a8421e9624c4200cc0a7c3306a3a3e))
+
+
 # [14.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.4.0...%40kong-ui-public%2Fanalytics-utilities%4014.5.0) (2026-11-05)
 
 ### Features
