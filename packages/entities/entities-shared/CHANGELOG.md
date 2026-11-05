@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.72.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.72.0...%40kong-ui-public%2Fentities-shared%403.72.1) (2026-11-05)
+
+### Bug Fixes
+
+* **monaco-editor:** resolve a single shiki version for consumers [KM-3610] ([#4022](https://github.com/Kong/public-ui-components/issues/4022)) ([44b874c](https://github.com/Kong/public-ui-components/commit/44b874c990103f8e90d1a66ffb8205df7e98ef5b))
+
+
 # [3.72.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.71.9...%40kong-ui-public%2Fentities-shared%403.72.0) (2026-11-04)
 
 ### Features

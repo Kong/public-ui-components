@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fexpressions%401.8.11...%40kong-ui-public%2Fexpressions%401.8.12) (2026-11-05)
+
+### Bug Fixes
+
+* **monaco-editor:** resolve a single shiki version for consumers [KM-3610] ([#4022](https://github.com/Kong/public-ui-components/issues/4022)) ([44b874c](https://github.com/Kong/public-ui-components/commit/44b874c990103f8e90d1a66ffb8205df7e98ef5b))
+
+
 ## [1.8.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fexpressions%401.8.10...%40kong-ui-public%2Fexpressions%401.8.11) (2026-11-04)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.27.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.27.8...%40kong-ui-public%2Fmonaco-editor%400.27.9) (2026-11-05)
+
+### Bug Fixes
+
+* **monaco-editor:** resolve a single shiki version for consumers [KM-3610] ([#4022](https://github.com/Kong/public-ui-components/issues/4022)) ([44b874c](https://github.com/Kong/public-ui-components/commit/44b874c990103f8e90d1a66ffb8205df7e98ef5b))
+
+
 ## [0.27.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.27.7...%40kong-ui-public%2Fmonaco-editor%400.27.8) (2026-11-03)
 
 ### Bug Fixes
