@@ -72,6 +72,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.58.0",
     "@kong/kongponents": "^9.64.0",
+    "@shikijs/monaco": ">=3.0.0 <5.0.0",
     "monaco-editor": ">=0.52.0 <1.0.0",
     "shiki": ">=3.0.0 <5.0.0",
     "vue": "^3.5.35",
@@ -83,6 +84,7 @@
     "@kong/icons": "^1.64.0",
     "@kong/kongponents": "9.66.12",
     "@peculiar/x509": "^2.2.0",
+    "@shikijs/monaco": "^4.5.0",
     "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
     "reflect-metadata": "^0.2.2",
@@ -92,7 +94,6 @@
     "zod": "^4.5.4"
   },
   "dependencies": {
-    "@shikijs/monaco": "^4.5.0",
     "@vueuse/core": "^14.4.0",
     "shiki-codegen": "^4.5.0"
   }

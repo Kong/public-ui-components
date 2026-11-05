@@ -34,7 +34,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
         '@vueuse/core',
         'monaco-editor',
-        /^@shikijs\//,
+        /^shiki(\/|$)/,
       ],
     },
   },
