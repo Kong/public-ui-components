@@ -1188,6 +1188,11 @@
             "label": "Meter AI token usage",
             "description": "Emit events for LLM input and output tokens on AI Gateway requests. Each request produces separate input/output events so they can be priced independently."
           },
+          "allow_status_codes": {
+            "label": "Allowed status codes",
+            "placeholder": "e.g., 200-299, 400-499",
+            "help": "Only meter responses whose status code falls within these ranges. Use comma to separate ranges. Leave empty to meter all responses."
+          },
           "ingest_endpoint": {
             "description": "The URL of the metering data ingest endpoint.",
             "help": "For Konnect Metering & Billing, use the regional endpoint from your Metering & Billing settings. For self-hosted OpenMeter, use your ingest URL."

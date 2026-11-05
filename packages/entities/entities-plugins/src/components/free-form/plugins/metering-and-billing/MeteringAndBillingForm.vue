@@ -134,6 +134,12 @@
     >
       <Field name="config.meter_api_requests" />
       <Field name="config.meter_ai_token_usage" />
+      <StringArrayField
+        :help="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.help')"
+        :label="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.label')"
+        name="config.allow_status_codes"
+        :placeholder="t('plugins.free-form.metering-and-billing.fields.allow_status_codes.placeholder')"
+      />
     </CollapsibleSection>
 
     <!-- Subject — ObjectField native collapse, 2-column content -->
@@ -205,7 +211,7 @@ import { computed, inject, provide, ref } from 'vue'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { KLabel } from '@kong/kongponents'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { FieldRenderer, Field, BooleanField, EnumField, NumberField, ArrayField, ObjectField, StringField } from '@kong-ui-public/freeform'
+import { FieldRenderer, Field, BooleanField, EnumField, NumberField, ArrayField, ObjectField, StringArrayField, StringField } from '@kong-ui-public/freeform'
 import AdvancedFields from '../../components/AdvancedFields.vue'
 import CollapsibleSection from '../../components/CollapsibleSection.vue'
 import useI18n from '../../../../composables/useI18n'
