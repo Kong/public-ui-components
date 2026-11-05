@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.4...%40kong-ui-public%2Fentities-plugins%4011.0.5) (2026-11-05)
+
+### Bug Fixes
+
+* **entities-plugins,-metadata:** typo in ai-aws-guardrails ([#4020](https://github.com/Kong/public-ui-components/issues/4020)) ([624f748](https://github.com/Kong/public-ui-components/commit/624f74867672704f558486a600b6ede77fca63ae))
+* **entities-plugins:** add allow_status_codes field to metering & billing form [AG-2150] ([#4023](https://github.com/Kong/public-ui-components/issues/4023)) ([6e78fa4](https://github.com/Kong/public-ui-components/commit/6e78fa4153f313542cd13966cebbe3c80eea0b74))
+
+
 ## [11.0.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.3...%40kong-ui-public%2Fentities-plugins%4011.0.4) (2026-11-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
