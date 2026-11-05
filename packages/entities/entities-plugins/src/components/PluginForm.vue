@@ -1492,6 +1492,8 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
+    // The inputs stay editable during the request, so keep the values that are sent
+    const savedFields = cloneDeep(form.fields)
     if (treatAsCredential.value && props.config.app === 'kongManager' && ['key-auth', 'key-auth-enc'].includes(props.pluginType) && typeof payload.ttl !== 'number') {
       // Kong Manager rejects an empty `ttl`, `0` means no expiration.
       payload.ttl = 0
@@ -1511,7 +1513,7 @@ const saveFormData = async (): Promise<void> => {
     }
 
     // The saved values are the new baseline to detect changes
-    setBaseline(form.fields)
+    setBaseline(savedFields)
 
     // Emit an update event for the host app to respond to
     emit('update', response?.data)

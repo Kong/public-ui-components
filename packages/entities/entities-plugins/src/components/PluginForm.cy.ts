@@ -817,6 +817,51 @@ describe('<PluginForm />', () => {
       })
     })
 
+    it('should keep save enabled for changes made while saving - edit', () => {
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      interceptKMSchema()
+      interceptKMOperatePlugin({
+        method: 'GET',
+        alias: 'getPlugin',
+        id: plugin1.id,
+        entityId: scopedService.id,
+        entityType: 'services',
+      })
+      cy.intercept(
+        {
+          method: 'PATCH',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services/${scopedService.id}/plugins/${plugin1.id}`,
+        },
+        {
+          statusCode: 200,
+          body: plugin1,
+          delay: 500,
+        },
+      ).as('updatePlugin')
+      const pluginType = 'cors'
+      const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType! }, pluginType)
+
+      cy.mount(PluginForm, {
+        props: {
+          config,
+          pluginType,
+          pluginId: plugin1.id,
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getPlugin', ...stubbedAliases]).then(() => {
+        cy.getTestId('ff-instance_name').type('-saved')
+        cy.getTestId('plugin-edit-form-submit').click()
+
+        // change the form while the request is pending
+        cy.getTestId('ff-instance_name').type('-unsaved')
+
+        cy.wait('@updatePlugin').its('request.body.instance_name').should('equal', `${plugin1.instance_name}-saved`)
+        cy.getTestId('plugin-edit-form-submit').should('be.enabled')
+      })
+    })
+
     it('should handle error state - failed to load schema', () => {
       cy.intercept(
         {
