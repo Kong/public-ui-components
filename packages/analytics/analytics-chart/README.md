@@ -1,6 +1,18 @@
 # @kong-ui-public/analytics-chart
 
-Dynamic chart component for kong analytics.
+Low-level chart components for Kong analytics.
+
+Application consumers must render charts through
+[`DashboardRenderer` or `DashboardTilePreview`](../dashboard-renderer/README.md#consumer-entry-points).
+These entry points own analytics queries, readiness, filters, and loading/error
+states. Do not import or render `AnalyticsChart` directly unless a required
+capability cannot be implemented through either entry point. First investigate
+extending the shared renderer and document the blocker and minimal exception
+in the PR.
+
+The primitive API and examples below are references for library internals,
+primitive tests, and justified exceptions. They do not recommend direct use in
+application pages. The API remains available.
 
 - [Features](#features)
 - [Requirements](#requirements)
