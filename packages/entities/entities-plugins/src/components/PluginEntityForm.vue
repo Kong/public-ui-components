@@ -67,7 +67,7 @@ import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from '../types/plugins/free-form'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
+import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import type { PluginScopeOptions } from './free-form/types'
 
@@ -339,7 +339,7 @@ const freeformSchema = computed(() => {
     props.pluginName,
     props.rawSchema as FormSchema,
   )
-  return distributeEntityChecks(enhanced)
+  return convertConfigSetsToArrays(distributeEntityChecks(enhanced))
 })
 
 const vaultSecretPickerSetup = ref<string | false>(false)

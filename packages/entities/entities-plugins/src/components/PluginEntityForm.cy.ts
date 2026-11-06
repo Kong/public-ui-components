@@ -456,3 +456,35 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
     })
   })
 })
+
+describe('<PluginEntityForm /> — config sets', () => {
+  it('renders sets without one_of as arrays', () => {
+    const router = createRouter({
+      routes: [{ path: '/', name: 'home', component: { template: '<div />' } }],
+      history: createMemoryHistory(),
+    })
+
+    mountForm({
+      pluginName: 'my-custom-plugin',
+      rawSchema: {
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { ports: { type: 'set', elements: { type: 'integer' } } },
+                { names: { type: 'set', elements: { type: 'string' } } },
+              ],
+            },
+          },
+        ],
+      },
+      record: {},
+      editing: false,
+      router,
+    })
+
+    cy.getTestId('ff-array-config.ports').should('exist')
+    cy.getTestId('ff-array-config.names').should('exist')
+  })
+})
