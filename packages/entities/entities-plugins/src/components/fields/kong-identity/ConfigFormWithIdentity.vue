@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed, provide } from 'vue'
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../free-form/const'
 import DynamicLayout from '../../free-form/layout/DynamicLayout.vue'
 import { StringField } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'

@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from './CustomKeyField.vue'

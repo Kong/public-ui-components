@@ -1,4 +1,5 @@
 export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
+export { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../components/free-form/const'
 
 export const FEATURE_FLAGS = {
   KM_2262_CODE_MODE: 'KM-2262-code-mode',

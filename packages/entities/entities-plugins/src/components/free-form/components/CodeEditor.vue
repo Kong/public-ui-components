@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../const'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import { dump, load, JSON_SCHEMA } from 'js-yaml'
 import { omit } from 'lodash-es'

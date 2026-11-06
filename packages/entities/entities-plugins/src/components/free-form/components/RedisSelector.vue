@@ -64,7 +64,7 @@
           :model-value="selectedRedisConfigItem"
           :placeholder="redisSelectorPlaceholderText"
           :redis-type="redisType"
-          :show-create-button="!hideNewRedis(formConfig)"
+          :show-create-button="!hideNewRedis"
           @error-change="onRedisSelectorFetchError"
           @toast="toaster"
           @update:model-value="redisConfigSelected"
@@ -109,10 +109,9 @@ import RedisConfigCard from './RedisConfigCard.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
-import { FORMS_CONFIG, hideNewRedis } from '@kong-ui-public/forms'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis } from '../types'
-import { partialEndpoints, REDIS_PARTIAL_INFO } from '../const'
+import { FORMS_CONFIG, partialEndpoints, REDIS_PARTIAL_INFO } from '../const'
 import { RedisConfigurationSelector } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import { useToaster } from '../../../composables/useToaster'
@@ -200,6 +199,8 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+// A Konnect Cloud Gateway can't create a Redis configuration here
+const hideNewRedis = computed(() => formConfig.app === 'konnect' && (formConfig as { isCloudGateway?: boolean }).isCloudGateway === true)
 
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),

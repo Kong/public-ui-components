@@ -35,8 +35,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/entities-redis-configurations/dist/style.css',
         '@kong-ui-public/monaco-editor',
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
-        '@kong-ui-public/forms',
-        '@kong-ui-public/forms/dist/style.css',
         '@kong-ui-public/freeform',
         '@kong-ui-public/freeform/style.css',
         '@vue-flow/background',
