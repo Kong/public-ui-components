@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.6.0...%40kong-ui-public%2Fanalytics-utilities%4014.7.0) (2026-11-06)
+
+### Features
+
+* add AiToolUsage fields ([#4026](https://github.com/Kong/public-ui-components/issues/4026)) ([2cac96e](https://github.com/Kong/public-ui-components/commit/2cac96e692023ca81708803031b0385251741d50))
+
+
 # [14.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.5.0...%40kong-ui-public%2Fanalytics-utilities%4014.6.0) (2026-11-05)
 
 ### Features
