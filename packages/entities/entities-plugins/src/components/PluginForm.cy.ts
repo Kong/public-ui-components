@@ -862,6 +862,22 @@ describe('<PluginForm />', () => {
       })
     })
 
+    it('should not render the plugin form when the schema has no fields', () => {
+      interceptKMSchema({ mockData: {} })
+
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKM,
+          pluginType: 'cors',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.get('.kong-ui-entities-plugin-form').should('not.exist')
+    })
+
     it('should handle error state - failed to load schema', () => {
       cy.intercept(
         {

@@ -156,6 +156,8 @@ export interface ConfigSection {
 export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
   onValidityChange?: (event: { model: string, valid: boolean, error?: Error | string }) => void
   isEditing: boolean
+  /** The plugin scope options from `PluginForm`, the standard layout's scope section is empty without them */
+  scopeOptions?: PluginScopeOptions
   /**
    * Optional multi-section configuration layout. When provided, the single
    * "Plugin Configuration" step is replaced by one numbered step block per

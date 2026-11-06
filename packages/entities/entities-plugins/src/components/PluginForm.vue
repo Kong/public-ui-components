@@ -58,7 +58,7 @@
       </template>
 
       <PluginEntityForm
-        v-else
+        v-else-if="loadedSchema?.fields"
         :config="config"
         :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
@@ -208,12 +208,10 @@ import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import {
-  EntityTypeIdField,
   PluginScope,
   PluginPartialType,
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
-  type PluginEntityInfo,
   type PluginFormFields,
   type PluginFormState,
   type PluginOrdering,
@@ -223,6 +221,7 @@ import {
 } from '../types'
 import type { FreeFormPluginData } from '../types/plugins/free-form'
 import type { PluginScopeEntityField, PluginScopeName, PluginScopeOptions } from './free-form/types'
+import { REFERENCE_FIELD_CONFIG } from '../composables/useReferenceEntityNames'
 import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
@@ -235,10 +234,9 @@ import { BEFORE_SAVE_KEY } from './const'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
-type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
-type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
+type ScopedEntitiesPermissions = Partial<Record<PluginScopeName, ScopedEntityPermission>>
 
 const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
 const usesFreeformLayout = ref(false)
@@ -502,73 +500,10 @@ const toggle = (): void => {
   isToggled.value = !isToggled.value
 }
 
-const entityMap = computed((): Record<string, PluginEntityInfo> => {
-  const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
-  const consumerGroupId = (props.config.entityType === 'consumer_groups' && props.config.entityId) || record.value?.consumer_group?.id
-  const serviceId = (props.config.entityType === 'services' && props.config.entityId) || record.value?.service?.id
-  const routeId = (props.config.entityType === 'routes' && props.config.entityId) || record.value?.route?.id
-
-  // global plugins
-  if (!(consumerId || consumerGroupId || serviceId || routeId)) {
-    return {
-      global: {
-        entity: PluginScope.GLOBAL,
-        entityEndpoint: 'plugins',
-      },
-    }
-  }
-
-  const entityMap: Record<string, PluginEntityInfo> = {}
-
-  // scoped plugins
-  if (serviceId) {
-    entityMap.service = {
-      entity: PluginScope.SERVICE,
-      entityEndpoint: 'services',
-      id: serviceId,
-      idField: EntityTypeIdField.SERVICE,
-    }
-  }
-
-  if (routeId) {
-    entityMap.route = {
-      entity: PluginScope.ROUTE,
-      entityEndpoint: 'routes',
-      id: routeId,
-      idField: EntityTypeIdField.ROUTE,
-    }
-  }
-
-  if (consumerId) {
-    entityMap.consumer = {
-      entity: PluginScope.CONSUMER,
-      entityEndpoint: 'consumers',
-      id: consumerId,
-      idField: EntityTypeIdField.CONSUMER,
-    }
-  }
-
-  if (consumerGroupId) {
-    entityMap.consumer_group = {
-      entity: PluginScope.CONSUMER_GROUP,
-      entityEndpoint: 'consumer_groups',
-      id: consumerGroupId,
-      idField: EntityTypeIdField.CONSUMER_GROUP,
-    }
-  }
-
-  // the actual entity requested in the config from the host app
-  if (props.config.entityType) {
-    entityMap.focusedEntity = {
-      entity: PluginScope[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
-      entityEndpoint: props.config.entityType,
-      id: props.config.entityId,
-      idField: EntityTypeIdField[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
-    }
-  }
-
-  return entityMap
-})
+// The consumer of the credential
+const credentialConsumerId = computed((): string | undefined =>
+  (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id,
+)
 
 // This is specifically used for credential plugins and portal developer plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
@@ -580,13 +515,6 @@ const resourceEndpoint = computed((): string => {
   return `${entityPath}/${props.config.entityId}${props.developer ? '/credentials' : ''}${type}`
 })
 
-const SCOPE_ENTITY_TYPES: Record<PluginScopeName, string> = {
-  service: 'services',
-  route: 'routes',
-  consumer: 'consumers',
-  consumer_group: 'consumer_groups',
-}
-
 // The scope options of the free-form layout
 const scopeOptions = computed((): PluginScopeOptions => {
   const pluginType = clonedSourcePlugin.value ?? props.pluginType
@@ -597,11 +525,11 @@ const scopeOptions = computed((): PluginScopeOptions => {
     consumer: supportsScope(PluginScope.CONSUMER),
     consumer_group: !props.config.disableConsumerGroupScope && supportsScope(PluginScope.CONSUMER_GROUP),
   }
-  const scopeNames = (Object.keys(SCOPE_ENTITY_TYPES) as PluginScopeName[]).filter(name => supported[name])
+  const scopeNames = (Object.keys(REFERENCE_FIELD_CONFIG) as PluginScopeName[]).filter(name => supported[name])
 
   // The entity the plugin is created or edited under
   const focusedScope = props.config.entityId
-    ? scopeNames.find(name => SCOPE_ENTITY_TYPES[name] === props.config.entityType)
+    ? scopeNames.find(name => REFERENCE_FIELD_CONFIG[name].entityType === props.config.entityType)
     : undefined
 
   const getDisabledTooltip = (scopeSelectionDisabled: boolean, dataRetrieveDisabled: boolean, scope: string) => {
@@ -636,15 +564,16 @@ const scopeOptions = computed((): PluginScopeOptions => {
     },
   }
 
-  const searchFields: Record<PluginScopeName, Pick<PluginScopeEntityField, 'labelField' | 'fields'>> = {
-    service: { labelField: 'name', fields: ['name', 'id'] },
-    route: { labelField: 'name', fields: ['name', 'id'] },
-    consumer: { labelField: 'username', fields: ['username', 'custom_id', 'id'] },
-    consumer_group: { labelField: 'name', fields: ['name', 'id'] },
+  // The entity keys to search and show
+  const searchFields: Record<PluginScopeName, string[]> = {
+    service: ['name', 'id'],
+    route: ['name', 'id'],
+    consumer: ['username', 'custom_id', 'id'],
+    consumer_group: ['name', 'id'],
   }
 
   const entityFields = scopeNames.map((name): PluginScopeEntityField => {
-    const entity = SCOPE_ENTITY_TYPES[name]
+    const { entityType: entity, nameField } = REFERENCE_FIELD_CONFIG[name]
     // disable the selection if the plugin is configured under this entity
     const scopeSelectionDisabled = focusedScope === name && props.disableScopeSelection
     const dataRetrieveDisabled = props.scopedEntitiesPermissions?.[name]?.canRetrieve === false
@@ -655,7 +584,8 @@ const scopeOptions = computed((): PluginScopeOptions => {
       label: scopeTexts[name].label,
       placeholder: t('plugins.form.scoping.placeholder'),
       help: scopeTexts[name].help,
-      ...searchFields[name],
+      labelField: nameField,
+      fields: searchFields[name],
       disabled: scopeSelectionDisabled || dataRetrieveDisabled,
       disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, dataRetrieveDisabled, entity),
     }
@@ -664,9 +594,9 @@ const scopeOptions = computed((): PluginScopeOptions => {
   // TODO: correct string concat
   // e.g. "Specific Gateway Services, Routes, Consumers, and/or Consumer Groups"
   const plurals = scopeNames.map(name => scopeTexts[name].plural)
-  const trailingPlurals = plurals.splice(plurals.length - 2, 2)
-  const trailingText = trailingPlurals.join(`${plurals.length > 0 ? ',' : ''} and/or `)
-  const scopedDescription = ['Specific', [...plurals.length > 0 ? [plurals.join(', ')] : [], trailingText].join(', ')].join(' ')
+  const leadingPlurals = plurals.slice(0, -2)
+  const trailingText = plurals.slice(-2).join(`${leadingPlurals.length > 0 ? ',' : ''} and/or `)
+  const scopedDescription = `Specific ${[...leadingPlurals, trailingText].join(', ')}`
 
   return {
     disabled: props.disableScopeSelection,
@@ -857,9 +787,8 @@ const getRequestBody = computed((): Record<string, any> => {
   if (treatAsCredential.value) {
     // The credential is already scoped by the request URL, the consumer is also sent to keep the payload the same as before.
     // ex. { consumer: { id: '1234-567-899' } }
-    const consumerId = entityMap.value.consumer?.id
-    if (consumerId) {
-      requestBody.consumer = { id: consumerId }
+    if (credentialConsumerId.value) {
+      requestBody.consumer = { id: credentialConsumerId.value }
     }
   }
 

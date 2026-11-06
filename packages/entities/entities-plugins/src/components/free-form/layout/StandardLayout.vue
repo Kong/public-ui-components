@@ -49,18 +49,18 @@
             v-model="scoped"
             card
             card-orientation="horizontal"
-            v-bind="radioGroup[0]"
+            v-bind="scopeOptions?.global"
             :disabled="scopeOptions?.disabled"
             :selected-value="false"
             @update:model-value="handleScopeChange"
           />
           <KRadio
-            v-if="radioGroup[1]"
+            v-if="scopeOptions?.scoped"
             v-model="scoped"
             card
             card-orientation="horizontal"
-            v-bind="radioGroup[1]"
-            :disabled="scopeOptions?.disabled"
+            v-bind="scopeOptions.scoped"
+            :disabled="scopeOptions.disabled"
             :selected-value="true"
             @update:model-value="handleScopeChange"
           />
@@ -190,7 +190,7 @@
       />
 
       <KCollapse
-        v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+        v-if="enableConditionField"
         v-model="advancedCollapsed"
         data-testid="view-general-info-additional-settings"
         :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
@@ -212,10 +212,7 @@
 </template>
 
 <script lang="ts">
-export interface Props<T extends FreeFormPluginData = any> extends PluginFormLayoutProps<T> {
-  /** The plugin scope options, the scope section is empty without them */
-  scopeOptions?: PluginScopeOptions
-}
+export type Props<T extends FreeFormPluginData = any> = PluginFormLayoutProps<T>
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
@@ -234,7 +231,7 @@ import CodeEditor from '../components/CodeEditor.vue'
 import ConditionField from '../components/ConditionField.vue'
 import useI18n from '../../../composables/useI18n'
 import type { PluginFormLayoutProps } from './provider'
-import type { PluginScopeName, PluginScopeOptions } from '../types'
+import type { PluginScopeName } from '../types'
 import PluginConfigurationForm from '../components/PluginConfigurationForm.vue'
 
 defineOptions({ inheritAttrs: false })
@@ -347,11 +344,6 @@ const scopeWrapperAttrs = computed(() => {
     }
   }
   return { class: 'scope' }
-})
-
-const radioGroup = computed(() => {
-  const { global, scoped } = props.scopeOptions ?? {}
-  return [global, scoped].filter(Boolean) as Array<{ label: string, description: string }>
 })
 
 const scopeEntityFields = computed(() => props.scopeOptions?.entityFields ?? [])
