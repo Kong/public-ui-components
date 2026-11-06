@@ -64,7 +64,8 @@ function setName(name: string | null) {
   renameNode(currentNode.value.id, name as NodeName ?? '')
 }
 
-const formData = computed(() => {
+// The stored values of the node, plus empty values for output fields that have none yet
+const storeValues = computed<StoreValue>(() => {
   if (!currentNode.value) {
     return {}
   }
@@ -102,11 +103,27 @@ const formData = computed(() => {
     nextValues[name] = ''
   })
 
+  return nextValues
+})
+
+const formData = computed(() => {
+  if (!currentNode.value) {
+    return {}
+  }
+
   return {
     name: currentNode.value.name,
-    values: storeValueToFieldValue(nextValues),
+    values: storeValueToFieldValue(storeValues.value),
   }
 })
+
+/**
+ * Only the edited value is parsed from its form string. The other values keep their stored types,
+ * e.g. the string "123" must not turn into the number 123 when another value is edited.
+ */
+function withFieldValue(name: FieldName, value: string): StoreValue {
+  return { ...storeValues.value, ...fieldValueToStoreValue({ [name]: value }) }
+}
 
 function handleAddField(name: FieldName, value?: string) {
   if (!currentNode.value) throw new Error('No selected node')
@@ -114,7 +131,7 @@ function handleAddField(name: FieldName, value?: string) {
   addField(nodeId, 'output', name, !isDefined)
   if (isDefined) {
     const next = {
-      values: fieldValueToStoreValue({ ...formData.value.values, [name]: value }),
+      values: withFieldValue(name, value),
     }
     replaceConfig(nodeId, next)
   }
@@ -125,7 +142,7 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
   const field = findFieldByName(currentNode.value, 'output', oldName)
   if (!field) throw new Error('No field found to rename')
   const next = {
-    values: fieldValueToStoreValue(renameKeyAndKeepOrder(formData.value.values ?? {}, oldName, newName)),
+    values: renameKeyAndKeepOrder(storeValues.value, oldName, newName),
   }
   replaceConfig(nodeId, next, false)
   renameField(nodeId, field.id, newName)
@@ -137,7 +154,7 @@ function handleRemoveField(name: FieldName) {
   if (!field) throw new Error('No field found to delete')
   removeField(currentNode.value?.id, field.id, true, false)
   const next = {
-    values: fieldValueToStoreValue({ ...formData.value.values }),
+    values: { ...storeValues.value },
   }
   delete next.values[name]
   replaceConfig(nodeId, next)
@@ -145,10 +162,8 @@ function handleRemoveField(name: FieldName) {
 
 function handleChangeValue(name: FieldName, value: string) {
   if (!currentNode.value) throw new Error('No selected node')
-  const nextValues = { ...formData.value.values }
-  nextValues[name] = value
   const next = {
-    values: fieldValueToStoreValue(nextValues),
+    values: withFieldValue(name, value),
   }
   replaceConfig(nodeId, next)
 }

@@ -26,7 +26,7 @@ export const KONG_CLIENT_SUPPORTED_PROPERTIES: Record<string, {
     writable: false,
     readable: true,
   },
-  'kong.client.get_identity_realm_source': {
+  'kong.client.identity_realm_source': {
     dataType: 'object',
     writable: false,
     readable: true,
@@ -146,7 +146,7 @@ export const KONG_CLIENT_SUPPORTED_PROPERTIES: Record<string, {
     writable: true,
     readable: false,
   },
-  'kong.service.request_scheme': {
+  'kong.service.request.scheme': {
     dataType: 'string ({scheme})',
     writable: true,
     readable: false,
