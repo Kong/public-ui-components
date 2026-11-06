@@ -221,6 +221,49 @@ describe('<DatakitForm />', () => {
 
       lastFormData().its('config.nodes.3.inputs.url').should('eq', 'BUILD_URL')
     })
+
+    it('uses the flow editor for unsupported fields the gateway filled with null', () => {
+      // A call node as the gateway returns it (AMV-57)
+      const config = {
+        debug: false,
+        resources: null,
+        nodes: [{
+          name: 'CALL',
+          type: 'call',
+          method: 'POST',
+          url: 'http://localhost:8000/chat',
+          input: null,
+          inputs: { body: 'request.body', headers: null, http_proxy: null, https_proxy: null, proxy_auth_password: null, proxy_auth_username: null, query: null, url: null },
+          output: null,
+          outputs: null,
+          ssl_server_name: null,
+          ssl_verify: true,
+          timeout: null,
+        }],
+      } as unknown as DatakitPluginData['config']
+
+      mountForm({ editorMode: 'flow', isEditing: true, model: { config }, pluginSchema: DATAKIT_PLUGIN_SCHEMA })
+
+      flowOption().should('not.have.attr', 'disabled')
+      cy.get('.dk-flow-editor').should('exist')
+    })
+
+    it('stays in the code editor after the fallback until switching back', () => {
+      // Monaco rejects its pending work with `Canceled` when the code editor is disposed on switching
+      cy.on('uncaught:exception', (error) => error.name !== 'Canceled')
+
+      mountForm({ editorMode: 'flow', isEditing: true, model: { config: CODE_ONLY_CONFIG } })
+      flowOption().should('have.attr', 'disabled')
+
+      // Removing the unsupported fields makes the flow editor available, without switching to it
+      setCode('config:\n  nodes:\n  - name: JQ\n    type: jq\n    jq: "."\n')
+      flowOption().should('not.have.attr', 'disabled')
+      cy.get('.dk-code-editor').should('exist')
+      cy.get('.dk-flow-editor').should('not.exist')
+
+      flowOption().click()
+      cy.get('.dk-flow-editor').should('exist')
+    })
   })
 
   describe('advanced configuration', () => {
