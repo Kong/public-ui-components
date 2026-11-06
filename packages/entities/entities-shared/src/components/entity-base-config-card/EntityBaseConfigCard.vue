@@ -285,11 +285,12 @@ onBeforeMount(async () => {
   }
 })
 const redactedCodeBlockRecord = computed(() => {
-  // A resolver may require a real payload and must not run while loading or after failure.
-  if (rawFetchedData.value == null) return undefined
+  // The View handles redaction unless the reader must run a legacy resolver after it.
+  const resolve = props.codeBlockRecordResolver
+  if (!resolve || rawFetchedData.value == null) return undefined
   const source = codeBlockRecordFromApi.value || withForceShowFields(record.value, props.configSchema)
   const redacted = redactConfigCardRecord(source, schema?.value, props.configSchema)
-  return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(redacted) : redacted
+  return resolve(redacted)
 })
 
 const slots = useSlots()

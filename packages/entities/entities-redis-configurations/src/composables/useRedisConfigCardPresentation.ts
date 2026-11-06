@@ -25,8 +25,6 @@ export default function useRedisConfigCardPresentation(
     let prefix = ''
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
-        prefix = t('form.options.type.host_port')
-        break
       case RedisType.HOST_PORT_EE:
         prefix = t('form.options.type.host_port')
         break
@@ -44,30 +42,7 @@ export default function useRedisConfigCardPresentation(
   const partialRecord = computed((): AddOnRecord => {
     const row = toValue(record) as RedisConfigurationResponse
     const partialConfig = row.config ?? {}
-    const rawCloudAuth = partialConfig.cloud_authentication
-
-    const cloudAuthForDisplay = toValue(cloudAuthAvailable)
-      ? cloudAuthenticationObjectForDisplay(
-        rawCloudAuth !== null &&
-        typeof rawCloudAuth === 'object' &&
-        !Array.isArray(rawCloudAuth)
-          ? (rawCloudAuth as AddOnRecord)
-          : {},
-        true,
-      ) : null
-
-    // The flat display drops nested objects; keep the whole `oauth` record so it renders as a JSON code block
-    if (
-      cloudAuthForDisplay &&
-    rawCloudAuth !== null &&
-    typeof rawCloudAuth === 'object' &&
-    !Array.isArray(rawCloudAuth) &&
-    rawCloudAuth.oauth
-    ) {
-      cloudAuthForDisplay.oauth = rawCloudAuth.oauth as AddOnValue
-    }
-
-    return {
+    const displayRecord: AddOnRecord = {
       id: row.id,
       name: row.name,
       tags: row.tags,
@@ -75,11 +50,19 @@ export default function useRedisConfigCardPresentation(
       updated_at: row.updated_at,
       type: row.type,
       ...partialConfig,
-      ...(toValue(cloudAuthAvailable)
-        ? { cloud_authentication: cloudAuthForDisplay }
-        : {}
-      ),
     }
+    if (toValue(cloudAuthAvailable)) {
+      const raw = partialConfig.cloud_authentication
+      const cloudAuth = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : undefined
+      const displayAuth = cloudAuthenticationObjectForDisplay((cloudAuth ?? {}) as AddOnRecord, true)
+
+      // The flat display drops nested objects, but OAuth needs its own JSON block.
+      if (displayAuth && cloudAuth?.oauth) {
+        displayAuth.oauth = cloudAuth.oauth as AddOnValue
+      }
+      displayRecord.cloud_authentication = displayAuth
+    }
+    return displayRecord
   })
 
   // Restore the nested API config for code formats; Terraform uses the Redis type as its key.
@@ -89,17 +72,12 @@ export default function useRedisConfigCardPresentation(
     }
 
     const { id, name, created_at, updated_at, type, tags, ...config } = record
+    const metadata = { id, name, tags, created_at, updated_at }
     if (codeFormat === 'terraform') {
       const typeKey = typeof type === 'string' ? type.replaceAll('-', '_') : 'partial'
-      return {
-        [typeKey]: {
-          id, name, tags, created_at, updated_at, config,
-        },
-      }
+      return { [typeKey]: { ...metadata, config } }
     }
-    return {
-      id, name, tags, created_at, updated_at, type, config,
-    }
+    return { ...metadata, type, config }
   }
 
   type BasicFields = {
@@ -278,16 +256,10 @@ export default function useRedisConfigCardPresentation(
     const schema: ConfigurationSchema = {}
     const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
     for (const field of keys) {
-      if (fields.includes(field)) {
-        schema[field] = {
-          ...schemaFieldConfigs[field],
-          order: fields.indexOf(field) + 1,
-        }
-      } else {
-        schema[field] = {
-          ...schemaFieldConfigs[field],
-          hidden: true,
-        }
+      const index = fields.indexOf(field)
+      schema[field] = {
+        ...schemaFieldConfigs[field],
+        ...(index === -1 ? { hidden: true } : { order: index + 1 }),
       }
     }
     return schema
@@ -384,7 +356,6 @@ export default function useRedisConfigCardPresentation(
     const addOn = record as CloudGatewaysAddOnResponse
     return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : record
   }
-
 
   const managedSchema = computed(() => buildManagedAddOnCardSchema(managedRecord.value, path => t(path as never)))
   return { redisTypeText, partialRecord, partialSchema, formatPartialRecord, managedRecord, managedSchema, formatManagedRecord }

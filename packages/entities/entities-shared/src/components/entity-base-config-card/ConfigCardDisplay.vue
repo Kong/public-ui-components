@@ -54,7 +54,6 @@
 
   <JsonCodeBlock
     v-if="format === 'json' && entityRecord"
-    :config="props.config"
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"

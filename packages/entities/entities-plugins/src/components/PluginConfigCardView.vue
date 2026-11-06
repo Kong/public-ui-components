@@ -10,7 +10,7 @@
       :hide-title="hideTitle"
       :plugin-config-key="PLUGIN_CONFIG_KEY"
       :plugin-config-schema="pluginConfigSchema"
-      :record="resolveRecord(record)"
+      :record="displayRecord"
       :schema="schema"
     >
       <template #name="slotProps">
@@ -26,79 +26,41 @@
         </div>
       </template>
 
-      <template #consumer="slotProps">
-        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+      <template
+        v-for="field in REFERENCE_SCOPES"
+        :key="field"
+        #[field]="{ row, rowValue }"
+      >
+        <span v-if="!rowValue">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="referenceLinkItem('consumer', getPropValue('rowValue', slotProps).id)"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
+          :item="referenceLinkItem(field, rowValue.id)"
+          @navigation-click="$emit('navigation-click', rowValue.id, field)"
         />
         <KCopy
-          v-if="schema?.fields"
-          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          data-testid="consumer-copy-uuid"
-          :text="getPropValue('rowValue', slotProps).id"
+          v-else
+          :copy-tooltip="t('copy.tooltip', { label: row.label })"
+          :data-testid="`${field.replace('_', '-')}-copy-uuid`"
+          :text="rowValue.id"
         />
       </template>
 
-      <template #route="slotProps">
-        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
-        <InternalLinkItem
-          v-else-if="showNameAsLink"
-          :item="referenceLinkItem('route', getPropValue('rowValue', slotProps).id)"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
-        />
-        <KCopy
-          v-if="schema?.fields"
-          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          data-testid="route-copy-uuid"
-          :text="getPropValue('rowValue', slotProps).id"
-        />
-      </template>
-      <template #service="slotProps">
-        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
-        <InternalLinkItem
-          v-else-if="showNameAsLink"
-          :item="referenceLinkItem('service', getPropValue('rowValue', slotProps).id)"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
-        />
-        <KCopy
-          v-if="schema?.fields"
-          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          data-testid="service-copy-uuid"
-          :text="getPropValue('rowValue', slotProps).id"
-        />
-      </template>
-      <template #consumer_group="slotProps">
-        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
-        <InternalLinkItem
-          v-else-if="showNameAsLink"
-          :item="referenceLinkItem('consumer_group', getPropValue('rowValue', slotProps).id)"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
-        />
-        <KCopy
-          v-if="schema?.fields"
-          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
-          data-testid="consumer-group-copy-uuid"
-          :text="getPropValue('rowValue', slotProps).id"
-        />
-      </template>
-      <template #partials="slotProps">
-        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+      <template #partials="{ row, rowValue }">
+        <span v-if="!rowValue?.[0]">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
           :item="{
-            key: getPropValue('rowValue', slotProps)?.[0]?.id,
-            value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
+            key: rowValue[0].id,
+            value: rowValue[0].name ? `${rowValue[0].id}/${rowValue[0].name}` : rowValue[0].id,
             type: ConfigurationSchemaType.LinkInternal,
           }"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps)?.[0]?.id, 'partial')"
+          @navigation-click="$emit('navigation-click', rowValue[0].id, 'partial')"
         />
         <KCopy
-          v-if="schema?.fields"
-          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
+          v-else
+          :copy-tooltip="t('copy.tooltip', { label: row.label })"
           data-testid="partial-copy-uuid"
-          :text="getPropValue('rowValue', slotProps)?.[0].id"
+          :text="rowValue[0].id"
         />
       </template>
 
@@ -153,6 +115,7 @@ import type { EntityConfigCardViewConfig } from '@kong-ui-public/entities-shared
 
 
 const PLUGIN_CONFIG_KEY = 'config'
+const REFERENCE_SCOPES = [PluginScope.CONSUMER, PluginScope.ROUTE, PluginScope.SERVICE, PluginScope.CONSUMER_GROUP] as const
 
 defineEmits<{
   (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service' | 'partial'): void
@@ -183,7 +146,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
-const { getPropValue } = useHelpers()
+const { getApiSchemaField, getPropValue } = useHelpers()
 
 // The local canvas initializes its graph once; refresh it when its resolved inputs change.
 const datakitRecordKey = computed(() => JSON.stringify([props.record.id, props.record.config, props.record.__ui_data, props.record.partials, props.schema]))
@@ -194,13 +157,18 @@ const scopeNameEnabled = computed(() => Object.keys(props.referenceEntities).len
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
   const customSchema: ConfigurationSchema = {}
-  const apiSchema = props.schema?.fields || []
-
-  for (let i = 0; i < apiSchema.length; i++) {
-    const field = props.schema.fields[i] as Record<string, any>
-    const key = Object.keys(field)?.[0]
+  for (const field of props.schema?.fields ?? []) {
+    const key = Object.keys(field)[0]
 
     setFieldType(customSchema, key, field[key])
+  }
+
+  for (const field of REFERENCE_SCOPES) {
+    customSchema[field] = {
+      label: t(scopeNameEnabled.value ? `plugins.fields.${field}` : `plugins.fields.${field}_id`),
+      section: ConfigurationSchemaSection.Basic,
+      order: 6,
+    }
   }
 
   return {
@@ -208,26 +176,6 @@ const configSchema = computed((): ConfigurationSchema => {
     instance_name: {
       section: ConfigurationSchemaSection.Basic,
       order: 1.5,
-    },
-    consumer: {
-      label: scopeNameEnabled.value ? t('plugins.fields.consumer') : t('plugins.fields.consumer_id'),
-      section: ConfigurationSchemaSection.Basic,
-      order: 6,
-    },
-    route: {
-      label: scopeNameEnabled.value ? t('plugins.fields.route') : t('plugins.fields.route_id'),
-      section: ConfigurationSchemaSection.Basic,
-      order: 6,
-    },
-    service: {
-      label: scopeNameEnabled.value ? t('plugins.fields.service') : t('plugins.fields.service_id'),
-      section: ConfigurationSchemaSection.Basic,
-      order: 6,
-    },
-    consumer_group: {
-      label: scopeNameEnabled.value ? t('plugins.fields.consumer_group') : t('plugins.fields.consumer_group_id'),
-      section: ConfigurationSchemaSection.Basic,
-      order: 6,
     },
     protocols: {
       type: ConfigurationSchemaType.BadgeTag,
@@ -237,31 +185,13 @@ const configSchema = computed((): ConfigurationSchema => {
   }
 })
 
-const apiPluginSchema = computed((): Array<Record<string, any>> => {
-  if (!props.schema?.fields) {
-    return []
-  }
-
-  const configField = props.schema.fields?.find((rec: Record<string, any>) => {
-    const key = Object.keys(rec)?.[0]
-
-    return key === PLUGIN_CONFIG_KEY
-  })
-
-  return configField?.[PLUGIN_CONFIG_KEY]?.fields || []
-})
-
 // Schema for the plugin config section
 const pluginConfigSchema = computed((): PluginConfigurationSchema => {
   const customSchema: PluginConfigurationSchema = {}
+  const fields = getApiSchemaField(props.schema?.fields, PLUGIN_CONFIG_KEY)?.fields ?? []
 
-  if (!apiPluginSchema.value) {
-    return customSchema
-  }
-
-  for (let i = 0; i < apiPluginSchema.value?.length; i++) {
-    const field = apiPluginSchema.value[i] as Record<string, any>
-    const key = Object.keys(field)?.[0]
+  for (const field of fields) {
+    const key = Object.keys(field)[0]
     const rec = field[key]
 
     // prioritize required fields
@@ -277,55 +207,35 @@ const pluginConfigSchema = computed((): PluginConfigurationSchema => {
   return customSchema
 })
 
-const resolveRecord = (data: Record<string, any>): Record<string, any> => {
-  const scopes: PluginScope[] | undefined = pluginMetaData.pluginMetaData[props.record.name]?.scope
+const displayRecord = computed(() => {
+  const record = props.record
+  const scopes = pluginMetaData.pluginMetaData[record.name]?.scope
 
-  // Missing `scope` indicates an unknown plugin. We'd better not touch the data.
-  if (!scopes)
-    return data
+  if (!scopes) return record
 
-  return Object.fromEntries(Object.entries(data).filter(([key, value]) => {
-    // If a scoped field is falsy (e.g., empty), and the plugin doesn't support that scope, remove it.
-    // Keeping non-empty scoping fields in case, in the very rare case, we made a mistake in the metadata.
-    if (value) return true
-
-    if (key === 'service' && !scopes.includes(PluginScope.SERVICE))
-      return false
-
-    if (key === 'route' && !scopes.includes(PluginScope.ROUTE))
-      return false
-
-    if (key === 'consumer' && !scopes.includes(PluginScope.CONSUMER))
-      return false
-
-    if (key === 'consumer_group' && !scopes.includes(PluginScope.CONSUMER_GROUP))
-      return false
-
-    return true
+  return Object.fromEntries(Object.entries(record).filter(([key, value]) => {
+    // Preserve populated scopes even if plugin metadata is incomplete.
+    const scope = REFERENCE_SCOPES.find(scope => scope === key)
+    return value || !scope || scopes.includes(scope)
   }))
-}
+})
 
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
   return omit(record, '__ui_data')
 }
 
-const getReferenceName = (field: ReferenceField): string | undefined => {
-  const entity = props.referenceEntities[field]
-  return entity?.id === props.record[field]?.id ? entity?.name : undefined
+const referenceLinkItem = (field: ReferenceField, id: string): RecordItem => {
+  const reference = props.referenceEntities[field]
+  const entity = reference?.id === id ? reference : undefined
+  return {
+    key: id,
+    value: entity?.name || id,
+    to: entity?.to,
+    subtitle: entity?.name ? id : undefined,
+    subtitleLoading: !!entity?.loading,
+    type: ConfigurationSchemaType.LinkInternal,
+  }
 }
-const isReferenceNameLoading = (field: ReferenceField): boolean => {
-  const entity = props.referenceEntities[field]
-  return entity?.id === props.record[field]?.id && !!entity?.loading
-}
-
-const referenceLinkItem = (field: ReferenceField, id: string): RecordItem => ({
-  key: id,
-  value: scopeNameEnabled.value ? getReferenceName(field) || id : id,
-  to: props.referenceEntities[field]?.id === id ? props.referenceEntities[field]?.to : undefined,
-  subtitle: scopeNameEnabled.value && getReferenceName(field) ? id : undefined,
-  subtitleLoading: scopeNameEnabled.value && isReferenceNameLoading(field),
-  type: ConfigurationSchemaType.LinkInternal,
-})
 
 </script>
 

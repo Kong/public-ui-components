@@ -46,7 +46,7 @@
 import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
-import type { ConfigCardDisplayConfig } from '../../utils/config-card'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
 import { KCodeBlockIconButton } from '@kong/kongponents'
 import { CopyIcon } from '@kong/icons'
@@ -55,7 +55,7 @@ import composables from '../../composables'
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<ConfigCardDisplayConfig>,
+    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig | KonnectBaseFormConfig | KongManagerBaseFormConfig>,
     required: false,
     default: () => ({}),
   },
