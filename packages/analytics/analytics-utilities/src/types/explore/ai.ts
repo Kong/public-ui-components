@@ -42,6 +42,7 @@ export const queryableAiExploreDimensions = [
   'status_code',
   'status_code_grouped',
   'time',
+  'tool_name',
   'upstream_status_code',
   'upstream_status_code_grouped',
 ] as const
@@ -115,6 +116,8 @@ export const aiExploreAggregations = [
   'time_to_first_token_p95',
   'time_to_first_token_p99',
   'token_cache_hit_rate',
+  'tool_call_count',
+  'tool_cost',
   'total_tokens',
   'total_tokens_per_minute',
 ] as const
