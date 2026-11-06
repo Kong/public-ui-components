@@ -94,7 +94,11 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   schema: FormSchema
   /** The **initial** entire plugin model, never update */
   model: T
-  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
+  /**
+   * Emits the plugin data to the parent.
+   * `PluginForm` submits the value as the payload (adding the plugin `name`), so a layout used in it
+   * must emit every field it controls, e.g. `config`, `enabled`, the scope, `protocols` and `tags`, not only `config`.
+   */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
   /** FreeForm configuration */
   formConfig?: FormConfig<T>

@@ -228,9 +228,12 @@ import {
   type PluginValidityChangeEvent,
   type EntityCreateEvent,
 } from '../types'
+import type { FreeFormPluginData } from '../types/plugins/free-form'
 import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
+import cloneDeep from 'lodash-es/cloneDeep'
+import isEqual from 'lodash-es/isEqual'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/const'
 import { EXPRESSIONS_FIELD } from '@kong-ui-public/freeform'
@@ -1246,7 +1249,10 @@ const initScopeFields = (): void => {
 }
 
 const changesExist = computed(() => {
-  return !objectsAreEqual(form.fields, formFieldsOriginal, true)
+  // Credential fields are flat, plugin fields are nested (e.g. `config`)
+  return treatAsCredential.value
+    ? !objectsAreEqual(form.fields, formFieldsOriginal, true)
+    : !isEqual(form.fields, formFieldsOriginal)
 })
 
 /**
@@ -1278,19 +1284,33 @@ const initForm = (data: Record<string, any>): void => {
 }
 
 const submitPayload = ref<Record<string, any>>({})
-const credentialBaselineSet = ref(false)
-// fired whenever form data is modified
-const handleUpdate = (payload: Record<string, any>) => {
-  form.fields = payload.model
-  form.fields.id = record.value?.id || undefined
-  Object.assign(formFieldsOriginal, payload.originalModel)
-  submitPayload.value = payload.data
+const baselineSet = ref(false)
+
+// Replace the baseline used to detect changes
+const setBaseline = (fields: Record<string, any>) => {
+  Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
+  Object.assign(formFieldsOriginal, cloneDeep(fields))
+}
+
+// fired whenever the plugin form data is modified
+const handleUpdate = (data: FreeFormPluginData) => {
+  // The free-form layout always emits `enabled`, `protocols` and `tags`
+  form.fields = { ...data, id: record.value?.id || undefined } as PluginFormFields
+
+  // The first emission is the form's initial value, use it as the baseline for change detection.
+  // After a save, `saveFormData` updates the baseline with the saved values.
+  if (!baselineSet.value) {
+    baselineSet.value = true
+    setBaseline(form.fields)
+  }
+
+  submitPayload.value = data
 
   // wizard relies on model-updated since action buttons are hidden
   if (props.isWizardStep) {
     emit('model-updated', {
       model: form.fields,
-      data: payload.data,
+      data,
       resourceEndpoint: resourceEndpoint.value,
     })
   }
@@ -1302,10 +1322,9 @@ const handleCredentialUpdate = (model: Record<string, any>) => {
 
   // The first emission is the form's initial value, use it as the baseline for change detection.
   // After a save, `saveFormData` updates the baseline with the saved values.
-  if (!credentialBaselineSet.value) {
-    credentialBaselineSet.value = true
-    Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
-    Object.assign(formFieldsOriginal, form.fields)
+  if (!baselineSet.value) {
+    baselineSet.value = true
+    setBaseline(form.fields)
   }
 
   const original: Record<string, any> = formFieldsOriginal
@@ -1473,6 +1492,8 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
+    // The inputs stay editable during the request, so keep the values that are sent
+    const savedFields = cloneDeep(form.fields)
     if (treatAsCredential.value && props.config.app === 'kongManager' && ['key-auth', 'key-auth-enc'].includes(props.pluginType) && typeof payload.ttl !== 'number') {
       // Kong Manager rejects an empty `ttl`, `0` means no expiration.
       payload.ttl = 0
@@ -1491,8 +1512,8 @@ const saveFormData = async (): Promise<void> => {
         : await axiosInstance.patch(submitUrl.value, payload)
     }
 
-    // Set initial state of `formFieldsOriginal` to these values in order to detect changes
-    Object.assign(formFieldsOriginal, form.fields)
+    // The saved values are the new baseline to detect changes
+    setBaseline(savedFields)
 
     // Emit an update event for the host app to respond to
     emit('update', response?.data)

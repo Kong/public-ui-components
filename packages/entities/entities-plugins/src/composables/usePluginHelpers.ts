@@ -93,90 +93,6 @@ export default function useHelpers() {
     return key.replace(/-/g, '.')
   }
 
-  /**
-   * Takes an object with dot notated keys (key.nested.values)
-   * and returns an object with nested objects (key: { nested: values })
-   * @param {Object} obj
-   * @returns {Object}
-   */
-  const unFlattenObject = (obj: Record<string, any>) => {
-    const result = {}
-
-    // Loop object and reduce each key to build
-    // nested structure
-    for (const key in obj) {
-      const keys = key.split('.')
-
-      keys.reduce((acc: Record<string, any>, cur: string, curIdx: number) => {
-        return acc[cur] ||
-          // If current key in acc is the next
-          // item in the split array (dot notation)
-          // set its value
-          (acc[cur] = isNaN(keys[curIdx + 1] as any)
-            ? (keys.length - 1 === curIdx ? obj[key] : {})
-            : [])
-      }, result)
-    }
-
-    return result
-  }
-
-  /**
-  * Delete all redis fields or partials in model and restore additional fields in model
-  * This is used when redis partial is toggled
-  * @param {Object} formModel
-  * @param {Object} additionalModel
-  * @param {string} fieldName
-  * @returns {void}
-  */
-  const dismissField = (formModel: Record<string, any>, additionalModel: Record<string, any>, fieldName = 'redis', edit = false) => {
-    const redisFieldPattern = /(?<=-redis-).*/
-    if (typeof formModel !== 'object' || formModel === null) {
-      return formModel
-    }
-
-    // delete all redis fields in model
-    if (fieldName === 'redis') {
-      Object.keys(formModel).forEach(key => {
-        if (key.match(redisFieldPattern)) {
-          delete formModel[key]
-        }
-      })
-    } else {
-      // editing use PUT so we need to set the partial field to null
-      if (edit) {
-        formModel[fieldName] = null
-      } else {
-        delete formModel[fieldName]
-      }
-    }
-
-    Object.assign(formModel, additionalModel)
-  }
-
-  /**
-   * A method to easily check if an object is empty or not
-   * @param {Object} obj object to check
-   * @return {Boolean}
-   */
-  const isObjectEmpty = (obj: Record<string, any>) => {
-    return Object.keys(obj).length === 0
-  }
-
-  /**
-   * Remove id of dot notated foreign key if null
-   * @param {string} key
-   * @param {Object} model
-   */
-  const unsetNullForeignKey = (key: string, model: Record<string, any>) => {
-    const keys = ['service.id', 'route.id', 'consumer.id', 'consumer_group.id']
-
-    if (keys.indexOf(key) > -1 && model[key] === null) {
-      delete model[key]
-      model[key.replace('.id', '')] = null
-    }
-  }
-
   // _ gets converted to space and only the first letter of each '-' separated segment is capitalized
   const formatPluginFieldLabel = (label: string) => {
     return label
@@ -220,10 +136,6 @@ export default function useHelpers() {
   return {
     setFieldType,
     convertToDotNotation,
-    unFlattenObject,
-    dismissField,
-    isObjectEmpty,
-    unsetNullForeignKey,
     formatPluginFieldLabel,
     getTallestPluginCardHeight,
     getToggleVisibility,
