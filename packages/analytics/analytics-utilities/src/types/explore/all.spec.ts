@@ -58,7 +58,7 @@ describe('stripUnknownFilters', () => {
     value: ['foo'],
   }
 
-  // a filter that's only in the managed_cache_usage datasource
+  // a filter that's in the managed_cache_usage and llm_usage datasources
   const managedCacheFilter = {
     operator: 'in',
     field: 'provider_region',
@@ -68,7 +68,7 @@ describe('stripUnknownFilters', () => {
   it.each([
     ['basic', [basicFilter]],
     ['api_usage', [basicFilter, advancedFilter, consumerGroupFilter, aiGatewayConsumerGroupFilter]],
-    ['llm_usage', [llmFilter, aiGatewayConsumerGroupFilter]],
+    ['llm_usage', [llmFilter, managedCacheFilter, aiGatewayConsumerGroupFilter]],
     ['agentic_usage', [basicFilter, advancedFilter, mcpFilter, aiGatewayConsumerGroupFilter]],
     ['managed_cache_usage', [managedCacheFilter]],
   ])('Strips only unknown filters for datasource "%s"', (datasource, expected) => {

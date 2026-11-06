@@ -17,23 +17,6 @@ const baseConfig: KonnectPluginFormConfig = {
   cancelRoute: { name: 'home' },
 }
 
-// Minimal `props.schema` so `parseSchema` produces `model.name`, which lets
-// `syncFormRenderingMode` resolve the freeform branch. The strip filter itself
-// reads from `props.rawSchema`, not this.
-const buildPropSchema = (pluginName: string) => ({
-  name: {
-    default: pluginName,
-    type: 'input',
-    inputType: 'hidden',
-    model: 'name',
-  },
-  enabled: {
-    default: true,
-    type: 'switch',
-    model: 'enabled',
-  },
-})
-
 const mountForm = (opts: {
   pluginName: string
   rawSchema: Record<string, any>
@@ -44,8 +27,9 @@ const mountForm = (opts: {
   cy.mount(PluginEntityForm, {
     props: {
       config: baseConfig,
-      record: opts.record,
-      schema: buildPropSchema(opts.pluginName),
+      // An existing plugin always has an id, the form waits for it in edit mode
+      record: (opts.editing ?? true) ? { id: 'plugin-id', ...opts.record } : opts.record,
+      pluginName: opts.pluginName,
       rawSchema: opts.rawSchema,
       editing: opts.editing ?? true,
       onModelUpdated: cy.spy().as('modelUpdatedSpy'),
@@ -54,10 +38,10 @@ const mountForm = (opts: {
   })
 }
 
-// Returns the `data` field of the most recent `model-updated` emit — the payload
+// Returns the payload of the most recent `model-updated` emit — the payload
 // that would be POSTed to Kong on submit.
 const lastEmittedConfig = (): Cypress.Chainable<Record<string, any>> =>
-  cy.get('@modelUpdatedSpy').then((spy: any) => spy.lastCall.args[0].data)
+  cy.get('@modelUpdatedSpy').then((spy: any) => spy.lastCall.args[0])
 
 describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
   let router: Router
@@ -470,31 +454,37 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
         })
       })
     })
+  })
+})
 
-    it('is a no-op when rawSchema is empty — payload identical to record', () => {
-      // Without a schema we cannot distinguish shorthand from canonical, so the filter falls
-      // back to passing the record through unchanged. This guards against breaking unknown-shape
-      // payloads (e.g. test setups or schema-load races).
-      const record = {
-        name: 'opentelemetry',
-        enabled: true,
-        config: {
-          endpoint: 'https://legacy/v1/traces',
-          traces_endpoint: 'https://otel/v1/traces',
-        },
-      }
-
-      mountForm({
-        pluginName: 'opentelemetry',
-        rawSchema: {},
-        record,
-        router,
-      })
-
-      lastEmittedConfig().then((data) => {
-        expect(data.config).to.have.property('endpoint', 'https://legacy/v1/traces')
-        expect(data.config).to.have.property('traces_endpoint', 'https://otel/v1/traces')
-      })
+describe('<PluginEntityForm /> — config sets', () => {
+  it('renders sets without one_of as arrays', () => {
+    const router = createRouter({
+      routes: [{ path: '/', name: 'home', component: { template: '<div />' } }],
+      history: createMemoryHistory(),
     })
+
+    mountForm({
+      pluginName: 'my-custom-plugin',
+      rawSchema: {
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { ports: { type: 'set', elements: { type: 'integer' } } },
+                { names: { type: 'set', elements: { type: 'string' } } },
+              ],
+            },
+          },
+        ],
+      },
+      record: {},
+      editing: false,
+      router,
+    })
+
+    cy.getTestId('ff-array-config.ports').should('exist')
+    cy.getTestId('ff-array-config.names').should('exist')
   })
 })

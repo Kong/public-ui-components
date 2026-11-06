@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { DatakitConfigSchema } from './compat'
+import { DatakitConfigSchema, omitBackendFilledFields } from './compat'
+import { DATAKIT_PLUGIN_SCHEMA } from '../test-utils/schema'
 
 /**
  * The compat schema decides whether a config can be opened in the flow editor.
@@ -127,3 +128,91 @@ describe('Datakit compat schema', () => {
     })
   })
 })
+
+describe('omitBackendFilledFields', () => {
+  // A call node as the gateway returns it (AMV-57): optional inputs the flow editor
+  // doesn't support are filled with null
+  const backendCallNode = {
+    name: 'CALL',
+    type: 'call',
+    method: 'POST',
+    url: 'http://localhost:8000/chat',
+    input: null,
+    inputs: {
+      body: 'request.body',
+      headers: null,
+      http_proxy: null,
+      https_proxy: null,
+      proxy_auth_password: null,
+      proxy_auth_username: null,
+      query: null,
+      url: null,
+    },
+    output: null,
+    outputs: null,
+    ssl_server_name: null,
+    ssl_verify: true,
+    timeout: null,
+  }
+
+  // A schema with a field the flow editor doesn't support yet
+  const pluginSchema = {
+    fields: [{
+      config: {
+        type: 'record',
+        fields: [{
+          nodes: {
+            type: 'array',
+            elements: {
+              type: 'record',
+              fields: [{ name: { type: 'string' } }, { type: { type: 'string' } }],
+              subschema_definitions: {
+                call: { fields: [{ future_flag: { type: 'boolean', default: false } }] },
+              },
+            },
+          },
+        }],
+      },
+    }],
+  }
+
+  it('lets the flow editor open configs with null fields filled in by the gateway', () => {
+    const config = { debug: false, ca_certificates: null, resources: null, nodes: [backendCallNode] }
+
+    expect(issuesOf(config)).toContainEqual(expect.stringContaining('Unrecognized keys'))
+    expect(issuesOf(omitBackendFilledFields(config, DATAKIT_PLUGIN_SCHEMA))).toEqual([])
+  })
+
+  it('drops only unrecognized fields that are null or hold the schema default', () => {
+    const config = {
+      nodes: [{ ...backendCallNode, future_flag: false, unknown_null: null }],
+    }
+
+    const result = omitBackendFilledFields(config, pluginSchema) as typeof config
+    expect(result.nodes[0]).not.toHaveProperty('future_flag')
+    expect(result.nodes[0]).not.toHaveProperty('unknown_null')
+    expect(result.nodes[0].inputs).toEqual({ body: 'request.body', headers: null, query: null })
+    // recognized fields are kept, even when null
+    expect(result.nodes[0]).toMatchObject({ input: null, outputs: null, timeout: null })
+  })
+
+  it('keeps unrecognized fields with a real value, so the config stays out of the flow editor', () => {
+    const config = {
+      nodes: [{ ...backendCallNode, future_flag: true, inputs: { body: 'request.body', url: 'request.body' } }],
+    }
+
+    expect(issuesOf(omitBackendFilledFields(config, pluginSchema)).sort()).toEqual([
+      'Unrecognized key: "future_flag"',
+      'Unrecognized key: "url"',
+    ])
+  })
+
+  it('does not change the given config', () => {
+    const config = { nodes: [backendCallNode] }
+    const copy = structuredClone(config)
+
+    omitBackendFilledFields(config, DATAKIT_PLUGIN_SCHEMA)
+    expect(config).toEqual(copy)
+  })
+})
+

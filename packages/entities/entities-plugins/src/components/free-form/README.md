@@ -96,7 +96,7 @@ For the default `StandardLayout`, nothing — but two things are worth checking:
 - the **schema** handed to `Form` — if you filter root fields, keep `expressions` (`StandardLayout`'s `FREE_FORM_SCHEMA_KEYS`)
 - the **model** keys you control — if you `pick()` the incoming model, keep `expressions`, or a saved plugin's expressions never load (`StandardLayout`'s `FREE_FORM_CONTROLLED_FIELDS`)
 
-`Form` never renders the `expressions` record as a field of its own; each twin is rendered inline by the field it overrides. `buildFormSchema` skips it for the same reason, so the legacy VFG form does not flatten it into stray `expressions-*` inputs.
+`Form` never renders the `expressions` record as a field of its own; each twin is rendered inline by the field it overrides.
 
 ## Layout
 
@@ -177,8 +177,7 @@ Key props passed to free-form components:
 |---|---|---|
 | `schema` | `FormSchema` | Raw form schema from API |
 | `model` | `Record<string, any>` | Initial plugin data |
-| `formSchema` | `any` | Legacy VFG schema (for scope and general info field metadata) |
-| `formModel` | `Record<string, any>` | Legacy form model (for scope initialization) |
+| `scopeOptions` | `PluginScopeOptions` | Scope radios, scope entity fields and the preselected scope (from `PluginForm`) |
 | `isEditing` | `boolean` | New vs edit mode |
 | `pluginName` | `string` | Current plugin name |
 | `renderRules` | `RenderRules` | From `pluginConfig.renderRules` |

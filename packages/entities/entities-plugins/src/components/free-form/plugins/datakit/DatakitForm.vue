@@ -9,7 +9,7 @@
       data-testid="datakit-editor-mode-switcher"
       :model-value="realEditorMode"
       :options="editorModes"
-      @update:model-value="editorMode = $event"
+      @update:model-value="selectEditorMode"
     >
       <template #option-label="{ option }">
         <KTooltip
@@ -95,6 +95,7 @@ import FlowEditor from './flow-editor/FlowEditor.vue'
 // import { DatakitConfigSchema } from './schema/strict'
 import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
+  omitBackendFilledFields,
 } from './schema/compat'
 
 defineOptions({ inheritAttrs: false })
@@ -116,14 +117,24 @@ onMounted(() => {
 // Editor mode selection
 
 const { editorMode } = usePreferences()
+
+// Once an incompatible config forces the code editor, stay there until the user switches back,
+// instead of jumping to the flow editor as soon as the config becomes compatible again
+const stayInCodeEditor = ref(false)
+
 const realEditorMode = computed<EditorMode>(() => {
   // Disable flow editor for non-Konnect apps or if flow is not available due to incompatible config
-  if (formConfig.app !== 'konnect' || flowAvailable.value === false) {
+  if (formConfig.app !== 'konnect' || flowAvailable.value === false || stayInCodeEditor.value) {
     return 'code'
   }
 
   return editorMode.value
 })
+
+function selectEditorMode(mode: EditorMode) {
+  editorMode.value = mode
+  stayInCodeEditor.value = false
+}
 const layoutEditorMode = computed<'form' | 'code'>(() => {
   if (formConfig.app === 'kongManager') {
     return 'code'
@@ -145,9 +156,12 @@ const flowUnavailableReason = ref<string>('')
  * Configs it cannot represent must stay in the code editor, otherwise unsupported fields would be dropped.
  */
 function checkFlowCompat(config: unknown) {
-  const { success, error } = DatakitConfigCompatSchema.safeParse(config)
+  const { success, error } = DatakitConfigCompatSchema.safeParse(omitBackendFilledFields(config, props.schema))
   flowUnavailableReason.value = success || !error ? '' : getSchemaErrorMessage(error)
   flowAvailable.value = success
+  if (!success) {
+    stayInCodeEditor.value = true
+  }
 }
 
 // Check before the first render so the flow editor never loads an incompatible config

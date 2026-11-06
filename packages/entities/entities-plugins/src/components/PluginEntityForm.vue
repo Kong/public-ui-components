@@ -1,30 +1,22 @@
 <template>
   <div class="kong-ui-entities-plugin-form">
-    <KSkeleton
-      v-if="loading"
-      type="form"
-    />
-
     <div
-      v-else-if="(formModel.id && editing) || !editing"
+      v-if="!editing || record.id"
       class="entity-form"
     >
-      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
         :is="freeformComponent"
-        v-if="freeformComponent"
         :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
-        :form-model="formModel"
-        :form-schema="formSchema"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
-        :plugin-name="formModel.name"
+        :plugin-name="pluginName"
         :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
+        :scope-options="scopeOptions"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -57,38 +49,31 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useHelpers } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   FORMS_CONFIG,
   REDIS_CREATE_SLIDEOUT,
-  customFields,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
-import composables from '../composables'
+import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
 import { useToaster } from '../composables/useToaster'
 import endpoints from '../plugins-endpoints'
-import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
+import type { FreeFormPluginData } from '../types/plugins/free-form'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
-import { getFreeFormComponent, getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
-import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
+import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
+import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
+import type { PluginScopeOptions } from './free-form/types'
 
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void
-  (e: 'model-updated',
-    payload: {
-      model: Record<string, any>
-      originalModel: Record<string, any>
-      data: Record<string, any>
-    }
-  ): void
+  /** The plugin payload to submit */
+  (e: 'model-updated', data: FreeFormPluginData): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'click:learn-more', entity: string): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
@@ -108,23 +93,23 @@ const props = defineProps({
     },
   },
   /**
-   * Entity data if plugin is scoped
+   * The plugin name, e.g. `acl`
    */
-  entityMap: {
-    type: Object as PropType<Record<string, PluginEntityInfo>>,
-    default: () => ({}),
+  pluginName: {
+    type: String,
+    required: true,
+  },
+  /**
+   * The source plugin of a cloned plugin
+   */
+  sourcePlugin: {
+    type: String,
+    default: undefined,
   },
   /**
    * Plugin data if being edited
    */
   record: {
-    type: Object as PropType<Record<string, any>>,
-    default: () => ({}),
-  },
-  /**
-   * Form schema
-   */
-  schema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
@@ -154,6 +139,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** The scope options of the free-form layout */
+  scopeOptions: {
+    type: Object as PropType<PluginScopeOptions>,
+    default: undefined,
+  },
 })
 
 const isKonnectManagedRedisEnabled = computed<boolean>(() => {
@@ -163,14 +153,7 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
   return konnect.isCloudGateway === true
 })
 
-const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
-
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-
-const { parseSchema } = composables.useSchemas({
-  entityId: props.entityMap.focusedEntity?.id || undefined,
-})
-const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
 const setPluginFormLayoutState = (value: boolean) => {
@@ -178,8 +161,6 @@ const setPluginFormLayoutState = (value: boolean) => {
     pluginFormLayoutState.value = value
   }
 }
-
-const { objectsAreEqual } = useHelpers()
 
 const mapControlPlane = (url: string) => {
   let urlString = url
@@ -349,17 +330,16 @@ provide(REDIS_CREATE_SLIDEOUT, {
   toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
 })
 
-const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
-const freeformComponent = shallowRef<any>()
-const formSchema = ref<Record<string, any>>({})
-const originalModel = reactive<Record<string, any>>({})
-const formModel = reactive<Record<string, any>>({})
+// For cloned plugins, use the source plugin name for rendering decisions
+const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)
+const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
+const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))
 const freeformSchema = computed(() => {
   const enhanced = appendEntityChecksFromMetadata(
-    formModel.name,
+    props.pluginName,
     props.rawSchema as FormSchema,
   )
-  return distributeEntityChecks(enhanced)
+  return convertConfigSetsToArrays(distributeEntityChecks(enhanced))
 })
 
 const vaultSecretPickerSetup = ref<string | false>(false)
@@ -373,342 +353,8 @@ const handleVaultSecretPickerAutofill = (secretRef: string) => {
   vaultSecretPickerSetup.value = false
 }
 
-const syncFormRenderingMode = (pluginName?: string) => {
-  if (!pluginName) {
-    pluginConfig.value = undefined
-    freeformComponent.value = undefined
-
-    setPluginFormLayoutState(false)
-
-    return
-  }
-
-  // For cloned plugins, use the source plugin name for rendering decisions
-  const effectivePluginName = props.schema?._sourcePlugin || pluginName
-  pluginConfig.value = getPluginConfig(effectivePluginName)
-  freeformComponent.value = getFreeFormComponent(effectivePluginName)
-
-  setPluginFormLayoutState(Boolean(freeformComponent.value))
-}
-
-// This function transforms the form data into the correct structure to be submitted to the API
-const getModel = (freeformFields?: string[]): Record<string, any> => {
-  const schema = { ...props.schema }
-  const inputModel = formModel
-  const origModel = originalModel
-  const formModelFields = Object.keys(inputModel)
-  const outputModel: Record<string, any> = {}
-
-  if (!isObjectEmpty(formSchema.value)) {
-    // convert formSchema from array to object
-    for (let i = 0; i < formSchema.value?.fields?.length; i++) {
-      schema[formSchema.value.fields[i].model] = formSchema.value.fields[i]
-    }
-  }
-
-  // Moved custom field keys to top level of schema & remove key
-  customFields.forEach((customField: string) => {
-    if (schema[customField]) {
-      schema[customField].fields.forEach((field: Record<string, any>) => {
-        // if the field has a fields array, set each to top level.
-        // Check out buildCustomFields() in EntityMixin for similar logic
-        if (field.fields) {
-          field.fields.forEach((subField: Record<string, any>) => {
-            schema[subField.model] = subField
-          })
-        }
-
-        if (field.model) schema[field.model] = field
-      })
-      delete schema[customField]
-    }
-  })
-
-  // Iterate over each field in the form, transform each field value to match the
-  // Kong Admin APIs request expectations for submission
-  formModelFields.forEach(fieldName => {
-    if (!schema[fieldName]) {
-      // special handling for partials
-      if (fieldName === 'partials') {
-        outputModel[fieldName] = inputModel[fieldName]
-      }
-      return
-    }
-
-    const fieldSchema = schema[fieldName]
-    let fieldValue = inputModel[fieldName]
-    const originalValue = origModel[fieldName]
-    const fieldValueType = Array.isArray(fieldValue) ? 'array' : typeof fieldValue
-    const fieldSchemaValueType = fieldSchema ? fieldSchema.valueType : null
-    const fieldSchemaArrayValueType = fieldSchema ? fieldSchema.valueArrayType : null
-    const transformer = fieldSchema ? fieldSchema.transform : null
-
-    if (fieldValue == null && originalValue == null && !fieldSchema.submitWhenNull) {
-      return
-    }
-
-    if (fieldSchema) {
-      // Check whether field has a value type and do conversions when required
-      // `.valueType` property values are defined in `pages/Plugins/Form.vue`
-      if (fieldSchemaValueType && fieldValueType !== fieldSchemaValueType) {
-        switch (fieldSchemaValueType) {
-          case 'array':
-            if (fieldValueType === 'string' && fieldValue.length) {
-              fieldValue = fieldValue.split(',').map((value: any) => {
-                value = value.trim()
-
-                if (fieldSchemaArrayValueType === 'string') {
-                  return String(value)
-                }
-
-                if (fieldSchemaArrayValueType === 'number') {
-                  return Number(value)
-                }
-
-                if (fieldSchemaArrayValueType === 'boolean') {
-                  // Convert string based boolean values ('true', 'false') to boolean type
-                  if (typeof value === 'string') {
-                    return (value.toLowerCase() === 'true' || value === '1')
-                  }
-
-                  // Handle a numerical value, just in-case someone fudged an input type.
-                  if (typeof value === 'number') {
-                    return (value === 1)
-                  }
-                }
-
-                return value
-              })
-            }
-
-            // We only want to set array fields to empty if the field is empty
-            if ((!fieldValue || !fieldValue.length)) {
-              fieldValue = fieldSchema.submitWhenNull ? null : []
-            }
-
-            break
-
-          case 'number':
-            // If the field is referenceable, we allow string values to be passed through
-            if (fieldSchema.referenceable !== true) {
-              // Use `Number()` to properly convert a string representation to it's
-              // proper sub-type (integer, float)
-              fieldValue = Number(fieldValue)
-            }
-            break
-
-          case 'boolean':
-            // Convert string based boolean values ('true', 'false') to boolean type
-            if (fieldValueType === 'string') {
-              fieldValue = (fieldValue.toLowerCase() === 'true' || fieldValue === '1')
-            }
-
-            // Handle a numerical value, just in-case someone fudged an input type.
-            if (fieldValueType === 'number') {
-              fieldValue = (fieldValue === 1)
-            }
-
-            break
-
-          // Handle values that aren't strings but should be.
-          case 'string':
-            fieldValue = (fieldValue == null) ? '' : String(fieldValue)
-            break
-        }
-      } else if (fieldSchemaValueType === 'array') {
-        if ((!fieldValue || !fieldValue.length)) {
-          fieldValue = fieldSchema.submitWhenNull ? null : []
-        } else if (fieldSchema.inputAttributes?.type === 'number') {
-          fieldValue = fieldValue.map((value: string) => Number(value))
-        }
-      }
-
-      // FIXME: Special treatment for AI plugins with complexly nested array fields
-      if (fieldSchema.type === 'array' && fieldSchema.nestedFields) {
-        const deepOmitNil = (o: Record<string, any>) => {
-          Object.keys(o).forEach(key => {
-            // if the value is an object (not an array or null), recursively call this function
-            if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && o[key] !== null) {
-              deepOmitNil(o[key])
-            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
-              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
-              delete o[key]
-            }
-          })
-        }
-        if (fieldValue && typeof fieldValue === 'object') {
-          deepOmitNil(fieldValue)
-        }
-      }
-
-      // Format Advanced Object for submission
-      if (fieldSchema.type === 'object-advanced' && fieldSchema.fields && fieldValue !== null) {
-        if (Object.entries(fieldValue).length === 0) {
-          fieldValue = null
-        } else {
-          Object.keys(fieldValue).forEach(key => {
-            if (Array.isArray(fieldValue[key])) return
-
-            fieldValue[key] = fieldValue[key].split(',')
-          })
-        }
-      }
-    }
-
-    // Converts the field name from dasherized notation that HTML & Vue understand
-    // to the dot notation that the Kong Admin API understands.
-    let fieldNameDotNotation = convertToDotNotation(fieldName)
-
-    // If the field name originally has dashes, they were converted to underscores during initiation.
-    // Now we need to convert them back to dashes because the Admin API expects dashes
-    if (fieldSchema.fieldNameHasDashes) {
-      const [keyToBeConverted, ...rest] = fieldNameDotNotation.split('.').reverse()
-
-      fieldNameDotNotation = [keyToBeConverted.replace(/_/g, '-'), ...rest].reverse().join('.')
-    }
-
-    if (fieldSchemaValueType === 'object-expand') {
-      let key
-
-      [fieldNameDotNotation, key] = fieldNameDotNotation.split('.')
-
-      let fieldObject: Record<string, any> = {}
-
-      // Rather then over writting the key in output model we, use the existing object if there is one
-      // this allows us to do things like support multiple developer meta fields
-      if (outputModel[fieldNameDotNotation]) {
-        fieldObject = outputModel[fieldNameDotNotation]
-      }
-
-      fieldObject[key] = fieldValue
-      fieldValue = fieldObject
-    }
-
-    // Empty fields are set to null to tell Kong to remove the value
-    // or reset this value to it's default.
-
-    // Include if field is empty & field has been modified from orginal value
-    if (originalValue !== undefined && fieldValue === '' && fieldValue !== originalValue) {
-      // We need to determine what type of 'empty' value to set for modified nested inputs,
-      // if we do not the model will not preserve its structure
-      // (this change may be able to be removed when core updates its reset default handling)
-      outputModel[fieldNameDotNotation] = fieldSchemaValueType === 'object' ? {} : null
-
-      // If empty & field is a checklist array, set as [] to prevent all options being selected
-    } else if (fieldSchema.type === 'checklist' && fieldValue === '') {
-      outputModel[fieldNameDotNotation] = []
-
-      // Include input value if field is not empty
-    } else if (fieldValue !== '') {
-      outputModel[fieldNameDotNotation] = fieldValue
-    }
-
-    // Do an optional final transform, as defined in transform() function in schema field
-    outputModel[fieldNameDotNotation] = transformer
-      ? transformer(fieldValue)
-      : outputModel[fieldNameDotNotation]
-
-    // If dot notated key (service.id) is null, set the whole object to null (service = null)
-    unsetNullForeignKey(fieldNameDotNotation, outputModel)
-  })
-
-  const model: Record<string, any> = unFlattenObject(outputModel)
-
-  // Handle the special case of the freeform plugin
-  if (freeformComponent.value) {
-    // remove any freeform fields from the model before merging
-    if (freeformFields && freeformFields.length) {
-      for (const field of freeformFields) {
-        delete model[field]
-      }
-    }
-    Object.assign(model, freeformData.value)
-  }
-
-  return model
-}
-
-const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
-  dismissField(formModel, additionalModel, dismissSchemaField, props.editing)
-  emit('model-updated', {
-    model: formModel,
-    originalModel,
-    data: getModel(),
-  })
-}
-
 const onValidityChange = (event: PluginValidityChangeEvent) => {
   emit('validity-change', event)
-}
-
-// special handling for problematic fields before we emit
-const updateModel = (data: Record<string, any>, parent?: string) => {
-  Object.keys(data).forEach(key => {
-    let modelKey = parent ? `${parent}-${key}` : key
-    let scheme = props.schema[modelKey]
-
-    // If `scheme` is undefined, it is because
-    // 1. the key is not the deepest nested key of the schema object
-    // 2. or the field name has dashes in it and its schema key was converted to underscores during initiation
-    // 3. or `parent` is already a schema key and `key` is a nested key of its value object
-    // For reasons 2 and 3, we need special logic to find the correct schema key
-    if (!scheme) {
-      const underscoredModelKey = parent ? `${parent}-${key.replace(/-/g, '_')}` : key.replace(/-/g, '_')
-
-      // Here we check if the underscored key exists in the schema and the `fieldNameHasDashes` flag is true
-      if (props.schema[underscoredModelKey]?.fieldNameHasDashes) {
-        modelKey = underscoredModelKey
-        scheme = props.schema[modelKey]
-      }
-
-      // Here we check if `parent` is a schema key and `key` is a nested key of its value object
-      if (parent && props.schema[parent]?.keyFromObject === key) {
-        modelKey = parent
-        scheme = props.schema[modelKey]
-      }
-    }
-
-    const value = data[key]
-    const type = typeof value
-
-    // Ensure Object Advanced field is saved to model as empty object
-    if (scheme && scheme.type === 'object-advanced' && !value) {
-      formModel[modelKey] = {}
-      originalModel[modelKey] = {}
-
-      return
-    }
-
-    // avoid pass by ref
-    if (Array.isArray(value)) {
-      formModel[modelKey] = JSON.parse(JSON.stringify(value))
-      originalModel[modelKey] = JSON.parse(JSON.stringify(value))
-
-      return
-    }
-
-    // update the model for each child of the object
-    if (type === 'object' && value && !value.length) {
-      return updateModel(value, modelKey)
-    }
-
-    // treatment for arrays, convert to comma separated string
-    if (type === 'object' && value && value.length && scheme.type === 'input') {
-      formModel[modelKey] = value.join(', ')
-      originalModel[modelKey] = value.join(', ')
-
-      return
-    }
-
-    formModel[modelKey] = value
-    originalModel[modelKey] = value
-  })
-
-  emit('model-updated', {
-    model: formModel,
-    originalModel,
-    data: getModel(),
-  })
 }
 
 // Walks a config value alongside its raw-schema subtree and drops keys that aren't in
@@ -786,126 +432,18 @@ const getConfigSubschema = (): UnionFieldSchema | undefined => {
 // the walker would over-strip those implicit fields and break the payload.
 const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
 
-// Mirrors the cloned-plugin resolution at line 475 — `_sourcePlugin` wins for clones so a
-// `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
-const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
-
-const freeformData = shallowRef<Record<string, any>>(props.record)
-const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
-  const unknownFieldStripped = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
+// The free-form layout owns every field of the payload except the plugin `name`
+const handleFreeFormUpdate = (value: FreeFormPluginData) => {
+  // `effectivePluginName` so a cloned datakit plugin also skips the strip
+  const unknownFieldStripped: FreeFormPluginData = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value)
     ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
     : value
 
-  freeformData.value = unknownFieldStripped
-
-  const newModel = { ...formModel }
-
-  // remove previous freeform fields from formModel
-  for (const field of fields || []) {
-    delete newModel[field]
-  }
-
-  emit('model-updated', {
-    // config change should also update the form model
-    // otherwise the submit button will be disabled
-    model: { ...newModel, ...unknownFieldStripped },
-    originalModel,
-    data: getModel(fields),
-  })
+  emit('model-updated', { name: props.pluginName, ...unknownFieldStripped })
 }
-
-const loading = ref(true)
-const initFormModel = (): void => {
-  if (props.record && props.schema) {
-    // global fields
-    updateModel({
-      enabled: props.record.enabled ?? true,
-      ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
-      ...(enableConditionField && props.record.condition != null && { condition: props.record.condition }),
-      ...(props.record.protocols && { protocols: props.record.protocols }),
-      ...(props.record.tags && { tags: props.record.tags }),
-    })
-
-    if (props.record.config) { // typical plugins
-      // scope fields
-      if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
-        (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
-        updateModel({
-          service_id: props.record.service_id || props.record.service,
-          route_id: props.record.route_id || props.record.route,
-          consumer_id: props.record.consumer_id || props.record.consumer,
-          consumer_group_id: props.record.consumer_group_id || props.record.consumer_group,
-        })
-      }
-
-      // handle partials and provide to formRedis component  TODO: confirm whether custom plugin need this
-      if (props.record.partials) {
-        onPartialToggled('redis', { partials: props.record.partials })
-      }
-
-      // main plugin configuration
-      if (freeformComponent.value) {
-        // keep original config from record for freeform plugins
-        handleFreeFormUpdate(props.record)
-      } else {
-        updateModel(props.record.config, 'config')
-      }
-    }
-  }
-
-  // scoping logic, convert _ to - for form model
-  // Check if incoming field exists in current model and if so update
-  if (Object.keys(props.entityMap).length && !props.entityMap.global && props.schema) {
-    const updateFields: Record<string, any> = {}
-    for (const entity in props.entityMap) {
-      const id = props.entityMap[entity].id
-      const idField = props.entityMap[entity].idField
-      const key = idField === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(idField).replace('_', '-'))
-
-      // ex. set consumer-id: <entityId>
-      if (Object.prototype.hasOwnProperty.call(formModel, key)) {
-        updateFields[key] = id
-      }
-    }
-
-    updateModel(updateFields)
-  }
-
-  loading.value = false
-}
-
-watch(loading, (newLoading) => {
-  emit('loading', newLoading)
-})
-// if the schema changed we've got to start over and completely rebuild the form model
-watch(() => props.schema, (newSchema, oldSchema) => {
-  if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
-    return
-  }
-  const parsedForm: Record<string, any> = parseSchema(newSchema)
-
-  Object.assign(formModel, parsedForm.model)
-
-  formSchema.value = {
-    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-      return { ...r, disabled: r.disabled || false }
-    }),
-  }
-  Object.assign(originalModel, JSON.parse(JSON.stringify(parsedForm.model)))
-
-  syncFormRenderingMode(parsedForm.model.name)
-
-  initFormModel()
-}, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  const form = parseSchema(props.schema)
-
-  Object.assign(formModel, form.model)
-  formSchema.value = form.schema
-  syncFormRenderingMode(form.model.name)
-
-  initFormModel()
+  setPluginFormLayoutState(true)
 })
 
 onBeforeUnmount(() => {

@@ -47,8 +47,6 @@ function mountLayout(
           pluginName: 'rate-limiting',
           isEditing: Object.keys(model).length > 0,
           onFormChange: (value: Record<string, unknown>) => changes.push(value),
-          formSchema: { fields: [] },
-          formModel: {},
           formConfig: options.formConfig,
         },
         { default: () => h(ConfigForm) },
