@@ -17,23 +17,6 @@ const baseConfig: KonnectPluginFormConfig = {
   cancelRoute: { name: 'home' },
 }
 
-// Minimal `props.schema` so `parseSchema` produces `model.name`, which lets
-// `syncFormRenderingMode` resolve the freeform branch. The strip filter itself
-// reads from `props.rawSchema`, not this.
-const buildPropSchema = (pluginName: string) => ({
-  name: {
-    default: pluginName,
-    type: 'input',
-    inputType: 'hidden',
-    model: 'name',
-  },
-  enabled: {
-    default: true,
-    type: 'switch',
-    model: 'enabled',
-  },
-})
-
 const mountForm = (opts: {
   pluginName: string
   rawSchema: Record<string, any>
@@ -46,7 +29,7 @@ const mountForm = (opts: {
       config: baseConfig,
       // An existing plugin always has an id, the form waits for it in edit mode
       record: (opts.editing ?? true) ? { id: 'plugin-id', ...opts.record } : opts.record,
-      schema: buildPropSchema(opts.pluginName),
+      pluginName: opts.pluginName,
       rawSchema: opts.rawSchema,
       editing: opts.editing ?? true,
       onModelUpdated: cy.spy().as('modelUpdatedSpy'),
@@ -471,5 +454,37 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
         })
       })
     })
+  })
+})
+
+describe('<PluginEntityForm /> — config sets', () => {
+  it('renders sets without one_of as arrays', () => {
+    const router = createRouter({
+      routes: [{ path: '/', name: 'home', component: { template: '<div />' } }],
+      history: createMemoryHistory(),
+    })
+
+    mountForm({
+      pluginName: 'my-custom-plugin',
+      rawSchema: {
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { ports: { type: 'set', elements: { type: 'integer' } } },
+                { names: { type: 'set', elements: { type: 'string' } } },
+              ],
+            },
+          },
+        ],
+      },
+      record: {},
+      editing: false,
+      router,
+    })
+
+    cy.getTestId('ff-array-config.ports').should('exist')
+    cy.getTestId('ff-array-config.names').should('exist')
   })
 })

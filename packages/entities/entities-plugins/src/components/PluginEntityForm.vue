@@ -1,30 +1,22 @@
 <template>
   <div class="kong-ui-entities-plugin-form">
-    <KSkeleton
-      v-if="loading"
-      type="form"
-    />
-
     <div
-      v-else-if="!editing || record.id"
+      v-if="!editing || record.id"
       class="entity-form"
     >
-      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
         :is="freeformComponent"
-        v-if="freeformComponent"
         :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
-        :form-model="formModel"
-        :form-schema="formSchema"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
-        :plugin-name="formModel.name"
+        :plugin-name="pluginName"
         :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
+        :scope-options="scopeOptions"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -57,7 +49,7 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useHelpers } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
@@ -69,18 +61,17 @@ import '@kong-ui-public/forms/dist/style.css'
 import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
-import composables from '../composables'
+import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
 import { useToaster } from '../composables/useToaster'
 import endpoints from '../plugins-endpoints'
-import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from '../types/plugins/free-form'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/schema-enhancement'
-import { getFreeFormComponent, getPluginConfig, type ResolvedPluginFormConfig } from './free-form/plugin-registry'
+import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
+import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
+import type { PluginScopeOptions } from './free-form/types'
 
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void
   /** The plugin payload to submit */
   (e: 'model-updated', data: FreeFormPluginData): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
@@ -102,23 +93,23 @@ const props = defineProps({
     },
   },
   /**
-   * Entity data if plugin is scoped
+   * The plugin name, e.g. `acl`
    */
-  entityMap: {
-    type: Object as PropType<Record<string, PluginEntityInfo>>,
-    default: () => ({}),
+  pluginName: {
+    type: String,
+    required: true,
+  },
+  /**
+   * The source plugin of a cloned plugin
+   */
+  sourcePlugin: {
+    type: String,
+    default: undefined,
   },
   /**
    * Plugin data if being edited
    */
   record: {
-    type: Object as PropType<Record<string, any>>,
-    default: () => ({}),
-  },
-  /**
-   * Form schema
-   */
-  schema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
@@ -148,6 +139,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** The scope options of the free-form layout */
+  scopeOptions: {
+    type: Object as PropType<PluginScopeOptions>,
+    default: undefined,
+  },
 })
 
 const isKonnectManagedRedisEnabled = computed<boolean>(() => {
@@ -159,18 +155,12 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema } = composables.useSchemas({
-  entityId: props.entityMap.focusedEntity?.id || undefined,
-})
-
 const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
 const setPluginFormLayoutState = (value: boolean) => {
   if (pluginFormLayoutState) {
     pluginFormLayoutState.value = value
   }
 }
-
-const { objectsAreEqual } = useHelpers()
 
 const mapControlPlane = (url: string) => {
   let urlString = url
@@ -340,16 +330,16 @@ provide(REDIS_CREATE_SLIDEOUT, {
   toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
 })
 
-const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
-const freeformComponent = shallowRef<any>()
-const formSchema = ref<Record<string, any>>({})
-const formModel = reactive<Record<string, any>>({})
+// For cloned plugins, use the source plugin name for rendering decisions
+const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)
+const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
+const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))
 const freeformSchema = computed(() => {
   const enhanced = appendEntityChecksFromMetadata(
-    formModel.name,
+    props.pluginName,
     props.rawSchema as FormSchema,
   )
-  return distributeEntityChecks(enhanced)
+  return convertConfigSetsToArrays(distributeEntityChecks(enhanced))
 })
 
 const vaultSecretPickerSetup = ref<string | false>(false)
@@ -361,24 +351,6 @@ const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: 
 const handleVaultSecretPickerAutofill = (secretRef: string) => {
   vaultSecretPickerAutofillAction.value?.(secretRef)
   vaultSecretPickerSetup.value = false
-}
-
-const syncFormRenderingMode = (pluginName?: string) => {
-  if (!pluginName) {
-    pluginConfig.value = undefined
-    freeformComponent.value = undefined
-
-    setPluginFormLayoutState(false)
-
-    return
-  }
-
-  // For cloned plugins, use the source plugin name for rendering decisions
-  const effectivePluginName = props.schema?._sourcePlugin || pluginName
-  pluginConfig.value = getPluginConfig(effectivePluginName)
-  freeformComponent.value = getFreeFormComponent(effectivePluginName)
-
-  setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
 
 const onValidityChange = (event: PluginValidityChangeEvent) => {
@@ -460,68 +432,18 @@ const getConfigSubschema = (): UnionFieldSchema | undefined => {
 // the walker would over-strip those implicit fields and break the payload.
 const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
 
-// Mirrors the cloned-plugin resolution at line 475 — `_sourcePlugin` wins for clones so a
-// `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
-const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
-
 // The free-form layout owns every field of the payload except the plugin `name`
 const handleFreeFormUpdate = (value: FreeFormPluginData) => {
-  const unknownFieldStripped: FreeFormPluginData = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
+  // `effectivePluginName` so a cloned datakit plugin also skips the strip
+  const unknownFieldStripped: FreeFormPluginData = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value)
     ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
     : value
 
-  emit('model-updated', { name: formModel.name, ...unknownFieldStripped })
+  emit('model-updated', { name: props.pluginName, ...unknownFieldStripped })
 }
-
-const loading = ref(true)
-const initFormModel = (): void => {
-  // When the plugin is created under an entity, preselect it as the scope
-  // e.g. `service-id: <entityId>`, the free-form layout reads it from the form model
-  if (Object.keys(props.entityMap).length && !props.entityMap.global) {
-    for (const entity in props.entityMap) {
-      const id = props.entityMap[entity].id
-      const idField = props.entityMap[entity].idField
-      const key = idField === 'consumer_group_id' ? 'consumer_group-id' : idField?.replace('_', '-')
-
-      if (key && Object.prototype.hasOwnProperty.call(formModel, key)) {
-        formModel[key] = id
-      }
-    }
-  }
-
-  loading.value = false
-}
-
-watch(loading, (newLoading) => {
-  emit('loading', newLoading)
-})
-// if the schema changed we've got to start over and completely rebuild the form model
-watch(() => props.schema, (newSchema, oldSchema) => {
-  if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
-    return
-  }
-  const parsedForm: Record<string, any> = parseSchema(newSchema)
-
-  Object.assign(formModel, parsedForm.model)
-
-  formSchema.value = {
-    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-      return { ...r, disabled: r.disabled || false }
-    }),
-  }
-  syncFormRenderingMode(parsedForm.model.name)
-
-  initFormModel()
-}, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  const form = parseSchema(props.schema)
-
-  Object.assign(formModel, form.model)
-  formSchema.value = form.schema
-  syncFormRenderingMode(form.model.name)
-
-  initFormModel()
+  setPluginFormLayoutState(true)
 })
 
 onBeforeUnmount(() => {

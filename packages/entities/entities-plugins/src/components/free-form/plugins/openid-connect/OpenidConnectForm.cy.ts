@@ -190,13 +190,6 @@ const createSchema = (
 }
 
 // Minimal VFG schema — only used by StandardLayout for global fields (enabled, name, scope)
-const createFormSchema = () => ({
-  fields: [
-    { model: 'enabled', type: 'switch', default: true },
-    { model: 'name', type: 'input', inputType: 'hidden' },
-  ],
-})
-
 // ─── Model fixtures ───────────────────────────────────────────────────────────
 
 // API-format model (nested config, not dash-keyed VFG model)
@@ -259,8 +252,6 @@ const mountForm = (options: MountOptions = {}) => {
     props: {
       schema: createSchema(withPrincipals, withCredentialClaims, withUnmarkedCredentialClaims, withJit),
       formConfig: minRuntimeVersion ? { minRuntimeVersion } : undefined,
-      formSchema: createFormSchema(),
-      formModel: {},
       model,
       isEditing,
       pluginName: 'openid-connect',

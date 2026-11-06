@@ -41,7 +41,7 @@
       :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
     >
       <component
-        :is="scopeSchema?.disabled ? KTooltip : 'div'"
+        :is="scopeOptions?.disabled ? KTooltip : 'div'"
         v-bind="scopeWrapperAttrs"
       >
         <div class="radio-group">
@@ -49,25 +49,25 @@
             v-model="scoped"
             card
             card-orientation="horizontal"
-            v-bind="radioGroup[0]"
-            :disabled="scopeSchema?.disabled"
+            v-bind="scopeOptions?.global"
+            :disabled="scopeOptions?.disabled"
             :selected-value="false"
             @update:model-value="handleScopeChange"
           />
           <KRadio
-            v-if="radioGroup[1]"
+            v-if="scopeOptions?.scoped"
             v-model="scoped"
             card
             card-orientation="horizontal"
-            v-bind="radioGroup[1]"
-            :disabled="scopeSchema?.disabled"
+            v-bind="scopeOptions.scoped"
+            :disabled="scopeOptions.disabled"
             :selected-value="true"
             @update:model-value="handleScopeChange"
           />
         </div>
       </component>
       <div
-        v-if="scopeEntitiesSchema"
+        v-if="scopeEntityFields.length"
         v-show="scoped"
         class="scope-detail"
       >
@@ -190,7 +190,7 @@
       />
 
       <KCollapse
-        v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+        v-if="enableConditionField"
         v-model="advancedCollapsed"
         data-testid="view-general-info-additional-settings"
         :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
@@ -212,12 +212,7 @@
 </template>
 
 <script lang="ts">
-export interface Props<T extends FreeFormPluginData = any> extends PluginFormLayoutProps<T> {
-  /** VFG schema */
-  formSchema: any
-  /** VFG form model */
-  formModel: Record<string, any>
-}
+export type Props<T extends FreeFormPluginData = any> = PluginFormLayoutProps<T>
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
@@ -236,6 +231,7 @@ import CodeEditor from '../components/CodeEditor.vue'
 import ConditionField from '../components/ConditionField.vue'
 import useI18n from '../../../composables/useI18n'
 import type { PluginFormLayoutProps } from './provider'
+import type { PluginScopeName } from '../types'
 import PluginConfigurationForm from '../components/PluginConfigurationForm.vue'
 
 defineOptions({ inheritAttrs: false })
@@ -270,6 +266,7 @@ const { hideEditorModeSwitcher = false, ...props } = defineProps<Props<T>>()
 const attrs = useAttrs()
 
 const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
+const enableConditionField = inject<boolean>(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
 type EditorMode = 'form' | 'code'
 
@@ -339,7 +336,7 @@ const hasConfigFields = computed(() => {
 const generalInfoStep = computed(() => 2 + (props.configSections?.length ?? (hasConfigFields.value ? 1 : 0)))
 
 const scopeWrapperAttrs = computed(() => {
-  if (scopeSchema.value?.disabled) {
+  if (props.scopeOptions?.disabled) {
     return {
       class: 'disabled-scope',
       maxWidth: '300',
@@ -349,71 +346,11 @@ const scopeWrapperAttrs = computed(() => {
   return { class: 'scope' }
 })
 
-interface LegacyFormSchemaField {
-  model: string
-  type: string
-  fields: LegacyFormSchemaField[]
-  label?: string
-  description?: string
-  disabled?: boolean
-  disabledTooltip?: string
-  labelField?: string
-}
+const scopeEntityFields = computed(() => props.scopeOptions?.entityFields ?? [])
 
-interface LegacyFormSchemaGroup {
-  fields: LegacyFormSchemaField[]
-  collapsible?: {
-    nestedCollapsible?: {
-      fields?: LegacyFormSchemaField[]
-    }
-  }
-}
+// Used when the plugin schema has no `protocols` field
+const ALL_PROTOCOLS = ['grpc', 'grpcs', 'http', 'https', 'tcp', 'tls', 'tls_passthrough', 'udp', 'ws', 'wss']
 
-const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
-  if (props.formSchema?.groups) {
-    return props.formSchema.groups.reduce(
-      (acc: any[], group: LegacyFormSchemaGroup) => {
-        const fields = group.fields
-
-        const allFields = group.collapsible?.nestedCollapsible?.fields
-          ? fields.concat(group.collapsible.nestedCollapsible.fields)
-          : fields
-
-        return acc.concat(allFields)
-      },
-      [] as LegacyFormSchemaField[],
-    )
-  }
-  return props.formSchema?.fields || []
-})
-
-const scopeSchema = computed(() => {
-  return flattenFormSchemaFields.value.find(field => field.type === 'selectionGroup')
-})
-
-const radioGroup = computed(() => {
-  return (scopeSchema.value?.fields || []).map(({ label, description }) => ({ label, description }))
-})
-
-const scopeEntitiesSchema = computed(() => {
-  return scopeSchema.value?.fields?.[1]
-})
-
-const scopeEntityFields = computed(() => {
-  return (scopeEntitiesSchema.value?.fields ?? []).map((field: any) => ({
-    name: field.model.split('-')[0],
-    entity: field.entity,
-    fields: field.inputValues?.fields,
-    label: field.label,
-    placeholder: field.placeholder,
-    help: field.help,
-    disabled: field.disabled,
-    disabledTooltip: field.disabledTooltip,
-    labelField: field.labelField,
-  }))
-})
-
-const MORE_FIELDS = ['instance_name', 'protocols', 'tags', 'condition']
 // Root fields of the plugin schema the freeform engine owns. `expressions` is
 // not rendered as a field of its own (`Form` filters it out of `childFields`),
 // but it has to reach `Form` so each expressible field can resolve its twin —
@@ -425,73 +362,63 @@ const freeFormSchema = computed(() => {
     fields: props.schema.fields.filter(item => FREE_FORM_SCHEMA_KEYS.includes(Object.keys(item)[0])),
   }
 
-  // append VFG fields to the freeform schema
-  const enabledField = flattenFormSchemaFields.value.find(field => field.model === 'enabled')
-  const vfgFields = [
-    // enabled field
-    ...(enabledField ? [enabledField] : []),
-    // scope fields
-    ...(scopeEntitiesSchema.value?.fields ?? []),
-    // general info fields
-    ...flattenFormSchemaFields.value.filter(field => MORE_FIELDS.includes(field.model!)),
-  ]
-  vfgFields.forEach((field: any) => {
-    if (field.type === 'AutoSuggest') { // service, route, consumer, consumer_group
-      result.fields.push({
-        [field.model.split('-')[0]]: {
-          type: 'foreign',
-          reference: field.entity,
-          description: field.help,
-        },
-      })
-    } else if (field.model === 'enabled') {
-      result.fields.push({
-        [field.model]: {
-          type: 'boolean',
-          default: true,
-        },
-      })
+  result.fields.push({ enabled: { type: 'boolean', default: true } })
 
-    } else if (field.model === 'instance_name' || field.model === 'condition') {
-      result.fields.push({
-        [field.model]: {
-          type: 'string',
-          description: field.help,
-        },
-      })
-    } else if (field.model === 'protocols') {
-      result.fields.push({
-        [field.model]: {
-          type: 'set',
-          elements: {
-            type: 'string',
-            one_of: field.values.map((v: any) => v.value),
-          },
-          default: [...field.default],
-          required: field.required,
-          description: field.help,
-          help: field.default
-            ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
-              protocols: field.default.join(', '),
-            })
-            : t('plugins.form.fields.protocols.placeholder'),
-        },
-      })
-    } else if (field.model === 'tags') {
-      result.fields.push({
-        [field.model]: {
-          type: 'set',
-          elements: {
-            type: 'string',
-          },
-          description: field.help,
-          default: field.default || [],
-        },
-      })
-    } else {
-      throw new Error(`Unsupported VFG field type '${field.type}' for model '${field.model}'`)
-    }
+  scopeEntityFields.value.forEach((field) => {
+    result.fields.push({
+      [field.name]: {
+        type: 'foreign',
+        reference: field.entity,
+        description: field.help,
+      },
+    })
   })
+
+  const protocols = props.schema.fields.find(item => Object.keys(item)[0] === 'protocols')?.protocols as Record<string, any> | undefined
+  const protocolsDefault: string[] = protocols?.default ?? []
+  result.fields.push({
+    protocols: {
+      type: 'set',
+      elements: {
+        type: 'string',
+        one_of: protocols?.elements?.one_of?.length ? protocols.elements.one_of : ALL_PROTOCOLS,
+      },
+      default: [...protocolsDefault],
+      required: true,
+      description: t('plugins.form.fields.protocols.help'),
+      help: t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+        protocols: protocolsDefault.join(', '),
+      }),
+    },
+  })
+
+  result.fields.push({
+    instance_name: {
+      type: 'string',
+      description: t('plugins.form.fields.instance_name.help'),
+    },
+  })
+
+  result.fields.push({
+    tags: {
+      type: 'set',
+      elements: {
+        type: 'string',
+      },
+      description: t('plugins.form.fields.tags.help'),
+      default: [],
+    },
+  })
+
+  if (enableConditionField) {
+    result.fields.push({
+      condition: {
+        type: 'string',
+        description: t('plugins.form.fields.condition.tooltip'),
+      },
+    })
+  }
+
   return result
 })
 
@@ -508,27 +435,16 @@ const prunedData = computed(() => {
 })
 
 /**
- * The scope-related field keys in VFG data model, e.g. `service-id`, `route-id`, `consumer-id`, `consumer_group-id`
- */
-const formModelScopeFields = computed<string[]>(() => {
-  return scopeEntitiesSchema.value?.fields.map((field: any) => field.model) ?? []
-})
-
-type ScopeFieldName = 'service' | 'route' | 'consumer' | 'consumer_group'
-
-/**
  * The scope-related field keys in freeform data model, e.g. `service`, `route`, `consumer`, `consumer_group`
  */
-const scopeFields = computed<ScopeFieldName[]>(() => {
-  return formModelScopeFields.value.map(field => field.split('-')[0] as ScopeFieldName)
-})
+const scopeFields = computed<PluginScopeName[]>(() => scopeEntityFields.value.map(field => field.name))
 
 // Cache of scope-related fields to restore when toggling scoped on/off
 const scopesCache = ref(
   props.isEditing
     ? pick(prunedData.value, scopeFields.value)
-    // For new plugin, initialize from formModel
-    : getScopesFromFormModel(),
+    // For new plugin, start with the preselected scope
+    : getDefaultScopes(),
 )
 
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
@@ -540,7 +456,7 @@ let skipUpdateScopeCache = false
 function prepareFormData(data: Partial<T>): Partial<T> {
   if (props.isEditing) return data
 
-  return { ...data, ... getScopesFromFormModel() }
+  return { ...data, ...getDefaultScopes() }
 }
 
 function handleScopeChange() {
@@ -604,17 +520,8 @@ function hasScopeId(value: any): value is { id: string } {
   return has(value, 'id') && value.id != null
 }
 
-function getScopesFromFormModel(): Partial<T> {
-  const data: Partial<T> = {}
-  formModelScopeFields.value.forEach(scopeField => {
-    if (props.formModel[scopeField]) {
-      const fieldName = scopeField.split('-')[0]
-      if (!fieldName) return
-      // Transfer 'service-id' to 'service': { id: '...' }
-      data[fieldName as keyof T] = { id: props.formModel[scopeField] } as any
-    }
-  })
-  return data
+function getDefaultScopes(): Partial<T> {
+  return { ...props.scopeOptions?.defaults } as Partial<T>
 }
 
 const advancedCollapsed = ref(true)

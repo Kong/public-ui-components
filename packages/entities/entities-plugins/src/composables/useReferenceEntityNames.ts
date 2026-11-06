@@ -7,7 +7,7 @@ import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '.
 // Add an entry here whenever Kong adds a new entity type plugins can reference (e.g. key, key-set).
 export type ReferenceField = 'service' | 'route' | 'consumer' | 'consumer_group'
 
-const REFERENCE_FIELD_CONFIG: Record<ReferenceField, { entityType: string, nameField: string }> = {
+export const REFERENCE_FIELD_CONFIG: Record<ReferenceField, { entityType: string, nameField: string }> = {
   service: { entityType: 'services', nameField: 'name' },
   route: { entityType: 'routes', nameField: 'name' },
   consumer: { entityType: 'consumers', nameField: 'username' },

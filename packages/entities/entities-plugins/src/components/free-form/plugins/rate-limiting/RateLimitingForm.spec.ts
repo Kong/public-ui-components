@@ -21,8 +21,6 @@ function mountForm(model: Record<string, any> = {}) {
         pluginName: 'rate-limiting',
         isEditing: Object.keys(model).length > 0,
         onFormChange: () => {},
-        formSchema: { fields: [] },
-        formModel: {},
       })
     },
   }))

@@ -331,3 +331,43 @@ export function transformFieldRulesToEntityChecks(fieldRules: FieldRules): Entit
 
   return entityChecks
 }
+
+/**
+ * Converts every `set` field without `one_of` elements in the `config` record to an `array`.
+ * Free-form renders such a set as tags (string elements) or as an enum with no options
+ * (other elements), the plugin form renders it as an array instead.
+ * Hidden and overwritten fields are not rendered, so their nested fields are left as is.
+ *
+ * @returns a converted copy of the schema
+ */
+export function convertConfigSetsToArrays(schema: FormSchema): FormSchema {
+  const cloned = JSON.parse(JSON.stringify(schema)) as FormSchema
+  const configEntry = cloned.fields.find(
+    (field): field is { config: RecordFieldSchema } => Object.prototype.hasOwnProperty.call(field, 'config'),
+  )
+
+  const convertRecord = (record: { fields?: RecordFieldSchema['fields'] }) => {
+    for (const fieldEntry of record.fields ?? []) {
+      const field = Object.values(fieldEntry)[0] as Record<string, any> | undefined
+      if (!field) continue
+
+      if (field.type === 'set' && !field.elements?.one_of) {
+        field.type = 'array'
+      }
+
+      if ('overwrite' in field || field.hidden) continue
+
+      if (Array.isArray(field.fields)) {
+        convertRecord(field)
+      } else if (field.type === 'array' && field.elements?.type === 'record') {
+        convertRecord(field.elements)
+      }
+    }
+  }
+
+  if (configEntry) {
+    convertRecord(configEntry.config)
+  }
+
+  return cloned
+}
