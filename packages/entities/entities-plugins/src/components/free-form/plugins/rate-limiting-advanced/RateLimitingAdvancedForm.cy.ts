@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import { REDIS_PARTIAL_INFO } from '../../const'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'

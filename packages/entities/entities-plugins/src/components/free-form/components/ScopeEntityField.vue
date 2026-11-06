@@ -11,7 +11,7 @@
       {{ fieldAttrs.label }}
     </KLabel>
 
-    <FieldScopedEntitySelect
+    <ScopedEntitySelect
       :id="fieldValue?.id ?? ''"
       :allow-uuid-search="allowUuidSearch"
       :disabled="loading"
@@ -38,14 +38,12 @@
 <script setup lang="ts">
 import { ref, toRef, computed, inject, onMounted } from 'vue'
 import { KLabel } from '@kong/kongponents'
-import {
-  FieldScopedEntitySelect,
-  FORMS_API_KEY,
-} from '@kong-ui-public/forms'
+import ScopedEntitySelect from './ScopedEntitySelect.vue'
+import { FORMS_API_KEY } from '../const'
 import { useField, useFieldAttrs } from '@kong-ui-public/freeform'
 import type { BaseFieldProps, EmptyValue } from '@kong-ui-public/freeform'
 import type { SelectItem } from '@kong/kongponents'
-import type { EntityData } from '@kong-ui-public/forms'
+import type { EntityData } from '../types'
 import useI18n from '../../../composables/useI18n'
 
 type ForeignFieldValue = { id: string } | EmptyValue

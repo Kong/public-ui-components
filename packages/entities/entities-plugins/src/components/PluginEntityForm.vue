@@ -50,26 +50,16 @@ import {
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
-import {
-  AUTOFILL_SLOT_NAME,
-  FORMS_API_KEY,
-  FORMS_CONFIG,
-  REDIS_CREATE_SLIDEOUT,
-  type AutofillSlotProps,
-} from '@kong-ui-public/forms'
-import '@kong-ui-public/forms/dist/style.css'
-import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
-import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
-import { useToaster } from '../composables/useToaster'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from '../types/plugins/free-form'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
-import type { PluginScopeOptions } from './free-form/types'
+import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
+import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -323,12 +313,6 @@ watch(() => props.config, (newConfig) => {
   Object.assign(liveConfig, newConfig)
 })
 provide(FORMS_CONFIG, liveConfig)
-
-const toaster = useToaster()
-provide(REDIS_CREATE_SLIDEOUT, {
-  component: markRaw(RedisConfigurationFormSlideout),
-  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
-})
 
 // For cloned plugins, use the source plugin name for rendering decisions
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)

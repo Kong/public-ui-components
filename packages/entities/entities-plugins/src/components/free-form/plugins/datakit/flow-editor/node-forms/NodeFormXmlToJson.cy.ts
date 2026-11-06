@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue'
 import { Form } from '@kong-ui-public/freeform'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../../../const'
 
 import NodeFormXmlToJson from './NodeFormXmlToJson.vue'
 import { provideEditorStore } from '../store/store'

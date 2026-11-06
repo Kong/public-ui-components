@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { inject, ref, computed, watch } from 'vue'
 import { VaultSecretPicker as VaultSecretPickerComponent } from '@kong-ui-public/entities-vaults'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../../const'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import composables from '../../../../../composables'
 

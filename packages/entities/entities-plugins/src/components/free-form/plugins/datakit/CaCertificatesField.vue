@@ -57,7 +57,7 @@
 import { computed, inject, onBeforeMount, toRef } from 'vue'
 import { KBadge, KMultiselect } from '@kong/kongponents'
 import type { LabelAttributes, MultiselectItem } from '@kong/kongponents'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import { useDebouncedFilter } from '@kong-ui-public/entities-shared'
 
 import endpoints from '../../../../plugins-endpoints'

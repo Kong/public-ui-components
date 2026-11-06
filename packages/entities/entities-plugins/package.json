@@ -138,7 +138,6 @@
     "@kong-ui-public/entities-redis-configurations": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
-    "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/freeform": "workspace:^",
     "lodash-es": "^4.18.1"
   }
