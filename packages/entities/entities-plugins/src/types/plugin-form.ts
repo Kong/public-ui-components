@@ -120,96 +120,11 @@ export interface PluginFormState {
   serverErrorMessage: string
 }
 
-export type PluginFieldType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
-
-export interface PluginTags {
-  label: string
-  name: string
-  type: 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag'
-  inputType: string
-  valueType: string
-  valueArrayType: string
-  placeholder: string
-  help: string
-  hint: string
-}
-
-export interface DefaultPluginsFormSchema {
-  type: PluginFieldType
-  default?: boolean | string[] | string
-  model?: 'enabled' | 'disabled'
-  label?: string
-  textOn?: string
-  textOff?: string
-  styleClasses?: string
-  inputType?: 'hidden' | 'text'
-  // Will be fixed in KHCP-6469
-  fields?: any
-  help?: string
-  tags?: PluginTags
-  values?: Array<Record<string, string | number | boolean>>
-  placeholder?: string
-  required?: boolean
-  /** Whether the field is pinned before the Plugin Configuration. FE only */
-  pinned?: boolean
-  // Will be fixed in KHCP-6469
-  getColumnFields?: (schema: unknown) => object
-}
-
 export type PartiallyRequired<T, K extends keyof T> = { [k in K]-?: T[k] } & { [k in keyof T]: T[k] }
-
-export type GetRequiredFieldsByContext<T extends DefaultPluginsFormSchema> = T['type'] extends 'input' ? PartiallyRequired<DefaultPluginsFormSchema, 'inputType'> : DefaultPluginsFormSchema
-
-export type DefaultPluginsSchemaRecord = Record<string, GetRequiredFieldsByContext<DefaultPluginsFormSchema>>
 
 /**
  * Types for schemas
  */
-
-export interface Tags {
-  label: string
-  name: string
-  type: string
-  inputType: string
-  valueType: string
-  valueArrayType: string
-  placeholder: string
-  help: string
-  hint: string
-}
-
-export interface AppRegFormSchema {
-  enabled: {
-    type: string
-    model: string
-    label: string
-    textOn: string
-    textOff: string
-    inputType: string
-    styleClasses: string
-    default: boolean
-  }
-  name: {
-    default: string
-    type: string
-    inputType: string
-    styleClasses: string
-  }
-  'service-id': {
-    type: string
-    label: string
-    styleClasses: string
-    description: string
-    model: string
-    entity: string
-    placeholder: string
-    inputValues: {
-      fields: string[]
-    }
-    help: string
-  }
-  tags: Tags
-}
 
 export interface Item {
   inputAttributes?: any

@@ -7,8 +7,7 @@ import type { PluginFormLayoutComponent, PluginFormLayoutProps } from './provide
 import type { Slots } from 'vue'
 
 type DynamicLayoutMountProps = PluginFormLayoutProps<FreeFormPluginData> & {
-  formSchema: any
-  formModel: Record<string, any>
+  scopeOptions?: any
 }
 
 const createBaseSchema = () => ({
@@ -25,39 +24,26 @@ const createBaseSchema = () => ({
   ],
 })
 
-const createFormSchema = () => ({
-  fields: [
-    {
-      model: 'enabled',
-      type: 'switch',
-      default: true,
-    },
-    {
-      type: 'selectionGroup',
-      fields: [
-        {
-          label: 'Global',
-          description: 'Plugin will apply to all requests',
-        },
-        {
-          label: 'Scoped',
-          description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
-          fields: [],
-        },
-      ],
-    },
-  ],
+const createScopeOptions = () => ({
+  disabled: false,
+  global: {
+    label: 'Global',
+    description: 'Plugin will apply to all requests',
+  },
+  scoped: {
+    label: 'Scoped',
+    description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
+  },
+  entityFields: [],
+  defaults: {},
 })
 
 const createLayoutProps = (overrides: Partial<DynamicLayoutMountProps> = {}): DynamicLayoutMountProps => ({
   schema: createBaseSchema() as any,
-  formSchema: createFormSchema(),
+  scopeOptions: createScopeOptions(),
   model: {
     enabled: true,
     config: {},
-  },
-  formModel: {
-    enabled: true,
   },
   onFormChange: cy.spy().as('onFormChange'),
   pluginName: 'test-plugin',

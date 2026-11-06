@@ -89,10 +89,6 @@ export default function useHelpers() {
     }
   }
 
-  const convertToDotNotation = (key: string) => {
-    return key.replace(/-/g, '.')
-  }
-
   // _ gets converted to space and only the first letter of each '-' separated segment is capitalized
   const formatPluginFieldLabel = (label: string) => {
     return label
@@ -135,7 +131,6 @@ export default function useHelpers() {
 
   return {
     setFieldType,
-    convertToDotNotation,
     formatPluginFieldLabel,
     getTallestPluginCardHeight,
     getToggleVisibility,

@@ -58,8 +58,6 @@ const mountForm = (options: {
   cy.mount(MeteringAndBillingForm, {
     props: {
       schema: createSchema(),
-      formSchema: {},
-      formModel: {},
       model,
       isEditing,
       pluginName: 'metering-and-billing',

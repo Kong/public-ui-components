@@ -109,6 +109,36 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   isKonnectManagedRedisEnabled?: boolean
 }
 
+export type PluginScopeName = 'service' | 'route' | 'consumer' | 'consumer_group'
+
+/** A scope entity field, e.g. the Gateway Service select */
+export interface PluginScopeEntityField {
+  name: PluginScopeName
+  /** Kong entity type, e.g. `services` */
+  entity: string
+  label: string
+  placeholder: string
+  help: string
+  /** The entity key to show as the item label */
+  labelField: string
+  /** The entity keys to search and show */
+  fields: string[]
+  disabled: boolean
+  disabledTooltip: string
+}
+
+/** The plugin scope options of the standard layout */
+export interface PluginScopeOptions {
+  /** Disable switching between global and scoped */
+  disabled: boolean
+  global: { label: string, description: string }
+  /** The scoped option, absent when the plugin can't be scoped */
+  scoped?: { label: string, description: string }
+  entityFields: PluginScopeEntityField[]
+  /** The scope preselected when a plugin is created under an entity */
+  defaults: Partial<Record<PluginScopeName, { id: string }>>
+}
+
 /**
  * Describes one numbered configuration step in a multi-section plugin layout.
  * Content for each section is provided by the layout consumer via a
