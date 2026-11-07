@@ -1,3 +1,4 @@
+import RouteConfigCardView from './components/RouteConfigCardView.vue'
 import RouteConfigCard from './components/RouteConfigCard.vue'
 import RouteForm from './components/RouteForm.vue'
 import RouteFormRulesComposer from './components/RouteFormRulesComposer.vue'
@@ -8,3 +9,6 @@ export { RouteConfigCard, RouteForm, RouteFormRulesComposer, RouteList }
 export * from './constants'
 export * from './types'
 export * from './utilities'
+
+export { RouteConfigCardView }
+export type RouteConfigCardViewProps = InstanceType<typeof RouteConfigCardView>['$props']

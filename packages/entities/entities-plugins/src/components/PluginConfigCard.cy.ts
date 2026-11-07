@@ -143,6 +143,7 @@ describe('<PluginConfigCard />', () => {
             cy.get('.navigation-subtitle').should('have.text', scopedIds[scope])
             // The pre-flag emit-only button is replaced by a real link.
             cy.get('.navigation-button').should('not.exist')
+            cy.getTestId(`${scope.replace('_', '-')}-copy-uuid`).should('not.exist')
           })
         }
       })
@@ -176,6 +177,22 @@ describe('<PluginConfigCard />', () => {
     })
 
     describe('with config.showScopeName disabled', () => {
+      it('renders placeholders for unassigned scopes and empty partials', () => {
+        interceptSchema()
+        cy.intercept('GET', `${konnectBase}/plugins/${pluginId}*`, {
+          ...pluginRecord, service: null, route: null, consumer: null, consumer_group: null, partials: [],
+        }).as('getPlugin')
+
+        mountCard(false, { showNameAsLink: false })
+        cy.wait(['@getPluginSchema', '@getPlugin'])
+
+        for (const field of ['service', 'route', 'partials']) {
+          cy.getTestId(`${field}-property-value`).should('have.text', '–')
+        }
+        cy.getTestId('consumer-property-value').should('not.exist')
+        cy.getTestId('consumer_group-property-value').should('not.exist')
+      })
+
       it('labels the scope rows with the "ID" suffix', () => {
         interceptSchema()
         interceptPlugin()

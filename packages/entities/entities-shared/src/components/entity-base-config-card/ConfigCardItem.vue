@@ -179,7 +179,7 @@ const hasTooltip = computed((): boolean => !!(props.item.tooltip || slots['label
 const isJson = computed((): boolean => props.item.type === ConfigurationSchemaType.Json || props.item.type === ConfigurationSchemaType.JsonArray)
 const isJsonArray = computed((): boolean => props.item.type === ConfigurationSchemaType.JsonArray)
 
-const schema = composables.useSubSchema(props.item.key)
+const schema = composables.useSubSchema(() => props.item.key)
 const { redactByApiSchema } = composables.useHelpers()
 const showSensitiveFields = inject(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, ref(false))
 const redactedFormat = computed(() => showSensitiveFields.value ? 'default' : 'redacted')

@@ -1,3 +1,4 @@
+import EntityConfigCardView from './components/entity-base-config-card/EntityConfigCardView.vue'
 import OnboardingCard from './components/onboarding-card/OnboardingCard.vue'
 import EntityBaseConfigCard from './components/entity-base-config-card/EntityBaseConfigCard.vue'
 import ConfigCardItem from './components/entity-base-config-card/ConfigCardItem.vue'
@@ -26,7 +27,7 @@ import composables from './composables'
 const { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchema, useSchemaProvider, useTableState, useManagedByEnabled, useManagedByColumn } = composables
 
 // Components
-export { OnboardingCard, EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityFormBlock, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, DeckCodeBlock, GeneratePatModal, SensitiveInput, TableTags }
+export { EntityConfigCardView, OnboardingCard, EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityFormBlock, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, DeckCodeBlock, GeneratePatModal, SensitiveInput, TableTags }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchema, useSchemaProvider, useTableState, useManagedByEnabled, useManagedByColumn }
@@ -45,3 +46,5 @@ export { highlightCodeBlock } from './utils/code-block'
 // the same source of truth instead of maintaining a second copy that drifts.
 export { getManagedByLabel, getManagedByFieldLabel, MANAGED_BY_LABELS } from './utils/managed-by'
 export type { ManagedBy } from './utils/managed-by'
+
+export type EntityConfigCardViewProps = InstanceType<typeof EntityConfigCardView>['$props']

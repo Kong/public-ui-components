@@ -1,3 +1,4 @@
+import GatewayServiceConfigCardView from './components/GatewayServiceConfigCardView.vue'
 import GatewayServiceList from './components/GatewayServiceList.vue'
 import GatewayServiceConfigCard from './components/GatewayServiceConfigCard.vue'
 import GatewayServiceForm from './components/GatewayServiceForm.vue'
@@ -10,3 +11,6 @@ export * from './utils'
 
 // Types
 export * from './types'
+
+export { GatewayServiceConfigCardView }
+export type GatewayServiceConfigCardViewProps = InstanceType<typeof GatewayServiceConfigCardView>['$props']

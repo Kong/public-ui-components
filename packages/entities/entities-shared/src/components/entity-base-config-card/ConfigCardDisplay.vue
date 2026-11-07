@@ -54,7 +54,6 @@
 
   <JsonCodeBlock
     v-if="format === 'json' && entityRecord"
-    :config="props.config"
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
@@ -70,13 +69,13 @@
   <TerraformCodeBlock
     v-if="format === 'terraform' && entityRecord"
     :entity-record="entityRecord"
-    :entity-type="props.entityType"
+    :entity-type="(props.entityType as SupportedEntityType)"
     :sub-entity-type="props.subEntityType"
     :unredacted-record="unredactedEntityRecord"
   />
   <DeckCodeBlock
     v-if="format === 'deck' && entityRecord"
-    :app="config.app"
+    :app="config.app || 'konnect'"
     :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
     :customization-options="deckCustomizationOptions"
     :entity-record="entityRecord"
@@ -97,8 +96,6 @@ import {
   CONFIG_CARD_FORMATS,
   type ConfigCardCodeFormat,
   type ConfigCardFormat,
-  type KongManagerBaseEntityConfig,
-  type KonnectBaseEntityConfig,
   type RecordItem,
   type SupportedEntityDeck,
   type SupportedEntityType,
@@ -110,6 +107,7 @@ import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
+import type { ConfigCardDisplayConfig } from '../../utils/config-card'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -120,13 +118,13 @@ export interface PropList {
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+    type: Object as PropType<ConfigCardDisplayConfig>,
     required: false,
     default: () => ({}),
   },
   entityType: {
     type: String as PropType<SupportedEntityType>,
-    required: true,
+    default: undefined,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   subEntityType: {

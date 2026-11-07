@@ -9,6 +9,7 @@ A config card component for Keys.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [KeyConfigCardView](#keyconfigcardview)
 
 ## Requirements
 
@@ -126,3 +127,42 @@ import type {
   KongManagerKeyEntityConfig,
 } from '@kong-ui-public/entities-keys'
 ```
+
+## KeyConfigCardView
+
+Use `KeyConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `KeyConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { KeyConfigCardView } from '@kong-ui-public/entities-keys'
+import type { KeyConfigCardViewProps } from '@kong-ui-public/entities-keys'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `keySet` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Resolved association display state. Omission displays the ID from the record. |
+
+JWK/PEM expansion is local and updates with the record. Supply associated Key Set information explicitly; the View never resolves it.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. The `navigation-click` event supplies the associated ID and `'key-sets'`. Local JWK parsing failures emit `error:parse` with the parsing error. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<KeyConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+  :key-set="record.set ? { id: record.set.id, name: keySet?.name, loading: keySetLoading } : undefined"
+/>
+```
+
+Existing `KeyConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

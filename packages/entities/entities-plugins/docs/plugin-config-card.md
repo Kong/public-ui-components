@@ -10,6 +10,7 @@ A config card component for plugins. Configuration section properties will be or
   - [Adopting `showScopeName`](#adopting-showscopename)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [PluginConfigCardView](#pluginconfigcardview)
 
 ## Requirements
 
@@ -237,3 +238,59 @@ import type {
   KongManagerPluginEntityConfig,
 } from '@kong-ui-public/entities-plugins'
 ```
+
+## PluginConfigCardView
+
+Use `PluginConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `PluginConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { PluginConfigCardView } from '@kong-ui-public/entities-plugins'
+import type { PluginConfigCardViewProps } from '@kong-ui-public/entities-plugins'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `schema` | `Record<string, any>` | Required | Already resolved plugin API schema. |
+| `referenceEntities` | Association map | `{}` | Resolved names/loading states, described below. |
+| `showNameAsLink` | `boolean` | `false` | Display scoped entities as links. |
+
+Schema is a separate required input. The View neither fetches schema nor renders a potentially sensitive plugin record when schema fields are unavailable. It preserves plugin field types, unsupported-scope filtering, icons and local Datakit display. Datakit receives the resolved schema and refreshes its graph when configuration, layout, partials or schema inputs change.
+
+The plugin type is derived from `record.name`. Application rollout gates and route-builder callbacks stay in the data owner.
+
+`referenceEntities` maps `service`, `route`, `consumer`, and `consumer_group` to `{ id: string, name?: string, loading?: boolean, to?: RouteLocationRaw }`:
+
+| Field | Why it is an input |
+| --- | --- |
+| `id` | Match asynchronously resolved data to the record's current association; ignore stale names/links. |
+| `name` | The entity record contains only the association ID. |
+| `loading` | Distinguish an unfinished association lookup from an ID-only result. |
+| `to` | A resolved route gives the link a real href, supporting open-in-new-tab and copy-link behavior. |
+
+Providing association data enables name/subtitle presentation. Missing names display IDs. `showNameAsLink` selects interactive reference presentation; otherwise the existing copyable UUID representation remains available. Loading, names and routes are all resolved by the owner. The View never calls a route builder or performs a lookup.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. `navigation-click` supplies the ID and one of `route`, `consumer`, `consumer_group`, `service` or `partial`. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<PluginConfigCardView
+  v-if="record && pluginSchema"
+  :key="record.id"
+  :record="record"
+  :schema="pluginSchema"
+  :reference-entities="referenceEntities"
+  show-name-as-link
+/>
+```
+
+Existing `PluginConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

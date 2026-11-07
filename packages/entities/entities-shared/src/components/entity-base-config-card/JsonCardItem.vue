@@ -47,7 +47,7 @@ const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = composables.useStringHelpers()
 
 if (props.isArrayItem) {
-  composables.useSubSchema(String(props.index))
+  composables.useSubSchema(() => String(props.index))
 }
 
 const key = computed((): string => props.item.key ?? 'json-array-item')

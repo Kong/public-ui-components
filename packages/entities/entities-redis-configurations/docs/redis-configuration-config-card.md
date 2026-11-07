@@ -9,6 +9,7 @@ A config card component for Redis Configurations.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [RedisConfigurationConfigCardView](#redisconfigurationconfigcardview)
 
 ## Requirements
 
@@ -115,7 +116,7 @@ Please refer to the [sandbox](../sandbox/pages/RedisConfigurationDetail.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](../src/types/redis-confiugration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](../src/types/redis-configuration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
@@ -123,3 +124,43 @@ import type {
   KongManagerRedisConfigurationEntityConfig,
 } from '@kong-ui-public/entities-redis-configurations'
 ```
+
+## RedisConfigurationConfigCardView
+
+Use `RedisConfigurationConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `RedisConfigurationConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { RedisConfigurationConfigCardView } from '@kong-ui-public/entities-redis-configurations'
+import type { RedisConfigurationConfigCardViewProps } from '@kong-ui-public/entities-redis-configurations'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig & { cloudAuthAvailable?: boolean }` | `{}` | Optional presentation context. |
+| `hideTitle` | `boolean` | `true` | Hide the card title. |
+
+Pass the resolved raw record. The existing `config.kind` discriminator identifies managed-cache add-ons; no separate mode prop is needed. It applies the existing partial flattening, cloud-auth display rules, managed field allowlisting, raw JSON/timestamp preservation and local Terraform transforms. If a page displays both cache and linked-partial segments, its data owner loads those records and owns segment loading. Changing View inputs never requests the other source.
+
+`config.cloudAuthAvailable` selects the supported cloud-authentication display contract and normalization. It is independent of Redis type and cannot be inferred from whether credential fields happen to be present.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<RedisConfigurationConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+  :config="{ app: 'konnect', cloudAuthAvailable: true }"
+/>
+```
+
+Existing `RedisConfigurationConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

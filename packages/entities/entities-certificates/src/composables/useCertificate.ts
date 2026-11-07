@@ -5,9 +5,11 @@ import useX509 from './x509Helper'
 export default function useCertificate() {
   const certificateData = useX509()
   const certificateDataCache = ref<{ [id: string]: X509Meta | undefined }>({})
+  const cachedCertificates = new Map<string, string>()
 
   const getDataFromCache = (row: EntityRow): X509Meta | undefined => {
-    if (!(row.id in certificateDataCache.value)) {
+    if (!(row.id in certificateDataCache.value) || cachedCertificates.get(row.id) !== row.cert) {
+      cachedCertificates.set(row.id, row.cert)
       try {
         certificateDataCache.value[row.id] = certificateData.parseMetaCertificateData(row.cert)
       } catch {

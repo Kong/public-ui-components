@@ -22,6 +22,7 @@ Check the [individual component docs](#individual-component-documentation) for m
 - `GatewayServiceList`
 - `GatewayServiceForm`
 - `GatewayServiceConfigCard`
+- `GatewayServiceConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -69,3 +70,4 @@ import '@kong-ui-public/entities-gateway-services/dist/style.css'
 - [`<GatewayServiceForm.vue />`](docs/gateway-service-form.md)
 - [`<GatewayServiceConfigCard.vue />`](docs/gateway-service-config-card.md)
 - [`urlValidator()`](docs/url-validator.md)
+- [`<GatewayServiceConfigCardView />`](docs/gateway-service-config-card.md#gatewayserviceconfigcardview) — display an already loaded record.

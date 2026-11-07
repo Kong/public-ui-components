@@ -9,6 +9,7 @@ A config card component for routes.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [RouteConfigCardView](#routeconfigcardview)
 
 ## Requirements
 
@@ -125,3 +126,43 @@ import type {
   KonnectRouteEntityConfig,
   KongManagerRouteEntityConfig,
 } from '@kong-ui-public/entities-routes'
+```
+
+## RouteConfigCardView
+
+Use `RouteConfigCardView` for an already resolved record. It performs no entity, schema or association reads and shares its domain presentation with `RouteConfigCard`. The data owner handles loading, errors and retry and mounts the View after the record is available. No Axios provider, request endpoint or control plane ID is required to render it.
+
+```ts
+import { RouteConfigCardView } from '@kong-ui-public/entities-routes'
+import type { RouteConfigCardViewProps } from '@kong-ui-public/entities-routes'
+```
+
+### View props
+
+| Prop | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | Resolved business record; unwrap HTTP envelopes in the data owner. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Optional presentation context. |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `service` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Resolved association display state. Omission displays the ID from the record. |
+
+Supply the associated service name or loading state explicitly. The View never resolves a service.
+
+See [EntityConfigCardView](../../entities-shared/docs/entity-config-card-view.md) for presentation context, format availability, record updates and sensitive-field/copy behavior. Records and schemas are read without mutation.
+
+### View slots and events
+
+The View accepts title, actions and field-slot overrides with the existing `record`, `row` and `rowValue` parameters. It emits no HTTP loading/success/error events. The `navigation-click` event supplies the associated ID and `'services'`. Use `:key="record.id"` when changing business scope or when a fresh local editor state is required.
+
+### Existing-record example
+
+```vue
+<RouteConfigCardView
+  v-if="record"
+  :key="record.id"
+  :record="record"
+  :service="record.service ? { id: record.service.id, name: service?.name, loading: serviceLoading } : undefined"
+/>
+```
+
+Existing `RouteConfigCard` callers can keep the current request configuration and events. To migrate, upgrade compatible published business/shared packages, pass the existing data owner's resolved record to the View, keep any required schema/association loading in that owner, and remove response-fabrication adapters or duplicate local cards.

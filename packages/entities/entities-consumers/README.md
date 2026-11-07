@@ -18,6 +18,7 @@ Check the [individual component docs](#individual-component-documentation) for m
 - `ConsumerList`
 - `ConsumerForm`
 - `ConsumerConfigCard`
+- `ConsumerConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -45,3 +46,4 @@ import '@kong-ui-public/entities-consumers/dist/style.css'
 - [`<ConsumerList.vue />`](docs/consumer-list.md)
 - [`<ConsumerForm.vue />`](docs/consumer-form.md)
 - [`<ConsumerConfigCard.vue />`](docs/consumer-config-card.md)
+- [`<ConsumerConfigCardView />`](docs/consumer-config-card.md#consumerconfigcardview) — display an already loaded record.

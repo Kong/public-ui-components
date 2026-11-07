@@ -12,6 +12,12 @@
       />
     </div>
 
+    <h2>Record-driven View (no entity reads)</h2>
+    <EntityConfigCardView
+      :entity-type="SupportedEntityType.Consumer"
+      :record="{ id: 'example', name: 'Already loaded consumer', custom_id: 'external-record' }"
+    />
+
     <h2>Konnect API</h2>
 
     <EntityBaseConfigCard
@@ -84,6 +90,7 @@ import { computed, defineComponent, ref, toRef } from 'vue'
 import type { ConfigurationSchema, KonnectBaseEntityConfig, KongManagerBaseEntityConfig, PluginConfigurationSchema } from '../../src'
 import {
   EntityBaseConfigCard,
+  EntityConfigCardView,
   ConfigurationSchemaType,
   ConfigCardItem,
   SupportedEntityType,
