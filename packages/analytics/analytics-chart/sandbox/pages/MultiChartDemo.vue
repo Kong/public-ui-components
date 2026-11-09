@@ -113,20 +113,20 @@ const verticalBarChartData = generateCrossSectionalData([{
 <style lang="scss" scoped>
 .chart-grid {
   display: grid;
+  gap: var(--kui-space-80, $kui-space-80);
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 24px;
-  width: 100%;
-  max-width: 1600px;
   margin: 0 auto;
+  max-width: 1600px;
+  width: 100%;
 }
 
 .chart-container {
+  background-color: var(--kui-color-background, $kui-color-background);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
+  box-shadow: var(--kui-shadow, $kui-shadow);
   height: 400px;
-  background-color: var(--kui-color-background);
-  border: 1px solid var(--kui-color-border);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 16px;
+  padding: var(--kui-space-60, $kui-space-60);
 }
 
 @media (max-width: 1200px) {

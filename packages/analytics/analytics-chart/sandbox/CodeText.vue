@@ -57,56 +57,40 @@ watch(() => props.modelValue, (newValue) => {
 <style lang="scss" scoped>
 .code-text {
   display: block;
-  margin: 5px 0;
-  transition: filter .3s ease-in;
+  margin: var(--kui-space-20, $kui-space-20) 0;
+  transition: filter var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
   width: auto;
 
   &.has-error {
-    filter: drop-shadow(0 0 1px crimson);
+    filter: drop-shadow(0 0 1px var(--kui-color-border-danger, $kui-color-border-danger));
   }
 
   &.is-valid {
-    filter: drop-shadow(0 0 1px lightgreen);
+    filter: drop-shadow(0 0 1px var(--kui-color-text-success, $kui-color-text-success));
   }
 
   textarea {
-    background-color: $kui-color-background-neutral-weakest;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    color: #333333;
-    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-    font-size: $kui-font-size-20;
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    color: var(--kui-color-text, $kui-color-text);
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     height: 500px;
-    line-height: 1.5;
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     overflow: auto;
-    padding: 5px;
+    padding: var(--kui-space-20, $kui-space-20);
     resize: vertical;
-    scrollbar-color: #bbbbbb #e0e0e0;
+    scrollbar-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak) transparent;
     scrollbar-width: thin;
     -moz-tab-size: 4;
     tab-size: 4;
     width: 90%;
   }
 
-  textarea::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  textarea::-webkit-scrollbar-track {
-    background: #e0e0e0;
-    border-radius: 10px;
-  }
-
-  textarea::-webkit-scrollbar-thumb {
-    background-color: #bbbbbb;
-    border: 1px solid #aaaaaa;
-    border-radius: 10px;
-  }
-
-  textarea:focus :not(.has-error),
-  textarea:focus-visible :not(.has-error) {
-    border-color: white;
-    box-shadow: 0 0 0 2px #fff;
+  textarea:focus {
+    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+    box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
     outline: none;
   }
 }

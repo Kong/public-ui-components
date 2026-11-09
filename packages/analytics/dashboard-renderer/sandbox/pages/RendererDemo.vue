@@ -605,7 +605,7 @@ h2 {
   align-items: center;
   display: flex;
   gap: var(--kui-space-50, $kui-space-50);
-  margin: 10px 0;
+  margin: var(--kui-space-40, $kui-space-40) 0;
 }
 
 // Custom theme via CSS property overrides

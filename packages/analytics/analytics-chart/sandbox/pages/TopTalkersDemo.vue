@@ -111,10 +111,10 @@ const columnOptions = {
   </SandboxLayout>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .demo-wrapper {
   height: 420px;
-  padding: 24px;
+  padding: var(--kui-space-80, $kui-space-80);
 }
 </style>
 

@@ -1,6 +1,10 @@
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+
 html,
 body {
-  background-color: #f1f1f5;
+  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
   height: 100%;
   margin: 0;
   min-height: 100%;
@@ -12,16 +16,16 @@ body {
   margin: 0;
 
   .k-label {
-    margin-bottom: 2px;
+    margin-bottom: var(--kui-space-10, $kui-space-10);
 
     &:not(:first-child) {
-      margin-top: 12px;
+      margin-top: var(--kui-space-50, $kui-space-50);
     }
   }
 
   .top-n-sandbox {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   h1 {
@@ -35,24 +39,23 @@ body {
 
   .chart-radio-group {
     .k-radio {
-      margin-top: 4px;
+      margin-top: var(--kui-space-20, $kui-space-20);
     }
   }
 
   .option-toggles {
-    margin: 24px 12px;
+    margin: var(--kui-space-80, $kui-space-80) var(--kui-space-50, $kui-space-50);
   }
 
   .flex-row-parent {
     display: flex;
     flex-direction: row;
-    gap: 24px;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   .config-container {
     display: flex;
-    gap: 24px;
-    --KCodeBlockFontSize: 15px;
+    gap: var(--kui-space-80, $kui-space-80);
 
     .config-container-row {
       flex-direction: row;
@@ -65,7 +68,7 @@ body {
     .flex-vertical {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: var(--kui-space-40, $kui-space-40);
     }
 
     .options-container {
@@ -79,6 +82,6 @@ body {
   flex-direction: row;
 
   .first-button {
-    margin-right: 8px;
+    margin-right: var(--kui-space-40, $kui-space-40);
   }
 }

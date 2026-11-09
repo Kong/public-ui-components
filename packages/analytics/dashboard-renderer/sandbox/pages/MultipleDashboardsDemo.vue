@@ -177,12 +177,12 @@ const dashboardConfigs = ref<DashboardSection[]>([
 
 <style lang="scss" scoped>
 .sandbox-container {
-  padding: 0 20px;
+  padding: 0 var(--kui-space-70, $kui-space-70);
 }
 
 .controls {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 </style>

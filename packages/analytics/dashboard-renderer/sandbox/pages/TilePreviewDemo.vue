@@ -158,40 +158,25 @@ const loadTableExample = () => {
 
 textarea {
   background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-  border: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
-  border-radius: 4px;
-  color: #333333;
-  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
   font-size: var(--kui-font-size-20, $kui-font-size-20);
-  line-height: 1.5;
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   overflow: auto;
-  padding: 10px;
+  padding: var(--kui-space-40, $kui-space-40);
   resize: vertical;
-  scrollbar-color: #bbbbbb #e0e0e0;
+  scrollbar-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak) transparent;
   scrollbar-width: thin;
   -moz-tab-size: 4;
   tab-size: 4;
   width: 100%;
 }
 
-textarea::-webkit-scrollbar {
-  width: 5px;
-}
-
-textarea::-webkit-scrollbar-track {
-  background: #e0e0e0;
-  border-radius: 10px;
-}
-
-textarea::-webkit-scrollbar-thumb {
-  background-color: #bbbbbb;
-  border: 1px solid #aaaaaa;
-  border-radius: 10px;
-}
-
 textarea:focus {
-  border-color: white;
-  box-shadow: 0 0 0 2px #eee;
+  border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+  box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
   outline: none;
 }
 </style>

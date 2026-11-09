@@ -201,43 +201,28 @@ const context: DashboardRendererContext = {
 
 <style lang="scss" scoped>
 textarea {
-  background-color: $kui-color-background-neutral-weakest;
-  border: 1px solid $kui-color-background-neutral-weak;
-  border-radius: 4px;
-  color: #333333;
-  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-  font-size: $kui-font-size-20;
+  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
   height: 500px;
-  line-height: 1.5;
-  margin: 1rem 0;
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  margin: var(--kui-space-60, $kui-space-60) 0;
   overflow: auto;
-  padding: 1rem;
+  padding: var(--kui-space-60, $kui-space-60);
   resize: vertical;
-  scrollbar-color: #bbbbbb #e0e0e0;
+  scrollbar-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak) transparent;
   scrollbar-width: thin;
-  tab-size: 4;
   -moz-tab-size: 4;
+  tab-size: 4;
   width: 90%;
 }
 
-textarea::-webkit-scrollbar {
-  width: 5px;
-}
-
-textarea::-webkit-scrollbar-track {
-  background: #e0e0e0;
-  border-radius: 10px;
-}
-
-textarea::-webkit-scrollbar-thumb {
-  background-color: #bbbbbb;
-  border: 1px solid #aaaaaa;
-  border-radius: 10px;
-}
-
 textarea:focus {
-  border-color: white;
-  box-shadow: 0 0 0 2px $kui-color-background-neutral-weak;
+  border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+  box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
   outline: none;
 }
 </style>
