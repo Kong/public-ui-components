@@ -54,7 +54,6 @@ import { ref, inject, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
 import { SearchIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
-import { useHelpers } from '@kong-ui-public/entities-shared'
 import EntityAutoSuggest from './EntityAutoSuggest.vue'
 import { FORMS_API_KEY } from '../const'
 import useI18n from '../../../composables/useI18n'
@@ -65,6 +64,9 @@ import type { SelectItem } from '@kong/kongponents'
 import type { EntityData, EntityResponse, EntityItemTransformer } from '../types'
 
 const EMPTY_VALUE_PLACEHOLDER = '—' // em dash
+// The whole search term must be a UUID, a name that contains a UUID is searched as a name
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+const isValidUuid = (str: string): boolean => UUID_PATTERN.test(str)
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
 const REQUEST_RESULTS_LIMIT = 1000
@@ -172,7 +174,6 @@ const suggestions = ref<Array<SelectItem<string>>>([])
 const rawData = ref<EntityData[]>([])
 const recentCreatedSuggestions = ref<Array<SelectItem<string>>>([])
 const { i18n: { t } } = useI18n()
-const { isValidUuid } = useHelpers()
 
 const axiosAbortController = ref<AbortController | null>(null)
 
