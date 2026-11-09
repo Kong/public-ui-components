@@ -110,26 +110,44 @@
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
-        <EditIcon
+        <KButton
           v-if="canShowHeaderActions && context.editable && !isFullscreen"
+          appearance="tertiary"
+          :aria-label="i18n.t('renderer.edit')"
           class="edit-icon"
-          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :data-testid="`edit-tile-${tileId}`"
-          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
+          icon
+          size="small"
           @click="editTile"
-        />
+        >
+          <EditIcon
+            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+            decorative
+          />
+        </KButton>
         <KDropdown
           v-if="canShowHeaderActions && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
+          @toggle-dropdown="isActionMenuOpen = $event"
         >
-          <MoreIcon
+          <KButton
+            appearance="tertiary"
+            :aria-expanded="isActionMenuOpen"
+            aria-haspopup="true"
+            :aria-label="i18n.t('renderer.tileActions')"
             class="kebab-action-menu"
-            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+            :class="{ 'is-open': isActionMenuOpen }"
             :data-testid="`kebab-action-menu-${tileId}`"
-            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
-          />
+            icon
+            size="small"
+          >
+            <MoreIcon
+              :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+              decorative
+            />
+          </KButton>
           <template #items>
             <KDropdownItem
               v-if="!!exploreLinkKebabMenu"
@@ -232,7 +250,7 @@ import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefini
 import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
 import { KSegmentedControl } from '@kong/kongponents'
@@ -243,6 +261,8 @@ import HeatmapRenderer from './HeatmapRenderer.vue'
 import TreemapRenderer from './TreemapRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
+
+const isActionMenuOpen = ref<boolean>(false)
 
 const {
   context,
@@ -708,12 +728,6 @@ defineExpose({ getExportData })
     height: auto;
   }
 
-  &.editable:hover {
-    .tile-header {
-      background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    }
-  }
-
   .badge-container {
     display: flex;
     flex-grow: 1;
@@ -762,10 +776,11 @@ defineExpose({ getExportData })
 
     .tile-actions {
       display: flex;
-      gap: var(--kui-space-30, $kui-space-30);
+      gap: var(--kui-space-20, $kui-space-20);
 
-      .edit-icon {
-        cursor: pointer;
+      // Keep the trigger highlighted while its menu is open.
+      .kebab-action-menu.is-open {
+        background-color: var(--kui-button-color-background-tertiary-active, var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker));
       }
     }
 
@@ -779,10 +794,6 @@ defineExpose({ getExportData })
       display: flex;
       margin-left: var(--kui-space-auto, $kui-space-auto);
       margin-right: var(--kui-space-0, $kui-space-0);
-
-      .kebab-action-menu {
-        cursor: pointer;
-      }
 
       .delete-option {
         color: var(--kui-color-text-danger, $kui-color-text-danger);
