@@ -7,7 +7,6 @@
         <KButton
           v-for="example in examples"
           :key="example.id"
-          appearance="secondary"
           size="small"
           @click="setExampleCode(example)"
         >
