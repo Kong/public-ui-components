@@ -741,6 +741,14 @@
       "entitlement-enforcement": {
         "name": "Entitlement Enforcement",
         "description": "Allow or deny API requests based on customer entitlements. Checks feature access, usage limits, and credit balance against Metering & Billing before routing traffic."
+      },
+      "hmac-signature-validator": {
+        "name": "HMAC Signature Validator",
+        "description": "Verify the authenticity and integrity of API requests using HMAC signatures."
+      },
+      "circuit-breaker": {
+        "name": "Circuit Breaker",
+        "description": "Protect upstream services by automatically stopping requests at the Service or Route level when failures or upstream latency exceed configured thresholds, allowing unhealthy backends time to recover."
       }
     },
     "fields": {
