@@ -743,7 +743,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     gatewayVersion: '3.17',
   },
-  'kong-circuit-breaker': {
+  'circuit-breaker': {
     name: 'Circuit Breaker',
     description: 'Protect upstream services by automatically stopping requests at the Service or Route level when failures or upstream latency exceed configured thresholds, allowing unhealthy backends time to recover.',
     group: PluginGroup.TRAFFIC_CONTROL,
