@@ -71,27 +71,6 @@ const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
 const REQUEST_RESULTS_LIMIT = 1000
 
-/**
- * How this component works
- *   This component utilizes `KSelect` with prefetch suggestions to improve user experience
- *   With `fieldDisabled` as a flag for controlling whether requests should be dispatched this was controlled by the upstream host apps,
- *     most likely permissions to list entities.
- *   By default when mounting the component, it will prefetch 50 records against the entity type `route/consumer/service/consumer_group`
- *     where `consumer_group` cannot be fuzzy queried with keywords which can only perform a client filtering with keywords.
- *   After data was fetched, the suggestions will be constructed using the `transformItem` function. When `selectedItem` is passed, in order to
- *     allow the option to be selected, it must be appended to the suggestions if the current suggestions list does not contain `selectedItem`
- *   When querying, if the data was exhausted when prefetching, the flag `dataDrainedFromPeeking` will be marked as `true` which indicates the
- *     upcoming querying will be delegated to inline search, otherwise, it performs a `fuzzy` search with `1000` items size capacity.
- *
- *  A noticeable fact about the component KSelect, when the component has a selected item, then user opens the select dropdown, the component
- *   will set `query` to `''` where triggers a `query-change` event, thus the handler in our component `onQueryChange` will be triggered, when
- *   this happens, we tend to show the `prefetched` data when this happens, when user types, we introduces `debounce` for
- *   the query input to avoid excessive API calls.
- *
- *  When `getAll`/`getOne`/`getPartial` props are not provided, the component falls back to injecting
- *  `FORMS_API_KEY` and building the API adapters internally.
- */
-
 const {
   transformItem: transformItemProp,
   labelField = 'name',
@@ -125,7 +104,6 @@ defineEmits<{
   change: [item: SelectItem<string> | null]
 }>()
 
-// --- API resolution: use provided callbacks or build from injected API ---
 const api = inject<Record<string, any> | undefined>(FORMS_API_KEY, undefined)
 
 const getAll = async (query: string, signal?: AbortSignal): Promise<EntityData[]> => {
@@ -209,6 +187,8 @@ const fetcher = async (executor: () => Promise<EntityData[]>, signal?: AbortSign
   }
 }
 
+// KSelect keeps its own query state and clears it on open (`enableFiltering`), which emits
+// `query-change` with an empty string. That empty query is what restores the prefetched suggestions.
 const onQueryChange = debounce((searchTerm: string) => {
   searchTerm = searchTerm || ''
   query.value = searchTerm
