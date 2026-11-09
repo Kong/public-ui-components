@@ -2,7 +2,7 @@
   <div
     ref="rootElement"
     class="kong-ui-public-table-data-grid"
-    :class="{ 'fit-to-content': fitToContent }"
+    :class="{ 'fit-to-content': fitToContent, 'is-scrolled': isBodyScrolled }"
     data-testid="table-data-grid"
   >
     <div
@@ -48,6 +48,7 @@
       :suppress-cell-focus="true"
       :suppress-multi-sort="true"
       :theme="gridTheme"
+      @body-scroll="onBodyScroll"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
       @new-columns-loaded="reconcileGridSort"
@@ -67,6 +68,7 @@ import type {
   TableDataGridStatePayload,
 } from '../types'
 import type {
+  BodyScrollEvent,
   ColDef,
   GridApi,
   GridReadyEvent,
@@ -80,7 +82,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, onBeforeUnmount, onMounted, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -256,6 +258,14 @@ const reconcileGridSort = () => {
 
 watch([gridApi, activeSort], reconcileGridSort)
 
+// The header casts a shadow while rows are scrolled under it.
+const isBodyScrolled = ref<boolean>(false)
+const onBodyScroll = (event: BodyScrollEvent<Row>) => {
+  if (event.direction === 'vertical') {
+    isBodyScrolled.value = event.top > 0
+  }
+}
+
 const onGridReady = (event: GridReadyEvent<Row>) => {
   gridApi.value = event.api
   emit('grid:ready', event.api)
@@ -283,13 +293,17 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   /* stylelint-disable custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
   --ag-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-border-color: var(--kui-color-border, #{$kui-color-border});
-  --ag-foreground-color: var(--kui-color-text, #{$kui-color-text});
+  // Text and row hover follow KTableView's table tokens.
+  --ag-font-size: var(--kui-table-cell-font-size, var(--kui-font-size-30, #{$kui-font-size-30}));
+  --ag-foreground-color: var(--kui-table-cell-color-text, var(--kui-color-text, #{$kui-color-text}));
   --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
   --ag-header-column-border-height: 30%;
   --ag-header-column-resize-handle-color: transparent;
-  --ag-header-font-weight: var(--kui-font-weight-semibold, #{$kui-font-weight-semibold});
-  --ag-header-text-color: var(--kui-color-text-neutral, #{$kui-color-text-neutral});
+  --ag-header-font-size: var(--kui-table-header-font-size, var(--kui-font-size-30, #{$kui-font-size-30}));
+  --ag-header-font-weight: var(--kui-table-header-font-weight, var(--kui-font-weight-semibold, #{$kui-font-weight-semibold}));
+  --ag-header-text-color: var(--kui-table-header-color-text, var(--kui-color-text-neutral, #{$kui-color-text-neutral}));
+  --ag-row-hover-color: var(--kui-table-row-color-background-hover, var(--kui-color-background-primary-weakest, #{$kui-color-background-primary-weakest}));
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */
@@ -297,6 +311,16 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
+}
+
+.table-data-grid-grid :deep(.ag-header) {
+  transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+  // Paint the shadow over the rows below.
+  z-index: 1;
+}
+
+.is-scrolled .table-data-grid-grid :deep(.ag-header) {
+  box-shadow: var(--kui-table-header-shadow-scrolled, var(--kui-shadow, $kui-shadow));
 }
 
 .table-data-grid-grid :global(.ag-cell) {

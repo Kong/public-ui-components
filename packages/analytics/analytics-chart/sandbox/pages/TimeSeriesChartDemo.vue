@@ -473,8 +473,8 @@ watch(multiDimensionToggle, enabled => {
 .sandbox-container {
   display: flex;
   flex-direction: row;
-  gap: 20px;
-  margin-top: 20px;
+  gap: var(--kui-space-70, $kui-space-70);
+  margin-top: var(--kui-space-70, $kui-space-70);
 
   .chart-section {
     flex: 3;
@@ -485,7 +485,7 @@ watch(multiDimensionToggle, enabled => {
   }
 
   .active-metric-control {
-    margin-bottom: 8px;
+    margin-bottom: var(--kui-space-40, $kui-space-40);
     overflow-x: auto;
 
     :deep(.k-segmented-control) {
@@ -497,7 +497,7 @@ watch(multiDimensionToggle, enabled => {
   .dataset-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

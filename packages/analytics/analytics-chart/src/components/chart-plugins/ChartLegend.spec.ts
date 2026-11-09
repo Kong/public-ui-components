@@ -228,4 +228,37 @@ describe('ChartLegend', () => {
       warn.mockRestore()
     })
   })
+
+  describe('keyboard access', () => {
+    it('renders dataset items as toggle buttons that report visibility', () => {
+      const chart = createLineChart({ isDatasetVisible: (datasetIndex) => datasetIndex === 0 })
+      const wrapper = mountLegend([
+        legendItem({ text: 'A', datasetIndex: 0, index: undefined }),
+        legendItem({ text: 'B', datasetIndex: 1, index: undefined }),
+      ], chart)
+
+      const buttons = wrapper.findAll('button.legend-item')
+
+      expect(buttons.map(button => button.attributes('type'))).toEqual(['button', 'button'])
+      expect(buttons.map(button => button.attributes('aria-pressed'))).toEqual(['true', 'false'])
+    })
+
+    it('does not render key items as buttons', () => {
+      const keyItem = legendItem({ text: 'p95', isKey: true, datasetIndex: undefined, index: undefined })
+      const wrapper = mountLegend([keyItem], createLineChart())
+
+      expect(wrapper.find('button').exists()).toBe(false)
+      expect(wrapper.find('li.legend-key .legend-item').exists()).toBe(true)
+    })
+
+    // Enter and Space activate the button with a click event, which must reach the item's toggle.
+    it('toggles the dataset when its button is clicked', async () => {
+      const chart = createLineChart({ isDatasetVisible: () => true })
+      const wrapper = mountLegend([legendItem({ datasetIndex: 1, index: 0 })], chart)
+
+      await wrapper.get('button.legend-item').trigger('click')
+
+      expect(chart.hide).toHaveBeenCalledWith(1, 0)
+    })
+  })
 })

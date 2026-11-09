@@ -135,6 +135,7 @@
     </main>
 
     <aside class="state-panel">
+      <SandboxThemePicker />
       <section class="state-panel-section">
         <KCollapse
           v-model="collapsedSections.tableOptions"
@@ -306,6 +307,7 @@ import type {
 import type { GridApi } from 'ag-grid-community'
 import type { BadgeAppearance, SegmentedControlOption } from '@kong/kongponents'
 import { computed, ref, shallowRef } from 'vue'
+import { SandboxThemePicker } from '@kong-ui-public/sandbox-layout'
 import { TableDataGrid } from '../src'
 
 type SandboxRow = {
@@ -707,6 +709,15 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 }
 </script>
 
+<style lang="scss">
+html,
+body {
+  background-color: var(--kui-color-background, $kui-color-background);
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
+}
+</style>
+
 <style lang="scss" scoped>
 .sandbox {
   display: grid;
@@ -723,7 +734,7 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   justify-content: space-between;
 
   h1 {
-    font-size: 28px;
+    font-size: var(--kui-font-size-70, $kui-font-size-70);
     margin: 0 0 var(--kui-space-20, $kui-space-20);
   }
 
@@ -806,7 +817,7 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   min-width: 0;
 
   h2 {
-    font-size: 16px;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     margin: 0;
   }
 }
@@ -825,7 +836,7 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   grid-column: 2;
 
   h3 {
-    font-size: 14px;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     margin: var(--kui-space-40, $kui-space-40) 0 var(--kui-space-30, $kui-space-30);
   }
 }
@@ -855,7 +866,8 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 
 .control-grid {
   select {
-    border: 1px solid var(--kui-color-border, $kui-color-border);
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     color: var(--kui-color-text, $kui-color-text);
     min-height: 32px;
@@ -883,9 +895,10 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
 
 .debug-output {
   background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-  border: 1px solid var(--kui-color-border, $kui-color-border);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  font-size: 12px;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
   margin: 0;
   max-height: 340px;
   overflow: auto;

@@ -10,7 +10,7 @@
 
 import { computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
-import { KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
+import { KUI_BORDER_RADIUS_30, KUI_BORDER_WIDTH_10, KUI_COLOR_BACKGROUND, KUI_COLOR_BORDER, KUI_FONT_FAMILY_TEXT, KUI_SHADOW } from '@kong/design-tokens'
 import type { ChartColors } from '../types'
 
 /** An ECharts theme option object (see `echarts.registerTheme`/`setTheme`). */
@@ -24,6 +24,15 @@ export const chartFontFamily = (): string => {
 
   return window.getComputedStyle(document.documentElement).getPropertyValue('--kui-font-family-text').trim() || KUI_FONT_FAMILY_TEXT
 }
+
+// Same surface as a Kongponents popover. ECharts writes this onto the tooltip element, so the theme's custom properties apply.
+const TOOLTIP_CSS = [
+  // Overrides `backgroundColor`: ECharts appends extraCssText after its inline styles.
+  `background-color: var(--kui-pop-color-background, var(--kui-color-background, ${KUI_COLOR_BACKGROUND}));`,
+  `border: var(--kui-pop-border-width, var(--kui-border-width-10, ${KUI_BORDER_WIDTH_10})) solid var(--kui-pop-color-border, var(--kui-color-border, ${KUI_COLOR_BORDER}));`,
+  `border-radius: var(--kui-pop-border-radius, var(--kui-border-radius-30, ${KUI_BORDER_RADIUS_30}));`,
+  `box-shadow: var(--kui-pop-shadow, var(--kui-shadow, ${KUI_SHADOW}));`,
+].join(' ')
 
 /** Builds the ECharts theme object from already-resolved chart colors. */
 export const chartTheme = (colors: ChartColors): ChartTheme => {
@@ -42,12 +51,12 @@ export const chartTheme = (colors: ChartColors): ChartTheme => {
     // Same box as the analytics-chart tooltip. No padding: `ChartTooltip` has its own spacing
     tooltip: {
       backgroundColor: colors.KUI_COLOR_BACKGROUND,
+      // Border and radius come from TOOLTIP_CSS so they follow the theme.
       borderWidth: 0,
-      borderRadius: 4,
       padding: 0,
       // Keep the tooltip inside the chart so tiles with `overflow: hidden` don't clip it
       confine: true,
-      extraCssText: 'box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);',
+      extraCssText: TOOLTIP_CSS,
       textStyle: { color: colors.KUI_COLOR_TEXT, fontFamily },
     },
     visualMap: {

@@ -5,60 +5,68 @@
     data-testid="legend"
   >
     <li
-      v-for="({ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash }, listIndex) in (items as any[])"
+      v-for="({ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty, isKey, lineDash, isVisible }, listIndex) in (legendEntries as any[])"
       :key="legendItemKey({ datasetIndex, index, isKey }, listIndex)"
       :class="{ 'legend-key': isKey }"
       @click="isKey ? undefined : handleLegendItemClick(datasetIndex, index)"
     >
-      <svg
-        v-if="lineDash?.length"
-        aria-hidden="true"
-        class="line-marker"
-        height="2"
-        width="16"
+      <!-- A native button makes the toggle focusable; Enter and Space fire a click that bubbles to the li. -->
+      <component
+        :is="isKey ? 'div' : 'button'"
+        :aria-pressed="isKey ? undefined : isVisible"
+        class="legend-item"
+        :type="isKey ? undefined : 'button'"
       >
-        <line
-          :stroke="strokeStyle"
-          :stroke-dasharray="lineDash.join(' ')"
-          stroke-width="2"
-          x1="0"
-          x2="16"
-          y1="1"
-          y2="1"
-        />
-      </svg>
-      <div
-        v-else
-        class="square-marker"
-        :style="{ background: fillStyle, 'border-color': strokeStyle }"
-      />
-      <KTooltip>
+        <svg
+          v-if="lineDash?.length"
+          aria-hidden="true"
+          class="line-marker"
+          height="2"
+          width="16"
+        >
+          <line
+            :stroke="strokeStyle"
+            :stroke-dasharray="lineDash.join(' ')"
+            stroke-width="2"
+            x1="0"
+            x2="16"
+            y1="1"
+            y2="1"
+          />
+        </svg>
         <div
-          class="label-container"
-          :class="{ 'strike-through': !isKey && !isDatasetVisible(datasetIndex, index), 'inline-value': isKey }"
-          :title="value && (showValues || isKey) ? `${text}: ${value.formatted}` : text"
-        >
+          v-else
+          class="square-marker"
+          :style="{ background: fillStyle, 'border-color': strokeStyle }"
+        />
+        <KTooltip>
           <div
-            class="label truncate-label"
+            class="label-container"
+            :class="{ 'strike-through': !isVisible, 'inline-value': isKey }"
+            :title="value && (showValues || isKey) ? `${text}: ${value.formatted}` : text"
           >
-            {{ text }}
+            <div
+              class="label truncate-label"
+            >
+              {{ text }}
+            </div>
+            <div
+              v-if="value && (showValues || isKey)"
+              class="sub-label"
+            >
+              <span v-if="isKey">-</span> {{ value.formatted }}
+            </div>
           </div>
-          <div
-            v-if="value && (showValues || isKey)"
-            class="sub-label"
+          <template
+            v-if="isSegmentEmpty"
+            #content
           >
-            <span v-if="isKey">-</span> {{ value.formatted }}
-          </div>
-        </div>
-        <template
-          v-if="isSegmentEmpty"
-          #content
-        >
-          <div class="tooltip-content">
-            {{ i18n.t('emptyEntityInfo') }}
-          </div>
-        </template>
-      </KTooltip>
+            <div class="tooltip-content">
+              {{ i18n.t('emptyEntityInfo') }}
+            </div>
+          </template>
+        </KTooltip>
+      </component>
     </li>
   </ul>
 </template>
@@ -66,7 +74,7 @@
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
 import { Chart } from 'chart.js'
-import { inject, ref, type PropType } from 'vue'
+import { computed, inject, ref, type PropType } from 'vue'
 import type { EnhancedLegendItem } from 'src/types'
 import composables from '../../composables'
 
@@ -101,7 +109,7 @@ const legendItemKey = (
   return `dataset-${datasetIndex ?? 0}-${index ?? 0}`
 }
 
-const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): void => {
+const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex?: number): void => {
   if (props.chartInstance === null) {
     // https://konghq.atlassian.net/browse/KHCP-4679
     return
@@ -127,7 +135,7 @@ const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): 
 
 // Donut charts contain only a single dataset; it is safe to default datasetIndex `0`
 // since all other chart types will always have this filled defined.
-const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boolean => {
+const isDatasetVisible = (datasetIndex: number = 0, segmentIndex?: number): boolean => {
   if (props.chartInstance === null || props.chartInstance.chart === null) {
     // https://konghq.atlassian.net/browse/KHCP-4679
     return true
@@ -142,6 +150,12 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     return chart.getDataVisibility(segmentIndex)
   }
 }
+
+// Chart.js owns visibility outside Vue; `items` is rebuilt after every chart update, so read it once per item here.
+const legendEntries = computed(() => props.items.map((item) => ({
+  ...item,
+  isVisible: item.isKey || isDatasetVisible(item.datasetIndex, item.index),
+})))
 </script>
 
 <style lang="scss" scoped>
@@ -152,7 +166,8 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
   display: flex;
   flex-grow: 1; // we want to push the chart up, so this takes all remaining space
   flex-wrap: wrap;
-  gap: 8px 9px;
+  // Same gap as KFilterGroup pills, so a hover fill or focus ring never reaches the next item.
+  gap: var(--kui-space-40, $kui-space-40);
   justify-content: center;
   margin: 0 0 0 0;
   max-height: inherit;
@@ -178,6 +193,32 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     // A key shows a value that is not a dataset, thus it cannot be toggled.
     &.legend-key {
       cursor: default;
+    }
+
+    .legend-item {
+      align-items: center;
+      background: none;
+      border: 0;
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      color: inherit;
+      cursor: inherit;
+      display: flex;
+      font: inherit;
+      line-height: inherit;
+      margin: 0;
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+      transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out, box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+    }
+
+    button.legend-item {
+      &:hover {
+        background-color: var(--kui-button-color-background-tertiary-hover, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
+      }
+
+      &:focus-visible {
+        box-shadow: var(--kui-button-shadow-focus, var(--kui-shadow-focus, $kui-shadow-focus));
+        outline: none;
+      }
     }
 
     .line-marker {
@@ -216,7 +257,9 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
       word-break: none;
     }
 
+    // Neutral, not disabled: a hidden series is still a toggle the user can press.
     .strike-through {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       text-decoration: line-through;
     }
 
