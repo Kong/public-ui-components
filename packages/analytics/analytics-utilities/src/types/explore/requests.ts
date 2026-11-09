@@ -57,6 +57,8 @@ export const queryableRequestDimensions = [
   'status_code_grouped',
   'time',
   'trace_id',
+  'traceparent',
+  'tracestate',
   'upstream_status_code_grouped',
   'upstream_uri',
   'websocket',
@@ -85,6 +87,8 @@ export const queryableRequestWildcardDimensions = [
   'service_port',
   'service_protocol',
   'trace_id',
+  'traceparent',
+  'tracestate',
   'upstream_uri',
 ] as const
 
