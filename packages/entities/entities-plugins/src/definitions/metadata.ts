@@ -678,10 +678,10 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.hmac-signature-validator.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['hmac-signature-validator'],
   },
-  'circuit-breaker': {
-    descriptionKey: 'plugins.meta.circuit-breaker.description',
-    nameKey: 'plugins.meta.circuit-breaker.name',
-    ...PLUGIN_GROUP_AND_SCOPE_MAP['circuit-breaker'],
+  'kong-circuit-breaker': {
+    descriptionKey: 'plugins.meta.kong-circuit-breaker.description',
+    nameKey: 'plugins.meta.kong-circuit-breaker.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['kong-circuit-breaker'],
   },
 }
 

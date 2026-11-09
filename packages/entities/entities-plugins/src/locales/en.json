@@ -746,7 +746,7 @@
         "name": "HMAC Signature Validator",
         "description": "Verify the authenticity and integrity of API requests using HMAC signatures."
       },
-      "circuit-breaker": {
+      "kong-circuit-breaker": {
         "name": "Circuit Breaker",
         "description": "Protect upstream services by automatically stopping requests at the Service or Route level when failures or upstream latency exceed configured thresholds, allowing unhealthy backends time to recover."
       }
