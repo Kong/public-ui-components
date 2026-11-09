@@ -676,7 +676,6 @@ export default {
 }
 
 .description {
-  color: rgba(0, 0, 0, 0.45);
   margin-bottom: 12px;
 
   a {

@@ -26,7 +26,7 @@
               :id="`fields-group-title-${uuid}`"
               class="fields-group-title"
             >
-              {{ t('consumers.form.consumer_identification.title') }}*
+              {{ t('consumers.form.consumer_identification.title') }}
             </h3>
             <p class="fields-group-text">
               {{ t('consumers.form.consumer_identification.description') }}
@@ -282,7 +282,6 @@ const submitData = async (): Promise<void> => {
   }
 
   &-text {
-    color: rgba(0, 0, 0, 0.45);
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: 20px;
     margin-bottom: 0;
