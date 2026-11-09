@@ -22,12 +22,27 @@
 import { readdirSync } from 'node:fs'
 import { join, basename, sep } from 'node:path'
 
+const DEFAULT_CAP = 8
+
+// A cap below 1 makes chunkEvenly loop forever, and a non-number makes it return empty chunks.
+function parseCap(raw, source) {
+  const value = Number(raw)
+  if (!Number.isInteger(value) || value < 1) {
+    process.stderr.write(`${source} must be a positive integer, got ${JSON.stringify(raw)}\n`)
+    process.exit(1)
+  }
+  return value
+}
+
 const PACKAGES = []
-let CAP = Number(process.env.COMPONENT_TEST_MAX_SPECS ?? 8)
+let CAP = DEFAULT_CAP
+
+const envCap = process.env.COMPONENT_TEST_MAX_SPECS
+if (envCap !== undefined) CAP = parseCap(envCap, 'COMPONENT_TEST_MAX_SPECS')
 
 const args = process.argv.slice(2)
 for (let i = 0; i < args.length; i++) {
-  if (args[i] === '--cap') CAP = Number(args[++i])
+  if (args[i] === '--cap') CAP = parseCap(args[++i], '--cap')
   else PACKAGES.push(args[i])
 }
 
@@ -121,7 +136,7 @@ function atoms(prefix, specs) {
   )
 }
 
-/** Pass 2: merge neighbouring pieces in path order so no job carries a lone spec. */
+/** Pass 2: merge neighbouring pieces in path order, so a lone spec joins a neighbour whenever the cap allows. */
 function mergeNeighbours(pieces) {
   const merged = []
   for (const piece of pieces) {
@@ -158,7 +173,12 @@ function main() {
 
   for (const pkg of new Set(PACKAGES)) {
     const specs = collectSpecs(join(pkg, 'src'))
-    if (specs.length === 0) continue
+    if (specs.length === 0) {
+      // ci.yaml picks packages with `find <pkg> -name '*.cy.ts'`, which does not know about
+      // SKIP_DIRS, so a package can arrive here with nothing left to run.
+      process.stderr.write(`  ${pkg}  (no specs outside ${[...SKIP_DIRS].join(', ')}; no job created)\n`)
+      continue
+    }
 
     const counts = countByDir(specs)
     const groups = mergeNeighbours(atoms(`${pkg}/src`, specs))
