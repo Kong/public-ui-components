@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.18.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.17.1...%40kong-ui-public%2Fentities-plugins-metadata%401.18.0) (2026-11-09)
+
+### Features
+
+* **entities-plugins:** rename circuit-breaker plugin key to kong-circuit-breaker ([#4033](https://github.com/Kong/public-ui-components/issues/4033)) ([9fc7864](https://github.com/Kong/public-ui-components/commit/9fc786425e803e3938003d3e1b04afd88a51c1d7))
+
+
+## [1.17.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.17.0...%40kong-ui-public%2Fentities-plugins-metadata%401.17.1) (2026-11-05)
+
+### Bug Fixes
+
+* **entities-plugins,-metadata:** typo in ai-aws-guardrails ([#4020](https://github.com/Kong/public-ui-components/issues/4020)) ([624f748](https://github.com/Kong/public-ui-components/commit/624f74867672704f558486a600b6ede77fca63ae))
+
+
 # [1.17.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.16.0...%40kong-ui-public%2Fentities-plugins-metadata%401.17.0) (2026-11-03)
 
 ### Features

@@ -5,6 +5,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { getPluginConfig } from '../../plugin-registry'
 import { usePreferences } from './composables'
 import { goldenFixtures } from './test-utils/fixtures'
+import { DATAKIT_PLUGIN_SCHEMA } from './test-utils/schema'
 
 import type { DatakitPluginData, EditorMode } from './types'
 
@@ -32,9 +33,10 @@ interface MountOptions {
   editorMode?: EditorMode
   model?: DatakitPluginData
   isEditing?: boolean
+  pluginSchema?: object
 }
 
-function mountForm({ app = 'konnect', editorMode = 'code', model = { config: {} } as DatakitPluginData, isEditing = false }: MountOptions = {}) {
+function mountForm({ app = 'konnect', editorMode = 'code', model = { config: {} } as DatakitPluginData, isEditing = false, pluginSchema = schema }: MountOptions = {}) {
   usePreferences().editorMode.value = editorMode
 
   cy.intercept('GET', '**/ca_certificates*', { statusCode: 200, body: { data: [], next: null } })
@@ -42,7 +44,7 @@ function mountForm({ app = 'konnect', editorMode = 'code', model = { config: {} 
   const Host = () => h('main', [
     h('div', { id: 'plugin-form-page-actions' }),
     h(DatakitForm as any, {
-      schema,
+      schema: pluginSchema,
       model,
       pluginName: 'datakit',
       isEditing,
@@ -219,6 +221,49 @@ describe('<DatakitForm />', () => {
 
       lastFormData().its('config.nodes.3.inputs.url').should('eq', 'BUILD_URL')
     })
+
+    it('uses the flow editor for unsupported fields the gateway filled with null', () => {
+      // A call node as the gateway returns it (AMV-57)
+      const config = {
+        debug: false,
+        resources: null,
+        nodes: [{
+          name: 'CALL',
+          type: 'call',
+          method: 'POST',
+          url: 'http://localhost:8000/chat',
+          input: null,
+          inputs: { body: 'request.body', headers: null, http_proxy: null, https_proxy: null, proxy_auth_password: null, proxy_auth_username: null, query: null, url: null },
+          output: null,
+          outputs: null,
+          ssl_server_name: null,
+          ssl_verify: true,
+          timeout: null,
+        }],
+      } as unknown as DatakitPluginData['config']
+
+      mountForm({ editorMode: 'flow', isEditing: true, model: { config }, pluginSchema: DATAKIT_PLUGIN_SCHEMA })
+
+      flowOption().should('not.have.attr', 'disabled')
+      cy.get('.dk-flow-editor').should('exist')
+    })
+
+    it('stays in the code editor after the fallback until switching back', () => {
+      // Monaco rejects its pending work with `Canceled` when the code editor is disposed on switching
+      cy.on('uncaught:exception', (error) => error.name !== 'Canceled')
+
+      mountForm({ editorMode: 'flow', isEditing: true, model: { config: CODE_ONLY_CONFIG } })
+      flowOption().should('have.attr', 'disabled')
+
+      // Removing the unsupported fields makes the flow editor available, without switching to it
+      setCode('config:\n  nodes:\n  - name: JQ\n    type: jq\n    jq: "."\n')
+      flowOption().should('not.have.attr', 'disabled')
+      cy.get('.dk-code-editor').should('exist')
+      cy.get('.dk-flow-editor').should('not.exist')
+
+      flowOption().click()
+      cy.get('.dk-flow-editor').should('exist')
+    })
   })
 
   describe('advanced configuration', () => {
@@ -268,6 +313,39 @@ describe('<DatakitForm />', () => {
       cy.getTestId('form-section-plugin-config').should('exist')
       cy.getTestId('form-section-advanced').should('not.exist')
       cy.get('.k-alert.danger').should('not.exist')
+    })
+  })
+
+  describe('with the gateway schema', () => {
+    // `resources.vault` is a map in the gateway schema, which the form keys by internal ids (`kid:N`)
+    const VAULT_CONFIG = {
+      nodes: [{ name: 'JQ', type: 'jq', jq: '.', inputs: { token: 'vault.TOKEN' } }],
+      resources: { vault: { TOKEN: '{vault://env/token}' } },
+    } as unknown as DatakitPluginData['config']
+
+    const codeEditorValue = () => cy.get('.dk-code-editor .monaco-editor', { timeout: 20000 })
+      .should('be.visible')
+      .then(() => monaco.editor.getEditors()[0].getValue())
+
+    it('shows map keys by name in the code editor', () => {
+      mountForm({ isEditing: true, model: { config: VAULT_CONFIG }, pluginSchema: DATAKIT_PLUGIN_SCHEMA })
+
+      codeEditorValue()
+        .should('contain', 'TOKEN: \'{vault://env/token}\'')
+        .and('not.contain', 'kid:')
+    })
+
+    it('keeps map keys by name when switching from the flow editor to the code editor', () => {
+      mountForm({ editorMode: 'flow', isEditing: true, model: { config: VAULT_CONFIG }, pluginSchema: DATAKIT_PLUGIN_SCHEMA })
+      cy.get('.dk-flow-editor').should('exist')
+
+      flowOption().should('not.have.attr', 'disabled')
+      cy.get('[data-testid="code-option"]').click()
+
+      codeEditorValue()
+        .should('contain', 'TOKEN: \'{vault://env/token}\'')
+        .and('not.contain', 'kid:')
+      lastFormData().its('config.resources.vault').should('deep.equal', { TOKEN: '{vault://env/token}' })
     })
   })
 })

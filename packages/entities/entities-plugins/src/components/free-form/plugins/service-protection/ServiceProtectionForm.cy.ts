@@ -28,8 +28,6 @@ const mountForm = (config: Record<string, any>, { isEditing = false } = {}) => {
   cy.mount(ServiceProtectionForm, {
     props: {
       schema: { type: 'record', ...schema } as unknown as FormSchema,
-      formSchema: { fields: [] },
-      formModel: {},
       model: { config: { limit: [10], window_size: [60], ...config } },
       isEditing,
       pluginName: 'service-protection',

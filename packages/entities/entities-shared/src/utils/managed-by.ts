@@ -18,6 +18,8 @@ export const MANAGED_BY_LABELS: Record<string, string> = {
   'terraform-provider-konnect': 'Terraform',
   'deck': 'decK',
   'kong-gateway-operator': 'Kong Gateway Operator',
+  'kongctl': 'kongctl',
+  'kong-ingress-controller': 'Kong Ingress Controller',
   'gw-manager': 'Konnect UI',
   'ai-manager': 'AI Manager',
   'dev-portal': 'Dev Portal',

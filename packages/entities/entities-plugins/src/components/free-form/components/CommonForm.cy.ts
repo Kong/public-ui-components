@@ -17,54 +17,41 @@ describe('<CommonForm />', () => {
     ],
   })
 
-  const createFormSchema = (disabled = false) => ({
-    fields: [
+  const createScopeOptions = (disabled = false, defaults = {}) => ({
+    disabled,
+    global: {
+      label: 'Global',
+      description: 'Plugin will apply to all requests',
+    },
+    scoped: {
+      label: 'Scoped',
+      description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
+    },
+    entityFields: [
       {
-        model: 'enabled',
-        type: 'switch',
-        default: true,
+        name: 'service',
+        entity: 'services',
+        label: 'Service',
+        placeholder: 'Select a Service',
+        help: 'The service this plugin will target',
+        labelField: 'name',
+        fields: ['name', 'id'],
+        disabled: false,
+        disabledTooltip: '',
       },
       {
-        type: 'selectionGroup',
-        disabled,
-        fields: [
-          {
-            label: 'Global',
-            description: 'Plugin will apply to all requests',
-          },
-          {
-            label: 'Scoped',
-            description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
-            fields: [
-              {
-                model: 'service-id',
-                label: 'Service',
-                placeholder: 'Select a Service',
-                type: 'AutoSuggest',
-                entity: 'services',
-                labelField: 'name',
-                inputValues: {
-                  fields: ['name', 'id'],
-                },
-                help: 'The service this plugin will target',
-              },
-              {
-                model: 'route-id',
-                label: 'Route',
-                placeholder: 'Select a Route',
-                type: 'AutoSuggest',
-                entity: 'routes',
-                labelField: 'name',
-                inputValues: {
-                  fields: ['name', 'id'],
-                },
-                help: 'The route this plugin will target',
-              },
-            ],
-          },
-        ],
+        name: 'route',
+        entity: 'routes',
+        label: 'Route',
+        placeholder: 'Select a Route',
+        help: 'The route this plugin will target',
+        labelField: 'name',
+        fields: ['name', 'id'],
+        disabled: false,
+        disabledTooltip: '',
       },
     ],
+    defaults,
   })
 
   const createBaseModel = () => ({
@@ -74,9 +61,8 @@ describe('<CommonForm />', () => {
 
   const mountCommonForm = (overrides: {
     schema?: any
-    formSchema?: any
+    scopeOptions?: any
     model?: any
-    formModel?: any
     isEditing?: boolean
     onFormChange?: any
     provide?: any
@@ -84,9 +70,8 @@ describe('<CommonForm />', () => {
   } = {}) => {
     const {
       schema = createBaseSchema(),
-      formSchema = createFormSchema(),
+      scopeOptions = createScopeOptions(),
       model = createBaseModel(),
-      formModel = { enabled: true },
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
@@ -96,9 +81,8 @@ describe('<CommonForm />', () => {
     const mountOptions: any = {
       props: {
         schema,
-        formSchema,
+        scopeOptions,
         model,
-        formModel,
         isEditing,
         onFormChange,
         pluginName: 'test-plugin',
@@ -292,30 +276,15 @@ describe('<CommonForm />', () => {
   })
 
   describe('Condition field', () => {
-    it('should not render condition field when formSchema does not include condition', () => {
+    it('should not render condition field when the condition flag is off', () => {
       mountCommonForm()
 
       cy.getTestId('ff-condition').should('not.exist')
     })
 
-    it('should render condition field when formSchema includes condition', () => {
-      const formSchemaWithCondition = {
-        ...createFormSchema(),
-        fields: [
-          ...createFormSchema().fields,
-          {
-            model: 'condition',
-            type: 'input',
-            inputType: 'text',
-            label: 'Condition',
-            help: 'An expression used for conditional control over plugin execution.',
-            placeholder: 'Enter a condition expression',
-          },
-        ],
-      }
-
+    it('should render condition field when the condition flag is on', () => {
       mountCommonForm({
-        formSchema: formSchemaWithCondition,
+        provide: { [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true },
       })
 
       cy.getTestId('ff-condition').should('exist')

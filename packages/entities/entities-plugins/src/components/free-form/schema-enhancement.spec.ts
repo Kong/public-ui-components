@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { distributeEntityChecks } from './schema-enhancement'
-import { appendEntityChecksFromMetadata } from './schema-enhancement'
+import { appendEntityChecksFromMetadata, convertConfigSetsToArrays } from './schema-enhancement'
 import { PLUGIN_METADATA } from '../../definitions/metadata'
 import type { EntityCheck, FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
@@ -538,5 +538,65 @@ describe('appendEntityChecksFromMetadata dedupe', () => {
     expect(checks).toContainEqual({ at_least_one_of: ['x', 'y'] })
     expect(checks).toContainEqual({ at_least_one_of: ['x', 'z'] })
     expect(checks).toContainEqual({ mutually_exclusive: ['x', 'z'] })
+  })
+})
+
+describe('convertConfigSetsToArrays', () => {
+  const createSchema = (configFields: RecordFieldSchema['fields']): FormSchema => ({
+    type: 'record',
+    fields: [
+      { protocols: { type: 'set', elements: { type: 'string' } } },
+      { config: { type: 'record', fields: configFields } },
+    ],
+  })
+
+  const getConfigField = (schema: FormSchema, name: string): any => {
+    const config = schema.fields.find((f): f is { config: RecordFieldSchema } => 'config' in f)!.config
+    return config.fields.find(f => name in f)![name]
+  }
+
+  it('converts sets without one_of to arrays', () => {
+    const schema = convertConfigSetsToArrays(createSchema([
+      { ports: { type: 'set', elements: { type: 'integer' } } },
+      { names: { type: 'set', elements: { type: 'string' } } },
+      { methods: { type: 'set', elements: { type: 'string', one_of: ['GET', 'POST'] } } },
+    ]))
+
+    expect(getConfigField(schema, 'ports').type).toBe('array')
+    expect(getConfigField(schema, 'names').type).toBe('array')
+    expect(getConfigField(schema, 'methods').type).toBe('set')
+  })
+
+  it('converts sets in nested records and in array of record elements', () => {
+    const schema = convertConfigSetsToArrays(createSchema([
+      { nested: { type: 'record', fields: [{ ports: { type: 'set', elements: { type: 'integer' } } }] } },
+      {
+        targets: {
+          type: 'array',
+          elements: { type: 'record', fields: [{ ports: { type: 'set', elements: { type: 'integer' } } }] },
+        },
+      },
+    ]))
+
+    expect(getConfigField(schema, 'nested').fields[0].ports.type).toBe('array')
+    expect(getConfigField(schema, 'targets').elements.fields[0].ports.type).toBe('array')
+  })
+
+  it('does not convert the nested fields of hidden fields', () => {
+    const input = createSchema([
+      { hidden_record: { type: 'record', fields: [{ ports: { type: 'set', elements: { type: 'integer' } } }] } },
+    ])
+    getConfigField(input, 'hidden_record').hidden = true
+    const schema = convertConfigSetsToArrays(input)
+
+    expect(getConfigField(schema, 'hidden_record').fields[0].ports.type).toBe('set')
+  })
+
+  it('leaves fields outside config and the input schema unchanged', () => {
+    const input = createSchema([{ ports: { type: 'set', elements: { type: 'integer' } } }])
+    const schema = convertConfigSetsToArrays(input)
+
+    expect((schema.fields[0] as any).protocols.type).toBe('set')
+    expect(getConfigField(input, 'ports').type).toBe('set')
   })
 })

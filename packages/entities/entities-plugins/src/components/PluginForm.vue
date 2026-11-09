@@ -58,23 +58,20 @@
       </template>
 
       <PluginEntityForm
-        v-else
+        v-else-if="loadedSchema?.fields"
         :config="config"
         :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
-        :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="realEngine"
-        :entity-map="entityMap"
+        :plugin-name="pluginType"
         :raw-schema="loadedSchema"
         :record="record"
-        :schema="finalSchema"
+        :scope-options="scopeOptions"
+        :source-plugin="clonedSourcePlugin ?? undefined"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
-        @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
-        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
         @validity-change="handleValidityChange"
       />
 
@@ -201,54 +198,46 @@ import {
   useBaseFormDeckOptions,
   useErrors,
   useHelpers,
-  useStringHelpers,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
-import DOMPurify from 'dompurify'
-import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, provide, reactive, ref, toRef, watch, type PropType, inject } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, toRef, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
-import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
-import { createArraySelectFieldSchema } from '../definitions/schemas/ArraySelectFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
-  EntityTypeIdField,
   PluginScope,
   PluginPartialType,
-  type DefaultPluginsFormSchema,
-  type DefaultPluginsSchemaRecord,
   type KongManagerPluginFormConfig,
   type KonnectPluginFormConfig,
-  type PluginEntityInfo,
   type PluginFormFields,
   type PluginFormState,
   type PluginOrdering,
-  type CustomSchemas,
   type CredentialType,
   type PluginValidityChangeEvent,
   type EntityCreateEvent,
 } from '../types'
+import type { FreeFormPluginData } from '../types/plugins/free-form'
+import type { PluginScopeEntityField, PluginScopeName, PluginScopeOptions } from './free-form/types'
+import { REFERENCE_FIELD_CONFIG } from '../composables/useReferenceEntityNames'
 import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
+import cloneDeep from 'lodash-es/cloneDeep'
+import isEqual from 'lodash-es/isEqual'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/const'
-import { EXPRESSIONS_FIELD } from '@kong-ui-public/freeform'
 import type { GlobalAction } from '@kong-ui-public/freeform'
 import { BEFORE_SAVE_KEY } from './const'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../constants'
 
-type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
-type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
+type ScopedEntitiesPermissions = Partial<Record<PluginScopeName, ScopedEntityPermission>>
 
-const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
 const usesFreeformLayout = ref(false)
 
@@ -267,7 +256,6 @@ const emit = defineEmits<{
       resourceEndpoint: string
     }
   ): void
-  (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'click:learn-more', entity: string): void
@@ -297,12 +285,6 @@ const props = defineProps({
   pluginId: {
     type: String as PropType<string | null>,
     default: null,
-  },
-
-  /** Rather than using internal logic to determine whether or not to hide scope, force it */
-  hideScopeSelection: {
-    type: Boolean,
-    default: false,
   },
 
   /** Disable scope selection due to the plugin is configured under an entity */
@@ -374,38 +356,15 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: null,
   },
-  /**
-   * Control if the redis partial is enabled for plugins.
-   */
-  enableRedisPartial: {
-    type: Boolean,
-    default: false,
-  },
   scopedEntitiesPermissions: {
     type: Object as PropType<ScopedEntitiesPermissions>,
     default: null,
-  },
-
-  /**
-   * Force the engine type for the form.
-   */
-  engine: {
-    type: String as PropType<'vfg' | 'freeform'>,
-    required: false,
-    default: undefined,
   },
 })
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas({
-  app: props.config.app,
-  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
-})
-const { formatPluginFieldLabel } = composables.usePluginHelpers()
-const { shouldUseFreeForm: isFreeForm } = composables.useFreeFormResolver()
 const { getMessageFromError } = useErrors()
-const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -425,34 +384,12 @@ const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const loadedSchema = ref<Record<string, any> | undefined>(undefined)
-const finalSchema = ref<Record<string, any> | undefined>(undefined)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | undefined>(undefined)
-const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 
-const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
-
 const clonedSourcePlugin = ref<string | null>(null)
-
-const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
-
-const effectivePluginType = computed(() =>
-  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
-)
-
-const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
-  if (props.engine) return props.engine
-  if (!customPluginFreeform || !isCustomPlugin.value) return undefined
-  if (isClonedPlugin.value && clonedSourcePlugin.value) {
-    // Cloned plugin: defer to the source plugin's engine.
-    return isFreeForm(clonedSourcePlugin.value) ? 'freeform' : 'vfg'
-  }
-  return 'freeform'
-})
-
-const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
 
 // Used by both the plugin form (`PluginEntityForm`) and the credential form
 provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
@@ -530,11 +467,6 @@ if (isDeckEnabled.value) {
 
 const configTab = ref(tabs.value[0].hash)
 
-// For array-typed fields, if their elements are deeply nested objects,
-// we need this variable to record the key of the array field.
-// See its usage in `buildFormSchema`.
-const arrayRootKey = ref<string>('')
-
 const fetchUrl = computed((): string => {
   if (treatAsCredential.value) { // credential
     let submitEndpoint = endpoints.form[props.config.app].credential[formType.value]
@@ -568,151 +500,10 @@ const toggle = (): void => {
   isToggled.value = !isToggled.value
 }
 
-const entityMap = computed((): Record<string, PluginEntityInfo> => {
-  const consumerId = (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id
-  const consumerGroupId = (props.config.entityType === 'consumer_groups' && props.config.entityId) || record.value?.consumer_group?.id
-  const serviceId = (props.config.entityType === 'services' && props.config.entityId) || record.value?.service?.id
-  const routeId = (props.config.entityType === 'routes' && props.config.entityId) || record.value?.route?.id
-
-  // global plugins
-  if (!(consumerId || consumerGroupId || serviceId || routeId)) {
-    return {
-      global: {
-        entity: PluginScope.GLOBAL,
-        entityEndpoint: 'plugins',
-      },
-    }
-  }
-
-  const entityMap: Record<string, PluginEntityInfo> = {}
-
-  // scoped plugins
-  if (serviceId) {
-    entityMap.service = {
-      entity: PluginScope.SERVICE,
-      entityEndpoint: 'services',
-      id: serviceId,
-      idField: EntityTypeIdField.SERVICE,
-    }
-  }
-
-  if (routeId) {
-    entityMap.route = {
-      entity: PluginScope.ROUTE,
-      entityEndpoint: 'routes',
-      id: routeId,
-      idField: EntityTypeIdField.ROUTE,
-    }
-  }
-
-  if (consumerId) {
-    entityMap.consumer = {
-      entity: PluginScope.CONSUMER,
-      entityEndpoint: 'consumers',
-      id: consumerId,
-      idField: EntityTypeIdField.CONSUMER,
-    }
-  }
-
-  if (consumerGroupId) {
-    entityMap.consumer_group = {
-      entity: PluginScope.CONSUMER_GROUP,
-      entityEndpoint: 'consumer_groups',
-      id: consumerGroupId,
-      idField: EntityTypeIdField.CONSUMER_GROUP,
-    }
-  }
-
-  // the actual entity requested in the config from the host app
-  if (props.config.entityType) {
-    entityMap.focusedEntity = {
-      entity: PluginScope[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
-      entityEndpoint: props.config.entityType,
-      id: props.config.entityId,
-      idField: EntityTypeIdField[props.config.entityType.substring(0, props.config.entityType.length - 1).toUpperCase() as keyof typeof EntityTypeIdField],
-    }
-  }
-
-  return entityMap
-})
-
-// Configuration for globally shared fields
-const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
-  // this is a required field that the user cannot set, it's always the name of the plugin
-  // ex. 'acl'
-  name: {
-    default: props.pluginType,
-    type: 'input',
-    inputType: 'hidden',
-    styleClasses: 'd-none hidden-field',
-    pinned: true, // does not matter because it's hidden
-  },
-  enabled: {
-    type: 'switch',
-    model: 'enabled',
-    label: t('plugins.form.fields.enabled.label'),
-    textOn: t('plugins.form.fields.enabled.on_text'),
-    textOff: t('plugins.form.fields.enabled.off_text'),
-    styleClasses: 'field-switch hide-label',
-    default: true,
-    pinned: true,
-  },
-  // plugin scoping
-  selectionGroup: {
-    type: !props.hideScopeSelection ? 'selectionGroup' : props.hideScopeSelection || (formType.value === EntityBaseFormType.Create && props.config.entityId) ? 'foreign' : 'selectionGroup',
-    disabled: props.disableScopeSelection,
-    inputType: 'hidden',
-    styleClasses: 'hide-label',
-    fields: [
-      {
-        label: t('plugins.form.scoping.global.label'),
-        description: t('plugins.form.scoping.global.help'),
-      },
-    ],
-    pinned: true,
-  },
-  protocols: {
-    id: 'protocols',
-    default: [],
-    help: t('plugins.form.fields.protocols.help'),
-    label: t('plugins.form.fields.protocols.label'),
-    required: true,
-    styleClasses: 'plugin-protocols-select',
-    type: 'multiselect',
-    values: [
-      { label: 'grpc', value: 'grpc' },
-      { label: 'grpcs', value: 'grpcs' },
-      { label: 'http', value: 'http' },
-      { label: 'https', value: 'https' },
-      { label: 'tcp', value: 'tcp' },
-      { label: 'tls', value: 'tls' },
-      { label: 'tls_passthrough', value: 'tls_passthrough' },
-      { label: 'udp', value: 'udp' },
-      { label: 'ws', value: 'ws' },
-      { label: 'wss', value: 'wss' },
-    ],
-  },
-  instance_name: {
-    default: '',
-    type: 'input',
-    label: t('plugins.form.fields.instance_name.label'),
-    inputType: 'text',
-    help: t('plugins.form.fields.instance_name.help'),
-  },
-  tags: typedefs.tags as DefaultPluginsFormSchema,
-  ...(
-    enableConditionField ? {
-      condition: {
-        default: '',
-        type: 'input',
-        label: t('plugins.form.fields.condition.label'),
-        inputType: 'text',
-        help: t('plugins.form.fields.condition.tooltip'),
-        placeholder: t('plugins.form.fields.condition.placeholder'),
-      },
-    } : {}
-  ),
-})
+// The consumer of the credential
+const credentialConsumerId = computed((): string | undefined =>
+  (props.config.entityType === 'consumers' && props.config.entityId) || record.value?.consumer?.id,
+)
 
 // This is specifically used for credential plugins and portal developer plugins
 // To create an 'ACL' credential we will end up submitting to a URL like: /<entityType>/<entityId>/acl
@@ -724,447 +515,22 @@ const resourceEndpoint = computed((): string => {
   return `${entityPath}/${props.config.entityId}${props.developer ? '/credentials' : ''}${type}`
 })
 
-const getArrayType = (list: unknown[]): string => {
-  const uniqueTypes = Array.from(new Set(list.map(item => typeof item)))
-
-  return uniqueTypes.length > 1 ? 'string' : uniqueTypes[0]
-}
-
-const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
-  let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-
-  // schema can either be an object or an array of objects. If it's an array, convert it to an object
-  if (Array.isArray(schema)) {
-    schema = schema.reduce((acc, current) => {
-      const key = Object.keys(current)[0]
-
-      // If the backend schema has dashes in the field name (e.g. config.response_headers.X-Cache-Status of the proxy-cache plugin),
-      // replace them with underscores because the shared form component treats dashes as separators for nested fields
-      if (key.match(/-/g)) {
-        acc[key.replace(/-/g, '_')] = {
-          ...current[key],
-          // A flag to indicate the field name has dashes originally and they are replaced with underscores.
-          // When submitting the form, the underscores should be replaced with dashes again
-          fieldNameHasDashes: true,
-        }
-      } else {
-        acc[key] = current[key]
-      }
-
-      return acc
-    }, {})
+// The scope options of the free-form layout
+const scopeOptions = computed((): PluginScopeOptions => {
+  const pluginType = clonedSourcePlugin.value ?? props.pluginType
+  const supportsScope = (scope: PluginScope) => PLUGIN_METADATA[pluginType]?.scope.includes(scope) ?? true
+  const supported: Record<PluginScopeName, boolean> = {
+    service: supportsScope(PluginScope.SERVICE),
+    route: supportsScope(PluginScope.ROUTE),
+    consumer: supportsScope(PluginScope.CONSUMER),
+    consumer_group: !props.config.disableConsumerGroupScope && supportsScope(PluginScope.CONSUMER_GROUP),
   }
+  const scopeNames = (Object.keys(REFERENCE_FIELD_CONFIG) as PluginScopeName[]).filter(name => supported[name])
 
-  // alphabetically sort the schema keys and handle specific configuration for each field type
-  Object.keys(schema).sort().forEach(key => {
-    // The root `expressions` record holds the expression twin of every field the
-    // Gateway marks `expressible`. Freeform renders each twin inline beside the
-    // field it overrides (see `StringField`/`NumberField`); VFG has no such
-    // affordance, and the generic record walk below would flatten the record
-    // into a row of stray `expressions-*` inputs, so skip it entirely.
-    if (!parentKey && key === EXPRESSIONS_FIELD) {
-      return
-    }
-
-    const scheme = schema[key]
-    // If the field type is 'set', convert it to 'array'
-    // Freeform can handle 'set' type with one_of elements as multiselect
-    // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
-      scheme.type = 'array'
-    }
-    const field = parentKey ? `${parentKey}-${key}` : `${key}`
-
-    // the field is marked for deletion in the frontend schema
-    if (pluginSchema?.fieldsToDelete?.includes(field)) {
-      unset(initialFormSchema, field)
-      return
-    }
-
-    // Required, omit keys with overwrite and hidden attributes for Kong Cloud
-    if (Object.prototype.hasOwnProperty.call(scheme, 'overwrite') || scheme.hidden) {
-      return
-    }
-
-    if (scheme.type === 'table') {
-      return buildFormSchema(field, scheme.schema, initialFormSchema)
-    }
-
-    if (scheme.fields) {
-      if (arrayNested && scheme.type === 'record') {
-        initialFormSchema[field] = {
-          type: 'object',
-          model: key,
-          schema: {
-            fields: Object.values(buildFormSchema(field, scheme, {}, true)),
-          },
-        }
-        return initialFormSchema
-      }
-      return buildFormSchema(field, scheme, initialFormSchema)
-    }
-
-    initialFormSchema[field] = { id: field, model: key } // each field's key will be set as the id
-    initialFormSchema[field].type = scheme.type === 'boolean' ? 'checkbox' : 'input'
-    initialFormSchema[field].required = scheme.required
-    initialFormSchema[field].referenceable = scheme.referenceable
-
-    if (field.startsWith('config-')) {
-      if (!arrayNested && scheme.type === 'array') {
-        // Assign `field` to `arrayRootKey`. `arrayRootKey` only have effect on deeply nested array elements.
-        // Take the following schema for example:
-        // "config": {
-        //   "type": "record",
-        //   "fields": [
-        //     "targets": {
-        //       "type": "array",
-        //       "elements": {
-        //         "type": "record",
-        //         "fields": [
-        //           {
-        //             "auth": {
-        //               "type": "record",
-        //               "fields": [
-        //                 { "header_name": { "type": "string" } },
-        //                 { "header_value": { "type": "string" } },
-        //               ]
-        //             }
-        //           },
-        //         ],
-        //       }
-        //     }
-        //   ]
-        // }
-        // In this case, `field` is "config-targets", and so is `arrayRootKey`.
-        arrayRootKey.value = field
-      }
-      if (arrayNested && arrayRootKey.value && field.startsWith(arrayRootKey.value)) {
-        // Generate label for deeply nested array elements.
-        // In the above example, `field` is "config-targets-auth-header_name",
-        // and `nestedKey` is "auth-header_name"
-        const nestedKey = field.slice(arrayRootKey.value.length + 1)
-        // Split `nestedKey` to ["auth", "header_name"], format each part and join them with "."
-        // The result is "Auth.Header Name"
-        initialFormSchema[field].label = nestedKey.split('-').map(formatPluginFieldLabel).join('.')
-      } else {
-        // Otherwise, just format the field
-        initialFormSchema[field].label = formatPluginFieldLabel(field)
-      }
-    }
-
-    // Apply descriptions from BE schema
-    // KAG-3347: Add /config-.*/ to cover deep fields like `config.redis.*` in the rate-limiting-advanced plugin
-    if (parentKey === 'config' || parentKey.startsWith('config-')) {
-      if (schema[key]?.description) {
-        initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions) as string)
-      }
-    }
-
-    // map -> object-advanced
-    if (scheme.type === 'map') {
-      initialFormSchema[field].type = 'object-advanced'
-
-      // Passing `values` to this field in the generated schema for autofill providers
-      // Note: `values` may contain `referenceable` flag.
-      initialFormSchema[field].values = scheme.values
-
-      if (scheme.values.type === 'array') {
-        const { type: elementsType } = scheme.values.elements || {}
-
-        initialFormSchema[field].schema = {
-          fields: [{
-            schema: {
-              fields: [{
-                ...ArrayInputFieldSchema,
-                model: field,
-                valueArrayType: elementsType === 'integer' ? 'number' : elementsType || 'string',
-                inputAttributes: {
-                  ...ArrayInputFieldSchema.inputAttributes,
-                  type: elementsType === 'integer' ? 'number' : 'text',
-                  inputMode: elementsType === 'integer' ? 'numeric' : 'text',
-                },
-              }],
-            },
-          }],
-        }
-      } else if (scheme.values.fields) {
-        initialFormSchema[field].schema = {
-          fields: [
-            {
-              type: 'object',
-              model: 'object',
-              schema: {
-                fields: scheme.values.fields.map((f: Record<string, any>) => {
-                  const modelName = Object.keys(f)[0]
-
-                  return {
-                    model: modelName,
-                    type: 'input',
-                    label: capitalize(modelName),
-                    placeholder: modelName,
-                    inputType: f[modelName].type,
-                  }
-                }),
-              },
-            },
-          ],
-        }
-      }
-
-      return initialFormSchema
-    }
-
-    // enum -> checklist
-    if (scheme.enum && scheme.type === 'array') {
-      initialFormSchema[field].type = 'checklist'
-      initialFormSchema[field].values = scheme.enum
-      initialFormSchema[field].multi = true
-      initialFormSchema[field].multiSelect = true
-    }
-
-    // one_of indicates a select
-    if (scheme.one_of && scheme.type !== 'array') {
-      initialFormSchema[field].type = 'select'
-      initialFormSchema[field].values = scheme.one_of
-      initialFormSchema[field].selectOptions = {
-        noneSelectedText: t('plugins.form.no_selection'),
-      }
-    }
-
-    if (scheme.elements && scheme.type === 'array') {
-      const elements = scheme.elements
-
-      // pass the referenceable flag from elements to the parent
-      initialFormSchema[field].referenceable = elements.referenceable
-
-      initialFormSchema[field].elements = elements
-
-      if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
-        const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
-        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
-        inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
-        initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
-      } else if (['string', 'integer', 'number'].includes(elements.type) && elements.one_of) {
-        // Array with select items for arrays with one_of constraint
-        // Only apply to nested fields (inside records) to minimize impact on existing plugins
-        if (arrayNested) {
-          const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
-          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of, scheme.default) }
-        }
-        // For non-nested fields, keep existing behavior (individual text inputs) for now
-      } else if (elements.type === 'array') { // array of string arrays (string[][])
-        const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
-        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
-        initialFormSchema[field] = {
-          id, help, label, hint, values, referenceable, model,
-          elements: schemaElements, // Preserve elements so FieldArray can check the original schema structure
-          inputAttributes,
-          ...overrides,
-        }
-      }
-    }
-
-    if (scheme.hint) {
-      initialFormSchema[field].hint = DOMPurify.sanitize(scheme.hint)
-    }
-
-    // Custom frontend schema override
-    if (pluginSchema && !pluginSchema.overwriteDefault) {
-      Object.keys(pluginSchema).forEach(plugin => {
-        // Check if current plugin matches any of custom schema keys
-        if (plugin === field) {
-          // Use custom defined schema instead of building from default && set field label
-          const { help, label, hint, values, referenceable, elements } = initialFormSchema[field]
-          const { help: helpOverride, ...overrides } = pluginSchema[plugin as keyof typeof pluginSchema] as Record<string, any>
-          initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
-          // Eagerly replace the help text because we are overriding
-          if (typeof helpOverride === 'string') {
-            initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions) as string)
-          }
-        }
-      })
-    }
-
-    // Apply descriptions from BE schema
-    // KAG-3347: Fix help text in nested fields like `metrics` in the datadog and `parameter_schema`
-    // in the request-validator plugin
-    if (scheme.type === 'array' && scheme.elements?.type === 'record' && Array.isArray(scheme.elements.fields)) {
-      let schemaFieldMap: Record<string, { description?: string }> = {}
-
-      for (const field of scheme.elements.fields) {
-        schemaFieldMap = { ...schemaFieldMap, ...field }
-      }
-
-      const itemFields = initialFormSchema[field]?.items?.schema?.fields
-      if (Array.isArray(itemFields)) {
-        for (const itemField of initialFormSchema[field].items.schema.fields) {
-          const description = schemaFieldMap[itemField.model]?.description
-          // Only replace the help text when it is not defined because it may have already been
-          // overridden by the previous step
-          if (itemField.help === undefined && typeof description === 'string') {
-            itemField.help = DOMPurify.sanitize(marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions) as string)
-          }
-        }
-      }
-
-      // If itemFields is not defined, it means no custom schema for this field is defined
-      // This usually happens for a custom plugin, so we need to build the schema
-      if (!itemFields) {
-        initialFormSchema[field].type = 'array'
-        initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
-        initialFormSchema[field].fieldClasses = 'array-card-container-wrapper'
-        initialFormSchema[field].itemContainerComponent = 'FieldArrayCardContainer'
-
-        initialFormSchema[field].items = {
-          type: 'object',
-          schema: {
-            fields: Object.values(buildFormSchema(field, scheme.elements, {}, true)),
-          },
-        }
-
-        // Set the model to the field name, and the label to the formatted field name
-        initialFormSchema[field].items.schema.fields.forEach(
-          (field: { id?: string, model?: string, label?: string }) => {
-            for (const f of scheme.elements.fields) {
-              const modelName = Object.keys(f)[0]
-              const idParts = field.id?.split?.('-') ?? []
-              if (idParts[idParts.length - 1] === modelName) {
-                field.model = modelName
-                field.label = formatPluginFieldLabel(modelName)
-                break
-              }
-            }
-          },
-        )
-
-        if (scheme.elements.type === 'record') {
-          /**
-           * FIXME Special treatment for nested fields in AI plugins
-           * Tell PluginEntityForm that this field is nested (not flatten), and eliminate the null
-           * fields from the payload
-           */
-          initialFormSchema[field].nestedFields = true
-        }
-      }
-
-      if (!initialFormSchema[field].nestedFields) {
-      // If the field is an array of objects, set the default value to an object
-      // with the default values of the nested fields
-        initialFormSchema[field].items.default = () =>
-          scheme.elements.fields.reduce((acc: Record<string, any>, current: Record<string, { default?: string }>) => {
-            const key = Object.keys(current)[0]
-            acc[key] = current[key].default
-            return acc
-          }, {})
-      } else { // FIXME: Special treatment for building default values for nested fields in AI plugins
-        const visit = (currField: any, defaultValue: Record<string, any>) => {
-          if (currField.type === 'object') {
-            if (currField.model) {
-              defaultValue[currField.model] = {}
-            }
-            for (const childField of currField.schema.fields) {
-              visit(childField, currField.model ? defaultValue[currField.model] : defaultValue)
-            }
-          } else if (currField.model) {
-            defaultValue[currField.model] = currField.default
-          }
-        }
-        initialFormSchema[field].items.default = () => {
-          const defaultValue: Record<string, any> = {}
-          visit(initialFormSchema[field].items, defaultValue)
-          return defaultValue
-        }
-      }
-    }
-
-    if (scheme.required && scheme.type !== 'boolean') {
-      initialFormSchema[field].required = true
-      initialFormSchema[field].selectOptions = {
-        hideNoneSelectedText: true,
-      }
-    }
-
-    if (scheme.required && scheme.type === 'boolean') {
-      initialFormSchema[field].default = scheme.default ?? false
-    }
-
-    // Default is set and is not an object or string 'function'
-    if (scheme.default != null && typeof scheme.default !== 'object' && scheme.default !== 'function') {
-      initialFormSchema[field].default = scheme.default
-    }
-
-    // Field type is an input, determine input type, such as 'text', or 'number'
-    if (initialFormSchema[field].type === 'input') {
-      if (['string', 'number'].includes(typeof initialFormSchema[field].default) && props.config.app === 'konnect') {
-        // Konnect API respects default values if the field is not set, so display them in the placeholder
-        initialFormSchema[field].placeholder = `Default: ${
-          initialFormSchema[field].default === '' ? '<empty string>' : initialFormSchema[field].default
-        }`
-      }
-      const { type: elementsType } = scheme.elements || {}
-
-      if (elementsType) {
-        initialFormSchema[field].valueArrayType = elementsType === 'integer' ? 'number' : elementsType
-      }
-
-      initialFormSchema[field].inputType = scheme.type === 'array' || scheme.type === 'string'
-        ? (scheme.encrypted ? 'password' : 'text')
-        : scheme.type
-    }
-
-    // Determine schema value type by interpretation of defaults or enum values
-    let valueType = 'string'
-
-    if (scheme.enum) {
-      valueType = getArrayType(scheme.enum)
-    } else if (scheme.type === 'boolean') {
-      valueType = 'boolean'
-    } else if (scheme.type === 'number' || scheme.type === 'integer') {
-      valueType = 'number'
-      initialFormSchema[field].inputType = 'number'
-    } else if (scheme.type === 'array') {
-      valueType = 'array'
-      initialFormSchema[field].default = scheme.default
-      // If an array/set field requires to be non-empty,
-      // commit null instead of an empty array/set.
-      // Fixes INTF-2938
-      if (scheme.len_min > 0) {
-        initialFormSchema[field].submitWhenNull = true
-      }
-    } else if (scheme.type === 'foreign') {
-      valueType = 'object'
-    } else if (scheme.default && Array.isArray(scheme.default)) {
-      valueType = 'array'
-      initialFormSchema[field].valueArrayType = getArrayType(scheme.default)
-    } else if (scheme.default) {
-      valueType = typeof scheme.default
-    }
-
-    initialFormSchema[field].valueType = valueType
-    if (scheme.fieldNameHasDashes) {
-      initialFormSchema[field].fieldNameHasDashes = true
-    }
-  })
-
-  return initialFormSchema
-}
-
-const initScopeFields = (): void => {
-  const pluginType = isClonedPlugin.value && clonedSourcePlugin.value ? clonedSourcePlugin.value : props.pluginType
-  const supportServiceScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
-  const supportConsumerGroupScope = props.config.disableConsumerGroupScope
-    ? false
-    : (PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
-  // check whether the plugin is scoped
-  const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
-  const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
-  const serviceScoped = (props.config.entityType === 'services' && !!props.config.entityId) || !!record.value?.service?.id
-  const routeScoped = (props.config.entityType === 'routes' && !!props.config.entityId) || !!record.value?.route?.id
-
-  const scopeEntityArray = []
+  // The entity the plugin is created or edited under
+  const focusedScope = props.config.entityId
+    ? scopeNames.find(name => REFERENCE_FIELD_CONFIG[name].entityType === props.config.entityType)
+    : undefined
 
   const getDisabledTooltip = (scopeSelectionDisabled: boolean, dataRetrieveDisabled: boolean, scope: string) => {
     if (scopeSelectionDisabled) {
@@ -1175,158 +541,82 @@ const initScopeFields = (): void => {
     return ''
   }
 
-  const dataRetrieveDisabled = (key: ScopedEntitiesType) => {
-    return props.scopedEntitiesPermissions?.[key]?.canRetrieve === false
-  }
-
-  /**
-   * type ScopedEntity {
-   *   id: string
-   *   model: string // used as the v-model
-   *   label: string
-   *   placeholder: string
-   *   type: string // which component to render
-   *   labelField: string // index key used for rendering dropdown item label
-   *   help: string // for Select help text
-   *   disabled: boolean // whether disable the field itself
-   *   disabledTooltip: string // the tooltip to show when field is disabled
-   *   entity: EntityType // which entity type we are rendering here
-   *   inputValues: {
-   *      fields: string[] // keys used for API requests and condition checks
-   *   }
-   * }
-   */
-  // if the plugin is enabled for a specific type of entity, add it's scope field to the form
-  if (supportServiceScope) {
-    const retrieveServiceDisabled = dataRetrieveDisabled('service')
-    const entity = 'services'
-    const scopeSelectionDisabled = (serviceScoped && props.disableScopeSelection)
-    scopeEntityArray.push({
-      id: 'service-id',
-      model: 'service-id',
+  const scopeTexts: Record<PluginScopeName, { label: string, help: string, plural: string }> = {
+    service: {
       label: t('plugins.form.scoping.gateway_service.label'),
-      placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggest',
-      labelField: 'name',
-      entity,
-      inputValues: {
-        fields: ['name', 'id'],
-      },
       help: t('plugins.form.scoping.gateway_service.help'),
-      disabled: scopeSelectionDisabled || retrieveServiceDisabled, // disable service selection if the plugin is already scoped under service
-      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveServiceDisabled, entity),
-    })
-  }
-
-  if (supportRouteScope) {
-    const retrieveRouteDisabled = dataRetrieveDisabled('route')
-    const entity = 'routes'
-    const scopeSelectionDisabled = (routeScoped && props.disableScopeSelection)
-    scopeEntityArray.push({
-      id: 'route-id',
-      model: 'route-id',
+      plural: t('plugins.form.scoping.gateway_service.plural'),
+    },
+    route: {
       label: t('plugins.form.scoping.route.label'),
-      placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggest',
-      entity,
-      labelField: 'name', // for rendering dropdown item label
-      inputValues: {
-        fields: ['name', 'id'],
-        primaryField: 'id',
-      },
       help: t('plugins.form.scoping.route.help'),
-      disabled: scopeSelectionDisabled || retrieveRouteDisabled,
-      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveRouteDisabled, entity),
-    })
-  }
-
-  if (supportConsumerScope) {
-    const retrieveConsumerDisabled = dataRetrieveDisabled('consumer')
-    const entity = 'consumers'
-    const scopeSelectionDisabled = (consumerScoped && props.disableScopeSelection)
-    scopeEntityArray.push({
-      model: 'consumer-id',
+      plural: t('plugins.form.scoping.route.plural'),
+    },
+    consumer: {
       label: t('plugins.form.scoping.consumer.label'),
-      placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggest',
-      entity,
-      labelField: 'username',
-      inputValues: {
-        fields: ['username', 'custom_id', 'id'],
-        primaryField: 'username',
-      },
       help: t('plugins.form.scoping.consumer.help'),
-      disabled: scopeSelectionDisabled || retrieveConsumerDisabled,
-      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveConsumerDisabled, entity),
-    })
-  }
-
-  if (supportConsumerGroupScope) {
-    const retrieveConsumerGroupDisabled = dataRetrieveDisabled('consumer_group')
-    const entity = 'consumer_groups'
-    const scopeSelectionDisabled = (consumerGroupScoped && props.disableScopeSelection)
-    scopeEntityArray.push({
-      model: 'consumer_group-id',
+      plural: t('plugins.form.scoping.consumer.plural'),
+    },
+    consumer_group: {
       label: t('plugins.form.scoping.consumer_group.label'),
-      placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggest',
-      entity,
-      entityDataKey: 'consumer_group',
-      labelField: 'name',
-      inputValues: {
-        fields: ['name', 'id'],
-        primaryField: 'name',
-      },
       help: t('plugins.form.scoping.consumer_group.help'),
-      disabled: scopeSelectionDisabled || retrieveConsumerGroupDisabled,
-      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveConsumerGroupDisabled, entity),
-    })
+      plural: t('plugins.form.scoping.consumer_group.plural'),
+    },
   }
 
-  if (scopeEntityArray.length) {
-    const scopeEntities = [
-      ...supportServiceScope ? ['service'] : [],
-      ...supportRouteScope ? ['route'] : [],
-      ...supportConsumerScope ? ['consumer'] : [],
-      ...supportConsumerGroupScope ? ['consumer_group'] : [],
-    ]
-
-    // TODO: correct string concat
-    // Building the description strings for global vs. scoped radio buttons
-    const trailingEntities = scopeEntities.splice(scopeEntities.length - 2, 2).map((entityType: string) => entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t))
-    const trailingText = trailingEntities.join(`${scopeEntities.length > 0 ? ',' : ''} and/or `)
-
-    const desc = [
-      'Specific',
-      [
-        ...scopeEntities.length > 0
-          ? [scopeEntities.map((entityType: string) =>
-            entityType === 'service' ? t('plugins.form.scoping.gateway_service.plural') : t(`plugins.form.scoping.${entityType}.plural` as keyof typeof t),
-          ).join(', ')]
-          : [],
-        trailingText,
-      ].join(', '),
-    ].join(' ')
-
-    defaultFormSchema.selectionGroup.fields.push({
-      label: t('plugins.form.scoping.label'),
-      description: desc,
-      fields: [],
-    })
-
-    defaultFormSchema.selectionGroup.fields[1].fields = scopeEntityArray
+  // The entity keys to search and show
+  const searchFields: Record<PluginScopeName, string[]> = {
+    service: ['name', 'id'],
+    route: ['name', 'id'],
+    consumer: ['username', 'custom_id', 'id'],
+    consumer_group: ['name', 'id'],
   }
 
-  // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[effectivePluginType.value as keyof CustomSchemas] && customSchemas[effectivePluginType.value as keyof CustomSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[effectivePluginType.value as keyof CustomSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[effectivePluginType.value as keyof CustomSchemas].formSchema)
+  const entityFields = scopeNames.map((name): PluginScopeEntityField => {
+    const { entityType: entity, nameField } = REFERENCE_FIELD_CONFIG[name]
+    // disable the selection if the plugin is configured under this entity
+    const scopeSelectionDisabled = focusedScope === name && props.disableScopeSelection
+    const dataRetrieveDisabled = props.scopedEntitiesPermissions?.[name]?.canRetrieve === false
+
+    return {
+      name,
+      entity,
+      label: scopeTexts[name].label,
+      placeholder: t('plugins.form.scoping.placeholder'),
+      help: scopeTexts[name].help,
+      labelField: nameField,
+      fields: searchFields[name],
+      disabled: scopeSelectionDisabled || dataRetrieveDisabled,
+      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, dataRetrieveDisabled, entity),
     }
+  })
+
+  // TODO: correct string concat
+  // e.g. "Specific Gateway Services, Routes, Consumers, and/or Consumer Groups"
+  const plurals = scopeNames.map(name => scopeTexts[name].plural)
+  const leadingPlurals = plurals.slice(0, -2)
+  const trailingText = plurals.slice(-2).join(`${leadingPlurals.length > 0 ? ',' : ''} and/or `)
+  const scopedDescription = `Specific ${[...leadingPlurals, trailingText].join(', ')}`
+
+  return {
+    disabled: props.disableScopeSelection,
+    global: {
+      label: t('plugins.form.scoping.global.label'),
+      description: t('plugins.form.scoping.global.help'),
+    },
+    scoped: entityFields.length
+      ? { label: t('plugins.form.scoping.label'), description: scopedDescription }
+      : undefined,
+    entityFields,
+    defaults: focusedScope ? { [focusedScope]: { id: props.config.entityId! } } : {},
   }
-}
+})
 
 const changesExist = computed(() => {
-  return !objectsAreEqual(form.fields, formFieldsOriginal, true)
+  // Credential fields are flat, plugin fields are nested (e.g. `config`)
+  return treatAsCredential.value
+    ? !objectsAreEqual(form.fields, formFieldsOriginal, true)
+    : !isEqual(form.fields, formFieldsOriginal)
 })
 
 /**
@@ -1335,10 +625,8 @@ const changesExist = computed(() => {
  */
 const canSubmit = computed((): boolean => !schemaLoading.value && !formLoading.value && (formType.value === EntityBaseFormType.Create || changesExist.value))
 
-const initialized = ref(false)
 const dynamicOrdering = ref<PluginOrdering>()
-// The whole purpose of this function is to wait for the existing record to be loaded if editing
-// We need to wait for this before we start attempting to build the schema
+// Store the existing record when editing
 const initForm = (data: Record<string, any>): void => {
   // FIXME: This is a workaround for the issue FTI-6248, it should be replaced with a better solution
   // When editing a credential, if the user saves the password without changing it, the password will be changed to the hashed password returned by the backend
@@ -1354,23 +642,36 @@ const initForm = (data: Record<string, any>): void => {
   Object.assign(formFieldsOriginal, form.fields)
 
   record.value = data
-  initialized.value = true
 }
 
 const submitPayload = ref<Record<string, any>>({})
-const credentialBaselineSet = ref(false)
-// fired whenever form data is modified
-const handleUpdate = (payload: Record<string, any>) => {
-  form.fields = payload.model
-  form.fields.id = record.value?.id || undefined
-  Object.assign(formFieldsOriginal, payload.originalModel)
-  submitPayload.value = payload.data
+const baselineSet = ref(false)
+
+// Replace the baseline used to detect changes
+const setBaseline = (fields: Record<string, any>) => {
+  Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
+  Object.assign(formFieldsOriginal, cloneDeep(fields))
+}
+
+// fired whenever the plugin form data is modified
+const handleUpdate = (data: FreeFormPluginData) => {
+  // The free-form layout always emits `enabled`, `protocols` and `tags`
+  form.fields = { ...data, id: record.value?.id || undefined } as PluginFormFields
+
+  // The first emission is the form's initial value, use it as the baseline for change detection.
+  // After a save, `saveFormData` updates the baseline with the saved values.
+  if (!baselineSet.value) {
+    baselineSet.value = true
+    setBaseline(form.fields)
+  }
+
+  submitPayload.value = data
 
   // wizard relies on model-updated since action buttons are hidden
   if (props.isWizardStep) {
     emit('model-updated', {
       model: form.fields,
-      data: payload.data,
+      data,
       resourceEndpoint: resourceEndpoint.value,
     })
   }
@@ -1382,10 +683,9 @@ const handleCredentialUpdate = (model: Record<string, any>) => {
 
   // The first emission is the form's initial value, use it as the baseline for change detection.
   // After a save, `saveFormData` updates the baseline with the saved values.
-  if (!credentialBaselineSet.value) {
-    credentialBaselineSet.value = true
-    Object.keys(formFieldsOriginal).forEach((key) => delete formFieldsOriginal[key as keyof PluginFormFields])
-    Object.assign(formFieldsOriginal, form.fields)
+  if (!baselineSet.value) {
+    baselineSet.value = true
+    setBaseline(form.fields)
   }
 
   const original: Record<string, any> = formFieldsOriginal
@@ -1428,27 +728,6 @@ const handleValidityChange = (event: PluginValidityChangeEvent) => {
     form.serverErrorMessage = ''
   }
 }
-
-watch([entityMap, initialized], (newData, oldData) => {
-  const newEntityData = newData[0] !== oldData[0]
-  const newinitialized = newData[1]
-  const oldinitialized = oldData[1]
-
-  // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
-  if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
-    const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-    if (isCustomPlugin.value) {
-      initialFormSchema._isCustomPlugin = true
-    }
-    if (isClonedPlugin.value && clonedSourcePlugin.value) {
-      initialFormSchema._sourcePlugin = clonedSourcePlugin.value
-    }
-    if (pluginPartialType.value) {
-      initialFormSchema._supported_redis_partial_type = pluginPartialType.value
-    }
-    finalSchema.value = initialFormSchema
-  }
-}, { deep: true })
 
 /**
  * ---------------
@@ -1508,9 +787,8 @@ const getRequestBody = computed((): Record<string, any> => {
   if (treatAsCredential.value) {
     // The credential is already scoped by the request URL, the consumer is also sent to keep the payload the same as before.
     // ex. { consumer: { id: '1234-567-899' } }
-    const consumerId = entityMap.value.consumer?.id
-    if (consumerId) {
-      requestBody.consumer = { id: consumerId }
+    if (credentialConsumerId.value) {
+      requestBody.consumer = { id: credentialConsumerId.value }
     }
   }
 
@@ -1553,18 +831,11 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
-    const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
+    // The inputs stay editable during the request, so keep the values that are sent
+    const savedFields = cloneDeep(form.fields)
     if (treatAsCredential.value && props.config.app === 'kongManager' && ['key-auth', 'key-auth-enc'].includes(props.pluginType) && typeof payload.ttl !== 'number') {
       // Kong Manager rejects an empty `ttl`, `0` means no expiration.
       payload.ttl = 0
-    }
-    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
-      customSchema.shamefullyTransformPayload({
-        originalModel: formFieldsOriginal,
-        model: form.fields,
-        payload,
-        schema: finalSchema.value,
-      })
     }
 
     if (formType.value === 'create') {
@@ -1580,8 +851,8 @@ const saveFormData = async (): Promise<void> => {
         : await axiosInstance.patch(submitUrl.value, payload)
     }
 
-    // Set initial state of `formFieldsOriginal` to these values in order to detect changes
-    Object.assign(formFieldsOriginal, form.fields)
+    // The saved values are the new baseline to detect changes
+    setBaseline(savedFields)
 
     // Emit an update event for the host app to respond to
     emit('update', response?.data)
@@ -1642,49 +913,9 @@ onBeforeMount(async () => {
       loadedSchema.value = data
 
       if (data) {
-        // start from the config part of the schema
-        const configField = data.fields.find((field: Record<string, any>) => field.config)
-        configResponse.value = configField ? configField.config : data
         if (data.supported_partials) {
           pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
           pluginRedisPath.value = data.supported_partials[pluginPartialType.value]?.[0]
-        }
-
-        // scoping and global field setup
-        initScopeFields()
-
-        const protocolsField = data.fields.find((field: Record<string, any>) => field.protocols)?.protocols
-
-        if (protocolsField) {
-          const { default: defaultValues = [], elements = {} } = protocolsField
-
-          defaultFormSchema.protocols.default = defaultValues
-
-          // Konnect API respects default values if the field is not set, so display them in the placeholder
-          defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
-            ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
-              protocols: defaultValues.join(', '),
-            })
-            : t('plugins.form.fields.protocols.placeholder')
-
-          if (elements.one_of?.length) {
-            defaultFormSchema.protocols.values = elements.one_of.map((value: string) => ({ label: value, value }))
-          }
-        }
-
-        // if editing, wait for record to load before building schema
-        if (initialized.value || formType.value === EntityBaseFormType.Create) {
-          const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-          // pass the redis partial type and redis path in plugin with the schema
-          if (pluginPartialType.value) {
-            initialFormSchema._supported_redis_partial_type = pluginPartialType.value
-          }
-          // pass whether the plugin is a custom plugin to the form schema
-          if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-          if (isClonedPlugin.value && clonedSourcePlugin.value) {
-            initialFormSchema._sourcePlugin = clonedSourcePlugin.value
-          }
-          finalSchema.value = initialFormSchema
         }
       }
     }

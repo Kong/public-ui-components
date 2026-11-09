@@ -2,7 +2,6 @@ import { definePluginConfig } from '../define-plugin-config'
 import { EnumField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
-  experimental: true,
   renderRules: {
     bundles: [
       ['config.strategy', 'config.redis'],

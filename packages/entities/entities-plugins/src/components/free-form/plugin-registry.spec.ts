@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { buildPluginConfigRegistry, derivePluginName } from './plugin-registry'
+import CommonForm from './components/CommonForm.vue'
+import ACLForm from './plugins/acl/ACLForm.vue'
+import { buildPluginConfigRegistry, derivePluginName, getFreeFormComponent } from './plugin-registry'
 
 describe('derivePluginName', () => {
   it('converts paths to plugin names', () => {
@@ -20,5 +22,19 @@ describe('buildPluginConfigRegistry', () => {
       './plugins/foo.ts': {},
       './plugins/foo/index.ts': {},
     })).toThrow('Duplicate plugin config for "foo"')
+  })
+})
+
+describe('getFreeFormComponent', () => {
+  it('returns the custom component of a registered plugin', () => {
+    expect(getFreeFormComponent('acl')).toBe(ACLForm)
+  })
+
+  it('returns CommonForm for a registered plugin without a custom component', () => {
+    expect(getFreeFormComponent('cors')).toBe(CommonForm)
+  })
+
+  it('returns CommonForm for a plugin without a config', () => {
+    expect(getFreeFormComponent('my-custom-plugin')).toBe(CommonForm)
   })
 })

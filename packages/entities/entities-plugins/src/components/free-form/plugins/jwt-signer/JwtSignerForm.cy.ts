@@ -38,8 +38,6 @@ const mountForm = (options: MountOptions = {}) => {
   cy.mount(JwtSignerForm as any, {
     props: {
       schema: createSchema(),
-      formSchema: {},
-      formModel: {},
       model: model ?? {},
       isEditing,
       pluginName: 'jwt-signer',

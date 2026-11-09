@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import StandardLayout from './StandardLayout.vue'
-import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../constants'
+import { FEATURE_FLAGS, FREE_FORM_SCHEMA_MAP_KEY } from '../../../constants'
 
 describe('<StandardLayout />', () => {
   const createBaseSchema = () => ({
@@ -29,54 +29,41 @@ describe('<StandardLayout />', () => {
     ],
   })
 
-  const createFormSchema = (disabled = false) => ({
-    fields: [
+  const createScopeOptions = (disabled = false, defaults = {}) => ({
+    disabled,
+    global: {
+      label: 'Global',
+      description: 'Plugin will apply to all requests',
+    },
+    scoped: {
+      label: 'Scoped',
+      description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
+    },
+    entityFields: [
       {
-        model: 'enabled',
-        type: 'switch',
-        default: true,
+        name: 'service',
+        entity: 'services',
+        label: 'Service',
+        placeholder: 'Select a Service',
+        help: 'The service this plugin will target',
+        labelField: 'name',
+        fields: ['name', 'id'],
+        disabled: false,
+        disabledTooltip: '',
       },
       {
-        type: 'selectionGroup',
-        disabled,
-        fields: [
-          {
-            label: 'Global',
-            description: 'Plugin will apply to all requests',
-          },
-          {
-            label: 'Scoped',
-            description: 'Specific Services, Routes, Consumers, and/or Consumer Groups',
-            fields: [
-              {
-                model: 'service-id',
-                label: 'Service',
-                placeholder: 'Select a Service',
-                type: 'AutoSuggest',
-                entity: 'services',
-                labelField: 'name',
-                inputValues: {
-                  fields: ['name', 'id'],
-                },
-                help: 'The service this plugin will target',
-              },
-              {
-                model: 'route-id',
-                label: 'Route',
-                placeholder: 'Select a Route',
-                type: 'AutoSuggest',
-                entity: 'routes',
-                labelField: 'name',
-                inputValues: {
-                  fields: ['name', 'id'],
-                },
-                help: 'The route this plugin will target',
-              },
-            ],
-          },
-        ],
+        name: 'route',
+        entity: 'routes',
+        label: 'Route',
+        placeholder: 'Select a Route',
+        help: 'The route this plugin will target',
+        labelField: 'name',
+        fields: ['name', 'id'],
+        disabled: false,
+        disabledTooltip: '',
       },
     ],
+    defaults,
   })
 
   const createBaseModel = () => ({
@@ -86,18 +73,16 @@ describe('<StandardLayout />', () => {
 
   const mountStandardLayout = (overrides: {
     schema?: any
-    formSchema?: any
+    scopeOptions?: any
     model?: any
-    formModel?: any
     isEditing?: boolean
     onFormChange?: any
     provide?: any
   } = {}) => {
     const {
       schema = createBaseSchema(),
-      formSchema = createFormSchema(),
+      scopeOptions = createScopeOptions(),
       model = createBaseModel(),
-      formModel = { enabled: true },
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
@@ -106,9 +91,8 @@ describe('<StandardLayout />', () => {
     const mountOptions: any = {
       props: {
         schema,
-        formSchema,
+        scopeOptions,
         model,
-        formModel,
         isEditing,
         onFormChange,
         pluginName: 'test-plugin',
@@ -144,7 +128,7 @@ describe('<StandardLayout />', () => {
 
   it('should disable scope selection when disabled flag is true', () => {
     mountStandardLayout({
-      formSchema: createFormSchema(true), // disabled = true
+      scopeOptions: createScopeOptions(true), // disabled = true
     })
 
     // Verify component renders successfully
@@ -161,22 +145,21 @@ describe('<StandardLayout />', () => {
 
   })
 
-  it('should initialize scope from formModel when creating new plugin', () => {
+  it('should initialize scope from the scope defaults when creating new plugin', () => {
     const onFormChangeSpy = cy.spy().as('onFormChange')
 
     mountStandardLayout({
-      formModel: {
-        enabled: true,
-        'service-id': 'test-service-123',
-        'route-id': 'test-route-456',
-      },
+      scopeOptions: createScopeOptions(false, {
+        service: { id: 'test-service-123' },
+        route: { id: 'test-route-456' },
+      }),
       onFormChange: onFormChangeSpy,
     })
 
     // Verify component renders successfully
     cy.get('.ff-standard-layout').should('exist')
 
-    // Verify onFormChange is called with service initialized from formModel
+    // Verify onFormChange is called with the scope defaults
     cy.get('@onFormChange').should('have.been.called')
     cy.get('@onFormChange').then((spy) => {
       const call = (spy as any).getCall(0)
@@ -256,9 +239,8 @@ describe('<StandardLayout />', () => {
     cy.mount(StandardLayout as any, {
       props: {
         schema: createBaseSchema(),
-        formSchema: createFormSchema(),
+        scopeOptions: createScopeOptions(),
         model: createBaseModel(),
-        formModel: { enabled: true },
         isEditing: false,
         onFormChange: cy.spy(),
         pluginName: 'test-plugin',
@@ -283,9 +265,8 @@ describe('<StandardLayout />', () => {
       cy.mount(StandardLayout as any, {
         props: {
           schema: createBaseSchema(),
-          formSchema: createFormSchema(),
+          scopeOptions: createScopeOptions(),
           model: createBaseModel(),
-          formModel: { enabled: true },
           isEditing: false,
           onFormChange: cy.spy(),
           pluginName: 'test-plugin',
@@ -353,9 +334,8 @@ describe('<StandardLayout />', () => {
       cy.mount(StandardLayout as any, {
         props: {
           schema: createEmptyConfigSchema(),
-          formSchema: createFormSchema(),
+          scopeOptions: createScopeOptions(),
           model: createBaseModel(),
-          formModel: { enabled: true },
           isEditing: false,
           onFormChange: cy.spy(),
           pluginName: 'test-plugin',
@@ -380,9 +360,8 @@ describe('<StandardLayout />', () => {
     cy.mount(StandardLayout as any, {
       props: {
         schema: createBaseSchema(),
-        formSchema: createFormSchema(),
+        scopeOptions: createScopeOptions(),
         model: createBaseModel(),
-        formModel: { enabled: true },
         isEditing: false,
         onFormChange: cy.spy(),
         pluginName: 'test-plugin',
@@ -402,31 +381,16 @@ describe('<StandardLayout />', () => {
   })
 
   describe('Condition field', () => {
-    it('should not render condition field when formSchema does not include condition', () => {
+    it('should not render condition field when the condition flag is off', () => {
       mountStandardLayout()
 
       cy.get('.ff-standard-layout').should('exist')
       cy.getTestId('ff-condition').should('not.exist')
     })
 
-    it('should render condition field when formSchema includes condition', () => {
-      const formSchemaWithCondition = {
-        ...createFormSchema(),
-        fields: [
-          ...createFormSchema().fields,
-          {
-            model: 'condition',
-            type: 'input',
-            inputType: 'text',
-            label: 'Condition',
-            help: 'An expression used for conditional control over plugin execution.',
-            placeholder: 'Enter a condition expression',
-          },
-        ],
-      }
-
+    it('should render condition field when the condition flag is on', () => {
       mountStandardLayout({
-        formSchema: formSchemaWithCondition,
+        provide: { [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true },
       })
 
       cy.get('.ff-standard-layout').should('exist')

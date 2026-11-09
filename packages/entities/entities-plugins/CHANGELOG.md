@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.8...%40kong-ui-public%2Fentities-plugins%4011.0.9) (2026-11-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.7...%40kong-ui-public%2Fentities-plugins%4011.0.8) (2026-11-06)
+
+### Bug Fixes
+
+* **entities-plugins:** ignore gateway-filled fields when gating the datakit flow editor [AMV-57] ([#4030](https://github.com/Kong/public-ui-components/issues/4030)) ([0848818](https://github.com/Kong/public-ui-components/commit/0848818b89dc1023928bb580c230e1b4ca52b1d8))
+
+
+## [11.0.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.6...%40kong-ui-public%2Fentities-plugins%4011.0.7) (2026-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.5...%40kong-ui-public%2Fentities-plugins%4011.0.6) (2026-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.4...%40kong-ui-public%2Fentities-plugins%4011.0.5) (2026-11-05)
+
+### Bug Fixes
+
+* **entities-plugins,-metadata:** typo in ai-aws-guardrails ([#4020](https://github.com/Kong/public-ui-components/issues/4020)) ([624f748](https://github.com/Kong/public-ui-components/commit/624f74867672704f558486a600b6ede77fca63ae))
+* **entities-plugins:** add allow_status_codes field to metering & billing form [AG-2150] ([#4023](https://github.com/Kong/public-ui-components/issues/4023)) ([6e78fa4](https://github.com/Kong/public-ui-components/commit/6e78fa4153f313542cd13966cebbe3c80eea0b74))
+
+
+## [11.0.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.3...%40kong-ui-public%2Fentities-plugins%4011.0.4) (2026-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.2...%40kong-ui-public%2Fentities-plugins%4011.0.3) (2026-11-05)
+
+### Bug Fixes
+
+* **monaco-editor:** resolve a single shiki version for consumers [KM-3610] ([#4022](https://github.com/Kong/public-ui-components/issues/4022)) ([44b874c](https://github.com/Kong/public-ui-components/commit/44b874c990103f8e90d1a66ffb8205df7e98ef5b))
+
+
+## [11.0.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.1...%40kong-ui-public%2Fentities-plugins%4011.0.2) (2026-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.0...%40kong-ui-public%2Fentities-plugins%4011.0.1) (2026-11-04)
+
+### Bug Fixes
+
+* **entities-plugins:** show datakit vault names instead of key ids in code editor [KM-3604] ([#4019](https://github.com/Kong/public-ui-components/issues/4019)) ([1b7269d](https://github.com/Kong/public-ui-components/commit/1b7269db33ed03fc1cf81dfb43b9151b033de8a0))
+
+
+# [11.0.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.2...%40kong-ui-public%2Fentities-plugins%4011.0.0) (2026-11-04)
+
+* feat(entities-plugins)!: render every plugin form with freeform [KM-3584] (#4015) ([0d27370](https://github.com/Kong/public-ui-components/commit/0d27370e1b64f75c3703774ee2cbe5f5806e45cb)), closes [#4015](https://github.com/Kong/public-ui-components/issues/4015)
+
+### BREAKING CHANGES
+
+* plugin forms always render with freeform. The `engine`
+  prop of `PluginForm` and the `EXPERIMENTAL_FREE_FORM_PROVIDER` export are
+  removed, `useProvideExperimentalFreeForms()` has no effect, and
+  `hideScopeSelection` no longer hides the scope section of plugin forms.
+
+  * test(entities-plugins): fix type errors in PluginForm tests [KM-3584]
+
+  - remove the fixtures only used by the deleted VFG tests
+  - type the scoped entity aliases as `@${string}` so `cy.wait()` accepts them
+
+  * fix(entities-plugins): keep experimental on ResolvedPluginFormConfig [KM-3584]
+
+  ai-manager builds `ResolvedPluginFormConfig` entries with
+  `experimental: false`. Keep the field as an optional, deprecated and
+  ignored property, like `PluginFormConfig.experimental`, so hosts keep
+  compiling until they drop it.
+
+
+## [10.4.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.1...%40kong-ui-public%2Fentities-plugins%4010.4.2) (2026-11-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [10.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4010.4.0...%40kong-ui-public%2Fentities-plugins%4010.4.1) (2026-11-03)
 
 ### Bug Fixes

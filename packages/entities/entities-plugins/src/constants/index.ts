@@ -1,7 +1,5 @@
 export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
 
-export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PROVIDER')
-
 export const FEATURE_FLAGS = {
   KM_2262_CODE_MODE: 'KM-2262-code-mode',
   KM_2306_CONDITION_FIELD_314: 'KM-2306-condition-field-314',

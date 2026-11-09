@@ -70,7 +70,8 @@ const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorM
 const { t } = createI18n<typeof english>('en-us', english)
 type TranslationKey = Parameters<typeof t>[0]
 
-const { formData, setValue } = useFormShared<DatakitPluginData>()
+// Read the data with `getValue()`: `formData` keys map entries by internal ids (`kid:N`), e.g. `resources.vault`
+const { getValue, setValue } = useFormShared<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
@@ -95,7 +96,7 @@ function dumpYaml(config: unknown): string {
 }
 
 function formDataToCode(): string {
-  return dumpYaml(omit(formData, ['__ui_data']))
+  return dumpYaml(omit(getValue(), ['__ui_data']))
 }
 
 const code = shallowRef(formDataToCode())
@@ -222,7 +223,7 @@ function setExampleCode(example: DatakitExample) {
     if (typeof config === 'object' && config !== null && isEqual(config.config, exampleConfigJson)) return
 
     const nextConfig = omit({
-      ...formData,
+      ...getValue(),
       config: { ...exampleConfigJson },
     }, ['__ui_data'])
 

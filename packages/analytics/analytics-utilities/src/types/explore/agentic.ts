@@ -19,8 +19,11 @@ export const queryableAgenticExploreDimensions = [
   'ai_gateway_version',
   'ai_provider',
   'mcp_error',
+  'mcp_error_code',
   'mcp_method',
+  'mcp_protocol_version',
   'mcp_session_id',
+  'mcp_tool_list_cache_hit',
   'mcp_tool_name',
 ] as const
 

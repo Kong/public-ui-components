@@ -94,7 +94,11 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   schema: FormSchema
   /** The **initial** entire plugin model, never update */
   model: T
-  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
+  /**
+   * Emits the plugin data to the parent.
+   * `PluginForm` submits the value as the payload (adding the plugin `name`), so a layout used in it
+   * must emit every field it controls, e.g. `config`, `enabled`, the scope, `protocols` and `tags`, not only `config`.
+   */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
@@ -103,6 +107,36 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   pluginName: string
   /** Konnect-managed Redis UI, from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
+}
+
+export type PluginScopeName = 'service' | 'route' | 'consumer' | 'consumer_group'
+
+/** A scope entity field, e.g. the Gateway Service select */
+export interface PluginScopeEntityField {
+  name: PluginScopeName
+  /** Kong entity type, e.g. `services` */
+  entity: string
+  label: string
+  placeholder: string
+  help: string
+  /** The entity key to show as the item label */
+  labelField: string
+  /** The entity keys to search and show */
+  fields: string[]
+  disabled: boolean
+  disabledTooltip: string
+}
+
+/** The plugin scope options of the standard layout */
+export interface PluginScopeOptions {
+  /** Disable switching between global and scoped */
+  disabled: boolean
+  global: { label: string, description: string }
+  /** The scoped option, absent when the plugin can't be scoped */
+  scoped?: { label: string, description: string }
+  entityFields: PluginScopeEntityField[]
+  /** The scope preselected when a plugin is created under an entity */
+  defaults: Partial<Record<PluginScopeName, { id: string }>>
 }
 
 /**
@@ -122,6 +156,8 @@ export interface ConfigSection {
 export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
   onValidityChange?: (event: { model: string, valid: boolean, error?: Error | string }) => void
   isEditing: boolean
+  /** The plugin scope options from `PluginForm`, the standard layout's scope section is empty without them */
+  scopeOptions?: PluginScopeOptions
   /**
    * Optional multi-section configuration layout. When provided, the single
    * "Plugin Configuration" step is replaced by one numbered step block per
@@ -176,10 +212,4 @@ type RuleBasedConfig = {
   fieldRenderers?: FieldRendererRule[]
 }
 
-export type PluginFormConfig = {
-  /**
-   * Whether the plugin is experimental.
-   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
-   */
-  experimental?: boolean
-} & (ComponentBasedConfig | RuleBasedConfig)
+export type PluginFormConfig = ComponentBasedConfig | RuleBasedConfig

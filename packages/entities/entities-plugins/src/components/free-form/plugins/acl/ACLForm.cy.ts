@@ -13,8 +13,6 @@ const mountForm = (options: MountOptions = {}) => {
   cy.mount(ACLForm as any, {
     props: {
       schema,
-      formSchema: { fields: [] },
-      formModel: {},
       model,
       isEditing: false,
       pluginName: 'acl',

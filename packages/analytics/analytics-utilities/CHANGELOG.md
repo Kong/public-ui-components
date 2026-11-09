@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.6.0...%40kong-ui-public%2Fanalytics-utilities%4014.7.0) (2026-11-06)
+
+### Features
+
+* add AiToolUsage fields ([#4026](https://github.com/Kong/public-ui-components/issues/4026)) ([2cac96e](https://github.com/Kong/public-ui-components/commit/2cac96e692023ca81708803031b0385251741d50))
+
+
+# [14.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.5.0...%40kong-ui-public%2Fanalytics-utilities%4014.6.0) (2026-11-05)
+
+### Features
+
+* **analytics:** add MCP protocol, cache hit and error code to agentic [MA-5655] ([#4027](https://github.com/Kong/public-ui-components/issues/4027)) ([60fe7ee](https://github.com/Kong/public-ui-components/commit/60fe7eea54a8421e9624c4200cc0a7c3306a3a3e))
+
+
+# [14.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.4.0...%40kong-ui-public%2Fanalytics-utilities%4014.5.0) (2026-11-05)
+
+### Features
+
+* add `service_tier` and `speed` field [MA-5627] ([#4021](https://github.com/Kong/public-ui-components/issues/4021)) ([cf58ac7](https://github.com/Kong/public-ui-components/commit/cf58ac7dd22e452dbc4261b0f498369daabfa21f))
+
+
+# [14.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.3.0...%40kong-ui-public%2Fanalytics-utilities%4014.4.0) (2026-11-04)
+
+### Features
+
+* **analytics:** add compression, media, guardrail and APE fields [MA-5643] ([#4014](https://github.com/Kong/public-ui-components/issues/4014)) ([d589c3f](https://github.com/Kong/public-ui-components/commit/d589c3fafe4071f3f6d4d292c988a875da42f4e3))
+
+
 # [14.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.2.3...%40kong-ui-public%2Fanalytics-utilities%4014.3.0) (2026-11-04)
 
 ### Features

@@ -640,8 +640,8 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
   },
   'ai-aws-guardrails': {
-    name: 'AI AWS GuardRails',
-    description: 'The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin.',
+    name: 'AI AWS Guardrails',
+    description: 'The AI AWS Guardrails enables enforcement of introspection with the AWS Guardrails service for all requests processed by the AI Proxy plugin.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
@@ -743,7 +743,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     gatewayVersion: '3.17',
   },
-  'circuit-breaker': {
+  'kong-circuit-breaker': {
     name: 'Circuit Breaker',
     description: 'Protect upstream services by automatically stopping requests at the Service or Route level when failures or upstream latency exceed configured thresholds, allowing unhealthy backends time to recover.',
     group: PluginGroup.TRAFFIC_CONTROL,

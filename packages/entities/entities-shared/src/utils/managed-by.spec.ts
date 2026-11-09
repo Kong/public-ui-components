@@ -29,6 +29,8 @@ describe('getManagedByLabel', () => {
     ['terraform-provider-konnect', 'Terraform'],
     ['deck', 'decK'],
     ['kong-gateway-operator', 'Kong Gateway Operator'],
+    ['kongctl', 'kongctl'],
+    ['kong-ingress-controller', 'Kong Ingress Controller'],
     ['gw-manager', 'Konnect UI'],
     ['dev-portal', 'Dev Portal'],
   ])('maps the known tool %s to %s', (tool, expected) => {
@@ -40,7 +42,6 @@ describe('getManagedByLabel', () => {
   })
 
   it.each([
-    'kong-ingress-controller',
     'some-tool-we-have-never-seen',
     'constructor',
     'toString',

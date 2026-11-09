@@ -38,5 +38,10 @@ export * from './types'
 export * from './constants'
 
 export { highlightCodeBlock } from './utils/code-block'
-export { getManagedByLabel, getManagedByFieldLabel } from './utils/managed-by'
+// `MANAGED_BY_LABELS` is exported alongside the resolver because consumers that render
+// owner names outside a table or config card (Gateway Manager's takeover notice) need the
+// map itself: `getManagedByLabel` collapses an unrecognised owner to "Custom", which reads
+// wrong in prose ("This entity is managed by Custom"). Exporting it keeps those surfaces on
+// the same source of truth instead of maintaining a second copy that drifts.
+export { getManagedByLabel, getManagedByFieldLabel, MANAGED_BY_LABELS } from './utils/managed-by'
 export type { ManagedBy } from './utils/managed-by'

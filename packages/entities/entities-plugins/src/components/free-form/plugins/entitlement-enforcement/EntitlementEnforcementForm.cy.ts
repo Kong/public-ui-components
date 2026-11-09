@@ -18,8 +18,6 @@ const mountForm = (options: {
   cy.mount(EntitlementEnforcementForm as any, {
     props: {
       schema: entitlementEnforcementSchema,
-      formSchema: {},
-      formModel: {},
       model,
       isEditing,
       pluginName: 'entitlement-enforcement',
