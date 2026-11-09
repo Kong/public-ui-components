@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.7.0...%40kong-ui-public%2Fanalytics-utilities%4014.8.0) (2026-11-09)
+
+### Features
+
+* tracestate/traceparent fields in API Requests ([#4031](https://github.com/Kong/public-ui-components/issues/4031)) ([07cae47](https://github.com/Kong/public-ui-components/commit/07cae47802280b221496be05a9a6f735e400082c))
+
+
 # [14.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.6.0...%40kong-ui-public%2Fanalytics-utilities%4014.7.0) (2026-11-06)
 
 ### Features
