@@ -2,6 +2,7 @@
 
 Render Analytics charts on a page from a JSON definition.
 
+- [Consumer entry points](#consumer-entry-points)
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Props](#props)
@@ -23,6 +24,58 @@ Render Analytics charts on a page from a JSON definition.
   - [Time Range Configuration](#time-range-configuration)
   - [Layout Configuration](#layout-configuration)
   - [Usage Example](#usage-example)
+
+## Consumer entry points
+
+Use `DashboardRenderer` for a dashboard or layout of analytics tiles. Use
+`DashboardTilePreview` for a single embedded tile, including a tile inside a
+custom card. Both use the host's `AnalyticsBridge` and own query execution,
+readiness, context filters, loading/error states, and rendering. Custom page
+layout does not require direct `AnalyticsChart` use.
+
+Application code must use these entry points instead of importing or rendering
+`AnalyticsChart` directly. A direct use is permitted only for a required
+capability neither entry point supports. First investigate extending the
+shared renderer; document the concrete blocker and smallest necessary
+exception in the PR. This restriction does not apply to the renderer's internal
+implementation or tests/examples of the chart primitive itself.
+
+For one tile, after installing the bridge described in [Requirements](#requirements):
+
+```vue
+<template>
+  <DashboardTilePreview :context="context" :definition="definition" />
+</template>
+
+<script setup lang="ts">
+import { DashboardTilePreview } from '@kong-ui-public/dashboard-renderer'
+import type { DashboardRendererContext } from '@kong-ui-public/dashboard-renderer'
+import type { ChartTileDefinition } from '@kong-ui-public/analytics-utilities'
+
+import '@kong-ui-public/analytics-chart/dist/style.css'
+import '@kong-ui-public/analytics-metric-provider/dist/style.css'
+import '@kong-ui-public/dashboard-renderer/dist/style.css'
+
+const context: DashboardRendererContext = {
+  filters: [],
+  timeSpec: { type: 'relative', time_range: '7d' },
+}
+const definition: ChartTileDefinition = {
+  chart: { type: 'timeseries_bar' },
+  query: {
+    datasource: 'api_usage',
+    metrics: ['request_count'],
+    dimensions: ['time'],
+    granularity: 'daily',
+  },
+}
+</script>
+```
+
+For a metric selector, set the tile query's `metrics` to the selected metric.
+`AnalyticsChart.activeMetric` only selects among grouped multi-metric time
+series; ungrouped results keep all queried metrics. Do not combine requests,
+tokens, latency, and cost on a single axis and rely on that prop to select one.
 
 ## Requirements
 
