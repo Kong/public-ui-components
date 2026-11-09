@@ -104,7 +104,8 @@ jobs:
       actions: write        # old caller review dispatch, successor plan runs and test publication
     with:
       trigger_phrase: ${{ vars.KSAI_TRIGGER_PHRASE }}
-      runs_on: ubuntu-latest
+      # KSAI v3's bwrap sandbox cannot start on Ubuntu 26, which the ubuntu-latest label now points at.
+      runs_on: ubuntu-24.04
       anthropic_base_url: ${{ vars.KSAI_ANTHROPIC_BASE_URL }}
       client_id: ${{ vars.CORE_UI_GH_APP_READ_ID }}
       federation_rule_id: ${{ vars.KSAI_FEDERATION_RULE_ID }}
@@ -150,7 +151,7 @@ jobs:
       actions: write  # dispatch this workflow onto the default branch
       contents: read  # download the actions this call runs
     with:
-      runs_on: ubuntu-latest
+      runs_on: ubuntu-24.04
       client_id: ${{ vars.CORE_UI_GH_APP_READ_ID }}
     secrets:
       ksai_private_key: ${{ secrets.CORE_UI_GH_APP_READ_PRIVATE_KEY }}
