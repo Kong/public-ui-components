@@ -74,6 +74,7 @@
             required: false,
           }"
           :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
+          @click.prevent.stop="toggleDisplay"
         >
           <slot
             :label="fieldAttrs.label"
@@ -342,6 +343,10 @@ $indent-guide-top-offset: 20px;
     &-toggle {
       align-items: center;
       display: flex;
+    }
+
+    .k-label {
+      cursor: pointer;
     }
   }
 
