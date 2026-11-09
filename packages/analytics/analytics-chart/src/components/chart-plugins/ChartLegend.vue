@@ -257,8 +257,9 @@ const legendEntries = computed(() => props.items.map((item) => ({
       word-break: none;
     }
 
+    // Neutral, not disabled: a hidden series is still a toggle the user can press.
     .strike-through {
-      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       text-decoration: line-through;
     }
 

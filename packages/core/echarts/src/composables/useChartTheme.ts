@@ -10,7 +10,7 @@
 
 import { computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
-import { KUI_BORDER_RADIUS_30, KUI_BORDER_WIDTH_10, KUI_COLOR_BORDER, KUI_FONT_FAMILY_TEXT, KUI_SHADOW } from '@kong/design-tokens'
+import { KUI_BORDER_RADIUS_30, KUI_BORDER_WIDTH_10, KUI_COLOR_BACKGROUND, KUI_COLOR_BORDER, KUI_FONT_FAMILY_TEXT, KUI_SHADOW } from '@kong/design-tokens'
 import type { ChartColors } from '../types'
 
 /** An ECharts theme option object (see `echarts.registerTheme`/`setTheme`). */
@@ -27,6 +27,8 @@ export const chartFontFamily = (): string => {
 
 // Same surface as a Kongponents popover. ECharts writes this onto the tooltip element, so the theme's custom properties apply.
 const TOOLTIP_CSS = [
+  // Overrides `backgroundColor`: ECharts appends extraCssText after its inline styles.
+  `background-color: var(--kui-pop-color-background, var(--kui-color-background, ${KUI_COLOR_BACKGROUND}));`,
   `border: var(--kui-pop-border-width, var(--kui-border-width-10, ${KUI_BORDER_WIDTH_10})) solid var(--kui-pop-color-border, var(--kui-color-border, ${KUI_COLOR_BORDER}));`,
   `border-radius: var(--kui-pop-border-radius, var(--kui-border-radius-30, ${KUI_BORDER_RADIUS_30}));`,
   `box-shadow: var(--kui-pop-shadow, var(--kui-shadow, ${KUI_SHADOW}));`,

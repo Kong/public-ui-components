@@ -120,10 +120,7 @@
           size="small"
           @click="editTile"
         >
-          <EditIcon
-            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-            decorative
-          />
+          <EditIcon decorative />
         </KButton>
         <KDropdown
           v-if="canShowHeaderActions && kebabMenuHasItems && !isFullscreen"
@@ -143,10 +140,7 @@
             icon
             size="small"
           >
-            <MoreIcon
-              :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-              decorative
-            />
+            <MoreIcon decorative />
           </KButton>
           <template #items>
             <KDropdownItem
@@ -250,7 +244,7 @@ import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefini
 import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
 import { KSegmentedControl } from '@kong/kongponents'
