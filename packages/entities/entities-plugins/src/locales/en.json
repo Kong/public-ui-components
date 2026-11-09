@@ -805,13 +805,7 @@
       "button_deck_customize": "Customize before copying to CLI",
       "disable_data_retrieving": "You do not have permission to select {scope}",
       "disable_source_scope_change": "Changing the {scope} is not allowed when configuring a plugin under it",
-      "no_selection": "No selection...",
       "fields": {
-        "enabled": {
-          "label": "Enabled",
-          "on_text": "This plugin is enabled",
-          "off_text": "This plugin is disabled"
-        },
         "plugin_status": {
           "label": "Plugin status",
           "text_on": "Enabled",
@@ -832,7 +826,6 @@
           }
         },
         "protocols": {
-          "label": "Protocols",
           "placeholder": "Select valid protocols for the plugin",
           "placeholderWithDefaultValues": "Select valid protocols for the plugin. Default protocols: {protocols}",
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
