@@ -166,7 +166,8 @@ const legendEntries = computed(() => props.items.map((item) => ({
   display: flex;
   flex-grow: 1; // we want to push the chart up, so this takes all remaining space
   flex-wrap: wrap;
-  gap: 8px 9px;
+  // Same gap as KFilterGroup pills, so a hover fill or focus ring never reaches the next item.
+  gap: var(--kui-space-40, $kui-space-40);
   justify-content: center;
   margin: 0 0 0 0;
   max-height: inherit;
@@ -198,40 +199,25 @@ const legendEntries = computed(() => props.items.map((item) => ({
       align-items: center;
       background: none;
       border: 0;
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       color: inherit;
       cursor: inherit;
       display: flex;
       font: inherit;
-      isolation: isolate;
       line-height: inherit;
       margin: 0;
-      padding: 0;
-      position: relative;
-
-      // The hover fill and focus ring sit behind the item so they don't change the legend layout.
-      &::before {
-        border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-        content: '';
-        inset: 0;
-        // Negative margins grow the box past the item on every side.
-        margin: calc(-1 * var(--kui-space-20, $kui-space-20)) calc(-1 * var(--kui-space-30, $kui-space-30));
-        position: absolute;
-        transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out, box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
-        z-index: -1;
-      }
+      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+      transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out, box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     }
 
     button.legend-item {
-      &:hover::before {
+      &:hover {
         background-color: var(--kui-button-color-background-tertiary-hover, var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest));
       }
 
       &:focus-visible {
+        box-shadow: var(--kui-button-shadow-focus, var(--kui-shadow-focus, $kui-shadow-focus));
         outline: none;
-
-        &::before {
-          box-shadow: var(--kui-button-shadow-focus, var(--kui-shadow-focus, $kui-shadow-focus));
-        }
       }
     }
 
