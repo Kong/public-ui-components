@@ -167,11 +167,13 @@ watch(tooltipEl, value => {
 
 .tooltip-container {
   background-color: var(--kui-color-background, $kui-color-background);
-  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
+  // Same surface as a Kongponents popover.
+  border: var(--kui-pop-border-width, var(--kui-border-width-10, $kui-border-width-10)) solid var(--kui-pop-color-border, var(--kui-color-border, $kui-color-border));
+  border-radius: var(--kui-pop-border-radius, var(--kui-border-radius-30, $kui-border-radius-30));
+  box-shadow: var(--kui-pop-shadow, var(--kui-shadow, $kui-shadow));
   max-width: 425px;
   position: fixed;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
   z-index: 1;
 
   .tooltip-title {
