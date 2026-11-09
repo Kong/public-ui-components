@@ -1,5 +1,6 @@
 import type { ConfigNodeType, DatakitConfig, FieldName } from './strict'
 
+import { cloneDeep, get, isEqual } from 'lodash-es'
 import { z } from 'zod'
 import { JWT_ALGORITHMS } from '../constants'
 import {
@@ -343,3 +344,52 @@ export const DatakitConfigSchema = z
     validateNamesAndConnections(config as DatakitConfig, IMPLICIT_NODE_NAMES, ctx)
   })
   .nullish()
+
+/**
+ * The default value of a config field in the gateway plugin schema, e.g. `['nodes', 0, 'retry']`.
+ * Node fields are looked up in the subschema of the node's type.
+ */
+function getSchemaDefault(pluginSchema: unknown, config: unknown, path: PropertyKey[]): unknown {
+  let schema = (get(pluginSchema, 'fields') as any[] | undefined)?.find((field) => 'config' in field)?.config
+  let data = config as any
+
+  for (const segment of path) {
+    if (!schema) return undefined
+
+    if (typeof segment === 'number') {
+      schema = schema.elements
+    } else {
+      const fields = [...schema.subschema_definitions?.[data?.type]?.fields ?? [], ...schema.fields ?? []]
+      schema = fields.find((field: object) => segment in field)?.[segment]
+    }
+    data = data?.[segment]
+  }
+
+  return schema?.default
+}
+
+/**
+ * The gateway fills every optional field it knows with `null` or its default value, including
+ * fields the flow editor doesn't support yet (e.g. call node `inputs.http_proxy`). Drop such
+ * unrecognized fields while they only hold a filled-in value, so they don't keep the config out
+ * of the flow editor. Unrecognized fields with a real value are kept.
+ */
+export function omitBackendFilledFields(config: unknown, pluginSchema?: unknown): unknown {
+  const { error } = DatakitConfigSchema.safeParse(config)
+  if (!error) return config
+
+  const result = cloneDeep(config)
+  for (const issue of error.issues) {
+    if (issue.code !== 'unrecognized_keys') continue
+
+    const target = issue.path.length ? get(result, issue.path) : result
+    for (const key of issue.keys) {
+      const value = target[key]
+      if (value === null || isEqual(value, getSchemaDefault(pluginSchema, result, [...issue.path, key]))) {
+        delete target[key]
+      }
+    }
+  }
+  return result
+}
+

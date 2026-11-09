@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.8...%40kong-ui-public%2Fentities-plugins%4011.0.9) (2026-11-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [11.0.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.7...%40kong-ui-public%2Fentities-plugins%4011.0.8) (2026-11-06)
+
+### Bug Fixes
+
+* **entities-plugins:** ignore gateway-filled fields when gating the datakit flow editor [AMV-57] ([#4030](https://github.com/Kong/public-ui-components/issues/4030)) ([0848818](https://github.com/Kong/public-ui-components/commit/0848818b89dc1023928bb580c230e1b4ca52b1d8))
+
+
+## [11.0.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.6...%40kong-ui-public%2Fentities-plugins%4011.0.7) (2026-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [11.0.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.5...%40kong-ui-public%2Fentities-plugins%4011.0.6) (2026-11-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
