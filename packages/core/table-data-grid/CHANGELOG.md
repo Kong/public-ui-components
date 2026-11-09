@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.8.5...%40kong-ui-public%2Ftable-data-grid%400.9.0) (2026-11-09)
+
+### Features
+
+* **analytics:** align dashboard tile, chart, and data grid styles with Kong tokens ([#4034](https://github.com/Kong/public-ui-components/issues/4034)) ([39cc2db](https://github.com/Kong/public-ui-components/commit/39cc2db7fd3b0caf325bda20fe941fbc6850b3e9))
+
+
 ## [0.8.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.8.4...%40kong-ui-public%2Ftable-data-grid%400.8.5) (2026-11-03)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.2.11...%40kong-ui-public%2Fanalytics-chart%4013.3.0) (2026-11-09)
+
+### Features
+
+* **analytics:** align dashboard tile, chart, and data grid styles with Kong tokens ([#4034](https://github.com/Kong/public-ui-components/issues/4034)) ([39cc2db](https://github.com/Kong/public-ui-components/commit/39cc2db7fd3b0caf325bda20fe941fbc6850b3e9))
+
+
 ## [13.2.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.2.10...%40kong-ui-public%2Fanalytics-chart%4013.2.11) (2026-11-09)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
