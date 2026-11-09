@@ -673,6 +673,16 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.entitlement-enforcement.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['entitlement-enforcement'],
   },
+  'hmac-signature-validator': {
+    descriptionKey: 'plugins.meta.hmac-signature-validator.description',
+    nameKey: 'plugins.meta.hmac-signature-validator.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['hmac-signature-validator'],
+  },
+  'kong-circuit-breaker': {
+    descriptionKey: 'plugins.meta.kong-circuit-breaker.description',
+    nameKey: 'plugins.meta.kong-circuit-breaker.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['kong-circuit-breaker'],
+  },
 }
 
 /**
