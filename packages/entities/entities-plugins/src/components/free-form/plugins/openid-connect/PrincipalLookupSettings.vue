@@ -149,38 +149,27 @@
         </KCheckbox>
       </div>
 
-      <!-- principals.jit — AI-Gateway-only (ai-manager host + schema presence);
-           version-gated like every other min_ai_gateway_version field: below 2.3
-           the group stays rendered but disabled. Independent of the lookup toggle
-           above: jit writes principals from token claims rather than resolving
-           them, so it is not inert when lookup is off. -->
+      <!-- principals.jit — rendered wherever the schema carries the record
+           (it rolls out on dev first, then everywhere), so both ai-manager and
+           gateway-manager show it. The record is required, so it has no on/off
+           switch: the form always submits one, seeded from the schema defaults.
+           Version-gated like every other min_ai_gateway_version field: below
+           2.3 the fields stay rendered but disabled on hosts that pin a runtime
+           version. Independent of the lookup toggle above: jit writes
+           principals from token claims rather than resolving them, so it is not
+           inert when lookup is off. -->
       <div
         v-if="showJitSettings"
         class="principals-field-group"
       >
-        <KInputSwitch
-          data-testid="principals-jit-toggle"
-          :disabled="jitDisabled"
-          :disabled-tooltip-text="jitVersionInfo?.tooltip"
-          :model-value="jitEnabled"
+        <KLabel
+          data-testid="principals-jit-label"
+          :info="t('plugins.free-form.openid-connect.jit.section_info')"
           :tooltip-attributes="{ maxWidth: '300' }"
-          @update:model-value="handleJitToggle"
         >
-          <template #label>
-            <KLabel
-              :info="t('plugins.free-form.openid-connect.jit.toggle_info')"
-              :tooltip-attributes="{ maxWidth: '300' }"
-            >
-              {{ t('plugins.free-form.openid-connect.jit.toggle_label') }}
-            </KLabel>
-          </template>
-        </KInputSwitch>
-      </div>
+          {{ t('plugins.free-form.openid-connect.jit.section_label') }}
+        </KLabel>
 
-      <div
-        v-if="showJitSettings && jitEnabled"
-        class="principals-field-group"
-      >
         <KCheckbox
           data-testid="principals-jit-all-claims"
           :disabled="jitDisabled"
@@ -224,7 +213,6 @@ import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSe
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '@kong-ui-public/freeform'
 import type { EmptyValue, RecordFieldSchema } from '@kong-ui-public/freeform'
-import { usePluginContext } from '../../plugin-context'
 import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
@@ -274,39 +262,38 @@ const matchConsumerGroups = usePrincipalsField('match_consumer_groups')
 
 // ── JIT provisioning (config.principals.jit) ──────────────────────────────────
 
-// AI-Gateway-only feature. The record appears in the schema as it rolls out
-// (dev first, then production), so rendering is schema-driven — but the
-// gateway-manager host must never render or deal with jit even if a shared
-// dev schema carries the record, hence the explicit ai-manager check.
-const openidConnectContext = usePluginContext('openid-connect')
-const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager')
+// The record appears in the schema as it rolls out (dev first, then
+// production), so rendering is purely schema-driven — gateway-manager now
+// supports jit as well, so there is no host check.
 const jitSchema = computed(() => getSchema('$.config.principals.jit') as RecordFieldSchema | undefined)
-const showJitSettings = computed(() => isAiManager.value && !!jitSchema.value)
+const showJitSettings = computed(() => !!jitSchema.value)
 
 // Version gating follows the min_ai_gateway_version family: below the
 // requirement (AI Gateway 2.3) the group stays rendered but disabled, with
 // the standard version tooltip. Fails open when the host pins no runtime
-// version — gateway-manager never gets here (showJitSettings is false).
+// version (gateway-manager), matching every other annotated field.
 const jitVersionInfo = computed(() => getFieldVersionInfo('$.config.principals.jit'))
 const jitDisabled = computed(() => props.disabled || !!jitVersionInfo.value)
 
-// The version-lock tooltip for the subfields, as a label info icon — same
-// treatment the toggle gets via its disabled tooltip. Undefined unless the
-// runtime is below 2.3, so an unlocked form shows no extra icon.
+// The version-lock tooltip for the fields, as a label info icon. Undefined
+// unless the runtime is below 2.3, so an unlocked form shows no extra icon.
 const jitVersionLabelAttributes = computed(() => jitVersionInfo.value
   ? { info: jitVersionInfo.value.tooltip, tooltipAttributes: { maxWidth: '300' } }
   : undefined)
 
-// jit has no on/off flag of its own — the record's presence is the switch.
-const jitEnabled = computed(() => !!formData.config?.principals?.jit)
-
-function handleJitToggle(enabled: boolean) {
-  const principals = formData.config?.principals
-  if (!principals) return
-  // On: seed from the schema so all_claims starts at its recorded default
-  // (false) and claims at the empty value. Off: explicit null (absent would
-  // also read as off, but the record key already exists in the model).
-  principals.jit = enabled ? getDefault('$.config.principals.jit') as OidcPrincipalsJit : null
+// The record is required, so there is no presence switch and the form always
+// submits one: seed it whenever the model carries none — on create, and on a
+// plugin saved before the record existed (where a null would be rejected).
+// `all_claims` is prefilled to true rather than to its schema default: sharing
+// every token claim is the intended starting point, and the user narrows it
+// down by unchecking. The rest of the record comes from the schema.
+// Runs once, on setup — later edits (including unchecking) stand.
+const principalsRecord = formData.config?.principals
+if (showJitSettings.value && principalsRecord && !principalsRecord.jit) {
+  principalsRecord.jit = {
+    ...getDefault('$.config.principals.jit') as OidcPrincipalsJit,
+    all_claims: true,
+  }
 }
 
 function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
@@ -364,8 +351,9 @@ function handleClaimsChange(rawValue: string) {
   jitClaims.value = parseClaims(rawValue)
 }
 
-// Re-sync the display only when the model changes from elsewhere (e.g. the
-// toggle recreates the jit record), never while it reflects the user's typing.
+// Re-sync the display only when the model changes from elsewhere (e.g.
+// share-all-claims restores the stashed list), never while it reflects the
+// user's typing.
 watch(jitClaims, (claims) => {
   if (!isEqual(claims ?? null, parseClaims(claimsInput.value) ?? null)) {
     claimsInput.value = encodeClaims(claims)

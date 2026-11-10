@@ -1129,8 +1129,8 @@
           }
         },
         "jit": {
-          "toggle_label": "Just-in-time principal provisioning",
-          "toggle_info": "Create or update the Kong Identity principal from token claims as requests arrive, so identities don't need to be provisioned in advance.",
+          "section_label": "Just-in-time principal provisioning",
+          "section_info": "Create or update the Kong Identity principal from token claims as requests arrive, so identities don't need to be provisioned in advance.",
           "all_claims": {
             "label": "Share all token claims",
             "description": "Share every claim from the token when creating or updating a principal."

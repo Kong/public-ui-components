@@ -1527,58 +1527,95 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('principals-advanced-settings').findTestId('collapse-trigger-content').click()
     }
 
-    it('does not render outside ai-manager (gateway-manager), even when the schema carries jit', () => {
+    it('renders in gateway-manager when the schema carries jit', () => {
       mountPrincipalsForm({ withJit: true })
 
       expandSettings()
-      cy.getTestId('principals-jit-toggle').should('not.exist')
+      cy.getTestId('principals-jit-all-claims').should('exist')
     })
 
-    it('does not render in ai-manager when the schema has no principals.jit record (schema not rolled out)', () => {
-      mountPrincipalsForm({ aiManager: true })
-
-      expandSettings()
-      cy.getTestId('principals-jit-toggle').should('not.exist')
-    })
-
-    it('renders the group but disabled when the runtime is below 2.3', () => {
-      mountPrincipalsForm({ withJit: true, aiManager: true, minRuntimeVersion: '2.2' })
-
-      expandSettings()
-      cy.getTestId('principals-jit-toggle').should('exist')
-      // KInputSwitch forwards attrs (incl. the testid) onto the checkbox input itself
-      cy.getTestId('principals-jit-toggle').should('be.disabled')
-    })
-
-    it('renders the group enabled when the runtime meets 2.3', () => {
-      mountPrincipalsForm({ withJit: true, aiManager: true, minRuntimeVersion: '2.3' })
-
-      expandSettings()
-      cy.getTestId('principals-jit-toggle').should('not.be.disabled')
-    })
-
-    it('toggling jit on seeds the schema defaults; toggling off nulls the record', () => {
+    it('renders in ai-manager when the schema carries jit', () => {
       mountPrincipalsForm({ withJit: true, aiManager: true })
 
       expandSettings()
-      cy.getTestId('principals-jit-toggle').click({ force: true })
+      cy.getTestId('principals-jit-all-claims').should('exist')
+    })
 
-      lastFormChange().then((payload) => {
-        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: null })
-      })
+    it('does not render, and leaves the model alone, when the schema has no principals.jit record (schema not rolled out)', () => {
+      mountPrincipalsForm()
 
-      cy.getTestId('principals-jit-toggle').click({ force: true })
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('not.exist')
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit).to.equal(null)
       })
     })
 
-    it('share-all-claims hides the claims input and nulls it in the payload, restoring it when unchecked', () => {
-      mountPrincipalsForm({ withJit: true, aiManager: true })
+    it('renders the fields but disabled when the runtime is below 2.3', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        withJit: true,
+        aiManager: true,
+        minRuntimeVersion: '2.2',
+        model: createPrincipalsModel({
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: null } },
+        }),
+      })
 
       expandSettings()
-      cy.getTestId('principals-jit-toggle').click({ force: true })
+      cy.getTestId('principals-jit-all-claims').should('be.disabled')
+      cy.getTestId('principals-jit-claims').should('be.disabled')
+    })
+
+    it('renders the fields enabled when the runtime meets 2.3', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        withJit: true,
+        aiManager: true,
+        minRuntimeVersion: '2.3',
+        model: createPrincipalsModel({
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: null } },
+        }),
+      })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('not.be.disabled')
+      cy.getTestId('principals-jit-claims').should('not.be.disabled')
+    })
+
+    it('prefills share-all-claims on create', () => {
+      mountPrincipalsForm({ withJit: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('be.checked')
+      cy.getTestId('principals-jit-claims').should('not.exist')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
+      })
+    })
+
+    it('prefills share-all-claims when editing a plugin saved before jit existed', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        withJit: true,
+        model: createPrincipalsModel(),
+      })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('be.checked')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
+      })
+    })
+
+    it('share-all-claims hides the claims input and nulls it in the payload, restoring it when unchecked', () => {
+      mountPrincipalsForm({ withJit: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
       cy.getTestId('principals-jit-claims').type('sub, email')
 
       lastFormChange().then((payload) => {
@@ -1603,10 +1640,10 @@ describe('OpenidConnectForm', () => {
     })
 
     it('writes comma-separated claims as a string array and nulls them when cleared', () => {
-      mountPrincipalsForm({ withJit: true, aiManager: true })
+      mountPrincipalsForm({ withJit: true })
 
       expandSettings()
-      cy.getTestId('principals-jit-toggle').click({ force: true })
+      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
       cy.getTestId('principals-jit-claims').type('sub, email')
 
       lastFormChange().then((payload) => {
@@ -1620,19 +1657,18 @@ describe('OpenidConnectForm', () => {
       })
     })
 
-    it('restores a saved jit record on edit', () => {
+    it('keeps a saved jit record on edit instead of prefilling over it', () => {
       mountPrincipalsForm({
         isEditing: true,
         withJit: true,
-        aiManager: true,
         model: createPrincipalsModel({
-          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: true, claims: null } },
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: ['email'] } },
         }),
       })
 
       expandSettings()
-      cy.getTestId('principals-jit-all-claims').should('be.checked')
-      cy.getTestId('principals-jit-claims').should('not.exist')
+      cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+      cy.getTestId('principals-jit-claims').should('have.value', 'email')
     })
   })
 })
