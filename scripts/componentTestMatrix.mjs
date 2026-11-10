@@ -24,14 +24,20 @@ import { join, basename, sep } from 'node:path'
 
 const DEFAULT_CAP = 8
 
-// A cap below 1 makes chunkEvenly loop forever, and a non-number makes it return empty chunks.
+let capRejected = false
+
+/** Parse a cap, or reject it with DEFAULT_CAP and capRejected: a cap below 1 makes chunkEvenly loop
+ * forever, and a non-number makes it return empty chunks. */
 function parseCap(raw, source) {
   const value = Number(raw)
-  if (!Number.isInteger(value) || value < 1) {
-    process.stderr.write(`${source} must be a positive integer, got ${JSON.stringify(raw)}\n`)
-    process.exit(1)
-  }
-  return value
+  if (Number.isInteger(value) && value > 0) return value
+
+  // process.exit() here would cut this write off on a pipe, and the build step would fail with no
+  // reason. Report through process.exitCode instead, so main() is skipped and the write drains.
+  process.stderr.write(`${source} must be a positive integer, got ${JSON.stringify(raw)}\n`)
+  process.exitCode = 1
+  capRejected = true
+  return DEFAULT_CAP
 }
 
 const PACKAGES = []
@@ -174,9 +180,10 @@ function main() {
   for (const pkg of new Set(PACKAGES)) {
     const specs = collectSpecs(join(pkg, 'src'))
     if (specs.length === 0) {
-      // ci.yaml picks packages with `find <pkg> -name '*.cy.ts'`, which does not know about
-      // SKIP_DIRS, so a package can arrive here with nothing left to run.
-      process.stderr.write(`  ${pkg}  (no specs outside ${[...SKIP_DIRS].join(', ')}; no job created)\n`)
+      // ci.yaml picks a package as soon as `find <pkg> -name '*.cy.ts'` matches anywhere in it,
+      // while collectSpecs reads only `<pkg>/src`. Say which package produced no job rather than
+      // dropping it: packages/core/cli has its single spec under a SKIP_DIRS entry.
+      process.stderr.write(`  ${pkg}  (no specs under ${pkg}/src; no job created)\n`)
       continue
     }
 
@@ -199,4 +206,4 @@ function main() {
   process.stdout.write(matrix.length ? `${JSON.stringify(matrix)}\n` : '')
 }
 
-main()
+if (!capRejected) main()
