@@ -37,11 +37,12 @@
 </template>
 
 <script setup lang="ts">
+import { createConfigCardSchema } from './config-card-schema'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerConsumerEntityConfig, KonnectConsumerEntityConfig, ConsumerConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import type { KongManagerConsumerEntityConfig, KonnectConsumerEntityConfig } from '../types'
+import { EntityBaseConfigCard, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import endpoints from '../consumers-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -86,29 +87,5 @@ const props = defineProps({
 const { i18n: { t }, i18nT } = composables.useI18n()
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 
-const configSchema = ref<ConsumerConfigurationSchema>({
-  id: {},
-  username: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('consumers.fields.username.tooltip'),
-    order: 1,
-  },
-  custom_id: {
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('consumers.fields.custom_id.tooltip'),
-    label: t('consumers.fields.custom_id.label'),
-    order: 2,
-  },
-  updated_at: {},
-  created_at: {},
-  tags: {
-    tooltip: t('consumers.fields.tags.tooltip'),
-  },
-  username_lower: {
-    hidden: true,
-  },
-  type: {
-    hidden: true,
-  },
-})
+const configSchema = createConfigCardSchema(t)
 </script>

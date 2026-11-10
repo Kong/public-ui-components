@@ -28,6 +28,7 @@ Upstreams and targets entities components.
 - `UpstreamsFormActiveHealthCheck`
 - `UpstreamsFormPassiveHealthCheck`
 - `UpstreamsConfigCard`
+- `UpstreamsConfigCardView`
 
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
@@ -69,3 +70,4 @@ import '@kong-ui-public/entities-upstreams-targets/dist/style.css'
 - [`<UpstreamsFormPassiveHealthCheck.vue />`](docs/upstreams-form-passive-healthcheck.md)
 - [`<UpstreamsForm.vue />`](docs/upstreams-form.md)
 - [`<UpstreamsConfigCard.vue />`](docs/upstreams-config-card.md)
+- [`<UpstreamsConfigCardView />`](docs/upstreams-config-card.md#upstreamsconfigcardview) — display an already loaded record.

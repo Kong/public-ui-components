@@ -9,6 +9,7 @@ A config card component for Key Sets.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [KeySetConfigCardView](#keysetconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,31 @@ import type {
   KonnectKeySetEntityConfig,
   KongManagerKeySetEntityConfig,
 } from '@kong-ui-public/entities-key-sets'
+```
+
+## KeySetConfigCardView
+
+`KeySetConfigCardView` displays an already loaded Key Set record with the same presentation as `KeySetConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { KeySetConfigCardView } from '@kong-ui-public/entities-key-sets'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Key Set record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<KeySetConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```
