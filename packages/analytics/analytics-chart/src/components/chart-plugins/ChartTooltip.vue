@@ -1,9 +1,10 @@
 <template>
   <div
     v-if="state.showTooltip"
+    :key="isPositioned ? 'positioned' : 'measuring'"
     ref="tooltipEl"
     class="tooltip-container"
-    :class="{ 'locked': state.interactionMode === 'interactive' }"
+    :class="{ 'locked': state.interactionMode === 'interactive', 'measuring': !isPositioned }"
     :style="{
       transform: isInteractive ? `translate(${dragLeft}, ${dragTop})` : `translate(${absoluteLeft}, ${absoluteTop})`,
       left: '0',
@@ -132,6 +133,14 @@ const isInteractive = computed(() => {
   return ['interactive', 'zoom-interactive'].includes(props.state.interactionMode)
 })
 
+// A chart's first tooltip has no measured size yet, so the chart can't position it and passes NaN.
+// The tooltip stays hidden but mounted until it has a position, so it can still report its size.
+// It then renders as a new element so it appears in place instead of transitioning in from the viewport origin.
+// A locked tooltip never gets a new position, so it always shows.
+const isPositioned = computed(() => {
+  return isInteractive.value || (Number.isFinite(parseFloat(props.absoluteLeft)) && Number.isFinite(parseFloat(props.absoluteTop)))
+})
+
 // Keep dragX and dragY in sync with absoluteLeft and absoluteTop when not dragging
 watch(() => [props.absoluteLeft, props.absoluteTop], ([left, top]) => {
   if (!isDragging.value) {
@@ -165,6 +174,10 @@ watch(tooltipEl, value => {
   cursor: move;
 }
 
+.measuring {
+  visibility: hidden;
+}
+
 .tooltip-container {
   // Same surface as a Kongponents popover.
   background-color: var(--kui-pop-color-background, var(--kui-color-background, $kui-color-background));
@@ -173,7 +186,8 @@ watch(tooltipEl, value => {
   box-shadow: var(--kui-pop-shadow, var(--kui-shadow, $kui-shadow));
   max-width: 425px;
   position: fixed;
-  transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+  // A fast-start curve so the tooltip keeps up with the cursor and the drag pointer. `transform` moves on every pointer event, and `ease-in-out` lags behind.
+  transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1;
 
   .tooltip-title {
