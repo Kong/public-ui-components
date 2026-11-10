@@ -336,6 +336,8 @@ By following this guide, CI integration should happen automatically. That is, yo
 - Component & Unit Tests
 - [Publishing](#publishing)
 
+A package with more than 8 component test files is spread over several CI jobs, so it no longer sets the floor for the whole pipeline by itself. The split bounds the number of spec files a job runs, not how long they take, so a package with slow specs can still be the longest job. The split follows your directory layout, and a job is named after the directory it covers, plus the range of file names when it covers only part of one. Grouping your `*.cy.ts` files into subdirectories therefore keeps the CI job list readable. See `scripts/componentTestMatrix.mjs` for the exact rules.
+
 ### Publishing
 
 Packaging is automatic via the CI. Releases are done via lerna and follow semantic-versioning.
