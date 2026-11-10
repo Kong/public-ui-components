@@ -66,3 +66,5 @@ provide('app:konnectColorMode', colorMode)
 - [`<PluginConfigCard.vue />`](docs/plugin-config-card.md)
 - [`<CustomPluginForm.vue />`](docs/custom-plugin-form.md)
 - [`<AuthPluginOnboardingCard.vue />`](docs/auth-plugin-onboarding-card.md)
+
+<!-- Benchmark marker for the component test matrix comparison (KM-3599). No functional change. -->
