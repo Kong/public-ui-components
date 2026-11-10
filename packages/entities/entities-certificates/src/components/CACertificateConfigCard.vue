@@ -66,14 +66,14 @@
 </template>
 
 <script setup lang="ts">
+import { createCACertificateConfigCardSchema } from './certificate-config-card-schema'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CACertificateConfigurationSchema, EntityRow } from '../types'
+import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, EntityRow } from '../types'
 import {
   EntityBaseConfigCard,
   ConfigurationSchemaType,
-  ConfigurationSchemaSection,
   useStringHelpers,
   useHelpers,
   ConfigCardItem,
@@ -162,48 +162,7 @@ const handleFetch = (entity: Record<string, any>) => {
   emit('fetch:success', entity)
 }
 
-const configSchema = ref<CACertificateConfigurationSchema>({
-  id: {},
-  updated_at: {},
-  created_at: {},
-  cert: {
-    section: ConfigurationSchemaSection.Basic,
-    label: t('ca-certificates.form.fields.cert.label'),
-    tooltip: t('ca-certificates.form.fields.cert.tooltip'),
-    order: 5,
-  },
-  cert_digest: {
-    section: ConfigurationSchemaSection.Basic,
-    label: t('ca-certificates.form.fields.cert_digest.label'),
-    tooltip: t('ca-certificates.form.fields.cert_digest.tooltip'),
-    order: 6,
-  },
-  metadata: {
-    section: ConfigurationSchemaSection.Basic,
-    type: ConfigurationSchemaType.Json,
-    order: 7,
-  },
-  ...(props.config.app === 'kongManager' && {
-    expiry: {
-      label: t('certificates.list.table_headers.expiry'),
-      section: ConfigurationSchemaSection.Basic,
-      order: 1.7,
-      forceShow: true,
-    },
-    issuer: {
-      section: ConfigurationSchemaSection.Basic,
-      order: 1.5,
-      forceShow: true,
-    },
-    key_usages: {
-      section: ConfigurationSchemaSection.Basic,
-      forceShow: true,
-    },
-  }),
-  tags: {
-    tooltip: t('ca-certificates.form.fields.tags.tooltip'),
-  },
-})
+const configSchema = createCACertificateConfigCardSchema(t, props.config.app === 'kongManager')
 </script>
 
 <style lang="scss" scoped>

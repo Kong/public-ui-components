@@ -9,6 +9,7 @@ A config card component for Redis Configurations.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [RedisConfigurationConfigCardView](#redisconfigurationconfigcardview)
 
 ## Requirements
 
@@ -115,11 +116,41 @@ Please refer to the [sandbox](../sandbox/pages/RedisConfigurationDetail.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](../src/types/redis-confiugration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](../src/types/redis-configuration-config.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
 } from '@kong-ui-public/entities-redis-configurations'
+```
+
+## RedisConfigurationConfigCardView
+
+`RedisConfigurationConfigCardView` displays an already loaded Redis configuration record with the same presentation as `RedisConfigurationConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { RedisConfigurationConfigCardView } from '@kong-ui-public/entities-redis-configurations'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Redis configuration record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `true` | Hide the card title. |
+| `cloudAuthAvailable` | `boolean` | `false` | Show Cloud authentication fields of Redis partials. |
+
+Managed cache add-ons and Redis partials are told apart by the record shape, so pass the record as returned by the API.
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<RedisConfigurationConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

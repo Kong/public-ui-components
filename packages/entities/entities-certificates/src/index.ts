@@ -1,3 +1,5 @@
+import CertificateConfigCardView from './components/CertificateConfigCardView.vue'
+import CACertificateConfigCardView from './components/CACertificateConfigCardView.vue'
 import CertificateList from './components/CertificateList.vue'
 import CertificateForm from './components/CertificateForm.vue'
 import CACertificateConfigCard from './components/CACertificateConfigCard.vue'
@@ -13,3 +15,7 @@ export { CACertificateForm }
 export { CertificateConfigCard }
 
 export * from './types'
+
+export { CertificateConfigCardView }
+
+export { CACertificateConfigCardView }

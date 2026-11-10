@@ -10,6 +10,7 @@ A config card component for plugins. Configuration section properties will be or
   - [Adopting `showScopeName`](#adopting-showscopename)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [PluginConfigCardView](#pluginconfigcardview)
 
 ## Requirements
 
@@ -236,4 +237,36 @@ import type {
   KonnectPluginEntityConfig,
   KongManagerPluginEntityConfig,
 } from '@kong-ui-public/entities-plugins'
+```
+
+## PluginConfigCardView
+
+`PluginConfigCardView` displays an already loaded Plugin record with the same presentation as `PluginConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { PluginConfigCardView } from '@kong-ui-public/entities-plugins'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Plugin record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `schema` | `Record<string, any>` | Required | Plugin API schema. It provides field types and identifies encrypted fields; without schema fields the card shows an error state instead of the record. |
+| `referenceEntities` | `Partial<Record<'service' \| 'route' \| 'consumer' \| 'consumer_group', { id: string, name?: string, loading?: boolean, to?: RouteLocationRaw }>>` | `{}` | Resolved scope entities. A non-empty map labels scope rows by entity (for example "Service" instead of "Service ID"). With `showNameAsLink`, a row shows the entity's name and links to `to` when the entry's `id` matches the record. |
+| `showNameAsLink` | `boolean` | `false` | Render scope entities and partials as links. |
+
+The plugin type is taken from `record.name`.
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits `navigation-click` (`id`, scope).
+
+```vue
+<PluginConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```
