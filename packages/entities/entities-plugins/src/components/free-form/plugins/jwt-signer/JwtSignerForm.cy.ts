@@ -233,5 +233,11 @@ describe('<JwtSignerForm /> - keyset URL validation', () => {
       })
       expectNoKeysetError('access')
     })
+
+    // Deliberate failure. It exists to prove that a failing dynamic component test job turns the
+    // required "Collect Test Results And Publish" check red. Remove it before closing the PR.
+    it('deliberate failure for the CI gate verification', () => {
+      expect(true, 'deliberate failure added for the required check verification').to.equal(false)
+    })
   })
 })
