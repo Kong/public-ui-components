@@ -1,164 +1,52 @@
 <template>
-  <KCard
-    class="kong-ui-entity-base-config-card"
+  <EntityConfigCardView
+    v-bind="$attrs"
+    :code-block-record="codeBlockRecordFromApi"
+    :code-block-record-formatter="codeBlockRecordFormatter"
+    :config="viewConfig"
+    :config-schema="configSchema"
+    :entity-type="entityType"
+    :formats-to-hide="formatsToHide"
+    :hide-title="hideTitle"
+    :plugin-config-key="pluginConfigKey"
+    :plugin-config-schema="pluginConfigSchema"
+    :policy-config-key="policyConfigKey"
+    :policy-config-schema="policyConfigSchema"
+    :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
+    :record="record"
+    :schema="schema"
+    :sub-entity-type="subEntityType"
     :title-tag="titleTag"
+    @config-format-change="emit('configFormatChange', $event)"
   >
     <template
-      v-if="!hideTitle"
-      #title
+      v-for="slotKey in Object.keys($slots)"
+      :key="slotKey"
+      #[slotKey]="slotProps"
     >
-      <span
-        class="config-card-title"
-        data-testid="config-card-title"
-      >
-        <slot name="title">
-          {{ t('baseConfigCard.title') }}
-        </slot>
-      </span>
+      <slot
+        :name="slotKey"
+        v-bind="slotProps"
+      />
     </template>
-
-    <template #actions>
-      <div class="config-card-actions">
-        <slot name="actions" />
-
-        <KCheckbox
-          v-model="showSensitiveFields"
-          class="sensitive-fields-checkbox"
-          data-testid="sensitive-fields-checkbox"
-          :label="t('baseConfigCard.actions.sensitive_fields')"
-          :label-attributes="{
-            info: t('baseConfigCard.actions.sensitive_fields_tooltip'),
-            tooltipAttributes: {
-              maxWidth: '200',
-              placement: 'top',
-            },
-          }"
-        />
-
-        <div class="row">
-          <KLabel
-            class="config-format-select-label"
-            data-testid="config-format-select-label"
-          >
-            {{ label }}
-          </KLabel>
-          <KSelect
-            v-model="configFormat"
-            data-testid="select-config-format"
-            :items="configFormatItems"
-            @change="handleChange"
-          />
-        </div>
-
-        <KButton
-          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
-          appearance="secondary"
-          class="button-customize-deck"
-          data-testid="config-deck-customize-button"
-          @click="isDeckCustomizationVisible = true"
-        >
-          {{ t('baseConfigCard.actions.deck_customize') }}
-        </KButton>
-
-        <KButton
-          v-if="configCardDoc"
-          appearance="tertiary"
-          class="book-icon"
-          data-testid="book-icon"
-        >
-          <a
-            :href="configCardDoc"
-            rel="noopener"
-            target="_blank"
-          >
-            <BookIcon
-              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
-            />
-          </a>
-        </KButton>
-      </div>
-    </template>
-
-    <!-- Loading -->
-    <KSkeleton
-      v-if="isLoading"
-      data-testid="config-card-loader"
-      :table-columns="2"
-      type="table"
-    />
-
-    <!-- Error fetching record -->
-    <KEmptyState
-      v-else-if="fetchDetailsError"
-      data-testid="config-card-fetch-error"
-      icon-variant="error"
-    >
-      <template #default>
-        <h3>{{ fetchErrorMessage }}</h3>
-      </template>
-    </KEmptyState>
-
-    <!-- Properties Content -->
-    <div
-      v-else
-      class="config-card-details-section"
-    >
-      <ConfigCardDisplay
-        :code-block-record="codeBlockRecordFromApi"
-        :code-block-record-formatter="codeBlockRecordFormatter"
-        :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
-        :config="config"
-        :entity-type="entityType"
-        :fetcher-url="fetcherUrl"
-        :format="configFormat"
-        :is-deck-customization-visible="isDeckCustomizationVisible"
-        :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
-        :prop-list-types="propListTypes"
-        :property-collections="propertyLists"
-        :record="record"
-        :sub-entity-type="subEntityType"
-        @deck-customization:close="isDeckCustomizationVisible = false"
-        @request-deck-format="configFormat = 'deck'"
-      >
-        <template
-          v-for="slotKey in Object.keys($slots)"
-          :key="slotKey"
-          #[slotKey]="slotProps"
-        >
-          <slot
-            :name="slotKey"
-            :record="record"
-            v-bind="slotProps"
-          />
-        </template>
-      </ConfigCardDisplay>
-    </div>
-  </KCard>
+  </EntityConfigCardView>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, onMounted, provide } from 'vue'
+import { computed, ref, onBeforeMount, watch, provide } from 'vue'
 import type { AxiosError } from 'axios'
-import type {
-  KonnectBaseEntityConfig,
-  KongManagerBaseEntityConfig,
-  ConfigurationSchema,
-  ConfigCardCodeFormat,
-  ConfigCardFormat,
-  PluginConfigurationSchema,
-  RecordItem,
-  DefaultCommonFieldsConfigurationSchema,
-  SupportedEntityType,
-  PolicyConfigurationSchema,
-} from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
-import composables from '../../composables'
-import ConfigCardDisplay from './ConfigCardDisplay.vue'
-import { CONFIG_CARD_SHOW_SENSITIVE_FIELDS } from '../../constants'
-import { BookIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, ConfigurationSchema, ConfigCardCodeFormat, ConfigCardFormat, PluginConfigurationSchema, SupportedEntityType, PolicyConfigurationSchema } from '../../types'
+import { SupportedEntityTypesArray } from '../../types'
 import type { HeaderTag } from '@kong/kongponents'
+import composables from '../../composables'
+import EntityConfigCardView from './EntityConfigCardView.vue'
+import { withForceShowFields, redactConfigCardRecord } from './record'
+import { READER_CONFIG_CARD_CONTEXT } from './reader-config-card'
+import type { ReaderConfigCardContext } from './reader-config-card'
+import { getConfigCardViewConfig } from '../../utils/config-card'
+
+defineOptions({ inheritAttrs: false })
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -166,8 +54,6 @@ const emit = defineEmits<{
   (e: 'fetch:error', error: AxiosError): void
   (e: 'configFormatChange', format: ConfigCardFormat): void
 }>()
-
-// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
@@ -318,153 +204,11 @@ const props = defineProps({
 
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
-const { convertKeyToTitle } = composables.useStringHelpers()
-const schema = composables.useSchema()
-const isManagedByEnabled = composables.useManagedByEnabled()
-
-composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
-
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
-
-const isDeckCustomizationVisible = ref(false)
-
-const {
-  isDeckEnabled,
-  deckCustomizationOptions,
-} = composables.useBaseEntityDeckOptions(
-  () => props.config,
-  () => props.entityType,
-)
-
-/** KSelect items: built in display order, then filtered by `formatsToHide` */
-const configFormatItems = computed(() => {
-  const items: Array<{ label: string, value: ConfigCardFormat, selected?: boolean }> = [
-    {
-      label: t('baseConfigCard.general.structuredFormat'),
-      value: 'structured',
-      selected: true,
-    },
-    {
-      label: t('baseForm.configuration.json'),
-      value: 'json',
-    },
-    {
-      label: t('baseForm.configuration.yaml'),
-      value: 'yaml',
-    },
-  ]
-
-  // terraform only supported in konnect
-  if (props.config.app === 'konnect') {
-    // insert terraform as the third option
-    items.splice(2, 0, {
-      label: t('baseForm.configuration.terraform'),
-      value: 'terraform',
-    })
-  }
-
-  if (isDeckEnabled.value) {
-    items.push({
-      label: t('baseForm.configuration.deck'),
-      value: 'deck',
-    })
-  }
-
-  const hidden = new Set(props.formatsToHide)
-  return items.filter((item) => item.value === 'structured' || !hidden.has(item.value as ConfigCardCodeFormat))
-})
-
-// Initial tab matches the first format item- `structured`.onMounted may replace this from localStorage
-// when `config.formatPreferenceKey` is set
-const configFormat = ref<ConfigCardFormat>('structured')
-
-const handleChange = (payload: any): void => {
-  configFormat.value = payload?.value
-  emit('configFormatChange', configFormat.value)
-}
-
-const persistFormat = (localStorageKey: string, format: ConfigCardFormat): void => {
-  localStorage.setItem(localStorageKey, format)
-}
-
-watch(configFormat, (format: ConfigCardFormat) => {
-  if (props.config.formatPreferenceKey) {
-    persistFormat(props.config.formatPreferenceKey, format)
-  }
-})
-
-// Restore last format from localStorage if still allowed and not removed by `formatsToHide`
-// Otherwise fall back to the first dropdown option (always `structured`)
-onMounted(() => {
-  if (props.config.formatPreferenceKey) {
-    const storedFormat = localStorage.getItem(props.config.formatPreferenceKey)
-    const items = configFormatItems.value
-    if (storedFormat && items.some(item => item.value === storedFormat)) {
-      configFormat.value = storedFormat as ConfigCardFormat
-    } else {
-      configFormat.value = items[0]?.value as ConfigCardFormat ?? 'structured'
-    }
-    persistFormat(props.config.formatPreferenceKey, configFormat.value)
-  }
-})
-
-/**
- * default ordering for these common fields:
- *   - name, id, enabled (if exists), updated_at, created_at, tags
- */
-const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema = {
-  id: {
-    type: ConfigurationSchemaType.ID,
-    label: t('baseConfigCard.commonFields.id_label'),
-    order: 0,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  name: {
-    order: 1,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  enabled: {
-    type: ConfigurationSchemaType.BadgeStatus,
-    order: 2,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  updated_at: {
-    type: ConfigurationSchemaType.Date,
-    label: t('baseConfigCard.commonFields.updated_at_label'),
-    order: 3,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  created_at: {
-    type: ConfigurationSchemaType.Date,
-    label: t('baseConfigCard.commonFields.created_at_label'),
-    order: 4,
-    section: ConfigurationSchemaSection.Basic,
-  },
-  managed_by: {
-    type: ConfigurationSchemaType.ManagedBy,
-    label: t('baseConfigCard.commonFields.managed_by_label'),
-    section: ConfigurationSchemaSection.Advanced,
-  },
-  tags: {
-    type: ConfigurationSchemaType.BadgeTag,
-    order: -1, // the last property displayed
-    section: ConfigurationSchemaSection.Basic,
-  },
-  labels: {
-    type: ConfigurationSchemaType.BadgeTag,
-    order: -1, // the last property displayed
-    section: ConfigurationSchemaSection.Basic,
-  },
-  partials: {
-    type: ConfigurationSchemaType.LinkInternal,
-    label: t('baseConfigCard.commonFields.partial_label'),
-    order: -1, // the last property displayed
-    section: ConfigurationSchemaSection.Basic,
-  },
-}
-
+const schema = composables.useSchema()
 const isLoading = ref(false)
 const fetchDetailsError = ref(false)
+const status = computed(() => isLoading.value ? 'loading' : fetchDetailsError.value ? 'error' : 'ready')
 const fetchErrorMessage = ref('')
 const record = ref<Record<string, any>>({})
 // Raw API payload for code tabs, structured tab always reads `record` (from `recordResolver`)
@@ -476,215 +220,6 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
     return undefined
   }
   return props.codeBlockRecordResolver(rawFetchedData.value)
-})
-
-// redact sensitive fields by default
-const showSensitiveFields = ref(false)
-provide(CONFIG_CARD_SHOW_SENSITIVE_FIELDS, showSensitiveFields)
-
-const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaField } = composables.useHelpers()
-
-const redactedCodeBlockRecord = computed((): Record<string, any> => {
-  const source = codeBlockRecordFromApi.value || record.value
-  let rec = source
-
-  if (isObjectRecord(source) && Array.isArray(schema?.value?.fields)) {
-    const schemaRedactedRecord: Record<string, any> = {}
-    for (const key in source) {
-      const fieldSchema = getApiSchemaField(schema?.value?.fields, key)
-      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : source[key]
-    }
-    rec = schemaRedactedRecord
-  }
-
-  rec = redactByConfigSchema(rec, props.configSchema) as Record<string, any>
-
-  return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
-})
-
-// Handle sorting by 'order' prop
-const orderedRecordArray = computed((): RecordItem[] => {
-  if (!record.value) {
-    return []
-  }
-
-  // each item is an array of the key and the order
-  // ex. [ ['id', 1], ['description', 5], ... ]
-  const sortableKeys = []
-  const fieldCount = Object.keys(record.value).length
-  for (const key in record.value) {
-    if (key === '__ui_data') continue // skip ui_data
-    // `managed_by` is behind a feature flag; until it is on, keep it out of the structured view
-    // entirely rather than letting the raw object fall through to a JSON code block.
-    if (key === 'managed_by' && !isManagedByEnabled.value) continue
-    const configOrder = props.configSchema?.[key]?.order
-    const defaultConfigOrder = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]?.order
-    // if no order provided, default to end of list
-    let order = fieldCount
-
-    // check if an order exists in the basic fields array
-    if (defaultConfigOrder || defaultConfigOrder === 0) {
-      // -1 means send it to the end
-      order = defaultConfigOrder === -1 ? fieldCount + 1 : defaultConfigOrder
-    }
-
-    // check if order exists in config
-    // config order overrides basic fields array order
-    if (configOrder) {
-      // -1 means send it to the end
-      order = configOrder === -1 ? fieldCount + 1 : configOrder
-    }
-
-    sortableKeys.push([key, order])
-  }
-
-  sortableKeys.sort(function(a, b) {
-    return (a[1] as number) - (b[1] as number)
-  })
-
-  return sortableKeys.map((sKey: Array<string | number>) => {
-    const key = sKey[0] as string
-    const recordEntry = record.value?.[key]
-    const configEntry = props.configSchema?.[key] || {}
-    const defaultConfigSchema = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]
-
-    return {
-      key,
-      value: recordEntry,
-      hidden: configEntry.hidden || false,
-      type: configEntry.type ?? (defaultConfigSchema?.type || ConfigurationSchemaType.Text),
-      label: configEntry.label ?? (defaultConfigSchema?.label || convertKeyToTitle(key)),
-      tooltip: configEntry.tooltip ?? (defaultConfigSchema?.tooltip || undefined),
-      section: configEntry.section ?? (defaultConfigSchema?.section || ConfigurationSchemaSection.Advanced),
-    } as RecordItem
-  }).filter(item => !item.hidden && item.key !== props.pluginConfigKey) // strip hidden & plugin config fields
-})
-
-// Handle sorting by 'order' prop
-const orderedPluginConfigArray = computed((): RecordItem[] => {
-  if (!record.value || !props.pluginConfigKey) {
-    return []
-  }
-
-  // each item is an array of the key and the order
-  // ex. [ ['id', 1], ['description', 5], ... ]
-  const configRecord = record.value[props.pluginConfigKey] || {}
-  const fieldCount = Object.keys(configRecord).length
-  const sortableKeys = []
-  for (const key in configRecord) {
-    const configOrder = props.pluginConfigSchema?.[key]?.order
-    const recEntry = configRecord[key]
-    // if no order provided, prioritize entries that have values
-    let order = recEntry !== null && recEntry !== undefined && recEntry !== '' ? fieldCount - 1 : fieldCount
-
-    // check if order exists in config
-    // config order overrides default order
-    if (configOrder) {
-      // -1 means send it to the end
-      order = configOrder === -1 ? fieldCount + 1 : configOrder
-    }
-
-    sortableKeys.push([key, order])
-  }
-
-  sortableKeys.sort(function(a, b) {
-    return (a[1] as number) - (b[1] as number)
-  })
-
-  return sortableKeys.map((sKey: Array<string | number>) => {
-    const key = sKey[0] as string
-    const recordEntry = configRecord[key]
-    const configEntry = props.pluginConfigSchema?.[key] || {}
-
-    return {
-      key,
-      value: recordEntry,
-      hidden: configEntry.hidden || false,
-      type: configEntry.type ?? ConfigurationSchemaType.Text,
-      label: configEntry.label ?? convertKeyToTitle(key),
-      tooltip: configEntry.tooltip ?? undefined,
-      section: ConfigurationSchemaSection.Plugin,
-    } as RecordItem
-  }).filter(item => !item.hidden) // strip hidden fields
-})
-
-const orderedPolicyConfigArray = computed((): RecordItem[] => {
-  if (!record.value || !props.policyConfigKey) {
-    return []
-  }
-
-  // each item is an array of the key and the order
-  // ex. [ ['id', 1], ['description', 5], ... ]
-  const configRecord = record.value[props.policyConfigKey] || {}
-  const fieldCount = Object.keys(configRecord).length
-  const sortableKeys = []
-  for (const key in configRecord) {
-    const configOrder = props.policyConfigSchema?.[key]?.order
-    const recEntry = configRecord[key]
-    // if no order provided, prioritize entries that have values
-    let order = recEntry !== null && recEntry !== undefined && recEntry !== '' ? fieldCount - 1 : fieldCount
-
-    // check if order exists in config
-    // config order overrides default order
-    if (configOrder) {
-      // -1 means send it to the end
-      order = configOrder === -1 ? fieldCount + 1 : configOrder
-    }
-
-    sortableKeys.push([key, order])
-  }
-
-  sortableKeys.sort(function(a, b) {
-    return (a[1] as number) - (b[1] as number)
-  })
-
-  return sortableKeys.map((sKey: Array<string | number>) => {
-    const key = sKey[0] as string
-    const recordEntry = configRecord[key]
-    const configEntry = props.policyConfigSchema?.[key] || {}
-
-    return {
-      key,
-      value: recordEntry,
-      hidden: configEntry.hidden || false,
-      type: configEntry.type ?? ConfigurationSchemaType.Text,
-      label: configEntry.label ?? convertKeyToTitle(key),
-      tooltip: configEntry.tooltip ?? undefined,
-      section: ConfigurationSchemaSection.Policy,
-    } as RecordItem
-  }).filter(item => !item.hidden) // strip hidden fields
-})
-
-// Split ordered rows by schema section so ConfigCardDisplay can render basic vs advanced vs plugin vs policy
-const propertyLists = computed((): { basic: RecordItem[], advanced: RecordItem[], plugin: RecordItem[], policy: RecordItem[] } => {
-  return {
-    basic: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Basic),
-    advanced: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Advanced),
-    plugin: orderedPluginConfigArray.value?.concat(orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Plugin)),
-    policy: orderedPolicyConfigArray.value?.concat(orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Policy)),
-  }
-})
-
-const propListTypes = computed((): string[] => {
-  const types = []
-
-  if (propertyLists.value.basic.length) {
-    types.push('basic')
-  }
-
-  if (propertyLists.value.advanced.length) {
-    types.push('advanced')
-  }
-
-  if (propertyLists.value.plugin.length) {
-    types.push('plugin')
-  }
-
-  if (propertyLists.value.policy.length) {
-    types.push('policy')
-  }
-
-  return types
 })
 
 /**
@@ -728,14 +263,6 @@ onBeforeMount(async () => {
       record.value = { ...data }
     }
 
-    // Inject forceShow keys into the record
-    const forceShowKeys = Object.keys(props.configSchema).filter(key => props.configSchema[key].forceShow)
-    forceShowKeys.forEach(key => {
-      if (record.value && typeof record.value[key] === 'undefined') {
-        record.value[key] = null
-      }
-    })
-
     emit('fetch:success', data)
   } catch (error: any) {
     rawFetchedData.value = null // avoid showing stale JSON after a failed refetch
@@ -749,49 +276,27 @@ onBeforeMount(async () => {
     isLoading.value = false
   }
 })
+
+// Kept for compatibility: the resolver also runs after redaction, as it always has.
+const redactedCodeBlockRecord = computed(() => {
+  const resolve = props.codeBlockRecordResolver
+  if (!resolve || rawFetchedData.value == null) return undefined
+  const source = codeBlockRecordFromApi.value || withForceShowFields(record.value, props.configSchema)
+  return resolve(redactConfigCardRecord(source, schema?.value, props.configSchema))
+})
+
+const viewConfig = computed(() => getConfigCardViewConfig(props.config))
+
+provide(READER_CONFIG_CARD_CONTEXT, computed((): ReaderConfigCardContext => ({
+  status: status.value,
+  errorMessage: fetchErrorMessage.value,
+  requestUrl: fetcherUrl.value,
+  deckOptions: props.config.app === 'konnect' ? props.config.enableDeckConfig : undefined,
+  deckCalloutPreferenceKey: props.config.app === 'kongManager' ? props.config.deckCalloutPreferenceKey : undefined,
+  formatPreferenceKey: props.config.formatPreferenceKey,
+  redactedCodeBlockRecord: redactedCodeBlockRecord.value,
+  configCardDoc: props.configCardDoc,
+  label: props.label,
+})))
+
 </script>
-
-<style lang="scss" scoped>
-.kong-ui-entity-base-config-card {
-  .config-card-actions {
-    align-items: center;
-    display: flex;
-    gap: var(--kui-space-60, $kui-space-60);
-
-    .row {
-      align-items: center;
-      display: flex;
-    }
-
-    .config-format-select-label {
-      margin-bottom: var(--kui-space-0, $kui-space-0);
-      margin-right: var(--kui-space-40, $kui-space-40);
-    }
-
-    .sensitive-fields-checkbox {
-      align-items: center;
-
-      :deep(.checkbox-label) {
-        width: max-content;
-      }
-    }
-  }
-
-  .config-card-prop-section-title {
-    color: var(--kui-color-text, $kui-color-text);
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
-    font-weight: 600;
-    margin-bottom: var(--kui-space-60, $kui-space-60);
-    margin-top: var(--kui-space-110, $kui-space-110);
-  }
-
-  :deep(.config-card-details-row:last-of-type) {
-    border-bottom: none;
-  }
-
-  .book-icon {
-    margin-left: var(--kui-space-40, $kui-space-40);
-    padding: var(--kui-space-0, $kui-space-0);
-  }
-}
-</style>

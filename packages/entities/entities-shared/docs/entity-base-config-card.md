@@ -239,6 +239,10 @@ Slot what is displayed for the label content of a specific property in the recor
 
 Slot what is displayed for the label tooltip content of a specific property in the record.
 
+#### default
+
+Overrides the value of a field named `default`. The `title` and `actions` slots also override field values when those names occur in the record.
+
 ### Usage example
 
 Please refer to the [sandbox](../sandbox/pages/EntityBaseFormPage.vue).
@@ -260,3 +264,7 @@ import type {
   ConfigurationSchemaSection,
 } from '@kong-ui-public/entities-shared'
 ```
+
+## Already loaded records
+
+Use [`EntityConfigCardView`](entity-config-card-view.md) to display a record the host has already loaded. It renders the same card without making requests.

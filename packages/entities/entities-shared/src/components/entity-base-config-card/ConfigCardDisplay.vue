@@ -16,45 +16,47 @@
         {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : pType === 'plugin' ? t('baseConfigCard.sections.plugin') : t('baseConfigCard.sections.policy') }}
       </div>
 
-      <slot
+      <!-- Each row, including a whole-row slot, resolves sensitive fields against the schema of the record it comes from -->
+      <ConfigCardRowSchemaScope
         v-for="propertyItem in propertyCollections[pType as keyof typeof propertyCollections]"
-        :name="`config-card-item-${propertyItem.key}`"
-        :row="propertyItem"
+        :key="propertyItem.key"
+        :item="propertyItem"
       >
-        <ConfigCardItem
-          :key="propertyItem.key"
-          :item="propertyItem"
+        <slot
+          :name="`config-card-item-${propertyItem.key}`"
+          :row="propertyItem"
         >
-          <template #label>
-            <slot
-              :name="`${propertyItem.key}-label`"
-              :row="propertyItem"
-            />
-          </template>
-          <template
-            v-if="hasTooltip(propertyItem)"
-            #label-tooltip
-          >
-            <slot
-              :name="`${propertyItem.key}-label-tooltip`"
-              :row="propertyItem"
-            />
-          </template>
-          <template #[propertyItem.key]="{ rowValue }">
-            <slot
-              :name="propertyItem.key"
-              :row="propertyItem"
-              :row-value="rowValue"
-            />
-          </template>
-        </ConfigCardItem>
-      </slot>
+          <ConfigCardItem :item="propertyItem">
+            <template #label>
+              <slot
+                :name="`${propertyItem.key}-label`"
+                :row="propertyItem"
+              />
+            </template>
+            <template
+              v-if="hasTooltip(propertyItem)"
+              #label-tooltip
+            >
+              <slot
+                :name="`${propertyItem.key}-label-tooltip`"
+                :row="propertyItem"
+              />
+            </template>
+            <template #[propertyItem.key]="{ rowValue }">
+              <slot
+                :name="propertyItem.key"
+                :row="propertyItem"
+                :row-value="rowValue"
+              />
+            </template>
+          </ConfigCardItem>
+        </slot>
+      </ConfigCardRowSchemaScope>
     </div>
   </div>
 
   <JsonCodeBlock
     v-if="format === 'json' && entityRecord"
-    :config="props.config"
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
@@ -67,20 +69,21 @@
     :unredacted-record="unredactedEntityRecord"
     @deck-callout:click-cta="$emit('request-deck-format')"
   />
+  <!-- TerraformCodeBlock resolves missing entity types for mixed host/runtime versions. -->
   <TerraformCodeBlock
     v-if="format === 'terraform' && entityRecord"
     :entity-record="entityRecord"
-    :entity-type="props.entityType"
+    :entity-type="(props.entityType as SupportedEntityType)"
     :sub-entity-type="props.subEntityType"
     :unredacted-record="unredactedEntityRecord"
   />
   <DeckCodeBlock
-    v-if="format === 'deck' && entityRecord"
+    v-if="format === 'deck' && entityRecord && config.app && deckEntityType"
     :app="config.app"
     :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
     :customization-options="deckCustomizationOptions"
     :entity-record="entityRecord"
-    :entity-type="(props.entityType as SupportedEntityDeck)"
+    :entity-type="deckEntityType"
     :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
     :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
@@ -97,19 +100,19 @@ import {
   CONFIG_CARD_FORMATS,
   type ConfigCardCodeFormat,
   type ConfigCardFormat,
-  type KongManagerBaseEntityConfig,
-  type KonnectBaseEntityConfig,
   type RecordItem,
-  type SupportedEntityDeck,
+  SupportedEntityDeckArray,
   type SupportedEntityType,
 } from '../../types'
 import { SupportedEntityTypesArray } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
+import ConfigCardRowSchemaScope from './ConfigCardRowSchemaScope.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
+import type { ConfigCardDisplayConfig } from '../../utils/config-card'
 
 export interface PropList {
   basic?: RecordItem[]
@@ -120,13 +123,13 @@ export interface PropList {
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
+    type: Object as PropType<ConfigCardDisplayConfig>,
     required: false,
     default: () => ({}),
   },
   entityType: {
     type: String as PropType<SupportedEntityType>,
-    required: true,
+    default: undefined,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
   },
   subEntityType: {
@@ -206,6 +209,7 @@ defineEmits<{
 
 const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
+const deckEntityType = computed(() => SupportedEntityDeckArray.find(type => type === props.entityType))
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 

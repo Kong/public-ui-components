@@ -199,3 +199,18 @@ export type ConfigCardFormat = (typeof CONFIG_CARD_FORMATS)[number]
 
 // JSON/ YAML/ TR/ Deck tabs only- excludes structured (used for `codeBlockRecordFormatter`)
 export type ConfigCardCodeFormat = Exclude<ConfigCardFormat, 'structured'>
+
+/** Presentation and export context of `EntityConfigCardView`. No entity ID, endpoint or HTTP client is required. */
+export interface EntityConfigCardViewConfig {
+  app?: 'konnect' | 'kongManager'
+  /** Kong Manager `--kong-addr` in generated decK commands. It is never requested. */
+  apiBaseUrl?: string
+  /** Workspace written into generated decK YAML */
+  workspace?: string | null
+  /** Konnect control plane name written into generated decK YAML */
+  controlPlaneName?: string
+  /** Regional Konnect `--konnect-addr` in generated decK commands */
+  geoApiServerUrl?: string
+  /** Konnect only: enable the decK format. Local command editing is available when the host provides the decK command editor. */
+  enableDeckConfig?: boolean
+}
