@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [13.3.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.3.0...%40kong-ui-public%2Fanalytics-chart%4013.3.1) (2026-11-10)
+
+### Bug Fixes
+
+* **analytics-chart:** keep the tooltip with the cursor and stop its first-hover fly-in ([#4049](https://github.com/Kong/public-ui-components/issues/4049)) ([dd8f8bb](https://github.com/Kong/public-ui-components/commit/dd8f8bb99dc1d8f733110180939310b9feb7b5a2)), closes [#4034](https://github.com/Kong/public-ui-components/issues/4034)
+
+
 # [13.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4013.2.11...%40kong-ui-public%2Fanalytics-chart%4013.3.0) (2026-11-09)
 
 ### Features
