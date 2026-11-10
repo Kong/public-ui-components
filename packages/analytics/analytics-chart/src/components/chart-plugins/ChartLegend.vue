@@ -166,7 +166,7 @@ const legendEntries = computed(() => props.items.map((item) => ({
   display: flex;
   flex-grow: 1; // we want to push the chart up, so this takes all remaining space
   flex-wrap: wrap;
-  // Same gap as KFilterGroup pills, so a hover fill or focus ring never reaches the next item.
+  // Same gap as KFilterGroup pills. Each item's hover fill covers half of it (see .legend-item), so neighboring fills meet but never overlap.
   gap: var(--kui-space-40, $kui-space-40);
   justify-content: center;
   margin: 0 0 0 0;
