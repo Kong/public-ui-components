@@ -492,6 +492,31 @@ describe('<AnalyticsChart />', () => {
     cy.get('.tooltip-container .square-marker').should('have.length', 2)
   })
 
+  it('appears at its first position instead of flying in from the viewport origin', () => {
+    // A chart's first tooltip has no measured size yet, so its first position is NaN.
+    cy.mount(ChartTooltip, {
+      props: {
+        state: {
+          showTooltip: true,
+          interactionMode: 'idle',
+          tooltipSeries: [{ backgroundColor: 'rgb(10, 10, 10)', borderColor: 'rgb(0, 0, 0)', label: 'v1', value: '1' }],
+        },
+        tooltipTitle: 'Requests count',
+        absoluteLeft: 'NaNpx',
+        absoluteTop: 'NaNpx',
+      },
+    }).then(({ wrapper }) => {
+      cy.get('.tooltip-container').should('exist').and('not.be.visible')
+
+      cy.then(() => wrapper.setProps({ absoluteLeft: '300px', absoluteTop: '200px' }))
+      cy.get('.tooltip-container').should('be.visible').then(($tooltip) => {
+        // Read once, without retries: a tooltip that transitions in from (0, 0) is still on its way here.
+        const { e: left, f: top } = new DOMMatrix(getComputedStyle($tooltip[0]).transform)
+        expect([left, top]).to.deep.equal([300, 200])
+      })
+    })
+  })
+
   it('updates an open chart tooltip when the metric changes externally', () => {
     const updatedChartData = {
       ...exploreResult,
