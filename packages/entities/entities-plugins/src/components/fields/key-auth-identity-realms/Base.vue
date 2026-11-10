@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../free-form/const'
 import composables from '../../../composables'
 
 import type { MultiselectItem } from '@kong/kongponents'

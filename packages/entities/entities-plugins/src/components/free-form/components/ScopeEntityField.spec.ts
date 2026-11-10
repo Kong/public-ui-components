@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
-import { FORMS_API_KEY } from '@kong-ui-public/forms'
+import { FORMS_API_KEY } from '../const'
 import { Form } from '@kong-ui-public/freeform'
 import ScopeEntityField from './ScopeEntityField.vue'
 
@@ -14,8 +14,8 @@ const schema = {
   ],
 }
 
-const FieldScopedEntitySelectStub = defineComponent({
-  name: 'FieldScopedEntitySelect',
+const ScopedEntitySelectStub = defineComponent({
+  name: 'ScopedEntitySelect',
   props: {
     selectedItem: { default: undefined },
     selectedItemLoading: Boolean,
@@ -57,7 +57,7 @@ function createWrapper(developer?: boolean, apiStatus: 200 | 404 = 404) {
   const wrapper = mount(Wrapper, {
     global: {
       provide: { [FORMS_API_KEY]: mockApi },
-      stubs: { FieldScopedEntitySelect: FieldScopedEntitySelectStub, KLabel: true },
+      stubs: { ScopedEntitySelect: ScopedEntitySelectStub, KLabel: true },
     },
   })
 
@@ -71,7 +71,7 @@ describe('ScopeEntityField', () => {
     const { wrapper } = createWrapper(false, 200)
     await flushPromises()
 
-    const stub = wrapper.findComponent(FieldScopedEntitySelectStub)
+    const stub = wrapper.findComponent(ScopedEntitySelectStub)
     expect(stub.props('selectedItem')).toMatchObject({ value: CONSUMER_ID })
   })
 
@@ -82,7 +82,7 @@ describe('ScopeEntityField', () => {
     expect(errorMock).toHaveBeenCalledOnce()
     errorMock.mockRestore()
 
-    const stub = wrapper.findComponent(FieldScopedEntitySelectStub)
+    const stub = wrapper.findComponent(ScopedEntitySelectStub)
     expect(stub.props('selectedItem')).toBeUndefined()
   })
 
@@ -90,7 +90,7 @@ describe('ScopeEntityField', () => {
     const { wrapper } = createWrapper(true, 404)
     await flushPromises()
 
-    const stub = wrapper.findComponent(FieldScopedEntitySelectStub)
+    const stub = wrapper.findComponent(ScopedEntitySelectStub)
     expect(stub.props('selectedItem')).toEqual({ label: CONSUMER_ID, value: CONSUMER_ID })
   })
 

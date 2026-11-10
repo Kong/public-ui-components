@@ -1,7 +1,7 @@
 import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/freeform'
 import type { FormSchema, RenderRules } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../const'
 import { ref } from 'vue'
 import RedisSelector from './RedisSelector.vue'
 

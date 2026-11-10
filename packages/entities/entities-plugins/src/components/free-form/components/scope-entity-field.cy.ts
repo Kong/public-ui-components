@@ -2,7 +2,7 @@ import { h } from 'vue'
 import { Form } from '@kong-ui-public/freeform'
 import type { FormSchema, FormConfig } from '@kong-ui-public/freeform'
 import ScopeEntityField from './ScopeEntityField.vue'
-import { FORMS_API_KEY } from '@kong-ui-public/forms'
+import { FORMS_API_KEY } from '../const'
 
 const FIELD_NAME = 'service'
 const ENTITY_ID = 'svc-1'

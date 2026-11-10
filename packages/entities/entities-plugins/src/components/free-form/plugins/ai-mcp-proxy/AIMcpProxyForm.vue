@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import { provide } from 'vue'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
 import { ArrayField, FieldRenderer, ObjectField, StringArrayField, MapField } from '@kong-ui-public/freeform'
