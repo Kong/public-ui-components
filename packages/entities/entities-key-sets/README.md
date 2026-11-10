@@ -21,6 +21,7 @@ Key set entity components.
 - `KeySetList`
 - `KeySetForm`
 - `KeySetConfigCard`
+- `KeySetConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -48,3 +49,4 @@ import '@kong-ui-public/entities-key-sets/dist/style.css'
 - [`<KeySetList.vue />`](docs/key-set-list.md)
 - [`<KeySetForm.vue />`](docs/key-set-form.md)
 - [`<KeySetConfigCard.vue />`](docs/key-set-config-card.md)
+- [`<KeySetConfigCardView />`](docs/key-set-config-card.md#keysetconfigcardview) — display an already loaded record.

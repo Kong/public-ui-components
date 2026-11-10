@@ -9,6 +9,7 @@ A config card component for Upstream.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [UpstreamsConfigCardView](#upstreamsconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,31 @@ import type {
  KonnectUpstreamsEntityConfig,
  KongManagerUpstreamsEntityConfig,
 } from '@kong-ui-public/entities-upstreams-targets'
+```
+
+## UpstreamsConfigCardView
+
+`UpstreamsConfigCardView` displays an already loaded Upstream record with the same presentation as `UpstreamsConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { UpstreamsConfigCardView } from '@kong-ui-public/entities-upstreams-targets'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Upstream record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<UpstreamsConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

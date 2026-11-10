@@ -9,6 +9,7 @@ A form component for consumer.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [ConsumerConfigCardView](#consumerconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,31 @@ import type {
   KonnectConsumerEntityConfig,
   KongManagerConsumerEntityConfig,
 } from '@kong-ui-public/entities-consumers'
+```
+
+## ConsumerConfigCardView
+
+`ConsumerConfigCardView` displays an already loaded Consumer record with the same presentation as `ConsumerConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { ConsumerConfigCardView } from '@kong-ui-public/entities-consumers'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Consumer record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<ConsumerConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

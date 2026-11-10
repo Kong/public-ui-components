@@ -18,6 +18,7 @@ Check the [individual component docs](#individual-component-documentation) for m
 - `ConsumerGroupList`
 - `ConsumerGroupForm`
 - `ConsumerGroupConfigCard`
+- `ConsumerGroupConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -45,4 +46,4 @@ import '@kong-ui-public/entities-consumer-groups/dist/style.css'
 - [`<ConsumerGroupList.vue />`](docs/consumer-group-list.md)
 - [`<ConsumerGroupForm.vue />`](docs/consumer-group-form.md)
 - [`<ConsumerGroupConfigCard.vue />`](docs/consumer-group-config-card.md)
-
+- [`<ConsumerGroupConfigCardView />`](docs/consumer-group-config-card.md#consumergroupconfigcardview) — display an already loaded record.

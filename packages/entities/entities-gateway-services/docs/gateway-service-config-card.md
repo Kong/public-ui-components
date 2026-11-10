@@ -9,6 +9,7 @@ A config card component for gateway services.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [GatewayServiceConfigCardView](#gatewayserviceconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,31 @@ import type {
   KonnectGatewayServiceEntityConfig,
   KongManagerGatewayServiceEntityConfig,
 } from '@kong-ui-public/entities-gateway-services'
+```
+
+## GatewayServiceConfigCardView
+
+`GatewayServiceConfigCardView` displays an already loaded Gateway Service record with the same presentation as `GatewayServiceConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { GatewayServiceConfigCardView } from '@kong-ui-public/entities-gateway-services'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Gateway Service record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<GatewayServiceConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

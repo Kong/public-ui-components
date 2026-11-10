@@ -69,15 +69,15 @@
 </template>
 
 <script setup lang="ts">
+import { createConfigCardSchema } from './config-card-schema'
 import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig, KeyConfigurationSchema } from '../types'
+import type { KongManagerKeyEntityConfig, KonnectKeyEntityConfig } from '../types'
 import {
   useAxios,
   useStringHelpers,
   ConfigCardItem,
-  ConfigurationSchemaSection,
   ConfigurationSchemaType,
   EntityBaseConfigCard,
   InternalLinkItem,
@@ -235,36 +235,5 @@ const mapToAdvanced = (currentKey: Key) => {
   return result
 }
 
-const configSchema = ref<KeyConfigurationSchema>({
-  id: {},
-  name: {
-    tooltip: t('keys.form.fields.name.tooltip'),
-  },
-  last_updated: {},
-  created: {},
-  set: {
-    label: t('keys.form.fields.set.label'),
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('keys.form.fields.set.tooltip'),
-    order: 5,
-  },
-  kid: {
-    label: t('keys.form.fields.kid.label'),
-    section: ConfigurationSchemaSection.Basic,
-    tooltip: t('keys.form.fields.kid.tooltip'),
-  },
-  tags: {
-    tooltip: t('keys.form.fields.tags.tooltip'),
-  },
-  // advanced fields
-  jwk: {
-    label: t('keys.form.fields.jwk.label'),
-    type: ConfigurationSchemaType.Json,
-  },
-  pem: {
-    section: ConfigurationSchemaSection.Advanced,
-    label: t('keys.form.fields.key_format.options.pem'),
-    type: ConfigurationSchemaType.Json,
-  },
-})
+const configSchema = createConfigCardSchema(t)
 </script>
