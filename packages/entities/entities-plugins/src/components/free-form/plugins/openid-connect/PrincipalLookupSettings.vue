@@ -228,7 +228,7 @@ import { usePluginContext } from '../../plugin-context'
 import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 import type { OidcConfigSubset, OidcPrincipals, OidcPrincipalsJit } from './types'
 
 const { showPrincipalsFields = true, ...props } = defineProps<{

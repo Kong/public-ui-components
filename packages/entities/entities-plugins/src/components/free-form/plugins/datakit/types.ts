@@ -2,7 +2,7 @@
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
 import type { Edge, XYPosition, Dimensions } from '@vue-flow/core'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 import type {
   DatakitConfig,
   HttpMethod,

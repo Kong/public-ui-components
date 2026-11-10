@@ -122,37 +122,6 @@ export interface PluginFormState {
 
 export type PartiallyRequired<T, K extends keyof T> = { [k in K]-?: T[k] } & { [k in keyof T]: T[k] }
 
-/**
- * Types for schemas
- */
-
-export interface Item {
-  inputAttributes?: any
-  newElementButtonLabel?: string
-}
-
-interface ArrayItem {
-  type: string
-  itemContainerComponent: string
-  fieldClasses: string
-  fieldItemsClasses: string
-  newElementButtonLabelClasses: string
-  inputAttributes: {
-    class: string
-    style: {
-      minWidth: string
-    }
-    [key: string]: any
-  }
-  removeElementButtonLabel: string
-  styleClasses: string
-  inputType: string
-  valueType: string
-  valueArrayType: string
-}
-
-export type ReturnArrayItem = ArrayItem & Item
-
 export enum PluginPartialType {
   REDIS_CE = 'redis-ce',
   REDIS_EE = 'redis-ee',

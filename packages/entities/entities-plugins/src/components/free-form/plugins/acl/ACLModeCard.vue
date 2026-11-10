@@ -80,7 +80,7 @@ import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 
 type AclConfig = {
   allow?: string[] | null

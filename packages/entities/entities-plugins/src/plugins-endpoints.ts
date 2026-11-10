@@ -54,10 +54,9 @@ export default {
         edit: `${konnectBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
       credentialSchema: '/v2/control-planes/{controlPlaneId}/core-entities/schemas/{plugin}',
-      // VFG endpoints24
+      // entity endpoints, e.g. for the scope entity select
       entityGetOne: `${konnectBaseApiUrl}/{entity}/{id}`,
       entityGetAll: `${konnectBaseApiUrl}/{entity}`,
-      entityPeek: `${konnectBaseApiUrl}/{entity}?size={amount}`,
     },
     kongManager: {
       create: {
@@ -74,7 +73,7 @@ export default {
         edit: `${KMBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
       credentialSchema: `${KMBaseApiUrl}/schemas/{plugin}`,
-      // VFG endpoints
+      // entity endpoints, e.g. for the scope entity select
       entityGetOne: `${KMBaseApiUrl}/{entity}/{id}`,
       entityGetAll: `${KMBaseApiUrl}/{entity}`,
     },

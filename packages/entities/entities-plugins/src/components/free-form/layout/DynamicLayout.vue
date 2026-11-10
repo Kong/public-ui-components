@@ -17,7 +17,7 @@
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { computed, inject, useAttrs, useSlots } from 'vue'
-import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../types'
 import StandardLayout from './StandardLayout.vue'
 import { FREE_FORM_PLUGIN_LAYOUT } from './provider'
 import type { PluginFormLayoutComponent, PluginFormLayoutProps } from './provider'

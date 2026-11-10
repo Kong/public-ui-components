@@ -2,7 +2,7 @@ import { h } from 'vue'
 import DynamicLayout from './DynamicLayout.vue'
 import { useProvideFreeFormPluginLayout } from './provider'
 
-import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../types'
 import type { PluginFormLayoutComponent, PluginFormLayoutProps } from './provider'
 import type { Slots } from 'vue'
 
