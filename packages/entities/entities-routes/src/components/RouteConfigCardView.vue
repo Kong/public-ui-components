@@ -78,7 +78,7 @@ const props = defineProps({
 
 const { i18n: { t } } = composables.useI18n()
 const internalServiceId = computed(() => props.service?.id || props.record.service?.id || '')
-const serviceName = computed(() => props.service?.name ?? internalServiceId.value)
+const serviceName = computed(() => props.service?.name || internalServiceId.value)
 
 const configSchema = createConfigCardSchema(t)
 </script>

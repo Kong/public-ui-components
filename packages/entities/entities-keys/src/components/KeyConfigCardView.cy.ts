@@ -13,6 +13,8 @@ describe('<KeyConfigCardView />', () => {
       cy.getTestId('set-property-value').should('contain.text', 'resolved-set')
       cy.getTestId('jwk.old-plain-text').should('not.exist')
       cy.getTestId('jwk.kty-plain-text').should('contain.text', 'EC')
+      cy.then(() => wrapper.setProps({ keySet: { id: 'set', name: '' } }))
+      cy.getTestId('set-property-value').should('have.text', 'set')
       cy.then(() => wrapper.setProps({ keySet: { id: 'other', name: 'stale-set' } }))
       cy.getTestId('set-property-value').should('contain.text', 'set').and('not.contain.text', 'stale-set')
     })

@@ -11,6 +11,8 @@ describe('<RouteConfigCardView />', () => {
       cy.getTestId('service-name-loader').should('exist')
       cy.then(() => wrapper.setProps({ service: { id: 'service', name: 'resolved-service' } }))
       cy.getTestId('service-property-value').should('contain.text', 'resolved-service')
+      cy.then(() => wrapper.setProps({ service: { id: 'service', name: '' } }))
+      cy.getTestId('service-property-value').should('have.text', 'service')
       cy.then(() => wrapper.setProps({ service: { id: 'other', name: 'stale-service' } }))
       cy.getTestId('service-property-value').should('not.contain.text', 'stale-service')
     })

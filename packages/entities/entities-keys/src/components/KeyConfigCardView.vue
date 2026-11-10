@@ -97,7 +97,7 @@ const { convertKeyToTitle } = useStringHelpers()
 const { i18n: { t } } = composables.useI18n()
 const entityKeySetId = computed(() => props.record.set?.id || props.keySet?.id || '')
 const keySetName = computed(() => props.keySet?.id === entityKeySetId.value
-  ? props.keySet?.name ?? entityKeySetId.value
+  ? props.keySet?.name || entityKeySetId.value
   : entityKeySetId.value)
 const keyFields = computed((): { values: Record<string, unknown>, error?: unknown } => {
   const { jwk } = props.record
