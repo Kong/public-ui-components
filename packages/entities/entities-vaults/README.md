@@ -21,6 +21,7 @@ Vault entity components.
 - `VaultList`
 - `VaultForm`
 - `VaultConfigCard`
+- `VaultConfigCardView`
 - `VaultSecretPicker`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
@@ -50,3 +51,4 @@ import '@kong-ui-public/entities-vaults/dist/style.css'
 - [`<VaultForm.vue />`](docs/vault-form.md)
 - [`<VaultConfigCard.vue />`](docs/vault-config-card.md)
 - [`<VaultSecretPicker.vue />`](docs/vault-secret-picker.md)
+- [`<VaultConfigCardView />`](docs/vault-config-card.md#vaultconfigcardview) — display an already loaded record.

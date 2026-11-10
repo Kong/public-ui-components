@@ -1,3 +1,4 @@
+import VaultConfigCardView from './components/VaultConfigCardView.vue'
 import VaultList from './components/VaultList.vue'
 import VaultForm from './components/VaultForm.vue'
 import VaultConfigCard from './components/VaultConfigCard.vue'
@@ -15,3 +16,5 @@ export { VaultSecretPickerProvider, VaultSecretPicker }
 export { vaultsEndpoints, secretsEndpoints }
 
 export * from './types'
+
+export { VaultConfigCardView }

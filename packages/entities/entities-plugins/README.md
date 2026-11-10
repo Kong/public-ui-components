@@ -23,6 +23,8 @@ Plugin entity components.
 
 - `PluginList`
 
+- `PluginConfigCardView`
+
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
 ## Usage
@@ -66,3 +68,4 @@ provide('app:konnectColorMode', colorMode)
 - [`<PluginConfigCard.vue />`](docs/plugin-config-card.md)
 - [`<CustomPluginForm.vue />`](docs/custom-plugin-form.md)
 - [`<AuthPluginOnboardingCard.vue />`](docs/auth-plugin-onboarding-card.md)
+- [`<PluginConfigCardView />`](docs/plugin-config-card.md#pluginconfigcardview) — display an already loaded record.
