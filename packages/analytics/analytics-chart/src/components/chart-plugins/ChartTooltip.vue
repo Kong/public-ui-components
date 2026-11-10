@@ -173,7 +173,8 @@ watch(tooltipEl, value => {
   box-shadow: var(--kui-pop-shadow, var(--kui-shadow, $kui-shadow));
   max-width: 425px;
   position: fixed;
-  transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+  // A fast-start curve so the tooltip keeps up with the cursor and the drag pointer. `transform` moves on every pointer event, and `ease-in-out` lags behind.
+  transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1;
 
   .tooltip-title {
