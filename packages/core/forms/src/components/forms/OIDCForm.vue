@@ -669,14 +669,12 @@ export default {
 
 <style lang="scss" scoped>
 .section-header {
-  color: rgba(0, 0, 0, 0.85);
   font-size: var(--kui-font-size-40, $kui-font-size-40);
   font-weight: 500;
   line-height: 20px;
 }
 
 .description {
-  color: rgba(0, 0, 0, 0.45);
   margin-bottom: 12px;
 
   a {

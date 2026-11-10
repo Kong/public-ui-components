@@ -386,7 +386,7 @@ const handleSelectChange = (field: string, item: (SelectItem & { custom?: boolea
     font-size: 12px;
 
     &::placeholder {
-      color: rgba(0, 0, 0, .45)!important;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
       font-size: 12px;
     }
   }
