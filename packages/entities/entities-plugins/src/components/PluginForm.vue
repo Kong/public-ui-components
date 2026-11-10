@@ -219,7 +219,7 @@ import {
   type PluginValidityChangeEvent,
   type EntityCreateEvent,
 } from '../types'
-import type { FreeFormPluginData } from '../types/plugins/free-form'
+import type { FreeFormPluginData } from './free-form/types'
 import type { PluginScopeEntityField, PluginScopeName, PluginScopeOptions } from './free-form/types'
 import { REFERENCE_FIELD_CONFIG } from '../composables/useReferenceEntityNames'
 import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
@@ -635,12 +635,7 @@ const initForm = (data: Record<string, any>): void => {
     data.password = ''
   }
 
-  form.fields.id = data?.id || undefined
   dynamicOrdering.value = data?.ordering
-
-  // Set initial state of `formFieldsOriginal` to these values in order to detect changes
-  Object.assign(formFieldsOriginal, form.fields)
-
   record.value = data
 }
 

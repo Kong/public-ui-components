@@ -141,10 +141,6 @@ export type PluginCardList = {
   [key in PluginGroup | PluginFeatured]?: PluginType[];
 }
 
-export type TriggerLabels = {
-  [key in PluginGroup]?: string // [plugin.group]: label
-}
-
 export type PluginOrdering = {
   before: {
     access: string[]

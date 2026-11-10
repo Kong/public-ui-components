@@ -418,7 +418,7 @@ import { AUTH_METHODS, KONG_IDENTITY_METHODS, isKongIdentityIssuer } from './Aut
 
 import type { ComputedRef } from 'vue'
 import type { EntityCreateEvent, KonnectPluginFormConfig } from '../../../../types'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 import type { OidcConfigSubset, OidcPrincipals, PrincipalsMode } from './types'
 
 const MODE_KONG_IDENTITY = 'kong-identity'

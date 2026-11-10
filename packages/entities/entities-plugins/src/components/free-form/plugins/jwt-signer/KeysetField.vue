@@ -15,7 +15,7 @@ import useI18n from '../../../../composables/useI18n'
 import { StringField, defaultLabelFormatter, useFormShared } from '@kong-ui-public/freeform'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 
 defineOptions({ inheritAttrs: false })
 

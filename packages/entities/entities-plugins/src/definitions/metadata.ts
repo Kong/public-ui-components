@@ -3,20 +3,12 @@ import {
 } from '@kong-ui-public/entities-plugins-metadata'
 import { type PluginMetaData } from '../types'
 import { type MessageSource as I18nMessageSource } from '../composables/useI18n'
-import { getColumnFields } from './schemas/typedefs'
-import { aclSchema } from './schemas/ACL'
 import aclsCredentialsSchema from './schemas/credentials/mockedAclSchema.json'
-import { basicAuthSchema } from './schemas/BasicAuth'
 import basicAuthCredentialsSchema from './schemas/credentials/mockedBasicAuthSchema.json'
-import { keyAuthCredentialSchema } from './schemas/KeyAuth'
 import keyAuthCredentialsSchema from './schemas/credentials/mockedKeyAuthSchema.json'
-import { hmacAuthSchema } from './schemas/HMAC'
 import hmacAuthCredentialsSchema from './schemas/credentials/mockedHmacAuthSchema.json'
-import { jwtSecretSchema } from './schemas/JWT'
 import jwtCredentialsSchema from './schemas/credentials/mockedJwtSchema.json'
-import OAuth2Schema from './schemas/OAuth2'
 import oauthCredentialSchema from './schemas/credentials/mockedOAuthSchema.json'
-import KeyAuthEncSchema from './schemas/KeyAuthEnc'
 import keyEncCredentialSchema from './schemas/credentials/mockedKeyEncAuthSchema.json'
 
 /**
@@ -695,70 +687,51 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
   acl: {
     titleKey: 'plugins.meta.acl.name',
     plugin: 'acl',
-    schema: aclSchema,
     nameKey: 'plugins.meta.acl.credential_name',
     endpoint: '/acls',
     schemaEndpoint: 'acls',
-    fields: getColumnFields(aclSchema),
-    applyCredentialButtonText: 'Add group to consumer',
   },
   'basic-auth': {
     titleKey: 'plugins.meta.basic-auth.name',
     plugin: 'basic-auth',
-    schema: basicAuthSchema,
     nameKey: 'plugins.meta.basic-auth.credential_name',
     endpoint: '/basic-auth',
     schemaEndpoint: 'basicauth_credentials',
-    fields: getColumnFields(basicAuthSchema),
   },
   'key-auth': {
     titleKey: 'plugins.meta.key-auth.name',
     plugin: 'key-auth',
-    schema: keyAuthCredentialSchema,
     nameKey: 'plugins.meta.key-auth.credential_name',
     endpoint: '/key-auth',
     schemaEndpoint: 'keyauth_credentials',
-    fields: getColumnFields(keyAuthCredentialSchema),
   },
   'key-auth-enc': {
     titleKey: 'plugins.meta.key-auth-enc.name',
     plugin: 'key-auth-enc',
-    schema: KeyAuthEncSchema,
     nameKey: 'plugins.meta.key-auth-enc.credential_name',
     endpoint: '/key-auth-enc',
     schemaEndpoint: 'keyauth_enc_credentials',
-    fields: getColumnFields(KeyAuthEncSchema),
   },
   oauth2: {
     titleKey: 'plugins.meta.oauth2.name',
     plugin: 'oauth2',
-    schema: OAuth2Schema,
     nameKey: 'plugins.meta.oauth2.credential_name',
     endpoint: '/oauth2',
     schemaEndpoint: 'oauth2_credentials',
-    fields: getColumnFields(OAuth2Schema),
   },
   'hmac-auth': {
     titleKey: 'plugins.meta.hmac-auth.name',
     plugin: 'hmac-auth',
-    schema: hmacAuthSchema,
     nameKey: 'plugins.meta.hmac-auth.credential_name',
     endpoint: '/hmac-auth',
     schemaEndpoint: 'hmacauth_credentials',
-    fields: getColumnFields(hmacAuthSchema),
   },
   jwt: {
     titleKey: 'plugins.meta.jwt.name',
     plugin: 'jwt',
-    schema: jwtSecretSchema,
     nameKey: 'plugins.meta.jwt.credential_name',
     endpoint: '/jwt',
     schemaEndpoint: 'jwt_secrets',
-    fields: {
-      id: {},
-      key: {},
-      algorithm: {},
-    },
   },
 }
 

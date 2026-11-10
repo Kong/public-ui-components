@@ -44,7 +44,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vue-flow/core/dist/style.css',
         '@vue-flow/core/dist/theme-default.css',
         '@vueuse/core',
-        '@vueuse/integrations',
         'monaco-editor',
         '@kong-ui-public/entities-plugins-icon',
         'zod',

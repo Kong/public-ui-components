@@ -38,7 +38,7 @@ import DynamicLayout from '../../layout/DynamicLayout.vue'
 
 import type { RenderRules } from '@kong-ui-public/freeform'
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 
 const props = defineProps<Props>()
 

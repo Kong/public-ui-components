@@ -1,4 +1,4 @@
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 
 export type RequestCalloutPlugin = FreeFormPluginData<RequestCallout>
 
