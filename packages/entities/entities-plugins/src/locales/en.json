@@ -897,6 +897,15 @@
           "plugin_config": {
             "description": "Stop requests to a Service or Route when failures or upstream latency cross the configured thresholds."
           },
+          "threshold_condition": {
+            "title": "Threshold condition"
+          },
+          "thresholds": {
+            "title": "Thresholds"
+          },
+          "other_settings": {
+            "title": "Other settings"
+          },
           "identification": {
             "title": "Circuit identification"
           },
@@ -907,13 +916,8 @@
             "title": "Request handling"
           }
         },
-        "units": {
-          "seconds": "seconds",
-          "milliseconds": "milliseconds",
-          "percent": "%"
-        },
         "fields": {
-          "failure_circuit": {
+          "policy_circuit": {
             "label": "Policy failure circuit",
             "description": "Stop requests when the number of failures exceeds the configured threshold."
           },
@@ -921,61 +925,51 @@
             "label": "Latency circuit",
             "description": "Stop requests when upstream responses are slow (time to first byte)."
           },
-          "max_failure_count": {
+          "open_when": {
+            "options": {
+              "max_failures": "Count only",
+              "failure_percentage": "Percentage only",
+              "both": "Both",
+              "either": "Either"
+            }
+          },
+          "max_failures": {
             "label": "Maximum failure count"
           },
+          "failure_percentage": {
+            "label": "Failure percentage (%)"
+          },
           "sampling_window": {
-            "label": "Sampling window"
+            "label": "Sampling window (seconds)"
           },
           "recovery_period": {
-            "label": "Recovery period"
+            "label": "Recovery period (milliseconds)"
           },
-          "failure_percentage": {
-            "label": "Failure percentage"
+          "max_upstream_response_time": {
+            "label": "Maximum upstream response time (milliseconds)"
           },
           "failure_types": {
             "label": "Failure type",
             "help": "At least one failure type is required"
           },
-          "max_upstream_response_time": {
-            "label": "Maximum upstream response time"
-          },
-          "window_type": {
-            "label": "Window type"
-          },
-          "group_circuits_by": {
+          "identifier": {
             "label": "Group circuits by",
             "options": {
               "service": "Service",
               "route": "Route"
             }
           },
-          "excluded_paths": {
-            "label": "Excluded paths",
-            "add": "Add path",
-            "path": {
-              "label": "Path",
-              "placeholder": "/health"
-            },
-            "method": {
-              "label": "Method",
-              "placeholder": "GET"
-            }
-          },
-          "half_open_requests": {
+          "half_open_calls": {
             "label": "Half-open requests"
           },
           "half_open_failure_threshold": {
-            "label": "Half-open failure threshold"
+            "label": "Half-open failure threshold (%)"
           },
           "half_open_timeout": {
-            "label": "Half-open timeout"
+            "label": "Half-open timeout (seconds)"
           },
-          "response_status_code": {
+          "response_code": {
             "label": "Response status code"
-          },
-          "response_body": {
-            "label": "Response body"
           }
         }
       },
