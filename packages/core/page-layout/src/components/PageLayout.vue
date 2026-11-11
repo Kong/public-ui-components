@@ -64,7 +64,7 @@
               </slot>
             </span>
             <div
-              v-if="showFavoriteButton && hasTitle()"
+              v-if="showFavoriteButton"
               :key="favoriteButtonKey"
               class="favorite-button-container"
             >
