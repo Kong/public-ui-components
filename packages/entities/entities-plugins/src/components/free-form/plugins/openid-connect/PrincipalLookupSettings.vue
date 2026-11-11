@@ -234,7 +234,9 @@ const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, unde
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // sibling advanced settings rendered in the default slot (e.g. OIDC auth methods).
-const { formData, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+// PrincipalsSection owns the jit record's prefill: it survives the auth-mode
+// switch that tears this component down.
+const { formData, getEmptyValue, getSchema, getFieldVersionInfo } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 function usePrincipalsField<K extends keyof OidcPrincipals>(key: K) {
   return computed<OidcPrincipals[K] | undefined>({
@@ -280,29 +282,6 @@ const jitDisabled = computed(() => fieldsDisabled.value || !!jitVersionInfo.valu
 const jitVersionLabelAttributes = computed(() => jitVersionInfo.value
   ? { info: jitVersionInfo.value.tooltip, tooltipAttributes: { maxWidth: '300' } }
   : undefined)
-
-// The record is required, so the form always submits one with `all_claims`
-// prefilled: sharing every token claim is the intended starting point and the
-// user narrows it down by unchecking.
-//
-// Two entry paths need it. A blank create never reaches here with an empty
-// record — the engine fills the whole model from schema defaults first
-// (`isSchemaDefaulted`), which writes the schema's own `all_claims: false` —
-// so the prefill overwrites that fill. A host-supplied model (edit, or a
-// draft) is the user's data: only a missing record is filled in, which is the
-// OIDC plugin saved before `jit` existed.
-// Runs once, on setup — later edits (including unchecking) stand.
-// Skipped while the version lock is on: below 2.3 both controls are disabled,
-// so a prefilled record would be config the user can't undo on a runtime that
-// doesn't understand it.
-const principalsRecord = formData.config?.principals
-if (showJitSettings.value && !jitVersionInfo.value && principalsRecord
-  && (!principalsRecord.jit || isSchemaDefaulted.value)) {
-  principalsRecord.jit = {
-    ...getDefault('$.config.principals.jit') as OidcPrincipalsJit,
-    all_claims: true,
-  }
-}
 
 function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
   return computed<OidcPrincipalsJit[K] | undefined>({

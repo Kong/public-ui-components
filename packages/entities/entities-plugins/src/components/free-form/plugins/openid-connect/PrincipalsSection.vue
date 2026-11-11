@@ -418,7 +418,7 @@ import { AUTH_METHODS, KONG_IDENTITY_METHODS, isKongIdentityIssuer } from './Aut
 import type { ComputedRef } from 'vue'
 import type { EntityCreateEvent, KonnectPluginFormConfig } from '../../../../types'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { OidcConfigSubset, OidcPrincipals, PrincipalsMode } from './types'
+import type { OidcConfigSubset, OidcPrincipals, OidcPrincipalsJit, PrincipalsMode } from './types'
 
 const MODE_KONG_IDENTITY = 'kong-identity'
 const MODE_EXTERNAL = 'external'
@@ -470,7 +470,30 @@ const isEditing = computed(() => isEditingRef?.value ?? false)
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // `<Field name="config.issuer">` and slot content rendered below this component.
-const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+
+// `config.principals.jit` is a required record, so the form always submits one with
+// `all_claims` prefilled: sharing every token claim is the intended starting point and
+// the user narrows it down by unchecking.
+//
+// Seeded here, not in PrincipalLookupSettings: that component is torn down and
+// recreated when the auth mode switches, so a setup-time prefill there re-applies over
+// the user's uncheck. This section survives the switch.
+//
+// A blank create never arrives with an empty record — the engine fills the model from
+// schema defaults first (`isSchemaDefaulted`), writing the schema's own
+// `all_claims: false` — so the prefill has to overwrite that fill. Host-supplied data
+// (edit, clone draft) is the user's: only a missing record is filled in, which is the
+// OIDC plugin saved before `jit` existed. Skipped while the version lock is on, where
+// both controls are disabled and a prefilled record would be config the user can't undo.
+if (getSchema('$.config.principals.jit') && !getFieldVersionInfo('$.config.principals.jit')
+  && formData.config?.principals
+  && (!formData.config.principals.jit || isSchemaDefaulted.value)) {
+  formData.config.principals.jit = {
+    ...getDefault('$.config.principals.jit') as OidcPrincipalsJit,
+    all_claims: true,
+  }
+}
 
 const issuer = computed<string | null>({
   get: () => formData.config?.issuer ?? null,

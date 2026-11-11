@@ -1623,6 +1623,23 @@ describe('OpenidConnectForm', () => {
       })
     })
 
+    // Switching the auth mode tears down and recreates the lookup settings, so a
+    // setup-time prefill in that component would re-apply over the user's choice.
+    it('keeps share-all-claims unchecked across an auth mode switch on create', () => {
+      mountPrincipalsForm({ withJit: true, model: {} })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit.all_claims).to.equal(false)
+      })
+    })
+
     it('prefills share-all-claims when the host draft carries no jit record', () => {
       mountPrincipalsForm({ withJit: true })
 
