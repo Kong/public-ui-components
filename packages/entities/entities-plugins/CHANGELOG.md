@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.1.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.1.0...%40kong-ui-public%2Fentities-plugins%4011.1.1) (2026-11-11)
+
+### Bug Fixes
+
+* **entities-plugins:** clear removed datakit resources and fix property names ([#3988](https://github.com/Kong/public-ui-components/issues/3988)) ([debe9d2](https://github.com/Kong/public-ui-components/commit/debe9d2dcf775ba63634cb1ef2fef1821586c762))
+* **entities-plugins:** drop removed parseGroupName from datakit helpers spec ([#4052](https://github.com/Kong/public-ui-components/issues/4052)) ([3776ec9](https://github.com/Kong/public-ui-components/commit/3776ec94ba6a0d8f500f1e79782edfbb6d06bd4b))
+
+
 # [11.1.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.0.12...%40kong-ui-public%2Fentities-plugins%4011.1.0) (2026-11-10)
 
 ### Features
