@@ -5,11 +5,10 @@ import {
   makeGroupName,
   mergeFlowChange,
   parseGroupId,
-  parseGroupName,
   parseNameConnection,
 } from './helpers'
 
-import type { ConfigNode, DatakitPluginData, GroupId, GroupName, NodeId, NodeName } from '../../types'
+import type { ConfigNode, DatakitPluginData, GroupId, NodeId, NodeName } from '../../types'
 
 describe('store helpers', () => {
   describe('generateNodeName', () => {
@@ -39,15 +38,17 @@ describe('store helpers', () => {
     })
   })
 
-  describe('group ids and names', () => {
-    it('round-trips ids and names, even when they contain colons', () => {
+  describe('group ids', () => {
+    it('round-trips ids, even when they contain colons', () => {
       expect(parseGroupId(makeGroupId('node:1' as NodeId, 'then'))).toEqual({ nodeId: 'node:1', branch: 'then' })
-      expect(parseGroupName(makeGroupName('BRANCH' as NodeName, 'else'))).toEqual({ nodeName: 'BRANCH', branch: 'else' })
+    })
+
+    it('builds group names as `<node name>:<branch>`', () => {
+      expect(makeGroupName('BRANCH' as NodeName, 'else')).toBe('BRANCH:else')
     })
 
     it('rejects malformed values', () => {
       expect(() => parseGroupId('node' as GroupId)).toThrow()
-      expect(() => parseGroupName('BRANCH' as GroupName)).toThrow()
     })
   })
 
