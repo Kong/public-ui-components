@@ -93,8 +93,8 @@ const PRINCIPALS_SCHEMA_FIELD = {
 // `config.principals.jit` as the gateway ships it: a required record whose
 // `claims` is unset (never `[]`, len_min is 1) and must stay unset while
 // `all_claims` is true. `min_ai_gateway_version` is the AI Gateway variant's
-// annotation — the same min_ai_gateway_version family credential_claims uses —
-// kept here so the version-gating path stays covered.
+// annotation — the same family credential_claims uses — which locks the fields
+// below 2.3; the gateway-manager view of the schema drops it.
 const JIT_SCHEMA_FIELD = {
   jit: {
     description: "Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with JIT provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.",
@@ -1539,6 +1539,12 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('principals-advanced-settings').findTestId('collapse-trigger-content').click()
     }
 
+    // The jit fields follow the principal lookup toggle, so anything that
+    // interacts with them mounts with lookup already on.
+    const lookupOnModel = (jit: Record<string, any> | null = null) => createPrincipalsModel({
+      principals: { ...DEFAULT_PRINCIPALS_MODEL, enabled: true, jit },
+    })
+
     it('renders in gateway-manager when the schema carries jit', () => {
       mountPrincipalsForm({ withJit: true })
 
@@ -1564,15 +1570,23 @@ describe('OpenidConnectForm', () => {
       })
     })
 
+    it('disables the fields while the principal lookup toggle is off', () => {
+      mountPrincipalsForm({ withJit: true })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('be.disabled')
+
+      cy.getTestId('use-principal-lookup').click({ force: true })
+      cy.getTestId('principals-jit-all-claims').should('not.be.disabled')
+    })
+
     it('renders the fields but disabled when the runtime is below 2.3', () => {
       mountPrincipalsForm({
         isEditing: true,
         withJit: true,
         aiManager: true,
         minRuntimeVersion: '2.2',
-        model: createPrincipalsModel({
-          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: null } },
-        }),
+        model: lookupOnModel({ all_claims: false, claims: null }),
       })
 
       expandSettings()
@@ -1586,9 +1600,7 @@ describe('OpenidConnectForm', () => {
         withJit: true,
         aiManager: true,
         minRuntimeVersion: '2.3',
-        model: createPrincipalsModel({
-          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: null } },
-        }),
+        model: lookupOnModel({ all_claims: false, claims: null }),
       })
 
       expandSettings()
@@ -1596,7 +1608,22 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('principals-jit-claims').should('not.be.disabled')
     })
 
-    it('prefills share-all-claims on create', () => {
+    // A real create hands the form no draft, so the engine fills the whole model
+    // from schema defaults first — including `jit: { all_claims: false }`. The
+    // prefill has to win over that fill, not just over a missing record.
+    it('prefills share-all-claims on a blank create, over the schema-default fill', () => {
+      mountPrincipalsForm({ withJit: true, model: {} })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('be.checked')
+      cy.getTestId('principals-jit-claims').should('not.exist')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
+      })
+    })
+
+    it('prefills share-all-claims when the host draft carries no jit record', () => {
       mountPrincipalsForm({ withJit: true })
 
       expandSettings()
@@ -1605,6 +1632,19 @@ describe('OpenidConnectForm', () => {
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
+      })
+    })
+
+    // Below 2.3 both controls are disabled, so a prefilled record would be
+    // config the user cannot undo on a runtime that does not understand it.
+    it('does not prefill while the version lock is on', () => {
+      mountPrincipalsForm({ withJit: true, aiManager: true, minRuntimeVersion: '2.2' })
+
+      expandSettings()
+      cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.equal(null)
       })
     })
 
@@ -1624,7 +1664,7 @@ describe('OpenidConnectForm', () => {
     })
 
     it('share-all-claims hides the claims input and nulls it in the payload, restoring it when unchecked', () => {
-      mountPrincipalsForm({ withJit: true })
+      mountPrincipalsForm({ withJit: true, model: lookupOnModel() })
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
@@ -1652,7 +1692,7 @@ describe('OpenidConnectForm', () => {
     })
 
     it('writes comma-separated claims as a string array and nulls them when cleared', () => {
-      mountPrincipalsForm({ withJit: true })
+      mountPrincipalsForm({ withJit: true, model: lookupOnModel() })
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
@@ -1673,9 +1713,7 @@ describe('OpenidConnectForm', () => {
       mountPrincipalsForm({
         isEditing: true,
         withJit: true,
-        model: createPrincipalsModel({
-          principals: { ...DEFAULT_PRINCIPALS_MODEL, jit: { all_claims: false, claims: ['email'] } },
-        }),
+        model: lookupOnModel({ all_claims: false, claims: ['email'] }),
       })
 
       expandSettings()

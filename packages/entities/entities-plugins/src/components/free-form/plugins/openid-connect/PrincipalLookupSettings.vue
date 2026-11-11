@@ -149,15 +149,9 @@
         </KCheckbox>
       </div>
 
-      <!-- principals.jit — rendered wherever the schema carries the record
-           (it rolls out on dev first, then everywhere), so both ai-manager and
-           gateway-manager show it. The record is required, so it has no on/off
-           switch: the form always submits one, seeded from the schema defaults.
-           Version-gated like every other min_ai_gateway_version field: below
-           2.3 the fields stay rendered but disabled on hosts that pin a runtime
-           version. Independent of the lookup toggle above: jit writes
-           principals from token claims rather than resolving them, so it is not
-           inert when lookup is off. -->
+      <!-- principals.jit — the claims are shared with the Kong Identity
+           principal lookup, so the fields follow the lookup toggle above and
+           the min_ai_gateway_version lock. -->
       <div
         v-if="showJitSettings"
         class="principals-field-group"
@@ -240,7 +234,7 @@ const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, unde
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // sibling advanced settings rendered in the default slot (e.g. OIDC auth methods).
-const { formData, getEmptyValue, getSchema, getDefault, getFieldVersionInfo } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 function usePrincipalsField<K extends keyof OidcPrincipals>(key: K) {
   return computed<OidcPrincipals[K] | undefined>({
@@ -260,6 +254,11 @@ const errorOnMiss = usePrincipalsField('error_on_miss')
 const matchConsumer = usePrincipalsField('match_consumer')
 const matchConsumerGroups = usePrincipalsField('match_consumer_groups')
 
+const lookupEnabled = computed(() => lookupEnabledValue.value === true)
+
+// Fields are inert when lookup is off.
+const fieldsDisabled = computed(() => props.disabled || !lookupEnabled.value)
+
 // ── JIT provisioning (config.principals.jit) ──────────────────────────────────
 
 // The record appears in the schema as it rolls out (dev first, then
@@ -268,28 +267,37 @@ const matchConsumerGroups = usePrincipalsField('match_consumer_groups')
 const jitSchema = computed(() => getSchema('$.config.principals.jit') as RecordFieldSchema | undefined)
 const showJitSettings = computed(() => !!jitSchema.value)
 
-// Version gating follows the min_ai_gateway_version family: below the
-// requirement (AI Gateway 2.3) the group stays rendered but disabled, with
-// the standard version tooltip. Fails open when the host pins no runtime
-// version (gateway-manager), matching every other annotated field.
+// Two gates, both shared with the fields above. The claims ride along with the
+// principal lookup, so they are inert when it is off; and the AI Gateway
+// schema tags the record with min_ai_gateway_version, which locks the fields
+// below 2.3 (fails open when the host pins no runtime version, like every
+// other annotated field).
 const jitVersionInfo = computed(() => getFieldVersionInfo('$.config.principals.jit'))
-const jitDisabled = computed(() => props.disabled || !!jitVersionInfo.value)
+const jitDisabled = computed(() => fieldsDisabled.value || !!jitVersionInfo.value)
 
-// The version-lock tooltip for the fields, as a label info icon. Undefined
-// unless the runtime is below 2.3, so an unlocked form shows no extra icon.
+// The version lock as a label info icon, since neither control owns a tooltip
+// of its own. Undefined unless the runtime is below 2.3.
 const jitVersionLabelAttributes = computed(() => jitVersionInfo.value
   ? { info: jitVersionInfo.value.tooltip, tooltipAttributes: { maxWidth: '300' } }
   : undefined)
 
-// The record is required, so there is no presence switch and the form always
-// submits one: seed it whenever the model carries none — on create, and on a
-// plugin saved before the record existed (where a null would be rejected).
-// `all_claims` is prefilled to true rather than to its schema default: sharing
-// every token claim is the intended starting point, and the user narrows it
-// down by unchecking. The rest of the record comes from the schema.
+// The record is required, so the form always submits one with `all_claims`
+// prefilled: sharing every token claim is the intended starting point and the
+// user narrows it down by unchecking.
+//
+// Two entry paths need it. A blank create never reaches here with an empty
+// record — the engine fills the whole model from schema defaults first
+// (`isSchemaDefaulted`), which writes the schema's own `all_claims: false` —
+// so the prefill overwrites that fill. A host-supplied model (edit, or a
+// draft) is the user's data: only a missing record is filled in, which is the
+// OIDC plugin saved before `jit` existed.
 // Runs once, on setup — later edits (including unchecking) stand.
+// Skipped while the version lock is on: below 2.3 both controls are disabled,
+// so a prefilled record would be config the user can't undo on a runtime that
+// doesn't understand it.
 const principalsRecord = formData.config?.principals
-if (showJitSettings.value && principalsRecord && !principalsRecord.jit) {
+if (showJitSettings.value && !jitVersionInfo.value && principalsRecord
+  && (!principalsRecord.jit || isSchemaDefaulted.value)) {
   principalsRecord.jit = {
     ...getDefault('$.config.principals.jit') as OidcPrincipalsJit,
     all_claims: true,
@@ -383,11 +391,6 @@ const hasValue = (value: unknown): boolean => {
 // (type=custom) lookup. A principal_claim on its own is just an OIDC lookup
 // against a non-`sub` claim, which is still the kong-identity method.
 const selectedLookupMethod = ref<string>(hasValue(principalBy.value) ? 'custom-identity' : 'kong-identity')
-
-const lookupEnabled = computed(() => lookupEnabledValue.value === true)
-
-// Fields are inert when lookup is off.
-const fieldsDisabled = computed(() => props.disabled || !lookupEnabled.value)
 
 // principal_claim is the value source in both modes (default `sub`), but in
 // custom-identity mode that value is matched against the Custom identity name,
