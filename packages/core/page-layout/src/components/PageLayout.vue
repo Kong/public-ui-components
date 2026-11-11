@@ -108,7 +108,7 @@
         </div>
       </div>
       <PageLayoutTabs
-        v-if="hasTabs && !isEmptyHeader()"
+        v-if="renderTabs()"
         :tabs="tabs"
       >
         <template
@@ -136,7 +136,7 @@
       </div>
 
       <div class="page-layout-content">
-        <router-view v-if="hasTabs" />
+        <router-view v-if="renderTabs()" />
         <slot
           v-else
           name="default"
@@ -201,6 +201,10 @@ const newAppearance = computed((): boolean => toValue(newAppearanceInjection) ==
 // teleport target. New appearance only. A function, like `hasTitle`, so the slot presence
 // is re-read at render time.
 const isEmptyHeader = (): boolean => newAppearance.value && !hasTitle() && !hasBreadcrumbs.value
+
+// Gates both the tab row and the router-view it enables: the two must switch together,
+// or an empty page would route to tab content with no tab bar to switch it with.
+const renderTabs = (): boolean => hasTabs.value && !isEmptyHeader()
 
 // The header carries either tabs or an anchor navigation bar, never both: tabs own the row they
 // render, and a page that declares both is treated as a tabbed page. The bar is part of the new

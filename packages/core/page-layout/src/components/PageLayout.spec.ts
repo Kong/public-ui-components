@@ -633,16 +633,26 @@ describe('<PageLayout />', () => {
         expect(wrapper.find('[data-teleport-target="ask-kai"]').exists()).toBe(true)
       })
 
-      it('does not render tabs or the anchor navigation bar in the empty state even when they are passed', () => {
+      it('drops the tab row and renders the default slot in the empty state even when tabs are passed', () => {
         const wrapper = mountWithRouter(PageLayout, {
-          props: {
-            tabs: [{ key: 'overview', label: 'Overview', to: '/overview' }],
-            anchors: [{ id: '#usage', label: 'Usage' }],
-          },
+          props: { tabs: [{ key: 'overview', label: 'Overview', to: '/overview' }] },
+          slots: { default: () => h('div', { 'data-testid': 'empty-state-content' }, 'Empty state') },
           global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
         })
 
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
         expect(wrapper.findTestId('page-layout-tabs').exists()).toBe(false)
+        // The router-view is gated with the tab row, so the default slot carries the page
+        expect(wrapper.getTestId('empty-state-content').text()).toBe('Empty state')
+      })
+
+      it('does not render the anchor navigation bar in the empty state even when anchors are passed', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { anchors: [{ id: '#usage', label: 'Usage' }] },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
         expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(false)
       })
 
