@@ -77,6 +77,20 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
    * are configured but a connected DP node can't process them.
    */
   dataPlaneVersions?: string[]
+  /**
+   * Loads the Kong Identity principals and groups the user can read, for value
+   * suggestions in plugin CEL expressions (`principal.id`, `principal.groups`,
+   * `principal.metadata`). The host app owns the Kong Identity API and its
+   * permission checks; return empty lists for what the user cannot read.
+   * Consumers and Consumer Groups are loaded by the form itself.
+   */
+  getCelIdentitySubjects?: () => Promise<CelIdentitySubjects>
+}
+
+/** Kong Identity records that plugin CEL expressions can name. */
+export interface CelIdentitySubjects {
+  principals?: ReadonlyArray<{ id: string, display_name?: string | null, metadata?: Readonly<Record<string, unknown>> | null }>
+  principalGroups?: ReadonlyArray<{ id: string, name: string }>
 }
 
 /** Kong Manager Plugin form config */

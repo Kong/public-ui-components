@@ -105,6 +105,7 @@ const featureFlags = ref<Record<string, boolean>>({
   [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
   [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
   [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+  [FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR]: true,
 })
 
 const FeatureFlagProvider = defineComponent({
@@ -141,6 +142,15 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   // isKongIdentityAuthServersAvailable: false,
   canCreateAuthServer: false,
+  // Sample Kong Identity records for CEL value suggestions. A host app loads these
+  // from the Kong Identity API after its own permission checks.
+  getCelIdentitySubjects: async () => ({
+    principals: [
+      { id: '7f0c5c6a-1d1e-4b8a-9a52-2f7e3c1a0b11', display_name: 'Ada Lovelace', metadata: { team: 'ai', tier: 'gold' } },
+      { id: '2b9e4d3f-8c6a-4f1b-b0e2-5d7a9c3e1f22', display_name: 'Alan Turing', metadata: { team: 'core' } },
+    ],
+    principalGroups: [{ id: 'c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e55', name: 'Platform admins' }],
+  }),
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {

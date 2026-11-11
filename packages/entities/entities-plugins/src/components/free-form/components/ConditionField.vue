@@ -19,7 +19,8 @@
       </div>
     </KLabel>
 
-    <StringField
+    <component
+      :is="celCondition ? CelField : StringField"
       :input-id="conditionFieldId"
       :label="''"
       name="condition"
@@ -37,19 +38,21 @@
           </template>
         </i18nT>
       </template>
-    </StringField>
+    </component>
   </div>
 </template>
 
 <script setup lang="ts">
 import { KTooltip } from '@kong/kongponents'
 import { InfoIcon } from '@kong/icons'
-import { useId } from 'vue'
-import { StringField } from '@kong-ui-public/freeform'
+import { computed, inject, useId } from 'vue'
+import { CelField, StringField } from '@kong-ui-public/freeform'
+import { CEL_CONDITION_KEY } from '../../../constants'
 import externalLinks from '../../../external-links'
 import useI18n from '../../../composables/useI18n'
 
 const conditionFieldId = useId()
+const celCondition = inject(CEL_CONDITION_KEY, computed(() => false))
 const { i18n: { t }, i18nT } = useI18n()
 </script>
 

@@ -31,6 +31,18 @@
         />
       </FieldRenderer>
 
+      <!-- ACL rules of any plugin (acl lays its own out; ai-mcp-proxy's go here) are CEL. -->
+      <FieldRenderer
+        v-if="celEditorEnabled"
+        v-slot="slotProps"
+        :match="({ genericPath }) => CEL_ACL_ITEM.test(genericPath)"
+      >
+        <CelField
+          v-bind="slotProps"
+          :rows="2"
+        />
+      </FieldRenderer>
+
       <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
         <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
       </FieldRenderer>
@@ -56,11 +68,13 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 
 <script setup lang="ts" generic="T extends Record<string, any>">
 import '@kong-ui-public/freeform/style.css'
-import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, inject, unref, useAttrs, useId, useTemplateRef } from 'vue'
+import type { MaybeRef } from 'vue'
 import { pick } from 'lodash-es'
-import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
+import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, CelField, useSchemaExposer } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
+import { FEATURE_FLAGS } from '../../../constants'
 import RedisSelector from './RedisSelector.vue'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
 
@@ -77,6 +91,10 @@ const instanceId = useId()
 const formRef = useTemplateRef('form')
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO, undefined)
+
+/** An item of an `allow_when`/`deny_when` array. */
+const CEL_ACL_ITEM = /(?:^|\.)(?:allow|deny)_when\.\*$/
+const celEditorEnabled = unref(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false))
 
 const configFieldRenderers = computed<FieldRendererRule[]>(() => props.fieldRenderers ?? [])
 
