@@ -68,7 +68,7 @@ export const curlExtractor: ConfigExtractor = {
       return null
     }
 
-    // Match --data or -d followed by a quoted string (single or double quotes)
+    // Match --data, --data-raw, --data-binary or -d followed by a quoted string (single or double quotes)
     // Handles escaped quotes within the string.
     // Examples:
     //   curl ... --data '{"name": "datakit"}'
@@ -76,7 +76,7 @@ export const curlExtractor: ConfigExtractor = {
     // Group 1: Content inside single quotes
     // Group 2: Content inside double quotes
     const dataMatch = content.match(
-      /(?:--data|-d)\s+(?:'((?:[^'\\]|\\[\s\S])*)'|"((?:[^"\\]|\\[\s\S])*)")/,
+      /(?:--data(?:-raw|-binary)?|-d)\s+(?:'((?:[^'\\]|\\[\s\S])*)'|"((?:[^"\\]|\\[\s\S])*)")/,
     )
     if (!dataMatch) {
       return null
