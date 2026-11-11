@@ -9,6 +9,7 @@ A config card component for routes.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [RouteConfigCardView](#routeconfigcardview)
 
 ## Requirements
 
@@ -125,3 +126,32 @@ import type {
   KonnectRouteEntityConfig,
   KongManagerRouteEntityConfig,
 } from '@kong-ui-public/entities-routes'
+```
+
+## RouteConfigCardView
+
+`RouteConfigCardView` displays an already loaded Route record with the same presentation as `RouteConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { RouteConfigCardView } from '@kong-ui-public/entities-routes'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Route record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `service` | `{ id: string, name?: string, loading?: boolean }` | `undefined` | Display state of the referenced Service. Without it, the ID from `record.service` is shown. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits `navigation-click` (`id`, `'services'`).
+
+```vue
+<RouteConfigCardView
+  v-if="record"
+  :record="record"
+/>
+```

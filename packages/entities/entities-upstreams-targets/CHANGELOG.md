@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-upstreams-targets%403.18.12...%40kong-ui-public%2Fentities-upstreams-targets%403.19.0) (2026-11-10)
+
+### Features
+
+* **entities:** add standard configuration card views [KM-3575] ([#4045](https://github.com/Kong/public-ui-components/issues/4045)) ([5e81459](https://github.com/Kong/public-ui-components/commit/5e8145955fde715cecc7c4730ea91d0853afa4e1))
+
+
+## [3.18.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-upstreams-targets%403.18.11...%40kong-ui-public%2Fentities-upstreams-targets%403.18.12) (2026-11-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
 ## [3.18.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-upstreams-targets%403.18.10...%40kong-ui-public%2Fentities-upstreams-targets%403.18.11) (2026-11-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

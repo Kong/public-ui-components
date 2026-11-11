@@ -4,7 +4,7 @@
       :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
-      :config-schema="(configSchema as any)"
+      :config-schema="configSchema"
       :entity-type="SupportedEntityType.Certificate"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
@@ -136,13 +136,13 @@
 </template>
 
 <script setup lang="ts">
+import { createCertificateConfigCardSchema } from './certificate-config-card-schema'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, CertificateConfigurationSchema, EntityRow } from '../types'
+import type { KongManagerCertificateEntityConfig, KonnectCertificateEntityConfig, EntityRow } from '../types'
 import {
   EntityBaseConfigCard,
-  ConfigurationSchemaSection,
   ConfigurationSchemaType,
   ConfigCardItem,
   SupportedEntityType,
@@ -199,65 +199,7 @@ const { getCertificateData } = composables.useCertificate()
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 const record = ref<EntityRow>()
 
-const configSchema = ref<CertificateConfigurationSchema>({
-  // basic fields
-  id: {},
-  cert: {
-    section: ConfigurationSchemaSection.Basic,
-  },
-  key: {
-    section: ConfigurationSchemaSection.Basic,
-    type: ConfigurationSchemaType.Redacted,
-  },
-  metadata: {
-    section: ConfigurationSchemaSection.Basic,
-    type: ConfigurationSchemaType.Json,
-  },
-  snis: {
-    section: ConfigurationSchemaSection.Basic,
-    type: ConfigurationSchemaType.BadgeTag,
-    label: t('certificates.list.table_headers.snis'),
-  },
-  updated_at: {},
-  created_at: {},
-  tags: {
-    tooltip: t('certificates.form.fields.tags.tooltip'),
-  },
-  ...(props.config.app === 'kongManager' && {
-    expiry: {
-      section: ConfigurationSchemaSection.Basic,
-      label: t('certificates.list.table_headers.expiry'),
-      // @ts-ignore TODO: Confirm if this is correct
-      forceShow: true,
-    },
-    issuer: {
-      section: ConfigurationSchemaSection.Basic,
-      label: t('certificates.list.table_headers.issuer'),
-      forceShow: true,
-    },
-    san_names: {
-      section: ConfigurationSchemaSection.Basic,
-      label: t('certificates.list.table_headers.san'),
-      forceShow: true,
-    },
-    subject: {
-      section: ConfigurationSchemaSection.Basic,
-      label: t('certificates.list.table_headers.subject'),
-      forceShow: true,
-    },
-    key_usages: {
-      forceShow: true,
-    },
-  }),
-  // advanced fields
-  cert_alt: {
-    section: ConfigurationSchemaSection.Advanced,
-  },
-  key_alt: {
-    section: ConfigurationSchemaSection.Advanced,
-    type: ConfigurationSchemaType.Redacted,
-  },
-})
+const configSchema = createCertificateConfigCardSchema(t, props.config.app === 'kongManager')
 
 // because we need record data to parse cert data, assign it to local ref
 const handleFetch = (entity: Record<string, any>) => {
@@ -315,7 +257,7 @@ const getMetadataLabel = (propKey: string) => {
   }
 
   // @ts-ignore - TODO: Fix type interface
-  return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
+  return configSchema[propKey]?.label || convertKeyToTitle(propKey)
 }
 
 </script>

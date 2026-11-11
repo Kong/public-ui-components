@@ -54,7 +54,7 @@
 import { computed, inject, onMounted, ref } from 'vue'
 import { get } from 'lodash-es'
 import type { SelectItem } from '@kong/kongponents'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import { useAxios, type KonnectBaseFormConfig, type KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { EnumField, useFormShared } from '@kong-ui-public/freeform'
 import useI18n from '../../../../composables/useI18n'

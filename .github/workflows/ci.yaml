@@ -187,20 +187,18 @@ jobs:
             echo "${out# }"
           }
 
-          # JSON array of the given strings, or nothing at all when there are none
-          jsonArray() {
-            if [[ $# -gt 0 ]]; then
-              jq -cn '$ARGS.positional' --args "$@"
-            fi
-          }
-
           filter=$(selectors './' '' "${changedPkgs[@]}")
           # `...{<path>}...` selects the package together with its dependencies and dependents
           buildFilter=$(selectors '...{./' '}...' "${changedPkgs[@]}")
           unitTestFilter=$(selectors './' '' "${unitTestPkgs[@]}")
 
-          # matrix in the format json.parse understands
-          componentTestMatrix=$(jsonArray "${componentTestPkgs[@]}")
+          # One package is one job as long as it stays within the spec budget. Bigger packages
+          # are split, so a single package can no longer monopolise the critical path.
+          # See scripts/componentTestMatrix.mjs for the splitting rules.
+          componentTestMatrix=""
+          if [[ ${#componentTestPkgs[@]} -gt 0 ]]; then
+            componentTestMatrix=$(node scripts/componentTestMatrix.mjs "${componentTestPkgs[@]}")
+          fi
 
           echo "filter=${filter}"
           echo "buildFilter=${buildFilter}"
@@ -321,7 +319,7 @@ jobs:
           path: packages/*/*/dist
 
   component-tests:
-    name: Component tests
+    name: Component tests (${{ matrix.container.name }})
     needs: [build]
     runs-on: ubuntu-latest
     if: ${{ needs.build.outputs.componentTestMatrix != ''}}
@@ -352,23 +350,16 @@ jobs:
         uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
         with:
           install: false
-          command: pnpm run test:component:ci --spec ${{ matrix.container }}
-
-      - name: Normalize test results artifact name
-        continue-on-error: true
-        if: failure()
-        id: normalize-name
-        shell: bash
-        run: |
-          packageName=$(echo ${{ matrix.container }} | sed 's/\//-/g')
-          echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
+          # cypress-io/github-action splits `command` on whitespace instead of running it
+          # through a shell, so quotes around the spec list would reach Cypress verbatim.
+          command: pnpm run test:component:ci --spec ${{ matrix.container.spec }}
 
       - name: Upload Component Test Results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         continue-on-error: true
         if: failure()
         with:
-          name: ${{ steps.normalize-name.outputs.artifactName }}
+          name: component-test-failures-${{ matrix.container.id }}
           path: |
             cypress/videos/
             cypress/screenshots/

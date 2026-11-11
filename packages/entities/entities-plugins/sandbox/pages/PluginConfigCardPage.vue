@@ -12,6 +12,14 @@
       />
     </template>
 
+    <h2>Record-driven plugin with externally supplied schema and service name</h2>
+    <PluginConfigCardView
+      :record="{ id: 'example', name: 'key-auth', service: { id: 'service' }, config: { key_names: ['apikey'] } }"
+      :reference-entities="{ service: { id: 'service', name: 'Already loaded service' } }"
+      :schema="{ fields: [{ config: { type: 'record', fields: [{ key_names: { type: 'array', elements: { type: 'string' } } }] } }] }"
+      show-name-as-link
+    />
+
     <h2>Konnect API</h2>
     <PluginConfigCard
       :config="konnectConfig"
@@ -36,7 +44,7 @@ import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
-import { PluginConfigCard } from '../../src'
+import { PluginConfigCard, PluginConfigCardView } from '../../src'
 
 const props = defineProps({
   /** Grab the Plugin type & id from the route params */

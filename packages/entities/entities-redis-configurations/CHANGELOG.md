@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.22.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.21.18...%40kong-ui-public%2Fentities-redis-configurations%401.22.0) (2026-11-10)
+
+### Features
+
+* **entities:** add specialized configuration card views [KM-3575] ([#3999](https://github.com/Kong/public-ui-components/issues/3999)) ([a1e985a](https://github.com/Kong/public-ui-components/commit/a1e985acd776966b9eb28c32bf514b476587a6b9))
+
+
+## [1.21.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.21.17...%40kong-ui-public%2Fentities-redis-configurations%401.21.18) (2026-11-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
 ## [1.21.17](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.21.16...%40kong-ui-public%2Fentities-redis-configurations%401.21.17) (2026-11-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

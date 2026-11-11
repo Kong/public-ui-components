@@ -1,3 +1,4 @@
+import RedisConfigurationConfigCardView from './components/RedisConfigurationConfigCardView.vue'
 import RedisConfigurationForm from './components/RedisConfigurationForm.vue'
 import RedisConfigurationList from './components/RedisConfigurationList.vue'
 import RedisConfigurationConfigCard from './components/RedisConfigurationConfigCard.vue'
@@ -42,3 +43,5 @@ export const composables = {
   useLinkedPluginsFetcher,
   useRedisConfigurationSelector,
 }
+
+export { RedisConfigurationConfigCardView }

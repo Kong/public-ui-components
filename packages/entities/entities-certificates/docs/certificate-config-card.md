@@ -9,6 +9,7 @@ A form component for Certificate.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [CertificateConfigCardView](#certificateconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,33 @@ import type {
   KonnectCertificateEntityConfig,
   KongManagerCertificateEntityConfig,
 } from '@kong-ui-public/entities-certificates'
+```
+
+## CertificateConfigCardView
+
+`CertificateConfigCardView` displays an already loaded Certificate record with the same presentation as `CertificateConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { CertificateConfigCardView } from '@kong-ui-public/entities-certificates'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Certificate record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+Certificate metadata is parsed locally from the record. With `config.app: 'kongManager'`, the locally parsed metadata fields are shown.
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<CertificateConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

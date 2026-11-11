@@ -7,6 +7,7 @@ import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { createPinia, setActivePinia } from 'pinia'
+import { h } from 'vue'
 
 function mouseMove({
   x1,
@@ -177,6 +178,40 @@ describe('<AnalyticsChart />', () => {
     setActivePinia(createPinia())
     cy.stub(composables, 'useEvaluateFeatureFlag').returns({
       evaluateFeatureFlag: () => false,
+    })
+  })
+
+  it('fits two rows of legend items in the space the chart reserves for the legend', () => {
+    const statusCodes = Array.from({ length: 14 }, (_, i) => String(200 + i))
+    const chartData = {
+      data: ['2024-02-05T22:00:00.000Z', '2024-02-05T23:00:00.000Z'].flatMap(timestamp =>
+        statusCodes.map((statusCode, i) => ({ timestamp, event: { status_code: statusCode, request_count: 1000 + i } })),
+      ),
+      meta: {
+        ...exploreResult.meta,
+        display: { status_code: Object.fromEntries(statusCodes.map(code => [code, { name: code }])) },
+      },
+    } as unknown as ExploreResultV4
+
+    // A fixed size like a dashboard tile: narrow enough that the legend wraps onto a second row,
+    // and a fixed height so the legend only gets the space the chart reserves for it.
+    cy.mount(() => h('div', { style: { width: '560px', height: '300px' } }, [
+      h(AnalyticsChart, {
+        chartData,
+        chartOptions: { type: 'timeseries_line', stacked: true, fill: false, granularity: 'hourly' },
+        tooltipTitle: 'Tooltip Title',
+      }),
+    ]), {
+      global: { provide: { [INJECT_QUERY_PROVIDER]: mockQueryProvider } },
+    })
+
+    cy.getTestId('legend').should(($legend) => {
+      const legend = $legend[0]
+      const rowTops = new Set([...legend.children].map(item => (item as HTMLElement).offsetTop))
+
+      expect(rowTops.size, 'legend rows').to.equal(2)
+      // Taller content scrolls inside the legend and cuts off the second row.
+      expect(legend.scrollHeight, 'legend content height').to.be.at.most(legend.clientHeight)
     })
   })
 
@@ -490,6 +525,31 @@ describe('<AnalyticsChart />', () => {
       })
 
     cy.get('.tooltip-container .square-marker').should('have.length', 2)
+  })
+
+  it('appears at its first position instead of flying in from the viewport origin', () => {
+    // A chart's first tooltip has no measured size yet, so its first position is NaN.
+    cy.mount(ChartTooltip, {
+      props: {
+        state: {
+          showTooltip: true,
+          interactionMode: 'idle',
+          tooltipSeries: [{ backgroundColor: 'rgb(10, 10, 10)', borderColor: 'rgb(0, 0, 0)', label: 'v1', value: '1' }],
+        },
+        tooltipTitle: 'Requests count',
+        absoluteLeft: 'NaNpx',
+        absoluteTop: 'NaNpx',
+      },
+    }).then(({ wrapper }) => {
+      cy.get('.tooltip-container').should('exist').and('not.be.visible')
+
+      cy.then(() => wrapper.setProps({ absoluteLeft: '300px', absoluteTop: '200px' }))
+      cy.get('.tooltip-container').should('be.visible').then(($tooltip) => {
+        // Read once, without retries: a tooltip that transitions in from (0, 0) is still on its way here.
+        const { e: left, f: top } = new DOMMatrix(getComputedStyle($tooltip[0]).transform)
+        expect([left, top]).to.deep.equal([300, 200])
+      })
+    })
   })
 
   it('updates an open chart tooltip when the metric changes externally', () => {

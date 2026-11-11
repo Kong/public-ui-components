@@ -97,12 +97,12 @@ export const isKongIdentityIssuer = (issuer: unknown): boolean =>
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { KCheckbox, KInputSwitch, KLabel, KMultiselect, KRadio } from '@kong/kongponents'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '@kong-ui-public/freeform'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 import type { OidcConfigSubset, PrincipalsMode } from './types'
 
 const props = defineProps<{

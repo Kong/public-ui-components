@@ -39,20 +39,6 @@ export const PluginGroupArraySortedAlphabetically = [
 
 // this is the entity associated with a specific plugin, if no associated entity, then it's a global plugin meaning EntityType will be 'plugins'
 export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups' | 'plugins'
-export enum EntityTypeIdField {
-  SERVICE = 'service_id',
-  ROUTE = 'route_id',
-  CONSUMER = 'consumer_id',
-  CONSUMER_GROUP = 'consumer_group_id',
-}
-
-export interface PluginEntityInfo {
-  entity: PluginScope
-  entityEndpoint: EntityType
-  id?: string
-  idField?: EntityTypeIdField
-}
-
 /**
  * Rules for fields in a plugin entity.
  * See `entity_checks` in BE schemas to learn more.
@@ -153,10 +139,6 @@ export type DisabledPlugin = {
 
 export type PluginCardList = {
   [key in PluginGroup | PluginFeatured]?: PluginType[];
-}
-
-export type TriggerLabels = {
-  [key in PluginGroup]?: string // [plugin.group]: label
 }
 
 export type PluginOrdering = {

@@ -1,5 +1,5 @@
 import { computed, h } from 'vue'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../free-form/const'
 import { Form } from '@kong-ui-public/freeform'
 import type { FormSchema } from '@kong-ui-public/freeform'
 import ConfigFormContent from './ConfigFormContent.vue'

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.73.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.72.2...%40kong-ui-public%2Fentities-shared%403.73.0) (2026-11-10)
+
+### Features
+
+* **entities-shared:** extract the record-driven config card view [KM-3575] ([#4044](https://github.com/Kong/public-ui-components/issues/4044)) ([7f32ad1](https://github.com/Kong/public-ui-components/commit/7f32ad159c95933880b8d258f231a37cff8fa074))
+
+
+## [3.72.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.72.1...%40kong-ui-public%2Fentities-shared%403.72.2) (2026-11-10)
+
+### Bug Fixes
+
+* **datakit:** code editor examples buttons ([#4040](https://github.com/Kong/public-ui-components/issues/4040)) ([0ba8d12](https://github.com/Kong/public-ui-components/commit/0ba8d120750a706a70bc49db0036129e1f205db0))
+
+
 ## [3.72.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.72.0...%40kong-ui-public%2Fentities-shared%403.72.1) (2026-11-05)
 
 ### Bug Fixes

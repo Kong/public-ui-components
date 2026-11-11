@@ -9,6 +9,7 @@ A config card component for Vaults.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [VaultConfigCardView](#vaultconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,34 @@ import type {
  KonnectVaultEntityConfig,
  KongManagerVaultEntityConfig,
 } from '@kong-ui-public/entities-vaults'
+```
+
+## VaultConfigCardView
+
+`VaultConfigCardView` displays an already loaded Vault record with the same presentation as `VaultConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { VaultConfigCardView } from '@kong-ui-public/entities-vaults'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Vault record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+| `apiType` | `'gateway' \| 'aiGateway'` | `'gateway'` | API that returned the record. AI Gateway records are mapped to gateway field names, and Terraform/decK are hidden. |
+
+Sensitive config values are always masked, including in code formats.
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<VaultConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

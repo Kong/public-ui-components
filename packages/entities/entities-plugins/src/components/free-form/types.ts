@@ -1,6 +1,30 @@
 import type { FormConfig, FieldRendererRule, RenderRules, FormSchema } from '@kong-ui-public/freeform'
-import type { FreeFormPluginData } from '../../types/plugins/free-form'
-import type { Component, Ref } from 'vue'
+import type { Component, Ref, Slot } from 'vue'
+import type { SelectItem } from '@kong/kongponents'
+
+export type FreeFormPluginData<
+  TConfig extends Record<string, any> = any,
+  TUIData extends Record<string, any> = Record<string, any>,
+> = {
+  config?: TConfig
+  /**
+   * Expression twins of the `expressible` fields in `config`, mirroring its
+   * structure. A root-level sibling of `config`, not part of it.
+   */
+  expressions?: Record<string, any> | null
+  instance_name?: string
+  condition?: string | null
+  partials?: Array<{ id: string, path?: string }> | null
+  protocols?: string[]
+  __ui_data?: TUIData
+  consumer_group?: { id: string } | null
+  consumer?: { id: string } | null
+  enabled?: boolean
+  name?: string
+  route?: { id: string } | null
+  service?: { id: string } | null
+  tags?: string[]
+}
 
 // TODO: check lua_schema type
 export interface Field {
@@ -82,11 +106,6 @@ export type PartialInfo = {
   redisType: Ref<RedisPartialType | undefined>
   redisPath: Ref<string | undefined>
   isEditing: boolean
-}
-
-export type PartialNotification = {
-  message: string
-  appearance: string
 }
 
 export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<string, any>> = {
@@ -213,3 +232,31 @@ type RuleBasedConfig = {
 }
 
 export type PluginFormConfig = ComponentBasedConfig | RuleBasedConfig
+
+export interface AutofillSlotProps {
+  schema: Record<string, any>
+  value: any
+  update: (value: any) => void
+  /**
+   * Set when the host field is disabled (e.g. by freeform's version
+   * compatibility check) — the autofill/vault-picker UI should not be
+   * interactive while this is true.
+   */
+  disabled?: boolean
+}
+
+export type AutofillSlot = Slot<AutofillSlotProps>
+
+/** A Kong entity, e.g. a Gateway Service */
+export interface EntityData {
+  [key: string]: any
+  id: string
+}
+
+export interface EntityResponse {
+  data: EntityData[]
+  next?: string
+  offset?: string
+}
+
+export type EntityItemTransformer = (item: EntityData) => SelectItem<string>

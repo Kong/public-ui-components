@@ -21,6 +21,7 @@ Key entity components.
 - `KeyList`
 - `KeyForm`
 - `KeyConfigCard`
+- `KeyConfigCardView`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -48,3 +49,4 @@ import '@kong-ui-public/entities-keys/dist/style.css'
 - [`<KeyList.vue />`](docs/key-list.md)
 - [`<KeyForm.vue />`](docs/key-form.md)
 - [`<KeyConfigCard.vue />`](docs/key-config-card.md)
+- [`<KeyConfigCardView />`](docs/key-config-card.md#keyconfigcardview) — display an already loaded record.

@@ -82,7 +82,7 @@ import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KCollapse, KSegmentedControl, KTooltip } from '@kong/kongponents'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 

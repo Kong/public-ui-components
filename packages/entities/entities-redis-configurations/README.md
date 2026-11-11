@@ -50,3 +50,4 @@ import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 ```
+- [`<RedisConfigurationConfigCardView />`](docs/redis-configuration-config-card.md#redisconfigurationconfigcardview) — display an already loaded record.

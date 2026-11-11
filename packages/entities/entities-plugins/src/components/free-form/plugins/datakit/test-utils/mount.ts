@@ -1,5 +1,5 @@
 import { defineComponent, h } from 'vue'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../../const'
 import { provideEditorStore } from '../flow-editor/store/store'
 
 import type { Component } from 'vue'

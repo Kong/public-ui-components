@@ -9,6 +9,7 @@ A config card component for consumer groups.
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
+- [ConsumerGroupConfigCardView](#consumergroupconfigcardview)
 
 ## Requirements
 
@@ -113,4 +114,31 @@ import type {
   KonnectConsumerGroupEntityConfig,
   KongManagerConsumerGroupEntityConfig,
 } from '@kong-ui-public/entities-consumer-groups'
+```
+
+## ConsumerGroupConfigCardView
+
+`ConsumerGroupConfigCardView` displays an already loaded Consumer Group record with the same presentation as `ConsumerGroupConfigCard`, without making any requests. The host loads the record, handles loading and errors, and mounts the View once the record is available.
+
+```ts
+import { ConsumerGroupConfigCardView } from '@kong-ui-public/entities-consumer-groups'
+```
+
+### View props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `record` | `Record<string, any>` | Required | The Consumer Group record, unwrapped from the HTTP response. |
+| `config` | `EntityConfigCardViewConfig` | `{}` | Presentation and export context. See [`EntityConfigCardView`](../../entities-shared/docs/entity-config-card-view.md#config). |
+| `hideTitle` | `boolean` | `false` | Hide the card title. |
+
+### View slots and events
+
+The View accepts `title` and `actions` slots. It emits no events.
+
+```vue
+<ConsumerGroupConfigCardView
+  v-if="record"
+  :record="record"
+/>
 ```

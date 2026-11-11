@@ -50,26 +50,16 @@ import {
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
-import {
-  AUTOFILL_SLOT_NAME,
-  FORMS_API_KEY,
-  FORMS_CONFIG,
-  REDIS_CREATE_SLIDEOUT,
-  type AutofillSlotProps,
-} from '@kong-ui-public/forms'
-import '@kong-ui-public/forms/dist/style.css'
-import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
-import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
-import { useToaster } from '../composables/useToaster'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
-import type { FreeFormPluginData } from '../types/plugins/free-form'
+import type { FreeFormPluginData } from './free-form/types'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
-import type { PluginScopeOptions } from './free-form/types'
+import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
+import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -172,7 +162,7 @@ const mapControlPlane = (url: string) => {
   return urlString.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 }
 
-// define endpoints for use by KFG
+// Entity API for the scope entity select
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
   url = mapControlPlane(url)
@@ -183,7 +173,6 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 
   return url
 }
-// define endpoints for use by KFG
 const buildGetAllUrl = (entityType: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
@@ -204,42 +193,6 @@ const getOne = (entityType: string, entityId: string, axiosOptions?: AxiosReques
   const url = buildGetOneUrl(entityType, entityId)
 
   return axiosInstance.get(url, axiosOptions)
-}
-
-/**
- * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
- * @returns {Promise<import('axios').AxiosResponse<T>>}
- */
-const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
-  const url = buildGetAllUrl(entityType)
-
-  // Currently hardcoded to fetch 1000 records, and filter
-  // client side. If more than 1000 records, this won't work
-  if (props.config.app === 'konnect') {
-    return axiosInstance.get(url).then(res => {
-      const { data: { data } } = res
-
-      delete params.size
-      delete params.offset
-
-      if (data.length && Object.keys(params).length === 1) {
-        const queryKey = Object.keys(params)[0]
-        const filteredData = data.filter((instance: Record<string, any>) => {
-          if (instance[queryKey]) {
-            return !!instance[queryKey].toLowerCase().includes(params[queryKey].toLowerCase())
-          }
-
-          return false
-        })
-
-        res.data.data = filteredData
-      }
-
-      return res
-    })
-  }
-
-  return axiosInstance.get(url, { params })
 }
 
 const getAllV2 = (entityType: string, params: AxiosRequestConfig['params'], signal: AbortSignal): Promise<AxiosResponse> => {
@@ -306,10 +259,8 @@ const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => 
   })
 }
 
-// provide to KFG
 provide(FORMS_API_KEY, {
   getOne,
-  getAll,
   getAllV2,
   peek,
 })
@@ -323,12 +274,6 @@ watch(() => props.config, (newConfig) => {
   Object.assign(liveConfig, newConfig)
 })
 provide(FORMS_CONFIG, liveConfig)
-
-const toaster = useToaster()
-provide(REDIS_CREATE_SLIDEOUT, {
-  component: markRaw(RedisConfigurationFormSlideout),
-  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
-})
 
 // For cloned plugins, use the source plugin name for rendering decisions
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)

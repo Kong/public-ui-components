@@ -166,7 +166,7 @@ const legendEntries = computed(() => props.items.map((item) => ({
   display: flex;
   flex-grow: 1; // we want to push the chart up, so this takes all remaining space
   flex-wrap: wrap;
-  // Same gap as KFilterGroup pills, so a hover fill or focus ring never reaches the next item.
+  // Same gap as KFilterGroup pills. Each item's hover fill covers half of it (see .legend-item), so neighboring fills meet but never overlap.
   gap: var(--kui-space-40, $kui-space-40);
   justify-content: center;
   margin: 0 0 0 0;
@@ -205,8 +205,10 @@ const legendEntries = computed(() => props.items.map((item) => ({
       display: flex;
       font: inherit;
       line-height: inherit;
-      margin: 0;
-      padding: var(--kui-space-20, $kui-space-20) var(--kui-space-30, $kui-space-30);
+      // The negative margin cancels the padding in layout: the hover fill extends into the gap, and items take
+      // the same space as plain text. The chart reserves room for two rows of legend, and padding would push one out.
+      margin: calc(-1 * var(--kui-space-20, $kui-space-20));
+      padding: var(--kui-space-20, $kui-space-20);
       transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out, box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     }
 

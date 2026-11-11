@@ -225,7 +225,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { FEATURE_FLAGS } from '../../../constants'
 import { SwitchField, Field, StringArrayField, StringField, EXPRESSIONS_FIELD } from '@kong-ui-public/freeform'
 import type { FormSchema } from '@kong-ui-public/freeform'
-import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../types'
 import ScopeEntityField from '../components/ScopeEntityField.vue'
 import CodeEditor from '../components/CodeEditor.vue'
 import ConditionField from '../components/ConditionField.vue'
@@ -428,7 +428,7 @@ const freeFormFieldNames = computed(() =>
 
 /**
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
- * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
+ * freeform would pass these unknown values back through the update method, and they would end up in the submitted payload
  */
 const prunedData = computed(() => {
   return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>

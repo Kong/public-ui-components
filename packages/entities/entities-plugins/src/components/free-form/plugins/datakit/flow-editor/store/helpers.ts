@@ -202,16 +202,6 @@ export function makeGroupName(nodeName: NodeName, branch: BranchName): GroupName
   return `${nodeName}:${branch}` as GroupName
 }
 
-export function parseGroupName(name: GroupName): { nodeName: NodeName, branch: BranchName } {
-  const lastColon = name.lastIndexOf(':')
-  if (lastColon === -1) {
-    throw new Error(`Invalid group name format: ${name}`)
-  }
-  const nodeName = name.slice(0, lastColon) as NodeName
-  const branch = name.slice(lastColon + 1) as BranchName
-  return { nodeName, branch }
-}
-
 export function toGroupInstance(
   nodeId: NodeId,
   branch: BranchName,
@@ -245,7 +235,13 @@ export function mergeFlowChange(
   partialId?: string,
 ): DatakitPluginData {
   const nextConfig = { ...formData.config, nodes: configNodes }
-  if (resources !== undefined) nextConfig.resources = resources
+  if (resources !== undefined) {
+    nextConfig.resources = resources
+  } else if (nextConfig.resources) {
+    // All resources were removed in the editor. Clear them with null, because the plugin entity
+    // form **merges** free-form data and VFG data, so a missing field won't clear existing resources.
+    nextConfig.resources = null
+  }
   const nextUIData: DatakitUIData = {
     ...formData.__ui_data,
     ...uiData,
@@ -258,8 +254,8 @@ export function mergeFlowChange(
   if (partialId != null) {
     nextFormData.partials = [{ id: partialId }]
   } else if (nextFormData.partials) {
-    // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
-    // so undefined won't clear existing partials. Intentionally NOT
+    // clear partials by setting to null, an omitted field doesn't clear existing partials
+    // (e.g. Kong Manager saves with PATCH). Intentionally NOT
     // `FormConfig.emptyFieldValue`-aware, for the same reason.
     nextFormData.partials = null
   }

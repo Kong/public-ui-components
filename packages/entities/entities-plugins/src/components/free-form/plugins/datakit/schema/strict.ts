@@ -133,7 +133,6 @@ export const JWTAlgorithmSchema = z.enum(JWT_ALGORITHMS)
  * token up to 32 characters; see `CallNodeSchema.method`.
  */
 export type HttpMethod = z.infer<typeof HttpMethodSchema>
-export type JWTAlgorithm = z.infer<typeof JWTAlgorithmSchema>
 
 export const ConfigNodeBaseSchema = z
   .object({
@@ -515,8 +514,6 @@ export const VaultSchema = z
     z.string().min(1).max(4095),
   )
 
-export type Vault = z.infer<typeof VaultSchema>
-
 /** cache.memory */
 const CacheMemorySchema = z.object({
   dictionary_name: z.string().nullish().default('kong_db_cache'),
@@ -674,8 +671,6 @@ export const ResourcesSchema = z.object({
 
 export type Resources = z.infer<typeof ResourcesSchema>
 export type CacheConfig = z.infer<typeof CacheSchema>
-
-export const PartialsSchema = z.array(z.object({ id: z.string() }))
 
 export const DatakitConfigSchema = z
   .object({

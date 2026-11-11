@@ -214,7 +214,7 @@
 </template>
 
 <script setup lang="ts">
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '../../const'
 import { computed, inject, provide, ref } from 'vue'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { KLabel } from '@kong/kongponents'

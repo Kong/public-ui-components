@@ -1,4 +1,9 @@
 <template>
+  <h2>Record-driven AI Gateway Vault (local mapping and masking)</h2>
+  <VaultConfigCardView
+    api-type="aiGateway"
+    :record="{ id: 'example', type: 'hcv', name: 'example-vault', config: { auth_method: 'cert', key: 'masked-example' } }"
+  />
   <h2>Konnect API</h2>
   <VaultConfigCard
     :config="konnectConfig"
@@ -34,6 +39,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, KonnectSecretListConfig } from '../../src'
+import { VaultConfigCardView } from '../../src'
 import { VaultProviders } from '../../src/types'
 import VaultConfigCard from '../../src/components/VaultConfigCard.vue'
 import SecretList from '../../src/components/SecretList.vue'

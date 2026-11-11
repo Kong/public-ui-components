@@ -403,7 +403,8 @@ import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { KButton, KExternalLink, KInput, KPrompt, KRadio, KSelect, KSkeleton } from '@kong/kongponents'
 import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { AUTOFILL_SLOT, FORMS_CONFIG, type AutofillSlot } from '@kong-ui-public/forms'
+import { AUTOFILL_SLOT, FORMS_CONFIG } from '../../const'
+import type { AutofillSlot } from '../../types'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { SecretInput } from '@kong-ui-public/misc-widgets'
 import '@kong-ui-public/misc-widgets/dist/style.css'
@@ -417,7 +418,7 @@ import { AUTH_METHODS, KONG_IDENTITY_METHODS, isKongIdentityIssuer } from './Aut
 
 import type { ComputedRef } from 'vue'
 import type { EntityCreateEvent, KonnectPluginFormConfig } from '../../../../types'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { FreeFormPluginData } from '../../types'
 import type { OidcConfigSubset, OidcPrincipals, OidcPrincipalsJit, PrincipalsMode } from './types'
 
 const MODE_KONG_IDENTITY = 'kong-identity'

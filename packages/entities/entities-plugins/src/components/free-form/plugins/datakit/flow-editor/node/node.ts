@@ -4,7 +4,6 @@ import type {
   ConfigNodeMeta,
   ConfigNodePanelGroup,
   ConfigNodeType,
-  FieldId,
   GroupInstance,
   ImplicitNodeName,
   ImplicitNodeType,
@@ -338,9 +337,6 @@ export const isNodeType = (type: string): type is NodeType =>
 export const isImplicitType = (type: NodeType): type is ImplicitNodeType =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)
 
-export const isConfigType = (type: NodeType): type is ConfigNodeType =>
-  (CONFIG_NODE_TYPES as readonly string[]).includes(type)
-
 export const isImplicitNode = (
   node: NodeMeta | NodeInstance,
 ): node is (NodeMeta | NodeInstance) & { type: ImplicitNodeType } =>
@@ -348,9 +344,6 @@ export const isImplicitNode = (
 
 export const isNodeId = (id?: string): id is NodeId =>
   !!id?.startsWith('node:')
-
-export const isFieldId = (id?: string): id is FieldId =>
-  !!id?.startsWith('field:')
 
 export const isGroupInstance = (obj: NodeInstance | GroupInstance): obj is GroupInstance =>
   Object.prototype.hasOwnProperty.call(obj, 'ownerId')

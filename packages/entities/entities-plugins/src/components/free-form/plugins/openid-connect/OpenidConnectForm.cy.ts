@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import OpenidConnectForm from './OpenidConnectForm.vue'
 import type { FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../../const'

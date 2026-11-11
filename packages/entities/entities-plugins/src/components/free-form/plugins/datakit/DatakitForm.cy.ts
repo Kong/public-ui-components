@@ -1,6 +1,6 @@
 import { h, ref } from 'vue'
 import * as monaco from 'monaco-editor'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 
 import { getPluginConfig } from '../../plugin-registry'
 import { usePreferences } from './composables'

@@ -1,4 +1,5 @@
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import { SupportedEntityType } from '../../types'
 
 const record = {
   created_at: 1682959038,
@@ -63,12 +64,26 @@ describe('<ConfigCardDisplay />', () => {
     it('renders the decK content correctly', () => {
       cy.mount(ConfigCardDisplay, {
         props: {
+          config: { app: 'konnect' },
+          entityType: SupportedEntityType.Route,
           format: 'deck',
           record,
         },
       })
 
       cy.get('.deck-config').should('be.visible')
+    })
+
+    it('requires an app and a supported entity type to render decK', () => {
+      cy.mount(ConfigCardDisplay, {
+        props: { entityType: SupportedEntityType.Route, format: 'deck', record },
+      }).then(({ wrapper }) => {
+        cy.get('.deck-config').should('not.exist')
+        cy.then(() => wrapper.setProps({ config: { app: 'konnect' }, entityType: SupportedEntityType.CloudGatewayAddon }))
+        cy.get('.deck-config').should('not.exist')
+        cy.then(() => wrapper.setProps({ entityType: SupportedEntityType.Route }))
+        cy.get('.deck-config').should('be.visible')
+      })
     })
   })
 
@@ -86,7 +101,7 @@ describe('<ConfigCardDisplay />', () => {
     const buildProps = (format: 'json' | 'yaml' | 'deck', extra: Record<string, any> = {}) => ({
       format,
       record,
-      ...(format === 'deck' ? { config: { app: 'konnect' } } : {}),
+      ...(format === 'deck' ? { config: { app: 'konnect' }, entityType: SupportedEntityType.Route } : {}),
       ...extra,
     })
 

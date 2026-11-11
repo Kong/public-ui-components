@@ -41,6 +41,7 @@ Shared components for Kong entities.
 - `EntityLink`
 - `EntityToggleModal`
 - `EntityBaseConfigCard`
+- `EntityConfigCardView`
 - `SensitiveInput`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
@@ -99,6 +100,7 @@ provide('app:konnectColorMode', colorMode)
 - [`<EntityLink.vue />`](docs/entity-link.md)
 - [`<EntityToggleModal.vue />`](docs/entity-toggle-modal.md)
 - [`<EntityBaseConfigCard.vue />`](docs/entity-base-config-card.md)
+- [`<EntityConfigCardView.vue />`](docs/entity-config-card-view.md)
 - [`<SensitiveInput.vue />`](docs/sensitive-input.md)
 
 ## Individual composables documentation

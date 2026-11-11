@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.29.13...%40kong-ui-public%2Fentities-gateway-services%403.30.0) (2026-11-10)
+
+### Features
+
+* **entities-shared:** extract the record-driven config card view [KM-3575] ([#4044](https://github.com/Kong/public-ui-components/issues/4044)) ([7f32ad1](https://github.com/Kong/public-ui-components/commit/7f32ad159c95933880b8d258f231a37cff8fa074))
+* **entities:** add standard configuration card views [KM-3575] ([#4045](https://github.com/Kong/public-ui-components/issues/4045)) ([5e81459](https://github.com/Kong/public-ui-components/commit/5e8145955fde715cecc7c4730ea91d0853afa4e1))
+
+
+## [3.29.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.29.12...%40kong-ui-public%2Fentities-gateway-services%403.29.13) (2026-11-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.29.12](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.29.11...%40kong-ui-public%2Fentities-gateway-services%403.29.12) (2026-11-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

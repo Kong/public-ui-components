@@ -89,15 +89,6 @@ export default function useHelpers() {
     }
   }
 
-  // _ gets converted to space and only the first letter of each '-' separated segment is capitalized
-  const formatPluginFieldLabel = (label: string) => {
-    return label
-      .replace(/_/g, ' ')
-      .split('-')
-      .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
-      .join('-')
-  }
-
   /**
    * Get the height of the tallest card
    */
@@ -131,7 +122,6 @@ export default function useHelpers() {
 
   return {
     setFieldType,
-    formatPluginFieldLabel,
     getTallestPluginCardHeight,
     getToggleVisibility,
   }

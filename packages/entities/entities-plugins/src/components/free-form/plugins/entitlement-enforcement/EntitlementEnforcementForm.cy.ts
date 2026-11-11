@@ -1,5 +1,5 @@
 import EntitlementEnforcementForm from './EntitlementEnforcementForm.vue'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '../../const'
 import entitlementEnforcementSchema from '../../../../../fixtures/schemas/entitlement-enforcement'
 
 const mountForm = (options: {

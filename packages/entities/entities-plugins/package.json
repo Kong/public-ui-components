@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "11.0.11",
+  "version": "11.1.0",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -49,7 +49,6 @@
     "@vue-flow/controls": "^1.1.3",
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^14.3.0",
-    "@vueuse/integrations": "^14.3.0",
     "axios": "^1.16.1",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.2.0",
@@ -82,7 +81,6 @@
     "@vue-flow/controls": "^1.1.3",
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^14.4.0",
-    "@vueuse/integrations": "^14.4.0",
     "axios": "^1.20.0",
     "monaco-editor": "^0.55.1",
     "nanoid": "^6.0.1",
@@ -138,7 +136,6 @@
     "@kong-ui-public/entities-redis-configurations": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
-    "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/freeform": "workspace:^",
     "lodash-es": "^4.18.1"
   }
