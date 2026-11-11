@@ -90,19 +90,31 @@ const PRINCIPALS_SCHEMA_FIELD = {
   },
 }
 
-// `config.principals.jit` from the AI Gateway 2.3 OIDC schema (x-property-annotations
-// dropped). The record is tagged with the runtime that introduced it — the same
-// min_ai_gateway_version family credential_claims uses — so the form can keep the
-// group rendered but disabled below 2.3.
+// `config.principals.jit` as the gateway ships it: a required record whose
+// `claims` is unset (never `[]`, len_min is 1) and must stay unset while
+// `all_claims` is true. `min_ai_gateway_version` is the AI Gateway variant's
+// annotation — the same min_ai_gateway_version family credential_claims uses —
+// kept here so the version-gating path stays covered.
 const JIT_SCHEMA_FIELD = {
   jit: {
-    description: 'Configure claims used to create and update Kong Identity principals just in time.',
+    description: "Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with JIT provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.",
     min_ai_gateway_version: '2.3',
-    required: false,
+    required: true,
     type: 'record',
     fields: [
-      { all_claims: { default: false, description: 'When true, share all token claims when creating or updating a principal.', min_ai_gateway_version: '2.3', type: 'boolean' } },
-      { claims: { description: 'Token claims to share when creating or updating a principal.', elements: { type: 'string' }, min_ai_gateway_version: '2.3', required: false, type: 'array' } },
+      { all_claims: { default: false, description: 'Send the full set of verified token claims with the Kong Identity principal lookup.', min_ai_gateway_version: '2.3', type: 'boolean' } },
+      { claims: { description: 'Send only the named token claims with the Kong Identity principal lookup. The claims are picked from the same source the principal claim is read from. Set all_claims to send every verified claim instead.', elements: { len_min: 1, type: 'string' }, len_min: 1, min_ai_gateway_version: '2.3', required: false, type: 'array' } },
+    ],
+    entity_checks: [
+      {
+        conditional: {
+          if_field: 'all_claims',
+          if_match: { eq: true },
+          then_field: 'claims',
+          then_match: { len_max: 0 },
+          then_err: 'claims should not be set when all_claims is true',
+        },
+      },
     ],
   },
 }
