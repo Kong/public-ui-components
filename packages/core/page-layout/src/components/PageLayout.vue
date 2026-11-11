@@ -47,7 +47,7 @@
               />
             </component>
             <span
-              v-if="title || $slots.title"
+              v-if="hasTitle"
               class="page-layout-title-wrapper"
             >
               <slot name="title">
@@ -60,7 +60,7 @@
               </slot>
             </span>
             <div
-              v-if="showFavoriteButton"
+              v-if="showFavoriteButton && hasTitle"
               :key="favoriteButtonKey"
               class="favorite-button-container"
             >
@@ -85,7 +85,7 @@
               </KTooltip>
             </div>
             <div
-              v-if="$slots['title-after']"
+              v-if="$slots['title-after'] && hasTitle"
               class="title-after-container"
             >
               <slot name="title-after" />
@@ -143,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, toValue, useTemplateRef, watch } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, toValue, useTemplateRef, watch, useSlots } from 'vue'
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
@@ -176,6 +176,9 @@ const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
 const route = useRoute()
+const slots = useSlots()
+
+const hasTitle = computed((): boolean => !!title || !!slots.title)
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
