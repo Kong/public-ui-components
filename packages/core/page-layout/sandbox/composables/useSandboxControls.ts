@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 // Module-level (not created inside the composable) so the switches rendered in the
 // sandbox layout's controls panel and the page that reads them share one state.
 const newAppearance = ref<boolean>(true)
+const showEmptyState = ref<boolean>(false)
 const showTabs = ref<boolean>(true)
 const showAnchorNavigation = ref<boolean>(false)
 const showFavoriteButton = ref<boolean>(true)
@@ -25,6 +26,19 @@ watch(showAnchorNavigation, (on) => {
   }
 })
 
+// The empty state is a chromeless page shape: with no title and no breadcrumbs PageLayout
+// omits the header except for its actions area. The toggles that feed the omitted parts
+// are turned off alongside it, so the demo starts from the state the component expects.
+watch(showEmptyState, (on) => {
+  if (on) {
+    showTabs.value = false
+    showAnchorNavigation.value = false
+    showFavoriteButton.value = false
+    showTitleAfter.value = false
+    showAside.value = false
+  }
+})
+
 export function useSandboxControls() {
-  return { newAppearance, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading }
+  return { newAppearance, showEmptyState, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading }
 }

@@ -46,6 +46,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - `<router-view>` integration when tabs are present; falls back to a default slot otherwise
 - Skeleton loading state while the tab layout is being computed
 - Border separator between the header and content area
+- An empty-state mode (new appearance only): when neither a title nor breadcrumbs are provided, the header renders only its actions area with no bottom border, so the layout acts as a plain container that still hosts the "Ask Kai" teleport target
 - Optional "favorite" star button next to the title for marking entity pages as shortcuts, integrated with a host-provided shortcuts context via dependency injection
 
 ## Requirements
@@ -143,6 +144,8 @@ The main content area of the page. This slot is **only rendered when no tabs are
 An optional slot rendered on the right side of the page header, aligned to the bottom of the header row. Use this slot to place action buttons, dropdowns, or other controls that relate to the current page. The slot is rendered regardless of whether tabs are present.
 
 The container that holds this slot is always rendered, even when the slot is empty, because it also hosts the [Ask Kai teleport target](#teleport-targets). Slotted content is rendered before that target.
+
+In the [new appearance](#new-appearance), when neither a title nor breadcrumbs are provided, this is the only part of the header that renders.
 
 #### `title`
 
@@ -347,6 +350,26 @@ const breadcrumbs = [
 </template>
 ```
 
+#### Empty state (new appearance only)
+
+When neither a title nor breadcrumbs are provided, the header renders only its actions area and carries no bottom border, so the layout acts as a plain container. The [Ask Kai teleport target](#teleport-targets) stays available, and the `actions` slot still renders.
+
+```html
+<template>
+  <PageLayout>
+    <template #actions>
+      <!-- Optional: actions still render in the header's actions area -->
+    </template>
+
+    <KEmptyState
+      action-button-text="Create a gateway service"
+      message="Services group routes and plugins under a single name."
+      title="No gateway services yet"
+    />
+  </PageLayout>
+</template>
+```
+
 ## Tabbed Navigation
 
 The `PageLayoutTabs` component is an internal component used by `PageLayout` to render the tab bar. It is not exported directly but its behavior is configured through the `tabs` prop on `PageLayout`.
@@ -547,6 +570,7 @@ Other differences from the default appearance:
 - The title is capped at `40ch` and truncates with an ellipsis below that, shrinking to whatever space the row leaves it. The breadcrumbs and the `title-after` slot keep their full width, so the title is the element that gives up space as the row narrows.
 - The [`aside` slot](#aside) is rendered. It is ignored in the default appearance.
 - The [anchor navigation bar](#anchor-navigation) is rendered when `anchors` is provided and `tabs` is not. It is ignored in the default appearance.
+- When neither a title nor breadcrumbs are provided, the header renders **only its actions area**: the breadcrumb/title row, the [anchor navigation bar](#anchor-navigation) and the tab row are omitted, and the bottom border is dropped. Tabs passed in this state are not rendered. This accommodates empty-state screens — the layout becomes a plain container that still hosts the [Ask Kai teleport target](#teleport-targets).
 
 Tabs, the `title-after` slot and the `actions` slot are otherwise unaffected.
 
