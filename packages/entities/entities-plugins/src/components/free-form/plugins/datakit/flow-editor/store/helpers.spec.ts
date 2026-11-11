@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   generateNodeName,
   makeGroupId,
+  makeGroupName,
   mergeFlowChange,
   parseGroupId,
   parseNameConnection,
@@ -37,9 +38,13 @@ describe('store helpers', () => {
     })
   })
 
-  describe('group ids and names', () => {
+  describe('group ids', () => {
     it('round-trips ids, even when they contain colons', () => {
       expect(parseGroupId(makeGroupId('node:1' as NodeId, 'then'))).toEqual({ nodeId: 'node:1', branch: 'then' })
+    })
+
+    it('builds group names as `<node name>:<branch>`', () => {
+      expect(makeGroupName('BRANCH' as NodeName, 'else')).toBe('BRANCH:else')
     })
 
     it('rejects malformed values', () => {
