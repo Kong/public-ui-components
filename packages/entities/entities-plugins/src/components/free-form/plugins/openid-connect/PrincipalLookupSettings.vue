@@ -149,38 +149,21 @@
         </KCheckbox>
       </div>
 
-      <!-- principals.jit — AI-Gateway-only (ai-manager host + schema presence);
-           version-gated like every other min_ai_gateway_version field: below 2.3
-           the group stays rendered but disabled. Independent of the lookup toggle
-           above: jit writes principals from token claims rather than resolving
-           them, so it is not inert when lookup is off. -->
+      <!-- principals.jit — the claims are shared with the Kong Identity
+           principal lookup, so the fields follow the lookup toggle above and
+           the min_ai_gateway_version lock. -->
       <div
         v-if="showJitSettings"
         class="principals-field-group"
       >
-        <KInputSwitch
-          data-testid="principals-jit-toggle"
-          :disabled="jitDisabled"
-          :disabled-tooltip-text="jitVersionInfo?.tooltip"
-          :model-value="jitEnabled"
+        <KLabel
+          data-testid="principals-jit-label"
+          :info="t('plugins.free-form.openid-connect.jit.section_info')"
           :tooltip-attributes="{ maxWidth: '300' }"
-          @update:model-value="handleJitToggle"
         >
-          <template #label>
-            <KLabel
-              :info="t('plugins.free-form.openid-connect.jit.toggle_info')"
-              :tooltip-attributes="{ maxWidth: '300' }"
-            >
-              {{ t('plugins.free-form.openid-connect.jit.toggle_label') }}
-            </KLabel>
-          </template>
-        </KInputSwitch>
-      </div>
+          {{ t('plugins.free-form.openid-connect.jit.section_label') }}
+        </KLabel>
 
-      <div
-        v-if="showJitSettings && jitEnabled"
-        class="principals-field-group"
-      >
         <KCheckbox
           data-testid="principals-jit-all-claims"
           :disabled="jitDisabled"
@@ -224,7 +207,6 @@ import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSe
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '@kong-ui-public/freeform'
 import type { EmptyValue, RecordFieldSchema } from '@kong-ui-public/freeform'
-import { usePluginContext } from '../../plugin-context'
 import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
@@ -252,7 +234,9 @@ const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, unde
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // sibling advanced settings rendered in the default slot (e.g. OIDC auth methods).
-const { formData, getEmptyValue, getSchema, getDefault, getFieldVersionInfo } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+// PrincipalsSection owns the jit record's prefill: it survives the auth-mode
+// switch that tears this component down.
+const { formData, getEmptyValue, getSchema, getFieldVersionInfo } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 function usePrincipalsField<K extends keyof OidcPrincipals>(key: K) {
   return computed<OidcPrincipals[K] | undefined>({
@@ -272,42 +256,32 @@ const errorOnMiss = usePrincipalsField('error_on_miss')
 const matchConsumer = usePrincipalsField('match_consumer')
 const matchConsumerGroups = usePrincipalsField('match_consumer_groups')
 
+const lookupEnabled = computed(() => lookupEnabledValue.value === true)
+
+// Fields are inert when lookup is off.
+const fieldsDisabled = computed(() => props.disabled || !lookupEnabled.value)
+
 // ── JIT provisioning (config.principals.jit) ──────────────────────────────────
 
-// AI-Gateway-only feature. The record appears in the schema as it rolls out
-// (dev first, then production), so rendering is schema-driven — but the
-// gateway-manager host must never render or deal with jit even if a shared
-// dev schema carries the record, hence the explicit ai-manager check.
-const openidConnectContext = usePluginContext('openid-connect')
-const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager')
+// The record appears in the schema as it rolls out (dev first, then
+// production), so rendering is purely schema-driven — gateway-manager now
+// supports jit as well, so there is no host check.
 const jitSchema = computed(() => getSchema('$.config.principals.jit') as RecordFieldSchema | undefined)
-const showJitSettings = computed(() => isAiManager.value && !!jitSchema.value)
+const showJitSettings = computed(() => !!jitSchema.value)
 
-// Version gating follows the min_ai_gateway_version family: below the
-// requirement (AI Gateway 2.3) the group stays rendered but disabled, with
-// the standard version tooltip. Fails open when the host pins no runtime
-// version — gateway-manager never gets here (showJitSettings is false).
+// Two gates, both shared with the fields above. The claims ride along with the
+// principal lookup, so they are inert when it is off; and the AI Gateway
+// schema tags the record with min_ai_gateway_version, which locks the fields
+// below 2.3 (fails open when the host pins no runtime version, like every
+// other annotated field).
 const jitVersionInfo = computed(() => getFieldVersionInfo('$.config.principals.jit'))
-const jitDisabled = computed(() => props.disabled || !!jitVersionInfo.value)
+const jitDisabled = computed(() => fieldsDisabled.value || !!jitVersionInfo.value)
 
-// The version-lock tooltip for the subfields, as a label info icon — same
-// treatment the toggle gets via its disabled tooltip. Undefined unless the
-// runtime is below 2.3, so an unlocked form shows no extra icon.
+// The version lock as a label info icon, since neither control owns a tooltip
+// of its own. Undefined unless the runtime is below 2.3.
 const jitVersionLabelAttributes = computed(() => jitVersionInfo.value
   ? { info: jitVersionInfo.value.tooltip, tooltipAttributes: { maxWidth: '300' } }
   : undefined)
-
-// jit has no on/off flag of its own — the record's presence is the switch.
-const jitEnabled = computed(() => !!formData.config?.principals?.jit)
-
-function handleJitToggle(enabled: boolean) {
-  const principals = formData.config?.principals
-  if (!principals) return
-  // On: seed from the schema so all_claims starts at its recorded default
-  // (false) and claims at the empty value. Off: explicit null (absent would
-  // also read as off, but the record key already exists in the model).
-  principals.jit = enabled ? getDefault('$.config.principals.jit') as OidcPrincipalsJit : null
-}
 
 function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
   return computed<OidcPrincipalsJit[K] | undefined>({
@@ -364,8 +338,9 @@ function handleClaimsChange(rawValue: string) {
   jitClaims.value = parseClaims(rawValue)
 }
 
-// Re-sync the display only when the model changes from elsewhere (e.g. the
-// toggle recreates the jit record), never while it reflects the user's typing.
+// Re-sync the display only when the model changes from elsewhere (e.g.
+// share-all-claims restores the stashed list), never while it reflects the
+// user's typing.
 watch(jitClaims, (claims) => {
   if (!isEqual(claims ?? null, parseClaims(claimsInput.value) ?? null)) {
     claimsInput.value = encodeClaims(claims)
@@ -395,11 +370,6 @@ const hasValue = (value: unknown): boolean => {
 // (type=custom) lookup. A principal_claim on its own is just an OIDC lookup
 // against a non-`sub` claim, which is still the kong-identity method.
 const selectedLookupMethod = ref<string>(hasValue(principalBy.value) ? 'custom-identity' : 'kong-identity')
-
-const lookupEnabled = computed(() => lookupEnabledValue.value === true)
-
-// Fields are inert when lookup is off.
-const fieldsDisabled = computed(() => props.disabled || !lookupEnabled.value)
 
 // principal_claim is the value source in both modes (default `sub`), but in
 // custom-identity mode that value is matched against the Custom identity name,

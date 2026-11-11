@@ -1104,16 +1104,16 @@
           }
         },
         "jit": {
-          "toggle_label": "Just-in-time principal provisioning",
-          "toggle_info": "Create or update the Kong Identity principal from token claims as requests arrive, so identities don't need to be provisioned in advance.",
+          "section_label": "Just-in-time principal provisioning",
+          "section_info": "Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with just-in-time provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.",
           "all_claims": {
             "label": "Share all token claims",
-            "description": "Share every claim from the token when creating or updating a principal."
+            "description": "Send the full set of verified token claims with the Kong Identity principal lookup."
           },
           "claims": {
             "label": "Claims to share",
             "placeholder": "e.g., email, department",
-            "help": "The token claims Kong writes onto the principal when creating or updating it just in time. Separate multiple claims with commas."
+            "help": "Send only the named token claims with the lookup, picked from the same source as the principal claim. Separate multiple claims with commas."
           }
         },
         "advanced_fields": {
