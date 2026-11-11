@@ -30,7 +30,7 @@
       </div>
 
       <section
-        v-if="hasAny(['max_failures', 'failure_percentage'])"
+        v-if="showsCount || showsPercentage"
         class="cb-group"
       >
         <h4 class="cb-group-title">
@@ -38,12 +38,12 @@
         </h4>
         <div class="cb-row">
           <NumberField
-            v-if="has('max_failures')"
+            v-if="showsCount"
             :label="f('max_failures.label')"
             :name="path('max_failures')"
           />
           <NumberField
-            v-if="has('failure_percentage')"
+            v-if="showsPercentage"
             :label="f('failure_percentage.label')"
             :name="path('failure_percentage')"
           />
@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { KCard } from '@kong/kongponents'
 import { EnumField, NumberField, SwitchField, useFormShared } from '@kong-ui-public/freeform'
 import RadioField from '../../components/RadioField.vue'
@@ -127,7 +127,7 @@ const { i18n: { t } } = useI18n()
 type MessageKey = Parameters<typeof t>[0]
 
 const f = (key: string) => t(`plugins.free-form.kong-circuit-breaker.fields.${key}` as MessageKey)
-const { formData, getSchema, getSelectItems } = useFormShared<Record<string, any>>()
+const { formData, getSchema, getSelectItems, getEmptyOrDefault } = useFormShared<Record<string, any>>()
 
 const path = (field: string) => `config.${circuit}.${field}`
 
@@ -146,6 +146,9 @@ const hasAny = (fields: string[]) => fields.some(has)
  */
 const optionsOf = (field: string) => getSelectItems(path(field)).map(item => ({
   ...item,
+  // `SelectItem` allows a numeric value; these enums are string-valued, and
+  // `EnumField` narrows its items to strings.
+  value: String(item.value),
   label: String(item.value)
     .replace(/_/g, ' ')
     .replace(/^./, char => char.toUpperCase())
@@ -161,6 +164,37 @@ const thresholdConditionItems = computed(() => [
   { value: 'both', label: f('open_when.options.both') },
   { value: 'either', label: f('open_when.options.either') },
 ].filter(item => (getSchema(path('open_when'))?.one_of ?? []).includes(item.value)))
+
+/**
+ * `open_when` picks which threshold actually opens the circuit, so the design
+ * shows only that one, and the unused one is dropped from the payload.
+ *
+ * Dropped, not nulled: both are `required`, and
+ * `POST /schemas/plugins/validate` answers `"required field missing"` for a
+ * null while accepting an absent key, which the Gateway fills with the
+ * schema default. The field returns to that default when it comes back.
+ */
+const openWhen = computed<string | undefined>(() => formData.config?.[circuit]?.open_when)
+const showsCount = computed<boolean>(() =>
+  has('max_failures') && openWhen.value !== 'failure_percentage')
+const showsPercentage = computed<boolean>(() =>
+  has('failure_percentage') && openWhen.value !== 'max_failures')
+
+function syncThreshold(field: string, visible: boolean) {
+  const record = formData.config?.[circuit]
+  if (!record || !has(field)) return
+
+  if (!visible) {
+    delete record[field]
+  } else if (record[field] == null) {
+    record[field] = getEmptyOrDefault(path(field))
+  }
+}
+
+watch([showsCount, showsPercentage], ([count, percentage]) => {
+  syncThreshold('max_failures', count)
+  syncThreshold('failure_percentage', percentage)
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

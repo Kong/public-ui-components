@@ -5,7 +5,7 @@ import type { FormSchema } from '@kong-ui-public/freeform'
 
 interface CircuitBreakerPayload {
   config: {
-    policy_circuit: { enabled: boolean, open_when: string }
+    policy_circuit: { enabled: boolean, open_when: string, max_failures: number | null, failure_percentage: number | null }
     latency_circuit: { enabled: boolean, max_upstream_ttfb_ms: number }
     half_open_calls: number
     identifier: string
@@ -51,7 +51,7 @@ describe('KongCircuitBreakerForm', () => {
     cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
     cy.getTestId('ff-config.policy_circuit.sampling_window_seconds').should('have.value', '60')
     cy.getTestId('ff-config.policy_circuit.recovery_period_ms').should('have.value', '30000')
-    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
+    cy.getTestId('ff-config.policy_circuit.min_samples').should('be.empty')
     cy.getTestId('ff-config.latency_circuit.max_upstream_ttfb_ms').should('not.exist')
 
     enableCircuit('latency_circuit')
@@ -102,6 +102,35 @@ describe('KongCircuitBreakerForm', () => {
     cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
       expect(value.config.policy_circuit.open_when).to.eq('both')
     })
+  })
+
+  // Both thresholds are `required`: the Gateway rejects a null ("required field
+  // missing") but accepts an absent key, so the unused one is dropped.
+  it('shows only the threshold its condition uses, and drops the other', () => {
+    mountForm()
+
+    enableCircuit('policy_circuit')
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('not.exist')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit.max_failures).to.eq(20)
+      expect(value.config.policy_circuit).to.not.have.property('failure_percentage')
+    })
+
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-failure_percentage').click()
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('not.exist')
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit).to.not.have.property('max_failures')
+      expect(value.config.policy_circuit.failure_percentage).to.eq(10)
+    })
+
+    // `both` and `either` need the pair, each back at its default.
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-both').click()
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
   })
 
   // The Gateway's schema is still changing: an unknown field list used to throw
