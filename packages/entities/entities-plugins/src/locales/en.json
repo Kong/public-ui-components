@@ -891,6 +891,94 @@
       }
     },
     "free-form": {
+      "kong-circuit-breaker": {
+        "hint": "Enable one or both circuit, at least one circuit must be enabled.",
+        "sections": {
+          "plugin_config": {
+            "description": "Stop requests to a Service or Route when failures or upstream latency cross the configured thresholds."
+          },
+          "identification": {
+            "title": "Circuit identification"
+          },
+          "recovery": {
+            "title": "Circuit recovery"
+          },
+          "request_handling": {
+            "title": "Request handling"
+          }
+        },
+        "units": {
+          "seconds": "seconds",
+          "milliseconds": "milliseconds",
+          "percent": "%"
+        },
+        "fields": {
+          "failure_circuit": {
+            "label": "Policy failure circuit",
+            "description": "Stop requests when the number of failures exceeds the configured threshold."
+          },
+          "latency_circuit": {
+            "label": "Latency circuit",
+            "description": "Stop requests when upstream responses are slow (time to first byte)."
+          },
+          "max_failure_count": {
+            "label": "Maximum failure count"
+          },
+          "sampling_window": {
+            "label": "Sampling window"
+          },
+          "recovery_period": {
+            "label": "Recovery period"
+          },
+          "failure_percentage": {
+            "label": "Failure percentage"
+          },
+          "failure_types": {
+            "label": "Failure type",
+            "help": "At least one failure type is required"
+          },
+          "max_upstream_response_time": {
+            "label": "Maximum upstream response time"
+          },
+          "window_type": {
+            "label": "Window type"
+          },
+          "group_circuits_by": {
+            "label": "Group circuits by",
+            "options": {
+              "service": "Service",
+              "route": "Route"
+            }
+          },
+          "excluded_paths": {
+            "label": "Excluded paths",
+            "add": "Add path",
+            "path": {
+              "label": "Path",
+              "placeholder": "/health"
+            },
+            "method": {
+              "label": "Method",
+              "placeholder": "GET"
+            }
+          },
+          "half_open_requests": {
+            "label": "Half-open requests"
+          },
+          "half_open_failure_threshold": {
+            "label": "Half-open failure threshold"
+          },
+          "half_open_timeout": {
+            "label": "Half-open timeout"
+          },
+          "response_status_code": {
+            "label": "Response status code"
+          },
+          "response_body": {
+            "label": "Response body"
+          }
+        }
+      },
       "editor_mode": {
         "visual": "Visual editor",
         "code": "Code editor"
