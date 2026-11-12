@@ -1,4 +1,4 @@
-import { nextTick, shallowRef } from 'vue'
+import { nextTick, shallowRef, type VNode } from 'vue'
 import { get } from 'lodash-es'
 import * as utils from '../utils'
 import { isKid } from './key-id-map'
@@ -150,7 +150,7 @@ export function createFieldReveal(options: {
 
       // Expanding records animate their height with `overflow: hidden`;
       // scrolling before that ends would scroll the clipped box instead.
-      await waitForTransitions()
+      await waitForSlideTransitions()
       if (id !== lastRevealId) {
         return null
       }
@@ -187,26 +187,40 @@ function nextFrame() {
 }
 
 /**
- * Waits for the running CSS transitions to end, at most `timeout` ms.
+ * Waits until no `SlideTransition` is running, at most `timeout` ms. Vue adds
+ * `ff-slide-active` as the element is inserted and removes it when the
+ * transition ends, the same marker the record filler waits on. Transitions
+ * elsewhere on the page don't hold the reveal up.
  */
-async function waitForTransitions(timeout = 1000) {
-  if (typeof document.getAnimations !== 'function' || typeof CSSTransition === 'undefined') {
-    return
+async function waitForSlideTransitions(timeout = 1000) {
+  const deadline = performance.now() + timeout
+  while (document.querySelector('.ff-slide-active') && performance.now() < deadline) {
+    await nextFrame()
+  }
+}
+
+/**
+ * The first element a vnode renders, or `null` when it renders none. A
+ * fragment is searched up to its end anchor only, so a component that
+ * renders nothing doesn't hand out the element of the field after it.
+ */
+export function getVNodeElement(vnode: VNode): Element | null {
+  if (vnode.component) {
+    return getVNodeElement(vnode.component.subTree)
   }
 
-  // `SlideTransition` starts its transition in the next frame
-  await nextFrame()
-  await nextFrame()
-
-  const running = document.getAnimations().filter(animation => animation instanceof CSSTransition)
-  if (!running.length) {
-    return
+  const end = vnode.anchor as Node | null
+  let node = vnode.el as Node | null
+  while (node) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      return node as Element
+    }
+    if (!end || node === end) {
+      return null
+    }
+    node = node.nextSibling
   }
-
-  await Promise.race([
-    Promise.allSettled(running.map(animation => animation.finished)),
-    new Promise(resolve => setTimeout(resolve, timeout)),
-  ])
+  return null
 }
 
 function focusWithin(element: Element) {

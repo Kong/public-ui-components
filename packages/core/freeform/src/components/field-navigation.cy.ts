@@ -1,8 +1,8 @@
-import { h, type Component } from 'vue'
+import { defineComponent, h, type Component } from 'vue'
 import Form from './Form.vue'
 import ArrayField from './ArrayField.vue'
 import FieldRenderer from './FieldRenderer.vue'
-import { FIELD_RENDERERS } from '../composables'
+import { FIELD_RENDERERS, useField } from '../composables'
 import type { FormSchema } from '../form-schema'
 import type { RenderRules } from '../types'
 import type { RevealResult } from '../composables'
@@ -33,6 +33,8 @@ const schema: FormSchema = {
         },
       },
     },
+    // Rendered by `RendersNothing`, see below
+    { note: { type: 'string' } },
     {
       headers: {
         type: 'map',
@@ -79,6 +81,15 @@ const data = {
   rate_limit: { strategy: 'local', redis: { host: 'localhost' } },
 }
 
+/** A field component that registers its path but renders no element */
+const RendersNothing = defineComponent({
+  props: { name: { type: String, required: true } },
+  setup(props) {
+    useField(() => props.name)
+    return () => null
+  },
+})
+
 /** What the test needs from the form's exposed API */
 type RevealingForm = { reveal: (path: string) => Promise<RevealResult | null> }
 
@@ -86,9 +97,14 @@ function mountForm() {
   cy.mount(Form, {
     props: { schema, data, renderRules },
     slots: {
-      [FIELD_RENDERERS]: () => h(FieldRenderer, { match: ({ path }: { path: string }) => path === 'upstreams' }, {
-        default: (props: Record<string, unknown>) => h(ArrayField as Component, { ...props, appearance: 'tabs' }),
-      }),
+      [FIELD_RENDERERS]: () => [
+        h(FieldRenderer, { match: ({ path }: { path: string }) => path === 'upstreams' }, {
+          default: (props: Record<string, unknown>) => h(ArrayField as Component, { ...props, appearance: 'tabs' }),
+        }),
+        h(FieldRenderer, { match: ({ path }: { path: string }) => path === 'note' }, {
+          default: (props: Record<string, unknown>) => h(RendersNothing, props as { name: string }),
+        }),
+      ],
     },
   }).then(({ wrapper }) => {
     cy.wrap(wrapper.vm as unknown as RevealingForm).as('form')
@@ -139,5 +155,16 @@ describe('Field navigation', () => {
   it('returns null for a path that is not in the form', () => {
     mountForm()
     reveal('no_such.field').should('equal', null)
+  })
+
+  it('returns null for a malformed path', () => {
+    mountForm()
+    reveal('headers["x.y"').should('equal', null)
+  })
+
+  it('does not land on the next field when a field renders no element', () => {
+    mountForm()
+    reveal('note').should('equal', null)
+    cy.focused().should('not.exist')
   })
 })

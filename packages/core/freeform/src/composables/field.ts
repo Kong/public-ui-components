@@ -4,6 +4,7 @@ import { get, set, uniqueId } from 'lodash-es'
 import { useFieldAncestors } from './ancestors'
 import { useFieldPath, useFieldRenderer } from './field-path'
 import { useFormShared } from './form-context'
+import { getVNodeElement } from './reveal'
 import * as utils from '../utils'
 
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
@@ -74,15 +75,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
   if (instance) {
     onBeforeUnmount(registerFieldElement({
       path: () => fieldPath.value,
-      // For a component with several root nodes, `$el` is the placeholder
-      // before them; the field's element is the first element after it.
-      element: () => {
-        let node = instance.proxy?.$el as Node | null | undefined
-        while (node && node.nodeType !== Node.ELEMENT_NODE) {
-          node = node.nextSibling
-        }
-        return (node as Element | null | undefined) ?? null
-      },
+      element: () => getVNodeElement(instance.subTree),
     }))
   }
 
