@@ -64,6 +64,12 @@
       </KButton>
     </header>
 
+    <!-- Only this field's own errors: the fields inside show theirs -->
+    <FieldErrors
+      :errors="field.ownFieldErrors?.value"
+      :path="field.path?.value"
+    />
+
     <template v-if="realAppearance !== 'tabs'">
       <div
         class="ff-array-field-container"
@@ -186,6 +192,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
+import FieldErrors from './FieldErrors.vue'
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs, watch } from 'vue'
 import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
@@ -230,7 +237,7 @@ defineSlots<{
 }>()
 
 const { i18n: { t } } = useI18n()
-const { getDefault, getSchema } = useFormShared()
+const { getDefault, getSchema, onArrayItemRemoved } = useFormShared()
 const { value: fieldValue, hide, versionInfo, ...field } = useField<T[] | EmptyValue>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
@@ -319,6 +326,7 @@ const addItem = async () => {
 
 const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
+    onArrayItemRemoved(field.path!.value, index)
     fieldValue!.value.splice(index, 1)
 
     // Required arrays stay `[]` (already spliced above); only relax to the

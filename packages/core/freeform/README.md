@@ -44,6 +44,7 @@ src/
     ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
     ├── ExpressionEditor.vue # The collapsible expression editor; StringField/NumberField render one inline, or a host places it itself
     ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
+    ├── FieldErrors.vue      # The list of a field's errors, rendered under its control
     ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
     ├── SlideTransition.vue  # Height-animated collapse transition
     ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
@@ -353,6 +354,24 @@ const result = await formRef.value?.reveal('config.redis.host')
 The field names in an entity checks alert (`EntityChecksAlert`, shown at the top of a record) are links that reveal the field, resolved against the record's path, e.g. `redis.host` on `config` reveals `config.redis.host`.
 
 A custom container opens itself for a reveal through `useField(name).revealTarget`: the path being revealed while it is the field itself or inside it, `null` otherwise. Containers that are not field paths (custom tabs and sections) are not supported yet.
+
+### Field Errors
+
+`Form` takes `errors`, a list of `{ path, message }` with data paths in the [Field Navigation](#field-navigation) format, and shows each one under the field it belongs to. Try it in the sandbox's **Field errors** page.
+
+```vue
+<Form v-model:errors="errors" :schema="schema" :data="data" />
+<!-- errors: [{ path: 'config.redis.host', message: 'required field missing' }] -->
+```
+
+| Rule | Detail |
+|---|---|
+| Display only | The form only shows the errors. Turning a server response into `errors`, and when to set or clear them, is up to the host. Showing errors and revealing fields are separate: a host that lists the errors can call `reveal(error.path)` when one is clicked |
+| Where an error shows | A field shows its own errors. A record, array or map shows only errors on itself, never a count of the ones inside. A set or a JSON field is one field, so it also shows the errors of its items (`tags.1`) |
+| Structure changes | An error belongs to the item it was raised on, not to its index. When an array item or a map entry is removed through the form, its errors are dropped and the errors of later array items move to their new index; when a map key is renamed, its errors follow it. The form emits the new list through `update:errors`, so bind `v-model:errors`. Whether an error still holds after the user edits the value is not decided here: that is up to the host |
+| Unmatched errors | An error no field can show in the current state — its path is malformed or not in the schema, names a map key that isn't in the data, sits under a record or array item without a value, or is hidden by a render rule — is left out of the form and listed in the exposed `unmatchedErrors`, for the host to show elsewhere |
+
+A custom field component gets its errors from `useField(name)`: `fieldErrors` (its own and those below it), `ownFieldErrors`, and `fieldErrorMessage` (`fieldErrors` as one line). The `FieldErrors` component renders a list of them.
 
 ## Filler (test utilities)
 

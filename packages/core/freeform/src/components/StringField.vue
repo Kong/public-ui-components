@@ -19,7 +19,7 @@
       :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :disabled="isDisabled"
-      :error="error"
+      :error="error || !!field.fieldErrors?.value.length"
       :error-message="errorMessage"
       :help="(multiline && error) ? errorMessage : help"
       :model-value="fieldValue ?? ''"
@@ -83,6 +83,11 @@
       </template>
     </EnhancedInput>
 
+    <FieldErrors
+      :errors="field.fieldErrors?.value"
+      :path="field.path?.value"
+    />
+
     <!-- block vault picker -->
     <template v-if="!inlineVaultPicker">
       <component
@@ -123,6 +128,7 @@
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'

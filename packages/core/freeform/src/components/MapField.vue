@@ -49,6 +49,12 @@
       </KLabel>
     </header>
 
+    <!-- Only this field's own errors: the fields inside show theirs -->
+    <FieldErrors
+      :errors="field.ownFieldErrors?.value"
+      :path="field.path?.value"
+    />
+
     <component
       :is="itemTag"
       v-for="([keyId, name], index) in keys"
@@ -119,6 +125,7 @@
 </template>
 
 <script lang="ts" setup>
+import FieldErrors from './FieldErrors.vue'
 import { toRef, computed, useTemplateRef, nextTick } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { useFieldAttrs } from '../composables'

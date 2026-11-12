@@ -21,6 +21,14 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
   config?: FormConfig<T>
   fieldsOrder?: string[]
   renderRules?: RenderRules
+  /**
+   * Errors to show on the fields, e.g. from the server rejecting a submit.
+   * The form only shows them; when to set or clear them is up to the host.
+   * Bind it with `v-model:errors`: when an array item or a map entry is
+   * removed, or a map key renamed, the form emits the list with the errors
+   * dropped or moved along, so none lands on another item.
+   */
+  errors?: FieldError[]
 }
 </script>
 
@@ -29,7 +37,7 @@ import { useSlots, type Slot, computed, toRaw, toRef } from 'vue'
 import { EXPRESSIONS_FIELD, FIELD_RENDERERS, provideFormShared } from '../composables'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
 import Field from './Field.vue'
-import type { FormConfig, GlobalAction, RenderRules } from '../types'
+import type { FieldError, FormConfig, GlobalAction, RenderRules } from '../types'
 import { sortFieldsByBundles, sortFieldsByFieldNames } from '../utils'
 
 defineOptions({ name: 'SchemaForm' })
@@ -41,20 +49,23 @@ defineSlots<
   } & Partial<Record<string, Slot<{ name: string }>>>
 >()
 
-const { tag = 'form', schema, fieldsOrder, config, data, renderRules } = defineProps<Props<T>>()
+const { tag = 'form', schema, fieldsOrder, config, data, renderRules, errors } = defineProps<Props<T>>()
 
 const emit = defineEmits<{
   change: [value: T]
   'globalAction': [name: GlobalAction, payload: any]
+  'update:errors': [errors: FieldError[]]
 }>()
 
 const slots = useSlots()
 
-const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue, reveal } = provideFormShared({
+const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue, reveal, unmatchedErrors } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: () => config as FormConfig,
   propsRenderRules: toRef(() => renderRules),
+  propsErrors: () => errors,
+  onErrorsChange: (value) => emit('update:errors', value),
   onChange: (value) => emit('change', value as T),
 })
 
@@ -85,6 +96,10 @@ defineExpose({
   setValue,
   getEmptyValue,
   reveal,
+  /**
+   * The errors no field can show in the current state, see `createFieldErrors`
+   */
+  unmatchedErrors,
 })
 </script>
 

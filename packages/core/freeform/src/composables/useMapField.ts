@@ -18,7 +18,7 @@ export function useMapField<T = unknown, K extends string = string>(
   onLegacyValueChange?: (newValue: Record<K, T> | null) => void,
 ) {
   const { value: fieldValue, ...field } = useField<Record<KeyId, T> | EmptyValue>(name)
-  const { getEmptyOrDefault, keyIdMap } = useFormShared()
+  const { getEmptyOrDefault, keyIdMap, onMapKeyRenamed, onMapKeyRemoved } = useFormShared()
   const valueSchema = computed(() => {
     if (!field.path) return
     return (field.schema.value as MapFieldSchema).values
@@ -39,7 +39,11 @@ export function useMapField<T = unknown, K extends string = string>(
   function updateKey(keyId: KeyId, newKey: K) {
     if (!fieldValue) return
 
+    const oldKey = keyIdMap.getKey(keyId)
     keyIdMap.updateKey(keyId, newKey)
+    if (oldKey !== undefined && oldKey !== newKey) {
+      onMapKeyRenamed(field.path!.value, oldKey, newKey)
+    }
     // Trigger reactive update
     fieldValue.value = { ...fieldValue.value }
   }
@@ -57,6 +61,10 @@ export function useMapField<T = unknown, K extends string = string>(
   }
 
   function removeKey(keyId: KeyId) {
+    const key = keyIdMap.getKey(keyId)
+    if (key !== undefined && field.path) {
+      onMapKeyRemoved(field.path.value, key)
+    }
     keyIdMap.deleteKey(keyId)
     if (!fieldValue) return
 

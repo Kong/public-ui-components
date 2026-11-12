@@ -37,5 +37,9 @@ const APP_LINKS: SandboxNavigationItem[] = [
     name: 'Field navigation',
     to: { name: 'field-navigation' },
   },
+  {
+    name: 'Field errors',
+    to: { name: 'field-errors' },
+  },
 ]
 </script>

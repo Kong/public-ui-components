@@ -169,3 +169,12 @@ export interface FieldRendererRule {
 }
 
 export type KeyId = `kid:${number}`
+
+/**
+ * An error to show on a field, e.g. from the server rejecting a submit
+ */
+export interface FieldError {
+  /** Data path in the `formatDataPath` format, e.g. `config.headers["x.y"]` */
+  path: string
+  message: string
+}

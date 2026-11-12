@@ -16,6 +16,10 @@
       v-bind="$attrs"
       :data-testid="`ff-object-${field.path.value}`"
     >
+      <FieldErrors
+        :errors="field.ownFieldErrors?.value"
+        :path="field.path?.value"
+      />
       <slot>
         <EntityChecksAlert
           :entity-checks="field.schema.value?.entity_checks"
@@ -112,6 +116,12 @@
       />
     </header>
 
+    <!-- Only this field's own errors: the fields inside show theirs -->
+    <FieldErrors
+      :errors="field.ownFieldErrors?.value"
+      :path="field.path?.value"
+    />
+
     <SlideTransition>
       <div
         v-if="effectiveExpanded"
@@ -141,6 +151,7 @@
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { KLabel, type LabelAttributes } from '@kong/kongponents'
 import { ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'

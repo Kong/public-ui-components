@@ -14,9 +14,20 @@
     :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :disabled="isDisabled"
+    :error="!!$attrs.error || !!field.fieldErrors?.value.length"
     :model-value="!!(fieldValue == null ? (emptyOrDefaultValue || false) : fieldValue)"
     @update:model-value="handleUpdate"
   >
+    <!-- The checkbox only colors its box on `error`, so the messages go in the description -->
+    <template
+      v-if="field.fieldErrors?.value.length"
+      #description
+    >
+      <FieldErrors
+        :errors="field.fieldErrors.value"
+        :path="field.path?.value"
+      />
+    </template>
     <template
       v-if="fieldAttrs.labelAttributes?.info || versionInfo"
       #tooltip
@@ -36,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from '../composables'
 import { computed, toRef, useAttrs } from 'vue'
