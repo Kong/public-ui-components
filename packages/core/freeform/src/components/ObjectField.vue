@@ -278,6 +278,20 @@ watch(realAdded, (value) => {
   expanded.value = value
 })
 
+/**
+ * Expands for a reveal of a field inside this record. Only view state may
+ * change: a record that is switched off is not switched on (that would write
+ * data), so the reveal stops at it.
+ */
+function expandForReveal(target: string | null | undefined) {
+  if (!target || target === field.path!.value || !realAdded.value || isLocked.value) {
+    return
+  }
+  expanded.value = true
+}
+
+watch(() => field.revealTarget?.value, expandForReveal)
+
 onBeforeMount(() => {
   if (field.error || !fieldValue) return
   const hasValue = fieldValue.value != null
@@ -288,6 +302,10 @@ onBeforeMount(() => {
   if (fieldAttrs.value.required || hasValue) {
     expanded.value = true
   }
+
+  // Mounted while a reveal is in progress, e.g. as a child of a record that
+  // just expanded for it. Runs after `added` is known.
+  expandForReveal(field.revealTarget?.value)
 })
 </script>
 

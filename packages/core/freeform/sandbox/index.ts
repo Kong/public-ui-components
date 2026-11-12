@@ -20,6 +20,11 @@ const router = createRouter({
       name: 'version-compatibility',
       component: () => import('./pages/VersionCompatibilityDemo.vue'),
     },
+    {
+      path: '/field-navigation',
+      name: 'field-navigation',
+      component: () => import('./pages/FieldNavigationDemo.vue'),
+    },
   ],
 })
 

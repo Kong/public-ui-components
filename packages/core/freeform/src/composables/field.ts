@@ -1,9 +1,10 @@
-import { computed, onUnmounted, toRaw, toValue, watch } from 'vue'
+import { computed, getCurrentInstance, onBeforeUnmount, onUnmounted, toRaw, toValue, watch } from 'vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../constants'
 import { get, set, uniqueId } from 'lodash-es'
 import { useFieldAncestors } from './ancestors'
 import { useFieldPath, useFieldRenderer } from './field-path'
 import { useFormShared } from './form-context'
+import { getVNodeElement } from './reveal'
 import * as utils from '../utils'
 
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
@@ -23,7 +24,10 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo } = useFormShared()
+  const {
+    getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo,
+    revealTarget: formRevealTarget, registerFieldElement,
+  } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
@@ -56,6 +60,25 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     }
   }
 
+  /**
+   * The field path being revealed, when it is this field or inside it.
+   * Containers open themselves while it is set.
+   */
+  const revealTarget = computed(() => {
+    const target = formRevealTarget.value
+    return target && utils.isWithinPath(target, fieldPath.value) ? target : null
+  })
+
+  // Calling `useField` means the component renders this field, so it is
+  // where a reveal of this path lands.
+  const instance = getCurrentInstance()
+  if (instance) {
+    onBeforeUnmount(registerFieldElement({
+      path: () => fieldPath.value,
+      element: () => getVNodeElement(instance.subTree),
+    }))
+  }
+
   return {
     schema,
     path: fieldPath,
@@ -67,6 +90,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
      */
     hide,
     versionInfo,
+    revealTarget,
     emptyOrDefaultValue,
     emptyValue,
     error: null,
