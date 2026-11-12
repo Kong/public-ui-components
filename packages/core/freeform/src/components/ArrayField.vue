@@ -186,7 +186,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
+import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs, watch } from 'vue'
 import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from '../composables'
@@ -286,6 +286,16 @@ const tabs = computed(() => realItems.value.map((item, index) => {
 }))
 const activeTab = ref<string>(tabs.value[0]?.hash)
 
+// Switches to the tab of the item a reveal is heading for
+watch(() => field.revealTarget?.value, (target) => {
+  if (!target || realAppearance.value !== 'tabs') return
+  const index = Number(utils.toArray(target.slice(field.path!.value.length))[0])
+  const tab = tabs.value[index]
+  if (tab) {
+    activeTab.value = tab.hash
+  }
+}, { immediate: true })
+
 const addItem = async () => {
 
   const defaultItemValue = getDefault(utils.resolve(field.path!.value, utils.arraySymbol))
@@ -341,7 +351,7 @@ function focus(index: number) {
   focusTarget?.focus()
 }
 
-const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
+const { FOCUSABLE_SELECTOR } = utils
 
 function findFocusTarget(itemRoot: HTMLElement): HTMLElement | null {
   const autofocusTarget = itemRoot.querySelector<HTMLElement>('[data-autofocus="true"]')

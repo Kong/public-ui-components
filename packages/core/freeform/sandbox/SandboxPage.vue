@@ -33,5 +33,9 @@ const APP_LINKS: SandboxNavigationItem[] = [
     name: 'Version compatibility',
     to: { name: 'version-compatibility' },
   },
+  {
+    name: 'Field navigation',
+    to: { name: 'field-navigation' },
+  },
 ]
 </script>

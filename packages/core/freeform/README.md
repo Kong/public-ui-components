@@ -334,6 +334,23 @@ Register it against a field path with `FieldRenderer`, or place it directly insi
 
 When the field needs to write an "empty" value (the user clears it, or a mode switch blanks it), use `emptyValue` from `useField()` instead of hardcoding `null` — see [Empty Field Values](#empty-field-values).
 
+### Field Navigation
+
+`Form` exposes `reveal(path)`, which brings the field at a data path into view and focuses it, even when it sits in a collapsed record or an inactive array tab. Try it in the sandbox's **Field navigation** page.
+
+```ts
+const result = await formRef.value?.reveal('config.redis.host')
+// { path: 'config.redis.host', exact: true }
+```
+
+| Rule | Detail |
+|---|---|
+| Path format | Real map keys, dot separated, array indexes as `.1`. A segment with `.`, `[`, `]` or `"` in it (or an empty key) is a quoted bracket segment: `config.headers["x.y"]`. `parseDataPath`/`formatDataPath` convert between a path and its segments; `limits[1]` is also accepted |
+| Only view state changes | Records expand and array tabs switch. A record that is switched off is not switched on, and a field hidden by a render rule stays hidden: the reveal stops at the nearest visible ancestor and returns it with `exact: false` |
+| Result | `null` when nothing on the path is visible, the path is malformed, or a later `reveal` call took over |
+
+A custom container opens itself for a reveal through `useField(name).revealTarget`: the path being revealed while it is the field itself or inside it, `null` otherwise. Containers that are not field paths (custom tabs and sections) are not supported yet.
+
 ## Filler (test utilities)
 
 Auto-fill utilities for Cypress and Playwright tests. A framework-agnostic core with framework-specific adapters — depends only on `form-schema.ts` and other generic primitives, no plugin/layout knowledge.
