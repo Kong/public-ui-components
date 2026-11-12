@@ -95,7 +95,7 @@ describe('Field errors', () => {
     cy.getTestId('ff-name').closest('.k-input').should('have.class', 'input-error')
   })
 
-  it("keeps an `error` the caller passes when the form has no error for the field", () => {
+  it('keeps an `error` the caller passes when the form has no error for the field', () => {
     cy.mount(Form, {
       props: { schema, data, errors: [] },
       slots: {
