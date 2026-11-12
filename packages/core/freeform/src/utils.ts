@@ -136,11 +136,6 @@ function findClosingQuote(source: string, start: number): number {
 }
 
 /**
- * Matches the elements that can take focus
- */
-export const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
-
-/**
  * Replaces hidden fields in a data tree with their empty-or-default value.
  *
  * Walks the tree **top-down**, which gives two structural guarantees the old

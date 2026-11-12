@@ -1,6 +1,7 @@
 import { nextTick, shallowRef, type VNode } from 'vue'
 import { get } from 'lodash-es'
 import * as utils from '../utils'
+import { FOCUSABLE_SELECTOR } from '../constants'
 import { isKid } from './key-id-map'
 
 import type { KeyId } from '../types'
@@ -229,9 +230,9 @@ export function getVNodeElement(vnode: VNode): Element | null {
 }
 
 function focusWithin(element: Element) {
-  const focusable = element.matches(utils.FOCUSABLE_SELECTOR)
+  const focusable = element.matches(FOCUSABLE_SELECTOR)
     ? element
-    : element.querySelector(utils.FOCUSABLE_SELECTOR)
+    : element.querySelector(FOCUSABLE_SELECTOR)
 
   if (focusable instanceof HTMLElement) {
     focusable.focus({ preventScroll: true })

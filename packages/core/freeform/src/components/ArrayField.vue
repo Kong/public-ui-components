@@ -192,6 +192,7 @@ import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from '../composables'
 import useI18n from '../composables/useI18n.ts'
 import * as utils from '../utils'
+import { FOCUSABLE_SELECTOR } from '../constants'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../form-schema'
 import StringArrayField from './StringArrayField.vue'
@@ -350,8 +351,6 @@ function focus(index: number) {
 
   focusTarget?.focus()
 }
-
-const { FOCUSABLE_SELECTOR } = utils
 
 function findFocusTarget(itemRoot: HTMLElement): HTMLElement | null {
   const autofocusTarget = itemRoot.querySelector<HTMLElement>('[data-autofocus="true"]')
