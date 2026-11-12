@@ -20,7 +20,8 @@
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
-        <StringField
+        <component
+          :is="celCondition ? CelField : StringField"
           v-if="getSchema('condition')"
           name="condition"
           :placeholder="t('plugins.form.fields.condition.placeholder')"
@@ -32,11 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import { Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
-import { ref } from 'vue'
+import { CelField, Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
+import { computed, inject, ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
+import { CEL_CONDITION_KEY } from '../../../constants'
 
 defineProps<{
   hideGeneralFields?: boolean
@@ -47,6 +49,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { getSchema } = useFormShared()
 
 const advancedCollapsed = ref(true)
+const celCondition = inject(CEL_CONDITION_KEY, computed(() => false))
 </script>
 
 <style lang="scss" scoped>

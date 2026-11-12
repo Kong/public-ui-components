@@ -98,6 +98,14 @@ For the default `StandardLayout`, nothing — but two things are worth checking:
 
 `Form` never renders the `expressions` record as a field of its own; each twin is rendered inline by the field it overrides.
 
+#### Validating an expression before saving
+
+Every CEL field — the twins above, the plugin `condition`, and ACL `allow_when`/`deny_when` — shows a **Validate** button when the host app passes `validateCelExpression` in its plugin form config. It compiles the current text on the Gateway and reports the result under the editor, marking the error in the source when the compiler gives a location. Without the callback there is no button and the editor keeps only its local hints.
+
+The host owns the URL and the client, because the endpoint differs per product (control-plane-scoped in Konnect, admin API in Kong Manager). The form only decides which half of the body to send: `{ expression }` for an `expressions.*` twin, which returns its own field's type, and `{ condition }` for the fields that must return a boolean (`getCelValidationRequest` in `cel/cel-validation.ts`).
+
+Resolve with `{ valid: false, message }` when the compiler rejected the expression — that is a result, not a failure. Reject only when the check could not run at all (network, permissions); the editor then says so rather than calling the expression invalid. `sandbox/pages/PluginFormPage.vue` has a worked example.
+
 ## Layout
 
 Plugin forms use `DynamicLayout` (`layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`components/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:

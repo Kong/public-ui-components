@@ -26,6 +26,35 @@ export interface BasePluginFormConfig {
   viewConsumerRoute?: (id: string) => RouteLocationRaw
   viewConsumerGroupRoute?: (id: string) => RouteLocationRaw
   viewCertificateRoute?: (id: string) => RouteLocationRaw
+  /**
+   * Compiles a CEL expression on the Gateway, behind the "Validate" button of the
+   * CEL editor. The host app owns the URL and the client: Konnect scopes it to the
+   * control plane, Kong Manager to the admin API. Without it there is no button,
+   * and the editor keeps its local hints.
+   *
+   * Resolve with `{ valid: false, message }` for an expression the compiler
+   * rejected — that is a result, not a failure. Reject only when the check itself
+   * could not run (network, permissions); the editor then says so instead of
+   * calling the expression invalid.
+   */
+  validateCelExpression?: (request: CelValidationRequest) => Promise<CelValidationResult>
+}
+
+/**
+ * The expression to compile. Exactly one key, matching the plugin field it came
+ * from: `expression` for the `expressions.*` twins, which return the field's own
+ * type, and `condition` for the fields that must return a boolean (the plugin
+ * `condition`, ACL `allow_when`/`deny_when`).
+ */
+export type CelValidationRequest = { expression: string } | { condition: string }
+
+export interface CelValidationResult {
+  valid: boolean
+  /**
+   * The compiler's error, shown under the editor. A `<input>:line:column` prefix
+   * (as koko's `kcel: compile: ERROR: <input>:1:5: ...`) also places a marker.
+   */
+  message?: string
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig { }
@@ -77,6 +106,20 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
    * are configured but a connected DP node can't process them.
    */
   dataPlaneVersions?: string[]
+  /**
+   * Loads the Kong Identity principals and groups the user can read, for value
+   * suggestions in plugin CEL expressions (`principal.id`, `principal.groups`,
+   * `principal.metadata`). The host app owns the Kong Identity API and its
+   * permission checks; return empty lists for what the user cannot read.
+   * Consumers and Consumer Groups are loaded by the form itself.
+   */
+  getCelIdentitySubjects?: () => Promise<CelIdentitySubjects>
+}
+
+/** Kong Identity records that plugin CEL expressions can name. */
+export interface CelIdentitySubjects {
+  principals?: ReadonlyArray<{ id: string, display_name?: string | null, metadata?: Readonly<Record<string, unknown>> | null }>
+  principalGroups?: ReadonlyArray<{ id: string, name: string }>
 }
 
 /** Kong Manager Plugin form config */

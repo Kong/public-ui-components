@@ -71,6 +71,8 @@ import { PluginForm, TOASTER_PROVIDER } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
+import axios from 'axios'
+import type { AxiosError } from 'axios'
 import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
@@ -105,6 +107,7 @@ const featureFlags = ref<Record<string, boolean>>({
   [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
   [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
   [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+  [FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR]: true,
 })
 
 const FeatureFlagProvider = defineComponent({
@@ -141,6 +144,30 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   // isKongIdentityAuthServersAvailable: false,
   canCreateAuthServer: false,
+  // Sample Kong Identity records for CEL value suggestions. A host app loads these
+  // from the Kong Identity API after its own permission checks.
+  getCelIdentitySubjects: async () => ({
+    principals: [
+      { id: '7f0c5c6a-1d1e-4b8a-9a52-2f7e3c1a0b11', display_name: 'Ada Lovelace', metadata: { team: 'ai', tier: 'gold' } },
+      { id: '2b9e4d3f-8c6a-4f1b-b0e2-5d7a9c3e1f22', display_name: 'Alan Turing', metadata: { team: 'core' } },
+    ],
+    principalGroups: [{ id: 'c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e55', name: 'Platform admins' }],
+  }),
+  /**
+   * What a host app does: POST the expression to its own URL and turn the
+   * response into a verdict. 400 is the compiler rejecting the expression, so it
+   * resolves; anything else throws and the editor reports that it could not check.
+   */
+  validateCelExpression: async (request) => {
+    try {
+      await axios.post(`/us/kong-api/v2/control-planes/${controlPlaneId}/expressions/validate`, request)
+      return { valid: true }
+    } catch (error) {
+      const response = (error as AxiosError<{ detail?: string, message?: string }>).response
+      if (response?.status !== 400) throw error
+      return { valid: false, message: response.data?.detail ?? response.data?.message }
+    }
+  },
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {
