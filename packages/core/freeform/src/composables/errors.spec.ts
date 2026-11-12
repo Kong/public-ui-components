@@ -76,6 +76,7 @@ describe('createFieldErrors', () => {
     ['a map key that is not in the data', 'headers.missing'],
     ['under a record without a value', 'cache.ttl'],
     ['under an array item that does not exist', 'servers.5.port'],
+    ['at an array item that does not exist', 'servers.5'],
     ['hidden by a render rule', 'redis.host'],
     ['malformed', 'headers["x.y"'],
   ])('should leave an error %s unmatched', (_, path) => {

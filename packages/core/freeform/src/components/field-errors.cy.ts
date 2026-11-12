@@ -1,5 +1,7 @@
 import { defineComponent, h, ref } from 'vue'
 import Form from './Form.vue'
+import NumberField from './NumberField.vue'
+import StringField from './StringField.vue'
 import type { FormSchema } from '../form-schema'
 import type { FieldError } from '../types'
 
@@ -91,6 +93,22 @@ describe('Field errors', () => {
   it('marks the inputs as invalid', () => {
     mountForm()
     cy.getTestId('ff-name').closest('.k-input').should('have.class', 'input-error')
+  })
+
+  it("keeps an `error` the caller passes when the form has no error for the field", () => {
+    cy.mount(Form, {
+      props: { schema, data, errors: [] },
+      slots: {
+        default: () => [
+          h(StringField, { name: 'name', error: true, errorMessage: 'Invalid name' }),
+          h(NumberField, { name: 'port', error: true, errorMessage: 'Invalid port' }),
+        ],
+      },
+    })
+
+    cy.getTestId('ff-name').closest('.k-input').should('have.class', 'input-error')
+    cy.getTestId('ff-port').closest('.k-input').should('have.class', 'input-error')
+    cy.contains('Invalid port').should('be.visible')
   })
 
   it('exposes the errors no field can show', () => {

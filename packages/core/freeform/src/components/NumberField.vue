@@ -21,7 +21,7 @@
       :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :disabled="isDisabled"
-      :error="!!$attrs.error || !!field.fieldErrors?.value.length"
+      :error="error || !!field.fieldErrors?.value.length"
       :model-value="modelValue"
       :type="inputType"
       @update:model-value="handleUpdate"

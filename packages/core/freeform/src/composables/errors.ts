@@ -79,6 +79,13 @@ export function createFieldErrors(options: {
       if (length < fieldSegments.length && get(formData, fieldSegments.slice(0, length)) == null) {
         return null
       }
+      // The last segment too, when it is an array index: no item, no field to show it
+      if (parentSchema?.type === 'array') {
+        const items = get(formData, fieldSegments.slice(0, length - 1))
+        if (!Array.isArray(items) || Number(fieldSegments[length - 1]) >= items.length) {
+          return null
+        }
+      }
       if (isFieldHidden(path)) {
         return null
       }
