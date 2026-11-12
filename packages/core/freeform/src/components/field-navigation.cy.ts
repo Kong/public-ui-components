@@ -157,6 +157,22 @@ describe('Field navigation', () => {
     reveal('no_such.field').should('equal', null)
   })
 
+  it('lets a later reveal take over an unfinished one', () => {
+    mountForm()
+    cy.getTestId('ff-object-toggle-btn-connection.tls').click()
+
+    cy.get<RevealingForm>('@form').then(form => {
+      // Not awaited: the second call starts while the first still waits for its records to expand
+      const first = form.reveal('connection.tls.client_cert')
+      const second = form.reveal('headers.X-Request-Id')
+      cy.wrap(Promise.all([first, second])).should('deep.equal', [
+        null,
+        { path: 'headers.X-Request-Id', exact: true },
+      ])
+    })
+    cy.focused().should('have.value', 'abc')
+  })
+
   it('returns null for a malformed path', () => {
     mountForm()
     reveal('headers["x.y"').should('equal', null)

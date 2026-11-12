@@ -23,17 +23,51 @@ export interface FieldElementEntry {
   element: () => Element | null
 }
 
+type PathMapOptions = {
+  formData: Record<string, any>
+  getSchema: (path: string) => UnionFieldSchema | undefined
+  getKey: (id: KeyId) => string | undefined
+}
+
+/**
+ * Turns data path segments into a field path: map keys become the key IDs
+ * the form data is keyed by. A key that isn't in the data is kept as is, so
+ * it simply matches no field.
+ */
+export function toFieldPath(segments: string[], { formData, getSchema, getKey }: PathMapOptions): string {
+  const result: string[] = []
+
+  for (const segment of segments) {
+    const parentSchema = result.length ? getSchema(utils.resolve(...result)) : undefined
+
+    if (parentSchema?.type === 'map') {
+      const entries = get(formData, result) as Record<string, unknown> | undefined
+      const keyId = entries && Object.keys(entries).find(id => isKid(id) && getKey(id) === segment)
+      result.push(keyId ?? segment)
+    } else {
+      result.push(segment)
+    }
+  }
+
+  return utils.resolve(...result)
+}
+
+/**
+ * Turns a field path back into a data path in the `formatDataPath` format:
+ * key IDs become the map keys they stand for.
+ */
+export function toDataPath(fieldPath: string, getKey: PathMapOptions['getKey']): string {
+  return utils.formatDataPath(
+    utils.toArray(fieldPath).map(segment => isKid(segment) ? getKey(segment) ?? segment : segment),
+  )
+}
+
 /**
  * Lets a form reveal a field by its data path: containers on the way open
  * themselves (see `useField`'s `revealTarget`), then the field is scrolled
  * into view and focused.
  */
-export function createFieldReveal(options: {
-  formData: Record<string, any>
-  getSchema: (path: string) => UnionFieldSchema | undefined
-  getKey: (id: KeyId) => string | undefined
-}) {
-  const { formData, getSchema, getKey } = options
+export function createFieldReveal(options: PathMapOptions) {
 
   /**
    * The field path being revealed. Containers whose path it is within open
@@ -48,35 +82,6 @@ export function createFieldReveal(options: {
     return () => {
       fieldElements.delete(entry)
     }
-  }
-
-  /**
-   * Turns data path segments into a field path: map keys become the key IDs
-   * the form data is keyed by. A key that isn't in the data is kept as is, so
-   * it simply matches no field.
-   */
-  function toFieldPath(segments: string[]): string {
-    const result: string[] = []
-
-    for (const segment of segments) {
-      const parentSchema = result.length ? getSchema(utils.resolve(...result)) : undefined
-
-      if (parentSchema?.type === 'map') {
-        const entries = get(formData, result) as Record<string, unknown> | undefined
-        const keyId = entries && Object.keys(entries).find(id => isKid(id) && getKey(id) === segment)
-        result.push(keyId ?? segment)
-      } else {
-        result.push(segment)
-      }
-    }
-
-    return utils.resolve(...result)
-  }
-
-  function toDataPath(fieldPath: string): string {
-    return utils.formatDataPath(
-      utils.toArray(fieldPath).map(segment => isKid(segment) ? getKey(segment) ?? segment : segment),
-    )
   }
 
   /**
@@ -135,7 +140,7 @@ export function createFieldReveal(options: {
     }
 
     const id = ++lastRevealId
-    const target = toFieldPath(segments)
+    const target = toFieldPath(segments, options)
     revealTarget.value = target
 
     try {
@@ -166,7 +171,7 @@ export function createFieldReveal(options: {
         focusWithin(landing.element)
       }
 
-      return { path: toDataPath(landing.path), exact }
+      return { path: toDataPath(landing.path, options.getKey), exact }
     } finally {
       // Left set, it would keep opening containers the user expands later
       if (id === lastRevealId) {
