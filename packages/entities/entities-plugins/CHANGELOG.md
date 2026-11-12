@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.2.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.1.1...%40kong-ui-public%2Fentities-plugins%4011.2.0) (2026-11-12)
+
+### Features
+
+* **entities-plugins:** add kong-circuit-breaker free-form plugin form ([#4051](https://github.com/Kong/public-ui-components/issues/4051)) ([91e47e6](https://github.com/Kong/public-ui-components/commit/91e47e6d9e381735f74ebd6eb335fcc4f8706a9a))
+* **entities-plugins:** show OIDC principals.jit in gateway manager ([#4048](https://github.com/Kong/public-ui-components/issues/4048)) ([02e993a](https://github.com/Kong/public-ui-components/commit/02e993aa622082d44c5288029905edfa5be9d275)), closes [#3983](https://github.com/Kong/public-ui-components/issues/3983)
+
+
 ## [11.1.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.1.0...%40kong-ui-public%2Fentities-plugins%4011.1.1) (2026-11-11)
 
 ### Bug Fixes
