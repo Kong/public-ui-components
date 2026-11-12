@@ -28,7 +28,7 @@ const comparedAt = (source: string) => {
 /** Suggestions with the cursor at `|`. */
 const suggest = (marked: string) => {
   const offset = marked.indexOf('|')
-  return getCelSubjectSuggestions(marked.replace('|', ''), offset, full, subjects)
+  return getCelSubjectSuggestions(marked.slice(0, offset) + marked.slice(offset + 1), offset, full, subjects)
 }
 
 describe('getCelSubjectValues', () => {

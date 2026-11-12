@@ -72,7 +72,10 @@ describe('getCelSuggestions', () => {
 
 describe('getCelHover', () => {
   /** Hover at `|`. */
-  const hover = (marked: string) => getCelHover(marked.replace('|', ''), marked.indexOf('|'), full)
+  const hover = (marked: string) => {
+    const offset = marked.indexOf('|')
+    return getCelHover(marked.slice(0, offset) + marked.slice(offset + 1), offset, full)
+  }
 
   it('shows the type and description of a Gateway variable', () => {
     expect(hover('consumer.i|d == "a"')).toEqual({
