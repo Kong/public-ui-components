@@ -8,6 +8,7 @@ import type { CelCallable, CelScope, CelType } from './cel-catalog'
 import { endsInCelLiteral, maskCelLiterals } from './cel-tokens'
 import { getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions } from './cel-subjects'
 import type { CelSubjects, CelSubjectValue } from './cel-subjects'
+import type { CelCompileError } from './cel-validation'
 
 export const CEL_LANGUAGE_ID = 'kong-plugin-cel'
 const SUGGEST_ARGUMENTS_COMMAND = `${CEL_LANGUAGE_ID}.suggestArguments`
@@ -299,4 +300,32 @@ export const attachCelLanguage = (instance: editor.IStandaloneCodeEditor, contex
   }
   const onDispose = model.onWillDispose(dispose)
   return { dispose }
+}
+
+const MARKER_OWNER = `${CEL_LANGUAGE_ID}.compile`
+
+/**
+ * Underlines the Gateway compiler's error. An error with no location, or one
+ * past the end of the text the user has now, marks the whole first line.
+ */
+export const setCelCompileMarker = (instance: editor.IStandaloneCodeEditor, error?: CelCompileError): void => {
+  const model = instance.getModel()
+  if (!model) return
+  if (!error) {
+    monaco.editor.setModelMarkers(model, MARKER_OWNER, [])
+    return
+  }
+
+  const line = error.line && error.line <= model.getLineCount() ? error.line : 1
+  const maxColumn = model.getLineMaxColumn(line)
+  const startColumn = Math.min(error.column ?? 1, maxColumn)
+  monaco.editor.setModelMarkers(model, MARKER_OWNER, [{
+    severity: monaco.MarkerSeverity.Error,
+    message: error.message,
+    startLineNumber: line,
+    endLineNumber: line,
+    startColumn,
+    // cel-go points at a position, not a range, so underline to the end of the line.
+    endColumn: Math.max(startColumn + 1, maxColumn),
+  }])
 }

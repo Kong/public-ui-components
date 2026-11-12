@@ -60,7 +60,7 @@ import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEn
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
-import { CEL_CONDITION_KEY, CEL_INPUT_KEY, CEL_SUBJECTS_KEY, FEATURE_FLAGS } from '../constants'
+import { CEL_CONDITION_KEY, CEL_INPUT_KEY, CEL_SUBJECTS_KEY, CEL_VALIDATE_KEY, FEATURE_FLAGS } from '../constants'
 import CelInput from './free-form/cel/CelInput.vue'
 import type { CelSubjects } from './free-form/cel/cel-subjects'
 
@@ -143,6 +143,8 @@ const props = defineProps({
 // the other CEL fields keep their plain inputs.
 const celEditorEnabled = unref(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false))
 if (celEditorEnabled) provide(CEL_INPUT_KEY, markRaw(CelInput))
+// Only when the host app can reach a Gateway that compiles CEL; otherwise no Validate button.
+if (props.config.validateCelExpression) provide(CEL_VALIDATE_KEY, props.config.validateCelExpression)
 provide(CEL_CONDITION_KEY, computed(() => celEditorEnabled && (props.config.app !== 'kongManager' || useGatewayFeatureSupported({
   gatewayInfo: (props.config as KongManagerPluginFormConfig).gatewayInfo,
   supportedRange: { enterprise: ['3.15'] },

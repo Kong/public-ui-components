@@ -933,7 +933,13 @@
           "principal": "Principal: {name}\nID: {id}",
           "principal_group": "Principal group: {name}\nID: {id}"
         },
-        "plugin_state_hint": "\"plugins.*\" variables are not supported in access control expressions."
+        "plugin_state_hint": "\"plugins.*\" variables are not supported in access control expressions.",
+        "validate": {
+          "action": "Validate",
+          "valid": "Valid expression.",
+          "invalid": "The Gateway rejected this expression.",
+          "unavailable": "Couldn't check this expression. Try again."
+        }
       },
       "acl": {
         "mode": {

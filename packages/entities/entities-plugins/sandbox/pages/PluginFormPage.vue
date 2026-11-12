@@ -71,6 +71,8 @@ import { PluginForm, TOASTER_PROVIDER } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
+import axios from 'axios'
+import type { AxiosError } from 'axios'
 import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
@@ -151,6 +153,21 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
     ],
     principalGroups: [{ id: 'c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e55', name: 'Platform admins' }],
   }),
+  /**
+   * What a host app does: POST the expression to its own URL and turn the
+   * response into a verdict. 400 is the compiler rejecting the expression, so it
+   * resolves; anything else throws and the editor reports that it could not check.
+   */
+  validateCelExpression: async (request) => {
+    try {
+      await axios.post(`/us/kong-api/v2/control-planes/${controlPlaneId}/expressions/validate`, request)
+      return { valid: true }
+    } catch (error) {
+      const response = (error as AxiosError<{ detail?: string, message?: string }>).response
+      if (response?.status !== 400) throw error
+      return { valid: false, message: response.data?.detail ?? response.data?.message }
+    }
+  },
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {

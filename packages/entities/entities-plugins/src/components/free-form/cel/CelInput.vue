@@ -36,6 +36,32 @@
       @update:model-value="update"
     />
 
+    <div
+      v-if="validate"
+      class="ff-cel-input-validation"
+    >
+      <KButton
+        appearance="tertiary"
+        :data-testid="path ? `ff-cel-validate-${path}` : undefined"
+        :disabled="disabled || !modelValue?.trim()"
+        :loading="validating"
+        size="small"
+        type="button"
+        @click="runValidation"
+      >
+        {{ t('plugins.free-form.cel.validate.action') }}
+      </KButton>
+      <span
+        v-if="validation"
+        class="ff-cel-input-validation-result"
+        :class="`is-${validation.state}`"
+        :data-testid="path ? `ff-cel-validation-${path}` : undefined"
+        role="status"
+      >
+        {{ validation.message }}
+      </span>
+    </div>
+
     <p
       v-if="hintText"
       class="ff-cel-input-hint"
@@ -62,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 import type { ComputedRef } from 'vue'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import type { LabelAttributes } from '@kong/kongponents'
@@ -72,7 +98,9 @@ import useI18n from '../../../composables/useI18n'
 import { getCelScope } from './cel-catalog'
 import { getCelHint } from './cel-hints'
 import type { CelSubjects, CelSubjectValue } from './cel-subjects'
-import { CEL_SUBJECTS_KEY } from '../../../constants'
+import { CEL_SUBJECTS_KEY, CEL_VALIDATE_KEY } from '../../../constants'
+import { getCelValidationRequest, parseCelCompileError } from './cel-validation'
+import type * as CelLanguage from './cel-language'
 
 /**
  * The `CEL_INPUT_KEY` editor of `@kong-ui-public/freeform`: a `KTextArea` stand-in
@@ -176,6 +204,10 @@ const editorOptions = computed<Partial<editor.IStandaloneEditorConstructionOptio
 const disposables: IDisposable[] = []
 let unmounted = false
 
+/** Held so the Validate button can mark the compiler's error in the source. */
+const editorInstance = shallowRef<editor.IStandaloneCodeEditor>()
+let setMarker: typeof CelLanguage.setCelCompileMarker | undefined
+
 const ready = async (instance: editor.IStandaloneCodeEditor) => {
   // The editor loads asynchronously and can be ready after the field unmounts.
   if (unmounted) return
@@ -184,12 +216,55 @@ const ready = async (instance: editor.IStandaloneCodeEditor) => {
   }
   disposables.push(instance.onDidContentSizeChange(resize))
   resize()
-  const { attachCelLanguage } = await import('./cel-language')
+  const { attachCelLanguage, setCelCompileMarker } = await import('./cel-language')
   if (unmounted) return
   disposables.push(attachCelLanguage(instance, { scope: () => scope.value, subjects: () => subjects.value, formatSubject }))
+  editorInstance.value = instance
+  setMarker = setCelCompileMarker
   loadSubjects?.().then((loaded) => {
     if (!unmounted) subjects.value = loaded
   }).catch(() => {})
+}
+
+/**
+ * The Gateway's verdict on the current text. Dropped as soon as the text changes,
+ * so the user is never told that an expression they have since edited is valid.
+ */
+const validate = inject(CEL_VALIDATE_KEY, undefined)
+const validating = ref(false)
+const validation = ref<{ state: 'valid' | 'invalid' | 'unavailable', message: string }>()
+
+const clearValidation = () => {
+  validation.value = undefined
+  if (editorInstance.value) setMarker?.(editorInstance.value)
+}
+
+watch(() => modelValue, clearValidation)
+
+const runValidation = async () => {
+  const expression = modelValue?.trim()
+  if (!validate || !expression || validating.value) return
+
+  validating.value = true
+  try {
+    const result = await validate(getCelValidationRequest(path, expression))
+    // The text moved on while the request was in flight, so its verdict no longer applies.
+    if (unmounted || expression !== modelValue?.trim()) return
+
+    if (result.valid) {
+      validation.value = { state: 'valid', message: t('plugins.free-form.cel.validate.valid') }
+      if (editorInstance.value) setMarker?.(editorInstance.value)
+      return
+    }
+    const error = parseCelCompileError(result.message || t('plugins.free-form.cel.validate.invalid'))
+    validation.value = { state: 'invalid', message: error.message }
+    if (editorInstance.value) setMarker?.(editorInstance.value, error)
+  } catch {
+    // The check itself failed, so the expression is not known to be wrong.
+    if (!unmounted) validation.value = { state: 'unavailable', message: t('plugins.free-form.cel.validate.unavailable') }
+  } finally {
+    if (!unmounted) validating.value = false
+  }
 }
 
 onBeforeUnmount(() => {
@@ -214,6 +289,30 @@ const update = (value: string) => {
 
   &.input-error .ff-cel-input-editor {
     border-color: var(--kui-color-border-danger, $kui-color-border-danger);
+  }
+
+  .ff-cel-input-validation {
+    align-items: center;
+    display: flex;
+    gap: var(--kui-space-40, $kui-space-40);
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .ff-cel-input-validation-result {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+
+    &.is-valid {
+      color: var(--kui-color-text-success, $kui-color-text-success);
+    }
+
+    &.is-invalid {
+      color: var(--kui-color-text-danger, $kui-color-text-danger);
+    }
+
+    &.is-unavailable {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    }
   }
 
   .ff-cel-input-hint,
