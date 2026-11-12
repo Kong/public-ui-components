@@ -63,6 +63,15 @@ export {
   usePluginContext,
 } from './components/free-form/plugin-context'
 
+export { provideCelEditor } from './components/free-form/cel/provide-cel-editor'
+export type { CelEditorOptions } from './components/free-form/cel/provide-cel-editor'
+/**
+ * The Monaco CEL editor itself, for a field that is not rendered by free-form
+ * and so cannot go through `CelField` — AI Manager's ACL rules, which use the
+ * app's own array field.
+ */
+export { default as CelInput } from './components/free-form/cel/CelInput.vue'
+
 export type {
   PluginContextRegistry,
   PluginName as PluginContextName,

@@ -106,6 +106,20 @@ The host owns the URL and the client, because the endpoint differs per product (
 
 Resolve with `{ valid: false, message }` when the compiler rejected the expression — that is a result, not a failure. Reject only when the check could not run at all (network, permissions); the editor then says so rather than calling the expression invalid. `sandbox/pages/PluginFormPage.vue` has a worked example.
 
+`PluginEntityForm` wires all of this from its config. A host that mounts the free-form pieces itself and never renders `PluginEntityForm` — AI Manager's policy form, which imports `PluginConfigurationForm` directly — gets none of it, not even the editor, because the injections are made there. Such a host calls `provideCelEditor` in its own setup instead:
+
+```ts
+import { provideCelEditor } from '@kong-ui-public/entities-plugins'
+
+provideCelEditor({
+  enabled: celEditorFlag,          // read once; no editor and no button when false
+  validate: validateCelExpression, // omitted: editor, but no Validate button
+  loadSubjects,                    // optional; value suggestions
+})
+```
+
+For a CEL field that free-form does not render — an app's own array of ACL rules — import `CelInput` and give it the field's `path`, which is what scopes its suggestions and picks the body half.
+
 ## Layout
 
 Plugin forms use `DynamicLayout` (`layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`components/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:
