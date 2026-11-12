@@ -205,21 +205,31 @@ watch([showsCount, showsPercentage], ([count, percentage]) => {
   gap: var(--kui-space-80, $kui-space-80);
 }
 
+// A two-column grid whose first column is the switch control: `display:
+// contents` lifts the control and its label out of SwitchField's own wrappers,
+// so the description lines up with the label whatever the control measures.
 .cb-circuit-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kui-space-20, $kui-space-20);
+  align-items: center;
+  column-gap: var(--kui-space-40, $kui-space-40);
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  row-gap: var(--kui-space-20, $kui-space-20);
 
-  :deep(.k-input-switch-label) {
+  :deep(.ff-switch-field),
+  :deep(.k-input-switch) {
+    display: contents;
+  }
+
+  :deep(.k-label) {
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    margin-bottom: 0;
   }
 }
 
 .cb-circuit-description {
   color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   font-size: var(--kui-font-size-30, $kui-font-size-30);
-  // Aligns with the switch label rather than the switch itself.
-  padding-left: var(--kui-space-100, $kui-space-100);
+  grid-column: 2;
 }
 
 .cb-circuit-body {

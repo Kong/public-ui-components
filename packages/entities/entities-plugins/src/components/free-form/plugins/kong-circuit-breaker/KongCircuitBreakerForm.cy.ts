@@ -12,12 +12,12 @@ interface CircuitBreakerPayload {
   }
 }
 
-const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}) => {
+const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}, isEditing = false) => {
   cy.mount(KongCircuitBreakerForm, {
     props: {
       schema: formSchema as FormSchema,
       model,
-      isEditing: false,
+      isEditing,
       pluginName: 'kong-circuit-breaker',
       onFormChange: cy.spy().as('onFormChange'),
     },
@@ -29,8 +29,8 @@ const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}) =
   })
 }
 
-const mountForm = (model: Record<string, unknown> = {}) =>
-  mountSchema({ type: 'record', ...schema }, model)
+const mountForm = (model: Record<string, unknown> = {}, isEditing = false) =>
+  mountSchema({ type: 'record', ...schema }, model, isEditing)
 
 const openAdvanced = () => cy.getTestId('view-advanced').findTestId('collapse-trigger-content').click()
 
@@ -38,16 +38,12 @@ const enableCircuit = (circuit: 'policy_circuit' | 'latency_circuit') =>
   cy.getTestId(`ff-config.${circuit}.enabled`).find('.switch-control').click()
 
 describe('KongCircuitBreakerForm', () => {
-  // Both circuits default to `enabled: false`, so the cards start collapsed.
-  it('reveals a circuit\'s fields only once that circuit is enabled', () => {
+  // A new plugin turns the policy circuit on: the schema defaults both circuits
+  // off, which the Gateway rejects ("at least one ... must be enabled").
+  it('starts a new plugin with the policy circuit on and the latency one off', () => {
     mountForm()
 
     cy.getTestId('cb-circuits-hint').should('be.visible')
-    cy.getTestId('ff-config.policy_circuit.max_failures').should('not.exist')
-    cy.getTestId('ff-config.latency_circuit.max_upstream_ttfb_ms').should('not.exist')
-
-    enableCircuit('policy_circuit')
-
     cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
     cy.getTestId('ff-config.policy_circuit.sampling_window_seconds').should('have.value', '60')
     cy.getTestId('ff-config.policy_circuit.recovery_period_ms').should('have.value', '30000')
@@ -62,6 +58,22 @@ describe('KongCircuitBreakerForm', () => {
     cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
       expect(value.config.policy_circuit.enabled).to.eq(true)
       expect(value.config.latency_circuit.enabled).to.eq(true)
+    })
+  })
+
+  it('leaves a saved plugin\'s circuits as they were', () => {
+    mountForm({
+      config: {
+        policy_circuit: { enabled: false },
+        latency_circuit: { enabled: true, max_upstream_ttfb_ms: 1200 },
+      },
+    }, true)
+
+    cy.getTestId('ff-config.latency_circuit.max_upstream_ttfb_ms').should('have.value', '1200')
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('not.exist')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit.enabled).to.eq(false)
     })
   })
 
@@ -96,7 +108,6 @@ describe('KongCircuitBreakerForm', () => {
   it('switches a circuit\'s threshold condition', () => {
     mountForm()
 
-    enableCircuit('policy_circuit')
     cy.getTestId('ff-radio-config.policy_circuit.open_when-both').click()
 
     cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
@@ -109,7 +120,6 @@ describe('KongCircuitBreakerForm', () => {
   it('shows only the threshold its condition uses, and drops the other', () => {
     mountForm()
 
-    enableCircuit('policy_circuit')
     cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
     cy.getTestId('ff-config.policy_circuit.failure_percentage').should('not.exist')
 
