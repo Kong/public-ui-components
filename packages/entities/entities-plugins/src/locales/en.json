@@ -892,7 +892,7 @@
     },
     "free-form": {
       "kong-circuit-breaker": {
-        "hint": "Enable one or both circuit, at least one circuit must be enabled.",
+        "hint": "Enable one or both circuits. At least one circuit must be enabled.",
         "sections": {
           "plugin_config": {
             "description": "Stop requests to a Service or Route when failures or upstream latency cross the configured thresholds."

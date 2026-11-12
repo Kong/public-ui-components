@@ -143,6 +143,39 @@ describe('KongCircuitBreakerForm', () => {
     cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
   })
 
+  // Offering a value the schema dropped would fail the Gateway's enum check.
+  it('offers only the enum options the schema declares', () => {
+    mountSchema({
+      type: 'record',
+      fields: [{
+        config: {
+          type: 'record',
+          required: true,
+          fields: [
+            { identifier: { type: 'string', one_of: ['service'], default: 'service' } },
+            {
+              policy_circuit: {
+                type: 'record',
+                required: true,
+                fields: [
+                  { enabled: { type: 'boolean', default: false } },
+                  { open_when: { type: 'string', one_of: ['max_failures'], default: 'max_failures' } },
+                  { max_failures: { type: 'integer', required: true, default: 20 } },
+                ],
+              },
+            },
+          ],
+        },
+      }],
+    })
+
+    openAdvanced()
+    cy.getTestId('ff-radio-config.identifier-service').should('exist')
+    cy.getTestId('ff-radio-config.identifier-route').should('not.exist')
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-max_failures').should('exist')
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-both').should('not.exist')
+  })
+
   // The Gateway's schema is still changing: an unknown field list used to throw
   // while a hand-placed field resolved its label, blanking the whole form.
   it('renders a schema that declares none of the fields it places', () => {

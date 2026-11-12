@@ -141,10 +141,11 @@ const { getSchema } = useFormShared()
 const has = (path: string) => !!getSchema(path)
 const hasAny = (paths: string[]) => paths.some(has)
 
+/** Offer only what the schema accepts, like the threshold condition does. */
 const identifierItems = computed(() => [
   { value: 'service', label: f('identifier.options.service') },
   { value: 'route', label: f('identifier.options.route') },
-])
+].filter(item => (getSchema('config.identifier')?.one_of ?? []).includes(item.value)))
 </script>
 
 <style lang="scss" scoped>
