@@ -30,7 +30,7 @@
           :key="error.path"
         >
           <template v-if="isUnmatched(error)">
-            <code>{{ error.path }}</code> {{ error.message }}
+            <code>{{ error.path || '(entity)' }}</code> {{ error.message }}
             <em>(not shown in the form)</em>
           </template>
           <a
@@ -38,7 +38,7 @@
             href="#"
             @click.prevent="formRef?.reveal(error.path)"
           >
-            <code>{{ error.path }}</code> {{ error.message }}
+            <code>{{ error.path || '(entity)' }}</code> {{ error.message }}
           </a>
         </li>
       </ul>
@@ -75,12 +75,20 @@ import { ArrayField, FieldRenderer, Form, FIELD_RENDERERS } from '../../src'
 import type { FormSchema } from '../../src/form-schema'
 import type { FieldError, RenderRules, RevealResult } from '../../src'
 
-// Errors the server might send back, already in the data path format
+// Errors the server might send back, already in the data path format. The
+// entity check errors use the gateway's wording: a check fails on the record
+// it is declared on, and names the fields only in its message.
 const SAMPLE_ERRORS: FieldError[] = [
+  // A check declared at the top of the schema: the gateway puts it on the
+  // whole entity (Konnect: `ERROR_TYPE_ENTITY`, no field), so no field shows it
+  { path: '', message: "at least one of these fields must be non-empty: 'cache.ttl', 'rate_limit.redis.host'" },
   { path: 'name', message: 'required field missing' },
-  { path: 'connection.tls', message: 'verify needs a client certificate' },
+  // A check declared on a record (Konnect: `connection.tls.@entity[0]`)
+  { path: 'connection.tls', message: "all or none of these fields must be set: 'verify', 'client_cert'" },
   { path: 'connection.tls.client_cert', message: 'invalid PEM certificate' },
   { path: 'upstreams.2.host', message: 'invalid hostname' },
+  // A check declared on the record of an array item
+  { path: 'servers.0', message: "only one or none of these fields must be set: 'host', 'port'" },
   { path: 'servers.1.port', message: 'value should be between 0 and 65535' },
   { path: 'headers.X-Request-Id', message: 'length must be at least 8' },
   { path: 'headers["x.y"]', message: 'header names must not contain a dot' },

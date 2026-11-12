@@ -76,6 +76,18 @@ describe('Field errors', () => {
     cy.get('[data-testid^="ff-field-errors-headers."]').should('have.text', 'header names must not contain a dot')
   })
 
+  it('shows the error on the record of an array item', () => {
+    mountForm([{ path: 'servers.1', message: "only one or none of these fields must be set: 'host', 'port'" }])
+    cy.getTestId('ff-field-errors-servers.1').should('have.text', "only one or none of these fields must be set: 'host', 'port'")
+  })
+
+  it('leaves an error on the whole entity to the host', () => {
+    const entityError = { path: '', message: "at least one of these fields must be non-empty: 'name', 'port'" }
+    mountForm([entityError])
+    cy.get('[data-testid^="ff-field-errors-"]').should('not.exist')
+    cy.get('@wrapper').its('vm.unmatchedErrors').should('deep.equal', [entityError])
+  })
+
   it('marks the inputs as invalid', () => {
     mountForm()
     cy.getTestId('ff-name').closest('.k-input').should('have.class', 'input-error')
