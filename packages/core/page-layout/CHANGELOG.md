@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.9...%40kong-ui-public%2Fpage-layout%401.3.10) (2026-11-13)
+
+### Bug Fixes
+
+* **page-layout:** empty header with actions in empty state [KHCP-22379] ([#4054](https://github.com/Kong/public-ui-components/issues/4054)) ([70049c4](https://github.com/Kong/public-ui-components/commit/70049c4580610fb770ff534ff0584d542a25206f))
+
+
 ## [1.3.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fpage-layout%401.3.8...%40kong-ui-public%2Fpage-layout%401.3.9) (2026-11-03)
 
 ### Bug Fixes
