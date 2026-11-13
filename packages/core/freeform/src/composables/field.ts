@@ -26,7 +26,7 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
   const {
     getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo,
-    revealTarget: formRevealTarget, registerFieldElement,
+    revealTarget: formRevealTarget, registerFieldElement, getFieldErrors,
   } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
@@ -69,6 +69,17 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     return target && utils.isWithinPath(target, fieldPath.value) ? target : null
   })
 
+  /**
+   * The errors of this field and of the fields below it, for a field that
+   * shows its value as a whole (a set rendered as tags gets the errors of its
+   * items). A field with child fields shows `ownFieldErrors` instead and
+   * leaves the rest to the children.
+   */
+  const fieldErrors = computed(() => getFieldErrors(fieldPath.value))
+  const ownFieldErrors = computed(() => getFieldErrors(fieldPath.value, false))
+  /** `fieldErrors` as one line, for controls that take a single message */
+  const fieldErrorMessage = computed(() => fieldErrors.value.map(error => error.message).join('; '))
+
   // Calling `useField` means the component renders this field, so it is
   // where a reveal of this path lands.
   const instance = getCurrentInstance()
@@ -91,6 +102,9 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     hide,
     versionInfo,
     revealTarget,
+    fieldErrors,
+    ownFieldErrors,
+    fieldErrorMessage,
     emptyOrDefaultValue,
     emptyValue,
     error: null,

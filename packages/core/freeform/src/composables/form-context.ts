@@ -8,9 +8,10 @@ import { findExpressionSourceRecord, toSourcePath } from './expression-paths'
 import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 import { createFieldReveal } from './reveal'
+import { createFieldErrors } from './errors'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
-import type { EmptyValue, FormConfig, MatchMap, RenderRules } from '../types'
+import type { EmptyValue, FieldError, FormConfig, MatchMap, RenderRules } from '../types'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
@@ -19,7 +20,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     propsData?: ComputedRef<T>
     propsConfig?: MaybeRefOrGetter<FormConfig<T> | undefined>
     propsRenderRules?: MaybeRefOrGetter<RenderRules | undefined>
+    propsErrors?: MaybeRefOrGetter<FieldError[] | undefined>
     onChange?: (newData: T) => void
+    onErrorsChange?: (errors: FieldError[]) => void
   }) {
     const {
       schema,
@@ -27,6 +30,8 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       onChange,
       propsRenderRules,
       propsConfig,
+      propsErrors,
+      onErrorsChange,
     } = options
     const {
       getDefault: getDefaultFromSchema,
@@ -180,6 +185,15 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getKey: keyIdMap.getKey,
     })
 
+    const { getFieldErrors, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
+      errors: propsErrors,
+      onChange: onErrorsChange,
+      formData: innerData,
+      getSchema: (path) => schemaHelpers.getSchema(path),
+      getKey: keyIdMap.getKey,
+      isFieldHidden,
+    })
+
     return {
       /**
        * The reactive form data object
@@ -205,6 +219,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
        * Reveals the field at a data path, see `createFieldReveal`
        */
       reveal,
+      getFieldErrors,
+      unmatchedErrors,
+      onArrayItemRemoved,
+      onMapKeyRenamed,
+      onMapKeyRemoved,
     }
   },
 )

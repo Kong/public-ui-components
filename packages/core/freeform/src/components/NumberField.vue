@@ -21,6 +21,7 @@
       :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :disabled="isDisabled"
+      :error="error || !!field.fieldErrors?.value.length"
       :model-value="modelValue"
       :type="inputType"
       @update:model-value="handleUpdate"
@@ -50,6 +51,11 @@
         </slot>
       </template>
     </EnhancedInput>
+
+    <FieldErrors
+      :errors="field.fieldErrors?.value"
+      :path="field.path?.value"
+    />
 
     <component
       :is="autofillSlot"
@@ -88,6 +94,7 @@
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from '../composables'

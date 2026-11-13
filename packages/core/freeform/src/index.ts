@@ -17,6 +17,7 @@ export { default as MapField } from './components/MapField.vue'
 export { default as EnhancedInput } from './components/EnhancedInput.vue'
 export { default as EntityChecksAlert } from './components/EntityChecksAlert.vue'
 export { default as SlideTransition } from './components/SlideTransition.vue'
+export { default as FieldErrors } from './components/FieldErrors.vue'
 
 export * from './composables'
 export * from './form-schema'

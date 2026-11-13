@@ -16,6 +16,8 @@
     :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :disabled="isDisabled"
+    :error="hasError"
+    :help="helpText"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
     @update:model-value="(value: EnumValue) => emit('update', normalizeValue(value))"
@@ -127,6 +129,11 @@ const fieldAttrs = useFieldAttrs(field.path!, props)
 // `disabled` is only on `SelectProps`, not `MultiselectProps` (KMultiselect reads it off
 // fallthrough attrs instead) — read it loosely so both branches of `EnumFieldProps` work.
 const isDisabled = computed(() => (props as { disabled?: boolean }).disabled || !!versionInfo?.value)
+
+// The select has no error message of its own: it turns its help text red
+// on `error`, so field errors take the help text's place.
+const hasError = computed(() => !!(props as { error?: boolean }).error || !!field.fieldErrors?.value.length)
+const helpText = computed(() => field.fieldErrorMessage?.value || (props as { help?: string }).help)
 
 function normalizeValue(value: EnumValue): EnumValue {
   // Required fields are already correctly shaped here (`[]` for a cleared

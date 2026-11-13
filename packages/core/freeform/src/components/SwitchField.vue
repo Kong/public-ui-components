@@ -23,10 +23,16 @@
         {{ fieldValue ? (enabledText || t('actions.enabled')) : (disabledText || t('actions.disabled')) }}
       </template>
     </KInputSwitch>
+
+    <FieldErrors
+      :errors="field.fieldErrors?.value"
+      :path="field.path?.value"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { KInputSwitch, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from '../composables'
 import { computed, toRef } from 'vue'

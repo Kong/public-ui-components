@@ -25,6 +25,11 @@ const router = createRouter({
       name: 'field-navigation',
       component: () => import('./pages/FieldNavigationDemo.vue'),
     },
+    {
+      path: '/field-errors',
+      name: 'field-errors',
+      component: () => import('./pages/FieldErrorsDemo.vue'),
+    },
   ],
 })
 

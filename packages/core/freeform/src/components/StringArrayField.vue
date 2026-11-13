@@ -19,6 +19,7 @@
       :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :disabled="isDisabled"
+      :error="!!$attrs.error || !!field.fieldErrors?.value.length"
       :model-value="rawInputValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -47,10 +48,16 @@
         </slot>
       </template>
     </EnhancedInput>
+
+    <FieldErrors
+      :errors="field.fieldErrors?.value"
+      :path="field.path?.value"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import FieldErrors from './FieldErrors.vue'
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
 import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
