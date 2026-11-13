@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.9.0...%40kong-ui-public%2Ffreeform%400.10.0) (2026-11-13)
+
+### Features
+
+* **freeform:** link entity check fields and animate the reveal ([#4058](https://github.com/Kong/public-ui-components/issues/4058)) ([9a3bd80](https://github.com/Kong/public-ui-components/commit/9a3bd809250767be5de120cc8a57610f06ff6420))
+
+
 # [0.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.8.6...%40kong-ui-public%2Ffreeform%400.9.0) (2026-11-12)
 
 ### Features
