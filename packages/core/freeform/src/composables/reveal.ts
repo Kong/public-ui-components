@@ -266,16 +266,22 @@ function prefersReducedMotion() {
 }
 
 /**
- * The nearest ancestor that scrolls, or `null` for the page
+ * The ancestors that scroll, innermost first, ending with the page when it
+ * scrolls
  */
-function findScrollContainer(element: Element): HTMLElement | null {
+function findScrollContainers(element: Element): HTMLElement[] {
+  const containers: HTMLElement[] = []
   for (let node = element.parentElement; node; node = node.parentElement) {
     const { overflowY } = getComputedStyle(node)
     if (/auto|scroll|overlay/.test(overflowY) && node.scrollHeight > node.clientHeight) {
-      return node
+      containers.push(node)
     }
   }
-  return null
+  const page = document.scrollingElement
+  if (page instanceof HTMLElement && page.scrollHeight > page.clientHeight && !containers.includes(page)) {
+    containers.push(page)
+  }
+  return containers
 }
 
 function easeInOutCubic(t: number) {
@@ -283,9 +289,10 @@ function easeInOutCubic(t: number) {
 }
 
 /**
- * Scrolls the element to the middle of its scroll container in `duration`
- * ms. `scrollIntoView`'s smooth behavior can't be timed, hence the frames.
- * Stops when `cancelled` turns true, e.g. a later reveal took over.
+ * Scrolls the element to the middle of each scroll container it sits in,
+ * from the innermost out, in `duration` ms, as `scrollIntoView` would move
+ * them all. Its smooth behavior can't be timed, hence the frames. Stops when
+ * `cancelled` turns true, e.g. a later reveal took over.
  */
 async function scrollToCenter(element: Element, duration: number, cancelled: () => boolean) {
   if (duration === 0) {
@@ -293,16 +300,23 @@ async function scrollToCenter(element: Element, duration: number, cancelled: () 
     return
   }
 
-  const container = findScrollContainer(element)
-  const scroller = container ?? document.scrollingElement ?? document.documentElement
-  const viewTop = container ? container.getBoundingClientRect().top : 0
-  const viewHeight = container ? container.clientHeight : window.innerHeight
   const rect = element.getBoundingClientRect()
+  // Where the element's top is in the viewport, once the containers inside
+  // the current one have scrolled
+  let top = rect.top
 
-  const from = scroller.scrollTop
-  const max = scroller.scrollHeight - scroller.clientHeight
-  const to = Math.min(max, Math.max(0, from + rect.top - viewTop - (viewHeight - rect.height) / 2))
-  if (Math.abs(to - from) < 1) {
+  const moves = findScrollContainers(element).map((scroller) => {
+    const isPage = scroller === document.scrollingElement
+    const viewTop = isPage ? 0 : scroller.getBoundingClientRect().top
+    const viewHeight = isPage ? window.innerHeight : scroller.clientHeight
+    const from = scroller.scrollTop
+    const max = scroller.scrollHeight - scroller.clientHeight
+    const to = Math.min(max, Math.max(0, from + top - viewTop - (viewHeight - rect.height) / 2))
+    top -= to - from
+    return { scroller, from, to }
+  }).filter(({ from, to }) => Math.abs(to - from) >= 1)
+
+  if (!moves.length) {
     return
   }
 
@@ -314,7 +328,10 @@ async function scrollToCenter(element: Element, duration: number, cancelled: () 
         return
       }
       const progress = Math.min(1, (now - start) / duration)
-      scroller.scrollTop = from + (to - from) * easeInOutCubic(progress)
+      const eased = easeInOutCubic(progress)
+      for (const { scroller, from, to } of moves) {
+        scroller.scrollTop = from + (to - from) * eased
+      }
       if (progress < 1) {
         requestAnimationFrame(step)
       } else {

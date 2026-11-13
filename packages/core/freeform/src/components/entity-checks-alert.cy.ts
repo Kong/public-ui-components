@@ -44,3 +44,31 @@ describe('EntityChecksAlert links', () => {
     cy.getTestId('ff-limits.redis.host').should('be.visible').and('have.focus')
   })
 })
+
+describe('EntityChecksAlert links inside a map entry', () => {
+  const mapSchema: FormSchema = {
+    type: 'record',
+    fields: [{
+      providers: {
+        type: 'map',
+        keys: { type: 'string' },
+        values: {
+          type: 'record',
+          entity_checks: [{ at_least_one_of: ['model', 'options.temperature'] }],
+          fields: [
+            { model: { type: 'string' } },
+            { options: { type: 'record', fields: [{ temperature: { type: 'number' } }] } },
+          ],
+        },
+      },
+    }],
+  }
+
+  it('reveals a field of the entry, whose key has a dot in it', () => {
+    // The record's path holds a key ID, which the link turns back into `"azure.openai"`
+    cy.mount(Form, { props: { schema: mapSchema, data: { providers: { 'azure.openai': { model: 'gpt-4o', options: { temperature: 0.7 } } } } } })
+
+    cy.getTestId('ff-entity-check-field-options.temperature').click()
+    cy.focused().should('have.value', '0.7')
+  })
+})

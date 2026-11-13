@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file -- small harness components wrap the form */
 import { defineComponent, h, type Component } from 'vue'
 import Form from './Form.vue'
 import ArrayField from './ArrayField.vue'
@@ -209,6 +210,29 @@ describe('Field navigation', () => {
       ])
     })
     cy.focused().should('have.value', 'cert')
+  })
+
+  it('scrolls every container on the way, not only the innermost', () => {
+    let form: RevealingForm | undefined
+    // A scrollable panel that is itself below the fold of the page
+    cy.mount(defineComponent({
+      setup: () => () => h('div', [
+        h('div', { style: 'height: 1500px' }),
+        h('div', { style: 'height: 200px; overflow: auto' }, [
+          h(Form, { schema, data, renderRules, ref: (instance: unknown) => {
+            form = instance as RevealingForm
+          } }),
+        ]),
+      ]),
+    }))
+
+    cy.then(() => form!.reveal('rate_limit.strategy', { duration: 200 }))
+    cy.get('[data-testid="ff-rate_limit.strategy"]').should(($el) => {
+      const { top, bottom } = $el[0].getBoundingClientRect()
+      const { innerHeight } = $el[0].ownerDocument.defaultView!
+      expect(top, 'top in the viewport').to.be.at.least(0)
+      expect(bottom, 'bottom in the viewport').to.be.at.most(innerHeight)
+    })
   })
 
   it('returns null for a malformed path', () => {
