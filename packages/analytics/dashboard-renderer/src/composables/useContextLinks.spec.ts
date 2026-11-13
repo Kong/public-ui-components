@@ -49,6 +49,25 @@ const mockStripUnknownFilters = ({
   })
 }
 
+const mockDatasourceConfigMap = {
+  basic: { name: 'basic', showInUI: false, showRequestsLink: true },
+  api_usage: { name: 'api_usage', showInUI: true, showRequestsLink: true },
+  llm_usage: { name: 'llm_usage', showInUI: true },
+  agentic_usage: { name: 'agentic_usage', showInUI: true, showRequestsLink: true },
+  requests: { name: 'requests', showInUI: false, showRequestsLink: true },
+  platform_usage: { name: 'platform_usage', showInUI: true },
+  managed_cache_usage: { name: 'managed_cache_usage', showInUI: true },
+}
+
+const mockDatasourceConfigStore = (overrides: Record<string, unknown> = {}) => ({
+  stripUnknownFilters: ref(mockStripUnknownFilters),
+  datasourceConfigMap: ref(mockDatasourceConfigMap),
+  datasourceConfigError: ref(null),
+  loading: ref(false),
+  isReady: vi.fn().mockResolvedValue(undefined),
+  ...overrides,
+}) as any
+
 const makeFilter = (field: string) => ({ field, operator: 'in', value: ['x'] })
 
 const absoluteTimeRange = {
@@ -152,11 +171,7 @@ describe('useContextLinks', () => {
     vi.clearAllMocks()
     analyticsConfig.analytics = true
     analyticsConfig.percentiles = true
-    vi.mocked(useDatasourceConfigStore).mockReturnValue({
-      stripUnknownFilters: ref(mockStripUnknownFilters),
-      loading: ref(false),
-      isReady: vi.fn().mockResolvedValue(undefined),
-    } as any)
+    vi.mocked(useDatasourceConfigStore).mockReturnValue(mockDatasourceConfigStore())
   })
 
   it('waits for datasource config readiness before generating links', async () => {
@@ -169,11 +184,10 @@ describe('useContextLinks', () => {
       }
     })
 
-    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
-      stripUnknownFilters: ref(mockStripUnknownFilters),
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
       loading,
       isReady: vi.fn(() => ready),
-    } as any)
+    }))
 
     const { wrapper } = mountComposable({})
     await flushPromises()
@@ -217,11 +231,9 @@ describe('useContextLinks', () => {
 
   it('forwards query fields to filter stripping when generating dashboard links', async () => {
     const stripUnknownFiltersSpy = vi.fn(mockStripUnknownFilters)
-    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
       stripUnknownFilters: ref(stripUnknownFiltersSpy),
-      loading: ref(false),
-      isReady: vi.fn().mockResolvedValue(undefined),
-    } as any)
+    }))
 
     const { wrapper } = mountComposable({
       metrics: ['request_count', 'request_size'],
@@ -364,7 +376,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', 'managed_cache_usage', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({
@@ -418,12 +430,74 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
-  it('prevents requests link for llm_usage datasource', async () => {
-    const { wrapper } = mountComposable({ datasource: 'llm_usage' })
+  it('prevents requests link for datasources without showRequestsLink', async () => {
+    for (const datasource of ['llm_usage', 'managed_cache_usage']) {
+      const { wrapper } = mountComposable({ datasource })
+      await flushPromises()
+
+      expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+      expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    }
+  })
+
+  it('builds requests link for datasources with showRequestsLink', async () => {
+    for (const datasource of ['api_usage', 'basic', 'agentic_usage', 'requests', undefined]) {
+      const { wrapper } = mountComposable({ datasource })
+      await flushPromises()
+
+      expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
+    }
+  })
+
+  it('does not build explore link for datasources Explore does not show', async () => {
+    const { wrapper } = mountComposable({ datasource: 'requests' })
     await flushPromises()
 
+    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+  })
+
+  it('does not build links for datasources missing from config', async () => {
+    const withoutAgentic: Record<string, unknown> = { ...mockDatasourceConfigMap }
+    delete withoutAgentic.agentic_usage
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
+      datasourceConfigMap: ref(withoutAgentic),
+    }))
+
+    const { wrapper } = mountComposable({ datasource: 'agentic_usage' })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
     expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
-    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+  })
+
+  it('looks up the deprecated platform datasource as platform_usage', async () => {
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
+      datasourceConfigMap: ref({
+        ...mockDatasourceConfigMap,
+        platform_usage: { name: 'platform_usage', showInUI: false },
+      }),
+    }))
+
+    const { wrapper } = mountComposable({ datasource: 'platform' })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
+  })
+
+  it('does not build links when datasource config fails to load', async () => {
+    for (const datasource of ['api_usage', 'goap_event_gateway']) {
+      vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
+        datasourceConfigMap: ref({}),
+        datasourceConfigError: ref(new Error('config failed')),
+      }))
+
+      const { wrapper } = mountComposable({ datasource })
+      await flushPromises()
+
+      expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+      expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    }
   })
 
   it('builds requests link for kebab menu (absolute time range uses chartData.meta start/end)', async () => {

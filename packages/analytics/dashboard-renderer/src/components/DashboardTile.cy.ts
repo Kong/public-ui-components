@@ -15,6 +15,7 @@ const datasourceConfigMock: DatasourceConfig[] = [
   {
     name: 'api_usage',
     showInUI: true,
+    showRequestsLink: true,
     timeRangeOptions: ['15m', '30m', '1h', '24h'],
     fields: [
       {
