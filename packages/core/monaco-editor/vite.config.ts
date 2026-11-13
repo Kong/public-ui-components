@@ -24,6 +24,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         // Language-specific entry points for code-splitting.
         'languages/json': resolve(dirname(fileURLToPath(import.meta.url)), './src/languages/json/index.ts'),
         'languages/yaml': resolve(dirname(fileURLToPath(import.meta.url)), './src/languages/yaml/index.ts'),
+        'languages/cel': resolve(dirname(fileURLToPath(import.meta.url)), './src/languages/cel/index.ts'),
       },
       fileName: (format, entryName) => {
         if (entryName === 'index') {

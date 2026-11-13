@@ -51,15 +51,18 @@ import {
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
+import { computed, defineAsyncComponent, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, unref, watch, type MaybeRef, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
+import { CEL_INPUT_KEY } from '@kong-ui-public/freeform'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
+import { FEATURE_FLAGS } from '../constants'
+import { getPluginCelFieldKind, useCelSubjectLoader } from './free-form/cel-editor'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -277,6 +280,16 @@ provide(FORMS_CONFIG, liveConfig)
 
 // For cloned plugins, use the source plugin name for rendering decisions
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)
+const celEditorEnabled = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
+const loadCelSubjects = useCelSubjectLoader(() => props.config)
+const PluginCelInput = defineAsyncComponent(() => import('./free-form/PluginCelInput.vue'))
+
+provide(CEL_INPUT_KEY, (path, schema) => {
+  const kind = getPluginCelFieldKind(path, schema, effectivePluginName.value, props.config, unref(celEditorEnabled))
+  if (!kind) return
+  return { component: PluginCelInput, props: { kind, getSubjects: loadCelSubjects.value } }
+})
+
 const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
 const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))
 const freeformSchema = computed(() => {

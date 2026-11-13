@@ -7,6 +7,7 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
 - [Usage](#usage)
   - [Install](#install)
   - [Register](#register)
+- [CEL input](#cel-input)
 - [MonacoEditor Component](#monacoeditor-component)
   - [Props](#props)
   - [Events](#events)
@@ -102,6 +103,38 @@ app.component('MonacoEditor', MonacoEditor)
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 </script>
 ```
+
+## CEL input
+
+Import `CelInput` and its language declarations from `@kong-ui-public/monaco-editor/languages/cel`. Each editor uses its own dialect for completion, hover, signature help, and hints. In an AI Manager ACL form the host can pass its authorized records and runtime capabilities directly.
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import { KTextArea } from '@kong/kongponents'
+import {
+  CelInput, defineCelLanguage, kongConsumer, kongConsumerGroup, kongPrincipal,
+  type CelSubjects,
+} from '@kong-ui-public/monaco-editor/languages/cel'
+import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
+
+const expression = defineModel<string>({ required: true })
+const props = defineProps<{ enableCelEditor: boolean, subjects: CelSubjects, supportsPrincipalGroups: boolean }>()
+const records = () => props.subjects
+const language = computed(() => defineCelLanguage([
+  kongConsumer(records),
+  kongConsumerGroup(records),
+  kongPrincipal(records, { supportsPrincipalGroups: props.supportsPrincipalGroups }),
+], { standardCallables: ['has', 'matches', 'contains', 'startsWith', 'endsWith', 'all', 'exists', 'map', 'filter'] }))
+</script>
+
+<template>
+  <CelInput v-if="enableCelEditor" v-model="expression" label="ACL expression" :language="language" />
+  <KTextArea v-else v-model="expression" label="ACL expression" />
+</template>
+```
+
+Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
 
 ## MonacoEditor Component
 

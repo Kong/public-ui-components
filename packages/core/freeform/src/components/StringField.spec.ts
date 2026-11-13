@@ -1,11 +1,11 @@
 import { afterEach, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { h, defineComponent, ref } from 'vue'
-import { KButton, KInput } from '@kong/kongponents'
+import { h, defineComponent, nextTick, ref } from 'vue'
+import { KButton, KInput, KTextArea } from '@kong/kongponents'
 import Form from './Form.vue'
 import StringField from './StringField.vue'
 import type { FormSchema, StringFieldSchema } from '../form-schema'
-import { USE_SECRET_INPUT_KEY } from '../constants'
+import { CEL_INPUT_KEY, USE_SECRET_INPUT_KEY } from '../constants'
 
 const FIELD_NAME = 'name'
 
@@ -79,6 +79,29 @@ describe('StringField', () => {
     const input = wrapper.get('input')
     await input.setValue('   ')
     expect(lastChange(onChangeSpy)).toEqual({ [FIELD_NAME]: '   ' })
+  })
+
+  it('switches only the selected field and preserves the value across rollout changes', async () => {
+    const enabled = ref(false)
+    const schema: FormSchema = { type: 'record', fields: [{ condition: { type: 'string' } }] }
+    const wrapper = mount(Form, {
+      props: { schema, data: { condition: 'true' } },
+      slots: { default: () => h(StringField, { name: 'condition' }) },
+      global: { provide: {
+        [CEL_INPUT_KEY as symbol]: (path: string) => enabled.value && path === 'condition'
+          ? { component: KTextArea, props: { rows: 4 } }
+          : undefined,
+      } },
+    })
+    expect(wrapper.get('input').element.value).toBe('true')
+    enabled.value = true
+    await nextTick()
+    expect(wrapper.get('textarea').attributes('rows')).toBe('4')
+    await wrapper.get('textarea').setValue('false')
+    expect(wrapper.emitted('change')?.at(-1)).toEqual([{ condition: 'false' }])
+    enabled.value = false
+    await nextTick()
+    expect(wrapper.get('input').element.value).toBe('false')
   })
 
   it('uses the legacy password input for encrypted fields by default', () => {

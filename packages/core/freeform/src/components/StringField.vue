@@ -21,6 +21,7 @@
       :disabled="isDisabled"
       :error="error || !!field.fieldErrors?.value.length"
       :error-message="errorMessage"
+      :field-path="field.path.value"
       :help="(multiline && error) ? errorMessage : help"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
