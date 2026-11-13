@@ -1,5 +1,5 @@
 import type { InjectionKey, Ref } from 'vue'
-import type { CelSubjects } from './cel/cel-subjects'
+import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 
 export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:use-secret-input') as InjectionKey<Ref<boolean>>
 

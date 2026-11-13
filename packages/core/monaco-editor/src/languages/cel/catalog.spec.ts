@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelGlobals, getCelLocals, getCelScope, resolveCelChain,
-} from './cel-catalog'
+} from './catalog'
 
 const full = { pluginState: true, expressible: false }
 const acl = { pluginState: false, expressible: false }

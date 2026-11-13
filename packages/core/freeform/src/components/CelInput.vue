@@ -69,10 +69,8 @@ import type { LabelAttributes } from '@kong/kongponents'
 import type { editor, IDisposable } from 'monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import useI18n from '../composables/useI18n'
-import { getCelScope } from '../cel/cel-catalog'
-import { attachCelLanguage } from '../cel/cel-language'
-import { getCelHint } from '../cel/cel-hints'
-import type { CelSubjects, CelSubjectValue } from '../cel/cel-subjects'
+import { attachCelLanguage, getCelHint, getCelScope } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelSubjects, CelSubjectValue } from '@kong-ui-public/monaco-editor/languages/cel'
 import { CEL_SUBJECTS_KEY } from '../constants'
 
 /**

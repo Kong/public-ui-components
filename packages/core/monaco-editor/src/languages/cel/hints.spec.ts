@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getCelHint } from './cel-hints'
+import { getCelHint } from './hints'
 
 const full = { pluginState: true, expressible: false }
 const acl = { pluginState: false, expressible: false }

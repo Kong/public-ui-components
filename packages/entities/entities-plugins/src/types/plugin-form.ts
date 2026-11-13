@@ -1,6 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { CelSubjects } from '@kong-ui-public/freeform'
+import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { CustomPluginType, EntityType } from './plugin'
 
 export interface BasePluginSelectConfig {

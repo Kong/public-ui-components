@@ -1,6 +1,6 @@
-import { getCelElement, getCelLocals, resolveCelChain } from './cel-catalog'
-import type { CelScope, CelSubjectKind, CelType } from './cel-catalog'
-import { CEL_LITERALS_AND_COMMENTS } from './cel-tokens'
+import { getCelElement, getCelLocals, resolveCelChain } from './catalog'
+import type { CelScope, CelSubjectKind, CelType } from './catalog'
+import { CEL_LITERALS_AND_COMMENTS } from './tokens'
 
 /**
  * Records that plugin CEL expressions can name: Gateway Consumers and Consumer

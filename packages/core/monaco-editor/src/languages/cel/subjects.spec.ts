@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   getCelComparedSubject, getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions, getCelSubjectValues,
-} from './cel-subjects'
-import type { CelSubjects } from './cel-subjects'
+} from './subjects'
+import type { CelSubjects } from './subjects'
 
 const full = { pluginState: true, expressible: false }
 

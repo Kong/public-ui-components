@@ -9,7 +9,7 @@
 // `plugins.<name>` uses the plugin name with `_` for `-`, as in `plugins.key_auth.is_matched`.
 // The functions, macros and field descriptions follow the published reference:
 // https://developer.konghq.com/gateway/plugins/expressions/
-import { maskCelLiterals } from './cel-tokens'
+import { maskCelLiterals } from './tokens'
 
 /** A string that names a Gateway or Kong Identity record, so its literals can be suggested. */
 export type CelSubjectKind =

@@ -1,6 +1,6 @@
-import { formatCelType, getCelGlobals, getCelLocals, getCelMember } from './cel-catalog'
-import type { CelScope, CelType } from './cel-catalog'
-import { maskCelLiterals } from './cel-tokens'
+import { formatCelType, getCelGlobals, getCelLocals, getCelMember } from './catalog'
+import type { CelScope, CelType } from './catalog'
+import { maskCelLiterals } from './tokens'
 
 // Plural or near-miss roots people type for the Gateway variables.
 const ALIASES: Record<string, string> = {

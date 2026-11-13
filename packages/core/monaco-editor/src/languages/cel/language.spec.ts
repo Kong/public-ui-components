@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('monaco-editor', () => ({}))
 
-import { getCelCompletionContext, getCelHover, getCelSignature, getCelSuggestions } from './cel-language'
+import { getCelCompletionContext, getCelHover, getCelSignature, getCelSuggestions } from './language'
 
 const full = { pluginState: true, expressible: false }
 const acl = { pluginState: false, expressible: false }

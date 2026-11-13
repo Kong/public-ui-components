@@ -3,11 +3,11 @@ import type { IDisposable, editor } from 'monaco-editor'
 import {
   CEL_MACROS, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelGlobals, getCelLocals,
   isCelPresenceRoot, resolveCelChain,
-} from './cel-catalog'
-import type { CelCallable, CelScope, CelType } from './cel-catalog'
-import { endsInCelLiteral, maskCelLiterals } from './cel-tokens'
-import { getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions } from './cel-subjects'
-import type { CelSubjects, CelSubjectValue } from './cel-subjects'
+} from './catalog'
+import type { CelCallable, CelScope, CelType } from './catalog'
+import { endsInCelLiteral, maskCelLiterals } from './tokens'
+import { getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions } from './subjects'
+import type { CelSubjects, CelSubjectValue } from './subjects'
 
 export const CEL_LANGUAGE_ID = 'kong-plugin-cel'
 const SUGGEST_ARGUMENTS_COMMAND = `${CEL_LANGUAGE_ID}.suggestArguments`

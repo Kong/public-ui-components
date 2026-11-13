@@ -28,6 +28,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong/design-tokens',
         '@kong-ui-public/monaco-editor',
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
+        '@kong-ui-public/monaco-editor/languages/cel',
         'monaco-editor',
       ],
     },
