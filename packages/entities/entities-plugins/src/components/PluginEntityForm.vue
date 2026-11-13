@@ -49,20 +49,21 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, unref, watch, type MaybeRef, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
-import { CEL_SUBJECTS_KEY, USE_CEL_EDITOR_KEY } from '@kong-ui-public/freeform'
+import { CEL_EDITOR_KEY, CEL_SUBJECTS_KEY } from '@kong-ui-public/freeform'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
-import { CEL_CONDITION_KEY, FEATURE_FLAGS } from '../constants'
+import { FEATURE_FLAGS } from '../constants'
+import { shouldRenderCelEditor } from './free-form/cel-editor'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -139,14 +140,9 @@ const props = defineProps({
   },
 })
 
-// Without the CEL editor, `CelField` (`expressions.*`) falls back to a textarea, and
-// the other CEL fields keep their plain inputs.
+// Every CEL field asks this one decision whether to render the CEL editor or its plain input.
 const celEditorEnabled = unref(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false))
-provide(USE_CEL_EDITOR_KEY, celEditorEnabled)
-provide(CEL_CONDITION_KEY, computed(() => celEditorEnabled && (props.config.app !== 'kongManager' || useGatewayFeatureSupported({
-  gatewayInfo: (props.config as KongManagerPluginFormConfig).gatewayInfo,
-  supportedRange: { enterprise: ['3.15'] },
-}))))
+provide(CEL_EDITOR_KEY, path => shouldRenderCelEditor(path, celEditorEnabled, props.config))
 
 const isKonnectManagedRedisEnabled = computed<boolean>(() => {
   if (props.config.app !== 'konnect') return false

@@ -1,13 +1,5 @@
-import type { InjectionKey, Ref } from 'vue'
-
 export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
 export { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../components/free-form/const'
-
-/**
- * Whether the plugin `condition` field takes CEL. Kong Gateway 3.15 made CEL the
- * condition engine; 3.14 used the ATC router syntax.
- */
-export const CEL_CONDITION_KEY = Symbol('CEL_CONDITION_KEY') as InjectionKey<Ref<boolean>>
 
 export const FEATURE_FLAGS = {
   KM_2262_CODE_MODE: 'KM-2262-code-mode',

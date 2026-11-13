@@ -44,7 +44,7 @@
     >
       <template #item="{ autofocus, fieldName }">
         <component
-          :is="isExpressionMode && celEditorEnabled ? CelField : StringField"
+          :is="isCelEditor(`config.${mode}.${fieldName}`) ? CelField : StringField"
           :autofocus="autofocus"
           :multiline="isExpressionMode"
           :name="fieldName"
@@ -74,14 +74,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, unref, watch } from 'vue'
-import type { MaybeRef } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared, ArrayField, CelField, StringField } from '@kong-ui-public/freeform'
+import { useFormShared, useCelEditor, ArrayField, CelField, StringField } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
-import { FEATURE_FLAGS } from '../../../../constants'
 
 import type { FreeFormPluginData } from '../../types'
 
@@ -99,8 +97,8 @@ type AclMode = keyof AclConfig
 // used to detect the active mode on initial load.
 const ALL_MODES: AclMode[] = ['allow', 'deny', 'allow_when', 'deny_when']
 
-// The two `*_when` modes hold CEL expressions, so they use `CelField` (or, without
-// the CEL editor flag, a textarea) instead of the single-line input the schema type would otherwise get.
+// The two `*_when` modes hold CEL expressions, which are long enough to warrant a
+// textarea instead of the single-line input the schema type would otherwise get.
 const EXPRESSION_MODES: AclMode[] = ['allow_when', 'deny_when']
 
 const { formData, getLabelAttributes, getSchema, getEmptyValue, getDefault } = useFormShared<FreeFormPluginData<AclConfig>>()
@@ -113,8 +111,7 @@ const MODES = computed(() => ALL_MODES.filter((m) => !!getSchema(`config.${m}`))
 
 const mode = ref<AclMode>('allow')
 const isExpressionMode = computed(() => EXPRESSION_MODES.includes(mode.value))
-// Without the CEL editor flag, the expression modes keep their textarea.
-const celEditorEnabled = unref(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false))
+const isCelEditor = useCelEditor()
 
 // With only allow/deny available the radios are self-explanatory, and the tooltip
 // copy talks about a choice the Gateway version cannot offer — so drop it entirely.

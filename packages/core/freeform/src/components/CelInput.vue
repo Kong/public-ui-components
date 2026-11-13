@@ -75,8 +75,8 @@ import { getPluginFieldCelLanguage } from '../cel'
 import { CEL_SUBJECTS_KEY } from '../constants'
 
 /**
- * The CEL editor that `CelField` renders under `USE_CEL_EDITOR_KEY`: a `KTextArea`
- * stand-in that suggests the Gateway variables in scope for the field at `path`.
+ * The Monaco editor inside `CelField`: a `KTextArea` stand-in that suggests the
+ * Gateway variables in scope for the field at `path`.
  */
 defineOptions({ inheritAttrs: false })
 

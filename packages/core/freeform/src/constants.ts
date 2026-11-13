@@ -6,11 +6,12 @@ export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:
 export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'
 
 /**
- * Whether `CelField` (and so every `ExpressionEditor`) renders the CEL editor:
- * Monaco, with suggestions, hover and hints scoped to the field's path. Without
- * it, `CelField` renders a textarea.
+ * Decides whether the CEL field at `path` (see `getCelFieldKind`) renders the
+ * CEL editor (`CelField`: Monaco, with suggestions, hover and hints) instead of
+ * its plain `StringField`. The host provides it; without it, every field keeps
+ * its plain input. Read it with `useCelEditor`.
  */
-export const USE_CEL_EDITOR_KEY = Symbol.for('kong-ui-public:freeform:use-cel-editor') as InjectionKey<boolean>
+export const CEL_EDITOR_KEY = Symbol.for('kong-ui-public:freeform:cel-editor') as InjectionKey<(path: string) => boolean>
 
 /**
  * Loads the records that CEL expressions can name, for value suggestions in the

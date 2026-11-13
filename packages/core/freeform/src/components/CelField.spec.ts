@@ -5,7 +5,6 @@ import { h, defineComponent } from 'vue'
 import Form from './Form.vue'
 import CelField from './CelField.vue'
 import type { FormSchema } from '../form-schema'
-import { USE_CEL_EDITOR_KEY } from '../constants'
 
 // A stand-in for the Monaco CEL editor, which needs a browser.
 vi.mock('./CelInput.vue', async () => {
@@ -32,7 +31,7 @@ vi.mock('./CelInput.vue', async () => {
 
 const FIELD_NAME = 'condition'
 
-async function mountCelField(data?: Record<string, unknown>, useEditor = false) {
+async function mountCelField(data?: Record<string, unknown>) {
   const schema: FormSchema = {
     type: 'record',
     fields: [{ [FIELD_NAME]: { type: 'string' } }],
@@ -49,9 +48,7 @@ async function mountCelField(data?: Record<string, unknown>, useEditor = false) 
     },
   })
 
-  const wrapper = mount(Wrapper, {
-    global: { provide: useEditor ? { [USE_CEL_EDITOR_KEY as symbol]: true } : {} },
-  })
+  const wrapper = mount(Wrapper)
   // The editor loads asynchronously.
   await flushPromises()
 
@@ -59,18 +56,9 @@ async function mountCelField(data?: Record<string, unknown>, useEditor = false) 
 }
 
 describe('CelField', () => {
-  it('renders a textarea without the CEL editor', async () => {
-    const { wrapper, lastChange } = await mountCelField()
-
-    const textarea = wrapper.get('textarea')
-    await textarea.setValue('consumer.username == "alice"')
-    expect(lastChange()).toEqual({ [FIELD_NAME]: 'consumer.username == "alice"' })
-  })
-
   it('renders the CEL editor with the field path', async () => {
-    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' }, true)
+    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' })
 
-    expect(wrapper.find('textarea').exists()).toBe(false)
     const input = wrapper.get('.fake-cel-editor')
     expect(input.attributes('data-path')).toBe(FIELD_NAME)
     expect((input.element as HTMLInputElement).value).toBe('true')
@@ -80,7 +68,7 @@ describe('CelField', () => {
   })
 
   it('writes the empty value when cleared', async () => {
-    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' }, true)
+    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' })
 
     await wrapper.get('.fake-cel-editor').setValue('')
     expect(lastChange()).toEqual({ [FIELD_NAME]: null })

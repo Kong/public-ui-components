@@ -12,11 +12,10 @@
     v-bind="$attrs"
   >
     <!--
-      The CEL editor when the host turns it on (`USE_CEL_EDITOR_KEY`), else a
-      textarea. Both take the `KTextArea` props and slots.
+      The CEL editor. Callers render `CelField` only where the host's
+      `CEL_EDITOR_KEY` decision says so, and their plain `StringField` elsewhere.
     -->
-    <component
-      :is="editor ?? EnhancedInput"
+    <CelInput
       v-bind="fieldAttrs"
       :id="inputId"
       class="ff-cel-field"
@@ -24,8 +23,7 @@
       :data-testid="`ff-${field.path.value}`"
       :disabled="isDisabled"
       :model-value="fieldValue ?? ''"
-      :multiline="editor ? undefined : true"
-      :path="editor ? field.path.value : undefined"
+      :path="field.path.value"
       :rows="rows"
       @update:model-value="handleUpdate"
     >
@@ -50,22 +48,22 @@
       >
         <slot name="help" />
       </template>
-    </component>
+    </CelInput>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, inject, toRef, useAttrs } from 'vue'
+import { computed, defineAsyncComponent, toRef, useAttrs } from 'vue'
 import type { LabelAttributes } from '@kong/kongponents'
-import EnhancedInput from './EnhancedInput.vue'
-import { USE_CEL_EDITOR_KEY } from '../constants'
 import { useField, useFieldAttrs } from '../composables'
 
 import type { BaseFieldProps, EmptyValue } from '../types'
 
 /**
- * A string field that holds a CEL expression. Kong Gateway evaluates these
- * per request (plugin `condition`, `expressions`, ACL `allow_when`/`deny_when`).
+ * The CEL editor for a string field that holds a CEL expression. Kong Gateway
+ * evaluates these per request (plugin `condition`, `expressions`, ACL
+ * `allow_when`/`deny_when`). It takes the props and slots of a `StringField`, so
+ * a caller can swap one for the other.
  */
 defineOptions({
   inheritAttrs: false,
@@ -84,6 +82,8 @@ const {
   required?: boolean
   inputId?: string
   rows?: number
+  /** Ignored: the editor is always multi-line. Accepted so `CelField` can replace a multi-line `StringField`. */
+  multiline?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -98,8 +98,8 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
-// Monaco loads only when the host turns the CEL editor on.
-const editor = inject(USE_CEL_EDITOR_KEY, false) ? defineAsyncComponent(() => import('./CelInput.vue')) : undefined
+// Monaco loads with the first CEL editor, not with the form.
+const CelInput = defineAsyncComponent(() => import('./CelInput.vue'))
 
 const { value: fieldValue, hide, versionInfo, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ ...props, ...attrs })))
