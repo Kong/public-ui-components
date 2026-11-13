@@ -155,6 +155,30 @@ Optional slot for a custom page title. Use it when the default `<h1>` needs to b
 
 An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
 
+#### `tabs`
+
+An optional slot rendered in place of the tab bar `PageLayout` would render from the `tabs` prop. Slot a standalone [`PageLayoutTabs`](#standalone-usage) here to drive the header's tab row with its own tab set — the component lands in exactly the position the internal one occupies, so the header's tab-row styling (bottom border behavior, sticky sizing) and the `<router-view>` content routing keep working unchanged.
+
+The slot is rendered under the same conditions as the internal tab row: only when the `tabs` prop is non-empty (the `tabs` prop still gates the tab row and the `<router-view>` it enables) and the header is not in the empty state.
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    :tabs="tabs"
+    title="My Control Plane"
+  >
+    <template #tabs>
+      <PageLayoutTabs :tabs="tabs" />
+    </template>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout, PageLayoutTabs } from '@kong-ui-public/page-layout'
+</script>
+```
+
 #### `aside`
 
 An optional secondary column rendered beside the page content. Use it for supporting content that belongs to the page but not to the main flow -- summary cards, metadata panels, contextual help, and so on.
@@ -372,7 +396,29 @@ When neither a title nor breadcrumbs are provided, the header renders only its a
 
 ## Tabbed Navigation
 
-The `PageLayoutTabs` component is an internal component used by `PageLayout` to render the tab bar. It is not exported directly but its behavior is configured through the `tabs` prop on `PageLayout`.
+The `PageLayoutTabs` component renders the tab bar. By default `PageLayout` renders it internally from the `tabs` prop; it is also exported from the package, so a page that needs the tab bar on its own — with a different tab set, or outside a full `PageLayout` — can use it standalone, and a page that wants to own the tab row can slot it back into the header through the [`tabs` slot](#tabs). In both cases it lands in the tab row's position in the header, so the header's borders, sticky sizing and `<router-view>` behavior stay exactly as they are with the prop-driven tab bar.
+
+### Standalone usage
+
+`PageLayoutTabs` is exported directly and takes the same `tabs` prop `PageLayout` does:
+
+```html
+<template>
+  <PageLayoutTabs :tabs="tabs" />
+</template>
+
+<script setup lang="ts">
+import { PageLayoutTabs } from '@kong-ui-public/page-layout'
+import type { PageLayoutTab } from '@kong-ui-public/page-layout'
+
+const tabs: PageLayoutTab[] = [
+  { key: 'overview', label: 'Overview', to: '/overview', active: true },
+  { key: 'settings', label: 'Settings', to: '/settings' },
+]
+</script>
+```
+
+Its props, slots (including the per-tab `tab-${tab.key}` slot), overflow behavior and navigation handling are the same as described below for the tab bar inside `PageLayout`. It requires `vue` and `vue-router` to be initialized in the host application, just like `PageLayout`.
 
 ### Tab Overflow
 
@@ -402,7 +448,7 @@ interface PageLayoutTab {
   to: string | RouteLocationRaw
   /** Is the navbar tab active */
   active?: boolean
-  /** The data-testid attribute; auto-generated as `${key}-tab-link` if not provided */
+  /** The data-testid attribute; auto-generated as `page-layout-tab-${key}` if not provided */
   dataTestId?: string
 }
 ```
@@ -413,7 +459,7 @@ interface PageLayoutTab {
 | `label`      | `string`                     | Yes      | -                  | Display text of the tab                                    |
 | `to`         | `string \| RouteLocationRaw` | Yes      | -                  | Navigation target: a Vue Router route object or URL string |
 | `active`     | `boolean`                    | No       | `undefined`        | Whether the tab is currently active (highlighted)          |
-| `dataTestId` | `string`                     | No       | `${key}-tab-link`  | Custom `data-testid` attribute for testing                 |
+| `dataTestId` | `string`                     | No       | `page-layout-tab-${key}` | Custom `data-testid` attribute for testing            |
 
 ## Anchor Navigation
 

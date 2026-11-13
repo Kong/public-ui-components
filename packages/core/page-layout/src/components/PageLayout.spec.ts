@@ -216,6 +216,44 @@ describe('<PageLayout />', () => {
     expect(wrapper.getTestId('page-layout-tab-settings').text()).toContain(tabs[1].label)
   })
 
+  it('renders slotted content in place of the internal tab row when the tabs slot is provided', async () => {
+    const slottedTabsTestId = 'slotted-page-layout-tabs'
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+    ]
+
+    const wrapper = mountWithRouter(PageLayout, {
+      props: {
+        title: 'Test Page Title',
+        tabs,
+      },
+      slots: {
+        tabs: () => h('nav', { 'data-testid': slottedTabsTestId, class: 'page-layout-tabs' }, 'Slotted tabs'),
+      },
+    })
+
+    await flushPromises()
+
+    // The slot content occupies the tab row's position in the header
+    expect(wrapper.getTestId('page-layout-header').findTestId(slottedTabsTestId).exists()).toBe(true)
+  })
+
+  it('does not render the tabs slot when the tabs prop is empty', async () => {
+    const slottedTabsTestId = 'slotted-page-layout-tabs'
+
+    const wrapper = mountWithRouter(PageLayout, {
+      props: { title: 'Test Page Title' },
+      slots: {
+        tabs: () => h('nav', { 'data-testid': slottedTabsTestId }, 'Slotted tabs'),
+      },
+    })
+
+    await flushPromises()
+
+    // The header's tab row only exists when there are tabs to show, for the slot as well
+    expect(wrapper.findTestId(slottedTabsTestId).exists()).toBe(false)
+  })
+
   it('renders content passed in through title-after slot', () => {
     const titleAfterTestId = 'page-layout-slotted-title-after'
     const titleAfterText = 'Title after'

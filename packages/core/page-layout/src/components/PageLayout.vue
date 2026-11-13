@@ -108,7 +108,7 @@
         </div>
       </div>
       <PageLayoutTabs
-        v-if="renderTabs()"
+        v-if="renderTabs() && !slots.tabs"
         :tabs="tabs"
       >
         <template
@@ -121,6 +121,16 @@
           />
         </template>
       </PageLayoutTabs>
+      <!--
+        A host can slot its own PageLayoutTabs (or any tab bar) into the same position the
+        internal one occupies. The slot is only rendered under the same conditions as the
+        internal tab row, so the header's `:has(.page-layout-tabs)` layout rules and the
+        router-view below keep working with slotted tabs exactly as with prop-driven ones.
+      -->
+      <slot
+        v-if="renderTabs() && slots.tabs"
+        name="tabs"
+      />
     </div>
 
     <div
