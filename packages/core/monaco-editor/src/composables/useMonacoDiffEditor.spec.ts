@@ -5,8 +5,8 @@ import { mount } from '@vue/test-utils'
 import * as monaco from 'monaco-editor'
 import type { UseMonacoDiffEditorOptions } from '../types'
 
-// Mock shiki and shikijs/monaco
-vi.mock('shiki', () => ({
+// Mock shiki via the virtual specifier monaco-loader.ts actually imports and shikijs/monaco
+vi.mock('virtual:@kong-ui-public/monaco-editor/shiki', () => ({
   getSingletonHighlighter: vi.fn(() => Promise.resolve({
     getLoadedLanguages: vi.fn(() => ['javascript', 'typescript', 'json']),
   })),
