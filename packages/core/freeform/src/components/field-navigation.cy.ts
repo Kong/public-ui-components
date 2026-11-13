@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file -- small harness components wrap the form */
 import { defineComponent, h, type Component } from 'vue'
 import Form from './Form.vue'
 import ArrayField from './ArrayField.vue'
@@ -5,7 +6,7 @@ import FieldRenderer from './FieldRenderer.vue'
 import { FIELD_RENDERERS, useField } from '../composables'
 import type { FormSchema } from '../form-schema'
 import type { RenderRules } from '../types'
-import type { RevealResult } from '../composables'
+import type { RevealOptions, RevealResult } from '../composables'
 
 const schema: FormSchema = {
   type: 'record',
@@ -91,7 +92,7 @@ const RendersNothing = defineComponent({
 })
 
 /** What the test needs from the form's exposed API */
-type RevealingForm = { reveal: (path: string) => Promise<RevealResult | null> }
+type RevealingForm = { reveal: (path: string, options?: RevealOptions) => Promise<RevealResult | null> }
 
 function mountForm() {
   cy.mount(Form, {
@@ -111,8 +112,8 @@ function mountForm() {
   })
 }
 
-function reveal(path: string) {
-  return cy.get<RevealingForm>('@form').then(form => cy.wrap(form.reveal(path)))
+function reveal(path: string, options?: RevealOptions) {
+  return cy.get<RevealingForm>('@form').then(form => cy.wrap(form.reveal(path, options)))
 }
 
 describe('Field navigation', () => {
@@ -171,6 +172,67 @@ describe('Field navigation', () => {
       ])
     })
     cy.focused().should('have.value', 'abc')
+  })
+
+  it('highlights the field it lands on, for twice the scroll duration', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { duration: 200 })
+    cy.focused().parents('.ff-reveal-highlight').should('exist')
+      .and('have.attr', 'style').and('contain', '--kong-ui-freeform-reveal-highlight-duration: 400ms')
+    // Removed once the highlight ends
+    cy.get('.ff-reveal-highlight').should('not.exist')
+  })
+
+  it('highlights for the default time when the jump is not animated', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { duration: 0 }).should('deep.equal', { path: 'headers.X-Request-Id', exact: true })
+    cy.focused().parents('.ff-reveal-highlight').should('exist')
+      .and('have.attr', 'style').and('contain', '--kong-ui-freeform-reveal-highlight-duration: 600ms')
+  })
+
+  it('does not highlight when the highlight is turned off', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { highlight: false }).should('deep.equal', { path: 'headers.X-Request-Id', exact: true })
+    cy.focused().should('have.value', 'abc')
+    cy.get('.ff-reveal-highlight').should('not.exist')
+  })
+
+  it('stops scrolling when a later reveal takes over', () => {
+    mountForm()
+    cy.get<RevealingForm>('@form').then(form => {
+      const slow = form.reveal('rate_limit.strategy', { duration: 2000 })
+      // Starts while the first one is still scrolling
+      const fast = new Promise(resolve => setTimeout(resolve, 300))
+        .then(() => form.reveal('connection.tls.client_cert', { duration: 0 }))
+      cy.wrap(Promise.all([slow, fast]), { timeout: 5000 }).should('deep.equal', [
+        null,
+        { path: 'connection.tls.client_cert', exact: true },
+      ])
+    })
+    cy.focused().should('have.value', 'cert')
+  })
+
+  it('scrolls every container on the way, not only the innermost', () => {
+    let form: RevealingForm | undefined
+    // A scrollable panel that is itself below the fold of the page
+    cy.mount(defineComponent({
+      setup: () => () => h('div', [
+        h('div', { style: 'height: 1500px' }),
+        h('div', { style: 'height: 200px; overflow: auto' }, [
+          h(Form, { schema, data, renderRules, ref: (instance: unknown) => {
+            form = instance as RevealingForm
+          } }),
+        ]),
+      ]),
+    }))
+
+    cy.then(() => form!.reveal('rate_limit.strategy', { duration: 200 }))
+    cy.get('[data-testid="ff-rate_limit.strategy"]').should(($el) => {
+      const { top, bottom } = $el[0].getBoundingClientRect()
+      const { innerHeight } = $el[0].ownerDocument.defaultView!
+      expect(top, 'top in the viewport').to.be.at.least(0)
+      expect(bottom, 'bottom in the viewport').to.be.at.most(innerHeight)
+    })
   })
 
   it('returns null for a malformed path', () => {

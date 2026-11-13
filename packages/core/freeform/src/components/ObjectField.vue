@@ -19,6 +19,7 @@
       <slot>
         <EntityChecksAlert
           :entity-checks="field.schema.value?.entity_checks"
+          :path="field.path.value"
           :visible-fields="visibleFieldNames"
         />
         <Field
@@ -120,6 +121,7 @@
         <slot>
           <EntityChecksAlert
             :entity-checks="field.schema.value?.entity_checks"
+            :path="field.path.value"
             :visible-fields="visibleFieldNames"
           />
           <Field

@@ -348,6 +348,9 @@ const result = await formRef.value?.reveal('config.redis.host')
 | Path format | Real map keys, dot separated, array indexes as `.1`. A segment with `.`, `[`, `]` or `"` in it (or an empty key) is a quoted bracket segment: `config.headers["x.y"]`. `parseDataPath`/`formatDataPath` convert between a path and its segments; `limits[1]` is also accepted |
 | Only view state changes | Records expand and array tabs switch. A record that is switched off is not switched on, and a field hidden by a render rule stays hidden: the reveal stops at the nearest visible ancestor and returns it with `exact: false` |
 | Result | `null` when nothing on the path is visible, the path is malformed, or a later `reveal` call took over |
+| Animation | `reveal(path, { duration, highlight })`. The scroll eases to the field in `duration` ms (default `300`; `0` jumps there at once). With `highlight` (default `true`) the field then flashes for twice the scroll, or 600 ms when the jump is not animated; the style is the global `ff-reveal-highlight` class. Users who prefer reduced motion get an instant jump and no flash |
+
+The field names in an entity checks alert (`EntityChecksAlert`, shown at the top of a record) are links that reveal the field, resolved against the record's path, e.g. `redis.host` on `config` reveals `config.redis.host`.
 
 A custom container opens itself for a reveal through `useField(name).revealTarget`: the path being revealed while it is the field itself or inside it, `null` otherwise. Containers that are not field paths (custom tabs and sections) are not supported yet.
 
