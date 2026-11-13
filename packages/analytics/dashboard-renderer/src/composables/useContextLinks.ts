@@ -6,7 +6,7 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContext } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
-import { isExploreChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
+import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
 const exploreConfigDatasource = (datasource: string | undefined): string => {
   if (!datasource || datasource === 'basic') {
@@ -83,6 +83,11 @@ export default function useContextLinks(
   })
 
   const canShowExploreLink = computed<boolean>(() => {
+    // api-requests definitions have no explore query, regardless of config.
+    if (isRequestsChartDefinition(definition.value)) {
+      return false
+    }
+
     const datasource = exploreConfigDatasource(definition.value.query?.datasource)
 
     return !!datasourceConfigMap.value[datasource]?.showInUI

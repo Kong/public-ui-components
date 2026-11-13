@@ -457,6 +457,21 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
   })
 
+  it('does not build explore link for requests tiles even when config shows them', async () => {
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce(mockDatasourceConfigStore({
+      datasourceConfigMap: ref({
+        ...mockDatasourceConfigMap,
+        requests: { name: 'requests', showInUI: true, showRequestsLink: true },
+      }),
+    }))
+
+    const { wrapper } = mountComposable({ datasource: 'requests' })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+  })
+
   it('does not build links for datasources missing from config', async () => {
     const withoutAgentic: Record<string, unknown> = { ...mockDatasourceConfigMap }
     delete withoutAgentic.agentic_usage
