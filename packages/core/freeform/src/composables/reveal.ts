@@ -18,6 +18,27 @@ export interface RevealResult {
   exact: boolean
 }
 
+export interface RevealOptions {
+  /**
+   * How long the scroll to the field takes, in ms. `0` jumps there at once.
+   * Users who prefer reduced motion always get `0`.
+   * @default 300
+   */
+  duration?: number
+  /**
+   * Whether to flash the field once it is reached, so the eye finds it. The
+   * flash lasts twice the scroll, or `DEFAULT_REVEAL_HIGHLIGHT_DURATION` when
+   * there is no scroll animation. Users who prefer reduced motion get none.
+   * @default true
+   */
+  highlight?: boolean
+}
+
+export const DEFAULT_REVEAL_DURATION = 300
+
+/** How long the highlight lasts when the scroll is not animated, in ms */
+export const DEFAULT_REVEAL_HIGHLIGHT_DURATION = 600
+
 export interface FieldElementEntry {
   /** The field path, with key IDs for map entries */
   path: () => string
@@ -129,7 +150,10 @@ export function createFieldReveal(options: PathMapOptions) {
    * @returns Where it landed, or `null` when nothing on the path is visible,
    *          the path is malformed, or a later `reveal` call took over.
    */
-  async function reveal(path: string): Promise<RevealResult | null> {
+  async function reveal(
+    path: string,
+    { duration = DEFAULT_REVEAL_DURATION, highlight: withHighlight = true }: RevealOptions = {},
+  ): Promise<RevealResult | null> {
     let segments: string[]
     try {
       segments = utils.parseDataPath(path)
@@ -167,9 +191,17 @@ export function createFieldReveal(options: PathMapOptions) {
       }
 
       const exact = landing.path === target
-      landing.element.scrollIntoView({ block: 'center' })
+      const reducedMotion = prefersReducedMotion()
+      const realDuration = reducedMotion ? 0 : Math.max(0, duration)
+      await scrollToCenter(landing.element, realDuration, () => id !== lastRevealId)
+      if (id !== lastRevealId) {
+        return null
+      }
       if (exact) {
         focusWithin(landing.element)
+      }
+      if (withHighlight && !reducedMotion) {
+        highlight(landing.element, realDuration > 0 ? realDuration * 2 : DEFAULT_REVEAL_HIGHLIGHT_DURATION)
       }
 
       return { path: toDataPath(landing.path, options.getKey), exact }
@@ -227,6 +259,88 @@ export function getVNodeElement(vnode: VNode): Element | null {
     node = node.nextSibling
   }
   return null
+}
+
+function prefersReducedMotion() {
+  return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+/**
+ * The nearest ancestor that scrolls, or `null` for the page
+ */
+function findScrollContainer(element: Element): HTMLElement | null {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node)
+    if (/auto|scroll|overlay/.test(overflowY) && node.scrollHeight > node.clientHeight) {
+      return node
+    }
+  }
+  return null
+}
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
+}
+
+/**
+ * Scrolls the element to the middle of its scroll container in `duration`
+ * ms. `scrollIntoView`'s smooth behavior can't be timed, hence the frames.
+ * Stops when `cancelled` turns true, e.g. a later reveal took over.
+ */
+async function scrollToCenter(element: Element, duration: number, cancelled: () => boolean) {
+  if (duration === 0) {
+    element.scrollIntoView({ block: 'center' })
+    return
+  }
+
+  const container = findScrollContainer(element)
+  const scroller = container ?? document.scrollingElement ?? document.documentElement
+  const viewTop = container ? container.getBoundingClientRect().top : 0
+  const viewHeight = container ? container.clientHeight : window.innerHeight
+  const rect = element.getBoundingClientRect()
+
+  const from = scroller.scrollTop
+  const max = scroller.scrollHeight - scroller.clientHeight
+  const to = Math.min(max, Math.max(0, from + rect.top - viewTop - (viewHeight - rect.height) / 2))
+  if (Math.abs(to - from) < 1) {
+    return
+  }
+
+  const start = performance.now()
+  await new Promise<void>((resolve) => {
+    const step = (now: number) => {
+      if (cancelled()) {
+        resolve()
+        return
+      }
+      const progress = Math.min(1, (now - start) / duration)
+      scroller.scrollTop = from + (to - from) * easeInOutCubic(progress)
+      if (progress < 1) {
+        requestAnimationFrame(step)
+      } else {
+        resolve()
+      }
+    }
+    requestAnimationFrame(step)
+  })
+}
+
+/**
+ * Flashes the landing so the eye finds it; the style is in `Form.vue`
+ */
+function highlight(element: Element, duration: number) {
+  if (!(element instanceof HTMLElement)) {
+    return
+  }
+  element.classList.remove('ff-reveal-highlight')
+  // Restart the animation when the same field is revealed again
+  void element.offsetWidth
+  element.style.setProperty('--kong-ui-freeform-reveal-highlight-duration', `${duration}ms`)
+  element.classList.add('ff-reveal-highlight')
+  element.addEventListener('animationend', () => {
+    element.classList.remove('ff-reveal-highlight')
+    element.style.removeProperty('--kong-ui-freeform-reveal-highlight-duration')
+  }, { once: true })
 }
 
 function focusWithin(element: Element) {

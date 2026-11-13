@@ -5,7 +5,7 @@ import FieldRenderer from './FieldRenderer.vue'
 import { FIELD_RENDERERS, useField } from '../composables'
 import type { FormSchema } from '../form-schema'
 import type { RenderRules } from '../types'
-import type { RevealResult } from '../composables'
+import type { RevealOptions, RevealResult } from '../composables'
 
 const schema: FormSchema = {
   type: 'record',
@@ -91,7 +91,7 @@ const RendersNothing = defineComponent({
 })
 
 /** What the test needs from the form's exposed API */
-type RevealingForm = { reveal: (path: string) => Promise<RevealResult | null> }
+type RevealingForm = { reveal: (path: string, options?: RevealOptions) => Promise<RevealResult | null> }
 
 function mountForm() {
   cy.mount(Form, {
@@ -111,8 +111,8 @@ function mountForm() {
   })
 }
 
-function reveal(path: string) {
-  return cy.get<RevealingForm>('@form').then(form => cy.wrap(form.reveal(path)))
+function reveal(path: string, options?: RevealOptions) {
+  return cy.get<RevealingForm>('@form').then(form => cy.wrap(form.reveal(path, options)))
 }
 
 describe('Field navigation', () => {
@@ -171,6 +171,44 @@ describe('Field navigation', () => {
       ])
     })
     cy.focused().should('have.value', 'abc')
+  })
+
+  it('highlights the field it lands on, for twice the scroll duration', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { duration: 200 })
+    cy.focused().parents('.ff-reveal-highlight').should('exist')
+      .and('have.attr', 'style').and('contain', '--kong-ui-freeform-reveal-highlight-duration: 400ms')
+    // Removed once the highlight ends
+    cy.get('.ff-reveal-highlight').should('not.exist')
+  })
+
+  it('highlights for the default time when the jump is not animated', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { duration: 0 }).should('deep.equal', { path: 'headers.X-Request-Id', exact: true })
+    cy.focused().parents('.ff-reveal-highlight').should('exist')
+      .and('have.attr', 'style').and('contain', '--kong-ui-freeform-reveal-highlight-duration: 600ms')
+  })
+
+  it('does not highlight when the highlight is turned off', () => {
+    mountForm()
+    reveal('headers.X-Request-Id', { highlight: false }).should('deep.equal', { path: 'headers.X-Request-Id', exact: true })
+    cy.focused().should('have.value', 'abc')
+    cy.get('.ff-reveal-highlight').should('not.exist')
+  })
+
+  it('stops scrolling when a later reveal takes over', () => {
+    mountForm()
+    cy.get<RevealingForm>('@form').then(form => {
+      const slow = form.reveal('rate_limit.strategy', { duration: 2000 })
+      // Starts while the first one is still scrolling
+      const fast = new Promise(resolve => setTimeout(resolve, 300))
+        .then(() => form.reveal('connection.tls.client_cert', { duration: 0 }))
+      cy.wrap(Promise.all([slow, fast]), { timeout: 5000 }).should('deep.equal', [
+        null,
+        { path: 'connection.tls.client_cert', exact: true },
+      ])
+    })
+    cy.focused().should('have.value', 'cert')
   })
 
   it('returns null for a malformed path', () => {

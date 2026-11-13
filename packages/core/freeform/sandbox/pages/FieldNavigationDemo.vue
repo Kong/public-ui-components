@@ -23,6 +23,17 @@
         >
           Collapse all records
         </KButton>
+        <KSelect
+          v-model="duration"
+          class="duration-select"
+          data-testid="reveal-duration"
+          :items="DURATIONS"
+        />
+        <KCheckbox
+          v-model="highlight"
+          data-testid="reveal-highlight"
+          label="Highlight"
+        />
       </form>
 
       <div class="presets">
@@ -74,7 +85,7 @@ import { computed, ref, useTemplateRef } from 'vue'
 import SandboxPage from '../SandboxPage.vue'
 import { ArrayField, FieldRenderer, Form, FIELD_RENDERERS } from '../../src'
 import type { FormSchema, NamedFieldSchema } from '../../src/form-schema'
-import type { RenderRules, RevealResult } from '../../src'
+import type { RenderRules, RevealOptions, RevealResult } from '../../src'
 
 const PRESETS = [
   { path: 'connection.tls.client_cert', note: 'Nested records. Collapse them first to see them expand.' },
@@ -90,7 +101,17 @@ const PRESETS = [
 const path = ref(PRESETS[0].path)
 const result = ref<RevealResult | null | undefined>()
 // `Form` is generic, so `InstanceType` can't name its exposed API
-const formRef = useTemplateRef<{ reveal: (path: string) => Promise<RevealResult | null> }>('form')
+const formRef = useTemplateRef<{ reveal: (path: string, options?: RevealOptions) => Promise<RevealResult | null> }>('form')
+
+// The scroll's duration; the landing is highlighted for twice as long
+const DURATIONS = [
+  { label: 'Instant (0 ms)', value: 0 },
+  { label: 'Fast (150 ms)', value: 150 },
+  { label: 'Default (300 ms)', value: 300 },
+  { label: 'Slow (1000 ms)', value: 1000 },
+]
+const duration = ref(300)
+const highlight = ref(true)
 
 let lastGo = 0
 
@@ -98,7 +119,7 @@ async function go(target: string) {
   const id = ++lastGo
   path.value = target
   result.value = undefined
-  const revealed = await formRef.value?.reveal(target) ?? null
+  const revealed = await formRef.value?.reveal(target, { duration: duration.value, highlight: highlight.value }) ?? null
   // A later click takes over; its result is the one to show
   if (id === lastGo) {
     result.value = revealed
@@ -135,11 +156,21 @@ const schema: FormSchema = {
       connection: {
         type: 'record',
         required: true,
+        // Field names in an entity checks alert are links that reveal the field.
+        // `tls.client_cert` sits in a nested record: collapse TLS first to see
+        // the link expand it.
+        entity_checks: [
+          { at_least_one_of: ['timeout', 'tls.client_cert'] },
+        ],
         fields: [
           { timeout: { type: 'integer' } },
           {
             tls: {
               type: 'record',
+              // Fields on the same level
+              entity_checks: [
+                { mutually_required: ['verify', 'client_cert'] },
+              ],
               fields: [
                 { verify: { type: 'boolean' } },
                 { client_cert: { type: 'string' } },
@@ -154,6 +185,10 @@ const schema: FormSchema = {
         type: 'array',
         elements: {
           type: 'record',
+          // Each tab's item has its own alert, which reveals the field of that item
+          entity_checks: [
+            { mutually_exclusive: ['host', 'health.path'] },
+          ],
           fields: [
             { host: { type: 'string' } },
             {
@@ -268,6 +303,10 @@ const data = {
   align-items: center;
   display: flex;
   gap: 8px;
+}
+
+.duration-select {
+  width: 180px;
 }
 
 .path-input {

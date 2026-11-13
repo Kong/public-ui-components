@@ -87,3 +87,22 @@ defineExpose({
   reveal,
 })
 </script>
+
+<style lang="scss">
+// Not scoped: `reveal` puts the class on the field it lands on. A soft glow in
+// a theme color comes off the field's edges and spreads out as it fades, with
+// no hard line around the field.
+@keyframes ff-reveal-highlight {
+  from {
+    filter: drop-shadow(0 0 4px var(--kui-color-brand, $kui-color-brand));
+  }
+
+  to {
+    filter: drop-shadow(0 0 16px transparent);
+  }
+}
+
+.ff-reveal-highlight {
+  animation: ff-reveal-highlight var(--kong-ui-freeform-reveal-highlight-duration, 600ms) ease-out;
+}
+</style>
