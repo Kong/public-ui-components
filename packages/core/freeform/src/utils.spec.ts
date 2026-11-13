@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { sortFieldsByBundles, normalizeMatch, pruneHiddenPaths } from './utils'
+import { sortFieldsByBundles, normalizeMatch, pruneHiddenPaths, formatDataPath, parseDataPath, isWithinPath } from './utils'
 import type { NamedFieldSchema } from './form-schema'
 
 describe('sortFieldsByBundles', () => {
@@ -447,5 +447,45 @@ describe('normalizeMatch', () => {
     const match = normalizeMatch(predicate)
 
     expect(match).toBe(predicate)
+  })
+})
+
+describe('isWithinPath', () => {
+  it('should match the path itself and paths below it', () => {
+    expect(isWithinPath('config.redis', 'config.redis')).toBe(true)
+    expect(isWithinPath('config.redis.host', 'config.redis')).toBe(true)
+  })
+
+  it('should not match a sibling that shares a prefix', () => {
+    expect(isWithinPath('config.redis_ssl', 'config.redis')).toBe(false)
+    expect(isWithinPath('config', 'config.redis')).toBe(false)
+  })
+})
+
+describe('formatDataPath / parseDataPath', () => {
+  const cases: Array<[string[], string]> = [
+    [['config', 'redis', 'host'], 'config.redis.host'],
+    [['config', 'limits', '1', 'window'], 'config.limits.1.window'],
+    [['config', 'headers', 'X-Request-Id'], 'config.headers.X-Request-Id'],
+    [['config', 'headers', 'x.y'], 'config.headers["x.y"]'],
+    [['config', 'headers', 'x.y', 'z'], 'config.headers["x.y"].z'],
+    [['m', 'a]b'], 'm["a]b"]'],
+    [['m', 'say "hi"'], 'm["say \\"hi\\""]'],
+    [['m', ''], 'm[""]'],
+  ]
+
+  it.each(cases)('should round-trip %j', (segments, path) => {
+    expect(formatDataPath(segments)).toBe(path)
+    expect(parseDataPath(path)).toEqual(segments)
+  })
+
+  it('should accept a leading root symbol and unquoted index brackets', () => {
+    expect(parseDataPath('$.config.limit[1]')).toEqual(['config', 'limit', '1'])
+    expect(parseDataPath('config.limit[1].window')).toEqual(['config', 'limit', '1', 'window'])
+  })
+
+  it('should throw on an unclosed bracket', () => {
+    expect(() => parseDataPath('config.headers["x.y"')).toThrow()
+    expect(() => parseDataPath('config.limit[1')).toThrow()
   })
 })

@@ -891,6 +891,88 @@
       }
     },
     "free-form": {
+      "kong-circuit-breaker": {
+        "hint": "Enable one or both circuits. At least one circuit must be enabled.",
+        "sections": {
+          "plugin_config": {
+            "description": "Stop requests to a Service or Route when failures or upstream latency cross the configured thresholds."
+          },
+          "threshold_condition": {
+            "title": "Threshold condition"
+          },
+          "thresholds": {
+            "title": "Thresholds"
+          },
+          "other_settings": {
+            "title": "Other settings"
+          },
+          "identification": {
+            "title": "Circuit identification"
+          },
+          "recovery": {
+            "title": "Circuit recovery"
+          },
+          "request_handling": {
+            "title": "Request handling"
+          }
+        },
+        "fields": {
+          "policy_circuit": {
+            "label": "Policy failure circuit",
+            "description": "Stop requests when the number of failures exceeds the configured threshold."
+          },
+          "latency_circuit": {
+            "label": "Latency circuit",
+            "description": "Stop requests when upstream responses are slow (time to first byte)."
+          },
+          "open_when": {
+            "options": {
+              "max_failures": "Count only",
+              "failure_percentage": "Percentage only",
+              "both": "Both",
+              "either": "Either"
+            }
+          },
+          "max_failures": {
+            "label": "Maximum failure count"
+          },
+          "failure_percentage": {
+            "label": "Failure percentage (%)"
+          },
+          "sampling_window": {
+            "label": "Sampling window (seconds)"
+          },
+          "recovery_period": {
+            "label": "Recovery period (milliseconds)"
+          },
+          "max_upstream_response_time": {
+            "label": "Maximum upstream response time (milliseconds)"
+          },
+          "failure_types": {
+            "label": "Failure type",
+            "help": "At least one failure type is required"
+          },
+          "identifier": {
+            "label": "Group circuits by",
+            "options": {
+              "service": "Service",
+              "route": "Route"
+            }
+          },
+          "half_open_calls": {
+            "label": "Half-open requests"
+          },
+          "half_open_failure_threshold": {
+            "label": "Half-open failure threshold (%)"
+          },
+          "half_open_timeout": {
+            "label": "Half-open timeout (seconds)"
+          },
+          "response_code": {
+            "label": "Response status code"
+          }
+        }
+      },
       "editor_mode": {
         "visual": "Visual editor",
         "code": "Code editor"
@@ -1121,16 +1203,16 @@
           }
         },
         "jit": {
-          "toggle_label": "Just-in-time principal provisioning",
-          "toggle_info": "Create or update the Kong Identity principal from token claims as requests arrive, so identities don't need to be provisioned in advance.",
+          "section_label": "Just-in-time principal provisioning",
+          "section_info": "Token claims to share with the Kong Identity principal lookup. Kong Identity, not this plugin, decides whether the claims are used: a trusted IdP with just-in-time provisioning enabled in Konnect maps them onto a principal provisioned just in time. By default the lookup only carries the principal claim (e.g. 'sub') and no additional claims are shared.",
           "all_claims": {
             "label": "Share all token claims",
-            "description": "Share every claim from the token when creating or updating a principal."
+            "description": "Send the full set of verified token claims with the Kong Identity principal lookup."
           },
           "claims": {
             "label": "Claims to share",
             "placeholder": "e.g., email, department",
-            "help": "The token claims Kong writes onto the principal when creating or updating it just in time. Separate multiple claims with commas."
+            "help": "Send only the named token claims with the lookup, picked from the same source as the principal claim. Separate multiple claims with commas."
           }
         },
         "advanced_fields": {

@@ -50,7 +50,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue } = provideFormShared({
+const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue, reveal } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: () => config as FormConfig,
@@ -84,5 +84,6 @@ defineExpose({
   getRawValue: () => toRaw(formData),
   setValue,
   getEmptyValue,
+  reveal,
 })
 </script>

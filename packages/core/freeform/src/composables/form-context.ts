@@ -7,6 +7,7 @@ import { useSchemaHelpers } from './schema'
 import { findExpressionSourceRecord, toSourcePath } from './expression-paths'
 import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
+import { createFieldReveal } from './reveal'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { EmptyValue, FormConfig, MatchMap, RenderRules } from '../types'
@@ -173,6 +174,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 
+    const { revealTarget, registerFieldElement, reveal } = createFieldReveal({
+      formData: innerData,
+      getSchema: (path) => schemaHelpers.getSchema(path),
+      getKey: keyIdMap.getKey,
+    })
+
     return {
       /**
        * The reactive form data object
@@ -192,6 +199,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       keyIdMap,
       getDefault,
       getEmptyOrDefault,
+      revealTarget,
+      registerFieldElement,
+      /**
+       * Reveals the field at a data path, see `createFieldReveal`
+       */
+      reveal,
     }
   },
 )

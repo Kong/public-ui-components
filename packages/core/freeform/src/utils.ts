@@ -46,6 +46,96 @@ export function removeRootSymbol(path: string) {
 }
 
 /**
+ * Whether `path` is `parent` itself or somewhere below it.
+ */
+export function isWithinPath(path: string, parent: string): boolean {
+  return path === parent || path.startsWith(`${parent}${separator}`)
+}
+
+/**
+ * A segment that can be written after a `.` as is. Anything else (a map key
+ * with a `.`, `[`, `]` or `"` in it, or an empty key) is written as a quoted
+ * bracket segment instead: `headers["x.y"]`.
+ */
+const PLAIN_DATA_PATH_SEGMENT = /^[^.[\]"]+$/
+
+/**
+ * Formats the segments of a data path (real map keys, not key IDs).
+ *
+ * @example formatDataPath(['config', 'headers', 'x.y']) // 'config.headers["x.y"]'
+ */
+export function formatDataPath(segments: readonly string[]): string {
+  return segments.reduce((path, segment) => {
+    if (PLAIN_DATA_PATH_SEGMENT.test(segment)) {
+      return path ? `${path}${separator}${segment}` : segment
+    }
+    return `${path}[${JSON.stringify(segment)}]`
+  }, '')
+}
+
+/**
+ * Parses a data path into its segments. Accepts the format `formatDataPath`
+ * writes, an optional leading `$.`, and unquoted brackets for array indexes
+ * (`limits[1]`, as Konnect reports them).
+ *
+ * @example parseDataPath('config.headers["x.y"].value') // ['config', 'headers', 'x.y', 'value']
+ * @throws When the path is malformed, e.g. an unclosed bracket
+ */
+export function parseDataPath(path: string): string[] {
+  const source = path === rootSymbol ? '' : path.startsWith(`${rootSymbol}${separator}`) ? path.slice(2) : path
+  const segments: string[] = []
+  let current = ''
+  let i = 0
+
+  const flush = () => {
+    if (current) {
+      segments.push(current)
+      current = ''
+    }
+  }
+
+  while (i < source.length) {
+    const char = source[i]
+
+    if (char === separator) {
+      flush()
+      i++
+    } else if (char === '[') {
+      flush()
+      const close = source[i + 1] === '"'
+        ? findClosingQuote(source, i + 1) + 1
+        : source.indexOf(']', i)
+      if (close <= i || source[close] !== ']') {
+        throw new Error(`Malformed data path: ${path}`)
+      }
+      const inner = source.slice(i + 1, close)
+      segments.push(inner.startsWith('"') ? JSON.parse(inner) : inner)
+      i = close + 1
+    } else {
+      current += char
+      i++
+    }
+  }
+  flush()
+
+  return segments
+}
+
+/**
+ * The index of the `"` that closes the JSON string starting at `start`, or -1.
+ */
+function findClosingQuote(source: string, start: number): number {
+  for (let i = start + 1; i < source.length; i++) {
+    if (source[i] === '\\') {
+      i++
+    } else if (source[i] === '"') {
+      return i
+    }
+  }
+  return -1
+}
+
+/**
  * Replaces hidden fields in a data tree with their empty-or-default value.
  *
  * Walks the tree **top-down**, which gives two structural guarantees the old

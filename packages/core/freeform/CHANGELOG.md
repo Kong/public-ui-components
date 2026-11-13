@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.8.6...%40kong-ui-public%2Ffreeform%400.9.0) (2026-11-12)
+
+### Features
+
+* **freeform:** reveal a field by its data path ([#4055](https://github.com/Kong/public-ui-components/issues/4055)) ([8b24326](https://github.com/Kong/public-ui-components/commit/8b24326d681e9a797f446c7e654355fc8f2b84c1))
+
+
 ## [0.8.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.8.5...%40kong-ui-public%2Ffreeform%400.8.6) (2026-11-10)
 
 **Note:** Version bump only for package @kong-ui-public/freeform
