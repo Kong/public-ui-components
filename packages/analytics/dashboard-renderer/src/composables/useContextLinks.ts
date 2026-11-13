@@ -6,23 +6,18 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContext } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
-import { isExploreChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
+import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
-const EXPLORE_DATASOURCES = [
-  'basic',
-  'api_usage',
-  'llm_usage',
-  'agentic_usage',
-  'platform',
-  'platform_usage',
-  'managed_cache_usage',
-  undefined,
-] as const
+const exploreConfigDatasource = (datasource: string | undefined): string => {
+  if (!datasource || datasource === 'basic') {
+    return 'api_usage'
+  }
 
-type ExploreDatasource = typeof EXPLORE_DATASOURCES[number]
+  if (isPlatformDatasource(datasource)) {
+    return 'platform_usage'
+  }
 
-const isExploreDatasource = (datasource: unknown): datasource is ExploreDatasource => {
-  return EXPLORE_DATASOURCES.includes(datasource as ExploreDatasource)
+  return datasource
 }
 
 export default function useContextLinks(
@@ -46,7 +41,13 @@ export default function useContextLinks(
 
   const analyticsConfigStore = useAnalyticsConfigStore()
   const datasourceConfigStore = useDatasourceConfigStore()
-  const { stripUnknownFilters, loading: datasourceConfigLoading } = storeToRefs(datasourceConfigStore)
+  const {
+    stripUnknownFilters,
+    datasourceConfigMap,
+    datasourceConfigError,
+    loading: datasourceConfigLoading,
+  } = storeToRefs(datasourceConfigStore)
+
   const isTableChart = computed(() => isTableChartDefinition(definition.value))
 
   onMounted(async () => {
@@ -70,8 +71,44 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'managed_cache_usage' && !isPlatformDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && isExploreDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canShowRequestsLink = computed<boolean>(() => {
+    const datasource = definition.value.query?.datasource ?? 'api_usage'
+
+    // goap datasources have no config entry
+    if (datasource.startsWith('goap')) {
+      return !datasourceConfigError.value
+    }
+
+    return !!datasourceConfigMap.value[datasource]?.showRequestsLink
+  })
+
+  const canShowExploreLink = computed<boolean>(() => {
+    // api-requests definitions have no explore query, regardless of config.
+    if (isRequestsChartDefinition(definition.value)) {
+      return false
+    }
+
+    const datasource = exploreConfigDatasource(definition.value.query?.datasource)
+
+    return !!datasourceConfigMap.value[datasource]?.showInUI
+  })
+
+  const canGenerateRequestsLink = computed(() => (
+    requestsBaseUrl.value
+    && definition.value.query
+    && !isTableChart.value
+    && canShowRequestsLink.value
+    && isAdvancedAnalytics.value
+    && !datasourceConfigLoading.value
+  ))
+
+  const canGenerateExploreLink = computed(() => (
+    exploreBaseUrl.value
+    && definition.value.query
+    && canShowExploreLink.value
+    && isAdvancedAnalytics.value
+    && !datasourceConfigLoading.value
+  ))
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined

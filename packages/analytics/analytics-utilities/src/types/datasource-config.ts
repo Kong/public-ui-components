@@ -44,6 +44,7 @@ export interface Field {
 export interface DatasourceConfig {
   name: string
   showInUI: boolean
+  showRequestsLink?: boolean
   fields: Field[]
   timeRangeOptions: string[]
   granularityOptions?: string[]
