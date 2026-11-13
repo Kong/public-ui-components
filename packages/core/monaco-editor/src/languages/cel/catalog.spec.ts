@@ -1,30 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import {
-  formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelGlobals, getCelLocals, getCelScope, resolveCelChain,
+  defineCelLanguage, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals, resolveCelChain,
 } from './catalog'
+import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
-const full = { pluginState: true, expressible: false }
-const acl = { pluginState: false, expressible: false }
+const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
+const full = defineCelLanguage([...gateway, kongPluginState(), kongFallback()])
+const acl = defineCelLanguage([...gateway, kongAclRule(), kongFallback()])
+const expressible = defineCelLanguage([...gateway, kongPluginState(), kongExpressibleField()])
 const none = new Map()
-const typeOf = (chain: string, scope = full) => {
-  const type = resolveCelChain(chain, none, scope)
+const typeOf = (chain: string, language = full) => {
+  const type = resolveCelChain(chain, none, language)
   return type && formatCelType(type)
 }
 
-describe('getCelScope', () => {
-  it('rejects plugin state only in ACL rules', () => {
-    expect(getCelScope('condition')).toEqual(full)
-    expect(getCelScope('expressions.custom_key')).toEqual({ pluginState: true, expressible: true })
-    expect(getCelScope('config.allow_when.0')).toEqual(acl)
-    expect(getCelScope('config.default_acl.1.deny_when.0')).toEqual(acl)
-    expect(getCelScope('config.tools.0.acl.allow_when.2')).toEqual(acl)
-  })
-})
-
 describe('global types', () => {
-  it('declares the Gateway roots, with plugins only where plugin state is in scope', () => {
-    expect(Object.keys(getCelGlobals(full))).toEqual(['http', 'net', 'consumer', 'consumer_group', 'route', 'service', 'principal', 'kong', 'plugins'])
-    expect(Object.keys(getCelGlobals(acl))).not.toContain('plugins')
+  it('declares the roots of the plugins it enables', () => {
+    expect(Object.keys(full.variables)).toEqual(['http', 'net', 'consumer', 'consumer_group', 'route', 'service', 'principal', 'kong', 'plugins'])
+    expect(Object.keys(acl.variables)).not.toContain('plugins')
   })
 
   it('types each variable as the Gateway supplies it', () => {
@@ -67,12 +60,12 @@ describe('getCelFields', () => {
 })
 
 describe('getCelDescription', () => {
-  it('describes globals from the Kong Gateway reference', () => {
-    expect(getCelDescription('http.path')).toBe('The normalized request path, without the query string.')
-    expect(getCelDescription('http.headers.x_tenant')).toBe('The first value of the header, or null when it is absent.')
-    expect(getCelDescription('plugins.key_auth.priority')).toBe('The priority of the plugin. Null when the plugin does not match.')
-    expect(getCelDescription('net')).toBeUndefined()
-    expect(getCelDescription('principal.groups')).toContain('Only AI Gateway data planes load the groups')
+  it('describes globals from the plugin descriptions, with * for a map key', () => {
+    expect(getCelDescription('http.path', full)).toBe('The normalized request path, without the query string.')
+    expect(getCelDescription('http.headers.x_tenant', full)).toBe('The first value of the header, or null when it is absent.')
+    expect(getCelDescription('plugins.key_auth.priority', full)).toBe('The priority of the plugin. Null when the plugin does not match.')
+    expect(getCelDescription('net', full)).toBeUndefined()
+    expect(getCelDescription('principal.groups', full)).toContain('Only AI Gateway data planes load the groups')
   })
 })
 
@@ -82,7 +75,7 @@ describe('getCelCallables', () => {
     expect(names()).toEqual(['has', 'matches', 'size'])
     // default() is for conditions and ACL rules; an expressible field falls back to its config value.
     expect(getCelCallables(undefined, full).map(c => c.name)).toEqual(['has', 'matches', 'size', 'default'])
-    expect(getCelCallables(undefined, { pluginState: true, expressible: true }).map(c => c.name)).toEqual(['has', 'matches', 'size'])
+    expect(getCelCallables(undefined, expressible).map(c => c.name)).toEqual(['has', 'matches', 'size'])
     expect(names('consumer.tags')).toEqual(['all', 'exists', 'map', 'filter', 'size'])
     expect(names('http.path')).toContain('startsWith')
     expect(names('principal.groups')).toContain('exists')
@@ -103,8 +96,8 @@ describe('getCelCallFrames', () => {
 })
 
 describe('getCelLocals', () => {
-  const locals = (before: string, scope = full) =>
-    Object.fromEntries([...getCelLocals(before, scope)].map(([name, type]) => [name, formatCelType(type)]))
+  const locals = (before: string) =>
+    Object.fromEntries([...getCelLocals(before, full)].map(([name, type]) => [name, formatCelType(type)]))
 
   it('types a macro variable as a list item or a map key', () => {
     expect(locals('principal.groups.exists(g, ')).toEqual({ g: '{ id, type }' })

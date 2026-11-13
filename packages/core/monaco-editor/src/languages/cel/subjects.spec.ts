@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
+import { defineCelLanguage } from './catalog'
+import { kongConsumer, kongConsumerGroup, kongContext, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
+import type { CelSubjects } from './kong'
 import {
-  getCelComparedSubject, getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions, getCelSubjectValues,
+  getCelComparedSubject, getCelHoveredSubject, getCelKeys, getCelSubjectSuggestions, getCelSubjectValues,
 } from './subjects'
-import type { CelSubjects } from './subjects'
-
-const full = { pluginState: true, expressible: false }
 
 const subjects: CelSubjects = {
   consumers: [
@@ -18,6 +18,11 @@ const subjects: CelSubjects = {
   ],
   principalGroups: [{ id: 'pg-1', name: 'Admins' }],
 }
+const records = () => subjects
+const full = defineCelLanguage([
+  kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongPrincipal(records), kongContext(),
+  kongPluginState(), kongFallback(),
+])
 
 /** The compared subject of the first `""` in the source. */
 const comparedAt = (source: string) => {
@@ -28,19 +33,19 @@ const comparedAt = (source: string) => {
 /** Suggestions with the cursor at `|`. */
 const suggest = (marked: string) => {
   const offset = marked.indexOf('|')
-  return getCelSubjectSuggestions(marked.slice(0, offset) + marked.slice(offset + 1), offset, full, subjects)
+  return getCelSubjectSuggestions(marked.slice(0, offset) + marked.slice(offset + 1), offset, full)
 }
 
 describe('getCelSubjectValues', () => {
   it('lists the values each subject kind takes', () => {
-    expect(getCelSubjectValues(subjects, 'consumer-id').map(v => [v.value, v.name])).toEqual([['c-1', 'alice'], ['c-2', 'B-2']])
-    expect(getCelSubjectValues(subjects, 'consumer-username').map(v => v.value)).toEqual(['alice'])
-    expect(getCelSubjectValues(subjects, 'consumer-custom-id').map(v => v.value)).toEqual(['A-1', 'B-2'])
-    expect(getCelSubjectValues(subjects, 'consumer-group-name').map(v => v.value)).toEqual(['gold', 'silver'])
-    expect(getCelSubjectValues(subjects, 'consumer-group-id').map(v => [v.value, v.name])).toEqual([['cg-1', 'gold'], ['cg-2', 'silver']])
-    expect(getCelSubjectValues(subjects, 'principal-id').map(v => [v.value, v.name])).toEqual([['p-1', 'Ada'], ['p-2', 'p-2']])
-    expect(getCelSubjectValues(subjects, 'principal-group-id').map(v => v.name)).toEqual(['Admins'])
-    expect(getCelSubjectValues({}, 'principal-id')).toEqual([])
+    expect(getCelSubjectValues(full, 'consumer-id').map(v => [v.value, v.name])).toEqual([['c-1', 'alice'], ['c-2', 'B-2']])
+    expect(getCelSubjectValues(full, 'consumer-username').map(v => v.value)).toEqual(['alice'])
+    expect(getCelSubjectValues(full, 'consumer-custom-id').map(v => v.value)).toEqual(['A-1', 'B-2'])
+    expect(getCelSubjectValues(full, 'consumer-group-name').map(v => v.value)).toEqual(['gold', 'silver'])
+    expect(getCelSubjectValues(full, 'consumer-group-id').map(v => [v.value, v.name])).toEqual([['cg-1', 'gold'], ['cg-2', 'silver']])
+    expect(getCelSubjectValues(full, 'principal-id').map(v => [v.value, v.name])).toEqual([['p-1', 'Ada'], ['p-2', 'p-2']])
+    expect(getCelSubjectValues(full, 'principal-group-id').map(v => v.name)).toEqual(['Admins'])
+    expect(getCelSubjectValues(defineCelLanguage([kongPrincipal()]), 'principal-id')).toEqual([])
   })
 })
 
@@ -110,16 +115,16 @@ describe('getCelSubjectSuggestions', () => {
 describe('getCelHoveredSubject', () => {
   it('names the record a literal refers to', () => {
     const source = 'principal.groups.exists(g, g.id == "pg-1")'
-    expect(getCelHoveredSubject(source, source.indexOf('pg-1'), full, subjects))
+    expect(getCelHoveredSubject(source, source.indexOf('pg-1'), full))
       .toEqual({ subject: { kind: 'principal-group-id', value: 'pg-1', name: 'Admins', id: 'pg-1' }, start: 35, end: 41 })
-    expect(getCelHoveredSubject("consumer.custom_id == 'B-2'", 24, full, subjects)?.subject.name).toBe('B-2')
-    expect(getCelHoveredSubject('consumer.id == "unknown"', 18, full, subjects)).toBeUndefined()
+    expect(getCelHoveredSubject("consumer.custom_id == 'B-2'", 24, full)?.subject.name).toBe('B-2')
+    expect(getCelHoveredSubject('consumer.id == "unknown"', 18, full)).toBeUndefined()
   })
 })
 
-describe('getCelMetadataKeys', () => {
+describe('getCelKeys', () => {
   it('lists selectable keys with the value types seen', () => {
-    expect(getCelMetadataKeys(subjects)).toEqual([
+    expect(getCelKeys(full, 'principal.metadata')).toEqual([
       { key: 'level', types: ['number'] },
       { key: 'tags', types: ['list'] },
       { key: 'team', types: ['string'] },

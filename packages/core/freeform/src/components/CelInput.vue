@@ -69,8 +69,9 @@ import type { LabelAttributes } from '@kong/kongponents'
 import type { editor, IDisposable } from 'monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import useI18n from '../composables/useI18n'
-import { attachCelLanguage, getCelHint, getCelScope } from '@kong-ui-public/monaco-editor/languages/cel'
+import { attachCelLanguage, getCelHint } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { CelSubjects, CelSubjectValue } from '@kong-ui-public/monaco-editor/languages/cel'
+import { getPluginFieldCelLanguage } from '../cel'
 import { CEL_SUBJECTS_KEY } from '../constants'
 
 /**
@@ -118,8 +119,11 @@ const PADDING = 16
 const minHeight = computed(() => rows * LINE_HEIGHT + PADDING)
 const editorHeight = ref(minHeight.value)
 
-const scope = computed(() => getCelScope(path))
-const hint = computed(() => getCelHint(modelValue ?? '', scope.value))
+// Records for value suggestions. The editor works without them while they load, or when a list is denied.
+const loadSubjects = inject(CEL_SUBJECTS_KEY, undefined)
+const subjects = shallowRef<CelSubjects>({})
+const language = computed(() => getPluginFieldCelLanguage(path, () => subjects.value))
+const hint = computed(() => getCelHint(modelValue ?? '', language.value))
 const hintText = computed(() => {
   const value = hint.value
   if (!value) return ''
@@ -133,9 +137,6 @@ const hintText = computed(() => {
   return t('cel.unknown_field_hint', { field: value.field })
 })
 
-// Records for value suggestions. The editor works without them while they load, or when a list is denied.
-const loadSubjects = inject(CEL_SUBJECTS_KEY, undefined)
-const subjects = shallowRef<CelSubjects>({})
 const formatSubject = ({ kind, name, id }: CelSubjectValue) => {
   if (kind === 'principal-id') return t('cel.hover.principal', { name, id })
   if (kind === 'principal-group-id') return t('cel.hover.principal_group', { name, id })
@@ -183,7 +184,7 @@ const ready = (instance: editor.IStandaloneCodeEditor) => {
   }
   disposables.push(instance.onDidContentSizeChange(resize))
   resize()
-  disposables.push(attachCelLanguage(instance, { scope: () => scope.value, subjects: () => subjects.value, formatSubject }))
+  disposables.push(attachCelLanguage(instance, { language: () => language.value, formatSubject }))
   loadSubjects?.().then((loaded) => {
     if (!unmounted) subjects.value = loaded
   }).catch(() => {})

@@ -1,15 +1,14 @@
 import * as monaco from 'monaco-editor'
 import type { IDisposable, editor } from 'monaco-editor'
 import {
-  CEL_MACROS, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelGlobals, getCelLocals,
+  CEL_MACROS, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals,
   isCelPresenceRoot, resolveCelChain,
 } from './catalog'
-import type { CelCallable, CelScope, CelType } from './catalog'
+import type { CelCallable, CelLanguage, CelSubjectValue, CelType } from './catalog'
 import { endsInCelLiteral, maskCelLiterals } from './tokens'
-import { getCelHoveredSubject, getCelMetadataKeys, getCelSubjectSuggestions } from './subjects'
-import type { CelSubjects, CelSubjectValue } from './subjects'
+import { getCelHoveredSubject, getCelKeys, getCelSubjectSuggestions } from './subjects'
 
-export const CEL_LANGUAGE_ID = 'kong-plugin-cel'
+export const CEL_LANGUAGE_ID = 'kong-cel'
 const SUGGEST_ARGUMENTS_COMMAND = `${CEL_LANGUAGE_ID}.suggestArguments`
 
 /** Only replace the current identifier, preserving its receiver and following text. */
@@ -26,7 +25,7 @@ export interface CelSuggestion {
   label: string
   kind: 'variable' | 'field' | 'function'
   detail: string
-  /** The description from the Kong Gateway reference, for a global variable. */
+  /** The description a plugin gives, for a global variable. */
   documentation?: string
   callable?: CelCallable
 }
@@ -36,7 +35,7 @@ export interface CelSuggestion {
  * of the receiver's type, or the macro variables, globals and functions at the
  * start of a term.
  */
-export const getCelSuggestions = (before: string, scope: CelScope, subjects: CelSubjects = {}): CelSuggestion[] => {
+export const getCelSuggestions = (before: string, language: CelLanguage): CelSuggestion[] => {
   const line = before.slice(before.lastIndexOf('\n') + 1)
   const context = getCelCompletionContext(line, line.length + 1)
   if (!context) return []
@@ -45,35 +44,35 @@ export const getCelSuggestions = (before: string, scope: CelScope, subjects: Cel
   // The first argument of a macro names a new variable.
   if (call && CEL_MACROS.has(call.name) && call.method && call.argument === 0) return []
   const presenceOnly = call?.name === 'has' && !call.receiver
-  const locals = getCelLocals(before, scope)
+  const locals = getCelLocals(before, language)
   const field = (label: string, type: CelType, kind: CelSuggestion['kind'], path: string, global: boolean): CelSuggestion => ({
     label, kind,
     detail: type.kind === 'record' && type.namespace ? path : `${path} · ${formatCelType(type)}`,
-    documentation: global ? getCelDescription(path) : undefined,
+    documentation: global ? getCelDescription(path, language) : undefined,
   })
 
   if (!context.receiver) {
     // A macro variable hides the global of the same name.
     const variables = new Map<string, [CelType, boolean]>()
-    for (const [name, type] of Object.entries(getCelGlobals(scope))) variables.set(name, [type, true])
+    for (const [name, type] of Object.entries(language.variables)) variables.set(name, [type, true])
     for (const [name, type] of locals) variables.set(name, [type, false])
     const suggestions = [...variables]
       .filter(([, [type]]) => !presenceOnly || isCelPresenceRoot(type))
       .map(([name, [type, global]]) => field(name, type, 'variable', name, global))
     if (!presenceOnly) {
-      for (const callable of getCelCallables(undefined, scope)) suggestions.push({ label: callable.name, kind: 'function', detail: callable.signature, callable })
+      for (const callable of getCelCallables(undefined, language)) suggestions.push({ label: callable.name, kind: 'function', detail: callable.signature, callable })
     }
     return suggestions
   }
 
-  const type = resolveCelChain(context.receiver, locals, scope)
+  const type = resolveCelChain(context.receiver, locals, language)
   if (!type) return []
   const global = !locals.has(context.receiver.split('.')[0])
   const suggestions = getCelFields(type, presenceOnly)
     .map(([name, member]) => field(name, member, 'field', `${context.receiver}.${name}`, global))
-  if (type.kind === 'map' && type.metadata) {
-    // principal.metadata keys come from the loaded principals.
-    for (const { key, types } of getCelMetadataKeys(subjects)) {
+  if (type.kind === 'map' && type.keys) {
+    // Keys the plugins know of, such as principal.metadata keys from the loaded principals.
+    for (const { key, types } of getCelKeys(language, type.keys)) {
       suggestions.push({ label: key, kind: 'field', detail: `${context.receiver}.${key} · ${types.join(' | ')}` })
     }
   }
@@ -85,9 +84,9 @@ export const getCelSuggestions = (before: string, scope: CelScope, subjects: Cel
 
 /**
  * What to show when hovering the identifier at `offset`: a function's signature,
- * or a variable's type and, for a Gateway variable, its description.
+ * or a variable's type and, for a global variable, its description.
  */
-export const getCelHover = (source: string, offset: number, scope: CelScope) => {
+export const getCelHover = (source: string, offset: number, language: CelLanguage) => {
   const code = maskCelLiterals(source)
   const start = offset - code.slice(0, offset).match(/\w*$/)![0].length
   const end = offset + code.slice(offset).match(/^\w*/)![0].length
@@ -99,41 +98,42 @@ export const getCelHover = (source: string, offset: number, scope: CelScope) => 
   if (/\.\s*$/.test(before) && !receiver) return
   // A macro's first argument declares its variable, which is in scope after the comma.
   const declaration = /\.\s*\w+\s*\(\s*$/.test(before) && /^\s*,/.test(after)
-  const locals = getCelLocals(declaration ? code.slice(0, end + after.indexOf(',') + 1) : before, scope)
+  const locals = getCelLocals(declaration ? code.slice(0, end + after.indexOf(',') + 1) : before, language)
 
   if (/^\s*\(/.test(after)) {
-    const receiverType = receiver ? resolveCelChain(receiver, locals, scope) : undefined
+    const receiverType = receiver ? resolveCelChain(receiver, locals, language) : undefined
     if (receiver && !receiverType) return
-    const callable = getCelCallables(receiverType, scope).find(item => item.name === word)
+    const callable = getCelCallables(receiverType, language).find(item => item.name === word)
     return callable && { start, end, title: callable.signature, description: callable.description }
   }
 
   const path = receiver ? `${receiver}.${word}` : word
-  const type = resolveCelChain(path, locals, scope)
+  const type = resolveCelChain(path, locals, language)
   if (!type) return
   const local = locals.has(path.split('.')[0])
   const namespace = type.kind === 'record' && type.namespace
   return {
     start, end,
     title: namespace ? path : `${path}: ${formatCelType(type)}`,
-    description: local ? undefined : getCelDescription(path),
+    description: local ? undefined : getCelDescription(path, language),
   }
 }
 
 /** The call the cursor is in, with its callable, for signature help. */
-export const getCelSignature = (before: string, scope: CelScope) => {
+export const getCelSignature = (before: string, language: CelLanguage) => {
   const call = [...getCelCallFrames(before)].reverse().find(frame => frame.name)
   if (!call) return
   // Resolve the receiver where the call starts, before its own variable exists.
-  const receiver = call.receiver ? resolveCelChain(call.receiver, getCelLocals(before.slice(0, call.start), scope), scope) : undefined
+  const receiver = call.receiver ? resolveCelChain(call.receiver, getCelLocals(before.slice(0, call.start), language), language) : undefined
   if (call.receiver && !receiver) return
-  const callable = getCelCallables(receiver, scope).find(item => item.name === call.name)
+  const callable = getCelCallables(receiver, language).find(item => item.name === call.name)
   if (callable) return { callable, argument: call.argument }
 }
 
 interface CelEditorContext {
-  scope: () => CelScope
-  subjects: () => CelSubjects
+  /** The dialect: the plugins this editor enables. */
+  language: () => CelLanguage
+  /** How to show the record a hovered literal names. */
   formatSubject: (subject: CelSubjectValue) => string
   instance: editor.IStandaloneCodeEditor
 }
@@ -183,7 +183,7 @@ const register = () => {
         if (!editorContext) return { suggestions: [] }
         const source = model.getValue()
         const offset = model.getOffsetAt(position)
-        const values = getCelSubjectSuggestions(source, offset, editorContext.scope(), editorContext.subjects())
+        const values = getCelSubjectSuggestions(source, offset, editorContext.language())
         const valueItems = values.suggestions.map(({ label, detail, insertText, filterText, start, end }, index): monaco.languages.CompletionItem => {
           const from = model.getPositionAt(start)
           const to = model.getPositionAt(end)
@@ -209,7 +209,7 @@ const register = () => {
         }
         const hasParentheses = /^\s*\(/.test(lineText.slice(range.endColumn - 1))
         const before = source.slice(0, offset)
-        const suggestions = getCelSuggestions(before, editorContext.scope(), editorContext.subjects()).map(({ label, kind, detail, documentation, callable }): monaco.languages.CompletionItem => ({
+        const suggestions = getCelSuggestions(before, editorContext.language()).map(({ label, kind, detail, documentation, callable }): monaco.languages.CompletionItem => ({
           label, detail, range,
           documentation: documentation ? { value: documentation } : undefined,
           kind: kind === 'function'
@@ -235,14 +235,14 @@ const register = () => {
           const end = model.getPositionAt(to)
           return { startLineNumber: start.lineNumber, startColumn: start.column, endLineNumber: end.lineNumber, endColumn: end.column }
         }
-        const info = getCelHover(source, offset, editorContext.scope())
+        const info = getCelHover(source, offset, editorContext.language())
         if (info) {
           return {
             range: range(info.start, info.end),
             contents: [{ value: '```\n' + info.title + '\n```' }, ...(info.description ? [{ value: info.description }] : [])],
           }
         }
-        const match = getCelHoveredSubject(source, offset, editorContext.scope(), editorContext.subjects())
+        const match = getCelHoveredSubject(source, offset, editorContext.language())
         if (!match) return
         const start = model.getPositionAt(match.start)
         const end = model.getPositionAt(match.end)
@@ -259,7 +259,7 @@ const register = () => {
       provideSignatureHelp(model, position) {
         const editorContext = contexts.get(model)
         if (!editorContext) return undefined
-        const signature = getCelSignature(model.getValue().slice(0, model.getOffsetAt(position)), editorContext.scope())
+        const signature = getCelSignature(model.getValue().slice(0, model.getOffsetAt(position)), editorContext.language())
         if (!signature) return undefined
         const { callable, argument } = signature
         const overloads = callable.alternateParameters ? [callable.parameters, callable.alternateParameters] : [callable.parameters]

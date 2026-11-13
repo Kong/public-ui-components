@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
+import { defineCelLanguage } from './catalog'
 import { getCelHint } from './hints'
+import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
-const full = { pluginState: true, expressible: false }
-const acl = { pluginState: false, expressible: false }
+const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
+const full = defineCelLanguage([...gateway, kongPluginState(), kongFallback()])
+const acl = defineCelLanguage([...gateway, kongAclRule(), kongFallback()])
+const expressible = defineCelLanguage([...gateway, kongPluginState(), kongExpressibleField()])
 
 describe('getCelHint', () => {
   it('accepts declared variables, map keys, methods, macro variables and literals', () => {
@@ -55,7 +59,7 @@ describe('getCelHint', () => {
   })
 
   it('rejects default() in an expressible field', () => {
-    expect(getCelHint('default(int(http.headers.x_limit), 10)', { pluginState: true, expressible: true })).toEqual({ kind: 'default' })
+    expect(getCelHint('default(int(http.headers.x_limit), 10)', expressible)).toEqual({ kind: 'default' })
   })
 
   it('asks for == instead of a single =', () => {

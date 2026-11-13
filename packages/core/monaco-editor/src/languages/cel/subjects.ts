@@ -1,63 +1,19 @@
 import { getCelElement, getCelLocals, resolveCelChain } from './catalog'
-import type { CelScope, CelSubjectKind, CelType } from './catalog'
+import type { CelLanguage, CelSubjectValue, CelType } from './catalog'
 import { CEL_LITERALS_AND_COMMENTS } from './tokens'
 
-/**
- * Records that plugin CEL expressions can name: Gateway Consumers and Consumer
- * Groups, and Kong Identity principals and groups. A list the user cannot read
- * stays empty.
- */
-export interface CelSubjects {
-  consumers?: ReadonlyArray<{ id: string, username?: string | null, custom_id?: string | null }>
-  consumerGroups?: ReadonlyArray<{ id: string, name: string }>
-  principals?: ReadonlyArray<{ id: string, display_name?: string | null, metadata?: Readonly<Record<string, unknown>> | null }>
-  principalGroups?: ReadonlyArray<{ id: string, name: string }>
-}
-
-/** A literal value that names a record. */
-export interface CelSubjectValue {
-  kind: CelSubjectKind
-  /** The literal the expression compares with. */
-  value: string
-  /** The record's display name. */
-  name: string
-  id: string
-}
-
-/** The values a subject kind can take, in list order. */
-export const getCelSubjectValues = (subjects: CelSubjects, kind: CelSubjectKind): CelSubjectValue[] => {
-  const values: CelSubjectValue[] = []
-  const add = (value: string | null | undefined, name: string | null | undefined, id: string) => {
-    if (value) values.push({ kind, value, name: name || id, id })
-  }
-  for (const { id, username, custom_id } of kind.startsWith('consumer-') && !kind.startsWith('consumer-group') ? subjects.consumers ?? [] : []) {
-    const name = username || custom_id
-    if (kind === 'consumer-id') add(id, name, id)
-    if (kind === 'consumer-username') add(username, name, id)
-    if (kind === 'consumer-custom-id') add(custom_id, name, id)
-  }
-  for (const { id, name } of kind.startsWith('consumer-group') ? subjects.consumerGroups ?? [] : []) {
-    add(kind === 'consumer-group-name' ? name : id, name, id)
-  }
-  if (kind === 'principal-id') for (const { id, display_name } of subjects.principals ?? []) add(id, display_name, id)
-  if (kind === 'principal-group-id') for (const { id, name } of subjects.principalGroups ?? []) add(id, name, id)
-  return values
-}
+/** The values a string with this `subject` can take, from the plugins that supply them. */
+export const getCelSubjectValues = (language: CelLanguage, subject: string): CelSubjectValue[] =>
+  language.plugins.flatMap(plugin => plugin.values?.(subject) ?? [])
 
 // Keys that CEL can select with a dot: identifiers that are not reserved words.
 const CEL_RESERVED = new Set(['as', 'break', 'const', 'continue', 'else', 'false', 'for', 'function', 'if', 'import', 'in', 'let', 'loop', 'namespace', 'null', 'package', 'return', 'true', 'var', 'void', 'while'])
-const valueType = (value: unknown) => Array.isArray(value) ? 'list' : value === null ? 'null' : typeof value
 
-/** The `principal.metadata` keys that loaded principals use, with the value types seen for each key. */
-export const getCelMetadataKeys = (subjects: CelSubjects) => {
-  const keys = new Map<string, Set<string>>()
-  for (const { metadata } of subjects.principals ?? []) {
-    for (const [key, value] of Object.entries(metadata ?? {})) {
-      if (/^[A-Za-z_]\w*$/.test(key) && !CEL_RESERVED.has(key)) keys.set(key, (keys.get(key) ?? new Set()).add(valueType(value)))
-    }
-  }
-  return [...keys].sort(([a], [b]) => a.localeCompare(b)).map(([key, types]) => ({ key, types: [...types] }))
-}
+/** The keys of a map with these `keys` that CEL can select with a dot, from the plugins that supply them. */
+export const getCelKeys = (language: CelLanguage, source: string) =>
+  language.plugins.flatMap(plugin => plugin.keys?.(source) ?? [])
+    .filter(({ key }) => /^[A-Za-z_]\w*$/.test(key) && !CEL_RESERVED.has(key))
+    .sort((a, b) => a.key.localeCompare(b.key))
 
 const CHAIN = '([A-Za-z_]\\w*(?:\\s*\\.\\s*[A-Za-z_]\\w*)*)'
 // The chain must end there: not a method call, a deeper member or an index.
@@ -75,15 +31,15 @@ const subjectOf = (type: CelType | undefined) => type?.kind === 'string' ? type.
  * of `==`/`!=`, or the list after `in`. Macro variables count, so the literal in
  * `principal.groups.exists(g, g.id == "…")` names a principal group.
  */
-export const getCelComparedSubject = (source: string, start: number, end: number, scope: CelScope): CelSubjectKind | undefined =>
-  compared(source, start, end, scope)?.kind
+export const getCelComparedSubject = (source: string, start: number, end: number, language: CelLanguage): string | undefined =>
+  compared(source, start, end, language)?.kind
 
 /** As `getCelComparedSubject`, plus where a single `=` starts, to replace it with `==`. */
-const compared = (source: string, start: number, end: number, scope: CelScope): { kind?: CelSubjectKind, assignAt?: number } | undefined => {
+const compared = (source: string, start: number, end: number, language: CelLanguage): { kind?: string, assignAt?: number } | undefined => {
   const before = source.slice(0, start)
   const after = source.slice(end)
-  const locals = getCelLocals(before, scope)
-  const resolve = (chain: string) => resolveCelChain(chain.replace(/\s+/g, ''), locals, scope)
+  const locals = getCelLocals(before, language)
+  const resolve = (chain: string) => resolveCelChain(chain.replace(/\s+/g, ''), locals, language)
   const left = before.match(COMPARED_BEFORE)?.[1]
   if (left) return { kind: subjectOf(resolve(left)) }
   const assigned = before.match(ASSIGNED_BEFORE)?.[1]
@@ -146,7 +102,7 @@ export interface CelSubjectSuggestion {
  * After a single `=` (`consumer.id = `), a value also corrects it to `==`.
  * `inLiteral` is true when the cursor is in a literal, where nothing else applies.
  */
-export const getCelSubjectSuggestions = (source: string, offset: number, scope: CelScope, subjects: CelSubjects) => {
+export const getCelSubjectSuggestions = (source: string, offset: number, language: CelLanguage) => {
   const literal = literalAt(source, offset)
   let start = offset
   let end = offset
@@ -162,12 +118,12 @@ export const getCelSubjectSuggestions = (source: string, offset: number, scope: 
     end = offset + (source.slice(offset).match(/^[\w-]*/)![0].length)
     typed = word
   }
-  const { kind, assignAt } = compared(source, start, end, scope) ?? {}
+  const { kind, assignAt } = compared(source, start, end, language) ?? {}
   // Replace from the `=` on, so the operator becomes `==`; Monaco filters on all the text it replaces.
   const from = assignAt ?? start
   const typedBefore = source.slice(from, offset - typed.length)
   const suggestions: CelSubjectSuggestion[] = []
-  for (const { value, name, id } of kind ? getCelSubjectValues(subjects, kind) : []) {
+  for (const { value, name, id } of kind ? getCelSubjectValues(language, kind) : []) {
     // A value can be found by typing any part of its name or of the value itself.
     const match = [name, value].find(candidate => candidate.toLowerCase().includes(typed.toLowerCase()))
     if (match === undefined) continue
@@ -183,11 +139,11 @@ export const getCelSubjectSuggestions = (source: string, offset: number, scope: 
 }
 
 /** The record a hovered string literal names, if it is compared with a record variable. */
-export const getCelHoveredSubject = (source: string, offset: number, scope: CelScope, subjects: CelSubjects) => {
+export const getCelHoveredSubject = (source: string, offset: number, language: CelLanguage) => {
   const literal = literalAt(source, offset)
   if (!literal?.closed) return
-  const kind = getCelComparedSubject(source, literal.start, literal.end, scope)
+  const kind = getCelComparedSubject(source, literal.start, literal.end, language)
   const value = kind && decode(literal.body, literal.quote)
-  const match = value === undefined ? undefined : getCelSubjectValues(subjects, kind!).find(item => item.value === value)
+  const match = value === undefined ? undefined : getCelSubjectValues(language, kind!).find(item => item.value === value)
   if (match) return { subject: match, start: literal.start, end: literal.end }
 }
