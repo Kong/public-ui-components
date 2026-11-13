@@ -20,8 +20,7 @@
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
-        <component
-          :is="isCelEditor('condition') ? CelField : StringField"
+        <StringField
           v-if="getSchema('condition')"
           name="condition"
           :placeholder="t('plugins.form.fields.condition.placeholder')"
@@ -33,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { CelField, Field, useCelEditor, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
+import { Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
 import { ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KCollapse } from '@kong/kongponents'
@@ -48,7 +47,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { getSchema } = useFormShared()
 
 const advancedCollapsed = ref(true)
-const isCelEditor = useCelEditor()
 </script>
 
 <style lang="scss" scoped>

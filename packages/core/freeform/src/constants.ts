@@ -1,23 +1,14 @@
-import type { InjectionKey, Ref } from 'vue'
-import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { Component, InjectionKey, Ref } from 'vue'
+import type { UnionFieldSchema } from './form-schema'
 
 export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:use-secret-input') as InjectionKey<Ref<boolean>>
 
 export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'
 
-/**
- * Decides whether the CEL field at `path` (see `getCelFieldKind`) renders the
- * CEL editor (`CelField`: Monaco, with suggestions, hover and hints) instead of
- * its plain `StringField`. The host provides it; without it, every field keeps
- * its plain input. Read it with `useCelEditor`.
- */
-export const CEL_EDITOR_KEY = Symbol.for('kong-ui-public:freeform:cel-editor') as InjectionKey<(path: string) => boolean>
-
-/**
- * Loads the records that CEL expressions can name, for value suggestions in the
- * CEL editor. Called when an editor opens; repeated calls should share one request.
- */
-export const CEL_SUBJECTS_KEY = Symbol.for('kong-ui-public:freeform:cel-subjects') as InjectionKey<() => Promise<CelSubjects>>
+/** Optional input for a string field. The host identifies CEL fields and supplies the editor. */
+export const CEL_INPUT_KEY = Symbol.for('kong-ui-public:freeform:cel-input') as InjectionKey<
+  (path: string, schema: UnionFieldSchema | undefined) => { component: Component, props?: Record<string, unknown> } | undefined
+>
 
 /**
  * Finds the control to focus inside a rendered field: the first enabled

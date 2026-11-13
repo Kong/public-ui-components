@@ -1,8 +1,8 @@
 import * as monaco from 'monaco-editor'
 import type { IDisposable, editor } from 'monaco-editor'
 import {
-  CEL_MACROS, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals,
-  isCelPresenceRoot, resolveCelChain,
+  formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals,
+  isCelMacroEnabled, isCelPresenceRoot, resolveCelChain,
 } from './catalog'
 import type { CelCallable, CelLanguage, CelSubjectValue, CelType } from './catalog'
 import { endsInCelLiteral, maskCelLiterals } from './tokens'
@@ -42,8 +42,8 @@ export const getCelSuggestions = (before: string, language: CelLanguage): CelSug
   const frames = getCelCallFrames(before)
   const call = [...frames].reverse().find(frame => frame.name)
   // The first argument of a macro names a new variable.
-  if (call && CEL_MACROS.has(call.name) && call.method && call.argument === 0) return []
-  const presenceOnly = call?.name === 'has' && !call.receiver
+  if (call && isCelMacroEnabled(call.name, language) && call.method && call.argument === 0) return []
+  const presenceOnly = call?.name === 'has' && !call.receiver && (!language.standardCallables || language.standardCallables.includes('has'))
   const locals = getCelLocals(before, language)
   const field = (label: string, type: CelType, kind: CelSuggestion['kind'], path: string, global: boolean): CelSuggestion => ({
     label, kind,
@@ -77,7 +77,7 @@ export const getCelSuggestions = (before: string, language: CelLanguage): CelSug
     }
   }
   if (!presenceOnly) {
-    for (const callable of getCelCallables(type)) suggestions.push({ label: callable.name, kind: 'function', detail: callable.signature, callable })
+    for (const callable of getCelCallables(type, language)) suggestions.push({ label: callable.name, kind: 'function', detail: callable.signature, callable })
   }
   return suggestions
 }

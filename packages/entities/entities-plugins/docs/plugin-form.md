@@ -167,6 +167,12 @@ Control if the View Configuration action button is hidden.
 
 Control if the vault secret picker is enabled for applicable fields.
 
+### CEL editor
+
+Konnect enables the editor by providing `FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR` as a boolean or Vue ref. Kong Manager opts in separately with `config.enableCelEditor: true`. For the plugin `condition` field, the host must also supply known CEL-compatible Gateway versions. Konnect uses `config.dataPlaneVersions` for all target data planes. Kong Manager uses `config.gatewayInfo` for its Enterprise Gateway. CEL conditions require Gateway 3.15 or later. The existing condition field visibility flag still applies.
+
+Both hosts can provide `config.getCelSubjects(): Promise<CelSubjects>`. The form calls it when a CEL input mounts and shares the lookup across fields. The host checks list access for each collection before calling its API, follows pagination, and returns the accessible Consumers, Consumer Groups, principals, and principal groups. Replace the callback when the user's access changes. Without a callback the editor provides field and function suggestions using its declarations alone.
+
 ### Events
 
 #### cancel

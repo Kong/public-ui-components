@@ -41,8 +41,7 @@
       v-else
       class="ff-expression-editor-expanded"
     >
-      <component
-        :is="celEditor ? CelField : StringField"
+      <StringField
         class="ff-expression-editor-input"
         :disabled="isLocked"
         :label="i18n.t('expression.label')"
@@ -83,7 +82,7 @@
             </i18nT>
           </slot>
         </template>
-      </component>
+      </StringField>
 
       <KButton
         appearance="tertiary"
@@ -106,11 +105,9 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
-import CelField from './CelField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
 import { useExpressionField, useFieldPath } from '../composables'
-import { useCelEditor } from '../cel-field'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -138,8 +135,6 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
-const isCelEditor = useCelEditor()
-const celEditor = computed(() => isCelEditor(expression.expressionPath.value!))
 
 /**
  * Version lock for the value/expression pair, resolved by `useExpressionField`

@@ -1,6 +1,6 @@
 <template>
   <InputComponent
-    v-bind="$attrs"
+    v-bind="{ ...$attrs, ...celInput?.props }"
     :character-limit="characterLimit"
     :model-value="modelValue"
     :resizable="multiline ? true : undefined"
@@ -23,11 +23,13 @@
 import { KInput, KTextArea } from '@kong/kongponents'
 import { SecretInput } from '@kong-ui-public/misc-widgets'
 import '@kong-ui-public/misc-widgets/dist/style.css'
-import { ref, watch, useSlots, computed, useAttrs } from 'vue'
+import { ref, watch, useSlots, computed, inject, useAttrs } from 'vue'
+import { CEL_INPUT_KEY } from '../constants'
 import { useFormShared } from '../composables'
 
 interface Props {
   modelValue?: string
+  fieldPath?: string
   multiline?: boolean
   secret?: boolean
 }
@@ -39,7 +41,10 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const InputComponent = computed(() => props.multiline ? KTextArea : props.secret ? SecretInput : KInput)
+const { config, getSchema } = useFormShared()
+const resolveCelInput = inject(CEL_INPUT_KEY, undefined)
+const celInput = computed(() => props.fieldPath ? resolveCelInput?.(props.fieldPath, getSchema(props.fieldPath)) : undefined)
+const InputComponent = computed(() => celInput.value?.component ?? (props.multiline ? KTextArea : props.secret ? SecretInput : KInput))
 const characterLimit = computed(() => {
   return (attrs.characterLimit as number) ?? (props.multiline ? false : undefined)
 })
@@ -49,8 +54,6 @@ const innerValue = ref(props.modelValue)
 watch(() => props.modelValue, (newValue) => {
   innerValue.value = newValue
 })
-
-const { config } = useFormShared()
 
 const handleInput = (value: string) => {
   if (value === innerValue.value) return

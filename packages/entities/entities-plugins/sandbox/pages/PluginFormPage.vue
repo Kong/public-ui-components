@@ -142,9 +142,10 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   // isKongIdentityAuthServersAvailable: false,
   canCreateAuthServer: false,
-  // Sample Kong Identity records for CEL value suggestions. A host app loads these
-  // from the Kong Identity API after its own permission checks.
-  getCelIdentitySubjects: async () => ({
+  // Production hosts check list permissions before reading each collection.
+  getCelSubjects: async () => ({
+    consumers: [{ id: 'c1', username: 'ada' }],
+    consumerGroups: [{ id: 'cg1', name: 'Platform' }],
     principals: [
       { id: '7f0c5c6a-1d1e-4b8a-9a52-2f7e3c1a0b11', display_name: 'Ada Lovelace', metadata: { team: 'ai', tier: 'gold' } },
       { id: '2b9e4d3f-8c6a-4f1b-b0e2-5d7a9c3e1f22', display_name: 'Alan Turing', metadata: { team: 'core' } },

@@ -31,17 +31,6 @@
         />
       </FieldRenderer>
 
-      <!-- CEL fields the form lays out itself (the ai-mcp-proxy ACL rules), where the host renders the CEL editor. -->
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path, schema }) => schema.type === 'string' && isCelEditor(path)"
-      >
-        <CelField
-          v-bind="slotProps"
-          :rows="2"
-        />
-      </FieldRenderer>
-
       <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
         <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
       </FieldRenderer>
@@ -69,7 +58,7 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
-import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, CelField, useCelEditor, useSchemaExposer } from '@kong-ui-public/freeform'
+import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from './RedisSelector.vue'
@@ -88,8 +77,6 @@ const instanceId = useId()
 const formRef = useTemplateRef('form')
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO, undefined)
-
-const isCelEditor = useCelEditor()
 
 const configFieldRenderers = computed<FieldRendererRule[]>(() => props.fieldRenderers ?? [])
 

@@ -29,5 +29,23 @@
       "loading_message": "Please wait while the {type} content is loaded.",
       "loading_title": "{type} editor"
     }
+  },
+  "cel": {
+    "editor_label": "CEL expression",
+    "alias_hint": "\"{typed}\" is not a variable in this expression. Did you mean \"{expected}\"?",
+    "unknown_field_hint": "\"{field}\" is not a field in this expression.",
+    "unknown_member_hint": "\"{field}\" does not exist. \"{base}\" is {type}.",
+    "header_name_hint": "Header names are lowercase, with \"_\" for \"-\". Use \"{expected}\" instead of \"{typed}\".",
+    "unguarded_hint": "A missing key is a runtime error. Check it first with \"has({field})\".",
+    "assignment_hint": "Use \"==\" to compare. CEL has no \"=\" operator.",
+    "default_hint": "\"default()\" is not allowed here. The value above is the fallback when the expression fails.",
+    "hover": {
+      "consumer": "Consumer: {name}\nID: {id}",
+      "consumer_group": "Consumer Group: {name}\nID: {id}",
+      "principal": "Principal: {name}\nID: {id}",
+      "principal_group": "Principal group: {name}\nID: {id}",
+      "record": "{name}\nID: {id}"
+    },
+    "plugin_state_hint": "\"plugins.*\" variables are not supported in access control expressions."
   }
 }

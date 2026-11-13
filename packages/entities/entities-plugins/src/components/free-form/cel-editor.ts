@@ -1,24 +1,57 @@
-import { getCelFieldKind } from '@kong-ui-public/freeform'
+import { shallowRef, watch } from 'vue'
+import { EXPRESSIONS_FIELD, isExpressionFieldSchema } from '@kong-ui-public/freeform'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
+import type { UnionFieldSchema } from '@kong-ui-public/freeform'
+import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 
-/**
- * Whether the plugin field at `path` renders the CEL editor instead of its plain
- * input. It needs the `km-plugins-cel-expression-editor` flag (`enabled`) and a
- * field that holds CEL (`condition`, `expressions.*`, ACL rules: see
- * `getCelFieldKind`). Kong Gateway 3.15 made CEL the `condition` engine (3.14 used
- * the ATC router syntax), so in Kong Manager, `condition` also needs Kong Gateway 3.15.
- */
-export const shouldRenderCelEditor = (
+type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
+export type PluginCelFieldKind = 'expression' | 'condition' | 'acl-rule'
+
+export function getPluginCelFieldKind(
   path: string,
-  enabled: boolean,
-  config: KonnectPluginFormConfig | KongManagerPluginFormConfig,
-): boolean => {
-  const kind = getCelFieldKind(path)
-  if (!enabled || !kind) return false
-  if (kind !== 'condition' || config.app !== 'kongManager') return true
-  return useGatewayFeatureSupported({
-    gatewayInfo: (config as KongManagerPluginFormConfig).gatewayInfo,
-    supportedRange: { enterprise: ['3.15'] },
-  })
+  schema: UnionFieldSchema | undefined,
+  plugin: string,
+  config: Config,
+  konnectEnabled: boolean,
+): PluginCelFieldKind | undefined {
+  const enabled = config.app === 'kongManager' ? config.enableCelEditor : konnectEnabled
+  if (!enabled || schema?.type !== 'string') return
+  if (path.startsWith(`${EXPRESSIONS_FIELD}.`) && isExpressionFieldSchema(schema)) return 'expression'
+  if (plugin === 'acl' && /^config\.(allow|deny)_when\.\d+$/.test(path)) return 'acl-rule'
+  if (plugin === 'ai-mcp-proxy' && /^config\.(default_acl\.\d+|tools\.\d+\.acl)\.(allow|deny)_when\.\d+$/.test(path)) return 'acl-rule'
+  if (path !== 'condition') return
+
+  // Gateway 3.14 evaluates condition as ATC. Offer CEL only for known 3.15+ targets.
+  const supportedRange = { enterprise: ['3.15'] as [string] }
+  if (config.app === 'kongManager') {
+    if (config.gatewayInfo && useGatewayFeatureSupported({ gatewayInfo: config.gatewayInfo, supportedRange })) return 'condition'
+    return
+  }
+
+  const versions = config.dataPlaneVersions
+  if (versions?.length && versions.every(version => useGatewayFeatureSupported({
+    gatewayInfo: { edition: 'enterprise', version }, supportedRange,
+  }))) return 'condition'
+}
+
+/** Share an in-flight or successful host lookup across the editors in this form. */
+export function useCelSubjectLoader(config: () => Config) {
+  const loader = shallowRef<Config['getCelSubjects']>()
+  watch([
+    () => config().getCelSubjects,
+    () => config().apiBaseUrl,
+    () => config().workspace,
+    () => {
+      const host = config()
+      return host.app === 'konnect' ? host.controlPlaneId : undefined
+    },
+  ], ([load]) => {
+    let pending: Promise<CelSubjects> | undefined
+    loader.value = load && (() => pending ??= Promise.resolve().then(load).catch(error => {
+      pending = undefined
+      throw error
+    }))
+  }, { immediate: true, flush: 'sync' })
+  return loader
 }

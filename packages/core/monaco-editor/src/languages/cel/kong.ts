@@ -171,12 +171,15 @@ const valueType = (value: unknown) => Array.isArray(value) ? 'list' : value === 
  * The authenticated Kong Identity principal. Suggests the loaded `principals`
  * and `principalGroups`, and the `principal.metadata` keys they use.
  */
-export const kongPrincipal = (records = NO_RECORDS): CelPlugin => ({
+export const kongPrincipal = (records = NO_RECORDS, { supportsPrincipalGroups = true } = {}): CelPlugin => ({
   variables: {
     principal: namespace({
-      id: subject('principal-id', true), display_name: NULLABLE_STRING, type: NULLABLE_STRING,
+      id: subject('principal-id', true), display_name: NULLABLE_STRING,
+      ...(supportsPrincipalGroups && { type: NULLABLE_STRING }),
       metadata: { kind: 'map', key: STRING, value: DYN, nullable: true, keys: 'principal.metadata', guarded: true },
-      groups: { kind: 'list', of: { kind: 'record', fields: { id: subject('principal-group-id'), type: STRING } }, nullable: true },
+      ...(supportsPrincipalGroups && {
+        groups: { kind: 'list', of: { kind: 'record', fields: { id: subject('principal-group-id'), type: STRING } }, nullable: true },
+      }),
     }),
   },
   // `principal.type` and `principal.groups` are newer than the published reference.
@@ -194,7 +197,7 @@ export const kongPrincipal = (records = NO_RECORDS): CelPlugin => ({
   aliases: { principals: 'principal' },
   values: (kind) => {
     if (kind === 'principal-id') return (records().principals ?? []).flatMap(({ id, display_name }) => subjectValue(kind, id, display_name, id))
-    if (kind === 'principal-group-id') return (records().principalGroups ?? []).flatMap(({ id, name }) => subjectValue(kind, id, name, id))
+    if (supportsPrincipalGroups && kind === 'principal-group-id') return (records().principalGroups ?? []).flatMap(({ id, name }) => subjectValue(kind, id, name, id))
     return []
   },
   keys: (source) => {

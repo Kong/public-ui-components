@@ -22,6 +22,9 @@ export interface BasePluginFormConfig {
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
 
+  /** Load only records the host has permission to list, including subsequent pages. */
+  getCelSubjects?: () => Promise<CelSubjects>
+
   viewServiceRoute?: (id: string) => RouteLocationRaw
   viewRouteRoute?: (id: string) => RouteLocationRaw
   viewConsumerRoute?: (id: string) => RouteLocationRaw
@@ -78,21 +81,12 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
    * are configured but a connected DP node can't process them.
    */
   dataPlaneVersions?: string[]
-  /**
-   * Loads the Kong Identity principals and groups the user can read, for value
-   * suggestions in plugin CEL expressions (`principal.id`, `principal.groups`,
-   * `principal.metadata`). The host app owns the Kong Identity API and its
-   * permission checks; return empty lists for what the user cannot read.
-   * Consumers and Consumer Groups are loaded by the form itself.
-   */
-  getCelIdentitySubjects?: () => Promise<CelIdentitySubjects>
 }
 
-/** Kong Identity records that plugin CEL expressions can name. */
-export type CelIdentitySubjects = Pick<CelSubjects, 'principals' | 'principalGroups'>
-
-/** Kong Manager Plugin form config */
-export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
+/** Kong Manager controls its CEL rollout independently of the Konnect feature flag. */
+export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {
+  enableCelEditor?: boolean
+}
 
 /**
  * Payload for the `click:create-entity` event. The consuming app navigates to the

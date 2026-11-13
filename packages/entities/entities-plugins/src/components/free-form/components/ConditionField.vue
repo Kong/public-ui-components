@@ -19,8 +19,7 @@
       </div>
     </KLabel>
 
-    <component
-      :is="isCelEditor('condition') ? CelField : StringField"
+    <StringField
       :input-id="conditionFieldId"
       :label="''"
       name="condition"
@@ -38,7 +37,7 @@
           </template>
         </i18nT>
       </template>
-    </component>
+    </StringField>
   </div>
 </template>
 
@@ -46,12 +45,11 @@
 import { KTooltip } from '@kong/kongponents'
 import { InfoIcon } from '@kong/icons'
 import { useId } from 'vue'
-import { CelField, StringField, useCelEditor } from '@kong-ui-public/freeform'
+import { StringField } from '@kong-ui-public/freeform'
 import externalLinks from '../../../external-links'
 import useI18n from '../../../composables/useI18n'
 
 const conditionFieldId = useId()
-const isCelEditor = useCelEditor()
 const { i18n: { t }, i18nT } = useI18n()
 </script>
 

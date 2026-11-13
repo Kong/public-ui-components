@@ -40,6 +40,26 @@ describe('getCelSuggestions', () => {
     expect(labels('http.', identity)).toEqual([])
   })
 
+  it('uses the AI ACL dialect for completion, hover and signature help', () => {
+    const language = defineCelLanguage([
+      kongConsumer(), kongConsumerGroup(), kongPrincipal(undefined, { supportsPrincipalGroups: false }),
+    ], { standardCallables: ['has', 'matches', 'contains', 'startsWith', 'endsWith', 'all', 'exists', 'map', 'filter'] })
+    expect(labels('', language)).toEqual(['consumer', 'consumer_group', 'principal', 'has', 'matches'])
+    expect(labels('principal.', language)).toEqual(['id', 'display_name', 'metadata'])
+    expect(labels('consumer.username.', language)).not.toContain('size')
+    expect(getCelHover('consumer.username.size()', 20, language)).toBeUndefined()
+    expect(getCelSignature('consumer.username.size(', language)).toBeUndefined()
+    expect(getCelSignature('consumer_group.ids.exists(', language)?.callable.name).toBe('exists')
+  })
+
+  it('allows a dialect to omit all standard functions and macros', () => {
+    const language = defineCelLanguage([kongConsumerGroup()], { standardCallables: [] })
+    expect(labels('', language)).toEqual(['consumer_group'])
+    expect(labels('has(', language)).toEqual(['consumer_group'])
+    expect(labels('consumer_group.ids.', language)).toEqual([])
+    expect(labels('consumer_group.ids.exists(item, ', language)).toEqual(['consumer_group'])
+  })
+
   it('offers fields and methods by the receiver type', () => {
     expect(labels('consumer.')).toEqual(['id', 'custom_id', 'username', 'tags'])
     expect(detail('consumer.', 'username')).toBe('consumer.username · string | null')

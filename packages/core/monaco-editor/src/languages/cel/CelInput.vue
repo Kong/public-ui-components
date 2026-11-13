@@ -1,15 +1,18 @@
 <template>
   <div
-    class="ff-cel-input"
+    class="cel-input"
     :class="{ 'input-error': error }"
   >
     <KLabel
       v-if="label || $slots.label"
-      :for="id"
+      :for="inputId"
       v-bind="labelAttributes"
       :required="required"
     >
-      <slot name="label">
+      <slot
+        :label="label"
+        name="label"
+      >
         {{ label }}
       </slot>
       <template
@@ -21,10 +24,8 @@
     </KLabel>
 
     <MonacoEditor
-      :id="id"
       appearance="standalone"
-      class="ff-cel-input-editor"
-      :data-testid="path ? `ff-cel-${path}` : undefined"
+      class="cel-input-editor"
       language="plaintext"
       :model-value="modelValue ?? ''"
       :options="editorOptions"
@@ -38,15 +39,14 @@
 
     <p
       v-if="hintText"
-      class="ff-cel-input-hint"
-      :data-testid="path ? `ff-cel-hint-${path}` : undefined"
+      class="cel-input-hint"
       role="status"
     >
       {{ hintText }}
     </p>
     <p
       v-if="error ? errorMessage : (help || $slots.help)"
-      class="ff-cel-input-help"
+      class="cel-input-help"
     >
       <template v-if="error">
         {{ errorMessage }}
@@ -62,27 +62,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computed, defineAsyncComponent, inject, onBeforeUnmount, ref, useId } from 'vue'
 import type { ComputedRef } from 'vue'
-import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import { KLabel } from '@kong/kongponents'
 import type { LabelAttributes } from '@kong/kongponents'
 import type { editor, IDisposable } from 'monaco-editor'
-import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
-import useI18n from '../composables/useI18n'
-import { attachCelLanguage, getCelHint } from '@kong-ui-public/monaco-editor/languages/cel'
-import type { CelSubjects, CelSubjectValue } from '@kong-ui-public/monaco-editor/languages/cel'
-import { getPluginFieldCelLanguage } from '../cel'
-import { CEL_SUBJECTS_KEY } from '../constants'
-
-/**
- * The Monaco editor inside `CelField`: a `KTextArea` stand-in that suggests the
- * Gateway variables in scope for the field at `path`.
- */
-defineOptions({ inheritAttrs: false })
+import useI18n from '../../composables/useI18n'
+import { attachCelLanguage } from './language'
+import { getCelHint } from './hints'
+import type { CelHint } from './hints'
+import type { CelLanguage, CelSubjectValue } from './catalog'
 
 const {
   modelValue,
-  path = '',
+  language,
+  ariaLabel,
+  formatHint,
+  formatSubject,
   id,
   label,
   labelAttributes,
@@ -95,7 +91,11 @@ const {
   rows = 3,
 } = defineProps<{
   modelValue?: string
-  path?: string
+  language: CelLanguage
+  ariaLabel?: string
+  /** Return a message for a host-defined hint, or use the built-in messages. */
+  formatHint?: (hint: CelHint) => string | undefined
+  formatSubject?: (subject: CelSubjectValue) => string
   id?: string
   label?: string
   labelAttributes?: LabelAttributes
@@ -110,23 +110,27 @@ const {
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
+  change: []
 }>()
 
+// Language-only consumers do not load the editor UI.
+const MonacoEditor = defineAsyncComponent(() => import('../../components/MonacoEditor.vue'))
 const { i18n: { t } } = useI18n()
+
+const generatedId = useId()
+const inputId = computed(() => id ?? generatedId)
 
 const LINE_HEIGHT = 20
 const PADDING = 16
 const minHeight = computed(() => rows * LINE_HEIGHT + PADDING)
 const editorHeight = ref(minHeight.value)
 
-// Records for value suggestions. The editor works without them while they load, or when a list is denied.
-const loadSubjects = inject(CEL_SUBJECTS_KEY, undefined)
-const subjects = shallowRef<CelSubjects>({})
-const language = computed(() => getPluginFieldCelLanguage(path, () => subjects.value))
-const hint = computed(() => getCelHint(modelValue ?? '', language.value))
+const hint = computed(() => getCelHint(modelValue ?? '', language))
 const hintText = computed(() => {
   const value = hint.value
   if (!value) return ''
+  const message = formatHint?.(value)
+  if (message !== undefined) return message
   if (value.kind === 'alias') return t('cel.alias_hint', { typed: value.typed, expected: value.expected })
   if (value.kind === 'plugin-state') return t('cel.plugin_state_hint')
   if (value.kind === 'header-name') return t('cel.header_name_hint', { typed: value.typed, expected: value.expected })
@@ -134,20 +138,24 @@ const hintText = computed(() => {
   if (value.kind === 'default') return t('cel.default_hint')
   if (value.kind === 'assignment') return t('cel.assignment_hint')
   if (value.kind === 'unknown-member') return t('cel.unknown_member_hint', { field: value.field, base: value.base, type: value.type })
-  return t('cel.unknown_field_hint', { field: value.field })
+  if (value.kind === 'unknown-field') return t('cel.unknown_field_hint', { field: value.field })
+  return ''
 })
 
-const formatSubject = ({ kind, name, id }: CelSubjectValue) => {
+const subjectHover = (subject: CelSubjectValue) => {
+  if (formatSubject) return formatSubject(subject)
+  const { kind, name, id } = subject
   if (kind === 'principal-id') return t('cel.hover.principal', { name, id })
   if (kind === 'principal-group-id') return t('cel.hover.principal_group', { name, id })
   if (kind.startsWith('consumer-group')) return t('cel.hover.consumer_group', { name, id })
-  return t('cel.hover.consumer', { name, id })
+  if (kind.startsWith('consumer-')) return t('cel.hover.consumer', { name, id })
+  return t('cel.hover.record', { name, id })
 }
 
 const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const editorOptions = computed<Partial<editor.IStandaloneEditorConstructionOptions>>(() => ({
-  ariaLabel: label || t('cel.editor_label'),
+  ariaLabel: ariaLabel || label || t('cel.editor_label'),
   placeholder,
   minimap: { enabled: false },
   automaticLayout: true,
@@ -184,10 +192,10 @@ const ready = (instance: editor.IStandaloneCodeEditor) => {
   }
   disposables.push(instance.onDidContentSizeChange(resize))
   resize()
-  disposables.push(attachCelLanguage(instance, { language: () => language.value, formatSubject }))
-  loadSubjects?.().then((loaded) => {
-    if (!unmounted) subjects.value = loaded
-  }).catch(() => {})
+  const input = instance.getDomNode()?.querySelector<HTMLElement>('textarea, [contenteditable="true"]')
+  if (input) input.id = inputId.value
+  disposables.push(instance.onDidBlurEditorText(() => emit('change')))
+  disposables.push(attachCelLanguage(instance, { language: () => language, formatSubject: subjectHover }))
 }
 
 onBeforeUnmount(() => {
@@ -196,40 +204,40 @@ onBeforeUnmount(() => {
 })
 
 const update = (value: string) => {
-  if (!disabled && value !== (modelValue ?? '')) emit('update:modelValue', value)
+  if (!disabled) emit('update:modelValue', value)
 }
 </script>
 
 <style lang="scss" scoped>
-.ff-cel-input {
+.cel-input {
   min-width: 0;
 
-  .ff-cel-input-editor {
+  .cel-input-editor {
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     overflow: hidden;
   }
 
-  &.input-error .ff-cel-input-editor {
+  &.input-error .cel-input-editor {
     border-color: var(--kui-color-border-danger, $kui-color-border-danger);
   }
 
-  .ff-cel-input-hint,
-  .ff-cel-input-help {
+  .cel-input-hint,
+  .cel-input-help {
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     line-height: var(--kui-line-height-20, $kui-line-height-20);
     margin: var(--kui-space-40, $kui-space-40) 0 0;
   }
 
-  .ff-cel-input-hint {
+  .cel-input-hint {
     color: var(--kui-color-text-warning, $kui-color-text-warning);
   }
 
-  .ff-cel-input-help {
+  .cel-input-help {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   }
 
-  &.input-error .ff-cel-input-help {
+  &.input-error .cel-input-help {
     color: var(--kui-color-text-danger, $kui-color-text-danger);
   }
 }

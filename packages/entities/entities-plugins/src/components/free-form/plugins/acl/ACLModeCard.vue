@@ -43,8 +43,7 @@
       :name="`config.${mode}`"
     >
       <template #item="{ autofocus, fieldName }">
-        <component
-          :is="isCelEditor(`config.${mode}.${fieldName}`) ? CelField : StringField"
+        <StringField
           :autofocus="autofocus"
           :multiline="isExpressionMode"
           :name="fieldName"
@@ -67,7 +66,7 @@
               </template>
             </i18nT>
           </template>
-        </component>
+        </StringField>
       </template>
     </ArrayField>
   </div>
@@ -76,7 +75,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared, useCelEditor, ArrayField, CelField, StringField } from '@kong-ui-public/freeform'
+import { useFormShared, ArrayField, StringField } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
@@ -111,7 +110,6 @@ const MODES = computed(() => ALL_MODES.filter((m) => !!getSchema(`config.${m}`))
 
 const mode = ref<AclMode>('allow')
 const isExpressionMode = computed(() => EXPRESSION_MODES.includes(mode.value))
-const isCelEditor = useCelEditor()
 
 // With only allow/deny available the radios are self-explanatory, and the tooltip
 // copy talks about a choice the Gateway version cannot offer — so drop it entirely.

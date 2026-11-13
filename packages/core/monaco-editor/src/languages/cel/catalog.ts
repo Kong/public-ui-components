@@ -70,13 +70,16 @@ export interface CelLanguage {
   functions: readonly CelCallable[]
   aliases: Readonly<Record<string, string>>
   plugins: readonly CelPlugin[]
+  /** Standard function and method names supported by this evaluator. Omit for the full set. */
+  standardCallables?: readonly string[]
 }
 
 // No prototype, so a typed name such as `constructor` is not a variable.
 const merge = <T>(records: ReadonlyArray<Record<string, T> | undefined>): Record<string, T> =>
   Object.assign(Object.create(null), ...records)
 
-export const defineCelLanguage = (plugins: readonly CelPlugin[]): CelLanguage => ({
+export const defineCelLanguage = (plugins: readonly CelPlugin[], options: Pick<CelLanguage, 'standardCallables'> = {}): CelLanguage => ({
+  ...options,
   variables: merge(plugins.map(plugin => plugin.variables)),
   descriptions: merge(plugins.map(plugin => plugin.descriptions)),
   functions: plugins.flatMap(plugin => plugin.functions ?? []),
@@ -160,6 +163,9 @@ const call = (name: string, ...parameters: string[]) => celFunction(name, parame
 
 export const CEL_MACROS = new Set(['all', 'exists', 'map', 'filter'])
 
+export const isCelMacroEnabled = (name: string, language: CelLanguage) =>
+  CEL_MACROS.has(name) && (!language.standardCallables || language.standardCallables.includes(name))
+
 const GLOBAL_FUNCTIONS = [call('has', 'field'), call('matches', 'text', 'pattern'), call('size', 'value')]
 // CEL macros range over list items, or over the keys of a map.
 const collectionMethods = (item: string) => [
@@ -173,13 +179,16 @@ const STRING_METHODS = [
   call('contains', 'substring'), call('startsWith', 'prefix'), call('endsWith', 'suffix'), call('matches', 'pattern'), call('size'),
 ]
 
+const METHODS: Partial<Record<CelType['kind'], readonly CelCallable[]>> = {
+  list: LIST_METHODS, map: MAP_METHODS, string: STRING_METHODS,
+}
+
 /** The functions to offer at the start of an expression (no type), or the methods of a value. */
 export const getCelCallables = (type?: CelType, language?: CelLanguage): readonly CelCallable[] => {
-  if (!type) return language ? [...GLOBAL_FUNCTIONS, ...language.functions] : GLOBAL_FUNCTIONS
-  if (type.kind === 'string') return STRING_METHODS
-  if (type.kind === 'list') return LIST_METHODS
-  if (type.kind === 'map') return MAP_METHODS
-  return []
+  const standard = type ? METHODS[type.kind] ?? [] : GLOBAL_FUNCTIONS
+  const allowed = language?.standardCallables
+  const callables = allowed ? standard.filter(callable => allowed.includes(callable.name)) : standard
+  return !type && language?.functions.length ? [...callables, ...language.functions] : callables
 }
 
 export interface CelCallFrame {
@@ -243,7 +252,7 @@ export const resolveCelChain = (chain: string, locals: ReadonlyMap<string, CelTy
 export const getCelLocals = (before: string, language: CelLanguage): Map<string, CelType> => {
   const locals = new Map<string, CelType>()
   for (const frame of getCelCallFrames(before)) {
-    if (!CEL_MACROS.has(frame.name) || !frame.method || !frame.binding || frame.argument < 1) continue
+    if (!isCelMacroEnabled(frame.name, language) || !frame.method || !frame.binding || frame.argument < 1) continue
     const receiver = frame.receiver ? resolveCelChain(frame.receiver, locals, language) : undefined
     locals.set(frame.binding, receiver ? getCelElement(receiver) : DYN)
   }
