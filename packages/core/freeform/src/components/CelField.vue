@@ -12,7 +12,7 @@
     v-bind="$attrs"
   >
     <!--
-      The host's CEL editor when it provides one (`CEL_INPUT_KEY`), else a
+      The CEL editor when the host turns it on (`USE_CEL_EDITOR_KEY`), else a
       textarea. Both take the `KTextArea` props and slots.
     -->
     <component
@@ -55,10 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, toRef, useAttrs } from 'vue'
+import { computed, defineAsyncComponent, inject, toRef, useAttrs } from 'vue'
 import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
-import { CEL_INPUT_KEY } from '../constants'
+import { USE_CEL_EDITOR_KEY } from '../constants'
 import { useField, useFieldAttrs } from '../composables'
 
 import type { BaseFieldProps, EmptyValue } from '../types'
@@ -98,7 +98,8 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
-const editor = inject(CEL_INPUT_KEY, null)
+// Monaco loads only when the host turns the CEL editor on.
+const editor = inject(USE_CEL_EDITOR_KEY, false) ? defineAsyncComponent(() => import('./CelInput.vue')) : undefined
 
 const { value: fieldValue, hide, versionInfo, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ ...props, ...attrs })))

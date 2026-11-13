@@ -1,14 +1,7 @@
 import type { InjectionKey, Ref } from 'vue'
-import type { CelSubjects } from '../components/free-form/cel/cel-subjects'
 
-export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY, CEL_INPUT_KEY } from '@kong-ui-public/freeform'
+export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
 export { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../components/free-form/const'
-
-/**
- * Loads the records that plugin CEL expressions can name, for value suggestions.
- * Called when a CEL editor opens; repeated calls share one request.
- */
-export const CEL_SUBJECTS_KEY = Symbol('CEL_SUBJECTS_KEY') as InjectionKey<() => Promise<CelSubjects>>
 
 /**
  * Whether the plugin `condition` field takes CEL. Kong Gateway 3.15 made CEL the

@@ -1,17 +1,22 @@
-import type { Component, InjectionKey, Ref } from 'vue'
+import type { InjectionKey, Ref } from 'vue'
+import type { CelSubjects } from './cel/cel-subjects'
 
 export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:use-secret-input') as InjectionKey<Ref<boolean>>
 
 export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'
 
 /**
- * A host-provided component that edits CEL expressions, used by `CelField`
- * (and so by every `ExpressionEditor`). It takes the same props and slots as
- * `KTextArea` (`label`, `label-tooltip`, `help`), plus `path`: the field's own
- * path, so it can scope its suggestions to the field. Without one, `CelField`
- * renders a textarea.
+ * Whether `CelField` (and so every `ExpressionEditor`) renders the CEL editor:
+ * Monaco, with suggestions, hover and hints scoped to the field's path. Without
+ * it, `CelField` renders a textarea.
  */
-export const CEL_INPUT_KEY = Symbol.for('kong-ui-public:freeform:cel-input') as InjectionKey<Component>
+export const USE_CEL_EDITOR_KEY = Symbol.for('kong-ui-public:freeform:use-cel-editor') as InjectionKey<boolean>
+
+/**
+ * Loads the records that CEL expressions can name, for value suggestions in the
+ * CEL editor. Called when an editor opens; repeated calls should share one request.
+ */
+export const CEL_SUBJECTS_KEY = Symbol.for('kong-ui-public:freeform:cel-subjects') as InjectionKey<() => Promise<CelSubjects>>
 
 /**
  * Finds the control to focus inside a rendered field: the first enabled

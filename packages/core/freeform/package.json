@@ -61,11 +61,13 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "^3.3.0",
     "@kong/icons": "^1.58.0",
     "@kong/kongponents": "^9.64.0",
     "@playwright/test": ">= 1.0.0 < 2.0.0",
     "@vueuse/core": "^14.3.0",
+    "monaco-editor": "^0.55.1",
     "vue": ">= 3.5.0 < 4"
   },
   "peerDependenciesMeta": {
@@ -77,6 +79,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.5.1",
     "@kong/icons": "^1.64.0",
@@ -84,6 +87,7 @@
     "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.64.1",
     "@vueuse/core": "^14.4.0",
+    "monaco-editor": "^0.55.1",
     "vue": "^3.5.43",
     "vue-router": "^5.4.0"
   },

@@ -51,18 +51,17 @@ import {
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, unref, watch, type MaybeRef, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, unref, watch, type MaybeRef, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
-import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
+import { CEL_SUBJECTS_KEY, USE_CEL_EDITOR_KEY } from '@kong-ui-public/freeform'
+import type { CelSubjects, GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
-import { CEL_CONDITION_KEY, CEL_INPUT_KEY, CEL_SUBJECTS_KEY, FEATURE_FLAGS } from '../constants'
-import CelInput from './free-form/cel/CelInput.vue'
-import type { CelSubjects } from './free-form/cel/cel-subjects'
+import { CEL_CONDITION_KEY, FEATURE_FLAGS } from '../constants'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -142,7 +141,7 @@ const props = defineProps({
 // Without the CEL editor, `CelField` (`expressions.*`) falls back to a textarea, and
 // the other CEL fields keep their plain inputs.
 const celEditorEnabled = unref(inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false))
-if (celEditorEnabled) provide(CEL_INPUT_KEY, markRaw(CelInput))
+provide(USE_CEL_EDITOR_KEY, celEditorEnabled)
 provide(CEL_CONDITION_KEY, computed(() => celEditorEnabled && (props.config.app !== 'kongManager' || useGatewayFeatureSupported({
   gatewayInfo: (props.config as KongManagerPluginFormConfig).gatewayInfo,
   supportedRange: { enterprise: ['3.15'] },

@@ -68,15 +68,16 @@ import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import type { LabelAttributes } from '@kong/kongponents'
 import type { editor, IDisposable } from 'monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
-import useI18n from '../../../composables/useI18n'
-import { getCelScope } from './cel-catalog'
-import { getCelHint } from './cel-hints'
-import type { CelSubjects, CelSubjectValue } from './cel-subjects'
-import { CEL_SUBJECTS_KEY } from '../../../constants'
+import useI18n from '../composables/useI18n'
+import { getCelScope } from '../cel/cel-catalog'
+import { attachCelLanguage } from '../cel/cel-language'
+import { getCelHint } from '../cel/cel-hints'
+import type { CelSubjects, CelSubjectValue } from '../cel/cel-subjects'
+import { CEL_SUBJECTS_KEY } from '../constants'
 
 /**
- * The `CEL_INPUT_KEY` editor of `@kong-ui-public/freeform`: a `KTextArea` stand-in
- * that suggests the Gateway variables in scope for the field at `path`.
+ * The CEL editor that `CelField` renders under `USE_CEL_EDITOR_KEY`: a `KTextArea`
+ * stand-in that suggests the Gateway variables in scope for the field at `path`.
  */
 defineOptions({ inheritAttrs: false })
 
@@ -124,30 +125,30 @@ const hint = computed(() => getCelHint(modelValue ?? '', scope.value))
 const hintText = computed(() => {
   const value = hint.value
   if (!value) return ''
-  if (value.kind === 'alias') return t('plugins.free-form.cel.alias_hint', { typed: value.typed, expected: value.expected })
-  if (value.kind === 'plugin-state') return t('plugins.free-form.cel.plugin_state_hint')
-  if (value.kind === 'header-name') return t('plugins.free-form.cel.header_name_hint', { typed: value.typed, expected: value.expected })
-  if (value.kind === 'unguarded') return t('plugins.free-form.cel.unguarded_hint', { field: value.field })
-  if (value.kind === 'default') return t('plugins.free-form.cel.default_hint')
-  if (value.kind === 'assignment') return t('plugins.free-form.cel.assignment_hint')
-  if (value.kind === 'unknown-member') return t('plugins.free-form.cel.unknown_member_hint', { field: value.field, base: value.base, type: value.type })
-  return t('plugins.free-form.cel.unknown_field_hint', { field: value.field })
+  if (value.kind === 'alias') return t('cel.alias_hint', { typed: value.typed, expected: value.expected })
+  if (value.kind === 'plugin-state') return t('cel.plugin_state_hint')
+  if (value.kind === 'header-name') return t('cel.header_name_hint', { typed: value.typed, expected: value.expected })
+  if (value.kind === 'unguarded') return t('cel.unguarded_hint', { field: value.field })
+  if (value.kind === 'default') return t('cel.default_hint')
+  if (value.kind === 'assignment') return t('cel.assignment_hint')
+  if (value.kind === 'unknown-member') return t('cel.unknown_member_hint', { field: value.field, base: value.base, type: value.type })
+  return t('cel.unknown_field_hint', { field: value.field })
 })
 
 // Records for value suggestions. The editor works without them while they load, or when a list is denied.
 const loadSubjects = inject(CEL_SUBJECTS_KEY, undefined)
 const subjects = shallowRef<CelSubjects>({})
 const formatSubject = ({ kind, name, id }: CelSubjectValue) => {
-  if (kind === 'principal-id') return t('plugins.free-form.cel.hover.principal', { name, id })
-  if (kind === 'principal-group-id') return t('plugins.free-form.cel.hover.principal_group', { name, id })
-  if (kind.startsWith('consumer-group')) return t('plugins.free-form.cel.hover.consumer_group', { name, id })
-  return t('plugins.free-form.cel.hover.consumer', { name, id })
+  if (kind === 'principal-id') return t('cel.hover.principal', { name, id })
+  if (kind === 'principal-group-id') return t('cel.hover.principal_group', { name, id })
+  if (kind.startsWith('consumer-group')) return t('cel.hover.consumer_group', { name, id })
+  return t('cel.hover.consumer', { name, id })
 }
 
 const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const editorOptions = computed<Partial<editor.IStandaloneEditorConstructionOptions>>(() => ({
-  ariaLabel: label || t('plugins.free-form.cel.editor_label'),
+  ariaLabel: label || t('cel.editor_label'),
   placeholder,
   minimap: { enabled: false },
   automaticLayout: true,
@@ -176,7 +177,7 @@ const editorOptions = computed<Partial<editor.IStandaloneEditorConstructionOptio
 const disposables: IDisposable[] = []
 let unmounted = false
 
-const ready = async (instance: editor.IStandaloneCodeEditor) => {
+const ready = (instance: editor.IStandaloneCodeEditor) => {
   // The editor loads asynchronously and can be ready after the field unmounts.
   if (unmounted) return
   const resize = () => {
@@ -184,8 +185,6 @@ const ready = async (instance: editor.IStandaloneCodeEditor) => {
   }
   disposables.push(instance.onDidContentSizeChange(resize))
   resize()
-  const { attachCelLanguage } = await import('./cel-language')
-  if (unmounted) return
   disposables.push(attachCelLanguage(instance, { scope: () => scope.value, subjects: () => subjects.value, formatSubject }))
   loadSubjects?.().then((loaded) => {
     if (!unmounted) subjects.value = loaded

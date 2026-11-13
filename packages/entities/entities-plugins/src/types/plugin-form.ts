@@ -1,5 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { CelSubjects } from '@kong-ui-public/freeform'
 import type { CustomPluginType, EntityType } from './plugin'
 
 export interface BasePluginSelectConfig {
@@ -88,10 +89,7 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
 }
 
 /** Kong Identity records that plugin CEL expressions can name. */
-export interface CelIdentitySubjects {
-  principals?: ReadonlyArray<{ id: string, display_name?: string | null, metadata?: Readonly<Record<string, unknown>> | null }>
-  principalGroups?: ReadonlyArray<{ id: string, name: string }>
-}
+export type CelIdentitySubjects = Pick<CelSubjects, 'principals' | 'principalGroups'>
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }

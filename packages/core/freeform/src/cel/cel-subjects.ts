@@ -1,16 +1,17 @@
 import { getCelElement, getCelLocals, resolveCelChain } from './cel-catalog'
 import type { CelScope, CelSubjectKind, CelType } from './cel-catalog'
 import { CEL_LITERALS_AND_COMMENTS } from './cel-tokens'
-import type { CelIdentitySubjects } from '../../../types'
 
 /**
- * Records that plugin CEL expressions can name. The form loads Consumers and
- * Consumer Groups; the host app supplies Kong Identity records. A list the user
- * cannot read stays empty.
+ * Records that plugin CEL expressions can name: Gateway Consumers and Consumer
+ * Groups, and Kong Identity principals and groups. A list the user cannot read
+ * stays empty.
  */
-export interface CelSubjects extends CelIdentitySubjects {
+export interface CelSubjects {
   consumers?: ReadonlyArray<{ id: string, username?: string | null, custom_id?: string | null }>
   consumerGroups?: ReadonlyArray<{ id: string, name: string }>
+  principals?: ReadonlyArray<{ id: string, display_name?: string | null, metadata?: Readonly<Record<string, unknown>> | null }>
+  principalGroups?: ReadonlyArray<{ id: string, name: string }>
 }
 
 /** A literal value that names a record. */

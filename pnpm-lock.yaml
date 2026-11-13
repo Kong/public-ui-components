@@ -918,6 +918,9 @@ importers:
       '@kong-ui-public/misc-widgets':
         specifier: workspace:^
         version: link:../misc-widgets
+      '@kong-ui-public/monaco-editor':
+        specifier: workspace:^
+        version: link:../monaco-editor
       '@kong-ui-public/sandbox-layout':
         specifier: workspace:^
         version: link:../sandbox-layout
@@ -939,6 +942,9 @@ importers:
       '@vueuse/core':
         specifier: ^14.4.0
         version: 14.4.0(vue@3.5.43(typescript@5.9.3))
+      monaco-editor:
+        specifier: ^0.55.1
+        version: 0.55.1
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)

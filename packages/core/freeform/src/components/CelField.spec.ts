@@ -1,30 +1,38 @@
 /* eslint-disable vue/one-component-per-file */
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
 import Form from './Form.vue'
 import CelField from './CelField.vue'
 import type { FormSchema } from '../form-schema'
-import { CEL_INPUT_KEY } from '../constants'
+import { USE_CEL_EDITOR_KEY } from '../constants'
+
+// A stand-in for the Monaco CEL editor, which needs a browser.
+vi.mock('./CelInput.vue', async () => {
+  // vi.mock is hoisted above the static imports, so the factory imports its own.
+  const { defineComponent, h } = await import('vue')
+  return {
+    // defineAsyncComponent takes `default` only from an ES module.
+    __esModule: true,
+    default: defineComponent({
+      props: { modelValue: { type: String, default: '' }, path: { type: String, default: '' }, disabled: Boolean },
+      emits: ['update:modelValue'],
+      setup(props, { emit }) {
+        return () => h('input', {
+          class: 'fake-cel-editor',
+          'data-path': props.path,
+          disabled: props.disabled,
+          value: props.modelValue,
+          onInput: (event: Event) => emit('update:modelValue', (event.target as HTMLInputElement).value),
+        })
+      },
+    }),
+  }
+})
 
 const FIELD_NAME = 'condition'
 
-/** A stand-in for the host's CEL editor. */
-const FakeCelEditor = defineComponent({
-  props: { modelValue: { type: String, default: '' }, path: { type: String, default: '' }, disabled: Boolean },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    return () => h('input', {
-      class: 'fake-cel-editor',
-      'data-path': props.path,
-      disabled: props.disabled,
-      value: props.modelValue,
-      onInput: (event: Event) => emit('update:modelValue', (event.target as HTMLInputElement).value),
-    })
-  },
-})
-
-function mountCelField(data?: Record<string, unknown>, editor?: typeof FakeCelEditor) {
+async function mountCelField(data?: Record<string, unknown>, useEditor = false) {
   const schema: FormSchema = {
     type: 'record',
     fields: [{ [FIELD_NAME]: { type: 'string' } }],
@@ -42,23 +50,25 @@ function mountCelField(data?: Record<string, unknown>, editor?: typeof FakeCelEd
   })
 
   const wrapper = mount(Wrapper, {
-    global: { provide: editor ? { [CEL_INPUT_KEY as symbol]: editor } : {} },
+    global: { provide: useEditor ? { [USE_CEL_EDITOR_KEY as symbol]: true } : {} },
   })
+  // The editor loads asynchronously.
+  await flushPromises()
 
   return { wrapper, lastChange: () => changes[changes.length - 1] }
 }
 
 describe('CelField', () => {
-  it('renders a textarea without a host editor', async () => {
-    const { wrapper, lastChange } = mountCelField()
+  it('renders a textarea without the CEL editor', async () => {
+    const { wrapper, lastChange } = await mountCelField()
 
     const textarea = wrapper.get('textarea')
     await textarea.setValue('consumer.username == "alice"')
     expect(lastChange()).toEqual({ [FIELD_NAME]: 'consumer.username == "alice"' })
   })
 
-  it('renders the host editor with the field path', async () => {
-    const { wrapper, lastChange } = mountCelField({ [FIELD_NAME]: 'true' }, FakeCelEditor)
+  it('renders the CEL editor with the field path', async () => {
+    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' }, true)
 
     expect(wrapper.find('textarea').exists()).toBe(false)
     const input = wrapper.get('.fake-cel-editor')
@@ -70,7 +80,7 @@ describe('CelField', () => {
   })
 
   it('writes the empty value when cleared', async () => {
-    const { wrapper, lastChange } = mountCelField({ [FIELD_NAME]: 'true' }, FakeCelEditor)
+    const { wrapper, lastChange } = await mountCelField({ [FIELD_NAME]: 'true' }, true)
 
     await wrapper.get('.fake-cel-editor').setValue('')
     expect(lastChange()).toEqual({ [FIELD_NAME]: null })
