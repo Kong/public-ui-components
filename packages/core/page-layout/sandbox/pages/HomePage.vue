@@ -3,11 +3,14 @@
     <PageLayout
       :anchors="showAnchorNavigation ? anchors : []"
       back-to="/"
-      :breadcrumbs="breadcrumbs"
+      :breadcrumbs="showEmptyState ? undefined : breadcrumbs"
       :page-shortcut-data="showFavoriteButton ? pageShortcutData : undefined"
       :tabs="showTabs ? tabs : []"
     >
-      <template #title>
+      <template
+        v-if="!showEmptyState"
+        #title
+      >
         <h1>Umbrella R&D Dev</h1>
       </template>
       <template #actions>
@@ -32,8 +35,14 @@
         </KBadge>
       </template>
       <template #default>
+        <KEmptyState
+          v-if="showEmptyState"
+          action-button-text="Create a gateway service"
+          message="Services group routes and plugins under a single name."
+          title="No gateway services yet"
+        />
         <AnchorSections
-          v-if="showAnchorNavigation"
+          v-else-if="showAnchorNavigation"
           ref="anchor-sections"
         />
         <NestedPage v-else />
@@ -104,7 +113,7 @@ import AnchorSections from './AnchorSections.vue'
 import { buildSandboxAnchors } from '../anchors'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+const { newAppearance, showEmptyState, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
 
 // One section is targeted by its element rather than by a selector, so the anchors are rebuilt
 // once the sections have mounted and handed their refs up. PageLayout picks the change up on its

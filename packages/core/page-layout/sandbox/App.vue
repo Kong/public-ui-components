@@ -17,6 +17,11 @@
                 label-before
               />
               <KInputSwitch
+                v-model="showEmptyState"
+                label="Empty state"
+                label-before
+              />
+              <KInputSwitch
                 v-model="showTabs"
                 label="Tabs"
                 label-before
@@ -72,7 +77,7 @@
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import { useSandboxControls } from './composables/useSandboxControls'
 
-const { newAppearance, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+const { newAppearance, showEmptyState, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
 </script>
 
 <style lang="scss" scoped>

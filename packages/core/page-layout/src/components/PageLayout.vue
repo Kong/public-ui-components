@@ -8,12 +8,16 @@
       v-if="!hasNestedPageLayout"
       ref="page-layout-header"
       class="page-layout-header"
+      :class="{ 'is-empty': isEmptyHeader() }"
       data-testid="page-layout-header"
     >
       <div class="page-header-container">
-        <div class="page-header-start">
+        <div
+          v-if="!isEmptyHeader()"
+          class="page-header-start"
+        >
           <KBreadcrumbs
-            v-if="breadcrumbs && breadcrumbs.length"
+            v-if="hasBreadcrumbs"
             class="header-breadcrumbs"
             data-testid="page-layout-breadcrumbs"
             item-max-width="25ch"
@@ -47,7 +51,7 @@
               />
             </component>
             <span
-              v-if="title || $slots.title"
+              v-if="hasTitle()"
               class="page-layout-title-wrapper"
             >
               <slot name="title">
@@ -85,7 +89,7 @@
               </KTooltip>
             </div>
             <div
-              v-if="$slots['title-after']"
+              v-if="$slots['title-after'] && hasTitle()"
               class="title-after-container"
             >
               <slot name="title-after" />
@@ -94,7 +98,7 @@
         </div>
 
         <PageLayoutAnchorNavigation
-          v-if="hasAnchorNavigation"
+          v-if="hasAnchorNavigation && !isEmptyHeader()"
           :anchors="anchors"
         />
 
@@ -104,7 +108,7 @@
         </div>
       </div>
       <PageLayoutTabs
-        v-if="hasTabs"
+        v-if="renderTabs()"
         :tabs="tabs"
       >
         <template
@@ -132,7 +136,7 @@
       </div>
 
       <div class="page-layout-content">
-        <router-view v-if="hasTabs" />
+        <router-view v-if="renderTabs()" />
         <slot
           v-else
           name="default"
@@ -143,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, toValue, useTemplateRef, watch } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, toValue, useTemplateRef, watch, useSlots } from 'vue'
 import type { DeepReadonly, MaybeRefOrGetter, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
@@ -176,6 +180,14 @@ const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
 const route = useRoute()
+const slots = useSlots()
+
+// A function, not a computed: `slots.title` is not reactive at runtime -- the `$slots`
+// dependency Vue tracks only fires during HMR -- so a cached value would go stale when the
+// title slot is toggled on a live page. Reading it per render is always fresh.
+const hasTitle = (): boolean => !!title || !!slots.title
+
+const hasBreadcrumbs = computed((): boolean => !!(breadcrumbs && breadcrumbs.length))
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
@@ -183,6 +195,16 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 // `toValue` lets the host provide a plain boolean, a ref or a getter
 const newAppearance = computed((): boolean => toValue(newAppearanceInjection) === true)
+
+// Empty-state page: without a title and without breadcrumbs the header renders only its
+// actions area, so the layout acts as a plain container that still hosts the Ask Kai
+// teleport target. New appearance only. A function, like `hasTitle`, so the slot presence
+// is re-read at render time.
+const isEmptyHeader = (): boolean => newAppearance.value && !hasTitle() && !hasBreadcrumbs.value
+
+// Gates both the tab row and the router-view it enables: the two must switch together,
+// or an empty page would route to tab content with no tab bar to switch it with.
+const renderTabs = (): boolean => hasTabs.value && !isEmptyHeader()
 
 // The header carries either tabs or an anchor navigation bar, never both: tabs own the row they
 // render, and a page that declares both is treated as a tabbed page. The bar is part of the new
@@ -410,8 +432,9 @@ $page-layout-header-height: 44px;
       }
     }
 
-    // When there are no tabs, add a border and padding to the bottom of the breadcrumbs container
-    &:not(:has(.page-layout-tabs)) {
+    // No tabs: border the header's bottom. An empty-state header (no title, no
+    // breadcrumbs, new appearance) skips the border, so the layout reads as a plain container.
+    &:not(:has(.page-layout-tabs)):not(.is-empty) {
       .page-header-container {
         border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         padding: var(--kui-space-60, $kui-space-60);
@@ -501,6 +524,13 @@ $page-layout-header-height: 44px;
         height: $page-layout-header-height;
         padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
       }
+    }
+
+    // The empty-state row holds only the actions area; `space-between` pins a lone
+    // child to the start, so it needs `flex-end` to stay on the right.
+    .page-layout-header.is-empty .page-header-container {
+      justify-content: flex-end;
+      padding-bottom: var(--kui-space-0, $kui-space-0);
     }
 
     .page-layout-content-container {

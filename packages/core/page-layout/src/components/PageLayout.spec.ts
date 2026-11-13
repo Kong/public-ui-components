@@ -612,6 +612,102 @@ describe('<PageLayout />', () => {
       expect(titleWrapper.text()).toBe(title)
     })
 
+    describe('empty state', () => {
+      it('renders only the actions area when neither title nor breadcrumbs are provided', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
+        expect(wrapper.find('.page-header-start').exists()).toBe(false)
+        expect(wrapper.find('.page-header-actions-container').exists()).toBe(true)
+      })
+
+      it('still renders the actions slot and the Ask Kai teleport target in the empty state', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          slots: { actions: () => h('div', { 'data-testid': 'page-layout-slotted-actions' }, 'Actions') },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-slotted-actions').text()).toBe('Actions')
+        expect(wrapper.find('[data-teleport-target="ask-kai"]').exists()).toBe(true)
+      })
+
+      it('drops the tab row and renders the default slot in the empty state even when tabs are passed', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { tabs: [{ key: 'overview', label: 'Overview', to: '/overview' }] },
+          slots: { default: () => h('div', { 'data-testid': 'empty-state-content' }, 'Empty state') },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
+        expect(wrapper.findTestId('page-layout-tabs').exists()).toBe(false)
+        // The router-view is gated with the tab row, so the default slot carries the page
+        expect(wrapper.getTestId('empty-state-content').text()).toBe('Empty state')
+      })
+
+      it('does not render the anchor navigation bar in the empty state even when anchors are passed', () => {
+        const wrapper = mountWithRouter(PageLayout, {
+          props: { anchors: [{ id: '#usage', label: 'Usage' }] },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
+        expect(wrapper.findTestId('page-layout-anchor-navigation').exists()).toBe(false)
+      })
+
+      it('keeps the header content when either a title or breadcrumbs are provided', () => {
+        const withTitle = mountWithRouter(PageLayout, {
+          props: { title: 'Test Page Title' },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+        const withBreadcrumbs = mountWithRouter(PageLayout, {
+          props: { breadcrumbs: [{ key: 'home', text: 'Home' }] },
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(withTitle.getTestId('page-layout-header').classes()).not.toContain('is-empty')
+        expect(withTitle.find('.page-header-start').exists()).toBe(true)
+        expect(withBreadcrumbs.getTestId('page-layout-header').classes()).not.toContain('is-empty')
+        expect(withBreadcrumbs.find('.page-header-start').exists()).toBe(true)
+      })
+
+      it('does not enter the empty state in the default appearance', () => {
+        const wrapper = mountWithRouter(PageLayout)
+
+        expect(wrapper.getTestId('page-layout-header').classes()).not.toContain('is-empty')
+        expect(wrapper.find('.page-header-start').exists()).toBe(true)
+      })
+
+      // Slots are not reactive at runtime: a computed reading `slots.title` would stay cached
+      // when the slot is removed after mount. This guards the render-time re-read.
+      it('marks the header as empty when the title slot is removed after mount', async () => {
+        const showTitle = ref<boolean>(true)
+
+        const wrapper = mountWithRouter(defineComponent({
+          components: { PageLayout },
+          setup: () => ({ showTitle }),
+          template: `
+            <PageLayout>
+              <template v-if="showTitle" #title>
+                <h1>Test Page Title</h1>
+              </template>
+            </PageLayout>
+          `,
+        }), {
+          global: { provide: { [NEW_APPEARANCE_INJECTION_KEY]: true } },
+        })
+
+        expect(wrapper.getTestId('page-layout-header').classes()).not.toContain('is-empty')
+
+        showTitle.value = false
+        await flushPromises()
+
+        expect(wrapper.getTestId('page-layout-header').classes()).toContain('is-empty')
+        expect(wrapper.find('.page-header-start').exists()).toBe(false)
+      })
+    })
+
     describe('aside slot', () => {
       const asideTestId = 'page-layout-slotted-aside'
       const asideSlot = { aside: () => h('div', { 'data-testid': asideTestId }, 'Aside') }
