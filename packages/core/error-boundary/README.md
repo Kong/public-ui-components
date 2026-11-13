@@ -93,7 +93,7 @@ You may still override this global callback on individual instances of the compo
 import { createApp } from 'vue'
 import ErrorBoundary from '@kong-ui-public/error-boundary' // No style imports needed
 // rum package example
-import { run } from '@kong-ui/real-user-monitoring'
+import { rum } from '@kong-ui/real-user-monitoring'
 
 const app = createApp(App)
 
