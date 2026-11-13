@@ -5,6 +5,7 @@ import { ref, watch } from 'vue'
 const newAppearance = ref<boolean>(true)
 const showEmptyState = ref<boolean>(false)
 const showTabs = ref<boolean>(true)
+const showSlottedTabs = ref<boolean>(false)
 const showAnchorNavigation = ref<boolean>(false)
 const showFavoriteButton = ref<boolean>(true)
 const showTitleAfter = ref<boolean>(false)
@@ -17,6 +18,10 @@ const aboutCardIsLoading = ref<boolean>(false)
 watch(showTabs, (on) => {
   if (on) {
     showAnchorNavigation.value = false
+  } else {
+    // The slotted tabs demo renders into the header's tab row, which only exists when the
+    // tabs prop is non-empty, so the switch goes off with it.
+    showSlottedTabs.value = false
   }
 })
 
@@ -32,6 +37,7 @@ watch(showAnchorNavigation, (on) => {
 watch(showEmptyState, (on) => {
   if (on) {
     showTabs.value = false
+    showSlottedTabs.value = false
     showAnchorNavigation.value = false
     showFavoriteButton.value = false
     showTitleAfter.value = false
@@ -40,5 +46,5 @@ watch(showEmptyState, (on) => {
 })
 
 export function useSandboxControls() {
-  return { newAppearance, showEmptyState, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading }
+  return { newAppearance, showEmptyState, showTabs, showSlottedTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading }
 }
