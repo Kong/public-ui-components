@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.10.0...%40kong-ui-public%2Ffreeform%400.11.0) (2026-11-13)
+
+### Features
+
+* **freeform:** show errors on the fields they belong to ([#4057](https://github.com/Kong/public-ui-components/issues/4057)) ([e5d4973](https://github.com/Kong/public-ui-components/commit/e5d49739025cd9eec15fbf2df8acc14d436f0b42))
+
+
 # [0.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.9.0...%40kong-ui-public%2Ffreeform%400.10.0) (2026-11-13)
 
 ### Features
