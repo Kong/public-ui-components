@@ -92,8 +92,8 @@ You may still override this global callback on individual instances of the compo
 // Global registration
 import { createApp } from 'vue'
 import ErrorBoundary from '@kong-ui-public/error-boundary' // No style imports needed
-// Datadog package example
-import { datadogRum } from '@datadog/browser-rum'
+// rum package example
+import { run } from '@kong-ui/real-user-monitoring'
 
 const app = createApp(App)
 
@@ -101,7 +101,7 @@ app.use(ErrorBoundary, {
   // Provide a global, default `onError` callback for all ErrorBoundary instances
   onError({ error, context }) {
     // Example of sending errors to Datadog
-    datadogRum.addError(error, {
+    rum.addError(error, {
       ui: context,
     })
   },
