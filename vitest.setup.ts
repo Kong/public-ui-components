@@ -1,4 +1,11 @@
 import { DOMWrapper, VueWrapper } from '@vue/test-utils'
+import { vi } from 'vitest'
+
+// Use the DOM environment's storage instead of Node's native Web Storage globals.
+if (typeof window !== 'undefined') {
+  vi.stubGlobal('localStorage', window.localStorage)
+  vi.stubGlobal('sessionStorage', window.sessionStorage)
+}
 
 /**
  * Add `getTestId` helper to all wrappers so tests can use
