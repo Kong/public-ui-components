@@ -4,10 +4,10 @@ import type {
   EditorLanguage,
   NegatedEditorFeature,
   IFeatureDefinition,
-} from 'monaco-editor/esm/metadata.js'
+} from './metadata'
 import type { BundledLanguage, BundledTheme } from 'shiki'
 
-import { features, languages } from 'monaco-editor/esm/metadata.js'
+import { features, languages, monacoSpecifier, usesModernEntryPoints } from './metadata'
 import { codegen } from 'shiki-codegen'
 import { bundledLanguages } from 'shiki'
 
@@ -115,11 +115,11 @@ function generateImports(entries: string | string[]): string[] {
   return entryArray.map((entry) => {
     // Start from monaco v0.55.1, languages with monaco.contribution needed to be reexported
     // https://github.com/microsoft/monaco-editor/issues/5133
-    if (entry.endsWith('monaco.contribution')) {
+    if (entry.endsWith('monaco.contribution') || entry.startsWith('vs/languages/features/') && entry.endsWith('/register')) {
       const lang = entry.split('/').at(-2)!
-      return `export * as ${lang} from 'monaco-editor/esm/${entry}'`
+      return `export * as ${lang} from '${monacoSpecifier(entry)}'`
     }
-    return `import 'monaco-editor/esm/${entry}'`
+    return `import '${monacoSpecifier(entry)}'`
   })
 }
 
@@ -156,7 +156,7 @@ function generateWorkerCode(
   const workerMapEntries: string[] = []
 
   // Add base editor worker import
-  imports.push("import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'")
+  imports.push(`import EditorWorker from '${monacoSpecifier('vs/editor/editor.worker')}?worker'`)
 
   // Generate imports and worker map entries for base languages
   languageIds.forEach((langId) => {
@@ -171,7 +171,7 @@ function generateWorkerCode(
     const workerVar = `${actualLang}Worker`
     if (!importedWorkers.has(workerVar)) {
       imports.push(
-        `import ${workerVar} from 'monaco-editor/esm/${workerEntry}?worker'`,
+        `import ${workerVar} from '${monacoSpecifier(workerEntry)}?worker'`,
       )
       importedWorkers.add(workerVar)
     }
@@ -252,12 +252,12 @@ function buildMonacoModule(options?: Options): string {
   )
 
   return [
-    "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
+    `import * as monaco from '${usesModernEntryPoints ? 'monaco-editor/editor' : monacoSpecifier('vs/editor/editor.api')}'`,
     ...featureImports,
     ...languageImports,
     ...customLanguageImports,
     ...workerCode,
-    "export * from 'monaco-editor/esm/vs/editor/editor.api'",
+    `export * from '${usesModernEntryPoints ? 'monaco-editor/editor' : monacoSpecifier('vs/editor/editor.api')}'`,
     'export default monaco',
   ].join('\n')
 }
