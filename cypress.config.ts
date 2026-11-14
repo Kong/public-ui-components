@@ -1,6 +1,5 @@
 import { defineConfig } from 'cypress'
 import sharedViteConfig from './vite.config.shared'
-import Monaco from './packages/core/monaco-editor/vite-plugin'
 
 export default defineConfig({
   component: {
@@ -9,9 +8,6 @@ export default defineConfig({
       bundler: 'vite',
       viteConfig: {
         ...sharedViteConfig,
-        // Exercise the same worker setup that consuming applications use.
-        // Monaco's default relative worker URLs do not survive dependency prebundling.
-        plugins: [...sharedViteConfig.plugins!, Monaco()],
         define: {
           'process.env.VSCODE_TEXTMATE_DEBUG': false,
         },

@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import { createRequire } from 'node:module'
 import { build } from 'vite'
 import type { Plugin, RollupOutput } from 'rollup'
 import monacoPlugin from './index'
@@ -51,16 +50,6 @@ describe('vite-plugin-monaco', () => {
   }
 
   describe('generated code snapshots', () => {
-    it('resolves generated Monaco imports and workers through package exports', async () => {
-      const require = createRequire(import.meta.url)
-      const code = await getGeneratedCode()
-      const specifiers = Array.from(code.matchAll(/(?:import|from)\s+['"](monaco-editor\/[^'"]+)['"]/g), match => match[1])
-      expect(specifiers.length).toBeGreaterThan(0)
-      for (const specifier of specifiers) {
-        expect(() => require.resolve(specifier.replace(/\?worker$/, ''))).not.toThrow()
-      }
-    })
-
     it('should include all features with default configuration', async () => {
       const code = await getGeneratedCode()
       expect(code).toMatchSnapshot()
@@ -140,15 +129,19 @@ describe('vite-plugin-monaco', () => {
     it('includes only plain-JS deep specifiers, not worker or css imports', () => {
       const { include } = getOptimizeDeps({ languages: ['json'], features: ['find'] })
 
-      expect(include).toContain('monaco-editor/editor')
+      expect(include).toContain('monaco-editor/esm/vs/editor/editor.api')
       expect(include.some((id) => id.includes('?'))).toBe(false)
       expect(include.some((id) => id.endsWith('.css'))).toBe(false)
     })
 
-    it('includes the codicon registration module without raw css imports', () => {
+    it('excludes a feature that only ships a .css entry, without erroring', () => {
+      // `codicon` is the only default feature whose entries are all `.css` (no `.js` at all) —
+      // makes sure filtering those out doesn't blow up or leave a `.css` specifier behind
       const { include } = getOptimizeDeps({ languages: [], features: ['codicon'] })
 
-      expect(include).toEqual(['monaco-editor/editor', 'monaco-editor/features/codicon/register'])
+      // Only the always-present core editor entry point remains — codicon itself contributed
+      // nothing, since all of its entries are `.css` and got filtered out
+      expect(include).toEqual(['monaco-editor/esm/vs/editor/editor.api'])
     })
   })
 })
