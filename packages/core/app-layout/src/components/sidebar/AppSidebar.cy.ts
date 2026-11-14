@@ -20,7 +20,8 @@ const viewports = {
   },
 }
 
-describe('<AppSidebar />', () => {
+// Keep offscreen visibility checks after Cypress 16 changed its default algorithm.
+describe('<AppSidebar />', { visibilityStrategy: 'legacy' }, () => {
   before(() => {
     // Add background color
     document.documentElement.style.setProperty('--kong-ui-app-sidebar-background', 'linear-gradient(180deg, #001740 0%, #073382 100%)')

@@ -8,6 +8,10 @@ export default defineConfig({
       bundler: 'vite',
       viteConfig: {
         ...sharedViteConfig,
+        oxc: {
+          // Vue must compile template requests before Cypress's JSX-refresh transform.
+          jsxRefreshExclude: [/\.vue\?.*\btype=template\b/],
+        },
         define: {
           'process.env.VSCODE_TEXTMATE_DEBUG': false,
         },

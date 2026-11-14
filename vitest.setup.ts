@@ -1,4 +1,11 @@
 import { DOMWrapper, VueWrapper } from '@vue/test-utils'
+import { vi } from 'vitest'
+
+// Use jsdom storage instead of Node 26's native Web Storage in DOM tests.
+if (typeof window !== 'undefined') {
+  vi.stubGlobal('localStorage', window.localStorage)
+  vi.stubGlobal('sessionStorage', window.sessionStorage)
+}
 
 /**
  * Add `getTestId` helper to all wrappers so tests can use
