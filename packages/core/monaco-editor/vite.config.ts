@@ -62,7 +62,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         },
       },
       {
-        extends: false,
         test: {
           name: 'vite-plugin',
           environment: 'node',

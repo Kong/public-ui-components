@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { build } from 'vite'
-import type { Plugin } from 'vite'
+import type { Plugin, RollupOutput } from 'rollup'
 import monacoPlugin from './index'
 
 // Virtual entry plugin that provides a test module importing monaco-editor
@@ -26,7 +26,7 @@ const virtualEntryPlugin = (): Plugin => {
 
 describe('vite-plugin-monaco', () => {
   const getGeneratedCode = async (options?: Parameters<typeof monacoPlugin>[0]) => {
-    const result = await build({
+    const { output: [{ code }] } = await build({
       plugins: [monacoPlugin(options), virtualEntryPlugin()],
       build: {
         // Keep code untransformed for stable, readable snapshots that don't change with Vite versions
@@ -44,16 +44,9 @@ describe('vite-plugin-monaco', () => {
       },
       configFile: false,
       logLevel: 'silent',
-    })
+    }) as RollupOutput
 
-    if (Array.isArray(result) || !('output' in result)) {
-      throw new Error('Expected a single build output')
-    }
-    const chunk = result.output.find(output => output.type === 'chunk')
-    if (!chunk) {
-      throw new Error('Expected a generated chunk')
-    }
-    return chunk.code
+    return code
   }
 
   describe('generated code snapshots', () => {

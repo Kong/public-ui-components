@@ -33,8 +33,7 @@ describe('<RLAForm />', () => {
     cy.getTestId('collapse-trigger-label').click()
     cy.getTestId('config-strategy-items').click()
     cy.getTestId('select-item-local').should('be.visible').click()
-    cy.getTestId('config-strategy-items').click()
-    cy.getTestId('select-item-redis').should('be.visible').click()
+    cy.getTestId('select-item-redis').click()
 
     cy.getTestId('redis-config-radio-group').should('not.exist')
     cy.get('.rla-form-redis-card').should('exist')
