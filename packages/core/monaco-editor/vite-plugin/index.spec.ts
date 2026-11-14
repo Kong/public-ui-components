@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { build } from 'vite'
-import type { Plugin, RollupOutput } from 'rollup'
+import type { Plugin, Rolldown } from 'vite'
 import monacoPlugin from './index'
 
 // Virtual entry plugin that provides a test module importing monaco-editor
@@ -44,7 +44,7 @@ describe('vite-plugin-monaco', () => {
       },
       configFile: false,
       logLevel: 'silent',
-    }) as RollupOutput
+    }) as Rolldown.RolldownOutput
 
     return code
   }
