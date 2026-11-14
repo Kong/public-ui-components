@@ -313,7 +313,7 @@ jobs:
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
@@ -341,13 +341,13 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: package-dist-artifacts
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6
+        uses: cypress-io/github-action@18016a55674bd02cabf197de5762a1710cb5577c # v7.4.9
         with:
           install: false
           # cypress-io/github-action splits `command` on whitespace instead of running it
@@ -355,7 +355,7 @@ jobs:
           command: pnpm run test:component:ci --spec ${{ matrix.container.spec }}
 
       - name: Upload Component Test Results
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         continue-on-error: true
         if: failure()
         with:
@@ -407,7 +407,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: package-dist-artifacts
           path: packages/
