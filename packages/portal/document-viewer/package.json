@@ -43,8 +43,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "3.5.1",
-    "@kong/kongponents": "9.66.12",
+    "@kong/design-tokens": "3.5.3",
+    "@kong/kongponents": "9.66.16",
     "@types/prismjs": "^1.26.6",
     "@vitejs/plugin-vue-jsx": "^5.1.6",
     "vue": "^3.5.43"
