@@ -1,6 +1,7 @@
 // Cypress component test spec file
 
 import AppLayout from './AppLayout.vue'
+import { expectLeftOfViewport } from '../../fixtures/assertions'
 
 const viewports = {
   desktop: {
@@ -44,7 +45,7 @@ describe('<AppLayout />', () => {
       cy.viewport(viewports.mobile.width - 100, viewports.mobile.height)
 
       cy.get('.kong-ui-app-navbar').should('be.visible')
-      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+      cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
     })
 
     it('should show overlay on small screen and hide it on large', () => {
@@ -53,7 +54,7 @@ describe('<AppLayout />', () => {
       cy.viewport(viewports.tablet.width, viewports.tablet.height)
 
       cy.get('.kong-ui-app-navbar').should('be.visible')
-      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+      cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
 
       cy.get('.sidebar-menu-toggle').should('be.visible').click()
 
@@ -268,7 +269,7 @@ describe('<AppLayout />', () => {
       cy.mount(AppLayout)
 
       cy.get('.kong-ui-app-navbar').should('be.visible')
-      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+      cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
 
       // Open the sidebar
       cy.get('.sidebar-menu-toggle').should('be.visible').click()
@@ -278,7 +279,7 @@ describe('<AppLayout />', () => {
       cy.viewport(viewports.tablet.width - 20, viewports.tablet.height)
 
       cy.get('.kong-ui-app-navbar').should('be.visible')
-      cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+      cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
     })
   })
 })

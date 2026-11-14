@@ -8,6 +8,11 @@ export default defineConfig({
       bundler: 'vite',
       viteConfig: {
         ...sharedViteConfig,
+        oxc: {
+          // Cypress enables JSX refresh for .js requests, including Vue's raw Pug
+          // templates. Let plugin-vue compile those before JavaScript transforms.
+          jsxRefreshExclude: [/\.vue\?.*\btype=template\b/],
+        },
         define: {
           'process.env.VSCODE_TEXTMATE_DEBUG': false,
         },

@@ -4,6 +4,7 @@ import AppSidebar from './AppSidebar.vue'
 import { h } from 'vue'
 import { topItems, bottomItems, groupedItems, groupConfig, groupCounts } from '../../../fixtures/sidebar-items'
 import { RuntimesIcon } from '@kong/icons'
+import { expectLeftOfViewport } from '../../../fixtures/assertions'
 
 const viewports = {
   desktop: {
@@ -808,8 +809,8 @@ describe('<AppSidebar />', () => {
         cy.viewport(viewports.mobile.width - 100, viewports.mobile.height)
 
         cy.get('.kong-ui-app-sidebar').should('not.have.class', 'sidebar-open')
-        cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items li').should('not.be.visible')
-        cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+        cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items li').should(expectLeftOfViewport)
+        cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
       })
     })
 
@@ -844,7 +845,7 @@ describe('<AppSidebar />', () => {
           },
         })
 
-        cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+        cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
       })
 
       it('shows the mobile sidebar when the open prop is set to true', () => {
@@ -936,7 +937,7 @@ describe('<AppSidebar />', () => {
           // Move the clock forward 101 milliseconds
           cy.tick(101)
           // Sidebar should no longer be visible
-          cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+          cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
         })
       })
 
@@ -987,7 +988,7 @@ describe('<AppSidebar />', () => {
           },
         })
 
-        cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+        cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
         cy.get('.kong-ui-app-sidebar-overlay').should('not.exist')
       })
 
@@ -1022,7 +1023,7 @@ describe('<AppSidebar />', () => {
 
         cy.get('.kong-ui-app-sidebar').should('be.visible')
         cy.get('.kong-ui-app-sidebar-overlay').click()
-        cy.get('.kong-ui-app-sidebar').should('not.be.visible')
+        cy.get('.kong-ui-app-sidebar').should(expectLeftOfViewport)
       })
 
       it('does not close the sidebar when a user clicks on the overlay if mobileOverlayCloseOnClick is set to false', {
