@@ -30,7 +30,8 @@ const renderDefaultSlot = (hideDefaultSlot: boolean = false) => {
   })
 }
 
-describe('<AppLayout />', () => {
+// Keep offscreen visibility checks after Cypress 16 changed its default algorithm.
+describe('<AppLayout />', { visibilityStrategy: 'legacy' }, () => {
   describe('test different viewport sizes', {
     viewportHeight: viewports.desktop.height, viewportWidth: viewports.desktop.width,
   }, () => {
