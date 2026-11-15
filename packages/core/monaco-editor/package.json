@@ -94,7 +94,7 @@
     "zod": "^4.5.4"
   },
   "dependencies": {
-    "@vueuse/core": "^14.4.0",
+    "@vueuse/core": "^15.0.0",
     "shiki-codegen": "^4.6.0"
   }
 }

@@ -65,7 +65,7 @@
     "@kong/icons": "^1.58.0",
     "@kong/kongponents": "^9.64.0",
     "@playwright/test": ">= 1.0.0 < 2.0.0",
-    "@vueuse/core": "^14.3.0",
+    "@vueuse/core": "^14.3.0 || ^15.0.0",
     "vue": ">= 3.5.0 < 4"
   },
   "peerDependenciesMeta": {
@@ -83,7 +83,7 @@
     "@kong/kongponents": "9.66.16",
     "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.64.1",
-    "@vueuse/core": "^14.4.0",
+    "@vueuse/core": "^15.0.0",
     "vue": "^3.5.43",
     "vue-router": "^5.4.0"
   },
