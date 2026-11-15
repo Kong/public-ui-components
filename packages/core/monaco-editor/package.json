@@ -83,7 +83,7 @@
     "@kong/design-tokens": "3.5.3",
     "@kong/icons": "^1.64.0",
     "@kong/kongponents": "9.66.16",
-    "@peculiar/x509": "^2.2.0",
+    "@peculiar/x509": "^3.1.0",
     "@shikijs/monaco": "^4.6.0",
     "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
