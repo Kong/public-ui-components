@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.30.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.30.1...%40kong-ui-public%2Fentities-gateway-services%403.30.2) (2026-11-15)
+
+### Bug Fixes
+
+* **deps:** update dependency @peculiar/x509 to v3 ([#4068](https://github.com/Kong/public-ui-components/issues/4068)) ([dd2ebc8](https://github.com/Kong/public-ui-components/commit/dd2ebc875d32a187b696357a179d5e3275441a02))
+
+
 ## [3.30.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.30.0...%40kong-ui-public%2Fentities-gateway-services%403.30.1) (2026-11-15)
 
 ### Bug Fixes

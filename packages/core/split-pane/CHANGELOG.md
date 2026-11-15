@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsplit-pane%400.6.7...%40kong-ui-public%2Fsplit-pane%400.6.8) (2026-11-15)
+
+### Bug Fixes
+
+* **deps:** update dependency @vueuse/core to v15 ([#4069](https://github.com/Kong/public-ui-components/issues/4069)) ([4540ed7](https://github.com/Kong/public-ui-components/commit/4540ed73176ad518af2fef9bb4f0d1517db0f0cc))
+
+
 ## [0.6.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsplit-pane%400.6.6...%40kong-ui-public%2Fsplit-pane%400.6.7) (2026-11-15)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane
