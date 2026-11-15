@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [14.8.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.8.0...%40kong-ui-public%2Fanalytics-utilities%4014.8.1) (2026-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
 # [14.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.7.0...%40kong-ui-public%2Fanalytics-utilities%4014.8.0) (2026-11-09)
 
 ### Features

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsplit-pane%400.6.6...%40kong-ui-public%2Fsplit-pane%400.6.7) (2026-11-15)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
 ## [0.6.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsplit-pane%400.6.5...%40kong-ui-public%2Fsplit-pane%400.6.6) (2026-11-01)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane
