@@ -1,4 +1,4 @@
-import { h, ref } from 'vue'
+import { defineComponent, h, onMounted, ref } from 'vue'
 import ErrorSummary from './ErrorSummary.vue'
 
 import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
@@ -95,6 +95,36 @@ describe('<ErrorSummary />', () => {
     mountSummary([entityError, hostError, portError], [entityError])
 
     cy.get('@onSelect').should('have.been.calledOnceWith', hostError)
+  })
+
+  it('waits for `unmatchedErrors` that the host passes one render after mounting', () => {
+    const onSelect = cy.spy().as('onSelect')
+    // Like a host that reads `unmatchedErrors` from a template ref to the form
+    const Host = defineComponent(() => {
+      const unmatchedErrors = ref<FieldError[]>()
+      onMounted(() => {
+        unmatchedErrors.value = [entityError]
+      })
+      return () => h(ErrorSummary, {
+        errors: [entityError, hostError],
+        unmatchedErrors: unmatchedErrors.value,
+        schema,
+        onSelect,
+      })
+    })
+    cy.mount(() => h(Host))
+
+    cy.get('@onSelect').should('have.been.calledOnceWith', hostError)
+  })
+
+  it('announces the error count to screen readers', () => {
+    const errors = mountSummary([])
+    cy.get('[aria-live="polite"]').should('have.text', '')
+
+    cy.then(() => {
+      errors.value = [hostError, portError]
+    })
+    cy.get('[aria-live="polite"]').should('contain.text', '2 errors')
   })
 
   it('selects the first linked error when errors show up, but not when they change', () => {

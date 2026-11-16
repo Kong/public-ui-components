@@ -1,80 +1,91 @@
 <template>
-  <section
-    v-if="errors.length"
-    class="ff-error-summary"
-    data-testid="ff-error-summary"
-  >
-    <div class="ff-error-summary-header">
-      <DangerCircleIcon
-        class="ff-error-summary-icon"
-        decorative
-        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
-      />
-      <div class="ff-error-summary-title">
-        {{ i18n.t('plugins.form.error_summary.count', { count: errors.length }) }}
-      </div>
-      <button
-        :aria-controls="listId"
-        :aria-expanded="expanded"
-        :aria-label="expanded ? i18n.t('plugins.form.error_summary.hide') : i18n.t('plugins.form.error_summary.show')"
-        class="ff-error-summary-toggle"
-        data-testid="ff-error-summary-toggle"
-        type="button"
-        @click="expanded = !expanded"
-      >
-        <ChevronDownIcon
-          class="ff-error-summary-toggle-icon"
+  <!-- Always mounted: it holds the sticky position and the live region -->
+  <div class="ff-error-summary-container">
+    <!-- Announces the count as errors show up and change; a whole-list `alert` would re-read every change -->
+    <div
+      aria-live="polite"
+      class="ff-error-summary-status"
+    >
+      {{ errors.length ? i18n.t('plugins.form.error_summary.count', { count: errors.length }) : '' }}
+    </div>
+
+    <section
+      v-if="errors.length"
+      class="ff-error-summary"
+      data-testid="ff-error-summary"
+    >
+      <div class="ff-error-summary-header">
+        <DangerCircleIcon
+          class="ff-error-summary-icon"
           decorative
           :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
         />
-      </button>
-    </div>
-
-    <!-- A grid row from `1fr` to `0fr` animates the height without measuring it -->
-    <div
-      class="ff-error-summary-body"
-      :class="{ 'is-collapsed': !expanded }"
-      :inert="!expanded || undefined"
-    >
-      <!-- Scrolls across the whole alert, so the scrollbar sits at its edge, clear of the text -->
-      <div class="ff-error-summary-scroll">
-        <ul
-          :id="listId"
-          class="ff-error-summary-list"
-          data-testid="ff-error-summary-list"
+        <div class="ff-error-summary-title">
+          {{ i18n.t('plugins.form.error_summary.count', { count: errors.length }) }}
+        </div>
+        <button
+          :aria-controls="listId"
+          :aria-expanded="expanded"
+          :aria-label="expanded ? i18n.t('plugins.form.error_summary.hide') : i18n.t('plugins.form.error_summary.show')"
+          class="ff-error-summary-toggle"
+          data-testid="ff-error-summary-toggle"
+          type="button"
+          @click="expanded = !expanded"
         >
-          <li
-            v-for="(error, index) in errors"
-            :key="index"
-            :data-testid="`ff-error-summary-item-${error.path}`"
-          >
-            <template v-if="isLinked(error)">
-              <button
-                class="ff-error-summary-link"
-                :title="error.path || undefined"
-                type="button"
-                @click="emit('select', error)"
-              >
-                {{ getLabel(error) }}
-              </button>:
-              {{ error.message }}
-            </template>
-            <template v-else>
-              <span
-                class="ff-error-summary-label"
-                :title="error.path || undefined"
-              >{{ getLabel(error) }}:</span>
-              {{ error.message }}
-            </template>
-          </li>
-        </ul>
+          <ChevronDownIcon
+            class="ff-error-summary-toggle-icon"
+            decorative
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
+          />
+        </button>
       </div>
-    </div>
-  </section>
+
+      <!-- A grid row from `1fr` to `0fr` animates the height without measuring it -->
+      <div
+        class="ff-error-summary-body"
+        :class="{ 'is-collapsed': !expanded }"
+        :inert="!expanded || undefined"
+      >
+        <!-- Scrolls across the whole alert, so the scrollbar sits at its edge, clear of the text -->
+        <div class="ff-error-summary-scroll">
+          <ul
+            :id="listId"
+            class="ff-error-summary-list"
+            data-testid="ff-error-summary-list"
+          >
+            <li
+              v-for="(error, index) in errors"
+              :key="index"
+              :data-testid="`ff-error-summary-item-${error.path}`"
+            >
+              <template v-if="isLinked(error)">
+                <button
+                  class="ff-error-summary-link"
+                  :title="error.path || undefined"
+                  type="button"
+                  @click="emit('select', error)"
+                >
+                  {{ getLabel(error) }}
+                </button>:
+                {{ error.message }}
+              </template>
+              <template v-else>
+                <span
+                  class="ff-error-summary-label"
+                  :title="error.path || undefined"
+                >{{ getLabel(error) }}:</span>
+                {{ error.message }}
+              </template>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { toRaw, useId, watch } from 'vue'
+import { nextTick, onMounted, toRaw, useId, watch } from 'vue'
 import { ChevronDownIcon, DangerCircleIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import useI18n from '../../../composables/useI18n'
@@ -117,31 +128,60 @@ function isLinked(error: FieldError) {
   return !props.unmatchedErrors?.some(unmatched => toRaw(unmatched) === toRaw(error))
 }
 
-// `post`: wait for the host to pass the `unmatchedErrors` of these errors
-watch(() => props.errors.length > 0, (hasErrors) => {
-  const first = hasErrors ? props.errors.find(isLinked) : undefined
+function selectFirstLinked() {
+  const first = props.errors.find(isLinked)
   if (first) {
     emit('select', first)
   }
-}, { immediate: true, flush: 'post' })
+}
+
+// `post`: runs after the host has rendered, so it has passed the `unmatchedErrors`
+// of the new errors. Not `immediate`, which would run at once, during setup.
+watch(() => props.errors.length > 0, (hasErrors) => {
+  if (hasErrors) {
+    selectFirstLinked()
+  }
+}, { flush: 'post' })
+
+// Mounted with errors: the host may pass `unmatchedErrors` only after its own mount,
+// e.g. from a template ref to the form, which takes one more render
+onMounted(async () => {
+  if (props.errors.length) {
+    await nextTick()
+    selectFirstLinked()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
 // The text column starts after the icon; the list is indented to match it on both sides
 $indent: calc(var(--kui-space-50, #{$kui-space-50}) + var(--kui-icon-size-40, #{$kui-icon-size-40}) + var(--kui-space-30, #{$kui-space-30}));
 
+.ff-error-summary-container {
+  bottom: 0;
+  position: sticky;
+  z-index: 10;
+}
+
+// Read by screen readers only
+.ff-error-summary-status {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 // Looks like a `KAlert` with the `danger` appearance
 .ff-error-summary {
   background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-  bottom: 0;
   box-sizing: border-box;
   color: var(--kui-color-text-danger, $kui-color-text-danger);
   font-family: var(--kui-font-family-text, $kui-font-family-text);
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   line-height: var(--kui-line-height-30, $kui-line-height-30);
-  position: sticky;
-  z-index: 10;
 }
 
 .ff-error-summary-header {
