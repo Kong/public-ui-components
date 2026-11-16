@@ -15,7 +15,7 @@
         :on-validity-change="onValidityChange"
         :plugin-name="pluginName"
         :render-rules="pluginConfig?.renderRules"
-        :schema="freeformSchema"
+        :schema="(rawSchema as FormSchema)"
         :scope-options="scopeOptions"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
@@ -56,7 +56,6 @@ import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
-import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from './free-form/schema-enhancement'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
@@ -279,13 +278,6 @@ provide(FORMS_CONFIG, liveConfig)
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)
 const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
 const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))
-const freeformSchema = computed(() => {
-  const enhanced = appendEntityChecksFromMetadata(
-    props.pluginName,
-    props.rawSchema as FormSchema,
-  )
-  return convertConfigSetsToArrays(distributeEntityChecks(enhanced))
-})
 
 const vaultSecretPickerSetup = ref<string | false>(false)
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()

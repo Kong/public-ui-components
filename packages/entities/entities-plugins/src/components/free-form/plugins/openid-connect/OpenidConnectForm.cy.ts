@@ -5,7 +5,6 @@ import OpenidConnectForm from './OpenidConnectForm.vue'
 import type { FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../../const'
 import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../../schema-enhancement'
 import { PLUGIN_CONTEXT_KEY } from '../../plugin-context'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
@@ -164,9 +163,8 @@ const CREDENTIAL_CLAIM_SHORTHAND = {
 
 // Use the real OIDC fixture from the Kong Admin API as the FormSchema. The fixture
 // is the raw API response shape (`{ fields, entity_checks, supported_partials }`);
-// FormSchema additionally requires `type: 'record'` at the root. Run the same
-// schema-enhancement pipeline PluginEntityForm uses before passing into free-form
-// components so entity_checks land at the right nesting level.
+// FormSchema additionally requires `type: 'record'` at the root. `PluginConfigurationForm`
+// appends and distributes the entity checks of the plugin metadata itself.
 const createSchema = (
   withPrincipals = false,
   withCredentialClaims = false,
@@ -198,7 +196,7 @@ const createSchema = (
     const configField = (raw.fields as any[]).find(f => 'config' in f)
     configField.config.fields.push(cloneDeep(CREDENTIAL_CLAIMS_SCHEMA_FIELD))
   }
-  return distributeEntityChecks(appendEntityChecksFromMetadata('openid-connect', raw))
+  return raw
 }
 
 // Minimal VFG schema — only used by StandardLayout for global fields (enabled, name, scope)
