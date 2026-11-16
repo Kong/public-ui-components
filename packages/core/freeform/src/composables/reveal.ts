@@ -1,7 +1,7 @@
 import { nextTick, shallowReactive, shallowRef, type VNode } from 'vue'
 import { get } from 'lodash-es'
 import * as utils from '../utils'
-import { FOCUSABLE_SELECTOR } from '../constants'
+import { FIELD_CONTROL_SELECTOR, FOCUSABLE_SELECTOR } from '../constants'
 import { isKid } from './key-id-map'
 
 import type { KeyId } from '../types'
@@ -422,10 +422,15 @@ function highlight(element: Element, duration: number) {
   }, { once: true })
 }
 
+/**
+ * Focuses the field's control, or else the first focusable element (e.g. a
+ * record's toggle). The label comes first in the field, so the first focusable
+ * element may be a tooltip trigger in it.
+ */
 function focusWithin(element: Element) {
-  const focusable = element.matches(FOCUSABLE_SELECTOR)
-    ? element
-    : element.querySelector(FOCUSABLE_SELECTOR)
+  const focusable = [FIELD_CONTROL_SELECTOR, FOCUSABLE_SELECTOR]
+    .map(selector => element.matches(selector) ? element : element.querySelector(selector))
+    .find(found => found instanceof HTMLElement)
 
   if (focusable instanceof HTMLElement) {
     focusable.focus({ preventScroll: true })
