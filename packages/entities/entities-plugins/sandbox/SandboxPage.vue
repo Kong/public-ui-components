@@ -42,6 +42,10 @@ const APP_LINKS: SandboxNavigationItem[] = [
     to: { name: 'plugin-catalog' },
   },
   {
+    name: 'Error summary',
+    to: { name: 'error-summary' },
+  },
+  {
     name: 'Auth plugin onboarding card',
     to: { name: 'auth-plugin-onboarding-card' },
   },

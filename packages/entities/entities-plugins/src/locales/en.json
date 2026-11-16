@@ -888,6 +888,12 @@
           "title": "Code editor",
           "description": "Configure this plugin by using YAML configuration."
         }
+      },
+      "error_summary": {
+        "count": "{count, plural, one {# error} other {# errors}}",
+        "show": "Show errors",
+        "hide": "Hide errors",
+        "entity": "Plugin"
       }
     },
     "free-form": {
