@@ -10,6 +10,7 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Slots](#slots)
   - [Usage example](#usage-example)
 - [Tabbed Navigation](#tabbed-navigation)
+  - [Slotted usage](#slotted-usage)
   - [Tab Overflow](#tab-overflow)
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)

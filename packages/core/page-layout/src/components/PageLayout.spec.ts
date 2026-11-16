@@ -234,8 +234,10 @@ describe('<PageLayout />', () => {
 
     await flushPromises()
 
-    // The slot content occupies the tab row's position in the header
+    // The slot content occupies the tab row's position in the header...
     expect(wrapper.getTestId('page-layout-header').findTestId(slottedTabsTestId).exists()).toBe(true)
+    // ...in place of the internal tab row, which must not render alongside it
+    expect(wrapper.findTestId('page-layout-tabs').exists()).toBe(false)
   })
 
   it('does not render the tabs slot when the tabs prop is empty', async () => {
