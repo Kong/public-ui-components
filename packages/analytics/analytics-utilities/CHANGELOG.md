@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.8.1...%40kong-ui-public%2Fanalytics-utilities%4014.9.0) (2026-11-16)
+
+### Features
+
+* **analytics-utilities:** add unit to datasource config field [MA-5410] ([#4062](https://github.com/Kong/public-ui-components/issues/4062)) ([0a56efd](https://github.com/Kong/public-ui-components/commit/0a56efdc3957cb15f9308424d0128e45e9dc46d4))
+
+
 ## [14.8.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.8.0...%40kong-ui-public%2Fanalytics-utilities%4014.8.1) (2026-11-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
