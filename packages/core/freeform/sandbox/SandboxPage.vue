@@ -41,5 +41,9 @@ const APP_LINKS: SandboxNavigationItem[] = [
     name: 'Field errors',
     to: { name: 'field-errors' },
   },
+  {
+    name: 'Split fields',
+    to: { name: 'split-fields' },
+  },
 ]
 </script>

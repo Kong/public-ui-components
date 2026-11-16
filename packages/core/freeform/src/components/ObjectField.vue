@@ -191,7 +191,7 @@ const {
   renderRules?: RenderRules
 }>()
 
-const { value: fieldValue, hide, versionInfo, ...field } = useField(toRef(props, 'name'))
+const { value: fieldValue, hide, versionInfo, ...field } = useField(toRef(props, 'name'), { exclude: () => omit })
 const {
   getSchema,
   getDefault,

@@ -189,14 +189,14 @@
         name="protocols"
       />
 
-      <KCollapse
+      <RevealCollapse
         v-if="enableConditionField"
         v-model="advancedCollapsed"
         data-testid="view-general-info-additional-settings"
         :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
       >
         <ConditionField />
-      </KCollapse>
+      </RevealCollapse>
     </EntityFormBlock>
 
     <EntityFormBlock
@@ -219,7 +219,8 @@ export type Props<T extends FreeFormPluginData = any> = PluginFormLayoutProps<T>
 import { computed, inject, nextTick, ref, useAttrs, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KCollapse, KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
+import { KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
+import RevealCollapse from '../components/RevealCollapse.vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { useLocalStorage } from '@vueuse/core'
 import { FEATURE_FLAGS } from '../../../constants'

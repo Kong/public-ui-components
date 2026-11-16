@@ -23,7 +23,16 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
+export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(
+  name: MaybeRefOrGetter<string>,
+  options: {
+    /**
+     * Child fields this component leaves out, e.g. `ObjectField`'s `omit`, so
+     * the form knows it doesn't render them
+     */
+    exclude?: MaybeRefOrGetter<string[] | undefined>
+  } = {},
+) {
   const {
     getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo,
     revealTarget: formRevealTarget, registerFieldElement, getFieldErrors,
@@ -87,6 +96,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     onBeforeUnmount(registerFieldElement({
       path: () => fieldPath.value,
       element: () => getVNodeElement(instance.subTree),
+      exclude: () => toValue(options.exclude),
     }))
   }
 
