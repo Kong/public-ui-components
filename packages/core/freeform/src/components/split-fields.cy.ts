@@ -1,5 +1,5 @@
 
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { KCollapse } from '@kong/kongponents'
 import Form from './Form.vue'
 import ObjectField from './ObjectField.vue'
@@ -83,6 +83,31 @@ describe('Fields split across records with omit', () => {
     cy.getTestId('ff-field-errors-config.timeout').should('exist')
     // Both records leave it out: no field shows it, so the host gets it
     cy.then(() => form().unmatchedErrors).should('deep.equal', [errors[2]])
+  })
+
+  it('matches an error again once the field that renders it mounts', () => {
+    const error = { path: 'config.timeout', message: 'must be positive' }
+    const showAdvanced = ref(false)
+    let form: FormApi | undefined
+    // A container that unmounts its content, like a tab with `v-if`
+    cy.mount(() => h(Form, { schema, data, errors: [error], ref: (instance: unknown) => {
+      form = instance as FormApi
+    } }, {
+      default: () => [
+        h(ObjectField, { name: 'config', asChild: true, omit: ['timeout', 'redis', 'legacy_key'] }),
+        showAdvanced.value
+          ? h(ObjectField, { name: 'config', asChild: true, omit: ['host', 'legacy_key'] })
+          : null,
+      ],
+    }))
+
+    cy.then(() => form!.unmatchedErrors).should('deep.equal', [error])
+    cy.then(() => {
+      showAdvanced.value = true
+      return nextTick()
+    })
+    cy.getTestId('ff-field-errors-config.timeout').should('have.text', 'must be positive')
+    cy.then(() => form!.unmatchedErrors).should('deep.equal', [])
   })
 
   it('opens the collapsed section to reveal a field inside it', () => {

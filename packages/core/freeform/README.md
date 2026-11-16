@@ -132,6 +132,7 @@ All exports below are re-exported from the package root (`render-rules.ts` only 
 | File | Exports | Purpose |
 |---|---|---|
 | `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue, getEmptyOrDefault/getEmptyValue |
+| `reveal-open.ts` | `useRevealOpen(container, open)` | Opens a section that keeps its fields mounted while closed (e.g. `KCollapse`) when a reveal heads for a field inside it |
 | `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors, emptyOrDefaultValue, emptyValue |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
 | `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getEmptyOrDefault, getEmptyValue, getSelectItems, getLabelAttributes |
