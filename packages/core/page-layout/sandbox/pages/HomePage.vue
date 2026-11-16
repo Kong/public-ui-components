@@ -28,10 +28,11 @@
         <KBadge>Info</KBadge>
       </template>
       <!--
-        Standalone PageLayoutTabs, slotted back into the header's tab row. The same `tabs`
-        set drives it, so the router-view below and the header's tab-row styling stay in
-        sync; the badge on the Keys tab is rendered through the component's own
-        `tab-${key}` slot to show the slot contract is intact when it stands alone.
+        PageLayoutTabs slotted into the header's tab row, the way a host whose architecture
+        prevents it from passing the `tabs` prop down would render it. The same `tabs` set
+        drives it, so the router-view below and the header's tab-row styling stay in sync;
+        the badge on the Keys tab is rendered through the component's own `tab-${key}` slot
+        to show the slot contract is intact when it is slotted in.
       -->
       <template
         v-if="showSlottedTabs"

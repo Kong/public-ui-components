@@ -157,7 +157,7 @@ An optional slot rendered immediately after the page title `<h1>`, inline within
 
 #### `tabs`
 
-An optional slot rendered in place of the tab bar `PageLayout` would render from the `tabs` prop. Slot a standalone [`PageLayoutTabs`](#standalone-usage) here to drive the header's tab row with its own tab set — the component lands in exactly the position the internal one occupies, so the header's tab-row styling (bottom border behavior, sticky sizing) and the `<router-view>` content routing keep working unchanged.
+An optional slot rendered in place of the tab bar `PageLayout` would render from the `tabs` prop. Slot a [`PageLayoutTabs`](#slotted-usage) here when the host's architecture prevents it from passing the `tabs` prop down to its `PageLayout` — the component lands in exactly the position the internal one occupies, so the header's tab-row styling (bottom border behavior, sticky sizing) and the `<router-view>` content routing keep working unchanged. `PageLayoutTabs` is the component `PageLayout` uses for tab navigation; do not slot a different one in its place.
 
 The slot is rendered under the same conditions as the internal tab row: only when the `tabs` prop is non-empty (the `tabs` prop still gates the tab row and the `<router-view>` it enables) and the header is not in the empty state.
 
@@ -396,19 +396,26 @@ When neither a title nor breadcrumbs are provided, the header renders only its a
 
 ## Tabbed Navigation
 
-The `PageLayoutTabs` component renders the tab bar. By default `PageLayout` renders it internally from the `tabs` prop; it is also exported from the package, so a page that needs the tab bar on its own — with a different tab set, or outside a full `PageLayout` — can use it standalone, and a page that wants to own the tab row can slot it back into the header through the [`tabs` slot](#tabs). In both cases it lands in the tab row's position in the header, so the header's borders, sticky sizing and `<router-view>` behavior stay exactly as they are with the prop-driven tab bar.
+The `PageLayoutTabs` component renders the tab bar. `PageLayout` renders it internally from the `tabs` prop; the component is exported only so a host whose architecture prevents it from passing the `tabs` prop down to its `PageLayout` can render the tab bar itself and slot it back into the header through the [`tabs` slot](#tabs). It is not meant to be used apart from `PageLayout`: `PageLayoutTabs` is the one component `PageLayout` uses for tab navigation, and a slotted one lands in exactly the position the internal one occupies, so the header's borders, sticky sizing and `<router-view>` behavior stay exactly as they are with the prop-driven tab bar.
 
-### Standalone usage
+### Slotted usage
 
-`PageLayoutTabs` is exported directly and takes the same `tabs` prop `PageLayout` does:
+A host that cannot provide the `tabs` prop to `PageLayout` renders `PageLayoutTabs` itself — with the same tab set it would have passed as the prop — and slots it into the `tabs` slot:
 
 ```html
 <template>
-  <PageLayoutTabs :tabs="tabs" />
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #tabs>
+      <PageLayoutTabs :tabs="tabs" />
+    </template>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
-import { PageLayoutTabs } from '@kong-ui-public/page-layout'
+import { PageLayout, PageLayoutTabs } from '@kong-ui-public/page-layout'
 import type { PageLayoutTab } from '@kong-ui-public/page-layout'
 
 const tabs: PageLayoutTab[] = [
@@ -417,6 +424,8 @@ const tabs: PageLayoutTab[] = [
 ]
 </script>
 ```
+
+The `tabs` prop on `PageLayout` still gates the slot: keep it non-empty (the same tab set the slot renders is the natural choice) so the header renders the tab row and routes the content through `<router-view>`, exactly as it does for the prop-driven tab bar.
 
 Its props, slots (including the per-tab `tab-${tab.key}` slot), overflow behavior and navigation handling are the same as described below for the tab bar inside `PageLayout`. It requires `vue` and `vue-router` to be initialized in the host application, just like `PageLayout`.
 

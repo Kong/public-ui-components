@@ -49,10 +49,12 @@ export interface PageLayoutSlots {
    */
   'title-after'?(): any
   /**
-   * Tabs slot to replace the internally rendered PageLayoutTabs. Slot a `PageLayoutTabs`
-   * here to render the tab bar with its own tab set while keeping the header's tab-row
-   * layout, borders and router-view behavior. Only rendered when the `tabs` prop is
-   * non-empty and the header is not empty, exactly like the internal tab row.
+   * Tabs slot to replace the internally rendered PageLayoutTabs. For hosts whose
+   * architecture prevents them from passing the `tabs` prop down to their PageLayout:
+   * render a PageLayoutTabs (the component PageLayout itself uses for tab navigation)
+   * and slot it here to keep the header's tab-row layout, borders and router-view
+   * behavior. Only rendered when the `tabs` prop is non-empty and the header is not
+   * empty, exactly like the internal tab row.
    */
   tabs?(): any
   /**
