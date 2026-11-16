@@ -37,6 +37,7 @@ export interface Field {
   group: boolean
   filter?: FieldFilter | null
   metricGroup?: string
+  unit?: string
   supportedDimensions?: string[]
   entityAttributes?: string[]
 }
