@@ -317,8 +317,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(postcss-html@2.0.0(postcss@8.5.29))(stylelint-config-html@2.0.0(postcss-html@2.0.0(postcss@8.5.29))(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3)))(stylelint-config-recommended-scss@17.0.1(postcss@8.5.29)(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3)))(stylelint-config-recommended@18.0.0(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3)))(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3))
       stylelint-order:
-        specifier: ^8.1.2
-        version: 8.1.2(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3))
+        specifier: ^8.1.3
+        version: 8.1.3(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3))
       swrv:
         specifier: ^1.3.0
         version: 1.3.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(vue@3.5.43(typescript@5.9.3))
@@ -9666,11 +9666,11 @@ packages:
     peerDependencies:
       stylelint: ^17.0.0
 
-  stylelint-order@8.1.2:
-    resolution: {integrity: sha512-A+bxnIMVmzkWr6KlIwHnjQqTWBXPlIixoJa962BpK1N5bkhq3lXhKHjs4fY8ecooktjd3B3TtRiqoLSj+MfbxQ==}
+  stylelint-order@8.1.3:
+    resolution: {integrity: sha512-sItAojls5EBcn4iQMe0p0wwcs8twQoEZ3G36yBriXOM4okA0vxScP8XQnE2WfRpnxtEpVcaWmcaFYpxGMuo26w==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
-      stylelint: ^16.18.0 || ^17.0.0
+      stylelint: ^16.18.0 || ^17.0.0 || ^18.0.0
 
   stylelint-scss@7.0.0:
     resolution: {integrity: sha512-H88kCC+6Vtzj76NsC8rv6x/LW8slBzIbyeSjsKVlS+4qaEJoDrcJR4L+8JdrR2ORdTscrBzYWiiT2jq6leYR1Q==}
@@ -20398,7 +20398,7 @@ snapshots:
     dependencies:
       stylelint: 17.16.0(supports-color@8.1.1)(typescript@5.9.3)
 
-  stylelint-order@8.1.2(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3)):
+  stylelint-order@8.1.3(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3)):
     dependencies:
       postcss: 8.5.29
       postcss-sorting: 10.0.0(postcss@8.5.29)
