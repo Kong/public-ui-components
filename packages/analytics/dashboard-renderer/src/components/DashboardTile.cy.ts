@@ -516,6 +516,66 @@ describe('<DashboardTile />', () => {
     cy.getTestId('chart-jump-to-explore-1').invoke('attr', 'href').should('have.string', 'granularity')
   })
 
+  describe('with supplied data', () => {
+    const suppliedData = generateSingleMetricTimeSeriesData(
+      { name: 'TotalRequests', unit: 'count' },
+      { status_code: ['request_count'] as string[] },
+      { start, end },
+    ) as ExploreResultV4
+
+    it('hides the refresh action and the jump-to links, and keeps CSV export', () => {
+      const queryFn = cy.stub().as('queryFn')
+
+      cy.mount(DashboardTile, {
+        props: {
+          data: suppliedData,
+          definition: mockTileDefinition,
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          showRefresh: true,
+          tileId: '1',
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      })
+
+      cy.getTestId('tile-refresh-button-1').should('not.exist')
+      cy.getTestId('kebab-action-menu-1').click()
+      cy.getTestId('chart-csv-export-1').should('exist')
+      cy.getTestId('chart-jump-to-explore-1').should('not.exist')
+      cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+      cy.get('@queryFn').should('not.have.been.called')
+    })
+
+    it('exports the supplied data without running a query', () => {
+      const queryFn = cy.stub().as('queryFn')
+
+      cy.mount(DashboardTile, {
+        props: {
+          data: suppliedData,
+          definition: mockTileDefinition,
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          tileId: '1',
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        return cy.wrap(wrapper.vm.getExportData()).should('deep.equal', suppliedData)
+      })
+
+      cy.get('@queryFn').should('not.have.been.called')
+    })
+  })
+
   it('should not show jump to explore link if query definition is missing', () => {
     mount({
       // @ts-ignore we're intentionally not including a query in this definition

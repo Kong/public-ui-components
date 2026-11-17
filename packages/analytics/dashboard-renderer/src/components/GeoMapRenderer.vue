@@ -5,6 +5,7 @@
     :query="mapQuery"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :supplied-data="suppliedData"
     @chart-data="onChartData"
   >
     <AnalyticsGeoMap

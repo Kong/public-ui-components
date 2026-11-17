@@ -6,6 +6,7 @@
     },
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
     "unexpectedError": "An unexpected error has occurred.",
+    "suppliedDataMismatch": "The supplied data doesn't match this tile type.",
     "trendRange": {
       "24h": "Last 24-hour summary",
       "7d": "Last 7-day summary",

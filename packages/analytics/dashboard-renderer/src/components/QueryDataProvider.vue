@@ -1,6 +1,18 @@
 <template>
+  <KEmptyState
+    v-if="isEmpty"
+    :action-button-visible="false"
+    data-testid="chart-no-data-state"
+  >
+    <template #title>
+      <p>{{ i18n.t('renderer.noDataAvailable.title') }}</p>
+    </template>
+    <template #default>
+      <p>{{ i18n.t('renderer.noDataAvailable.description') }}</p>
+    </template>
+  </KEmptyState>
   <KSkeleton
-    v-if="(isLoading || (!v4Data && !hasError)) && !displayData"
+    v-else-if="(isLoading || (!v4Data && !hasError)) && !displayData"
     class="chart-skeleton"
     type="table"
   />
@@ -10,17 +22,17 @@
     data-testid="chart-empty-state"
   >
     <template #icon>
-      <VisibilityOffIcon v-if="queryError?.type === 'forbidden'" />
+      <VisibilityOffIcon v-if="displayError?.type === 'forbidden'" />
       <WarningOutlineIcon v-else />
     </template>
     <template #title>
-      <p>{{ queryError?.message || i18n.t('renderer.unexpectedError') }}</p>
+      <p>{{ displayError?.message || i18n.t('renderer.unexpectedError') }}</p>
     </template>
     <template
-      v-if="queryError?.details"
+      v-if="displayError?.details"
       #default
     >
-      <p>{{ queryError.details }}</p>
+      <p>{{ displayError.details }}</p>
     </template>
   </KEmptyState>
 
@@ -46,7 +58,7 @@ import type {
   ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { QueryError } from '@kong-ui-public/analytics-chart'
-import type { DashboardRendererContext } from '../types'
+import type { DashboardRendererContext, SuppliedTileData } from '../types'
 
 import { computed, inject, ref, watch } from 'vue'
 import useSWRV from 'swrv'
@@ -55,6 +67,7 @@ import { handleQueryError, LoadingOverlay } from '@kong-ui-public/analytics-char
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { isExploreResultV4, resolveSuppliedData } from '../utils/supplied-tile-data'
 import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
@@ -63,6 +76,8 @@ const props = defineProps<{
   query: ValidDashboardChartQuery
   queryReady: boolean
   refreshCounter: number
+  /** When set, the provider shows this data and doesn't run a query. */
+  suppliedData?: SuppliedTileData
 }>()
 
 const emit = defineEmits<{
@@ -75,9 +90,16 @@ const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
+const suppliedState = computed(() => props.suppliedData && resolveSuppliedData({
+  supplied: props.suppliedData,
+  isExpected: isExploreResultV4,
+  mismatchMessage: i18n.t('renderer.suppliedDataMismatch'),
+}))
+
 const queryKey = () => {
   // SWRV can't accept `false` as a key, so use a more complicated conditional to match its `IKey` interface.
-  if (props.queryReady && queryBridge) {
+  // A null key also keeps SWRV from fetching while the host supplies the data.
+  if (props.queryReady && queryBridge && !props.suppliedData) {
     return JSON.stringify([props.query, props.context, props.refreshCounter])
   }
 
@@ -125,15 +147,33 @@ const v4Data = computed(() => keyedData.value?.result)
 const { state, swrvState: STATE } = useSwrvState(keyedData, error, isValidating)
 
 const queryError = ref<QueryError | null>(null)
-const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
-const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
+
+// Each state below reads the supplied data when the host passes it, and the query otherwise.
+const displayError = computed<QueryError | null>(() => {
+  if (suppliedState.value) {
+    return suppliedState.value.status === 'error' ? { type: 'other', message: suppliedState.value.message } : null
+  }
+
+  return queryError.value
+})
+const hasError = computed(() => suppliedState.value
+  ? suppliedState.value.status === 'error'
+  : state.value === STATE.ERROR || !!queryError.value)
+const isLoading = computed(() => suppliedState.value
+  ? suppliedState.value.status === 'loading'
+  : !props.queryReady || state.value === STATE.PENDING)
+const isEmpty = computed(() => suppliedState.value?.status === 'empty')
 
 const oldData = ref<ExploreResultV4 | undefined>()
 const displayData = computed(() => {
+  if (suppliedState.value) {
+    return suppliedState.value.status === 'success' ? suppliedState.value.data : undefined
+  }
+
   return v4Data.value ?? (props.queryReady && state.value === STATE.PENDING ? oldData.value : undefined)
 })
 
-const isStale = computed(() => !!displayData.value && keyedData.value?.key !== queryKey())
+const isStale = computed(() => !suppliedState.value && !!displayData.value && keyedData.value?.key !== queryKey())
 
 watch([() => v4Data.value, () => state.value], ([data, state]) => {
   if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS') && data !== oldData.value) {
@@ -141,4 +181,16 @@ watch([() => v4Data.value, () => state.value], ([data, state]) => {
     emit('chart-data', data)
   }
 })
+
+watch(suppliedState, current => {
+  if (!current || current.status === 'loading') {
+    return
+  }
+
+  if (current.status === 'success') {
+    emit('chart-data', current.data)
+  }
+
+  emit('query-complete')
+}, { immediate: true })
 </script>

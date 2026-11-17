@@ -5,6 +5,7 @@
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :supplied-data="suppliedData"
   >
     <div
       class="analytics-chart"
