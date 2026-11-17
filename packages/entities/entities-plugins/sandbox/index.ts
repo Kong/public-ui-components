@@ -69,6 +69,11 @@ const init = async () => {
         component: () => import('./pages/PluginFormPlayground.vue'),
       },
       {
+        path: '/error-summary',
+        name: 'error-summary',
+        component: () => import('./pages/ErrorSummaryPage.vue'),
+      },
+      {
         path: '/onboarding/auth-plugin',
         name: 'auth-plugin-onboarding-card',
         component: () => import('./pages/AuthPluginOnboardingCardPage.vue'),
