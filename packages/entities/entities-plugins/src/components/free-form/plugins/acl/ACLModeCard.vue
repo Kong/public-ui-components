@@ -43,7 +43,9 @@
       :name="`config.${mode}`"
     >
       <template #item="{ autofocus, fieldName }">
-        <StringField
+        <component
+          :is="celInput ? CelField : StringField"
+          v-bind="celInput"
           :autofocus="autofocus"
           :multiline="isExpressionMode"
           :name="fieldName"
@@ -66,16 +68,16 @@
               </template>
             </i18nT>
           </template>
-        </StringField>
+        </component>
       </template>
     </ArrayField>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared, ArrayField, StringField } from '@kong-ui-public/freeform'
+import { CEL_INPUT_KEY, useFormShared, ArrayField, CelField, StringField } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
@@ -110,6 +112,8 @@ const MODES = computed(() => ALL_MODES.filter((m) => !!getSchema(`config.${m}`))
 
 const mode = ref<AclMode>('allow')
 const isExpressionMode = computed(() => EXPRESSION_MODES.includes(mode.value))
+const resolveCelInput = inject(CEL_INPUT_KEY, undefined)
+const celInput = computed(() => isExpressionMode.value ? resolveCelInput?.('acl-rule') : undefined)
 
 // With only allow/deny available the radios are self-explanatory, and the tooltip
 // copy talks about a choice the Gateway version cannot offer — so drop it entirely.

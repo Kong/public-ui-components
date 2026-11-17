@@ -1,0 +1,108 @@
+import { describe, expect, it, vi } from 'vitest'
+import { effectScope, shallowRef } from 'vue'
+import { getPluginFieldCelLanguage, isPluginCelEnabled, useCelSubjectLoader } from './cel-editor'
+import { getCelCallables, getCelHint } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { PluginCelLanguage } from './cel-editor'
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
+
+const konnect: KonnectPluginFormConfig = { app: 'konnect', apiBaseUrl: '', controlPlaneId: 'cp' }
+const manager: KongManagerPluginFormConfig = { app: 'kongManager', apiBaseUrl: '', workspace: 'default' }
+
+describe('plugin CEL rendering', () => {
+  it('gates explicitly selected languages without matching field paths or plugin names', () => {
+    for (const language of ['expression', 'acl-rule']) {
+      expect(isPluginCelEnabled(language, konnect, true)).toBe(true)
+      expect(isPluginCelEnabled(language, konnect, false)).toBe(false)
+    }
+    expect(isPluginCelEnabled('config.allow_when.0', konnect, true)).toBe(false)
+    expect(isPluginCelEnabled('unknown-language', konnect, true)).toBe(false)
+  })
+
+  it('requires every Konnect data plane to support CEL for condition', () => {
+    const condition = (dataPlaneVersions?: string[]) =>
+      isPluginCelEnabled('condition', { ...konnect, dataPlaneVersions }, true)
+    expect(condition()).toBe(false)
+    expect(condition([])).toBe(false)
+    expect(condition(['3.15.0.0', '3.14.0.0'])).toBe(false)
+    expect(condition(['3.15.0.0', '3.17.0.0'])).toBe(true)
+  })
+
+  it('lets Kong Manager opt in independently and requires known Gateway support for condition', () => {
+    expect(isPluginCelEnabled('acl-rule', manager, true)).toBe(false)
+    const optedIn = { ...manager, enableCelEditor: true }
+    expect(isPluginCelEnabled('acl-rule', optedIn, false)).toBe(true)
+    expect(isPluginCelEnabled('condition', optedIn, false)).toBe(false)
+    const condition = (version: string) => isPluginCelEnabled('condition', {
+      ...optedIn, gatewayInfo: { edition: 'enterprise', version },
+    }, false)
+    expect(condition('3.14.0.0')).toBe(false)
+    expect(condition('3.15.0.0')).toBe(true)
+  })
+})
+
+describe('CEL record lookups', () => {
+  it('discards pending records after the host scope changes or the form unmounts', async () => {
+    let resolveRecords!: (records: { consumers: Array<{ id: string }> }) => void
+    const host = shallowRef<KonnectPluginFormConfig>({ ...konnect, getCelSubjects: () => new Promise(resolve => {
+      resolveRecords = resolve
+    }) })
+    const scope = effectScope()
+    const { loader, subjects } = scope.run(() => useCelSubjectLoader(() => host.value))!
+    const old = loader.value!()
+    await Promise.resolve()
+    host.value = { ...host.value, controlPlaneId: 'other' }
+    resolveRecords({ consumers: [{ id: 'old' }] })
+    await old
+    expect(subjects.value).toEqual({})
+
+    const next = loader.value!()
+    await Promise.resolve()
+    scope.stop()
+    resolveRecords({ consumers: [{ id: 'unmounted' }] })
+    await next
+    expect(subjects.value).toEqual({})
+  })
+
+  it('calls only the host loader, shares the result and invalidates it when scope or permissions change', async () => {
+    const host = shallowRef(konnect)
+    const scope = effectScope()
+    const { loader, subjects } = scope.run(() => useCelSubjectLoader(() => host.value))!
+    expect(loader.value).toBeUndefined()
+    const records = { consumerGroups: [{ id: 'g', name: 'team' }] }
+    const load = vi.fn().mockRejectedValueOnce(new Error('unavailable')).mockResolvedValue(records)
+    host.value = { ...konnect, getCelSubjects: load }
+    expect(load).not.toHaveBeenCalled()
+    await expect(loader.value!()).rejects.toThrow('unavailable')
+    const pending = loader.value!()
+    expect(loader.value!()).toBe(pending)
+    await expect(pending).resolves.toEqual(records)
+    expect(subjects.value).toEqual(records)
+    host.value = { ...host.value, controlPlaneId: 'other' }
+    expect(loader.value!()).not.toBe(pending)
+    await expect(loader.value!()).resolves.toEqual(records)
+    expect(load).toHaveBeenCalledTimes(3)
+    host.value = konnect
+    expect(loader.value).toBeUndefined()
+    expect(subjects.value).toEqual({})
+    scope.stop()
+  })
+})
+
+vi.mock('monaco-editor', () => ({}))
+
+const dialect = (kind: PluginCelLanguage) => {
+  const language = getPluginFieldCelLanguage(kind, () => ({}))
+  return {
+    pluginState: 'plugins' in language.variables,
+    fallback: getCelCallables(undefined, language).some(callable => callable.name === 'default'),
+    hints: [getCelHint('plugins.key_auth.is_matched', language)?.kind, getCelHint('default(1, 2)', language)?.kind],
+  }
+}
+
+describe('getPluginFieldCelLanguage', () => {
+  it('rejects plugin state only in ACL rules, and default() only in expressible fields', () => {
+    expect(dialect('condition')).toEqual({ pluginState: true, fallback: true, hints: [undefined, undefined] })
+    expect(dialect('expression')).toEqual({ pluginState: true, fallback: false, hints: [undefined, 'default'] })
+    expect(dialect('acl-rule')).toEqual({ pluginState: false, fallback: true, hints: ['plugin-state', undefined] })
+  })
+})

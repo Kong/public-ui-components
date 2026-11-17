@@ -3,6 +3,15 @@
     <template #field-renderers>
       <FieldRenderer
         v-slot="slotProps"
+        :match="({ genericPath }) => CEL_FIELDS.includes(genericPath)"
+      >
+        <component
+          :is="celInput ? CelField : StringField"
+          v-bind="{ ...slotProps, ...celInput }"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
         :match="({ path }) => path === 'config.default_acl'"
       >
         <ArrayField
@@ -51,14 +60,23 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
-import { provide } from 'vue'
+import { computed, inject, provide } from 'vue'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { ArrayField, FieldRenderer, ObjectField, StringArrayField, MapField } from '@kong-ui-public/freeform'
+import { CEL_INPUT_KEY, ArrayField, CelField, FieldRenderer, ObjectField, StringArrayField, StringField, MapField } from '@kong-ui-public/freeform'
 import composables from '../../../../composables'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 
 const props = defineProps<Props>()
+const resolveCelInput = inject(CEL_INPUT_KEY, undefined)
+const celInput = computed(() => resolveCelInput?.('acl-rule'))
+
+const CEL_FIELDS = [
+  'config.default_acl.*.allow_when.*',
+  'config.default_acl.*.deny_when.*',
+  'config.tools.*.acl.allow_when.*',
+  'config.tools.*.acl.deny_when.*',
+]
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
