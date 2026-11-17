@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import StandardLayout from './StandardLayout.vue'
 import rawSchema from '../../../../fixtures/schemas/rate-limiting'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../schema-enhancement'
 import ConfigForm from '../components/ConfigForm.vue'
 
 import type { VueWrapper } from '@vue/test-utils'
@@ -18,12 +17,10 @@ import type { FormConfig, FormSchema, NamedFieldSchema, RecordFieldSchema, Union
  * from them, and neither is visible from a test that mounts `Form` directly —
  * which is exactly how this shipped broken once.
  */
-// The real form never sees the raw schema: `PluginEntityForm` runs it through
-// the same two steps first, which is what moves the plugin's `at_least_one_of`
-// into `config` and so decides which fields are default-visible.
-const schema = distributeEntityChecks(
-  appendEntityChecksFromMetadata('rate-limiting', rawSchema as unknown as FormSchema),
-)
+// The form gets the raw schema: `PluginConfigurationForm` appends the plugin's
+// `at_least_one_of` and moves it into `config`, which decides which fields are
+// default-visible.
+const schema = rawSchema as unknown as FormSchema
 
 globalThis.ResizeObserver = class {
   observe() {}

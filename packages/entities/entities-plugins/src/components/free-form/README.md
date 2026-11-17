@@ -185,12 +185,13 @@ Key props passed to free-form components:
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |
 | `onValidityChange` | `(event) => void` | Callback for free-form validity updates |
 
-Schema enhancement pipeline (in PluginEntityForm):
+Schema enhancement pipeline (in PluginConfigurationForm, so every host of the free-form `Form` gets it):
 
 ```
-rawSchema -> appendEntityChecksFromMetadata(pluginName, schema)
-          -> distributeEntityChecks(schema)
-          -> freeformSchema
+schema -> appendEntityChecksFromMetadata(pluginName, schema)
+       -> distributeEntityChecks(schema)
+       -> convertConfigSetsToArrays(schema)
+       -> the schema the form renders
 ```
 
 ## Custom Field Rendering

@@ -9,7 +9,7 @@
     :data-plugin-name="pluginName"
     :data-testid="formTestId"
     :render-rules="renderRules"
-    :schema="schema"
+    :schema="finalSchema"
     tag="div"
     @change="handleDataChange"
   >
@@ -59,9 +59,10 @@ import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
 import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
-import type { FieldRendererRule, FormConfig } from '@kong-ui-public/freeform'
+import type { FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from './RedisSelector.vue'
+import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from '../schema-enhancement'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
 
 defineOptions({ inheritAttrs: false })
@@ -79,6 +80,20 @@ const formRef = useTemplateRef('form')
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO, undefined)
 
 const configFieldRenderers = computed<FieldRendererRule[]>(() => props.fieldRenderers ?? [])
+
+/**
+ * The schema the form renders.
+ *
+ * Entity checks from the plugin metadata are appended and distributed to the level of
+ * the fields they cover, so each check sits beside the fields it validates.
+ *
+ * `set` fields become arrays: freeform shows a set as tags (string elements) or as an
+ * enum with no options (any other elements), so a set of records gets no item fields at
+ * all. A Kong `set` value is a JSON array.
+ */
+const finalSchema = computed<FormSchema>(() => convertConfigSetsToArrays(
+  distributeEntityChecks(appendEntityChecksFromMetadata(props.pluginName, props.schema)),
+))
 
 const formTestId = computed(() => attrs['data-testid'] ?? 'ff-plugin-configuration-form')
 
@@ -118,5 +133,5 @@ defineExpose({
   getEmptyValue: () => formRef.value?.getEmptyValue(),
 })
 
-useSchemaExposer(() => props.schema, instanceId)
+useSchemaExposer(() => finalSchema.value, instanceId)
 </script>
