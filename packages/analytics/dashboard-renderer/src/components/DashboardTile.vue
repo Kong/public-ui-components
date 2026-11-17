@@ -293,9 +293,14 @@ const {
 
 const fieldLabel = composables.useFieldLabel()
 
+// These renderers run their own queries and don't read supplied data, so they keep the query behavior.
+const QUERY_ONLY_TILE_TYPES: DashboardTileType[] = ['golden_signals', 'top_talkers']
+
 // An explicit `undefined` means the host is loading the data, so check whether `data` was passed, not its value.
 const isDataPassed = composables.useIsPropPassed('data')
-const suppliedData = computed<SuppliedTileData | undefined>(() => isDataPassed.value ? { value: data } : undefined)
+const suppliedData = computed<SuppliedTileData | undefined>(() => (
+  isDataPassed.value && !QUERY_ONLY_TILE_TYPES.includes(definition.chart.type) ? { value: data } : undefined
+))
 // Supplied data has no query to refresh.
 const showRefreshAction = computed<boolean>(() => showRefresh && !suppliedData.value)
 

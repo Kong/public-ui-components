@@ -111,7 +111,8 @@ With `data`:
   are hidden.
 - Zoom emits `tile-time-range-zoom`. Fetch data for the new time range and
   pass it to `data`.
-- `chart-data` emits the supplied data, and CSV export uses it.
+- Chart tiles that take `ExploreResultV4` emit the supplied data in
+  `chart-data`, and CSV export uses it.
 - The renderer checks only the top-level shape of the data, such as its
   `data` and `meta` fields.
 - `golden_signals` and `top_talkers` tiles don't support `data`. They run

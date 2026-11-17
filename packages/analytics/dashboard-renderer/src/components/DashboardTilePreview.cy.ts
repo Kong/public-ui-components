@@ -602,6 +602,21 @@ describe('<DashboardTilePreview /> with supplied data', () => {
     expectNoBridgeQuery()
   })
 
+  it('stops querying when the host starts passing data after mount', () => {
+    const onChartData = cy.spy().as('chartData')
+    mountPreview({ definition: timeseriesDefinition, passData: false, attrs: { onChartData } }).then(({ wrapper }) => {
+      cy.get('@queryFn').should('have.been.calledOnce').then(() => {
+        const suppliedResult = { ...exploreResult, meta: { ...exploreResult.meta, query_id: 'supplied' } }
+
+        return wrapper.setProps({ data: suppliedResult }).then(() => {
+          cy.get('@chartData').should('have.been.calledWith', suppliedResult)
+          cy.get('.refresh-button').should('not.exist')
+          cy.get('@queryFn').should('have.been.calledOnce')
+        })
+      })
+    })
+  })
+
   it('runs the query when data is not passed', () => {
     mountPreview({ definition: timeseriesDefinition, passData: false })
 

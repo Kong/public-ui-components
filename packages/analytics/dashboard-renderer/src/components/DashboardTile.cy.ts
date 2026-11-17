@@ -551,6 +551,30 @@ describe('<DashboardTile />', () => {
       cy.get('@queryFn').should('not.have.been.called')
     })
 
+    it('keeps the refresh action on tile types that ignore supplied data', () => {
+      cy.mount(DashboardTile, {
+        props: {
+          data: suppliedData,
+          definition: {
+            chart: { type: 'golden_signals' },
+            query: { datasource: 'api_usage' },
+          } as TileDefinition,
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          showRefresh: true,
+          tileId: '1',
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+          },
+        },
+      })
+
+      cy.getTestId('tile-refresh-button-1').should('exist')
+    })
+
     it('exports the supplied data without running a query', () => {
       const queryFn = cy.stub().as('queryFn')
 
