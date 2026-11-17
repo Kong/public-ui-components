@@ -20,7 +20,7 @@
       :title="f('latency_circuit.label')"
     />
 
-    <AdvancedFields hide-general-fields>
+    <AdvancedFields>
       <div class="cb-advanced">
         <section
           v-if="has('config.identifier')"

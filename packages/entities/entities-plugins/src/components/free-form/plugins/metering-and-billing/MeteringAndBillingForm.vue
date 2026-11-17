@@ -197,7 +197,6 @@
     <AdvancedFields
       class="ff-advanced-fields-container"
       data-testid="ff-advanced-fields-container"
-      hide-general-fields
     >
       <div class="ff-mb-queue">
         <KLabel class="ff-mb-queue-label">
