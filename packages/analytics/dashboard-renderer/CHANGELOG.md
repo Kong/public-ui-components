@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.4.7...%40kong-ui-public%2Fdashboard-renderer%4010.5.0) (2026-11-17)
+
+### Features
+
+* **analytics:** use config driven requests/explore link [MA-5273] ([#4061](https://github.com/Kong/public-ui-components/issues/4061)) ([62c5bc6](https://github.com/Kong/public-ui-components/commit/62c5bc664e64128388e2fee09215bf9447c14100))
+
+
 ## [10.4.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.4.6...%40kong-ui-public%2Fdashboard-renderer%4010.4.7) (2026-11-16)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

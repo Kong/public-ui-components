@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.9.0...%40kong-ui-public%2Fanalytics-utilities%4014.10.0) (2026-11-17)
+
+### Features
+
+* **analytics:** use config driven requests/explore link [MA-5273] ([#4061](https://github.com/Kong/public-ui-components/issues/4061)) ([62c5bc6](https://github.com/Kong/public-ui-components/commit/62c5bc664e64128388e2fee09215bf9447c14100))
+
+
 # [14.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.8.1...%40kong-ui-public%2Fanalytics-utilities%4014.9.0) (2026-11-16)
 
 ### Features
