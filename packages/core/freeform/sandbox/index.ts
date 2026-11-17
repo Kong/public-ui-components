@@ -30,6 +30,11 @@ const router = createRouter({
       name: 'field-errors',
       component: () => import('./pages/FieldErrorsDemo.vue'),
     },
+    {
+      path: '/split-fields',
+      name: 'split-fields',
+      component: () => import('./pages/SplitFieldsDemo.vue'),
+    },
   ],
 })
 

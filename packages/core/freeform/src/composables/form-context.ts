@@ -179,7 +179,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 
-    const { revealTarget, registerFieldElement, reveal } = createFieldReveal({
+    const { revealTarget, registerFieldElement, isFieldRendered, findCoveringElement, reveal } = createFieldReveal({
       formData: innerData,
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
@@ -192,6 +192,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
       isFieldHidden,
+      isFieldRendered,
     })
 
     return {
@@ -215,6 +216,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getEmptyOrDefault,
       revealTarget,
       registerFieldElement,
+      findCoveringElement,
       /**
        * Reveals the field at a data path, see `createFieldReveal`
        */

@@ -87,6 +87,21 @@ describe('createFieldErrors', () => {
     expect(getFieldErrors('')).toEqual([])
   })
 
+  it('should leave an error unmatched when no mounted field renders it', () => {
+    const error = { path: 'tls.client_cert', message: 'invalid' }
+    const { unmatchedErrors } = createFieldErrors({
+      errors: [error],
+      formData,
+      getSchema,
+      getKey,
+      isFieldHidden: () => false,
+      // e.g. every record that could show it leaves it out with `omit`
+      isFieldRendered: path => path !== 'tls.client_cert',
+    })
+
+    expect(unmatchedErrors.value).toEqual([error])
+  })
+
   it('should give a field its own errors, or with `deep` the errors below it too', () => {
     const own = { path: 'tls', message: 'own' }
     const child = { path: 'tls.client_cert', message: 'child' }

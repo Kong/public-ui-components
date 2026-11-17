@@ -132,6 +132,7 @@ All exports below are re-exported from the package root (`render-rules.ts` only 
 | File | Exports | Purpose |
 |---|---|---|
 | `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue, getEmptyOrDefault/getEmptyValue |
+| `reveal-open.ts` | `useRevealOpen(container, open)` | Opens a section that keeps its fields mounted while closed (e.g. `KCollapse`) when a reveal heads for a field inside it |
 | `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors, emptyOrDefaultValue, emptyValue |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
 | `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getEmptyOrDefault, getEmptyValue, getSelectItems, getLabelAttributes |
@@ -353,7 +354,9 @@ const result = await formRef.value?.reveal('config.redis.host')
 
 The field names in an entity checks alert (`EntityChecksAlert`, shown at the top of a record) are links that reveal the field, resolved against the record's path, e.g. `redis.host` on `config` reveals `config.redis.host`.
 
-A custom container opens itself for a reveal through `useField(name).revealTarget`: the path being revealed while it is the field itself or inside it, `null` otherwise. Containers that are not field paths (custom tabs and sections) are not supported yet.
+A custom container opens itself for a reveal through `useField(name).revealTarget`: the path being revealed while it is the field itself or inside it, `null` otherwise.
+
+A section that is not a field path but keeps its fields mounted while closed (e.g. `KCollapse`, which uses `v-show`) opens itself with `useRevealOpen(container, open)`: `open` is called when the field that renders the target is inside `container`. The form knows which field that is because every mounted field registers itself, and a record split with `omit` covers only the fields it renders. Try it in the sandbox's **Split fields** page. A section that unmounts its fields while closed is not supported.
 
 ### Field Errors
 
@@ -369,7 +372,7 @@ A custom container opens itself for a reveal through `useField(name).revealTarge
 | Display only | The form only shows the errors. Turning a server response into `errors`, and when to set or clear them, is up to the host. Showing errors and revealing fields are separate: a host that lists the errors can call `reveal(error.path)` when one is clicked |
 | Where an error shows | A field shows its own errors. A record, array or map shows only errors on itself, never a count of the ones inside. A set or a JSON field is one field, so it also shows the errors of its items (`tags.1`) |
 | Structure changes | An error belongs to the item it was raised on, not to its index. When an array item or a map entry is removed through the form, its errors are dropped and the errors of later array items move to their new index; when a map key is renamed, its errors follow it. The form emits the new list through `update:errors`, so bind `v-model:errors`. Whether an error still holds after the user edits the value is not decided here: that is up to the host |
-| Unmatched errors | An error no field can show in the current state — its path is malformed or not in the schema, names a map key that isn't in the data, sits under a record or array item without a value, or is hidden by a render rule — is left out of the form and listed in the exposed `unmatchedErrors`, for the host to show elsewhere |
+| Unmatched errors | An error no field can show in the current state — its path is malformed or not in the schema, names a map key that isn't in the data, sits under a record or array item without a value, is hidden by a render rule, or is rendered by no mounted field (e.g. every record that could show it leaves it out with `omit`) — is left out of the form and listed in the exposed `unmatchedErrors`, for the host to show elsewhere |
 
 A custom field component gets its errors from `useField(name)`: `fieldErrors` (its own and those below it), `ownFieldErrors`, and `fieldErrorMessage` (`fieldErrors` as one line). The `FieldErrors` component renders a list of them.
 

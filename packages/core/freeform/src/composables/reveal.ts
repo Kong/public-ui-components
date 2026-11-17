@@ -1,4 +1,4 @@
-import { nextTick, shallowRef, type VNode } from 'vue'
+import { nextTick, shallowReactive, shallowRef, type VNode } from 'vue'
 import { get } from 'lodash-es'
 import * as utils from '../utils'
 import { FOCUSABLE_SELECTOR } from '../constants'
@@ -43,6 +43,27 @@ export interface FieldElementEntry {
   /** The field path, with key IDs for map entries */
   path: () => string
   element: () => Element | null
+  /**
+   * Child fields it leaves out, e.g. `ObjectField`'s `omit`. The entry stands
+   * for its path and everything below it except these.
+   */
+  exclude?: () => string[] | undefined
+}
+
+/**
+ * Whether the entry stands for the field at `fieldPath`: its own path, or a
+ * path below it that is not in a child it leaves out
+ */
+function entryCovers(entry: FieldElementEntry, fieldPath: string): boolean {
+  const path = entry.path()
+  if (fieldPath === path) {
+    return true
+  }
+  if (!utils.isWithinPath(fieldPath, path)) {
+    return false
+  }
+  const child = utils.toArray(fieldPath)[utils.toArray(path).length]
+  return !entry.exclude?.()?.includes(child)
 }
 
 type PathMapOptions = {
@@ -97,7 +118,9 @@ export function createFieldReveal(options: PathMapOptions) {
    */
   const revealTarget = shallowRef<string | null>(null)
 
-  const fieldElements = new Set<FieldElementEntry>()
+  // Reactive, so what depends on which fields are mounted (e.g. matching
+  // errors) follows records expanding and tabs switching
+  const fieldElements = shallowReactive(new Set<FieldElementEntry>())
 
   function registerFieldElement(entry: FieldElementEntry) {
     fieldElements.add(entry)
@@ -121,6 +144,43 @@ export function createFieldReveal(options: PathMapOptions) {
       }
     }
     return null
+  }
+
+  /**
+   * The mounted field that most closely stands for `fieldPath`: the field
+   * itself, or the deepest ancestor that renders it (see `entryCovers`)
+   */
+  function findCoveringEntry(fieldPath: string): FieldElementEntry | null {
+    let found: FieldElementEntry | null = null
+    let foundDepth = -1
+    for (const entry of fieldElements) {
+      if (!entryCovers(entry, fieldPath)) {
+        continue
+      }
+      const depth = utils.toArray(entry.path()).length
+      if (depth > foundDepth) {
+        found = entry
+        foundDepth = depth
+      }
+    }
+    return found
+  }
+
+  /**
+   * Whether a mounted field shows the field at `fieldPath`, now or once the
+   * user expands it. A field left out with `omit` everywhere is not.
+   */
+  function isFieldRendered(fieldPath: string): boolean {
+    return !!findCoveringEntry(fieldPath)
+  }
+
+  /**
+   * The element of the mounted field that most closely stands for
+   * `fieldPath`, visible or not, so a collapsed section can tell whether the
+   * field is inside it
+   */
+  function findCoveringElement(fieldPath: string): Element | null {
+    return findCoveringEntry(fieldPath)?.element() ?? null
   }
 
   /**
@@ -216,6 +276,8 @@ export function createFieldReveal(options: PathMapOptions) {
   return {
     revealTarget,
     registerFieldElement,
+    isFieldRendered,
+    findCoveringElement,
     reveal,
   }
 }

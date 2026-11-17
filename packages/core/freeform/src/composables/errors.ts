@@ -14,7 +14,8 @@ import type { UnionFieldSchema } from '../form-schema'
  * An error is matched when a field can show it in the current state. It is
  * unmatched when its path is malformed or not in the schema, names a map key
  * that isn't in the data, sits under a record or array item that has no
- * value (e.g. a record that is switched off), or is hidden by a render rule.
+ * value (e.g. a record that is switched off), is hidden by a render rule, or
+ * no mounted field renders it (e.g. it is left out with `omit` everywhere).
  */
 export function createFieldErrors(options: {
   errors: MaybeRefOrGetter<FieldError[] | undefined>
@@ -22,10 +23,15 @@ export function createFieldErrors(options: {
   getSchema: (path: string) => UnionFieldSchema | undefined
   getKey: (id: KeyId) => string | undefined
   isFieldHidden: (path: string) => boolean
+  /**
+   * Whether a mounted field shows the field at a path, now or once expanded.
+   * Without it, every field in the schema counts as rendered.
+   */
+  isFieldRendered?: (fieldPath: string) => boolean
   /** Called with the errors rewritten after the data's structure changed */
   onChange?: (errors: FieldError[]) => void
 }) {
-  const { formData, getSchema, getKey, isFieldHidden, onChange } = options
+  const { formData, getSchema, getKey, isFieldHidden, isFieldRendered, onChange } = options
 
   /**
    * The nearest ancestor of `fieldPath` that is a set or a JSON field
@@ -89,6 +95,13 @@ export function createFieldErrors(options: {
       if (isFieldHidden(path)) {
         return null
       }
+    }
+
+    // The schema has it, but a custom form may still render it nowhere, e.g.
+    // CommonForm splits `config` into two records that `omit` each other's
+    // fields, and a field both leave out shows in neither
+    if (isFieldRendered && !isFieldRendered(fieldPath)) {
+      return null
     }
 
     return fieldPath

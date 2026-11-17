@@ -1,5 +1,5 @@
 <template>
-  <KCollapse
+  <RevealCollapse
     v-model="advancedCollapsed"
     data-testid="view-advanced"
     :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
@@ -28,14 +28,14 @@
       </template>
       <slot />
     </div>
-  </KCollapse>
+  </RevealCollapse>
 </template>
 
 <script setup lang="ts">
 import { Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
 import { ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { KCollapse } from '@kong/kongponents'
+import RevealCollapse from './RevealCollapse.vue'
 import english from '../../../locales/en.json'
 
 defineProps<{
