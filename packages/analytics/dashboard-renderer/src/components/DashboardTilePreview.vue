@@ -49,7 +49,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
 const root = useTemplateRef('root')
 const tileRef = useTemplateRef('dashboard-tile')
@@ -105,6 +105,11 @@ const isDataPassed = composables.useIsPropPassed('data')
 const dataProps = computed(() => isDataPassed.value ? { data } : {})
 
 const chartNotConfigured = computed(() => {
+  // A `requests` scatter tile plots the query's metric, so supplied data can't replace it.
+  if (isRequestsChartDefinition(definition)) {
+    return !definition.query.metric
+  }
+
   // Supplied data needs no query, so the query's metrics and columns don't matter.
   if (isDataPassed.value) {
     return false

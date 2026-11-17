@@ -189,6 +189,25 @@ describe('<DashboardTilePreview />', () => {
     cy.getTestId('test-stub').should('not.exist')
   })
 
+  it('passes requests scatter definitions with a metric to DashboardTile', () => {
+    const definition = {
+      chart: {
+        type: 'scatter',
+        chart_title: 'Latency',
+      },
+      query: {
+        datasource: 'requests',
+        metric: 'latencies_response_ms',
+      },
+    } as TileDefinition
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.getTestId('test-stub').should('exist')
+    expectTilePropIs('definition', definition)
+  })
+
   it('passes table chart definitions to DashboardTile without showing the chart empty state', () => {
     const definition: TileDefinition = {
       chart: {
@@ -586,6 +605,17 @@ describe('<DashboardTilePreview /> with supplied data', () => {
 
     cy.getTestId('chart-not-configured-empty-state').should('not.exist')
     cy.get('.tile-content canvas').should('exist')
+  })
+
+  it('shows the "Chart not configured" state for a requests scatter tile with no metric', () => {
+    mountPreview({
+      definition: { ...scatterDefinition, query: { datasource: 'requests' } } as TileDefinition,
+      data: requestsResult,
+    })
+
+    cy.getTestId('chart-not-configured-empty-state').should('exist')
+    cy.get('.tile-content canvas').should('not.exist')
+    expectNoBridgeQuery()
   })
 
   it('emits tile-time-range-zoom on zoom without running a query', () => {
