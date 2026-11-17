@@ -157,8 +157,15 @@ const mockQueryProvider = {
     {
       name: 'api_usage',
       showInUI: true,
+      showRequestsLink: true,
       fields: [],
       timeRangeOptions: ['15m', '1h', '24h', '7d', '30d'],
+    },
+    {
+      name: 'platform_usage',
+      showInUI: true,
+      fields: [],
+      timeRangeOptions: ['7d', '30d'],
     },
     {
       name: 'managed_cache_usage',
