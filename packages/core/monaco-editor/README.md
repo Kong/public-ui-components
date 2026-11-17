@@ -7,6 +7,7 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
 - [Usage](#usage)
   - [Install](#install)
   - [Register](#register)
+- [CEL input](#cel-input)
 - [MonacoEditor Component](#monacoeditor-component)
   - [Props](#props)
   - [Events](#events)
@@ -102,6 +103,12 @@ app.component('MonacoEditor', MonacoEditor)
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 </script>
 ```
+
+## CEL language support
+
+Import configurable CEL declarations, completion, hover, signature help, and hints from `@kong-ui-public/monaco-editor/languages/cel`. `defineCelLanguage()` composes only the variables and functions supplied by the host; authorized records are supplied through its declarations. The language API can be attached to any Monaco editor with `attachCelLanguage()`.
+
+The reusable form input lives in `@kong-ui-public/freeform`. See [CEL input and host configuration](../freeform/README.md#cel-input) for standalone and Freeform examples, including an AI Manager dialect without Gateway request globals.
 
 ## MonacoEditor Component
 
