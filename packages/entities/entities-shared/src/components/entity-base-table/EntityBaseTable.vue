@@ -392,6 +392,23 @@ const { hideTableToolbar, handleStateChange } = composables.useTableState(() => 
 
 const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
+// Non-hidable columns are always visible, including on load: a column made non-hidable after
+// a user hid it has no checkbox in the column visibility menu to show it again
+const showNonHidableColumns = (preferences: TablePreferences): TablePreferences => {
+  const columnVisibility = preferences.columnVisibility
+  if (!columnVisibility) {
+    return preferences
+  }
+
+  headers.value.forEach((header: InternalHeader) => {
+    if ('hidable' in header && header.hidable === false) {
+      columnVisibility[header.key] = true
+    }
+  })
+
+  return preferences
+}
+
 // Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
 // for localStorage of user's table preferences across tables, orgs and users
 //
@@ -401,17 +418,17 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 // column visibility per key instead of taking it wholesale: a stored choice always wins,
 // and keys the user has never decided on take the default - otherwise a column meant to be
 // hidden by default would show up for every user who loaded the table before it existed.
+// The merge always builds a new `columnVisibility`, so `showNonHidableColumns` never mutates
+// the shared core defaults or the `defaultTablePreferences` prop.
 const resolveTablePreferences = (): TablePreferences => {
   const stored = getTablePreferences(cacheId.value, props.defaultTablePreferences)
   const defaultColumnVisibility = props.defaultTablePreferences?.columnVisibility
 
-  return {
+  return showNonHidableColumns({
     ...DEFAULT_USER_TABLE_PREFERENCES,
     ...stored,
-    ...(defaultColumnVisibility
-      ? { columnVisibility: { ...defaultColumnVisibility, ...stored.columnVisibility } }
-      : {}),
-  }
+    columnVisibility: { ...defaultColumnVisibility, ...stored.columnVisibility },
+  })
 }
 
 const tablePreferences = ref<TablePreferences>(resolveTablePreferences())
@@ -427,17 +444,7 @@ const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams
 })
 
 const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): void => {
-  tablePreferences.value = newTablePreferences
-  // Iterate over each header and check if it's non-hidable
-  headers.value.forEach((header: InternalHeader) => {
-    if (!('hidable' in header) || !tablePreferences.value.columnVisibility) {
-      return
-    }
-    // If the header is non-hidable, always make it visible
-    if (header.hidable === false) {
-      tablePreferences.value.columnVisibility[header.key] = true
-    }
-  })
+  tablePreferences.value = showNonHidableColumns(newTablePreferences)
 
   if (cacheId.value) {
     setTablePreferences(cacheId.value, newTablePreferences)
