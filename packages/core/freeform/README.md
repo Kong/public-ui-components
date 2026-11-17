@@ -45,6 +45,8 @@ src/
     ├── ExpressionEditor.vue # The collapsible expression editor; StringField/NumberField render one inline, or a host places it itself
     ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
     ├── FieldErrors.vue      # The list of a field's errors, rendered under its control
+    ├── CelInput.vue         # Standalone CEL input using the shared Monaco language API
+    ├── CelField.vue         # CEL form binding; selected by the frontend cel schema type or a custom renderer
     ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
     ├── SlideTransition.vue  # Height-animated collapse transition
     ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
@@ -55,6 +57,60 @@ src/
 Everything here is generic: no plugin registry, no layout, no scope/Redis/credential UI. That kind of
 entities-plugins-specific code (layout, plugin registry, Redis types, credential fields, etc.) stays in
 `@kong-ui-public/entities-plugins`, which depends on this package — never the other way around.
+
+## CEL input
+
+Import `CelInput` from `@kong-ui-public/freeform` and language declarations from `@kong-ui-public/monaco-editor/languages/cel`. The input works standalone without a Freeform `Form` parent. Each editor uses its own dialect for completion, hover, signature help, and hints. In an AI Manager ACL form the host can pass its authorized records and runtime capabilities directly.
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import { KTextArea } from '@kong/kongponents'
+import { CelInput } from '@kong-ui-public/freeform'
+import '@kong-ui-public/freeform/style.css'
+import {
+  defineCelLanguage, kongConsumer, kongConsumerGroup, kongPrincipal,
+  type CelSubjects,
+} from '@kong-ui-public/monaco-editor/languages/cel'
+
+const expression = defineModel<string>({ required: true })
+const props = defineProps<{ enableCelEditor: boolean, subjects: CelSubjects, supportsPrincipalGroups: boolean }>()
+const records = () => props.subjects
+const language = computed(() => defineCelLanguage([
+  kongConsumer(records),
+  kongConsumerGroup(records),
+  kongPrincipal(records, { supportsPrincipalGroups: props.supportsPrincipalGroups }),
+], { standardCallables: ['has', 'matches', 'contains', 'startsWith', 'endsWith', 'all', 'exists', 'map', 'filter'] }))
+</script>
+
+<template>
+  <CelInput v-if="enableCelEditor" v-model="expression" label="ACL expression" :language="language" />
+  <KTextArea v-else v-model="expression" label="ACL expression" />
+</template>
+```
+
+Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
+
+Inside a Freeform form, the frontend can declare `type: 'cel'` with a resolved `language`. The existing schema-type dispatcher maps it to `CelField`, which binds the form value to `CelInput`. The submitted value remains a string. This type is a frontend declaration, not a Gateway API schema type.
+
+```ts
+import type { FormSchema } from '@kong-ui-public/freeform'
+
+const schema: FormSchema = {
+  type: 'record',
+  fields: [{ rule: { type: 'cel', language } }],
+}
+```
+
+Custom layouts can select `CelField` directly, preserving their existing `StringField` fallback and its props and slots. Plugin condition fields keep `type: 'string'` in their schema; the renderer alone selects the input:
+
+```vue
+<component :is="celInput ? CelField : StringField" v-bind="celInput" name="condition" />
+```
+
+`CEL_INPUT_KEY` supplies a resolver returning `{ language }` or `undefined` for a frontend-selected key. `ExpressionEditor` requests `expression`; plugin renderers request `condition` or `acl-rule`. Those renderers own selection, including live rollout changes; `Field`, `StringField`, and `EnhancedInput` do not resolve CEL configuration. `CelField` owns only CEL form binding, empty values, blur commits, visibility, and version locks. The standalone `CelInput` needs no form parent.
+
+The host supplies rollout/version gates, language declarations, and authorized records. Freeform does not fetch records or infer Gateway globals. The Monaco runtime loads when a CEL input is rendered.
 
 ## Schema System
 
@@ -71,8 +127,8 @@ interface FormSchema {
 
 type NamedFieldSchema = { [name: string]: UnionFieldSchema }
 
-// Field types: string | number | integer | boolean | foreign | array | set | map | record | json | function
-type UnionFieldSchema = StringFieldSchema | NumberLikeFieldSchema | BooleanFieldSchema
+// Field types: cel | string | number | integer | boolean | foreign | array | set | map | record | json | function
+type UnionFieldSchema = CelFieldSchema | StringFieldSchema | NumberLikeFieldSchema | BooleanFieldSchema
   | ArrayFieldSchema | SetFieldSchema | MapFieldSchema | RecordFieldSchema
   | JsonFieldSchema | ForeignFieldSchema
 ```
@@ -83,6 +139,7 @@ Defined in `field-dispatch.ts`. The mapping logic:
 
 | Schema Type | `one_of` present? | Component |
 |---|---|---|
+| `cel` | - | `CelField` |
 | `string` | No | `StringField` |
 | `string` | Yes | `EnumField` |
 | `number` | `integer` | No | `NumberField` |
@@ -97,7 +154,7 @@ Defined in `field-dispatch.ts`. The mapping logic:
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
 
-This is the whole mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a host rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
+This is the plain-field mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a host rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
 
 ### Entity Checks
 

@@ -44,5 +44,4 @@ export const selectors = {
   // inside are keyed by the source field, which the twin path cannot recover.
   expression: (path: string) => `[data-expression-for="${path}"]`,
   expressionAddBtn: (path: string) => `[data-expression-for="${path}"] [data-testid^="ff-expression-add-"]`,
-  expressionInput: (path: string) => `[data-expression-for="${path}"] textarea`,
 }

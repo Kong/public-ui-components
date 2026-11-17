@@ -48,8 +48,8 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
     "install:pw": "playwright install chromium",
-    "test:pw": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
-    "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
+    "test:pw": "pnpm run build:filler && cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
+    "test:pw:open": "pnpm run build:filler && cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
   },
   "dependencies": {
     "compare-versions": "^6.1.1",
@@ -61,6 +61,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "^3.3.0",
     "@kong/icons": "^1.58.0",
     "@kong/kongponents": "^9.64.0",
@@ -77,6 +78,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.5.3",
     "@kong/icons": "^1.64.0",
@@ -84,6 +86,7 @@
     "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.65.0",
     "@vueuse/core": "^15.0.0",
+    "monaco-editor": "^0.55.1",
     "vue": "^3.5.43",
     "vue-router": "^5.4.0"
   },

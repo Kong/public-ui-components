@@ -1,4 +1,5 @@
 import StringField from './components/StringField.vue'
+import CelField from './components/CelField.vue'
 import BooleanField from './components/BooleanField.vue'
 import ArrayField from './components/ArrayField.vue'
 import ObjectField from './components/ObjectField.vue'
@@ -15,6 +16,8 @@ import type { UnionFieldSchema } from './form-schema'
 
 function pickFieldComponent(schema: UnionFieldSchema | undefined) {
   switch (schema?.type) {
+    case 'cel':
+      return CelField
     case 'string':
       return ('one_of' in schema) ? EnumField : StringField
     case 'boolean':

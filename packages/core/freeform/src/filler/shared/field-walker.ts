@@ -53,6 +53,7 @@ export function getHandlerType(fieldSchema: UnionFieldSchema): HandlerType {
   if (isEnumField(fieldSchema)) return 'enum'
 
   switch (fieldSchema.type) {
+    case 'cel': return 'expression'
     case 'string': return 'string'
     case 'number':
     case 'integer': return 'number'

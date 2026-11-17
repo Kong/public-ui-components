@@ -1,4 +1,7 @@
+import type { CelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
+
 export type FieldSchemaType = 'string'
+  | 'cel'
   | 'number'
   | 'integer'
   | 'boolean'
@@ -154,6 +157,12 @@ export interface ExpressionFieldSchema extends StringFieldSchema {
   expressible_kong_type: FieldSchemaType
 }
 
+/** Frontend-only editor type. The submitted value remains a string. */
+export interface CelFieldSchema extends FieldSchema {
+  type: 'cel'
+  language: CelLanguage
+}
+
 export interface NumberLikeFieldSchema extends FieldSchema {
   type: 'number' | 'integer'
 
@@ -208,6 +217,7 @@ export interface ForeignFieldSchema extends FieldSchema {
 }
 
 export type UnionFieldSchema = StringFieldSchema
+  | CelFieldSchema
   | NumberLikeFieldSchema
   | BooleanFieldSchema
   | ArrayFieldSchema

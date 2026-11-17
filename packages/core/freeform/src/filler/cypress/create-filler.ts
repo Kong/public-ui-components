@@ -3,6 +3,7 @@ import type {
   FormSchema,
   UnionFieldSchema,
   StringFieldSchema,
+  CelFieldSchema,
   NumberLikeFieldSchema,
   BooleanFieldSchema,
   SetFieldSchema,
@@ -79,7 +80,7 @@ export function createFiller(
         mergedHandlers.fillForeign({ fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
         break
       case 'expression':
-        mergedHandlers.fillExpression({ fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema, value })
+        mergedHandlers.fillExpression({ fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema | CelFieldSchema, value })
         break
       case 'expressionArray':
         // No container and no add-button: the rows belong to the source array

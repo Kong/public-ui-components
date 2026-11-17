@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/experimental-ct-vue'
-import { createFiller } from './create-filler'
+import { createFiller } from '@kong-ui-public/freeform/filler/playwright'
 import type { FormSchema } from '../../form-schema'
 import FormWrapper from './FormWrapper.vue'
 import MultilineMapFormWrapper from './MultilineMapFormWrapper.vue'

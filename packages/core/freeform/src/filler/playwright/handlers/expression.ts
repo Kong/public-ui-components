@@ -1,23 +1,23 @@
-import type { ExpressionFieldSchema } from '../../../form-schema'
+import type { CelFieldSchema, ExpressionFieldSchema } from '../../../form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
+import { fillString } from './string'
 
 /**
- * Fills the expression twin of an `expressible` field. Unlike a plain string
- * field, its textarea only exists once the "Add expression" trigger has been
- * used, so open it first when the field is still collapsed.
+ * Fills an expression twin or a frontend CEL field. Only twins can be collapsed
+ * behind an "Add expression" trigger; explicit CEL fields render directly.
  */
-export async function fillExpression(option: HandlerOption<ExpressionFieldSchema>): Promise<void> {
-  const { page, fieldKey, value } = option
+export async function fillExpression(option: HandlerOption<ExpressionFieldSchema | CelFieldSchema>): Promise<void> {
+  const { page, fieldKey, fieldSchema } = option
 
-  const input = page.locator(selectors.expressionInput(fieldKey))
+  if (fieldSchema.type !== 'cel') {
+    await page.locator(selectors.expression(fieldKey)).waitFor({ state: 'visible' })
+    const trigger = page.locator(selectors.expressionAddBtn(fieldKey))
 
-  if (await input.count() === 0) {
-    await page.locator(selectors.expressionAddBtn(fieldKey)).click()
+    if (await trigger.count()) {
+      await trigger.click()
+    }
   }
 
-  await input.clear()
-  if (value !== undefined && value !== null && value !== '') {
-    await input.fill(String(value))
-  }
+  await fillString(option)
 }

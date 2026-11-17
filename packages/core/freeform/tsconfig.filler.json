@@ -23,6 +23,7 @@
     "src/filler/**/*"
   ],
   "exclude": [
+    "src/filler/fixtures/**",
     "src/filler/**/*.cy.ts",
     "src/filler/**/*.spec.ts",
     "src/filler/**/*.pw.ts"
