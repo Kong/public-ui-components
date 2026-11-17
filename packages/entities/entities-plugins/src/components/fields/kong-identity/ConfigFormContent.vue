@@ -46,7 +46,6 @@
   <AdvancedFields
     class="ff-advanced-fields-container"
     data-testid="ff-advanced-fields-container"
-    hide-general-fields
   >
     <div
       v-if="isKonnect && hasPrincipals && selectedMode === 'kong-identity' && hasPrincipalsErrorOnMiss"

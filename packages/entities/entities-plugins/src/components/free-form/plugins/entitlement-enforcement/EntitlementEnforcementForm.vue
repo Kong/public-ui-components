@@ -127,7 +127,6 @@
       <AdvancedFields
         class="ff-entitlement-enforcement-advanced-fields-container"
         data-testid="ff-entitlement-enforcement-config-advanced-fields"
-        hide-general-fields
       >
         <div>
           <h3 class="ff-entitlement-enforcement-cache-sync-heading">
@@ -181,7 +180,6 @@
       <AdvancedFields
         class="ff-entitlement-enforcement-advanced-fields-container"
         data-testid="ff-entitlement-enforcement-advanced-settings"
-        hide-general-fields
       >
         <!-- Response mapping — fixed 5 rows, editable status/message -->
 

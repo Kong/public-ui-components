@@ -5,46 +5,18 @@
     :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
   >
     <div class="ff-advanced-fields">
-      <template v-if="!hideGeneralFields">
-        <Field
-          v-if="getSchema('instance_name')"
-          name="instance_name"
-        />
-        <Field
-          v-if="getSchema('protocols')"
-          name="protocols"
-        />
-        <StringArrayField
-          v-if="getSchema('tags')"
-          help="e.g. tag1, tag2, tag3"
-          name="tags"
-          :placeholder="t('plugins.form.fields.tags.placeholder')"
-        />
-        <StringField
-          v-if="getSchema('condition')"
-          name="condition"
-          :placeholder="t('plugins.form.fields.condition.placeholder')"
-        />
-      </template>
       <slot />
     </div>
   </RevealCollapse>
 </template>
 
 <script setup lang="ts">
-import { Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
 import { ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import RevealCollapse from './RevealCollapse.vue'
 import english from '../../../locales/en.json'
 
-defineProps<{
-  hideGeneralFields?: boolean
-}>()
-
 const { t } = createI18n<typeof english>('en-us', english)
-
-const { getSchema } = useFormShared()
 
 const advancedCollapsed = ref(true)
 </script>

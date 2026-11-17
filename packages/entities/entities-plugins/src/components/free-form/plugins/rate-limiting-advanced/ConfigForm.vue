@@ -17,7 +17,7 @@
     <ErrorMessageForm />
   </ObjectField>
 
-  <AdvancedFields hide-general-fields>
+  <AdvancedFields>
     <ObjectField
       as-child
       name="config"
