@@ -105,14 +105,10 @@ const isDataPassed = composables.useIsPropPassed('data')
 const dataProps = computed(() => isDataPassed.value ? { data } : {})
 
 const chartNotConfigured = computed(() => {
-  // A `requests` scatter tile plots the query's metric, so supplied data can't replace it.
-  if (isRequestsChartDefinition(definition)) {
-    return !definition.query.metric
-  }
-
   // Supplied data needs no query, so the query's metrics and columns don't matter.
+  // A `requests` scatter tile is the exception: it plots supplied data by the query's metric.
   if (isDataPassed.value) {
-    return false
+    return isRequestsChartDefinition(definition) && !definition.query.metric
   }
 
   if (isTableDefinition.value) {
