@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.3.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.2.5...%40kong-ui-public%2Fentities-plugins%4011.3.0) (2026-11-17)
+
+### Features
+
+* **entities-plugins:** add an error summary for the plugin form ([#4071](https://github.com/Kong/public-ui-components/issues/4071)) ([cbf102b](https://github.com/Kong/public-ui-components/commit/cbf102baa2a62a81be40a96bf105b1fc47c2ec4c))
+* **freeform:** match errors to rendered fields and reveal into sections ([#4070](https://github.com/Kong/public-ui-components/issues/4070)) ([40b824d](https://github.com/Kong/public-ui-components/commit/40b824de55826a0376a04475995f65c3f3398c6a))
+
+
 ## [11.2.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.2.4...%40kong-ui-public%2Fentities-plugins%4011.2.5) (2026-11-15)
 
 ### Bug Fixes

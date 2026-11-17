@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.11.2...%40kong-ui-public%2Ffreeform%400.12.0) (2026-11-17)
+
+### Features
+
+* **freeform:** match errors to rendered fields and reveal into sections ([#4070](https://github.com/Kong/public-ui-components/issues/4070)) ([40b824d](https://github.com/Kong/public-ui-components/commit/40b824de55826a0376a04475995f65c3f3398c6a))
+
+
 ## [0.11.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.11.1...%40kong-ui-public%2Ffreeform%400.11.2) (2026-11-15)
 
 ### Bug Fixes
