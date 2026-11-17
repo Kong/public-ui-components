@@ -27,6 +27,30 @@
       >
         <KBadge>Info</KBadge>
       </template>
+      <!--
+        PageLayoutTabs slotted into the header's tab row, the way a host whose architecture
+        prevents it from passing the `tabs` prop down would render it. The same `tabs` set
+        drives it, so the router-view below and the header's tab-row styling stay in sync;
+        the badge on the Keys tab is rendered through the component's own `tab-${key}` slot
+        to show the slot contract is intact when it is slotted in.
+      -->
+      <template
+        v-if="showSlottedTabs"
+        #tabs
+      >
+        <PageLayoutTabs :tabs="tabs">
+          <template #tab-keys="{ tab }">
+            {{ tab.label }}
+
+            <KBadge
+              appearance="decorative"
+              size="small"
+            >
+              Slotted
+            </KBadge>
+          </template>
+        </PageLayoutTabs>
+      </template>
       <template #tab-gateway-services="{ tab }">
         {{ tab.label }}
 
@@ -105,7 +129,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, provide, reactive, ref, useTemplateRef } from 'vue'
-import { AboutCard, NEW_APPEARANCE_INJECTION_KEY, PageLayout } from '../../src'
+import { AboutCard, NEW_APPEARANCE_INJECTION_KEY, PageLayout, PageLayoutTabs } from '../../src'
 import type { AboutCardRow, PageLayoutAnchor, PageLayoutTab, PageShortcutData } from '../../src'
 import { AddIcon, MoreIcon } from '@kong/icons'
 import NestedPage from './NestedPage.vue'
@@ -113,7 +137,7 @@ import AnchorSections from './AnchorSections.vue'
 import { buildSandboxAnchors } from '../anchors'
 import { useSandboxControls } from '../composables/useSandboxControls'
 
-const { newAppearance, showEmptyState, showTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
+const { newAppearance, showEmptyState, showTabs, showSlottedTabs, showAnchorNavigation, showFavoriteButton, showTitleAfter, showAside, showAskKaiButton, aboutCardIsLoading } = useSandboxControls()
 
 // One section is targeted by its element rather than by a selector, so the anchors are rebuilt
 // once the sections have mounted and handed their refs up. PageLayout picks the change up on its

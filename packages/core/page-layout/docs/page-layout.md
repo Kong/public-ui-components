@@ -10,6 +10,7 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Slots](#slots)
   - [Usage example](#usage-example)
 - [Tabbed Navigation](#tabbed-navigation)
+  - [Slotted usage](#slotted-usage)
   - [Tab Overflow](#tab-overflow)
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
@@ -154,6 +155,30 @@ Optional slot for a custom page title. Use it when the default `<h1>` needs to b
 #### `title-after`
 
 An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
+
+#### `tabs`
+
+An optional slot rendered in place of the tab bar `PageLayout` would render from the `tabs` prop. Slot a [`PageLayoutTabs`](#slotted-usage) here when the host's architecture prevents it from passing the `tabs` prop down to its `PageLayout` — the component lands in exactly the position the internal one occupies, so the header's tab-row styling (bottom border behavior, sticky sizing) and the `<router-view>` content routing keep working unchanged. `PageLayoutTabs` is the component `PageLayout` uses for tab navigation; do not slot a different one in its place.
+
+The slot is rendered under the same conditions as the internal tab row: only when the `tabs` prop is non-empty (the `tabs` prop still gates the tab row and the `<router-view>` it enables) and the header is not in the empty state.
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    :tabs="tabs"
+    title="My Control Plane"
+  >
+    <template #tabs>
+      <PageLayoutTabs :tabs="tabs" />
+    </template>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout, PageLayoutTabs } from '@kong-ui-public/page-layout'
+</script>
+```
 
 #### `aside`
 
@@ -372,7 +397,38 @@ When neither a title nor breadcrumbs are provided, the header renders only its a
 
 ## Tabbed Navigation
 
-The `PageLayoutTabs` component is an internal component used by `PageLayout` to render the tab bar. It is not exported directly but its behavior is configured through the `tabs` prop on `PageLayout`.
+The `PageLayoutTabs` component renders the tab bar. `PageLayout` renders it internally from the `tabs` prop; the component is exported only so a host whose architecture prevents it from passing the `tabs` prop down to its `PageLayout` can render the tab bar itself and slot it back into the header through the [`tabs` slot](#tabs). It is not meant to be used apart from `PageLayout`: `PageLayoutTabs` is the one component `PageLayout` uses for tab navigation, and a slotted one lands in exactly the position the internal one occupies, so the header's borders, sticky sizing and `<router-view>` behavior stay exactly as they are with the prop-driven tab bar.
+
+### Slotted usage
+
+A host that cannot provide the `tabs` prop to `PageLayout` renders `PageLayoutTabs` itself — with the same tab set it would have passed as the prop — and slots it into the `tabs` slot:
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #tabs>
+      <PageLayoutTabs :tabs="tabs" />
+    </template>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout, PageLayoutTabs } from '@kong-ui-public/page-layout'
+import type { PageLayoutTab } from '@kong-ui-public/page-layout'
+
+const tabs: PageLayoutTab[] = [
+  { key: 'overview', label: 'Overview', to: '/overview', active: true },
+  { key: 'settings', label: 'Settings', to: '/settings' },
+]
+</script>
+```
+
+The `tabs` prop on `PageLayout` still gates the slot: keep it non-empty (the same tab set the slot renders is the natural choice) so the header renders the tab row and routes the content through `<router-view>`, exactly as it does for the prop-driven tab bar.
+
+Its props, slots (including the per-tab `tab-${tab.key}` slot), overflow behavior and navigation handling are the same as described below for the tab bar inside `PageLayout`. It requires `vue` and `vue-router` to be initialized in the host application, just like `PageLayout`.
 
 ### Tab Overflow
 
@@ -402,7 +458,7 @@ interface PageLayoutTab {
   to: string | RouteLocationRaw
   /** Is the navbar tab active */
   active?: boolean
-  /** The data-testid attribute; auto-generated as `${key}-tab-link` if not provided */
+  /** The data-testid attribute; auto-generated as `page-layout-tab-${key}` if not provided */
   dataTestId?: string
 }
 ```
@@ -413,7 +469,7 @@ interface PageLayoutTab {
 | `label`      | `string`                     | Yes      | -                  | Display text of the tab                                    |
 | `to`         | `string \| RouteLocationRaw` | Yes      | -                  | Navigation target: a Vue Router route object or URL string |
 | `active`     | `boolean`                    | No       | `undefined`        | Whether the tab is currently active (highlighted)          |
-| `dataTestId` | `string`                     | No       | `${key}-tab-link`  | Custom `data-testid` attribute for testing                 |
+| `dataTestId` | `string`                     | No       | `page-layout-tab-${key}` | Custom `data-testid` attribute for testing            |
 
 ## Anchor Navigation
 

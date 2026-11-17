@@ -17,6 +17,8 @@ A set of Kong UI page layout components that provides a structured page header w
 ## Included components
 
 - `PageLayout.vue`
+- `PageLayoutTabs.vue`
+- `AboutCard.vue`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -33,7 +35,7 @@ yarn add @kong-ui-public/page-layout
 Import the component within your application.
 
 ```ts
-import { PageLayout } from '@kong-ui-public/page-layout'
+import { PageLayout, PageLayoutTabs } from '@kong-ui-public/page-layout'
 ```
 
 ## TypeScript interfaces

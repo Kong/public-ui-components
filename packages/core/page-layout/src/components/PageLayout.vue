@@ -108,7 +108,7 @@
         </div>
       </div>
       <PageLayoutTabs
-        v-if="renderTabs()"
+        v-if="renderTabs() && !slots.tabs"
         :tabs="tabs"
       >
         <template
@@ -121,6 +121,10 @@
           />
         </template>
       </PageLayoutTabs>
+      <slot
+        v-if="renderTabs() && slots.tabs"
+        name="tabs"
+      />
     </div>
 
     <div
