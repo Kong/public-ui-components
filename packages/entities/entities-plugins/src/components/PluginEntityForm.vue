@@ -55,7 +55,7 @@ import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallow
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
-import { CEL_INPUT_KEY } from '@kong-ui-public/freeform'
+import { provideCelInput } from '@kong-ui-public/freeform'
 import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
@@ -282,7 +282,7 @@ const effectivePluginName = computed(() => props.sourcePlugin || props.pluginNam
 const celEditorEnabled = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
 const { subjects: celSubjects, loader: loadCelSubjects } = useCelSubjectLoader(() => props.config)
 
-provide(CEL_INPUT_KEY, (language) => {
+provideCelInput((language) => {
   if (!isPluginCelEnabled(language, props.config, unref(celEditorEnabled))) return
   // Start a shared host lookup only when a rendered field opts into CEL.
   void loadCelSubjects.value?.().catch(() => {})

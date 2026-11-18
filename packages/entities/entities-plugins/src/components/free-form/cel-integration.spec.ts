@@ -74,6 +74,17 @@ describe('plugin form CEL rollout', () => {
     expect(wrapper.get('[data-testid="ff-config.allow_when.0"]').element.tagName).toBe('INPUT')
   })
 
+  it('keeps plain ACL group names in a string input without loading CEL subjects', async () => {
+    const getCelSubjects = vi.fn().mockResolvedValue({})
+    const wrapper = mount(PluginEntityForm, {
+      props: { config: { ...config, getCelSubjects }, pluginName: 'acl', rawSchema: schema, record: { config: { allow: ['team'] } } },
+      global,
+    })
+    await flushPromises()
+    expect(wrapper.get('[data-testid="ff-config.allow.0"]').element).toBeInstanceOf(HTMLInputElement)
+    expect(getCelSubjects).not.toHaveBeenCalled()
+  })
+
   it('selects the condition renderer without changing its string schema or value', async () => {
     const enabled = ref(true)
     const wrapper = mount(PluginEntityForm, {

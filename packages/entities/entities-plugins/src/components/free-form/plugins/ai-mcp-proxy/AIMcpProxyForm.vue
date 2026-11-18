@@ -60,16 +60,15 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
-import { computed, inject, provide } from 'vue'
+import { provide } from 'vue'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { CEL_INPUT_KEY, ArrayField, CelField, FieldRenderer, ObjectField, StringArrayField, StringField, MapField } from '@kong-ui-public/freeform'
+import { ArrayField, CelField, FieldRenderer, ObjectField, StringArrayField, StringField, MapField, useCelInput } from '@kong-ui-public/freeform'
 import composables from '../../../../composables'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 
 const props = defineProps<Props>()
-const resolveCelInput = inject(CEL_INPUT_KEY, undefined)
-const celInput = computed(() => resolveCelInput?.('acl-rule'))
+const celInput = useCelInput('acl-rule')
 
 const CEL_FIELDS = [
   'config.default_acl.*.allow_when.*',
