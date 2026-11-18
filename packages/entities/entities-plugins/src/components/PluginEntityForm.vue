@@ -8,6 +8,7 @@
         :is="freeformComponent"
         :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
+        :form-config="formConfig"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
@@ -55,13 +56,12 @@ import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallow
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
-import { provideCelInput } from '@kong-ui-public/freeform'
-import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
+import type { GlobalAction, ArrayFieldSchema, FormConfig, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
 import { FEATURE_FLAGS } from '../constants'
-import { getPluginFieldCelLanguage, isPluginCelEnabled, useCelSubjectLoader } from './free-form/cel-editor'
+import { getPluginFieldCelLanguage, isPluginCelEnabled, supportsPluginCelKind, useCelSubjectLoader } from './free-form/cel-editor'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -282,12 +282,16 @@ const effectivePluginName = computed(() => props.sourcePlugin || props.pluginNam
 const celEditorEnabled = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
 const { subjects: celSubjects, loader: loadCelSubjects } = useCelSubjectLoader(() => props.config)
 
-provideCelInput((language) => {
-  if (!isPluginCelEnabled(language, props.config, unref(celEditorEnabled))) return
-  // Start a shared host lookup only when a rendered field opts into CEL.
-  void loadCelSubjects.value?.().catch(() => {})
-  return { language: getPluginFieldCelLanguage(language, props.config, () => celSubjects.value) }
-})
+const formConfig = computed<FormConfig>(() => ({
+  celExpression: {
+    enabled: isPluginCelEnabled(props.config, unref(celEditorEnabled)),
+    getSupportedLanguages(kind) {
+      if (!supportsPluginCelKind(kind, props.config)) return []
+      void loadCelSubjects.value?.().catch(() => {})
+      return [getPluginFieldCelLanguage(kind, props.config, () => celSubjects.value)]
+    },
+  },
+}))
 
 const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
 const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))

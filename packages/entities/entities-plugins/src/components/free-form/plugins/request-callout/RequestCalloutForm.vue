@@ -1,7 +1,7 @@
 <template>
   <DynamicLayout
     v-bind="props"
-    :form-config="formConfig"
+    :form-config="{ ...props.formConfig, ...formConfig }"
     :on-form-change="handleFormChange"
   >
     <template #field-renderers>

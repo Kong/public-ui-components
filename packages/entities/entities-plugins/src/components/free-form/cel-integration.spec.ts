@@ -5,6 +5,7 @@ import { KTabs } from '@kong/kongponents'
 import PluginEntityForm from '../PluginEntityForm.vue'
 import { FEATURE_FLAGS } from '../../constants'
 import schema from '../../../fixtures/schemas/acl'
+import circuitBreakerSchema from '../../../fixtures/schemas/kong-circuit-breaker'
 import { CelInput, Form } from '@kong-ui-public/freeform'
 import { getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
@@ -134,6 +135,20 @@ describe('plugin form CEL rollout', () => {
     await wrapper.setProps({ config: { ...config, dataPlaneVersions: ['3.15.0.0'] } })
     expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input')
     expectStringSchema()
+  })
+
+  it('preserves plugin-specific form preparation alongside the CEL rollout', async () => {
+    const wrapper = mount(PluginEntityForm, {
+      props: {
+        config: { ...config, dataPlaneVersions: ['3.17.0.0'] },
+        pluginName: 'kong-circuit-breaker',
+        rawSchema: { type: 'record', ...circuitBreakerSchema },
+        record: {},
+      },
+      global: { ...global, provide: { ...global.provide, [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true } },
+    })
+    await vi.waitFor(() => expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input'))
+    expect(wrapper.getComponent(Form).emitted('change')?.at(-1)?.[0]).toMatchObject({ config: { policy_circuit: { enabled: true } } })
   })
 
   it('selects CEL explicitly for MCP default and tool ACL rows', async () => {

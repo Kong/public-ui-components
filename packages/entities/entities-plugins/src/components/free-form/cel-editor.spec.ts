@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { effectScope, shallowRef } from 'vue'
-import { getPluginFieldCelLanguage, isPluginCelEnabled, useCelSubjectLoader } from './cel-editor'
+import { getPluginFieldCelLanguage, isPluginCelEnabled, supportsPluginCelKind, useCelSubjectLoader } from './cel-editor'
 import { getCelCallables, getCelHint, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
-import type { PluginCelLanguage } from './cel-editor'
+import type { CelExpressionKind } from '@kong-ui-public/freeform'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 
 const konnect: KonnectPluginFormConfig = { app: 'konnect', apiBaseUrl: '', controlPlaneId: 'cp' }
@@ -10,17 +10,18 @@ const manager: KongManagerPluginFormConfig = { app: 'kongManager', apiBaseUrl: '
 
 describe('plugin CEL rendering', () => {
   it('gates explicitly selected languages without matching field paths or plugin names', () => {
+    expect(isPluginCelEnabled(konnect, true)).toBe(true)
+    expect(isPluginCelEnabled(konnect, false)).toBe(false)
     for (const language of ['expression', 'acl-rule']) {
-      expect(isPluginCelEnabled(language, konnect, true)).toBe(true)
-      expect(isPluginCelEnabled(language, konnect, false)).toBe(false)
+      expect(supportsPluginCelKind(language, konnect)).toBe(true)
     }
-    expect(isPluginCelEnabled('config.allow_when.0', konnect, true)).toBe(false)
-    expect(isPluginCelEnabled('unknown-language', konnect, true)).toBe(false)
+    expect(supportsPluginCelKind('config.allow_when.0', konnect)).toBe(false)
+    expect(supportsPluginCelKind('unknown-language', konnect)).toBe(false)
   })
 
   it('requires every Konnect data plane to support CEL for condition', () => {
     const condition = (dataPlaneVersions?: string[]) =>
-      isPluginCelEnabled('condition', { ...konnect, dataPlaneVersions }, true)
+      supportsPluginCelKind('condition', { ...konnect, dataPlaneVersions })
     expect(condition()).toBe(false)
     expect(condition([])).toBe(false)
     expect(condition(['3.15.0.0', '3.14.0.0'])).toBe(false)
@@ -28,13 +29,13 @@ describe('plugin CEL rendering', () => {
   })
 
   it('lets Kong Manager opt in independently and requires known Gateway support for condition', () => {
-    expect(isPluginCelEnabled('acl-rule', manager, true)).toBe(false)
+    expect(isPluginCelEnabled(manager, true)).toBe(false)
     const optedIn = { ...manager, enableCelEditor: true }
-    expect(isPluginCelEnabled('acl-rule', optedIn, false)).toBe(true)
-    expect(isPluginCelEnabled('condition', optedIn, false)).toBe(false)
-    const condition = (version: string) => isPluginCelEnabled('condition', {
+    expect(isPluginCelEnabled(optedIn, false)).toBe(true)
+    expect(supportsPluginCelKind('condition', optedIn)).toBe(false)
+    const condition = (version: string) => supportsPluginCelKind('condition', {
       ...optedIn, gatewayInfo: { edition: 'enterprise', version },
-    }, false)
+    })
     expect(condition('3.14.0.0')).toBe(false)
     expect(condition('3.15.0.0')).toBe(true)
   })
@@ -90,7 +91,7 @@ describe('CEL record lookups', () => {
 
 vi.mock('monaco-editor', () => ({}))
 
-const dialect = (kind: PluginCelLanguage) => {
+const dialect = (kind: CelExpressionKind) => {
   const language = getPluginFieldCelLanguage(kind, konnect, () => ({}))
   return {
     pluginState: 'plugins' in language.variables,

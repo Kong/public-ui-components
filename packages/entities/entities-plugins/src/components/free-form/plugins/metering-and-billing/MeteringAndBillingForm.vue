@@ -1,7 +1,7 @@
 <template>
   <DynamicLayout
     v-bind="props"
-    :form-config="formConfig"
+    :form-config="{ ...props.formConfig, ...formConfig }"
     :plugin-config-description="t('plugins.free-form.metering-and-billing.sections.plugin_config.description')"
   >
     <template #field-renderers>

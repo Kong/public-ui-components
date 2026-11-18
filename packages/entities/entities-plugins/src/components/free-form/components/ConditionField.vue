@@ -20,10 +20,10 @@
     </KLabel>
 
     <component
-      :is="celInput ? CelField : StringField"
-      v-bind="celInput"
+      :is="language ? CelField : StringField"
       :input-id="conditionFieldId"
       :label="''"
+      :language="language"
       name="condition"
       :placeholder="t('plugins.form.fields.condition.placeholder')"
     >
@@ -46,13 +46,14 @@
 <script setup lang="ts">
 import { KTooltip } from '@kong/kongponents'
 import { InfoIcon } from '@kong/icons'
-import { useId } from 'vue'
-import { CelField, StringField, useCelInput } from '@kong-ui-public/freeform'
+import { computed, useId } from 'vue'
+import { CelField, StringField, useCelExpression } from '@kong-ui-public/freeform'
 import externalLinks from '../../../external-links'
 import useI18n from '../../../composables/useI18n'
 
 const conditionFieldId = useId()
-const celInput = useCelInput('condition')
+const { getSupportedLanguages } = useCelExpression()
+const language = computed(() => getSupportedLanguages('condition')[0])
 const { i18n: { t }, i18nT } = useI18n()
 </script>
 

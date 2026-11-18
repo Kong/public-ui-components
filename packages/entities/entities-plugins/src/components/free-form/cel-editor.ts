@@ -1,13 +1,13 @@
 import { shallowRef, watch } from 'vue'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
+import type { CelExpressionKind } from '@kong-ui-public/freeform'
 import {
   defineCelLanguage, kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet,
   kongPluginState, kongPrincipal, kongRoute, kongService,
 } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { CelLanguage, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 
-export type PluginCelLanguage = 'expression' | 'condition' | 'acl-rule'
 type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
 
 function allTargetsSupport(config: Config, minimum: string): boolean {
@@ -27,7 +27,7 @@ function allTargetsSupport(config: Config, minimum: string): boolean {
  * except plugin state in ACL rules and `default()` in expressible fields.
  * `records` reads the records that value suggestions name.
  */
-export const getPluginFieldCelLanguage = (kind: PluginCelLanguage, config: Config, records: () => CelSubjects): CelLanguage => {
+export const getPluginFieldCelLanguage = (kind: CelExpressionKind, config: Config, records: () => CelSubjects): CelLanguage => {
   return defineCelLanguage([
     kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongContext(),
     kongPrincipal(records, { supportsPrincipalGroups: allTargetsSupport(config, '3.17.0.0-rc.1') }),
@@ -36,14 +36,11 @@ export const getPluginFieldCelLanguage = (kind: PluginCelLanguage, config: Confi
   ])
 }
 
-/** Rollout policy for language keys explicitly selected by the frontend form. */
-export function isPluginCelEnabled(
-  language: string,
-  config: Config,
-  konnectEnabled: boolean,
-): language is PluginCelLanguage {
-  const enabled = config.app === 'kongManager' ? config.enableCelEditor : konnectEnabled
-  if (!enabled) return false
+export function isPluginCelEnabled(config: Config, konnectEnabled: boolean) {
+  return config.app === 'kongManager' ? !!config.enableCelEditor : konnectEnabled
+}
+
+export function supportsPluginCelKind(language: string, config: Config): language is CelExpressionKind {
   if (language === 'expression' || language === 'acl-rule') return true
 
   // Gateway 3.14 evaluates condition as ATC. Offer CEL only for known 3.15+ targets.
