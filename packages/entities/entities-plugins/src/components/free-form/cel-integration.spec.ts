@@ -5,6 +5,7 @@ import { KTabs } from '@kong/kongponents'
 import PluginEntityForm from '../PluginEntityForm.vue'
 import { FEATURE_FLAGS } from '../../constants'
 import schema from '../../../fixtures/schemas/acl'
+import rateLimitingSchema from '../../../fixtures/schemas/rate-limiting'
 import circuitBreakerSchema from '../../../fixtures/schemas/kong-circuit-breaker'
 import { CelInput, Form } from '@kong-ui-public/freeform'
 import { getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
@@ -135,6 +136,33 @@ describe('plugin form CEL rollout', () => {
     await wrapper.setProps({ config: { ...config, dataPlaneVersions: ['3.15.0.0'] } })
     expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input')
     expectStringSchema()
+
+    await wrapper.setProps({ config })
+    expect(wrapper.get('[data-testid="ff-condition"]').element.tagName).toBe('INPUT')
+  })
+
+  it('resolves an expanded expression from the host and shares its value with the plain textarea', async () => {
+    const getCelSubjects = vi.fn().mockResolvedValue({})
+    const enabled = ref(true)
+    const wrapper = mount(PluginEntityForm, {
+      props: {
+        config: { ...config, getCelSubjects },
+        pluginName: 'rate-limiting',
+        rawSchema: rateLimitingSchema,
+        record: { config: { minute: 10 } },
+      },
+      global: { ...global, provide: { [FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR]: enabled } },
+    })
+    expect(wrapper.findComponent(CelInput).exists()).toBe(false)
+    expect(getCelSubjects).not.toHaveBeenCalled()
+    await wrapper.get('[data-testid="ff-expression-add-config.minute"]').trigger('click')
+    const input = wrapper.getComponent(CelInput)
+    expect(input.attributes('data-testid')).toBe('ff-expressions.minute')
+    expect(getCelSubjects).toHaveBeenCalledTimes(1)
+    input.vm.$emit('update:modelValue', '42')
+    enabled.value = false
+    await flushPromises()
+    expect(wrapper.get('[data-testid="ff-expressions.minute"]').element).toHaveProperty('value', '42')
   })
 
   it('preserves plugin-specific form preparation alongside the CEL rollout', async () => {

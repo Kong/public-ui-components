@@ -13,7 +13,7 @@
     v-else
     v-bind="props"
     :config-sections="configSections"
-    :form-config="{ ...props.formConfig, ...formConfig }"
+    :form-config="formConfig"
   >
     <template #field-renderers>
       <!-- Customer: look_up_value_in -->

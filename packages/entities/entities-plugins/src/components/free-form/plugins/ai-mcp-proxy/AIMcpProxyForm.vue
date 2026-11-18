@@ -5,10 +5,9 @@
         v-slot="slotProps"
         :match="({ genericPath }) => CEL_FIELDS.includes(genericPath)"
       >
-        <component
-          :is="language ? CelField : StringField"
+        <PluginCelField
           v-bind="slotProps"
-          :language="language"
+          kind="acl-rule"
         />
       </FieldRenderer>
       <FieldRenderer
@@ -61,16 +60,15 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
-import { computed, provide } from 'vue'
+import { provide } from 'vue'
+import PluginCelField from '../../components/PluginCelField'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import { ArrayField, CelField, FieldRenderer, ObjectField, StringArrayField, StringField, MapField, useCelExpression } from '@kong-ui-public/freeform'
+import { ArrayField, FieldRenderer, ObjectField, StringArrayField, MapField } from '@kong-ui-public/freeform'
 import composables from '../../../../composables'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 
 const props = defineProps<Props>()
-const { getSupportedLanguages } = useCelExpression(() => props.formConfig)
-const language = computed(() => getSupportedLanguages('acl-rule')[0])
 
 const CEL_FIELDS = [
   'config.default_acl.*.allow_when.*',

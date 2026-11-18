@@ -1,12 +1,15 @@
-import { shallowRef, watch } from 'vue'
+import { computed, inject, shallowRef, unref, watch, type MaybeRef } from 'vue'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
-import type { CelExpressionKind } from '@kong-ui-public/freeform'
+import { FEATURE_FLAGS } from '../../constants'
+import { FORMS_API_KEY, FORMS_CONFIG } from './const'
 import {
   defineCelLanguage, kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet,
   kongPluginState, kongPrincipal, kongRoute, kongService,
 } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { CelLanguage, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
+
+export type CelExpressionKind = 'expression' | 'condition' | 'acl-rule'
 
 type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
 
@@ -36,15 +39,24 @@ export const getPluginFieldCelLanguage = (kind: CelExpressionKind, config: Confi
   ])
 }
 
-export function isPluginCelEnabled(config: Config, konnectEnabled: boolean) {
-  return config.app === 'kongManager' ? !!config.enableCelEditor : konnectEnabled
-}
+export function useCelInput() {
+  const config = inject<Config | undefined>(FORMS_CONFIG, undefined)
+  const featureFlag = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
+  const api = inject<{ celSubjects?: ReturnType<typeof useCelSubjectLoader> }>(FORMS_API_KEY, {})
+  const enabled = computed(() => config?.app === 'kongManager'
+    ? !!config.enableCelEditor
+    : config?.app === 'konnect' && unref(featureFlag))
 
-export function supportsPluginCelKind(language: string, config: Config): language is CelExpressionKind {
-  if (language === 'expression' || language === 'acl-rule') return true
+  function getLanguages(kind: CelExpressionKind): CelLanguage[] {
+    if (!enabled.value || !config) return []
+    // Gateway 3.14 evaluates condition as ATC. Every target must support CEL.
+    if (kind === 'condition' && !allTargetsSupport(config, '3.15')) return []
 
-  // Gateway 3.14 evaluates condition as ATC. Offer CEL only for known 3.15+ targets.
-  return language === 'condition' && allTargetsSupport(config, '3.15')
+    void api.celSubjects?.loader.value?.().catch(() => {})
+    return [getPluginFieldCelLanguage(kind, config, () => api.celSubjects?.subjects.value ?? {})]
+  }
+
+  return { enabled, getLanguages }
 }
 
 /** Share an in-flight or successful host lookup across the editors in this form. */

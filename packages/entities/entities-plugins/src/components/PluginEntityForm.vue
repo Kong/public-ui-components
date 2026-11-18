@@ -8,7 +8,6 @@
         :is="freeformComponent"
         :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
-        :form-config="formConfig"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
@@ -52,16 +51,16 @@ import {
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, unref, watch, type MaybeRef, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, type PropType } from 'vue'
+import { reactiveComputed } from '@vueuse/core'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
-import type { GlobalAction, ArrayFieldSchema, FormConfig, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
+import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
-import { FEATURE_FLAGS } from '../constants'
-import { getPluginFieldCelLanguage, isPluginCelEnabled, supportsPluginCelKind, useCelSubjectLoader } from './free-form/cel-editor'
+import { useCelSubjectLoader } from './free-form/cel-editor'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -261,38 +260,18 @@ const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => 
   })
 }
 
+// Descendants keep the same injected object when the host replaces its config.
+const liveConfig = reactiveComputed(() => ({ ...props.config }))
+provide(FORMS_CONFIG, liveConfig)
 provide(FORMS_API_KEY, {
   getOne,
   getAllV2,
   peek,
+  celSubjects: useCelSubjectLoader(() => liveConfig),
 })
-
-// shallowReactive keeps the same object identity so all descendants can
-// access properties directly (no .value unwrap needed), while staying live
-// when the host replaces the entire config prop reference (e.g. once an
-// async field like principalsCreationGuideVisible resolves).
-const liveConfig = shallowReactive({ ...(props.config as object) })
-watch(() => props.config, (newConfig) => {
-  Object.assign(liveConfig, newConfig)
-})
-provide(FORMS_CONFIG, liveConfig)
 
 // For cloned plugins, use the source plugin name for rendering decisions
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)
-const celEditorEnabled = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
-const { subjects: celSubjects, loader: loadCelSubjects } = useCelSubjectLoader(() => props.config)
-
-const formConfig = computed<FormConfig>(() => ({
-  celExpression: {
-    enabled: isPluginCelEnabled(props.config, unref(celEditorEnabled)),
-    getSupportedLanguages(kind) {
-      if (!supportsPluginCelKind(kind, props.config)) return []
-      void loadCelSubjects.value?.().catch(() => {})
-      return [getPluginFieldCelLanguage(kind, props.config, () => celSubjects.value)]
-    },
-  },
-}))
-
 const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))
 const freeformComponent = computed(() => getFreeFormComponent(effectivePluginName.value))
 

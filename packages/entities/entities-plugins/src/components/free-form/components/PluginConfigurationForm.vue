@@ -36,6 +36,11 @@
       </FieldRenderer>
 
       <slot name="field-renderers" />
+
+      <FieldRenderer
+        :component="PluginCelField"
+        :match="({ schema }) => isExpressionFieldSchema(schema)"
+      />
     </template>
 
     <template
@@ -58,9 +63,10 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
-import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
+import { Form, isExpressionFieldSchema, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
+import PluginCelField from './PluginCelField'
 import RedisSelector from './RedisSelector.vue'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from '../schema-enhancement'
 import type { PluginConfigurationBaseProps } from '../layout/provider'

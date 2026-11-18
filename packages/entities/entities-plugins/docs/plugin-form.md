@@ -169,7 +169,7 @@ Control if the vault secret picker is enabled for applicable fields.
 
 ### CEL editor
 
-The plugin form passes CEL settings through the Freeform configuration. Renderers call `useCelExpression()` to read the rollout flag (`enabled`) and call `getSupportedLanguages(kind)` with `condition`, `expression`, or `acl-rule`. The adapter returns one Gateway dialect for a supported kind. An empty list selects the existing string input. The condition schema stays `type: 'string'`.
+Plugin fields call `useCelInput()` to read the reactive `enabled` flag from the host context. Its `getLanguages(kind)` function accepts `condition`, `expression`, or `acl-rule` and returns the supported Gateway dialect. An empty list selects the existing string input. The condition schema stays `type: 'string'`.
 
 Konnect enables the editor by providing `FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR` as a boolean or Vue ref. Kong Manager opts in separately with `config.enableCelEditor: true`. For the plugin `condition` field, the host must also supply known CEL-compatible Gateway versions. Konnect uses `config.dataPlaneVersions` for all target data planes. Kong Manager uses `config.gatewayInfo` for its Enterprise Gateway. CEL conditions require Gateway 3.15 or later. The existing condition field visibility flag still applies.
 

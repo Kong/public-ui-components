@@ -43,10 +43,9 @@
       :name="`config.${mode}`"
     >
       <template #item="{ autofocus, fieldName }">
-        <component
-          :is="language ? CelField : StringField"
+        <PluginCelField
           :autofocus="autofocus"
-          :language="language"
+          :kind="isExpressionMode ? 'acl-rule' : null"
           :multiline="isExpressionMode"
           :name="fieldName"
           :placeholder="t(`plugins.free-form.acl.field.${mode}.placeholder`)"
@@ -68,7 +67,7 @@
               </template>
             </i18nT>
           </template>
-        </component>
+        </PluginCelField>
       </template>
     </ArrayField>
   </div>
@@ -77,8 +76,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useCelExpression, useFormShared, ArrayField, CelField, StringField } from '@kong-ui-public/freeform'
+import { useFormShared, ArrayField } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
+import PluginCelField from '../../components/PluginCelField'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 
@@ -112,8 +112,6 @@ const MODES = computed(() => ALL_MODES.filter((m) => !!getSchema(`config.${m}`))
 
 const mode = ref<AclMode>('allow')
 const isExpressionMode = computed(() => EXPRESSION_MODES.includes(mode.value))
-const { getSupportedLanguages } = useCelExpression()
-const language = computed(() => isExpressionMode.value ? getSupportedLanguages('acl-rule')[0] : undefined)
 
 // With only allow/deny available the radios are self-explanatory, and the tooltip
 // copy talks about a choice the Gateway version cannot offer — so drop it entirely.

@@ -1,43 +1,54 @@
 import { describe, expect, it, vi } from 'vitest'
-import { effectScope, shallowRef } from 'vue'
-import { getPluginFieldCelLanguage, isPluginCelEnabled, supportsPluginCelKind, useCelSubjectLoader } from './cel-editor'
+import { createApp, effectScope, ref, shallowRef, type MaybeRef } from 'vue'
+import { getPluginFieldCelLanguage, useCelInput, useCelSubjectLoader, type CelExpressionKind } from './cel-editor'
 import { getCelCallables, getCelHint, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
-import type { CelExpressionKind } from '@kong-ui-public/freeform'
+import { FEATURE_FLAGS } from '../../constants'
+import { FORMS_CONFIG } from './const'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 
 const konnect: KonnectPluginFormConfig = { app: 'konnect', apiBaseUrl: '', controlPlaneId: 'cp' }
 const manager: KongManagerPluginFormConfig = { app: 'kongManager', apiBaseUrl: '', workspace: 'default' }
 
-describe('plugin CEL rendering', () => {
-  it('gates explicitly selected languages without matching field paths or plugin names', () => {
-    expect(isPluginCelEnabled(konnect, true)).toBe(true)
-    expect(isPluginCelEnabled(konnect, false)).toBe(false)
-    for (const language of ['expression', 'acl-rule']) {
-      expect(supportsPluginCelKind(language, konnect)).toBe(true)
-    }
-    expect(supportsPluginCelKind('config.allow_when.0', konnect)).toBe(false)
-    expect(supportsPluginCelKind('unknown-language', konnect)).toBe(false)
+function fromHost(config?: KonnectPluginFormConfig | KongManagerPluginFormConfig, flag?: MaybeRef<boolean>) {
+  const app = createApp({})
+  if (config) app.provide(FORMS_CONFIG, config)
+  if (flag !== undefined) app.provide(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, flag)
+  return app.runWithContext(useCelInput)
+}
+
+describe('useCelInput', () => {
+  it('reads the rollout from the host and responds when its flag changes', () => {
+    const flag = ref(false)
+    const { enabled, getLanguages } = fromHost(konnect, flag)
+    expect(enabled.value).toBe(false)
+    expect(getLanguages('expression')).toEqual([])
+    flag.value = true
+    expect(enabled.value).toBe(true)
+    expect(getLanguages('expression')).toHaveLength(1)
+    expect(getLanguages('acl-rule')).toHaveLength(1)
+    expect(fromHost(konnect).enabled.value).toBe(false)
+    expect(fromHost(undefined, true).enabled.value).toBe(false)
   })
 
-  it('requires every Konnect data plane to support CEL for condition', () => {
-    const condition = (dataPlaneVersions?: string[]) =>
-      supportsPluginCelKind('condition', { ...konnect, dataPlaneVersions })
-    expect(condition()).toBe(false)
-    expect(condition([])).toBe(false)
-    expect(condition(['3.15.0.0', '3.14.0.0'])).toBe(false)
-    expect(condition(['3.15.0.0', '3.17.0.0'])).toBe(true)
+  it('requires every Konnect target to support CEL for condition', () => {
+    const languages = (dataPlaneVersions?: string[]) =>
+      fromHost({ ...konnect, dataPlaneVersions }, true).getLanguages('condition')
+    expect(languages()).toEqual([])
+    expect(languages([])).toEqual([])
+    expect(languages(['3.15.0.0', '3.14.0.0'])).toEqual([])
+    expect(languages(['3.15.0.0', '3.17.0.0'])).toHaveLength(1)
   })
 
   it('lets Kong Manager opt in independently and requires known Gateway support for condition', () => {
-    expect(isPluginCelEnabled(manager, true)).toBe(false)
+    expect(fromHost(manager, true).enabled.value).toBe(false)
     const optedIn = { ...manager, enableCelEditor: true }
-    expect(isPluginCelEnabled(optedIn, false)).toBe(true)
-    expect(supportsPluginCelKind('condition', optedIn)).toBe(false)
-    const condition = (version: string) => supportsPluginCelKind('condition', {
+    expect(fromHost(optedIn).enabled.value).toBe(true)
+    expect(fromHost(optedIn).getLanguages('condition')).toEqual([])
+    const languages = (version: string) => fromHost({
       ...optedIn, gatewayInfo: { edition: 'enterprise', version },
-    })
-    expect(condition('3.14.0.0')).toBe(false)
-    expect(condition('3.15.0.0')).toBe(true)
+    }).getLanguages('condition')
+    expect(languages('3.14.0.0')).toEqual([])
+    expect(languages('3.15.0.0')).toHaveLength(1)
   })
 })
 
