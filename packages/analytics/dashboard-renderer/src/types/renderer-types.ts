@@ -4,6 +4,7 @@ import type {
   ApiRequestsQuery,
   DashboardConfig,
   ScatterChartOptions,
+  TileLayout,
   TimeRangeV4,
   ValidDashboardChartQuery,
   ValidDashboardTableQuery,
@@ -32,6 +33,16 @@ export interface DashboardSection {
    * can be linked to (e.g. `#my-section`). No anchor is rendered when omitted.
    */
   anchorId?: string
+  /**
+   * renders a single tile per groupId. Each tileId per groupId is the tile that
+   * will be rendered when the label is selected. Shows a tabbed interface with
+   * label as the text for switching between tiles.
+   */
+  tileGroups?: Array<{
+    groupId: string
+    tileIdLabels: Array<[string, string]>
+    layout: TileLayout
+  }>
   definition: DashboardConfig
 }
 

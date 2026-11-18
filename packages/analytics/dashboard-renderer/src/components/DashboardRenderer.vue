@@ -78,6 +78,7 @@
               :context="getContextWithFilters(section.definition)"
               :definition="tile.meta as TileDefinition"
               :fit-to-content="fitToContent"
+              :group-tiles="(tile as any).groupTiles"
               :height="tile.layout.size.rows * (section.definition.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
               :hide-actions="!showTileActions"
               :is-fullscreen="isFullscreen"
@@ -235,8 +236,20 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
   return a.layout.position.col - b.layout.position.col
 }
 
-const getTiles = (config: DashboardConfig): Array<GridTile<TileDefinition>> => {
-  return config.tiles.map((tile: TileConfig) => {
+type TileGroup = NonNullable<DashboardSection['tileGroups']>[number]
+
+const getTileGroupMap = (section: DashboardSection): Record<string, TileGroup> => {
+  const map: Record<string, TileGroup> = {}
+  section.tileGroups?.forEach((group) => {
+    group.tileIdLabels.forEach(([tileId]) => {
+      map[tileId] = group
+    })
+  })
+  return map
+}
+
+const getTiles = (section: DashboardSection): Array<GridTile<TileDefinition>> => {
+  const allTiles = section.definition.tiles.map((tile: TileConfig) => {
     if (editable.value && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
@@ -273,9 +286,37 @@ const getTiles = (config: DashboardConfig): Array<GridTile<TileDefinition>> => {
       id: tile.id ?? crypto.randomUUID(),
     }
   })
+
+  const tileGroupMap = getTileGroupMap(section)
+  const byId = new Map(allTiles.map(t => [t.id, t]))
+  const emittedGroups = new Set<string>()
+
+  return allTiles.reduce<Array<GridTile<TileDefinition>>>((acc, tile) => {
+    const group = tileGroupMap[tile.id]
+    if (!group) {
+      acc.push(tile)
+      return acc
+    }
+    if (emittedGroups.has(group.groupId)) {
+      return acc
+    }
+    emittedGroups.add(group.groupId)
+
+    // One stable grid tile per group (keyed by the first tile's id) so switching tabs
+    // never changes the grid. DashboardTile switches between the members internally.
+    const groupTiles = group.tileIdLabels
+      .map(([id, label]) => ({ id, label, tile: byId.get(id) }))
+      .filter(({ tile }) => !!tile?.meta)
+      .map(({ id, label, tile }) => ({ id, label, definition: tile!.meta as TileDefinition }))
+    const first = byId.get(groupTiles[0]?.id)
+    if (first) {
+      acc.push({ ...first, layout: group.layout, groupTiles } as unknown as GridTile<TileDefinition>)
+    }
+    return acc
+  }, [])
 }
 
-const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => sections.value.map(section => getTiles(section.definition)))
+const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => sections.value.map(section => getTiles(section)))
 
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
@@ -349,7 +390,11 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>, index: number
     } as TileConfig
   })
 
-  model.tiles = updatedTiles.sort(tileSortFn)
+  // Tiles hidden behind a group tab aren't in the grid; keep them in the model.
+  const shownIds = new Set(updatedTiles.map(t => t.id))
+  const hiddenTiles = model.tiles.filter(t => t.id && !shownIds.has(t.id) && getTileGroupMap(sections.value[index])[t.id])
+
+  model.tiles = [...updatedTiles, ...hiddenTiles].sort(tileSortFn)
 }
 
 const updateScale = async () => {

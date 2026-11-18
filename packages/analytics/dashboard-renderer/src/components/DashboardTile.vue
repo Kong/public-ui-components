@@ -10,6 +10,16 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
+      v-if="groupTiles && groupTiles.length > 1"
+      class="group-tabs"
+    >
+      <KTabs
+        v-model="activeGroupTab"
+        data-testid="tile-group-tabs"
+        :tabs="groupTabs"
+      />
+    </div>
+    <div
       v-if="hasTileHeader && !isSlottableTile"
       class="tile-header"
     >
@@ -149,7 +159,7 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!isTableChartDefinition(definition) && !!requestsLinkKebabMenu"
+              v-if="!isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -247,7 +257,7 @@ import { storeToRefs } from 'pinia'
 import { KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
-import { KSegmentedControl } from '@kong/kongponents'
+import { KSegmentedControl, KTabs } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -260,8 +270,9 @@ const isActionMenuOpen = ref<boolean>(false)
 
 const {
   context,
-  definition,
+  definition: baseDefinition,
   fitToContent = false,
+  groupTiles,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
   isFullscreen,
@@ -274,6 +285,7 @@ const {
   context: DashboardRendererContext
   definition: TileDefinition
   fitToContent?: boolean
+  groupTiles?: Array<{ id: string, label: string, definition: TileDefinition }>
   height?: number
   hideActions?: boolean
   isFullscreen?: boolean
@@ -283,6 +295,19 @@ const {
   tileId: string | number
   tileType?: TileConfig['type']
 }>()
+
+const activeGroupTileId = ref<string>()
+
+// Switching between grouped tiles happens here so the rest of the dashboard is untouched.
+const activeDefinitionTileId = computed<string | undefined>(() =>
+  groupTiles?.find(t => t.id === activeGroupTileId.value)?.id ?? groupTiles?.[0]?.id,
+)
+
+const activeDefinition = computed<TileDefinition>(() =>
+  groupTiles?.find(t => t.id === activeGroupTileId.value)?.definition
+  ?? groupTiles?.[0]?.definition
+  ?? baseDefinition,
+)
 
 const fieldLabel = composables.useFieldLabel()
 
@@ -319,7 +344,7 @@ const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 
-const chart = computed(() => definition.chart)
+const chart = computed(() => activeDefinition.value.chart)
 const isSingleValue = computed<boolean>(() => chart.value.type === 'single_value')
 const tileTitle = computed<string | undefined>(() => {
   const title = 'chart_title' in chart.value ? chart.value.chart_title : undefined
@@ -327,10 +352,10 @@ const tileTitle = computed<string | undefined>(() => {
   // Single value tiles fall back to the metric name
   return title || (isSingleValue.value ? singleValueMetricLabel.value : undefined)
 })
-const tileDescription = computed<string | undefined>(() => definition.header_description)
+const tileDescription = computed<string | undefined>(() => activeDefinition.value.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableChartDefinition(definition) || isRequestsChartDefinition(definition)) {
+  if (isTableChartDefinition(activeDefinition.value) || isRequestsChartDefinition(activeDefinition.value)) {
     return false
   }
 
@@ -352,13 +377,13 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: toRef(() => definition),
+  definition: activeDefinition,
   context: readonly(toRef(() => context)),
 })
 
 const { issueQuery } = composables.useIssueQuery()
 
-watch(() => definition, async (newValue, oldValue) => {
+watch(activeDefinition, async (newValue, oldValue) => {
   await nextTick()
 
   if (titleRef.value) {
@@ -410,17 +435,17 @@ const componentEventHandlers = computed(() => ({
 }))
 
 const componentData = computed(() => {
-  const component = rendererLookup[definition.chart.type]
-  const isTableChart = isTableChartDefinition(definition)
+  const component = rendererLookup[activeDefinition.value.chart.type]
+  const isTableChart = isTableChartDefinition(activeDefinition.value)
 
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
-  const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsBounds = activeDefinition.value.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
   const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
   const rendererProps = {
-    query: definition.query,
+    query: activeDefinition.value.query,
     context: context,
     queryReady: queryReady,
     height: height - PADDING_SIZE * 2,
@@ -428,7 +453,7 @@ const componentData = computed(() => {
     zoomConfiguration: zoomConfiguration.value,
   }
   const chartRendererProps = {
-    chartOptions: definition.chart,
+    chartOptions: activeDefinition.value.chart,
     activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
     requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
@@ -440,7 +465,7 @@ const componentData = computed(() => {
     rendererProps: {
       ...rendererProps,
       ...(!isTableChart ? chartRendererProps : {}),
-      ...(['top_n', 'single_value'].includes(definition.chart.type) ? { fitToContent } : {}),
+      ...(['top_n', 'single_value'].includes(activeDefinition.value.chart.type) ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,
@@ -452,11 +477,11 @@ const componentData = computed(() => {
 })
 
 const badgeData = computed<string | null>(() => {
-  if (isTableChartDefinition(definition)) {
+  if (isTableChartDefinition(activeDefinition.value)) {
     return null
   }
 
-  const query = definition.query
+  const query = activeDefinition.value.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -483,7 +508,7 @@ const badgeData = computed<string | null>(() => {
 })
 
 const rangeUnsupported = computed(() => {
-  const query = definition.query
+  const query = activeDefinition.value.query
   const datasource = query?.datasource
   const supportedTimeRanges = datasource ? datasourceConfigMap.value[datasource]?.timeRangeOptions : undefined
   const tileTimeRange = query && 'time_range' in query ? query.time_range : undefined
@@ -545,7 +570,7 @@ const showMetricSelector = computed(() => (
 ))
 
 const singleValueMetricLabel = computed<string | undefined>(() => {
-  const queryMetric = 'metrics' in definition.query ? definition.query.metrics?.[0] : undefined
+  const queryMetric = 'metrics' in activeDefinition.value.query ? activeDefinition.value.query.metrics?.[0] : undefined
   const metric = queryMetric ?? metricNames.value[0]
 
   if (!metric) {
@@ -555,6 +580,16 @@ const singleValueMetricLabel = computed<string | undefined>(() => {
   return fieldLabel(metric)
 })
 
+// KTabs identifies tabs by hash, so map group tile ids to `#id` hashes.
+const groupTabs = computed(() => (groupTiles ?? []).map(({ id, label }) => ({ hash: `#${id}`, title: label })))
+
+const activeGroupTab = computed<string>({
+  get: () => `#${activeDefinitionTileId.value}`,
+  set: (hash) => {
+    activeGroupTileId.value = hash.slice(1)
+  },
+})
+
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,
   label: fieldLabel(value),
@@ -562,11 +597,11 @@ const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>((
 
 const isAgedOutQuery = computed(() => {
   // Check explore type tiles first so TypeScript narrows before reading query.granularity.
-  if (!isExploreChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
+  if (!isExploreChartDefinition(activeDefinition.value) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = definition.query.granularity
+  const savedGranularity = activeDefinition.value.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -578,7 +613,7 @@ const isAgedOutQuery = computed(() => {
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
   // Check explore type tiles first so TypeScript narrows before reading query.granularity.
-  const savedGranularity = isExploreChartDefinition(definition) ? definition.query.granularity ?? 'unknown' : 'unknown'
+  const savedGranularity = isExploreChartDefinition(activeDefinition.value) ? activeDefinition.value.query.granularity ?? 'unknown' : 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -594,10 +629,10 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const filters = [...context.filters, ...definition.query.filters ?? []] as AllFilters[]
-  const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
+  const filters = [...context.filters, ...activeDefinition.value.query.filters ?? []] as AllFilters[]
+  const metrics = 'metrics' in activeDefinition.value.query ? activeDefinition.value.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
-  const datasource = definition.query.datasource ?? 'api_usage'
+  const datasource = activeDefinition.value.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
@@ -607,15 +642,15 @@ const datasourceScopedFilters = computed(() => {
 })
 
 const editTile = () => {
-  emit('edit-tile', definition)
+  emit('edit-tile', activeDefinition.value)
 }
 
 const duplicateTile = () => {
-  emit('duplicate-tile', definition)
+  emit('duplicate-tile', activeDefinition.value)
 }
 
 const removeTile = () => {
-  emit('remove-tile', definition)
+  emit('remove-tile', activeDefinition.value)
 }
 
 const onChartData = (data: ExploreResultV4) => {
@@ -643,19 +678,19 @@ const hideExportModal = () => {
 }
 
 const getExportData = (): Promise<ExploreResultV4> => {
-  if (isRequestsChartDefinition(definition)) {
+  if (isRequestsChartDefinition(activeDefinition.value)) {
     throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
   }
 
   // goap datasources don't allow limit increases
-  const isGoapDatasource = definition.query.datasource?.startsWith('goap')
+  const isGoapDatasource = activeDefinition.value.query.datasource?.startsWith('goap')
 
   // we intentionally default to true if unset
   const queryBridgeIncreases = queryBridge?.staticConfig?.increaseCsvExportLimit !== false
 
   if (queryBridgeIncreases && !isGoapDatasource) {
     // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-    return issueQuery(definition.query, context, EXPORT_RECORD_LIMIT)
+    return issueQuery(activeDefinition.value.query, context, EXPORT_RECORD_LIMIT)
   } else if (chartData.value) {
     // If we're not allowed to increase the limit, and results are available, use them.
     return Promise.resolve(chartData.value)
@@ -720,6 +755,21 @@ defineExpose({ getExportData })
 
   &.fit-to-content {
     height: auto;
+  }
+
+  .group-tabs {
+    :deep(.tab-item) {
+      padding-bottom: 0 !important;
+    }
+
+    :deep(.tab-item .tab-link) {
+      font-size: var(--kui-font-size-20, $kui-font-size-20) !important;
+      padding: 0 var(--kui-space-40, $kui-space-40) !important;
+    }
+
+    :deep(.k-tabs ul) {
+      margin-bottom: 0;
+    }
   }
 
   .badge-container {
