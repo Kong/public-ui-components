@@ -102,16 +102,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref, toRef, watch } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import CelField from './CelField.vue'
-import { CEL_INPUT_KEY } from '../constants'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
-import { useExpressionField, useFieldPath } from '../composables'
+import { useCelInput, useExpressionField, useFieldPath } from '../composables'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -137,7 +136,6 @@ const { i18n, i18nT } = useI18n()
 
 const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
-const resolveCelInput = inject(CEL_INPUT_KEY, undefined)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
 
@@ -158,7 +156,7 @@ const isLocked = computed(() => !!versionInfo.value)
  * open while the user clears and retypes, and only `remove` collapses it.
  */
 const expanded = ref(expression.hasExpression.value)
-const celInput = computed(() => expression.available.value && expanded.value ? resolveCelInput?.('expression') : undefined)
+const celInput = useCelInput('expression', () => expression.available.value && expanded.value)
 watch(expression.hasExpression, (hasExpression) => {
   if (hasExpression) expanded.value = true
 })

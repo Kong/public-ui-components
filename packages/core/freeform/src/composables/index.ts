@@ -1,4 +1,5 @@
 export * from './ancestors'
+export * from './cel-input'
 export * from './constants'
 export * from './expression'
 export * from './expression-paths'

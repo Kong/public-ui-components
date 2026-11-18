@@ -91,13 +91,21 @@ const language = computed(() => defineCelLanguage([
 
 Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
 
-Inside a Freeform form, a custom renderer passes the language to `CelField` to edit an existing string field. For example:
+Inside a Freeform form, the host calls `provideCelInput(resolve)` during setup. The resolver accepts a language key and returns `{ language }` when the editor is enabled. A descendant renderer calls `useCelInput` to edit an existing string field.
 
 ```vue
-<component :is="celInput ? CelField : StringField" v-bind="celInput" name="condition" />
+<script setup lang="ts">
+import { CelField, StringField, useCelInput } from '@kong-ui-public/freeform'
+
+const celInput = useCelInput('condition')
+</script>
+
+<template>
+  <component :is="celInput ? CelField : StringField" v-bind="celInput" name="condition" />
+</template>
 ```
 
-`CEL_INPUT_KEY` supplies a resolver returning `{ language }` or `undefined` for a frontend-selected key. `ExpressionEditor` requests `expression`; plugin renderers request `condition` or `acl-rule`. Those renderers own selection, including live rollout changes; `Field`, `StringField`, and `EnhancedInput` do not resolve CEL configuration. `CelField` owns only CEL form binding, empty values, blur commits, visibility, and version locks. The standalone `CelInput` needs no form parent.
+`useCelInput` returns a computed ref that follows the host's rollout settings. It yields `undefined` when the provider is absent or the editor is disabled, so the renderer falls back to its usual input. `ExpressionEditor` requests `expression` when expanded. Plugin renderers request `condition` or `acl-rule`. `CelField` handles form binding, empty values, blur commits, visibility, and version locks.
 
 The host supplies rollout/version gates, language declarations, and authorized records. Freeform does not fetch records or infer Gateway globals. The Monaco runtime loads when a CEL input is rendered.
 

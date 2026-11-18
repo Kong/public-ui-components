@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
 import Form from '../../components/Form.vue'
 import { defineCelLanguage, kongConsumer, kongHttp } from '@kong-ui-public/monaco-editor/languages/cel'
 import CelField from '../../components/CelField.vue'
 import StringField from '../../components/StringField.vue'
 import NumberField from '../../components/NumberField.vue'
 import ArrayField from '../../components/ArrayField.vue'
-import { CEL_INPUT_KEY } from '../../constants'
+import { provideCelInput } from '../../composables/cel-input'
 import { schema } from './cel'
 
 const props = defineProps<{
@@ -17,7 +17,7 @@ const props = defineProps<{
 
 // The host supplies only language configuration; Freeform owns the real input.
 const language = defineCelLanguage([kongHttp(), kongConsumer()])
-provide(CEL_INPUT_KEY, () => props.enabled ? { language } : undefined)
+provideCelInput(() => props.enabled ? { language } : undefined)
 
 const data = {
   condition: '',

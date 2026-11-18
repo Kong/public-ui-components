@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick, ref } from 'vue'
 import { KInput } from '@kong/kongponents'
 import { defineCelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
-import { CEL_INPUT_KEY } from '../constants'
+import { provideCelInput } from '../composables/cel-input'
 import type { ExpressionFieldSchema, FormSchema } from '../form-schema'
 import Form from './Form.vue'
 import CelField from './CelField.vue'
@@ -48,10 +48,12 @@ describe('CelField', () => {
       { allow_when: { type: 'string' } },
       { choice: { type: 'string', one_of: ['true', 'false'] } },
     ] }
-    const wrapper = mount(Form, {
-      props: { schema },
-      global: { stubs: { EnumField: true }, provide: { [CEL_INPUT_KEY as symbol]: resolve } },
-    })
+    const wrapper = mount({
+      setup() {
+        provideCelInput(resolve)
+        return () => h(Form, { schema })
+      },
+    }, { global: { stubs: { EnumField: true } } })
     expect(wrapper.get('[data-testid="ff-condition"]').element.tagName).toBe('INPUT')
     expect(wrapper.get('[data-testid="ff-allow_when"]').element.tagName).toBe('INPUT')
     expect(wrapper.findComponent(CelInput).exists()).toBe(false)
@@ -161,13 +163,16 @@ describe('CelField', () => {
         type: 'string', expressible_kong_type: 'number',
       } as ExpressionFieldSchema } }] } },
     ] }
-    const wrapper = mount(Form, {
-      props: { schema, data: { config: { limit: [10, 20] } } },
-      global: { stubs: { MonacoEditor: true }, provide: {
-        [CEL_INPUT_KEY as symbol]: () => ({ language }),
-      } },
-    })
+    const resolve = vi.fn(() => ({ language }))
+    const wrapper = mount({
+      setup() {
+        provideCelInput(resolve)
+        return () => h(Form, { schema, data: { config: { limit: [10, 20] } } })
+      },
+    }, { global: { stubs: { MonacoEditor: true } } }).getComponent(Form)
+    expect(resolve).not.toHaveBeenCalled()
     await wrapper.get('[data-testid="ff-expression-add-config.limit.1"]').trigger('click')
+    expect(resolve).toHaveBeenCalledWith('expression')
     const input = wrapper.getComponent(CelInput)
     input.vm.$emit('update:modelValue', '30')
     await nextTick()

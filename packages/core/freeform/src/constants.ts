@@ -1,14 +1,8 @@
 import type { InjectionKey, Ref } from 'vue'
-import type { CelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
 
 export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:use-secret-input') as InjectionKey<Ref<boolean>>
 
 export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'
-
-/** Resolves an explicitly selected CEL language key; undefined preserves the existing input. */
-export const CEL_INPUT_KEY = Symbol.for('kong-ui-public:freeform:cel-input') as InjectionKey<
-  (language: string) => { language: CelLanguage } | undefined
->
 
 /**
  * Finds the control to focus inside a rendered field: the first enabled
