@@ -43,8 +43,8 @@ export interface CelCallable {
 }
 
 /**
- * One feature of a CEL dialect: the variables, functions, record values and
- * hints it adds. A host enables a feature by passing its plugin to `defineCelLanguage`.
+ * One feature of a CEL kind: the variables, functions, record values and
+ * hints it adds. A host enables a feature by passing its plugin to `defineCelKind`.
  */
 export interface CelPlugin {
   variables?: Record<string, CelType>
@@ -63,8 +63,8 @@ export interface CelPlugin {
   checkPath?: (path: readonly string[]) => CelHint | undefined
 }
 
-/** A CEL dialect: the plugins an editor enables, merged. */
-export interface CelLanguage {
+/** A kind of CEL expression: the plugins an editor enables, merged. */
+export interface CelKind {
   variables: Readonly<Record<string, CelType>>
   descriptions: Readonly<Record<string, string>>
   functions: readonly CelCallable[]
@@ -78,7 +78,7 @@ export interface CelLanguage {
 const merge = <T>(records: ReadonlyArray<Record<string, T> | undefined>): Record<string, T> =>
   Object.assign(Object.create(null), ...records)
 
-export const defineCelLanguage = (plugins: readonly CelPlugin[], options: Pick<CelLanguage, 'standardCallables'> = {}): CelLanguage => ({
+export const defineCelKind = (plugins: readonly CelPlugin[], options: Pick<CelKind, 'standardCallables'> = {}): CelKind => ({
   ...options,
   variables: merge(plugins.map(plugin => plugin.variables)),
   descriptions: merge(plugins.map(plugin => plugin.descriptions)),
@@ -97,15 +97,15 @@ export const getCelMember = (type: CelType, name: string): CelType | undefined =
 }
 
 /** The docs for a variable path, such as `consumer.id` or `plugins.key_auth.priority`. */
-export const getCelDescription = (path: string, language: CelLanguage): string | undefined => {
+export const getCelDescription = (path: string, kind: CelKind): string | undefined => {
   const [root, ...members] = path.split('.')
-  let type: CelType | undefined = language.variables[root]
+  let type: CelType | undefined = kind.variables[root]
   const pattern = [root]
   for (const member of members) {
     pattern.push(type?.kind === 'map' ? '*' : member)
     type = type && getCelMember(type, member)
   }
-  return language.descriptions[path] ?? language.descriptions[pattern.join('.')]
+  return kind.descriptions[path] ?? kind.descriptions[pattern.join('.')]
 }
 
 /** The type a macro variable takes: a list item, or a map key. */
@@ -163,8 +163,8 @@ const call = (name: string, ...parameters: string[]) => celFunction(name, parame
 
 export const CEL_MACROS = new Set(['all', 'exists', 'map', 'filter'])
 
-export const isCelMacroEnabled = (name: string, language: CelLanguage) =>
-  CEL_MACROS.has(name) && (!language.standardCallables || language.standardCallables.includes(name))
+export const isCelMacroEnabled = (name: string, kind: CelKind) =>
+  CEL_MACROS.has(name) && (!kind.standardCallables || kind.standardCallables.includes(name))
 
 const GLOBAL_FUNCTIONS = [call('has', 'field'), call('matches', 'text', 'pattern'), call('size', 'value')]
 // CEL macros range over list items, or over the keys of a map.
@@ -184,11 +184,11 @@ const METHODS: Partial<Record<CelType['kind'], readonly CelCallable[]>> = {
 }
 
 /** The functions to offer at the start of an expression (no type), or the methods of a value. */
-export const getCelCallables = (type?: CelType, language?: CelLanguage): readonly CelCallable[] => {
+export const getCelCallables = (type?: CelType, kind?: CelKind): readonly CelCallable[] => {
   const standard = type ? METHODS[type.kind] ?? [] : GLOBAL_FUNCTIONS
-  const allowed = language?.standardCallables
+  const allowed = kind?.standardCallables
   const callables = allowed ? standard.filter(callable => allowed.includes(callable.name)) : standard
-  return !type && language?.functions.length ? [...callables, ...language.functions] : callables
+  return !type && kind?.functions.length ? [...callables, ...kind.functions] : callables
 }
 
 export interface CelCallFrame {
@@ -234,9 +234,9 @@ export const getCelCallFrames = (before: string): CelCallFrame[] => {
 }
 
 /** The type of a dotted chain such as `principal.groups` or `g.id`, or undefined when it names nothing. */
-export const resolveCelChain = (chain: string, locals: ReadonlyMap<string, CelType>, language: CelLanguage): CelType | undefined => {
+export const resolveCelChain = (chain: string, locals: ReadonlyMap<string, CelType>, kind: CelKind): CelType | undefined => {
   const [root, ...members] = chain.split('.')
-  let type: CelType | undefined = locals.get(root) ?? language.variables[root]
+  let type: CelType | undefined = locals.get(root) ?? kind.variables[root]
   for (const member of members) {
     if (!type) return
     type = getCelMember(type, member)
@@ -249,11 +249,11 @@ export const resolveCelChain = (chain: string, locals: ReadonlyMap<string, CelTy
  * variable is in scope after its macro's first argument, and it hides a global
  * of the same name: in `http.headers.map(service, …)`, `service` is a header name.
  */
-export const getCelLocals = (before: string, language: CelLanguage): Map<string, CelType> => {
+export const getCelLocals = (before: string, kind: CelKind): Map<string, CelType> => {
   const locals = new Map<string, CelType>()
   for (const frame of getCelCallFrames(before)) {
-    if (!isCelMacroEnabled(frame.name, language) || !frame.method || !frame.binding || frame.argument < 1) continue
-    const receiver = frame.receiver ? resolveCelChain(frame.receiver, locals, language) : undefined
+    if (!isCelMacroEnabled(frame.name, kind) || !frame.method || !frame.binding || frame.argument < 1) continue
+    const receiver = frame.receiver ? resolveCelChain(frame.receiver, locals, kind) : undefined
     locals.set(frame.binding, receiver ? getCelElement(receiver) : DYN)
   }
   return locals

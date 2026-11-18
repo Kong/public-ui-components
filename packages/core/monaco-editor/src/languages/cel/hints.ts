@@ -1,5 +1,5 @@
 import { formatCelType, getCelLocals, getCelMember } from './catalog'
-import type { CelLanguage, CelType } from './catalog'
+import type { CelKind, CelType } from './catalog'
 import { maskCelLiterals } from './tokens'
 
 /**
@@ -14,15 +14,15 @@ export interface CelHint {
 }
 
 /**
- * A hint about a variable or field the dialect does not supply. This is not CEL
+ * A hint about a variable or field the kind does not supply. This is not CEL
  * validation: the server checks the expression when it is saved. The hint
  * catches what would otherwise fail only on save, or at runtime.
  */
-export const getCelHint = (expression: string, language: CelLanguage): CelHint | undefined => {
+export const getCelHint = (expression: string, kind: CelKind): CelHint | undefined => {
   const code = maskCelLiterals(expression)
   // CEL compares with `==`; a single `=` is not an operator.
   if (/(?<![=!<>])=(?!=)/.test(code)) return { kind: 'assignment' }
-  for (const plugin of language.plugins) {
+  for (const plugin of kind.plugins) {
     const hint = plugin.check?.(expression)
     if (hint) return hint
   }
@@ -43,19 +43,19 @@ export const getCelHint = (expression: string, language: CelLanguage): CelHint |
       if (/\.\s*\w+\s*\(\s*$/.test(before) && /^\s*,/.test(after)) continue
     }
 
-    const local = getCelLocals(before, language).get(root)
+    const local = getCelLocals(before, kind).get(root)
     if (!local) {
-      for (const plugin of language.plugins) {
+      for (const plugin of kind.plugins) {
         const hint = plugin.checkPath?.(segments)
         if (hint) return hint
       }
-      if (!language.variables[root]) {
-        if (language.aliases[root]) return { kind: 'alias', typed: root, expected: language.aliases[root] }
+      if (!kind.variables[root]) {
+        if (kind.aliases[root]) return { kind: 'alias', typed: root, expected: kind.aliases[root] }
         continue
       }
     }
 
-    let type: CelType = local ?? language.variables[root]
+    let type: CelType = local ?? kind.variables[root]
     for (let index = 1; index < segments.length; index++) {
       const member = getCelMember(type, segments[index])
       const field = segments.slice(0, index + 1).join('.')

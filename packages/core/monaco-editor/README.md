@@ -106,7 +106,7 @@ import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 
 ## CEL language support
 
-Import configurable CEL declarations, completion, hover, signature help, and hints from `@kong-ui-public/monaco-editor/languages/cel`. `defineCelLanguage()` composes only the variables and functions supplied by the host; authorized records are supplied through its declarations. The language API can be attached to any Monaco editor with `attachCelLanguage()`.
+Import configurable CEL declarations, completion, hover, signature help, and hints from `@kong-ui-public/monaco-editor/languages/cel`. `defineCelKind()` composes one kind of expression from only the variables and functions supplied by the host; authorized records are supplied through its declarations. The language API can be attached to any Monaco editor with `attachCelLanguage()`.
 
 ## MonacoEditor Component
 

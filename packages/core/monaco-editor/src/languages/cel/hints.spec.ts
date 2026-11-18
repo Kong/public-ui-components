@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { defineCelLanguage } from './catalog'
+import { defineCelKind } from './catalog'
 import { getCelHint } from './hints'
 import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
 const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
-const full = defineCelLanguage([...gateway, kongPluginState(), kongFallback()])
-const acl = defineCelLanguage([...gateway, kongAclRule(), kongFallback()])
-const expressible = defineCelLanguage([...gateway, kongPluginState(), kongExpressibleField()])
+const full = defineCelKind([...gateway, kongPluginState(), kongFallback()])
+const acl = defineCelKind([...gateway, kongAclRule(), kongFallback()])
+const expressible = defineCelKind([...gateway, kongPluginState(), kongExpressibleField()])
 
 describe('getCelHint', () => {
   it('accepts declared variables, map keys, methods, macro variables and literals', () => {

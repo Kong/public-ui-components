@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
-  defineCelLanguage, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals, resolveCelChain,
+  defineCelKind, formatCelType, getCelCallables, getCelCallFrames, getCelDescription, getCelFields, getCelLocals, resolveCelChain,
 } from './catalog'
 import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
 const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
-const full = defineCelLanguage([...gateway, kongPluginState(), kongFallback()])
-const acl = defineCelLanguage([...gateway, kongAclRule(), kongFallback()])
-const expressible = defineCelLanguage([...gateway, kongPluginState(), kongExpressibleField()])
+const full = defineCelKind([...gateway, kongPluginState(), kongFallback()])
+const acl = defineCelKind([...gateway, kongAclRule(), kongFallback()])
+const expressible = defineCelKind([...gateway, kongPluginState(), kongExpressibleField()])
 const none = new Map()
-const typeOf = (chain: string, language = full) => {
-  const type = resolveCelChain(chain, none, language)
+const typeOf = (chain: string, kind = full) => {
+  const type = resolveCelChain(chain, none, kind)
   return type && formatCelType(type)
 }
 

@@ -2,15 +2,15 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('monaco-editor', () => ({}))
 
-import { defineCelLanguage } from './catalog'
+import { defineCelKind } from './catalog'
 import { getCelCompletionContext, getCelHover, getCelSignature, getCelSuggestions } from './language'
 import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
 const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
-const full = defineCelLanguage([...gateway, kongPluginState(), kongFallback()])
-const acl = defineCelLanguage([...gateway, kongAclRule(), kongFallback()])
-const expressible = defineCelLanguage([...gateway, kongPluginState(), kongExpressibleField()])
-const labels = (before: string, language = full) => getCelSuggestions(before, language).map(s => s.label)
+const full = defineCelKind([...gateway, kongPluginState(), kongFallback()])
+const acl = defineCelKind([...gateway, kongAclRule(), kongFallback()])
+const expressible = defineCelKind([...gateway, kongPluginState(), kongExpressibleField()])
+const labels = (before: string, kind = full) => getCelSuggestions(before, kind).map(s => s.label)
 const detail = (before: string, label: string) => getCelSuggestions(before, full).find(s => s.label === label)?.detail
 
 describe('getCelCompletionContext', () => {
@@ -40,29 +40,29 @@ describe('getCelSuggestions', () => {
 
   it('offers only the features a dialect enables', () => {
     // An identity-only dialect, as for ACLs that cannot read the request.
-    const identity = defineCelLanguage([kongConsumer(), kongConsumerGroup(), kongPrincipal()])
+    const identity = defineCelKind([kongConsumer(), kongConsumerGroup(), kongPrincipal()])
     expect(labels('', identity)).toEqual(['consumer', 'consumer_group', 'principal', 'has', 'matches', 'size'])
     expect(labels('http.', identity)).toEqual([])
   })
 
   it('uses the AI ACL dialect for completion, hover and signature help', () => {
-    const language = defineCelLanguage([
+    const kind = defineCelKind([
       kongConsumer(), kongConsumerGroup(), kongPrincipal(undefined, { supportsPrincipalGroups: false }),
     ], { standardCallables: ['has', 'matches', 'contains', 'startsWith', 'endsWith', 'all', 'exists', 'map', 'filter'] })
-    expect(labels('', language)).toEqual(['consumer', 'consumer_group', 'principal', 'has', 'matches'])
-    expect(labels('principal.', language)).toEqual(['id', 'display_name', 'metadata'])
-    expect(labels('consumer.username.', language)).not.toContain('size')
-    expect(getCelHover('consumer.username.size()', 20, language)).toBeUndefined()
-    expect(getCelSignature('consumer.username.size(', language)).toBeUndefined()
-    expect(getCelSignature('consumer_group.ids.exists(', language)?.callable.name).toBe('exists')
+    expect(labels('', kind)).toEqual(['consumer', 'consumer_group', 'principal', 'has', 'matches'])
+    expect(labels('principal.', kind)).toEqual(['id', 'display_name', 'metadata'])
+    expect(labels('consumer.username.', kind)).not.toContain('size')
+    expect(getCelHover('consumer.username.size()', 20, kind)).toBeUndefined()
+    expect(getCelSignature('consumer.username.size(', kind)).toBeUndefined()
+    expect(getCelSignature('consumer_group.ids.exists(', kind)?.callable.name).toBe('exists')
   })
 
   it('allows a dialect to omit all standard functions and macros', () => {
-    const language = defineCelLanguage([kongConsumerGroup()], { standardCallables: [] })
-    expect(labels('', language)).toEqual(['consumer_group'])
-    expect(labels('has(', language)).toEqual(['consumer_group'])
-    expect(labels('consumer_group.ids.', language)).toEqual([])
-    expect(labels('consumer_group.ids.exists(item, ', language)).toEqual(['consumer_group'])
+    const kind = defineCelKind([kongConsumerGroup()], { standardCallables: [] })
+    expect(labels('', kind)).toEqual(['consumer_group'])
+    expect(labels('has(', kind)).toEqual(['consumer_group'])
+    expect(labels('consumer_group.ids.', kind)).toEqual([])
+    expect(labels('consumer_group.ids.exists(item, ', kind)).toEqual(['consumer_group'])
   })
 
   it('offers fields and methods by the receiver type', () => {
@@ -97,7 +97,7 @@ describe('getCelSuggestions', () => {
   })
 
   it('offers principal.metadata keys from the loaded principals', () => {
-    const withPrincipals = defineCelLanguage([kongPrincipal(() => ({ principals: [{ id: 'p-1', metadata: { team: 'ai' } }] }))])
+    const withPrincipals = defineCelKind([kongPrincipal(() => ({ principals: [{ id: 'p-1', metadata: { team: 'ai' } }] }))])
     expect(getCelSuggestions('principal.metadata.', withPrincipals).find(s => s.label === 'team')?.detail).toBe('principal.metadata.team · string')
     expect(getCelSuggestions('principal.metadata.', full).map(s => s.label)).not.toContain('team')
   })

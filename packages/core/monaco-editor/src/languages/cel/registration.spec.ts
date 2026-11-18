@@ -1,6 +1,6 @@
 import { expect, it, vi } from 'vitest'
 import { editor, languages, type Position } from 'monaco-editor'
-import { defineCelLanguage } from './catalog'
+import { defineCelKind } from './catalog'
 import { attachCelLanguage, CEL_LANGUAGE_ID } from './language'
 
 vi.mock('monaco-editor', () => {
@@ -40,9 +40,9 @@ function scriptedEditor(source: string) {
 it('shares providers across models, replaces the current word, and targets the accepting editor', async () => {
   const first = scriptedEditor('true &&\nhas')
   const second = scriptedEditor('"""\nhas')
-  const dialect = { language: () => defineCelLanguage([]), formatSubject: () => '' }
-  const one = attachCelLanguage(first.instance, dialect)
-  const two = attachCelLanguage(second.instance, dialect)
+  const options = { kind: () => defineCelKind([]), formatSubject: () => '' }
+  const one = attachCelLanguage(first.instance, options)
+  const two = attachCelLanguage(second.instance, options)
 
   try {
     expect(languages.registerCompletionItemProvider).toHaveBeenCalledTimes(1)

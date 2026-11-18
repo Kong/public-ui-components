@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineCelLanguage } from './catalog'
+import { defineCelKind } from './catalog'
 import { kongConsumer, kongConsumerGroup, kongContext, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 import type { CelSubjects } from './kong'
 import {
@@ -19,7 +19,7 @@ const subjects: CelSubjects = {
   principalGroups: [{ id: 'pg-1', name: 'Admins' }],
 }
 const records = () => subjects
-const full = defineCelLanguage([
+const full = defineCelKind([
   kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongPrincipal(records), kongContext(),
   kongPluginState(), kongFallback(),
 ])
@@ -45,7 +45,7 @@ describe('getCelSubjectValues', () => {
     expect(getCelSubjectValues(full, 'consumer-group-id').map(v => [v.value, v.name])).toEqual([['cg-1', 'gold'], ['cg-2', 'silver']])
     expect(getCelSubjectValues(full, 'principal-id').map(v => [v.value, v.name])).toEqual([['p-1', 'Ada'], ['p-2', 'p-2']])
     expect(getCelSubjectValues(full, 'principal-group-id').map(v => v.name)).toEqual(['Admins'])
-    expect(getCelSubjectValues(defineCelLanguage([kongPrincipal()]), 'principal-id')).toEqual([])
+    expect(getCelSubjectValues(defineCelKind([kongPrincipal()]), 'principal-id')).toEqual([])
   })
 })
 
