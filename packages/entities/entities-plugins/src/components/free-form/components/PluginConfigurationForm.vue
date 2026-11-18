@@ -66,6 +66,7 @@ import { pick } from 'lodash-es'
 import { Form, isExpressionFieldSchema, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
+import { provideCelSubjectLoader } from '../cel-editor'
 import PluginCelField from './PluginCelField'
 import RedisSelector from './RedisSelector.vue'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from '../schema-enhancement'
@@ -74,6 +75,7 @@ import type { PluginConfigurationBaseProps } from '../layout/provider'
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps<Props<T>>()
+provideCelSubjectLoader()
 
 const emit = defineEmits<{
   change: [value: T]

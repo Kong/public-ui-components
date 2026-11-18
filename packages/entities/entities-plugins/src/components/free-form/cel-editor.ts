@@ -1,8 +1,9 @@
-import { computed, inject, shallowRef, unref, watch, type MaybeRef } from 'vue'
+import { computed, inject, provide, shallowRef, unref, watch, type MaybeRef } from 'vue'
+import { reactiveComputed } from '@vueuse/core'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 import { FEATURE_FLAGS } from '../../constants'
-import { FORMS_API_KEY, FORMS_CONFIG } from './const'
+import { FORMS_CONFIG } from './const'
 import {
   defineCelLanguage, kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet,
   kongPluginState, kongPrincipal, kongRoute, kongService,
@@ -42,7 +43,6 @@ export const getPluginFieldCelLanguage = (kind: CelExpressionKind, config: Confi
 export function useCelInput() {
   const config = inject<Config | undefined>(FORMS_CONFIG, undefined)
   const featureFlag = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
-  const api = inject<{ celSubjects?: ReturnType<typeof useCelSubjectLoader> }>(FORMS_API_KEY, {})
   const enabled = computed(() => config?.app === 'kongManager'
     ? !!config.enableCelEditor
     : config?.app === 'konnect' && unref(featureFlag))
@@ -52,8 +52,12 @@ export function useCelInput() {
     // Gateway 3.14 evaluates condition as ATC. Every target must support CEL.
     if (kind === 'condition' && !allTargetsSupport(config, '3.15')) return []
 
-    void api.celSubjects?.loader.value?.().catch(() => {})
-    return [getPluginFieldCelLanguage(kind, config, () => api.celSubjects?.subjects.value ?? {})]
+    const load = config.getCelSubjects
+    let records: CelSubjects = {}
+    void load?.().then(result => {
+      records = result
+    }).catch(() => {})
+    return [getPluginFieldCelLanguage(kind, config, () => config.getCelSubjects === load ? records : {})]
   }
 
   return { enabled, getLanguages }
@@ -61,7 +65,6 @@ export function useCelInput() {
 
 /** Share an in-flight or successful host lookup across the editors in this form. */
 export function useCelSubjectLoader(config: () => Config) {
-  const subjects = shallowRef<CelSubjects>({})
   const loader = shallowRef<Config['getCelSubjects']>()
   watch([
     () => config().getCelSubjects,
@@ -69,22 +72,34 @@ export function useCelSubjectLoader(config: () => Config) {
     () => config().workspace,
     () => {
       const host = config()
+      return 'aiGatewayId' in host ? host.aiGatewayId : undefined
+    },
+    () => {
+      const host = config()
       return host.app === 'konnect' ? host.controlPlaneId : undefined
     },
   ], ([load], _, onCleanup) => {
-    subjects.value = {}
     let active = true
     onCleanup(() => {
       active = false
+      loader.value = undefined
     })
     let pending: Promise<CelSubjects> | undefined
-    loader.value = load && (() => pending ??= Promise.resolve().then(load).then(records => {
-      if (active) subjects.value = records
-      return records
-    }).catch(error => {
-      pending = undefined
-      throw error
-    }))
+    loader.value = load && (() => pending ??= Promise.resolve()
+      .then(() => active ? load() : {})
+      .then(records => active ? records : {})
+      .catch(error => {
+        pending = undefined
+        throw error
+      }))
   }, { immediate: true, flush: 'sync' })
-  return { subjects, loader }
+  return loader
+}
+
+/** Scope the existing host callback to one mounted configuration form, including direct AI Manager mounts. */
+export function provideCelSubjectLoader() {
+  const host = inject<Config | undefined>(FORMS_CONFIG, undefined)
+  if (!host) return
+  const loader = useCelSubjectLoader(() => host)
+  provide(FORMS_CONFIG, reactiveComputed(() => ({ ...host, getCelSubjects: loader.value })))
 }

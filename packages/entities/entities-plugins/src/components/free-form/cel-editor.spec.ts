@@ -59,26 +59,25 @@ describe('CEL record lookups', () => {
       resolveRecords = resolve
     }) })
     const scope = effectScope()
-    const { loader, subjects } = scope.run(() => useCelSubjectLoader(() => host.value))!
+    const loader = scope.run(() => useCelSubjectLoader(() => host.value))!
     const old = loader.value!()
     await Promise.resolve()
     host.value = { ...host.value, controlPlaneId: 'other' }
     resolveRecords({ consumers: [{ id: 'old' }] })
-    await old
-    expect(subjects.value).toEqual({})
+    await expect(old).resolves.toEqual({})
 
     const next = loader.value!()
     await Promise.resolve()
     scope.stop()
     resolveRecords({ consumers: [{ id: 'unmounted' }] })
-    await next
-    expect(subjects.value).toEqual({})
+    await expect(next).resolves.toEqual({})
+    expect(loader.value).toBeUndefined()
   })
 
   it('calls only the host loader, shares the result and invalidates it when scope or permissions change', async () => {
     const host = shallowRef(konnect)
     const scope = effectScope()
-    const { loader, subjects } = scope.run(() => useCelSubjectLoader(() => host.value))!
+    const loader = scope.run(() => useCelSubjectLoader(() => host.value))!
     expect(loader.value).toBeUndefined()
     const records = { consumerGroups: [{ id: 'g', name: 'team' }] }
     const load = vi.fn().mockRejectedValueOnce(new Error('unavailable')).mockResolvedValue(records)
@@ -88,14 +87,12 @@ describe('CEL record lookups', () => {
     const pending = loader.value!()
     expect(loader.value!()).toBe(pending)
     await expect(pending).resolves.toEqual(records)
-    expect(subjects.value).toEqual(records)
     host.value = { ...host.value, controlPlaneId: 'other' }
     expect(loader.value!()).not.toBe(pending)
     await expect(loader.value!()).resolves.toEqual(records)
     expect(load).toHaveBeenCalledTimes(3)
     host.value = konnect
     expect(loader.value).toBeUndefined()
-    expect(subjects.value).toEqual({})
     scope.stop()
   })
 })

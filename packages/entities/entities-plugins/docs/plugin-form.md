@@ -175,7 +175,7 @@ Konnect enables the editor by providing `FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION
 
 All three editors offer `principal.groups` and `principal.type` when every target runs Gateway 3.17.0.0-rc.1 or later. Older or unknown target versions get the common principal fields. Only AI Gateway data planes populate the groups.
 
-Both hosts can provide `config.getCelSubjects(): Promise<CelSubjects>`. The form calls it when a rendered field selects CEL and shares the lookup across fields. The host checks list access for each collection before calling its API, follows pagination, and returns the accessible Consumers, Consumer Groups, principals, and principal groups. Replace the callback when the user's access changes. Without a callback the editor provides field and function suggestions using its declarations alone.
+Both hosts can provide `config.getCelSubjects(): Promise<CelSubjects>`. The shared `PluginConfigurationForm` calls it when a rendered field selects CEL and shares the lookup across fields. Hosts such as AI Manager that mount this component directly can supply the same callback in their existing `kong-ui-forms-config` context. Switching control planes, workspaces, or AI gateways invalidates the cached records. The host checks list access for each collection before calling its API, follows pagination, and returns the accessible Consumers, Consumer Groups, principals, and principal groups. Replace the callback when the user's access changes. Without a callback the editor provides field and function suggestions using its declarations alone.
 
 ### Events
 

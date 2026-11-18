@@ -1,14 +1,16 @@
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
-import { ref } from 'vue'
+import { h, reactive, ref } from 'vue'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { KTabs } from '@kong/kongponents'
 import PluginEntityForm from '../PluginEntityForm.vue'
+import PluginConfigurationForm from './components/PluginConfigurationForm.vue'
+import { FORMS_CONFIG } from './const'
 import { FEATURE_FLAGS } from '../../constants'
 import schema from '../../../fixtures/schemas/acl'
 import rateLimitingSchema from '../../../fixtures/schemas/rate-limiting'
 import circuitBreakerSchema from '../../../fixtures/schemas/kong-circuit-breaker'
-import { CelInput, Form } from '@kong-ui-public/freeform'
-import { getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
+import { CelInput, Form, NumberField } from '@kong-ui-public/freeform'
+import { getCelSubjectValues, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 enableAutoUnmount(afterEach)
@@ -163,6 +165,41 @@ describe('plugin form CEL rollout', () => {
     enabled.value = false
     await flushPromises()
     expect(wrapper.get('[data-testid="ff-expressions.minute"]').element).toHaveProperty('value', '42')
+  })
+
+  it('shares authorized suggestions across expressions on a directly mounted AI Manager form', async () => {
+    const getCelSubjects = vi.fn()
+      .mockResolvedValueOnce({ consumers: [{ id: 'first' }] })
+      .mockResolvedValueOnce({ consumers: [{ id: 'second' }] })
+    const host = reactive({ ...config, apiType: 'aiGateway', controlPlaneId: '', aiGatewayId: 'a', getCelSubjects })
+    const wrapper = mount(PluginConfigurationForm, {
+      props: {
+        schema: rateLimitingSchema as unknown as FormSchema,
+        pluginName: 'rate-limiting',
+        model: { config: { minute: 1, hour: 2 } },
+        onFormChange: vi.fn(),
+      },
+      slots: { default: () => [h(NumberField, { name: 'config.minute' }), h(NumberField, { name: 'config.hour' })] },
+      global: { ...global, provide: { ...global.provide, [FORMS_CONFIG]: host } },
+    })
+    expect(getCelSubjects).not.toHaveBeenCalled()
+    await wrapper.get('[data-testid="ff-expression-add-config.minute"]').trigger('click')
+    await wrapper.get('[data-testid="ff-expression-add-config.hour"]').trigger('click')
+    await flushPromises()
+    const languages = () => wrapper.findAllComponents(CelInput).map(input => input.props('language'))
+    const ids = (language: ReturnType<typeof languages>[number]) => getCelSubjectValues(language, 'consumer-id').map(v => v.value)
+    const original = languages()
+    expect(original.map(ids)).toEqual([['first'], ['first']])
+    expect(getCelSubjects).toHaveBeenCalledTimes(1)
+
+    host.aiGatewayId = 'b'
+    expect(original.map(ids)).toEqual([[], []])
+    await flushPromises()
+    const current = languages()
+    expect(current.map(ids)).toEqual([['second'], ['second']])
+    expect(getCelSubjects).toHaveBeenCalledTimes(2)
+    wrapper.unmount()
+    expect(current.map(ids)).toEqual([[], []])
   })
 
   it('preserves plugin-specific form preparation alongside the CEL rollout', async () => {

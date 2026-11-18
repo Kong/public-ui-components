@@ -60,7 +60,6 @@ import type { GlobalAction, ArrayFieldSchema, FormSchema, MapFieldSchema, Record
 import { getFreeFormComponent, getPluginConfig } from './free-form/plugin-registry'
 import { AUTOFILL_SLOT_NAME, FORMS_API_KEY, FORMS_CONFIG } from './free-form/const'
 import type { AutofillSlotProps, PluginScopeOptions } from './free-form/types'
-import { useCelSubjectLoader } from './free-form/cel-editor'
 
 const emit = defineEmits<{
   /** The plugin payload to submit */
@@ -261,13 +260,11 @@ const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => 
 }
 
 // Descendants keep the same injected object when the host replaces its config.
-const liveConfig = reactiveComputed(() => ({ ...props.config }))
-provide(FORMS_CONFIG, liveConfig)
+provide(FORMS_CONFIG, reactiveComputed(() => ({ ...props.config })))
 provide(FORMS_API_KEY, {
   getOne,
   getAllV2,
   peek,
-  celSubjects: useCelSubjectLoader(() => liveConfig),
 })
 
 // For cloned plugins, use the source plugin name for rendering decisions
