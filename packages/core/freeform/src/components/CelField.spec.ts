@@ -2,7 +2,7 @@ import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick, ref, type Component, type FunctionalComponent } from 'vue'
 import { KInput } from '@kong/kongponents'
-import { defineCelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
+import { defineCelKind } from '@kong-ui-public/monaco-editor/languages/cel'
 import { FIELD_RENDERERS, isExpressionFieldSchema } from '../composables'
 import FieldRenderer from './FieldRenderer.vue'
 import type { ExpressionFieldSchema, FormSchema } from '../form-schema'
@@ -16,7 +16,7 @@ import CelInput from './CelInput.vue'
 vi.mock('monaco-editor', () => ({}))
 enableAutoUnmount(afterEach)
 
-const language = defineCelLanguage([])
+const kind = defineCelKind([])
 
 describe('CelField', () => {
   it('switches only the selected field and preserves the value across rollout changes', async () => {
@@ -24,13 +24,13 @@ describe('CelField', () => {
     const schema: FormSchema = { type: 'record', fields: [{ condition: { type: 'string' } }] }
     const wrapper = mount(Form, {
       props: { schema, data: { condition: 'true' } },
-      slots: { default: () => enabled.value ? h(CelField, { name: 'condition', language }) : h(StringField, { name: 'condition' }) },
+      slots: { default: () => enabled.value ? h(CelField, { name: 'condition', kind }) : h(StringField, { name: 'condition' }) },
       global: { stubs: { MonacoEditor: true } },
     })
     expect(wrapper.get('input').element.value).toBe('true')
     enabled.value = true
     await nextTick()
-    expect(wrapper.getComponent(CelInput).props('language')).toBe(language)
+    expect(wrapper.getComponent(CelInput).props('kind')).toBe(kind)
     expect(wrapper.findComponent(StringField).exists()).toBe(false)
     expect(wrapper.findComponent(EnhancedInput).exists()).toBe(false)
     wrapper.getComponent(CelInput).vm.$emit('update:modelValue', 'false')
@@ -66,7 +66,7 @@ describe('CelField', () => {
         data: { rule: 'true' },
         config: { updateOnChange: true, emptyFieldValue },
       },
-      slots: { default: () => h(CelField, { name: 'rule', language }) },
+      slots: { default: () => h(CelField, { name: 'rule', kind }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const input = wrapper.getComponent(CelInput)
@@ -88,7 +88,7 @@ describe('CelField', () => {
       props: { data: { nested: { rule: 'true' } }, schema: { type: 'record', fields: [{ nested: { type: 'record', fields: [
         { rule: { type: 'string', required: true, description: 'Rule description' } },
       ] } }] } },
-      slots: { default: () => enabled.value ? h(CelField, { name: '$.nested.rule', language }) : h(StringField, { name: '$.nested.rule' }) },
+      slots: { default: () => enabled.value ? h(CelField, { name: '$.nested.rule', kind }) : h(StringField, { name: '$.nested.rule' }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const label = wrapper.getComponent(CelInput).props('label')
@@ -103,7 +103,7 @@ describe('CelField', () => {
 
     const explicit = mount(Form, {
       props: { schema: { type: 'record', fields: [{ rule: { type: 'string' } }] } },
-      slots: { default: () => h(CelField, { name: 'rule', language, inputId: 'rule-id', error: true, errorMessage: 'Invalid rule' }, {
+      slots: { default: () => h(CelField, { name: 'rule', kind, inputId: 'rule-id', error: true, errorMessage: 'Invalid rule' }, {
         tooltip: () => 'Custom tooltip', help: () => 'Custom help',
       }) },
       global: { stubs: { MonacoEditor: true } },
@@ -119,7 +119,7 @@ describe('CelField', () => {
         schema: { type: 'record', fields: [{ rule: { type: 'string' } }] },
         errors: [{ path: 'rule', message: 'Invalid CEL expression' }],
       },
-      slots: { default: () => h(CelField, { name: 'rule', language }) },
+      slots: { default: () => h(CelField, { name: 'rule', kind }) },
       global: { stubs: { MonacoEditor: true } },
     })
     await nextTick()
@@ -141,7 +141,7 @@ describe('CelField', () => {
         config: { minRuntimeVersion: '2.2' },
         renderRules: { dependencies: { rule: ['visible', true] } },
       },
-      slots: { default: () => h(CelField, { name: 'rule', language }) },
+      slots: { default: () => h(CelField, { name: 'rule', kind }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const input = wrapper.getComponent(CelInput)
@@ -160,7 +160,7 @@ describe('CelField', () => {
         type: 'string', expressible_kong_type: 'number',
       } as ExpressionFieldSchema } }] } },
     ] }
-    const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) => h(CelField, { ...attrs, language }, slots)
+    const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) => h(CelField, { ...attrs, kind }, slots)
     ExpressionInput.inheritAttrs = false
     const wrapper = mount(Form, {
       props: { schema, data: { config: { limit: [10, 20] } } },
@@ -184,7 +184,7 @@ describe('CelField', () => {
       { config: { type: 'record', fields: [{ limit: { type: 'number', expressible: true } }] } },
       { expressions: { type: 'record', fields: [{ limit: { type: 'string', expressible_kong_type: 'number' } as ExpressionFieldSchema }] } },
     ] }
-    const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) => h(CelField, { ...attrs, language }, slots)
+    const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) => h(CelField, { ...attrs, kind }, slots)
     ExpressionInput.inheritAttrs = false
     const expand = async (component?: Component) => {
       const wrapper = mount(Form, {

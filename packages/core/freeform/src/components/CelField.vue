@@ -13,7 +13,7 @@
     :data-testid="`ff-${field.path?.value}`"
     :disabled="isDisabled"
     :error="props.error || !!field.fieldErrors?.value.length"
-    :language="props.language"
+    :kind="props.kind"
     :model-value="draft ?? ''"
     @change="handleChange"
     @update:model-value="handleInput"
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
-import type { CelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelKind } from '@kong-ui-public/monaco-editor/languages/cel'
 import { useField, useFieldAttrs, useFormShared } from '../composables'
 import type { BaseFieldProps, EmptyValue } from '../types'
 import CelInput from './CelInput.vue'
@@ -64,7 +64,7 @@ import FieldErrors from './FieldErrors.vue'
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps<BaseFieldProps & {
-  language: CelLanguage
+  kind: CelKind
   disabled?: boolean
   error?: boolean
   inputId?: string

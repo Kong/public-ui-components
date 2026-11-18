@@ -68,13 +68,13 @@ import { KLabel } from '@kong/kongponents'
 import type { LabelAttributes } from '@kong/kongponents'
 import type { editor, IDisposable } from 'monaco-editor'
 import useI18n from '../composables/useI18n'
-import type { CelHint, CelLanguage, CelSubjectValue } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelHint, CelKind, CelSubjectValue } from '@kong-ui-public/monaco-editor/languages/cel'
 import type * as CelLanguageApi from '@kong-ui-public/monaco-editor/languages/cel'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 
 const {
   modelValue,
-  language,
+  kind,
   ariaLabel,
   formatHint,
   formatSubject,
@@ -90,7 +90,8 @@ const {
   rows = 3,
 } = defineProps<{
   modelValue?: string
-  language: CelLanguage
+  /** The kind of CEL expression: the variables and functions it can use. */
+  kind: CelKind
   ariaLabel?: string
   /** Return a message for a host-defined hint, or use the built-in messages. */
   formatHint?: (hint: CelHint) => string | undefined
@@ -132,7 +133,7 @@ const PADDING = 16
 const minHeight = computed(() => rows * LINE_HEIGHT + PADDING)
 const editorHeight = ref(minHeight.value)
 
-const hint = computed(() => languageApi.value?.getCelHint(modelValue ?? '', language))
+const hint = computed(() => languageApi.value?.getCelHint(modelValue ?? '', kind))
 const hintText = computed(() => {
   const value = hint.value
   if (!value) return ''
@@ -151,11 +152,11 @@ const hintText = computed(() => {
 
 const subjectHover = (subject: CelSubjectValue) => {
   if (formatSubject) return formatSubject(subject)
-  const { kind, name, id } = subject
-  if (kind === 'principal-id') return t('cel.hover.principal', { name, id })
-  if (kind === 'principal-group-id') return t('cel.hover.principal_group', { name, id })
-  if (kind.startsWith('consumer-group')) return t('cel.hover.consumer_group', { name, id })
-  if (kind.startsWith('consumer-')) return t('cel.hover.consumer', { name, id })
+  const { kind: subjectKind, name, id } = subject
+  if (subjectKind === 'principal-id') return t('cel.hover.principal', { name, id })
+  if (subjectKind === 'principal-group-id') return t('cel.hover.principal_group', { name, id })
+  if (subjectKind.startsWith('consumer-group')) return t('cel.hover.consumer_group', { name, id })
+  if (subjectKind.startsWith('consumer-')) return t('cel.hover.consumer', { name, id })
   return t('cel.hover.record', { name, id })
 }
 
@@ -203,7 +204,7 @@ const ready = async (instance: editor.IStandaloneCodeEditor) => {
   if (input) input.id = inputId.value
   disposables.push(instance.onDidBlurEditorText(() => emit('change')))
   const { attachCelLanguage } = await loadLanguage
-  if (!unmounted) disposables.push(attachCelLanguage(instance, { language: () => language, formatSubject: subjectHover }))
+  if (!unmounted) disposables.push(attachCelLanguage(instance, { kind: () => kind, formatSubject: subjectHover }))
 }
 
 onBeforeUnmount(() => {

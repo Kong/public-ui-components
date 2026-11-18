@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, ref, type FunctionalComponent } from 'vue'
 import Form from '../../components/Form.vue'
-import { defineCelLanguage, kongConsumer, kongHttp } from '@kong-ui-public/monaco-editor/languages/cel'
+import { defineCelKind, kongConsumer, kongHttp } from '@kong-ui-public/monaco-editor/languages/cel'
 import CelField from '../../components/CelField.vue'
 import StringField from '../../components/StringField.vue'
 import NumberField from '../../components/NumberField.vue'
@@ -16,10 +16,10 @@ const props = defineProps<{
   updateOnChange?: boolean
 }>()
 
-// The host supplies only language configuration; Freeform owns the real input.
-const language = defineCelLanguage([kongHttp(), kongConsumer()])
+// The host supplies only the CEL kind; Freeform owns the real input.
+const kind = defineCelKind([kongHttp(), kongConsumer()])
 const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) =>
-  props.enabled ? h(CelField, { ...attrs, language }, slots) : h(StringField, attrs, slots)
+  props.enabled ? h(CelField, { ...attrs, kind }, slots) : h(StringField, attrs, slots)
 ExpressionInput.inheritAttrs = false
 
 const data = {
@@ -46,7 +46,7 @@ const payload = ref<Record<string, any>>(data)
     <NumberField name="config.minute" />
     <component
       :is="enabled ? CelField : StringField"
-      v-bind="enabled ? { language } : {}"
+      v-bind="enabled ? { kind } : {}"
       name="condition"
     />
     <ArrayField
@@ -57,7 +57,7 @@ const payload = ref<Record<string, any>>(data)
       <template #item="{ fieldName }">
         <component
           :is="enabled ? CelField : StringField"
-          v-bind="enabled ? { language } : {}"
+          v-bind="enabled ? { kind } : {}"
           multiline
           :name="fieldName"
         />
