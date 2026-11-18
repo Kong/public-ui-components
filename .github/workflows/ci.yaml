@@ -309,7 +309,8 @@ jobs:
         if: ${{ steps.changed_packages.outputs.unitTestFilter != '' }}
         env:
           PNPM_FILTER: ${{ steps.changed_packages.outputs.unitTestFilter }}
-        run: pnpm --fail-if-no-match --parallel --stream $PNPM_FILTER run test:unit
+        # Each Vitest process has its own worker pool; avoid starting every package at once.
+        run: pnpm --fail-if-no-match --workspace-concurrency=2 --stream $PNPM_FILTER run test:unit
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
