@@ -51,8 +51,7 @@ import {
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { PLUGIN_FORM_LAYOUT_STATE, useAxios } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, type PropType } from 'vue'
-import { reactiveComputed } from '@vueuse/core'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, ref, shallowReactive, watch, type PropType } from 'vue'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../types'
 import type { FreeFormPluginData } from './free-form/types'
@@ -259,13 +258,21 @@ const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => 
   })
 }
 
-// Descendants keep the same injected object when the host replaces its config.
-provide(FORMS_CONFIG, reactiveComputed(() => ({ ...props.config })))
 provide(FORMS_API_KEY, {
   getOne,
   getAllV2,
   peek,
 })
+
+// shallowReactive keeps the same object identity so all descendants can
+// access properties directly (no .value unwrap needed), while staying live
+// when the host replaces the entire config prop reference (e.g. once an
+// async field like principalsCreationGuideVisible resolves).
+const liveConfig = shallowReactive({ ...(props.config as object) })
+watch(() => props.config, (newConfig) => {
+  Object.assign(liveConfig, newConfig)
+})
+provide(FORMS_CONFIG, liveConfig)
 
 // For cloned plugins, use the source plugin name for rendering decisions
 const effectivePluginName = computed(() => props.sourcePlugin || props.pluginName)

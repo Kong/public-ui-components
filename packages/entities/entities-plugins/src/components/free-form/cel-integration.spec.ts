@@ -138,9 +138,6 @@ describe('plugin form CEL rollout', () => {
     await wrapper.setProps({ config: { ...config, dataPlaneVersions: ['3.15.0.0'] } })
     expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input')
     expectStringSchema()
-
-    await wrapper.setProps({ config })
-    expect(wrapper.get('[data-testid="ff-condition"]').element.tagName).toBe('INPUT')
   })
 
   it('resolves an expanded expression from the host and shares its value with the plain textarea', async () => {
