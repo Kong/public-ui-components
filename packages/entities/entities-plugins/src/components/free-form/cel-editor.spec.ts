@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { createApp, effectScope, nextTick, reactive, ref, type ComputedRef, type MaybeRef } from 'vue'
 import { useGatewayCelLanguage } from './cel-editor'
 import {
-  getCelCallables, getCelHint, getCelSubjectValues, getCelSuggestions,
+  getCelSubjectValues, getCelSuggestions,
   kongAclRule, kongExpressibleField, kongFallback, kongPluginState, type CelLanguage, type CelPlugin,
 } from '@kong-ui-public/monaco-editor/languages/cel'
 import { FEATURE_FLAGS } from '../../constants'
@@ -72,20 +72,6 @@ describe('useGatewayCelLanguage', () => {
     expect(fields({ ...konnect, dataPlaneVersions: ['3.17.0.0-rc.1', '3.17.0.0'] })).toEqual(extended)
     expect(fields({ ...optedIn, gatewayInfo: { edition: 'enterprise', version: '3.15.0.0' } })).toEqual(base)
     expect(fields({ ...optedIn, gatewayInfo: { edition: 'enterprise', version: '3.17.0.0' } })).toEqual(extended)
-  })
-
-  it('adds only the features each field registers', () => {
-    const dialect = (plugins: readonly CelPlugin[]) => {
-      const language = fromHost(konnect, plugins, { flag: true }).language.value!
-      return {
-        pluginState: 'plugins' in language.variables,
-        fallback: getCelCallables(undefined, language).some(callable => callable.name === 'default'),
-        hints: [getCelHint('plugins.key_auth.is_matched', language)?.kind, getCelHint('default(1, 2)', language)?.kind],
-      }
-    }
-    expect(dialect(CONDITION)).toEqual({ pluginState: true, fallback: true, hints: [undefined, undefined] })
-    expect(dialect(EXPRESSIBLE)).toEqual({ pluginState: true, fallback: false, hints: [undefined, 'default'] })
-    expect(dialect(ACL_RULE)).toEqual({ pluginState: false, fallback: true, hints: ['plugin-state', undefined] })
   })
 
   it('shares one host lookup, retries a failure and reloads when the scope changes', async () => {

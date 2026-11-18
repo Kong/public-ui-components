@@ -10,7 +10,8 @@ import schema from '../../../fixtures/schemas/acl'
 import rateLimitingSchema from '../../../fixtures/schemas/rate-limiting'
 import circuitBreakerSchema from '../../../fixtures/schemas/kong-circuit-breaker'
 import { CelInput, Form, NumberField } from '@kong-ui-public/freeform'
-import { getCelSubjectValues, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
+import { getCelCallables, getCelHint, getCelSubjectValues, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 enableAutoUnmount(afterEach)
@@ -29,6 +30,14 @@ const global = {
   provide: { [FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR]: true },
   stubs: { VaultSecretPicker: true, MonacoEditor: true },
 }
+
+// The features a field adds to the Gateway variables, as the editor offers and hints them.
+const dialect = (language: CelLanguage) => ({
+  pluginState: 'plugins' in language.variables,
+  fallback: getCelCallables(undefined, language).some(callable => callable.name === 'default'),
+  hints: [getCelHint('plugins.key_auth.is_matched', language)?.kind, getCelHint('default(1, 2)', language)?.kind],
+})
+const ACL_RULE_DIALECT = { pluginState: false, fallback: true, hints: ['plugin-state', undefined] }
 
 describe('plugin form CEL rollout', () => {
   it.each(['acl', 'cloned-acl'])('switches %s rows together and loads only host-provided subjects', async (pluginName) => {
@@ -57,6 +66,7 @@ describe('plugin form CEL rollout', () => {
       await flushPromises()
       expect(getCelSubjects).toHaveBeenCalledTimes(1)
       expect(row().classes()).toContain('cel-input')
+      expect(dialect(wrapper.getComponent(CelInput).props('language'))).toEqual(ACL_RULE_DIALECT)
       expect(wrapper.find('[data-testid="ff-condition"]').exists()).toBe(false)
 
       enabled.value = false
@@ -110,6 +120,7 @@ describe('plugin form CEL rollout', () => {
     expectStringSchema()
     await vi.waitFor(() => expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input'))
     expect(principalFields()).not.toContain('groups')
+    expect(dialect(wrapper.getComponent(CelInput).props('language'))).toEqual({ pluginState: true, fallback: true, hints: [undefined, undefined] })
     wrapper.getComponent(CelInput).vm.$emit('update:modelValue', 'http.path == "/test"')
     await flushPromises()
     expect(wrapper.getComponent(Form).emitted('change')?.at(-1)?.[0]).toMatchObject({ condition: 'http.path == "/test"' })
@@ -157,6 +168,7 @@ describe('plugin form CEL rollout', () => {
     await wrapper.get('[data-testid="ff-expression-add-config.minute"]').trigger('click')
     const input = wrapper.getComponent(CelInput)
     expect(input.attributes('data-testid')).toBe('ff-expressions.minute')
+    expect(dialect(input.props('language'))).toEqual({ pluginState: true, fallback: false, hints: [undefined, 'default'] })
     expect(getCelSubjects).toHaveBeenCalledTimes(1)
     input.vm.$emit('update:modelValue', '42')
     enabled.value = false
@@ -237,6 +249,7 @@ describe('plugin form CEL rollout', () => {
         expect(wrapper.get(`[data-testid="ff-${prefix}.${field}.0"]`).classes()).toContain('cel-input')
       }
     }
+    expect(wrapper.findAllComponents(CelInput).map(input => dialect(input.props('language')))).toEqual(Array(4).fill(ACL_RULE_DIALECT))
     expect(wrapper.get('[data-testid="ff-config.notifications.allow_when.0"]').element.tagName).toBe('INPUT')
     enabled.value = false
     await flushPromises()

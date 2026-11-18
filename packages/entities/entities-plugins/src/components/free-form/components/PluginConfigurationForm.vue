@@ -61,13 +61,12 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 
 <script setup lang="ts" generic="T extends Record<string, any>">
 import '@kong-ui-public/freeform/style.css'
-import { computed, h, inject, useAttrs, useId, useTemplateRef, type FunctionalComponent } from 'vue'
+import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
 import { Form, isExpressionFieldSchema, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
 import type { FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
-import { kongExpressibleField, kongPluginState } from '@kong-ui-public/monaco-editor/languages/cel'
-import PluginCelField from './PluginCelField'
+import ExpressionCelField from './ExpressionCelField'
 import RedisSelector from './RedisSelector.vue'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from '../schema-enhancement'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
@@ -75,12 +74,6 @@ import type { PluginConfigurationBaseProps } from '../layout/provider'
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps<Props<T>>()
-
-// An expressible field falls back to its config value, so the Gateway rejects `default()` there.
-const EXPRESSIBLE_FIELD_CEL = [kongPluginState(), kongExpressibleField()]
-const ExpressionCelField: FunctionalComponent<{ name: string }> = (attrs, { slots }) =>
-  h(PluginCelField, { ...attrs, plugins: EXPRESSIBLE_FIELD_CEL }, slots)
-ExpressionCelField.inheritAttrs = false
 
 const emit = defineEmits<{
   change: [value: T]
