@@ -101,14 +101,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, isRef, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
-import { useExpressionField, useFieldPath, useFieldRenderer } from '../composables'
+import { generalizePath, useExpressionField, useFieldPath, useFormShared } from '../composables'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -136,7 +136,22 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
-const inputRenderer = useFieldRenderer(() => expression.expressionPath.value ?? '')
+const { fieldRendererRegistry, getSchema, getSchemaMap } = useFormShared()
+
+/**
+ * A host replaces the expanded input by registering a component with
+ * `FieldRenderer`. Slot renderers are skipped: a slot cannot receive the
+ * tooltip and help slots below, so the input would lose them.
+ */
+const inputRenderer = computed(() => {
+  const twinPath = expression.expressionPath.value
+  if (!twinPath) return undefined
+  const genericPath = generalizePath(twinPath, getSchemaMap())
+  for (const [match, renderer] of fieldRendererRegistry) {
+    if (isRef(renderer) && match({ path: twinPath, genericPath, schema: getSchema(twinPath)! })) return renderer.value
+  }
+  return undefined
+})
 
 /**
  * Version lock for the value/expression pair, resolved by `useExpressionField`

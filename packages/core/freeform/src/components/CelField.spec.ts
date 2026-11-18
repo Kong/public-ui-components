@@ -1,6 +1,6 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { h, nextTick, ref, type FunctionalComponent } from 'vue'
+import { h, nextTick, ref, type Component, type FunctionalComponent } from 'vue'
 import { KInput } from '@kong/kongponents'
 import { defineCelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
 import { FIELD_RENDERERS, isExpressionFieldSchema } from '../composables'
@@ -177,5 +177,31 @@ describe('CelField', () => {
     input.vm.$emit('update:modelValue', '')
     await nextTick()
     expect(wrapper.emitted('change')?.at(-1)).toEqual([{ config: { limit: [10, 20] }, expressions: { limit: ['', ''] } }])
+  })
+
+  it('replaces the expanded expression input only with a registered component', async () => {
+    const schema: FormSchema = { type: 'record', fields: [
+      { config: { type: 'record', fields: [{ limit: { type: 'number', expressible: true } }] } },
+      { expressions: { type: 'record', fields: [{ limit: { type: 'string', expressible_kong_type: 'number' } as ExpressionFieldSchema }] } },
+    ] }
+    const ExpressionInput: FunctionalComponent<{ name: string }> = (attrs, { slots }) => h(CelField, { ...attrs, language }, slots)
+    ExpressionInput.inheritAttrs = false
+    const expand = async (component?: Component) => {
+      const wrapper = mount(Form, {
+        props: { schema, data: { config: { limit: 10 } } },
+        slots: { [FIELD_RENDERERS]: () => [
+          // A slot cannot receive the expression's tooltip and help slots, so it never replaces the twin input.
+          h(FieldRenderer, { match: ({ schema }) => isExpressionFieldSchema(schema) }, { default: () => h('span', { class: 'slot-renderer' }) }),
+          component && h(FieldRenderer, { component, match: ({ schema }) => isExpressionFieldSchema(schema) }),
+        ] },
+        global: { stubs: { MonacoEditor: true } },
+      })
+      await wrapper.get('[data-testid="ff-expression-add-config.limit"]').trigger('click')
+      expect(wrapper.find('.slot-renderer').exists()).toBe(false)
+      return wrapper
+    }
+
+    expect((await expand()).get('[data-testid="ff-expressions.limit"]').element.tagName).toBe('TEXTAREA')
+    expect((await expand(ExpressionInput)).getComponent(CelInput).get('.cel-input-help').text()).toContain('number')
   })
 })

@@ -93,7 +93,7 @@ Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omi
 
 Use `<CelField :name="fieldName" :language="language" />` for a form-bound string field. The host selects the dialect and supplies authorized records. The Monaco runtime loads when a CEL input is rendered.
 
-For expression twins, register your input component with `FieldRenderer` in the form's field-renderers slot. Match the twin with `isExpressionFieldSchema(schema)`. When expanded, `ExpressionEditor` passes its field name, update listener, tooltip and help slots to the registered component. Its default input is `StringField`.
+For expression twins, register your input component with `FieldRenderer :component` in the form's field-renderers slot. Match the twin with `isExpressionFieldSchema(schema)`. When expanded, `ExpressionEditor` passes its field name, update listener, tooltip and help slots to the registered component. Slot renderers do not replace the twin input, because a slot cannot receive those named slots. Its default input is `StringField`.
 
 ## Schema System
 
