@@ -63,6 +63,29 @@ describe('standalone CelInput', () => {
     expect(languageDispose).toHaveBeenCalledOnce()
   })
 
+  it('renders the messages for each built-in hint kind', async () => {
+    const language = defineCelLanguage([])
+    const wrapper = mount(CelInput, { props: { language, modelValue: 'true' } })
+    await vi.waitFor(() => expect(wrapper.find('textarea').exists()).toBe(true))
+
+    for (const [kind, message] of [
+      ['assignment', 'Use "==" to compare'],
+      ['alias', 'Did you mean "consumer"?'],
+      ['plugin-state', 'not supported in access control expressions'],
+      ['header-name', 'Use "consumer" instead of "user"'],
+      ['unguarded', 'has(consumer.id)'],
+      ['default', '"default()" is not allowed here'],
+      ['unknown-member', '"consumer.id" does not exist. "consumer" is string'],
+      ['unknown-field', '"consumer.id" is not a field'],
+    ]) {
+      await wrapper.setProps({ language: defineCelLanguage([{ check: () => ({
+        kind, typed: 'user', expected: 'consumer', field: 'consumer.id', base: 'consumer', type: 'string',
+      }) }]) })
+      expect(wrapper.get('[role="status"]').text()).toContain(message)
+    }
+    wrapper.unmount()
+  })
+
   it('uses the supplied dialect for hints and respects disabled fields', async () => {
     const wrapper = mount(CelInput, { props: {
       language: defineCelLanguage([kongHttp()]), modelValue: 'http.custom', disabled: true,

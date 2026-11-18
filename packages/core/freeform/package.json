@@ -48,8 +48,8 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
     "install:pw": "playwright install chromium",
-    "test:pw": "pnpm run build:filler && cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
-    "test:pw:open": "pnpm run build:filler && cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
+    "test:pw": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
+    "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
   },
   "dependencies": {
     "compare-versions": "^6.1.1",

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/experimental-ct-vue'
-import { createFiller } from '@kong-ui-public/freeform/filler/playwright'
+import { createFiller } from './create-filler'
 import CelFormWrapper from '../fixtures/CelFormWrapper.vue'
 import { acl, condition, expression, parsePayload, schema } from '../fixtures/cel'
 
