@@ -28,6 +28,17 @@ auditConfig:
     # braces has no patched release. Remove this exception when a fix is available.
     # https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
     - 'GHSA-vfj7-8cjw-p6xm'
+    # picomatch has no patched release. Fixed locally by patches/picomatch@*.patch.
+    # Remove this exception and the patches when a fix is available.
+    # https://github.com/advisories/GHSA-fc5q-39xc-vjpf
+    - 'GHSA-fc5q-39xc-vjpf'
+
+# CVE-2026-112366: picomatch ReDoS via repeated extglobs (e.g. `+(*a)`).
+# Remove when upstream releases a fix (https://github.com/micromatch/picomatch/pull/194).
+patchedDependencies:
+  picomatch@2.3.2: patches/picomatch@2.3.2.patch
+  picomatch@4.0.5: patches/picomatch@4.0.5.patch
+  picomatch@4.0.7: patches/picomatch@4.0.7.patch
 
 overrides:
   '@vue/server-renderer@<3.5.42': ^3.5.43
