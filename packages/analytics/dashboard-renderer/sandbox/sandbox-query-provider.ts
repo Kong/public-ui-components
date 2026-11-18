@@ -162,28 +162,50 @@ const aiModelHeatmapResponse = (): ExploreResultV4 => {
   return { data, meta: aiModelMeta(start.toISOString(), end.toISOString(), dayMs, { ai_gateway_model: aiModelDisplay }) }
 }
 
-// Model → consumer request counts for the sankey: a few heavy consumers per model, some of them
-// shared between models, and a long tail the sankey leaves out of each model's top 5
+// Provider → model → consumer request counts for the sankey: a few heavy consumers per model, some
+// of them shared between models, and a long tail the sankey leaves out of each model's top 5
 const sankeyConsumers = ['alex', 'sam', 'kim', 'lee', 'jo', 'max', 'ana', 'raj', 'zoe', 'leo', 'mia', 'ivan']
 
-const aiModelConsumerRequests: Array<[model: string, consumer: string, requests: number]> = aiModelRequests
-  .slice(0, 8)
-  .flatMap(([, model, requests], modelIndex) => sankeyConsumers.map((consumer, consumerIndex): [string, string, number] => {
+const aiModelConsumerRequests: Array<[provider: string, model: string, consumer: string, requests: number]> = aiModelRequests
+  .flatMap(([provider, model, requests], modelIndex) => sankeyConsumers.map((consumer, consumerIndex): [string, string, string, number] => {
     // Each model's heaviest consumers start at a different offset, so their top 5s overlap partly
     const rank = (consumerIndex - modelIndex * 2 + sankeyConsumers.length) % sankeyConsumers.length
 
-    return [model, `${consumer}@example.com`, Math.round(requests / (rank + 1) ** 1.4)]
+    return [provider, model, `${consumer}@example.com`, Math.round(requests / (rank + 1) ** 1.4)]
   }))
 
-const aiModelConsumerResponse: ExploreResultV4 = {
-  data: aiModelConsumerRequests.map(([model, consumer, requests]) => ({
-    event: { ai_gateway_model: model, oidc_credential: consumer, ai_request_count: requests },
-    timestamp: '2024-01-31T20:00:00.000Z',
-  })),
-  meta: aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, {
-    ai_gateway_model: aiModelDisplay,
-    oidc_credential: Object.fromEntries(sankeyConsumers.map((consumer) => [`${consumer}@example.com`, { name: `${consumer}@example.com`, deleted: false }])),
-  }),
+const sankeyDisplay: ExploreResultV4['meta']['display'] = {
+  ai_provider: aiProviderExploreResponse.meta.display.ai_provider,
+  ai_gateway_model: aiModelDisplay,
+  oidc_credential: Object.fromEntries(sankeyConsumers.map((consumer) => [`${consumer}@example.com`, { name: `${consumer}@example.com`, deleted: false }])),
+}
+
+// Grouped by the queried dimensions, with `display` in query order like the API, which sets the sankey's column order.
+// Applies `in` filters, so clicking a sankey node narrows the data
+const aiModelConsumerResponse = (dimensions: string[], filters: Array<{ field: string, operator: string, value?: unknown }> = []): ExploreResultV4 => {
+  const rows = new Map<string, { event: Record<string, string | number>, requests: number }>()
+
+  for (const [provider, model, consumer, requests] of aiModelConsumerRequests) {
+    const values: Record<string, string> = { ai_provider: provider, ai_gateway_model: model, oidc_credential: consumer }
+
+    if (filters.some(({ field, operator, value }) => operator === 'in' && field in values && !(value as string[]).includes(values[field]))) {
+      continue
+    }
+
+    const event = Object.fromEntries(dimensions.map((dimension) => [dimension, values[dimension]]))
+    const key = JSON.stringify(event)
+    const row = rows.get(key) ?? { event, requests: 0 }
+    row.requests += requests
+    rows.set(key, row)
+  }
+
+  return {
+    data: [...rows.values()].map(({ event, requests }) => ({
+      event: { ...event, ai_request_count: requests },
+      timestamp: '2024-01-31T20:00:00.000Z',
+    })),
+    meta: aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, Object.fromEntries(dimensions.map((dimension) => [dimension, sankeyDisplay[dimension]]))),
+  }
 }
 
 const delayedResponse = <T>(response: T): Promise<T> => {
@@ -208,7 +230,7 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
 
   // Model usage by consumer: a sankey of model → consumer
   if (query.query.dimensions?.includes('oidc_credential')) {
-    return await delayedResponse(aiModelConsumerResponse)
+    return await delayedResponse(aiModelConsumerResponse(query.query.dimensions, query.query.filters))
   }
 
   // Model usage: a heatmap over time, or a treemap of provider → model

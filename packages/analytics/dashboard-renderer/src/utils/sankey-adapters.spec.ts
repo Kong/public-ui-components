@@ -29,6 +29,33 @@ const buildResult = (
   },
 })
 
+const buildThreeDimensionResult = (
+  records: Array<[provider: string, model: string, consumer: string, requests: number]>,
+  // The query's dimensions, which set the column order
+  dimensions: string[] = ['ai_provider', 'ai_gateway_model', 'oidc_credential'],
+): ExploreResultV4 => {
+  const display: Record<string, Record<string, { name: string, is_other_group?: boolean }>> = {
+    ai_provider: Object.fromEntries(records.map(([provider]) => [provider, provider === OTHER ? { name: OTHER, is_other_group: true } : { name: provider }])),
+    ai_gateway_model: Object.fromEntries(records.map(([, model]) => [model, { name: model }])),
+    oidc_credential: Object.fromEntries(records.map(([, , consumer]) => [consumer, { name: consumer }])),
+  }
+
+  return {
+    data: records.map(([provider, model, consumer, requests]) => ({
+      timestamp: '2026-11-11T00:00:00Z',
+      event: { ai_provider: provider, ai_gateway_model: model, oidc_credential: consumer, ai_request_count: requests },
+    })),
+    meta: {
+      start: '2026-11-11T00:00:00Z',
+      end: '2026-11-18T00:00:00Z',
+      granularity_ms: 604800000,
+      query_id: 'query',
+      metric_names: ['ai_request_count'],
+      display: Object.fromEntries(dimensions.map((dimension) => [dimension, display[dimension]])),
+    },
+  }
+}
+
 /** Nodes as `[id, name, depth, value]`, without their colors */
 const nodeSummary = (result: ReturnType<typeof exploreResultToSankey>) => (
   result?.nodes.map(({ id, name, depth, value }) => [id, name, depth, value])
@@ -64,10 +91,31 @@ describe('exploreResultToSankey', () => {
     ])
   })
 
-  it('colors every node', () => {
-    const sankey = exploreResultToSankey(buildResult([['gpt', 'alex', 30]]))
+  describe('node colors', () => {
+    const fiveModels: Array<[string, string, number]> = ['a', 'b', 'c', 'd', 'e'].map((model, index) => [model, `user-${model}`, 50 - index])
 
-    expect(sankey?.nodes.every(({ itemStyle }) => typeof itemStyle?.color === 'string')).toBe(true)
+    it('gives first-dimension nodes different colors without a coordinator', () => {
+      const sankey = exploreResultToSankey(buildResult(fiveModels))
+      const modelColors = sankey?.nodes.filter(({ depth }) => depth === 0).map(({ itemStyle }) => itemStyle?.color)
+
+      expect(new Set(modelColors).size).toBe(5)
+    })
+
+    it('resolves colors through the coordinator, first-dimension nodes first', () => {
+      const resolveDiscriminator = vi.fn(({ order }: { order?: number }) => order ?? 0)
+
+      exploreResultToSankey(buildResult([
+        ['gpt', 'alex', 30],
+        ['claude', 'sam', 20],
+      ]), { coordinator: { resolveDiscriminator, reset: vi.fn() }, chartUuid: 'chart-1' })
+
+      expect(resolveDiscriminator.mock.calls.map(([args]) => args)).toEqual([
+        expect.objectContaining({ name: 'ai_gateway_modelgpt', order: 0, chartUuid: 'chart-1' }),
+        expect.objectContaining({ name: 'ai_gateway_modelclaude', order: 1, chartUuid: 'chart-1' }),
+        expect.objectContaining({ name: 'oidc_credentialalex', order: 2, chartUuid: 'chart-1' }),
+        expect.objectContaining({ name: 'oidc_credentialsam', order: 3, chartUuid: 'chart-1' }),
+      ])
+    })
   })
 
   it('keeps the top first-dimension values, ranked by their total', () => {
@@ -174,12 +222,91 @@ describe('exploreResultToSankey', () => {
   })
 })
 
+describe('exploreResultToSankey with three dimensions', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  const usage: Array<[provider: string, model: string, consumer: string, requests: number]> = [
+    ['openai', 'gpt', 'alex', 30],
+    ['openai', 'mini', 'alex', 20],
+    ['anthropic', 'claude', 'alex', 10],
+    ['openai', 'gpt', 'sam', 5],
+    ['meta', 'llama', 'kim', 1],
+  ]
+
+  it('ranks the first column and breaks each value down into its own top values in the other columns', () => {
+    const sankey = exploreResultToSankey(buildThreeDimensionResult(usage), { limit: 1 })
+
+    expect(nodeSummary(sankey)).toEqual([
+      ['ai_provider:openai', 'openai', 0, 55],
+      ['ai_gateway_model:gpt', 'gpt', 1, undefined],
+      ['oidc_credential:alex', 'alex', 2, undefined],
+    ])
+    // Openai's top model, then the part of it that comes from openai's top user
+    expect(linkSummary(sankey)).toEqual([
+      'ai_provider:openai -> ai_gateway_model:gpt: 35',
+      'ai_gateway_model:gpt -> oidc_credential:alex: 30',
+    ])
+  })
+
+  it('links the other two columns only through the values picked for each first-column value', () => {
+    const sankey = exploreResultToSankey(buildThreeDimensionResult(usage, ['oidc_credential', 'ai_provider', 'ai_gateway_model']), { limit: 2 })
+
+    expect(nodeSummary(sankey)).toEqual([
+      ['oidc_credential:alex', 'alex', 0, 60],
+      ['oidc_credential:sam', 'sam', 0, 5],
+      ['ai_provider:openai', 'openai', 1, undefined],
+      ['ai_provider:anthropic', 'anthropic', 1, undefined],
+      ['ai_gateway_model:gpt', 'gpt', 2, undefined],
+      ['ai_gateway_model:mini', 'mini', 2, undefined],
+    ])
+    // Claude isn't one of alex's top 2 models, so anthropic links to no model
+    expect(linkSummary(sankey)).toEqual([
+      'oidc_credential:alex -> ai_provider:openai: 50',
+      'oidc_credential:alex -> ai_provider:anthropic: 10',
+      'oidc_credential:sam -> ai_provider:openai: 5',
+      'ai_provider:openai -> ai_gateway_model:gpt: 35',
+      'ai_provider:openai -> ai_gateway_model:mini: 20',
+    ])
+  })
+
+  it('leaves out an Other group in a later column, but counts it in the first column\'s totals', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const sankey = exploreResultToSankey(buildThreeDimensionResult([
+      ['openai', 'gpt', 'alex', 10],
+      [OTHER, 'gpt', 'alex', 40],
+    ], ['oidc_credential', 'ai_provider', 'ai_gateway_model']))
+
+    expect(nodeSummary(sankey)?.slice(0, 2)).toEqual([
+      ['oidc_credential:alex', 'alex', 0, 50],
+      ['ai_provider:openai', 'openai', 1, undefined],
+    ])
+  })
+
+  it('colors the nodes column by column', () => {
+    const resolveDiscriminator = vi.fn(({ order }: { order?: number }) => order ?? 0)
+
+    exploreResultToSankey(buildThreeDimensionResult([['openai', 'gpt', 'alex', 10]]), { coordinator: { resolveDiscriminator, reset: vi.fn() } })
+
+    expect(resolveDiscriminator.mock.calls.map(([{ name }]) => name)).toEqual(['ai_provideropenai', 'ai_gateway_modelgpt', 'oidc_credentialalex'])
+  })
+
+  it('maps the first-column nodes to their values', () => {
+    const sankey = exploreResultToSankey(buildThreeDimensionResult(usage), { limit: 2 })
+
+    expect(sankey?.rankedDimension).toBe('ai_provider')
+    expect(sankey?.rankedValues).toEqual(new Map([['ai_provider:openai', 'openai'], ['ai_provider:anthropic', 'anthropic']]))
+  })
+})
+
 describe('isSankeyCompatible', () => {
   it.each([
     ['ai_request_count', ['ai_gateway_model', 'oidc_credential'], true],
     [undefined, ['ai_gateway_model', 'oidc_credential'], true],
     ['ai_request_count', ['ai_gateway_model'], false],
-    ['ai_request_count', ['ai_provider', 'ai_gateway_model', 'oidc_credential'], false],
+    ['ai_request_count', ['ai_provider', 'ai_gateway_model', 'oidc_credential'], true],
+    ['ai_request_count', ['ai_provider', 'ai_gateway_model', 'oidc_credential', 'status_code_grouped'], false],
     ['ai_request_count', ['time', 'ai_gateway_model'], false],
     ['llm_latency_average', ['ai_gateway_model', 'oidc_credential'], false],
     ['error_rate', ['ai_gateway_model', 'oidc_credential'], false],

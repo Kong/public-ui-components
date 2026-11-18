@@ -577,9 +577,14 @@ const dashboardConfig = ref<DashboardConfig>({
       definition: {
         chart: {
           type: 'sankey',
-          chart_title: 'Model usage by consumer',
+          chart_title: 'Usage breakdown',
+          views: [
+            { label: 'Models', dimensions: ['ai_gateway_model', 'oidc_credential'] },
+            { label: 'Providers', dimensions: ['ai_provider', 'ai_gateway_model', 'oidc_credential'] },
+            { label: 'Consumers', dimensions: ['oidc_credential', 'ai_provider', 'ai_gateway_model'] },
+          ],
         },
-        header_description: 'The top 5 models, each linked to its own top 5 consumers.',
+        header_description: 'Click a ranked node to see only that value.',
         query: {
           datasource: 'llm_usage',
           dimensions: ['ai_gateway_model', 'oidc_credential'],

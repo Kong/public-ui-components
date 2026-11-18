@@ -88,6 +88,16 @@ Links take their source node's color by default. Set `linkColor` to `target`, or
 
 Hovering a node or link highlights the links connected to it and fades the rest. Nodes can't be dragged.
 
+Clicking a node emits `node-click` with that node, as it was passed in `nodes`:
+
+```vue
+<SankeyChart
+  :links="links"
+  :nodes="nodes"
+  @node-click="(node) => selectModel(node.id)"
+/>
+```
+
 Long node names are truncated to fit the room on the right of the chart. Change the label width or that room with `seriesOption`, e.g. `{ right: 240, label: { width: 220 } }`.
 
 ## Tooltip

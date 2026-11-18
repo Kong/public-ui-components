@@ -361,8 +361,28 @@ export const treemapChartSchema = {
 
 export type TreemapChartOptions = FromSchemaWithOptions<typeof treemapChartSchema>
 
-// Two dimensions: flows from the first to the second, e.g. model -> consumer. The query's
-// `limit` is the top N in each column: the top N first values, and the top N second values of each
+const sankeyViewSchema = {
+  type: 'object',
+  properties: {
+    label: {
+      type: 'string',
+      description: 'The view\'s name in the tile header.',
+    },
+    dimensions: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 2,
+      maxItems: 3,
+      description: 'The columns, in order. Replaces the query\'s dimensions while the view is selected.',
+    },
+  },
+  required: ['label', 'dimensions'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+// Two or three dimensions, one column each, e.g. provider -> model -> consumer. The query's `limit`
+// is the top N in each column: the top N values of the first column (e.g. providers), and for each of
+// them, its own top N values in every other column
 export const sankeyChartSchema = {
   type: 'object',
   properties: {
@@ -371,6 +391,11 @@ export const sankeyChartSchema = {
       enum: ['sankey'],
     },
     chart_title: chartTitle,
+    views: {
+      type: 'array',
+      items: sankeyViewSchema,
+      description: 'Ways to break down the query, picked in the tile header. The selected view\'s dimensions replace the query\'s, and the first view is shown first.',
+    },
   },
   required: ['type'],
   additionalProperties: false,

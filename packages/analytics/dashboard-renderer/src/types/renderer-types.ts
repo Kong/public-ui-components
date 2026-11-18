@@ -108,6 +108,8 @@ export interface ChartRendererProps<T> {
    * This is only used when rendering a time series chart with multiple metrics and a group-by dimension.
    */
   activeMetric?: AllAggregations
+  /** The index of the selected view, for charts with `views` (sankey) */
+  activeView?: number
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink

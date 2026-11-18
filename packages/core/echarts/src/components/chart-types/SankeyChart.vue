@@ -3,6 +3,7 @@
     :height="height"
     :option="mergedOption"
     :tooltip-content="flowTooltipContent"
+    @click="onClick"
   />
 </template>
 
@@ -33,6 +34,10 @@ const {
   seriesOption,
   tooltipTitle,
 } = defineProps<SankeyChartProps>()
+
+const emit = defineEmits<{
+  'node-click': [node: SankeyNode]
+}>()
 
 const colors = useChartColors()
 
@@ -95,6 +100,18 @@ const flowTooltipContent: ChartTooltipContent = (params) => {
     title: tooltipTitle,
     metric: seriesName,
     rows: [tooltipRow(item, (item.data as SankeyNode).name, item.value, valueFormatter)],
+  }
+}
+
+/** Emits the clicked node, with the `id` and `name` it was given */
+const onClick = (params: { dataType?: string, data?: unknown }): void => {
+  if (params.dataType === 'node') {
+    const { id } = params.data as SankeyNode
+    const node = nodes?.find((node) => node.id === id)
+
+    if (node) {
+      emit('node-click', node)
+    }
   }
 }
 

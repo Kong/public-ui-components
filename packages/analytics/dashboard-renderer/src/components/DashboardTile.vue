@@ -72,6 +72,18 @@
         />
       </div>
 
+      <div
+        v-if="showViewSelector"
+        class="metric-selector-wrapper"
+      >
+        <KSegmentedControl
+          v-model="activeView"
+          class="metric-selector"
+          data-testid="view-selector"
+          :options="viewOptions"
+        />
+      </div>
+
       <div v-if="showRefresh">
         <KButton
           appearance="secondary"
@@ -432,6 +444,7 @@ const componentData = computed(() => {
   const chartRendererProps = {
     chartOptions: definition.chart,
     activeMetric: activeMetric.value,
+    activeView: activeView.value,
     headerDescription: tileDescription.value,
     requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
     exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
@@ -507,6 +520,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(tileDescription.value),
     showRefresh,
     showMetricSelector.value,
+    showViewSelector.value,
   ].some(Boolean)
 })
 
@@ -556,6 +570,15 @@ const singleValueMetricLabel = computed<string | undefined>(() => {
 
   return fieldLabel(metric)
 })
+
+// Ways to break down the same query, e.g. a sankey of models or of users
+const viewOptions = computed<Array<SegmentedControlOption<number>>>(() => (
+  chart.value.type === 'sankey' ? (chart.value.views ?? []).map(({ label }, value) => ({ label, value })) : []
+))
+
+const activeView = ref(0)
+
+const showViewSelector = computed(() => viewOptions.value.length > 1)
 
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,

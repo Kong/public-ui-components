@@ -144,6 +144,24 @@ describe('<SankeyChart />', () => {
     })
   })
 
+  describe('node-click', () => {
+    it('emits the clicked node as given, without its palette color', () => {
+      const wrapper = mountChart({ nodes, links })
+
+      chart(wrapper).vm.$emit('click', { dataType: 'node', data: { ...nodes[1], itemStyle: { color: 'red' } } })
+
+      expect(wrapper.emitted('node-click')).toEqual([[nodes[1]]])
+    })
+
+    it('ignores clicks on links', () => {
+      const wrapper = mountChart({ nodes, links })
+
+      chart(wrapper).vm.$emit('click', { dataType: 'edge', data: links[0] })
+
+      expect(wrapper.emitted('node-click')).toBeUndefined()
+    })
+  })
+
   it('always merges the option over the generated option, even without data', () => {
     const option = chartOption(mountChart({ option: { animation: false } }))
 
