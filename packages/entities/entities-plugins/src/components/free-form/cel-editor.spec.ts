@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { effectScope, shallowRef } from 'vue'
 import { getPluginFieldCelLanguage, isPluginCelEnabled, useCelSubjectLoader } from './cel-editor'
-import { getCelCallables, getCelHint } from '@kong-ui-public/monaco-editor/languages/cel'
+import { getCelCallables, getCelHint, getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { PluginCelLanguage } from './cel-editor'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 
@@ -91,7 +91,7 @@ describe('CEL record lookups', () => {
 vi.mock('monaco-editor', () => ({}))
 
 const dialect = (kind: PluginCelLanguage) => {
-  const language = getPluginFieldCelLanguage(kind, () => ({}))
+  const language = getPluginFieldCelLanguage(kind, konnect, () => ({}))
   return {
     pluginState: 'plugins' in language.variables,
     fallback: getCelCallables(undefined, language).some(callable => callable.name === 'default'),
@@ -100,6 +100,19 @@ const dialect = (kind: PluginCelLanguage) => {
 }
 
 describe('getPluginFieldCelLanguage', () => {
+  it('offers principal groups and type only when every target declares them', () => {
+    const fields = (config: KonnectPluginFormConfig | KongManagerPluginFormConfig) =>
+      getCelSuggestions('principal.', getPluginFieldCelLanguage('acl-rule', config, () => ({}))).map(s => s.label).sort()
+    const base = ['display_name', 'id', 'metadata']
+    const extended = ['display_name', 'groups', 'id', 'metadata', 'type']
+
+    expect(fields(konnect)).toEqual(base)
+    expect(fields({ ...konnect, dataPlaneVersions: ['3.16.0.2', '3.17.0.0'] })).toEqual(base)
+    expect(fields({ ...konnect, dataPlaneVersions: ['3.17.0.0-rc.1', '3.17.0.0'] })).toEqual(extended)
+    expect(fields({ ...manager, gatewayInfo: { edition: 'enterprise', version: '3.15.0.0' } })).toEqual(base)
+    expect(fields({ ...manager, gatewayInfo: { edition: 'enterprise', version: '3.17.0.0' } })).toEqual(extended)
+  })
+
   it('rejects plugin state only in ACL rules, and default() only in expressible fields', () => {
     expect(dialect('condition')).toEqual({ pluginState: true, fallback: true, hints: [undefined, undefined] })
     expect(dialect('expression')).toEqual({ pluginState: true, fallback: false, hints: [undefined, 'default'] })

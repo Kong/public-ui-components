@@ -6,6 +6,7 @@ import PluginEntityForm from '../PluginEntityForm.vue'
 import { FEATURE_FLAGS } from '../../constants'
 import schema from '../../../fixtures/schemas/acl'
 import { CelInput, Form } from '@kong-ui-public/freeform'
+import { getCelSuggestions } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 enableAutoUnmount(afterEach)
@@ -89,9 +90,11 @@ describe('plugin form CEL rollout', () => {
     })
     const conditionSchema = () => (wrapper.getComponent(Form).props('schema') as FormSchema).fields.find(field => field.condition)?.condition
     const expectStringSchema = () => expect(conditionSchema()).toEqual({ type: 'string', description: expect.any(String) })
+    const principalFields = () => getCelSuggestions('principal.', wrapper.getComponent(CelInput).props('language')).map(s => s.label)
 
     expectStringSchema()
     await vi.waitFor(() => expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input'))
+    expect(principalFields()).not.toContain('groups')
     wrapper.getComponent(CelInput).vm.$emit('update:modelValue', 'http.path == "/test"')
     await flushPromises()
     expect(wrapper.getComponent(Form).emitted('change')?.at(-1)?.[0]).toMatchObject({ condition: 'http.path == "/test"' })
@@ -106,6 +109,10 @@ describe('plugin form CEL rollout', () => {
     enabled.value = true
     await flushPromises()
     expect(wrapper.get('[data-testid="ff-condition"]').classes()).toContain('cel-input')
+    expect(wrapper.getComponent(CelInput).props('modelValue')).toBe('http.path == "/test"')
+
+    await wrapper.setProps({ config: { ...config, dataPlaneVersions: ['3.17.0.0'] } })
+    expect(principalFields()).toContain('groups')
     expect(wrapper.getComponent(CelInput).props('modelValue')).toBe('http.path == "/test"')
 
     // A mixed-version sandbox must retain the ATC-compatible plain input.

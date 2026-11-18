@@ -286,7 +286,7 @@ provide(CEL_INPUT_KEY, (language) => {
   if (!isPluginCelEnabled(language, props.config, unref(celEditorEnabled))) return
   // Start a shared host lookup only when a rendered field opts into CEL.
   void loadCelSubjects.value?.().catch(() => {})
-  return { language: getPluginFieldCelLanguage(language, () => celSubjects.value) }
+  return { language: getPluginFieldCelLanguage(language, props.config, () => celSubjects.value) }
 })
 
 const pluginConfig = computed(() => getPluginConfig(effectivePluginName.value))

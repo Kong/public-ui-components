@@ -8,21 +8,34 @@ import {
 import type { CelLanguage, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 
 export type PluginCelLanguage = 'expression' | 'condition' | 'acl-rule'
+type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
+
+function allTargetsSupport(config: Config, minimum: string): boolean {
+  const supportedRange = { enterprise: [minimum] as [string] }
+  if (config.app === 'kongManager') {
+    return !!config.gatewayInfo && useGatewayFeatureSupported({ gatewayInfo: config.gatewayInfo, supportedRange })
+  }
+
+  const versions = config.dataPlaneVersions
+  return !!versions?.length && versions.every(version => useGatewayFeatureSupported({
+    gatewayInfo: { edition: 'enterprise', version }, supportedRange,
+  }))
+}
 
 /**
  * The CEL dialect of the plugin field of this kind: every Kong Gateway variable,
  * except plugin state in ACL rules and `default()` in expressible fields.
  * `records` reads the records that value suggestions name.
  */
-export const getPluginFieldCelLanguage = (kind: PluginCelLanguage, records: () => CelSubjects): CelLanguage => {
+export const getPluginFieldCelLanguage = (kind: PluginCelLanguage, config: Config, records: () => CelSubjects): CelLanguage => {
   return defineCelLanguage([
-    kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongPrincipal(records), kongContext(),
+    kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongContext(),
+    kongPrincipal(records, { supportsPrincipalGroups: allTargetsSupport(config, '3.17.0.0-rc.1') }),
     kind === 'acl-rule' ? kongAclRule() : kongPluginState(),
     kind === 'expression' ? kongExpressibleField() : kongFallback(),
   ])
 }
 
-type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
 /** Rollout policy for language keys explicitly selected by the frontend form. */
 export function isPluginCelEnabled(
   language: string,
@@ -32,18 +45,9 @@ export function isPluginCelEnabled(
   const enabled = config.app === 'kongManager' ? config.enableCelEditor : konnectEnabled
   if (!enabled) return false
   if (language === 'expression' || language === 'acl-rule') return true
-  if (language !== 'condition') return false
 
   // Gateway 3.14 evaluates condition as ATC. Offer CEL only for known 3.15+ targets.
-  const supportedRange = { enterprise: ['3.15'] as [string] }
-  if (config.app === 'kongManager') {
-    return !!config.gatewayInfo && useGatewayFeatureSupported({ gatewayInfo: config.gatewayInfo, supportedRange })
-  }
-
-  const versions = config.dataPlaneVersions
-  return !!versions?.length && versions.every(version => useGatewayFeatureSupported({
-    gatewayInfo: { edition: 'enterprise', version }, supportedRange,
-  }))
+  return language === 'condition' && allTargetsSupport(config, '3.15')
 }
 
 /** Share an in-flight or successful host lookup across the editors in this form. */
