@@ -27,6 +27,11 @@ describe('getCelCompletionContext', () => {
 })
 
 describe('getCelSuggestions', () => {
+  it('suppresses completions inside multiline strings and resumes after the closing delimiter', () => {
+    expect(labels('"""first line\npri')).toEqual([])
+    expect(labels('"""first line\nlast""" == consumer.')).toContain('username')
+  })
+
   it('offers globals and functions at the start of a term', () => {
     expect(labels('')).toEqual(['http', 'net', 'consumer', 'consumer_group', 'route', 'service', 'principal', 'kong', 'plugins', 'has', 'matches', 'size', 'default'])
     expect(labels('', expressible)).not.toContain('default')

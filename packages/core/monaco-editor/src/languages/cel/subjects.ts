@@ -1,6 +1,6 @@
 import { getCelElement, getCelLocals, resolveCelChain } from './catalog'
 import type { CelLanguage, CelSubjectValue, CelType } from './catalog'
-import { CEL_LITERALS_AND_COMMENTS } from './tokens'
+import { CEL_LITERALS_AND_COMMENTS, endsInCelLiteral } from './tokens'
 
 /** The values a string with this `subject` can take, from the plugins that supply them. */
 export const getCelSubjectValues = (language: CelLanguage, subject: string): CelSubjectValue[] =>
@@ -104,6 +104,7 @@ export interface CelSubjectSuggestion {
  */
 export const getCelSubjectSuggestions = (source: string, offset: number, language: CelLanguage) => {
   const literal = literalAt(source, offset)
+  if (!literal && endsInCelLiteral(source.slice(0, offset))) return { suggestions: [], inLiteral: true }
   let start = offset
   let end = offset
   let quote = '"'

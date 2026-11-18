@@ -12,15 +12,16 @@ export const CEL_LANGUAGE_ID = 'kong-cel'
 const SUGGEST_ARGUMENTS_COMMAND = `${CEL_LANGUAGE_ID}.suggestArguments`
 
 /** Only replace the current identifier, preserving its receiver and following text. */
-export const getCelCompletionContext = (line: string, column: number) => {
-  const before = line.slice(0, column - 1)
+export const getCelCompletionContext = (source: string, cursor = source.length + 1) => {
+  const before = source.slice(0, cursor - 1)
   // Don't suggest variables inside a string or comment.
   if (endsInCelLiteral(before)) return undefined
-  const match = before.match(/(?:\b([a-zA-Z_]\w*(?:\s*\.\s*[a-zA-Z_]\w*)*)\s*\.\s*)?([a-zA-Z_]\w*)?$/)
+  const line = before.slice(before.lastIndexOf('\n') + 1)
+  const match = line.match(/(?:\b([a-zA-Z_]\w*(?:\s*\.\s*[a-zA-Z_]\w*)*)\s*\.\s*)?([a-zA-Z_]\w*)?$/)
   // Only dotted identifiers are resolved; an indexed or called receiver must
   // not fall back to global suggestions after its trailing dot.
-  if (!match || /\.\s*$/.test(before.slice(0, match.index))) return undefined
-  return { receiver: match[1]?.replace(/\s+/g, '') ?? '', prefix: match[2] ?? '', startColumn: column - (match[2]?.length ?? 0) }
+  if (!match || /\.\s*$/.test(line.slice(0, match.index))) return undefined
+  return { receiver: match[1]?.replace(/\s+/g, '') ?? '', prefix: match[2] ?? '', startColumn: line.length + 1 - (match[2]?.length ?? 0) }
 }
 
 export interface CelSuggestion {
@@ -33,13 +34,11 @@ export interface CelSuggestion {
 }
 
 /**
- * What to offer at the end of `before`, whose last line is `line`: the members
+ * What to offer at the end of `before`: the members
  * of the receiver's type, or the macro variables, globals and functions at the
  * start of a term.
  */
-export const getCelSuggestions = (before: string, language: CelLanguage): CelSuggestion[] => {
-  const line = before.slice(before.lastIndexOf('\n') + 1)
-  const context = getCelCompletionContext(line, line.length + 1)
+export const getCelSuggestions = (before: string, language: CelLanguage, context = getCelCompletionContext(before)): CelSuggestion[] => {
   if (!context) return []
   const frames = getCelCallFrames(before)
   const call = [...frames].reverse().find(frame => frame.name)
@@ -203,15 +202,15 @@ const register = () => {
           && (completionContext.triggerCharacter === '=' || completionContext.triggerCharacter === ' ')
         if (values.inLiteral || valuesOnly) return { suggestions: valueItems, incomplete: true }
         const lineText = model.getLineContent(position.lineNumber)
-        const context = getCelCompletionContext(lineText, position.column)
+        const before = source.slice(0, offset)
+        const context = getCelCompletionContext(before)
         if (!context) return { suggestions: valueItems }
         const range = {
           startLineNumber: position.lineNumber, endLineNumber: position.lineNumber,
           startColumn: context.startColumn, endColumn: model.getWordAtPosition(position)?.endColumn ?? position.column,
         }
         const hasParentheses = /^\s*\(/.test(lineText.slice(range.endColumn - 1))
-        const before = source.slice(0, offset)
-        const suggestions = getCelSuggestions(before, editorContext.language()).map(({ label, kind, detail, documentation, callable }): monaco.languages.CompletionItem => ({
+        const suggestions = getCelSuggestions(before, editorContext.language(), context).map(({ label, kind, detail, documentation, callable }): monaco.languages.CompletionItem => ({
           label, detail, range,
           documentation: documentation ? { value: documentation } : undefined,
           kind: kind === 'function'

@@ -106,6 +106,11 @@ describe('getCelSubjectSuggestions', () => {
     expect(getCelComparedSubject('consumer.username = ""', 19, 21, full)).toBe('consumer-username')
   })
 
+  it('suppresses record completions in comments and multiline literals', () => {
+    expect(suggest('// consumer.username == |')).toEqual({ suggestions: [], inLiteral: true })
+    expect(suggest('"""first line\nconsumer.username == |"""')).toEqual({ suggestions: [], inLiteral: true })
+  })
+
   it('offers nothing in other literals', () => {
     expect(suggest('route.name == "|"')).toEqual({ suggestions: [], inLiteral: true })
     expect(suggest('http.path == |').suggestions).toEqual([])
