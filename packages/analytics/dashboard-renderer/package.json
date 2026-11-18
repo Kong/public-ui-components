@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "10.5.0",
+  "version": "10.5.1",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -96,8 +96,8 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.24.18",
-    "ag-grid-community": "^36.2.0",
-    "ag-grid-vue3": "^36.2.0",
+    "ag-grid-community": "^36.3.0",
+    "ag-grid-vue3": "^36.3.0",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "file-saver": "^2.0.5",
