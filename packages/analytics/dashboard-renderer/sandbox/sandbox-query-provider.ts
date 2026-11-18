@@ -162,6 +162,30 @@ const aiModelHeatmapResponse = (): ExploreResultV4 => {
   return { data, meta: aiModelMeta(start.toISOString(), end.toISOString(), dayMs, { ai_gateway_model: aiModelDisplay }) }
 }
 
+// Model → consumer request counts for the sankey: a few heavy consumers per model, some of them
+// shared between models, and a long tail the sankey leaves out of each model's top 5
+const sankeyConsumers = ['alex', 'sam', 'kim', 'lee', 'jo', 'max', 'ana', 'raj', 'zoe', 'leo', 'mia', 'ivan']
+
+const aiModelConsumerRequests: Array<[model: string, consumer: string, requests: number]> = aiModelRequests
+  .slice(0, 8)
+  .flatMap(([, model, requests], modelIndex) => sankeyConsumers.map((consumer, consumerIndex): [string, string, number] => {
+    // Each model's heaviest consumers start at a different offset, so their top 5s overlap partly
+    const rank = (consumerIndex - modelIndex * 2 + sankeyConsumers.length) % sankeyConsumers.length
+
+    return [model, `${consumer}@example.com`, Math.round(requests / (rank + 1) ** 1.4)]
+  }))
+
+const aiModelConsumerResponse: ExploreResultV4 = {
+  data: aiModelConsumerRequests.map(([model, consumer, requests]) => ({
+    event: { ai_gateway_model: model, oidc_credential: consumer, ai_request_count: requests },
+    timestamp: '2024-01-31T20:00:00.000Z',
+  })),
+  meta: aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, {
+    ai_gateway_model: aiModelDisplay,
+    oidc_credential: Object.fromEntries(sankeyConsumers.map((consumer) => [`${consumer}@example.com`, { name: `${consumer}@example.com`, deleted: false }])),
+  }),
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -180,6 +204,11 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     && singleValueTrendMocks[query.query.metrics[0]]
   ) {
     return await delayedResponse(singleValueTrendMocks[query.query.metrics[0]])
+  }
+
+  // Model usage by consumer: a sankey of model → consumer
+  if (query.query.dimensions?.includes('oidc_credential')) {
+    return await delayedResponse(aiModelConsumerResponse)
   }
 
   // Model usage: a heatmap over time, or a treemap of provider → model

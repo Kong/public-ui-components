@@ -572,6 +572,24 @@ const dashboardConfig = ref<DashboardConfig>({
       },
       layout: { position: { col: 0, row: 24 }, size: { cols: 6, rows: 3 } },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'sankey',
+          chart_title: 'Model usage by consumer',
+        },
+        header_description: 'The top 5 models, each linked to its own top 5 consumers.',
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_gateway_model', 'oidc_credential'],
+          metrics: ['ai_request_count'],
+          limit: 5,
+          time_range: { type: 'relative', time_range: '7d' },
+        },
+      },
+      layout: { position: { col: 0, row: 27 }, size: { cols: 6, rows: 3 } },
+    } satisfies TileConfig,
   ],
 })
 

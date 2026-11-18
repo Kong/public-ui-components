@@ -31,6 +31,7 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 export const dashboardTileTypes = [
   'heatmap',
   'treemap',
+  'sankey',
   'horizontal_bar',
   'vertical_bar',
   'gauge',
@@ -359,6 +360,23 @@ export const treemapChartSchema = {
 } as const satisfies JSONSchema
 
 export type TreemapChartOptions = FromSchemaWithOptions<typeof treemapChartSchema>
+
+// Two dimensions: flows from the first to the second, e.g. model -> consumer. The query's
+// `limit` is the top N in each column: the top N first values, and the top N second values of each
+export const sankeyChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['sankey'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SankeyChartOptions = FromSchemaWithOptions<typeof sankeyChartSchema>
 
 export const columnIconSet = ['ai_provider'] as const
 
@@ -1065,6 +1083,7 @@ const dashboardTileChartSchema = {
     donutChartSchema,
     heatmapChartSchema,
     treemapChartSchema,
+    sankeyChartSchema,
     timeseriesChartSchema,
     scatterChartSchema,
     metricCardSchema,
