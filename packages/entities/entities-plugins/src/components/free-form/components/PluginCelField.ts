@@ -1,17 +1,19 @@
-import { computed, defineComponent, h, type PropType } from 'vue'
+import { defineComponent, h, type PropType } from 'vue'
 import { CelField, StringField } from '@kong-ui-public/freeform'
-import { useCelInput, type CelExpressionKind } from '../cel-editor'
+import type { CelPlugin } from '@kong-ui-public/monaco-editor/languages/cel'
+import { useGatewayCelLanguage } from '../cel-editor'
 
 export default defineComponent({
   name: 'PluginCelField',
   inheritAttrs: false,
   props: {
     name: { type: String, required: true },
-    kind: { type: String as PropType<CelExpressionKind | null>, default: 'expression' },
+    /** This field's CEL features on top of the Gateway variables. Without them the field stays a string input. */
+    plugins: { type: Array as PropType<readonly CelPlugin[]>, default: undefined },
+    minGatewayVersion: { type: String, default: undefined },
   },
   setup(props, { attrs, slots }) {
-    const { getLanguages } = useCelInput()
-    const language = computed(() => props.kind && getLanguages(props.kind)[0])
+    const language = useGatewayCelLanguage(() => props.plugins, { minGatewayVersion: props.minGatewayVersion })
 
     return () => language.value
       ? h(CelField, { ...attrs, name: props.name, language: language.value }, slots)

@@ -45,10 +45,10 @@
       <template #item="{ autofocus, fieldName }">
         <PluginCelField
           :autofocus="autofocus"
-          :kind="isExpressionMode ? 'acl-rule' : null"
           :multiline="isExpressionMode"
           :name="fieldName"
           :placeholder="t(`plugins.free-form.acl.field.${mode}.placeholder`)"
+          :plugins="isExpressionMode ? ACL_RULE_CEL : undefined"
           :rows="isExpressionMode ? 2 : undefined"
         >
           <!-- Only the CEL modes need the syntax hint; allow/deny take plain group names. -->
@@ -78,6 +78,7 @@ import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
 import { useFormShared, ArrayField } from '@kong-ui-public/freeform'
 import * as utils from '@kong-ui-public/freeform'
+import { kongAclRule, kongFallback } from '@kong-ui-public/monaco-editor/languages/cel'
 import PluginCelField from '../../components/PluginCelField'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
@@ -101,6 +102,8 @@ const ALL_MODES: AclMode[] = ['allow', 'deny', 'allow_when', 'deny_when']
 // The two `*_when` modes hold CEL expressions, which are long enough to warrant a
 // textarea instead of the single-line input the schema type would otherwise get.
 const EXPRESSION_MODES: AclMode[] = ['allow_when', 'deny_when']
+// ACL rules run outside the plugins iterator, so they cannot read plugin state.
+const ACL_RULE_CEL = [kongAclRule(), kongFallback()]
 
 const { formData, getLabelAttributes, getSchema, getEmptyValue, getDefault } = useFormShared<FreeFormPluginData<AclConfig>>()
 const { i18n: { t }, i18nT } = useI18n()

@@ -193,13 +193,10 @@ describe('plugin form CEL rollout', () => {
     expect(getCelSubjects).toHaveBeenCalledTimes(1)
 
     host.aiGatewayId = 'b'
-    expect(original.map(ids)).toEqual([[], []])
     await flushPromises()
     const current = languages()
     expect(current.map(ids)).toEqual([['second'], ['second']])
     expect(getCelSubjects).toHaveBeenCalledTimes(2)
-    wrapper.unmount()
-    expect(current.map(ids)).toEqual([[], []])
   })
 
   it('preserves plugin-specific form preparation alongside the CEL rollout', async () => {

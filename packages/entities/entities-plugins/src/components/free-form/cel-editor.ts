@@ -1,18 +1,16 @@
-import { computed, inject, provide, shallowRef, unref, watch, type MaybeRef } from 'vue'
-import { reactiveComputed } from '@vueuse/core'
+import { computed, inject, shallowRef, toValue, unref, watch } from 'vue'
+import type { ComputedRef, MaybeRef, MaybeRefOrGetter } from 'vue'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
+import {
+  defineCelLanguage, kongConsumer, kongConsumerGroup, kongContext, kongHttp, kongNet, kongPrincipal, kongRoute, kongService,
+} from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelLanguage, CelPlugin, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 import { FEATURE_FLAGS } from '../../constants'
 import { FORMS_CONFIG } from './const'
-import {
-  defineCelLanguage, kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet,
-  kongPluginState, kongPrincipal, kongRoute, kongService,
-} from '@kong-ui-public/monaco-editor/languages/cel'
-import type { CelLanguage, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
-
-export type CelExpressionKind = 'expression' | 'condition' | 'acl-rule'
 
 type Config = KonnectPluginFormConfig | KongManagerPluginFormConfig
+type LoadSubjects = NonNullable<Config['getCelSubjects']>
 
 function allTargetsSupport(config: Config, minimum: string): boolean {
   const supportedRange = { enterprise: [minimum] as [string] }
@@ -26,80 +24,69 @@ function allTargetsSupport(config: Config, minimum: string): boolean {
   }))
 }
 
+// One lookup per host callback and scope, shared by every CEL field that reads it.
+const lookups = new WeakMap<LoadSubjects, { scope: string, records: Promise<CelSubjects> }>()
+
+function lookupSubjects(load: LoadSubjects, scope: string): Promise<CelSubjects> {
+  const cached = lookups.get(load)
+  if (cached?.scope === scope) return cached.records
+  const records = load()
+  lookups.set(load, { scope, records })
+  records.catch(() => {
+    if (lookups.get(load)?.records === records) lookups.delete(load)
+  })
+  return records
+}
+
 /**
- * The CEL dialect of the plugin field of this kind: every Kong Gateway variable,
- * except plugin state in ACL rules and `default()` in expressible fields.
- * `records` reads the records that value suggestions name.
+ * The Gateway CEL dialect of one field: the variables every Gateway expression
+ * reads, plus the field's own `plugins`. Undefined while the host has the editor
+ * off, the field passes no plugins, or a target is older than `minGatewayVersion`.
  */
-export const getPluginFieldCelLanguage = (kind: CelExpressionKind, config: Config, records: () => CelSubjects): CelLanguage => {
-  return defineCelLanguage([
-    kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongContext(),
-    kongPrincipal(records, { supportsPrincipalGroups: allTargetsSupport(config, '3.17.0.0-rc.1') }),
-    kind === 'acl-rule' ? kongAclRule() : kongPluginState(),
-    kind === 'expression' ? kongExpressibleField() : kongFallback(),
-  ])
-}
-
-export function useCelInput() {
+export function useGatewayCelLanguage(
+  plugins: MaybeRefOrGetter<readonly CelPlugin[] | undefined>,
+  { minGatewayVersion }: { minGatewayVersion?: string } = {},
+): ComputedRef<CelLanguage | undefined> {
   const config = inject<Config | undefined>(FORMS_CONFIG, undefined)
-  const featureFlag = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
-  const enabled = computed(() => config?.app === 'kongManager'
-    ? !!config.enableCelEditor
-    : config?.app === 'konnect' && unref(featureFlag))
+  const flag = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
+  const subjects = shallowRef<CelSubjects>({})
+  const records = () => subjects.value
 
-  function getLanguages(kind: CelExpressionKind): CelLanguage[] {
-    if (!enabled.value || !config) return []
-    // Gateway 3.14 evaluates condition as ATC. Every target must support CEL.
-    if (kind === 'condition' && !allTargetsSupport(config, '3.15')) return []
+  const language = computed(() => {
+    const local = toValue(plugins)
+    if (!config || !local) return
+    const enabled = config.app === 'kongManager' ? !!config.enableCelEditor : !!unref(flag)
+    if (!enabled || (minGatewayVersion && !allTargetsSupport(config, minGatewayVersion))) return
+    return defineCelLanguage([
+      kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongContext(),
+      kongPrincipal(records, { supportsPrincipalGroups: allTargetsSupport(config, '3.17.0.0-rc.1') }),
+      ...local,
+    ])
+  })
 
-    const load = config.getCelSubjects
-    let records: CelSubjects = {}
-    void load?.().then(result => {
-      records = result
-    }).catch(() => {})
-    return [getPluginFieldCelLanguage(kind, config, () => config.getCelSubjects === load ? records : {})]
-  }
-
-  return { enabled, getLanguages }
-}
-
-/** Share an in-flight or successful host lookup across the editors in this form. */
-export function useCelSubjectLoader(config: () => Config) {
-  const loader = shallowRef<Config['getCelSubjects']>()
+  // Load the records once this field shows a CEL editor. Switching the scope
+  // that the host callback reads discards the old records.
   watch([
-    () => config().getCelSubjects,
-    () => config().apiBaseUrl,
-    () => config().workspace,
-    () => {
-      const host = config()
-      return 'aiGatewayId' in host ? host.aiGatewayId : undefined
-    },
-    () => {
-      const host = config()
-      return host.app === 'konnect' ? host.controlPlaneId : undefined
-    },
-  ], ([load], _, onCleanup) => {
+    () => !!language.value,
+    () => config?.getCelSubjects,
+    () => config && [
+      config.apiBaseUrl,
+      config.workspace,
+      config.app === 'konnect' ? config.controlPlaneId : '',
+      'aiGatewayId' in config ? config.aiGatewayId : '',
+    ].join('\n'),
+  ], ([shown, load, scope], _, onCleanup) => {
+    subjects.value = {}
+    if (!shown || !load || scope === undefined) return
     let active = true
     onCleanup(() => {
       active = false
-      loader.value = undefined
     })
-    let pending: Promise<CelSubjects> | undefined
-    loader.value = load && (() => pending ??= Promise.resolve()
-      .then(() => active ? load() : {})
-      .then(records => active ? records : {})
-      .catch(error => {
-        pending = undefined
-        throw error
-      }))
-  }, { immediate: true, flush: 'sync' })
-  return loader
-}
+    // A failed lookup leaves value suggestions empty; the next field retries it.
+    lookupSubjects(load, scope).then((result) => {
+      if (active) subjects.value = result
+    }).catch(() => {})
+  }, { immediate: true })
 
-/** Scope the existing host callback to one mounted configuration form, including direct AI Manager mounts. */
-export function provideCelSubjectLoader() {
-  const host = inject<Config | undefined>(FORMS_CONFIG, undefined)
-  if (!host) return
-  const loader = useCelSubjectLoader(() => host)
-  provide(FORMS_CONFIG, reactiveComputed(() => ({ ...host, getCelSubjects: loader.value })))
+  return language
 }
