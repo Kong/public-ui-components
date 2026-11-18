@@ -91,25 +91,9 @@ const language = computed(() => defineCelLanguage([
 
 Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
 
-Inside a Freeform form, pass `celExpression: { enabled, getSupportedLanguages }` in the form configuration. Set `enabled` from the host's feature flag. Return the supported dialects for each field kind in preference order. A custom renderer can use the first dialect to edit an existing string field.
+Use `<CelField :name="fieldName" :language="language" />` for a form-bound string field. The host selects the dialect and supplies authorized records. The Monaco runtime loads when a CEL input is rendered.
 
-```vue
-<script setup lang="ts">
-import { computed } from 'vue'
-import { CelField, StringField, useCelExpression } from '@kong-ui-public/freeform'
-
-const { getSupportedLanguages } = useCelExpression()
-const language = computed(() => getSupportedLanguages('condition')[0])
-</script>
-
-<template>
-  <component :is="language ? CelField : StringField" :language="language" name="condition" />
-</template>
-```
-
-`useCelExpression()` returns a reactive `enabled` flag and a `getSupportedLanguages(kind)` function. An absent configuration, disabled flag, or unsupported kind yields an empty list and the normal string input. `ExpressionEditor` requests `expression` when expanded. Plugin renderers request `condition` or `acl-rule`.
-
-The host supplies rollout/version gates, language declarations, and authorized records. Freeform does not fetch records or infer Gateway globals. The Monaco runtime loads when a CEL input is rendered.
+For expression twins, register your input component with `FieldRenderer` in the form's field-renderers slot. Match the twin with `isExpressionFieldSchema(schema)`. When expanded, `ExpressionEditor` passes its field name, update listener, tooltip and help slots to the registered component. Its default input is `StringField`.
 
 ## Schema System
 

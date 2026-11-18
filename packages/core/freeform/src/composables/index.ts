@@ -1,5 +1,4 @@
 export * from './ancestors'
-export * from './cel-expression'
 export * from './constants'
 export * from './expression'
 export * from './expression-paths'

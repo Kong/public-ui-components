@@ -42,12 +42,11 @@
       class="ff-expression-editor-expanded"
     >
       <component
-        :is="language ? CelField : StringField"
+        :is="inputRenderer ?? StringField"
         class="ff-expression-editor-input"
         :disabled="isLocked"
         :label="i18n.t('expression.label')"
         :label-attributes="labelAttributes"
-        :language="language"
         multiline
         :name="expressionName"
         :placeholder="placeholder ?? ''"
@@ -107,10 +106,9 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
-import CelField from './CelField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
-import { useCelExpression, useExpressionField, useFieldPath } from '../composables'
+import { useExpressionField, useFieldPath, useFieldRenderer } from '../composables'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -138,6 +136,7 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
+const inputRenderer = useFieldRenderer(() => expression.expressionPath.value ?? '')
 
 /**
  * Version lock for the value/expression pair, resolved by `useExpressionField`
@@ -156,8 +155,6 @@ const isLocked = computed(() => !!versionInfo.value)
  * open while the user clears and retypes, and only `remove` collapses it.
  */
 const expanded = ref(expression.hasExpression.value)
-const { getSupportedLanguages } = useCelExpression()
-const language = computed(() => getSupportedLanguages('expression')[0])
 watch(expression.hasExpression, (hasExpression) => {
   if (hasExpression) expanded.value = true
 })
