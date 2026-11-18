@@ -123,8 +123,8 @@ describe('<SankeyRenderer />', () => {
 
   it('ranks the selected view\'s first column', async () => {
     const wrapper = mountRenderer({ activeView: 0 })
-    // Ranked nodes are the ones sized by their total
-    const rankedNodeIds = () => (chart(wrapper).props('nodes') as SankeyNode[]).filter(({ value }) => value !== undefined).map(({ id }) => id)
+    // Ranked nodes are the ones with a total
+    const rankedNodeIds = () => (chart(wrapper).props('nodes') as SankeyNode[]).filter(({ total }) => total !== undefined).map(({ id }) => id)
 
     expect(rankedNodeIds()).toEqual(['ai_gateway_model:gpt', 'ai_gateway_model:claude'])
 

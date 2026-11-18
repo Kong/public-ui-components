@@ -56,9 +56,9 @@ const buildThreeDimensionResult = (
   }
 }
 
-/** Nodes as `[id, name, depth, value]`, without their colors */
+/** Nodes as `[id, name, depth, total]`, without their colors */
 const nodeSummary = (result: ReturnType<typeof exploreResultToSankey>) => (
-  result?.nodes.map(({ id, name, depth, value }) => [id, name, depth, value])
+  result?.nodes.map(({ id, name, depth, total }) => [id, name, depth, total])
 )
 
 /** Links as `source -> target: value` */
@@ -157,7 +157,7 @@ describe('exploreResultToSankey', () => {
     expect(sankey?.links).toHaveLength(2)
   })
 
-  it('sizes first-dimension nodes by their full total, including values left out of the links', () => {
+  it('gives first-dimension nodes their full total, including values left out of the links', () => {
     const sankey = exploreResultToSankey(buildResult([
       ['gpt', 'alex', 30],
       ['gpt', 'sam', 20],
@@ -165,6 +165,8 @@ describe('exploreResultToSankey', () => {
     ], { withOther: true }), { limit: 1 })
 
     expect(nodeSummary(sankey)?.[0]).toEqual(['ai_gateway_model:gpt', 'GPT', 0, 150])
+    // No `value`, so the node is only as tall as its links
+    expect(sankey?.nodes[0].value).toBeUndefined()
     expect(linkSummary(sankey)).toEqual(['ai_gateway_model:gpt -> oidc_credential:alex: 30'])
   })
 

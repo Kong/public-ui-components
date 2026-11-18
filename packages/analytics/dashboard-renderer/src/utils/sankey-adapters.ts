@@ -49,14 +49,15 @@ interface NodeSource {
   /** The dimension value */
   id: string
   depth: number
-  value?: number
+  /** The full total, for the tooltip */
+  total?: number
 }
 
 // Prefixed with the dimension, so the same value in two columns stays two nodes
 const nodeId = (dimension: string, id: string): string => `${dimension}:${id}`
 
 const sankeyNode = (
-  { dimension, id, depth, value }: NodeSource,
+  { dimension, id, depth, total }: NodeSource,
   dimensionDisplay: Display | undefined,
   order: number,
   { coordinator, chartUuid }: SankeyAdapterOptions,
@@ -64,7 +65,7 @@ const sankeyNode = (
   id: nodeId(dimension, id),
   name: dimensionDisplay?.[id]?.name ?? id,
   depth,
-  ...(value !== undefined && { value }),
+  ...(total !== undefined && { total }),
   itemStyle: {
     // Like the analytics charts: the coordinator keeps a value's color across the dashboard, and
     // without one each node takes the next palette color, so neighbors don't share a color
@@ -105,8 +106,8 @@ const addToGroup = (groups: Map<string, Map<string, number>>, group: string, key
  * once, e.g. provider -> its top models and its top users. Links only count traffic through the ranked
  * values shown and the values picked for them.
  *
- * The API's `Other` groups are left out. First-column nodes are sized by their full total, so they keep
- * their ranking even though their links only cover part of it.
+ * The API's `Other` groups are left out. First-column nodes are as tall as their links, in ranked order,
+ * and carry their full total for the tooltip, since their links only cover part of it.
  */
 export const exploreResultToSankey = (
   result: ExploreResultV4 | undefined,
@@ -206,7 +207,7 @@ export const exploreResultToSankey = (
   }
 
   const nodeSources: NodeSource[] = [
-    ...rankedEntries.map(([id, total]) => ({ dimension: rankedDimension, id, depth: 0, value: total })),
+    ...rankedEntries.map(([id, total]) => ({ dimension: rankedDimension, id, depth: 0, total })),
     ...otherDimensions.flatMap((dimension) => [...shown.get(dimension)!].map((id) => ({ dimension, id, depth: dimensions.indexOf(dimension) }))),
   ]
 

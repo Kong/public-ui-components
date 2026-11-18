@@ -96,10 +96,12 @@ const flowTooltipContent: ChartTooltipContent = (params) => {
   }
 
   // `item.name` is the node's `id`, the label is on its data
+  const { name, total } = item.data as SankeyNode
+
   return {
     title: tooltipTitle,
     metric: seriesName,
-    rows: [tooltipRow(item, (item.data as SankeyNode).name, item.value, valueFormatter)],
+    rows: [tooltipRow(item, name, total ?? item.value, valueFormatter)],
   }
 }
 
@@ -115,15 +117,17 @@ const onClick = (params: { dataType?: string, data?: unknown }): void => {
   }
 }
 
-/** A node's label: its name (ECharts would show its `id`), and its value with `showValues`. */
+/** A node's label: its name (ECharts would show its `id`), and its total or value with `showValues`. */
 const nodeLabel = ({ data, value }: { data: unknown, value: unknown }): string => {
-  const { name } = data as SankeyNode
+  const { name, total } = data as SankeyNode
 
   if (!showValues) {
     return name
   }
 
-  return `${name}: ${valueFormatter ? valueFormatter(Number(value)) : String(value)}`
+  const shown = total ?? Number(value)
+
+  return `${name}: ${valueFormatter ? valueFormatter(shown) : String(shown)}`
 }
 
 const generatedOption = computed((): EChartsOption => ({

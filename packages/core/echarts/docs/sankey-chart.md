@@ -39,12 +39,12 @@ const links: SankeyLink[] = [
 
 Columns come from the links: nodes with no incoming links start on the left, and each link moves one column to the right. Set `depth` on a node to put it in a specific column.
 
-A node's height is the larger of its incoming and outgoing values. Set `value` on a node to make it taller than its links, e.g. a model sized by its total requests while only its links to its top consumers are drawn:
+A node's height is the larger of its incoming and outgoing values. When the links only cover part of a node's value, e.g. a model linked to just its top consumers, set `total` on it: the tooltip (and the label with `showValues`) shows the total, while the node stays as tall as its links:
 
 ```ts
 const nodes: SankeyNode[] = [
   // 245,000 requests in total, of which the links below show 67,400
-  { id: 'model:gpt-5', name: 'gpt-5', value: 245000 },
+  { id: 'model:gpt-5', name: 'gpt-5', total: 245000 },
   { id: 'consumer:alex', name: 'alex@example.com' },
   { id: 'consumer:sam', name: 'sam@example.com' },
 ]
@@ -105,7 +105,7 @@ Long node names are truncated to fit the room on the right of the chart. Change 
 Hovering shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips), with `seriesName` as the metric and values formatted with `valueFormatter`:
 
 - A link shows its source node as the subtitle, and a row with its target node and value, in the source node's color.
-- A node shows a row with its name and value.
+- A node shows a row with its name and value, or its `total` when set.
 
 ```vue
 <SankeyChart

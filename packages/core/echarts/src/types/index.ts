@@ -142,6 +142,11 @@ export type SankeyNode = Omit<NonNullable<SankeySeriesOption['data']>[number], '
   id: string
   /** Label shown next to the node. Can repeat across nodes, e.g. an `Other` node in several columns. */
   name: string
+  /**
+   * The node's full value, shown in its tooltip and label instead of its flow. For nodes whose
+   * links only cover part of their value, e.g. a model linked to just its top consumers.
+   */
+  total?: number
 }
 
 /** A flow between two nodes, with its width set by `value`. */

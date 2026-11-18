@@ -102,6 +102,10 @@ describe('<SankeyChart />', () => {
     it('falls back to the raw value when showValues is set without valueFormatter', () => {
       expect(label(mountChart({ nodes, showValues: true }), nodes[2], 400)).toBe('alex@example.com: 400')
     })
+
+    it('shows the node\'s total instead of its flow with showValues', () => {
+      expect(label(mountChart({ nodes, showValues: true }), { ...nodes[0], total: 1000 }, 300)).toBe('gpt-5: 1000')
+    })
   })
 
   describe('tooltip', () => {
@@ -134,6 +138,12 @@ describe('<SankeyChart />', () => {
         metric: 'Requests',
         rows: [{ color: '#123456', label: 'alex@example.com', value: '400' }],
       })
+    })
+
+    it('shows a node\'s total instead of its flow when set', () => {
+      const node = { ...nodes[0], total: 1000 }
+
+      expect(tooltipContent(mountChart({ nodes: [node] }))({ dataType: 'node', data: node, value: 300 } as any)?.rows?.[0]?.value).toBe('1000')
     })
 
     it('uses valueFormatter for link and node values', () => {
