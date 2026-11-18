@@ -1,36 +1,7 @@
 import { test, expect } from '@playwright/experimental-ct-vue'
-import { createFiller, fillExpression } from '@kong-ui-public/freeform/filler/playwright'
+import { createFiller } from '@kong-ui-public/freeform/filler/playwright'
 import CelFormWrapper from '../fixtures/CelFormWrapper.vue'
 import { acl, condition, expression, parsePayload, schema } from '../fixtures/cel'
-
-for (const updateOnChange of [false, true]) {
-  test(`routes explicit CEL fields through fillExpression with updateOnChange ${updateOnChange}`, async ({ mount, page }) => {
-    await mount(CelFormWrapper, { props: { enabled: false, updateOnChange } })
-    const expressionFields: string[] = []
-    const filler = createFiller(page, schema, {
-      fillExpression: async (option) => {
-        expressionFields.push(option.fieldKey)
-        await fillExpression(option)
-      },
-    })
-    const assertRule = async (value: string | null) => {
-      await expect.poll(async () => parsePayload(await page.getByTestId('payload').innerText()).rule).toEqual(value)
-    }
-
-    // A schema CEL field has no expression twin container or Add expression button.
-    await expect(page.locator('[data-expression-for="rule"]')).toHaveCount(0)
-    await filler.fill({ rule: condition })
-    await assertRule(condition)
-    expect(expressionFields).toEqual(['rule'])
-    await filler.fillField('rule', 'false')
-    await assertRule('false')
-    for (const empty of ['', null, undefined]) {
-      await filler.fillField('rule', condition)
-      await filler.fillField('rule', empty)
-      await assertRule(null)
-    }
-  })
-}
 
 for (const enabled of [false, true]) {
   test(`fills, replaces and clears expression, condition and ACL inputs with CEL ${enabled ? 'on' : 'off'}`, async ({ mount, page }) => {

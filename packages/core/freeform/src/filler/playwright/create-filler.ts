@@ -4,7 +4,6 @@ import type {
   FormSchema,
   UnionFieldSchema,
   StringFieldSchema,
-  CelFieldSchema,
   NumberLikeFieldSchema,
   BooleanFieldSchema,
   SetFieldSchema,
@@ -83,7 +82,7 @@ export function createFiller(
         await mergedHandlers.fillForeign({ page, fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
         break
       case 'expression':
-        await mergedHandlers.fillExpression({ page, fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema | CelFieldSchema, value })
+        await mergedHandlers.fillExpression({ page, fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema, value })
         break
       case 'expressionArray':
         // No container and no add-button: the rows belong to the source array

@@ -8,6 +8,7 @@ import type { ExpressionFieldSchema, FormSchema } from '../form-schema'
 import Form from './Form.vue'
 import CelField from './CelField.vue'
 import StringField from './StringField.vue'
+import EnumField from './EnumField.vue'
 import EnhancedInput from './EnhancedInput.vue'
 import CelInput from './CelInput.vue'
 
@@ -22,7 +23,7 @@ describe('CelField', () => {
     const schema: FormSchema = { type: 'record', fields: [{ condition: { type: 'string' } }] }
     const wrapper = mount(Form, {
       props: { schema, data: { condition: 'true' } },
-      slots: { default: () => h(enabled.value ? CelField : StringField, { name: 'condition', ...(enabled.value && { language }) }) },
+      slots: { default: () => enabled.value ? h(CelField, { name: 'condition', language }) : h(StringField, { name: 'condition' }) },
       global: { stubs: { MonacoEditor: true } },
     })
     expect(wrapper.get('input').element.value).toBe('true')
@@ -45,15 +46,16 @@ describe('CelField', () => {
     const schema: FormSchema = { type: 'record', fields: [
       { condition: { type: 'string' } },
       { allow_when: { type: 'string' } },
-      { arbitrary: { type: 'cel', language } },
+      { choice: { type: 'string', one_of: ['true', 'false'] } },
     ] }
     const wrapper = mount(Form, {
       props: { schema },
-      global: { stubs: { MonacoEditor: true }, provide: { [CEL_INPUT_KEY as symbol]: resolve } },
+      global: { stubs: { EnumField: true }, provide: { [CEL_INPUT_KEY as symbol]: resolve } },
     })
     expect(wrapper.get('[data-testid="ff-condition"]').element.tagName).toBe('INPUT')
     expect(wrapper.get('[data-testid="ff-allow_when"]').element.tagName).toBe('INPUT')
-    expect(wrapper.findAllComponents(CelInput)).toHaveLength(1)
+    expect(wrapper.findComponent(CelInput).exists()).toBe(false)
+    expect(wrapper.getComponent(EnumField).props('name')).toContain('choice')
     expect(resolve).not.toHaveBeenCalled()
     wrapper.unmount()
   })
@@ -61,10 +63,11 @@ describe('CelField', () => {
   it.each(['null', 'undefined'] as const)('commits on blur and clears using the %s empty sentinel', async (emptyFieldValue) => {
     const wrapper = mount(Form, {
       props: {
-        schema: { type: 'record', fields: [{ rule: { type: 'cel', language } }] },
+        schema: { type: 'record', fields: [{ rule: { type: 'string' } }] },
         data: { rule: 'true' },
         config: { updateOnChange: true, emptyFieldValue },
       },
+      slots: { default: () => h(CelField, { name: 'rule', language }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const input = wrapper.getComponent(CelInput)
@@ -86,7 +89,7 @@ describe('CelField', () => {
       props: { data: { nested: { rule: 'true' } }, schema: { type: 'record', fields: [{ nested: { type: 'record', fields: [
         { rule: { type: 'string', required: true, description: 'Rule description' } },
       ] } }] } },
-      slots: { default: () => h(enabled.value ? CelField : StringField, { name: '$.nested.rule', ...(enabled.value && { language }) }) },
+      slots: { default: () => enabled.value ? h(CelField, { name: '$.nested.rule', language }) : h(StringField, { name: '$.nested.rule' }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const label = wrapper.getComponent(CelInput).props('label')
@@ -114,9 +117,10 @@ describe('CelField', () => {
   it('shows and clears server errors using the shared field error rendering', async () => {
     const wrapper = mount(Form, {
       props: {
-        schema: { type: 'record', fields: [{ rule: { type: 'cel', language } }] },
+        schema: { type: 'record', fields: [{ rule: { type: 'string' } }] },
         errors: [{ path: 'rule', message: 'Invalid CEL expression' }],
       },
+      slots: { default: () => h(CelField, { name: 'rule', language }) },
       global: { stubs: { MonacoEditor: true } },
     })
     await nextTick()
@@ -132,12 +136,13 @@ describe('CelField', () => {
       props: {
         schema: { type: 'record', fields: [
           { visible: { type: 'boolean', default: false } },
-          { rule: { type: 'cel', language, min_ai_gateway_version: '2.3' } },
+          { rule: { type: 'string', min_ai_gateway_version: '2.3' } },
         ] },
         data: { visible: false, rule: 'true' },
         config: { minRuntimeVersion: '2.2' },
         renderRules: { dependencies: { rule: ['visible', true] } },
       },
+      slots: { default: () => h(CelField, { name: 'rule', language }) },
       global: { stubs: { MonacoEditor: true } },
     })
     const input = wrapper.getComponent(CelInput)

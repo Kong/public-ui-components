@@ -1,8 +1,8 @@
-import type { CelFieldSchema, StringFieldSchema } from '../../../form-schema'
+import type { StringFieldSchema } from '../../../form-schema'
 import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
 
-export function fillString(option: HandlerOption<StringFieldSchema | CelFieldSchema>): void {
+export function fillString(option: HandlerOption<StringFieldSchema>): void {
   const { fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)

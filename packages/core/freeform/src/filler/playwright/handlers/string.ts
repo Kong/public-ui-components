@@ -1,8 +1,8 @@
-import type { CelFieldSchema, StringFieldSchema } from '../../../form-schema'
+import type { StringFieldSchema } from '../../../form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
 
-export async function fillString(option: HandlerOption<StringFieldSchema | CelFieldSchema>): Promise<void> {
+export async function fillString(option: HandlerOption<StringFieldSchema>): Promise<void> {
   const { page, fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)

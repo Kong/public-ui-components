@@ -1,13 +1,8 @@
 import type { ExpressionFieldSchema, FormSchema } from '../../form-schema'
-import { defineCelLanguage } from '../../../../monaco-editor/src/languages/cel/catalog'
-import { kongConsumer, kongHttp } from '../../../../monaco-editor/src/languages/cel/kong'
-
-export const language = defineCelLanguage([kongHttp(), kongConsumer()])
 
 export const schema: FormSchema = {
   type: 'record',
   fields: [
-    { rule: { type: 'cel', language } },
     { condition: { type: 'string' } },
     { config: { type: 'record', required: true, fields: [
       { minute: { type: 'number', expressible: true } },
@@ -15,7 +10,7 @@ export const schema: FormSchema = {
       { deny_when: { type: 'array', elements: { type: 'string' } } },
     ] } },
     { expressions: { type: 'record', fields: [
-      { minute: { type: 'string', expressible_kong_type: 'number', source_field: { type: 'number' } } as ExpressionFieldSchema },
+      { minute: { type: 'string', expressible_kong_type: 'number' } as ExpressionFieldSchema },
     ] } },
   ],
 }

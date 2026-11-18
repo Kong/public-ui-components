@@ -46,7 +46,7 @@ src/
     ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
     ├── FieldErrors.vue      # The list of a field's errors, rendered under its control
     ├── CelInput.vue         # Standalone CEL input using the shared Monaco language API
-    ├── CelField.vue         # CEL form binding; selected by the frontend cel schema type or a custom renderer
+    ├── CelField.vue         # CEL form binding; selected by a custom renderer for a string field
     ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
     ├── SlideTransition.vue  # Height-animated collapse transition
     ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
@@ -91,18 +91,7 @@ const language = computed(() => defineCelLanguage([
 
 Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
 
-Inside a Freeform form, the frontend can declare `type: 'cel'` with a resolved `language`. The existing schema-type dispatcher maps it to `CelField`, which binds the form value to `CelInput`. The submitted value remains a string. This type is a frontend declaration, not a Gateway API schema type.
-
-```ts
-import type { FormSchema } from '@kong-ui-public/freeform'
-
-const schema: FormSchema = {
-  type: 'record',
-  fields: [{ rule: { type: 'cel', language } }],
-}
-```
-
-Custom layouts can select `CelField` directly, preserving their existing `StringField` fallback and its props and slots. Plugin condition fields keep `type: 'string'` in their schema; the renderer alone selects the input:
+Inside a Freeform form, a custom renderer passes the language to `CelField` to edit an existing string field. For example:
 
 ```vue
 <component :is="celInput ? CelField : StringField" v-bind="celInput" name="condition" />
@@ -127,8 +116,8 @@ interface FormSchema {
 
 type NamedFieldSchema = { [name: string]: UnionFieldSchema }
 
-// Field types: cel | string | number | integer | boolean | foreign | array | set | map | record | json | function
-type UnionFieldSchema = CelFieldSchema | StringFieldSchema | NumberLikeFieldSchema | BooleanFieldSchema
+// Field types: string | number | integer | boolean | foreign | array | set | map | record | json | function
+type UnionFieldSchema = StringFieldSchema | NumberLikeFieldSchema | BooleanFieldSchema
   | ArrayFieldSchema | SetFieldSchema | MapFieldSchema | RecordFieldSchema
   | JsonFieldSchema | ForeignFieldSchema
 ```
@@ -139,7 +128,6 @@ Defined in `field-dispatch.ts`. The mapping logic:
 
 | Schema Type | `one_of` present? | Component |
 |---|---|---|
-| `cel` | - | `CelField` |
 | `string` | No | `StringField` |
 | `string` | Yes | `EnumField` |
 | `number` | `integer` | No | `NumberField` |
@@ -154,7 +142,7 @@ Defined in `field-dispatch.ts`. The mapping logic:
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
 
-This is the plain-field mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a host rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
+This is the whole mapping — `expressible` fields don't get a separate row. `StringField` and `NumberField` render their own expression editor inline whenever their schema resolves one, so no matter how they're reached (this dispatch, or a host rendering them directly) an expressible field just works. See [Expressible Fields](#expressible-fields-expressions).
 
 ### Entity Checks
 

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { provide, ref } from 'vue'
 import Form from '../../components/Form.vue'
-import Field from '../../components/Field.vue'
+import { defineCelLanguage, kongConsumer, kongHttp } from '@kong-ui-public/monaco-editor/languages/cel'
 import CelField from '../../components/CelField.vue'
 import StringField from '../../components/StringField.vue'
 import NumberField from '../../components/NumberField.vue'
 import ArrayField from '../../components/ArrayField.vue'
 import { CEL_INPUT_KEY } from '../../constants'
-import { language, schema } from './cel'
+import { schema } from './cel'
 
 const props = defineProps<{
   enabled: boolean
@@ -16,6 +16,7 @@ const props = defineProps<{
 }>()
 
 // The host supplies only language configuration; Freeform owns the real input.
+const language = defineCelLanguage([kongHttp(), kongConsumer()])
 provide(CEL_INPUT_KEY, () => props.enabled ? { language } : undefined)
 
 const data = {
@@ -33,7 +34,6 @@ const payload = ref<Record<string, any>>(data)
     :schema="schema"
     @change="payload = $event"
   >
-    <Field name="rule" />
     <NumberField name="config.minute" />
     <component
       :is="enabled ? CelField : StringField"

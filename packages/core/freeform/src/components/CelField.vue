@@ -5,7 +5,7 @@
     :message="field.error.message"
   />
   <CelInput
-    v-else-if="language"
+    v-else
     v-show="!field.hide?.value"
     v-bind="{ ...fieldAttrs, ...$attrs }"
     :id="props.inputId"
@@ -13,7 +13,7 @@
     :data-testid="`ff-${field.path?.value}`"
     :disabled="isDisabled"
     :error="props.error || !!field.fieldErrors?.value.length"
-    :language="language"
+    :language="props.language"
     :model-value="draft ?? ''"
     @change="handleChange"
     @update:model-value="handleInput"
@@ -64,8 +64,7 @@ import FieldErrors from './FieldErrors.vue'
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps<BaseFieldProps & {
-  /** Explicit language for a custom renderer; otherwise read from the frontend CEL schema. */
-  language?: CelLanguage
+  language: CelLanguage
   disabled?: boolean
   error?: boolean
   inputId?: string
@@ -85,7 +84,6 @@ const attrs = useAttrs()
 const field = useField<string | EmptyValue>(toRef(props, 'name'))
 const { config } = useFormShared()
 const fieldAttrs = useFieldAttrs(() => field.path?.value ?? props.name, { ...attrs, labelAttributes: props.labelAttributes })
-const language = computed(() => props.language ?? (field.schema?.value?.type === 'cel' ? field.schema.value.language : undefined))
 const isDisabled = computed(() => props.disabled || !!field.versionInfo?.value)
 const draft = ref(field.value?.value)
 

@@ -1,5 +1,4 @@
 import { createFiller } from './create-filler'
-import { fillExpression } from './handlers/expression'
 import { defineAsyncComponent } from 'vue'
 import CelFormWrapper from '../fixtures/CelFormWrapper.vue'
 import { acl, condition, expression, parsePayload, schema } from '../fixtures/cel'
@@ -8,26 +7,6 @@ function assertField(path: string, value: unknown) {
   cy.getTestId('payload').should(($output) => {
     const data = parsePayload($output.text())
     expect(path.split('.').reduce((parent, key) => parent?.[key], data)).to.deep.equal(value)
-  })
-}
-
-for (const updateOnChange of [false, true]) {
-  it(`routes explicit CEL fields through fillExpression with updateOnChange ${updateOnChange}`, () => {
-    cy.mount(CelFormWrapper, { props: { enabled: false, updateOnChange } })
-    const filler = createFiller(schema, { fillExpression: cy.spy(fillExpression).as('fillExpression') })
-
-    // A schema CEL field has no expression twin container or Add expression button.
-    cy.get('[data-expression-for="rule"]').should('not.exist')
-    filler.fill({ rule: condition })
-    assertField('rule', condition)
-    cy.get('@fillExpression').should('have.been.calledWithMatch', { fieldKey: 'rule', fieldSchema: { type: 'cel' } })
-    filler.fillField('rule', 'false')
-    assertField('rule', 'false')
-    for (const empty of ['', null, undefined]) {
-      filler.fillField('rule', condition)
-      filler.fillField('rule', empty)
-      assertField('rule', null)
-    }
   })
 }
 
