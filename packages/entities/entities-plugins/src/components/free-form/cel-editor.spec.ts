@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createApp, effectScope, nextTick, reactive, ref, type ComputedRef, type MaybeRef } from 'vue'
-import { useGatewayCelLanguage } from './cel-editor'
+import { useGatewayCelKind } from './cel-editor'
 import {
   getCelSubjectValues, getCelSuggestions,
-  kongAclRule, kongExpressibleField, kongFallback, kongPluginState, type CelLanguage, type CelPlugin,
+  kongAclRule, kongExpressibleField, kongFallback, kongPluginState, type CelKind, type CelPlugin,
 } from '@kong-ui-public/monaco-editor/languages/cel'
 import { FEATURE_FLAGS } from '../../constants'
 import { FORMS_CONFIG } from './const'
@@ -26,43 +26,43 @@ function fromHost(
   if (config) app.provide(FORMS_CONFIG, config)
   if (options.flag !== undefined) app.provide(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, options.flag)
   const scope = effectScope()
-  const language = app.runWithContext(() => scope.run(() => useGatewayCelLanguage(plugins, options))!)
-  return { language, scope }
+  const kind = app.runWithContext(() => scope.run(() => useGatewayCelKind(plugins, options))!)
+  return { kind, scope }
 }
 
-describe('useGatewayCelLanguage', () => {
+describe('useGatewayCelKind', () => {
   it('follows the Konnect flag and the Kong Manager opt-in', () => {
     const flag = ref(false)
-    const { language } = fromHost(konnect, EXPRESSIBLE, { flag })
-    expect(language.value).toBeUndefined()
+    const { kind } = fromHost(konnect, EXPRESSIBLE, { flag })
+    expect(kind.value).toBeUndefined()
     flag.value = true
-    expect(language.value).toBeDefined()
-    expect(fromHost(konnect, EXPRESSIBLE).language.value).toBeUndefined()
-    expect(fromHost(undefined, EXPRESSIBLE, { flag: true }).language.value).toBeUndefined()
-    expect(fromHost(manager, EXPRESSIBLE, { flag: true }).language.value).toBeUndefined()
-    expect(fromHost({ ...manager, enableCelEditor: true }, EXPRESSIBLE).language.value).toBeDefined()
-    expect(fromHost(konnect, undefined, { flag: true }).language.value).toBeUndefined()
+    expect(kind.value).toBeDefined()
+    expect(fromHost(konnect, EXPRESSIBLE).kind.value).toBeUndefined()
+    expect(fromHost(undefined, EXPRESSIBLE, { flag: true }).kind.value).toBeUndefined()
+    expect(fromHost(manager, EXPRESSIBLE, { flag: true }).kind.value).toBeUndefined()
+    expect(fromHost({ ...manager, enableCelEditor: true }, EXPRESSIBLE).kind.value).toBeDefined()
+    expect(fromHost(konnect, undefined, { flag: true }).kind.value).toBeUndefined()
   })
 
   it('requires every target to support the field minimum', () => {
-    const konnectLanguage = (dataPlaneVersions?: string[]) =>
-      fromHost({ ...konnect, dataPlaneVersions }, CONDITION, { flag: true, minGatewayVersion: '3.15' }).language.value
-    expect(konnectLanguage()).toBeUndefined()
-    expect(konnectLanguage([])).toBeUndefined()
-    expect(konnectLanguage(['3.15.0.0', '3.14.0.0'])).toBeUndefined()
-    expect(konnectLanguage(['3.15.0.0', '3.17.0.0'])).toBeDefined()
+    const konnectKind = (dataPlaneVersions?: string[]) =>
+      fromHost({ ...konnect, dataPlaneVersions }, CONDITION, { flag: true, minGatewayVersion: '3.15' }).kind.value
+    expect(konnectKind()).toBeUndefined()
+    expect(konnectKind([])).toBeUndefined()
+    expect(konnectKind(['3.15.0.0', '3.14.0.0'])).toBeUndefined()
+    expect(konnectKind(['3.15.0.0', '3.17.0.0'])).toBeDefined()
 
-    const managerLanguage = (version?: string) => fromHost({
+    const managerKind = (version?: string) => fromHost({
       ...manager, enableCelEditor: true, ...(version && { gatewayInfo: { edition: 'enterprise' as const, version } }),
-    }, CONDITION, { minGatewayVersion: '3.15' }).language.value
-    expect(managerLanguage()).toBeUndefined()
-    expect(managerLanguage('3.14.0.0')).toBeUndefined()
-    expect(managerLanguage('3.15.0.0')).toBeDefined()
+    }, CONDITION, { minGatewayVersion: '3.15' }).kind.value
+    expect(managerKind()).toBeUndefined()
+    expect(managerKind('3.14.0.0')).toBeUndefined()
+    expect(managerKind('3.15.0.0')).toBeDefined()
   })
 
   it('offers principal groups and type only when every target declares them', () => {
     const fields = (config: KonnectPluginFormConfig | KongManagerPluginFormConfig) =>
-      getCelSuggestions('principal.', fromHost(config, ACL_RULE, { flag: true }).language.value!).map(s => s.label).sort()
+      getCelSuggestions('principal.', fromHost(config, ACL_RULE, { flag: true }).kind.value!).map(s => s.label).sort()
     const base = ['display_name', 'id', 'metadata']
     const extended = ['display_name', 'groups', 'id', 'metadata', 'type']
     const optedIn = { ...manager, enableCelEditor: true }
@@ -80,20 +80,20 @@ describe('useGatewayCelLanguage', () => {
       .mockResolvedValueOnce({ consumers: [{ id: 'first' }] })
       .mockResolvedValueOnce({ consumers: [{ id: 'other' }] })
     const host = reactive<KonnectPluginFormConfig>({ ...konnect, getCelSubjects: load })
-    const ids = (language: ComputedRef<CelLanguage | undefined>) =>
-      getCelSubjectValues(language.value!, 'consumer-id').map(v => v.value)
+    const ids = (kind: ComputedRef<CelKind | undefined>) =>
+      getCelSubjectValues(kind.value!, 'consumer-id').map(v => v.value)
 
     const failed = fromHost(host, ACL_RULE, { flag: true })
     await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(1))
     failed.scope.stop()
 
     const fields = [fromHost(host, ACL_RULE, { flag: true }), fromHost(host, EXPRESSIBLE, { flag: true })]
-    await vi.waitFor(() => expect(fields.map(field => ids(field.language))).toEqual([['first'], ['first']]))
+    await vi.waitFor(() => expect(fields.map(field => ids(field.kind))).toEqual([['first'], ['first']]))
     expect(load).toHaveBeenCalledTimes(2)
 
     host.controlPlaneId = 'other'
     await nextTick()
-    await vi.waitFor(() => expect(fields.map(field => ids(field.language))).toEqual([['other'], ['other']]))
+    await vi.waitFor(() => expect(fields.map(field => ids(field.kind))).toEqual([['other'], ['other']]))
     expect(load).toHaveBeenCalledTimes(3)
   })
 })

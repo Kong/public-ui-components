@@ -2,9 +2,9 @@ import { computed, inject, shallowRef, toValue, unref, watch } from 'vue'
 import type { ComputedRef, MaybeRef, MaybeRefOrGetter } from 'vue'
 import { useGatewayFeatureSupported } from '@kong-ui-public/entities-shared'
 import {
-  defineCelLanguage, kongConsumer, kongConsumerGroup, kongContext, kongHttp, kongNet, kongPrincipal, kongRoute, kongService,
+  defineCelKind, kongConsumer, kongConsumerGroup, kongContext, kongHttp, kongNet, kongPrincipal, kongRoute, kongService,
 } from '@kong-ui-public/monaco-editor/languages/cel'
-import type { CelLanguage, CelPlugin, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
+import type { CelKind, CelPlugin, CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../types'
 import { FEATURE_FLAGS } from '../../constants'
 import { FORMS_CONFIG } from './const'
@@ -39,25 +39,25 @@ function lookupSubjects(load: LoadSubjects, scope: string): Promise<CelSubjects>
 }
 
 /**
- * The Gateway CEL dialect of one field: the variables every Gateway expression
+ * The Gateway CEL kind of one field: the variables every Gateway expression
  * reads, plus the field's own `plugins`. Undefined while the host has the editor
  * off, the field passes no plugins, or a target is older than `minGatewayVersion`.
  */
-export function useGatewayCelLanguage(
+export function useGatewayCelKind(
   plugins: MaybeRefOrGetter<readonly CelPlugin[] | undefined>,
   { minGatewayVersion }: { minGatewayVersion?: string } = {},
-): ComputedRef<CelLanguage | undefined> {
+): ComputedRef<CelKind | undefined> {
   const config = inject<Config | undefined>(FORMS_CONFIG, undefined)
   const flag = inject<MaybeRef<boolean>>(FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR, false)
   const subjects = shallowRef<CelSubjects>({})
   const records = () => subjects.value
 
-  const language = computed(() => {
+  const kind = computed(() => {
     const local = toValue(plugins)
     if (!config || !local) return
     const enabled = config.app === 'kongManager' ? !!config.enableCelEditor : !!unref(flag)
     if (!enabled || (minGatewayVersion && !allTargetsSupport(config, minGatewayVersion))) return
-    return defineCelLanguage([
+    return defineCelKind([
       kongHttp(), kongNet(), kongConsumer(records), kongConsumerGroup(records), kongRoute(), kongService(), kongContext(),
       kongPrincipal(records, { supportsPrincipalGroups: allTargetsSupport(config, '3.17.0.0-rc.1') }),
       ...local,
@@ -67,7 +67,7 @@ export function useGatewayCelLanguage(
   // Load the records once this field shows a CEL editor. Switching the scope
   // that the host callback reads discards the old records.
   watch([
-    () => !!language.value,
+    () => !!kind.value,
     () => config?.getCelSubjects,
     () => config && [
       config.apiBaseUrl,
@@ -88,5 +88,5 @@ export function useGatewayCelLanguage(
     }).catch(() => {})
   }, { immediate: true })
 
-  return language
+  return kind
 }

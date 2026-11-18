@@ -1,7 +1,7 @@
 import { defineComponent, h, type PropType } from 'vue'
 import { CelField, StringField } from '@kong-ui-public/freeform'
 import type { CelPlugin } from '@kong-ui-public/monaco-editor/languages/cel'
-import { useGatewayCelLanguage } from '../cel-editor'
+import { useGatewayCelKind } from '../cel-editor'
 
 export default defineComponent({
   name: 'PluginCelField',
@@ -13,10 +13,10 @@ export default defineComponent({
     minGatewayVersion: { type: String, default: undefined },
   },
   setup(props, { attrs, slots }) {
-    const language = useGatewayCelLanguage(() => props.plugins, { minGatewayVersion: props.minGatewayVersion })
+    const kind = useGatewayCelKind(() => props.plugins, { minGatewayVersion: props.minGatewayVersion })
 
-    return () => language.value
-      ? h(CelField, { ...attrs, name: props.name, language: language.value }, slots)
+    return () => kind.value
+      ? h(CelField, { ...attrs, name: props.name, kind: kind.value }, slots)
       : h(StringField, { ...attrs, name: props.name }, slots)
   },
 })

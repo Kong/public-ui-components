@@ -169,7 +169,7 @@ Control if the vault secret picker is enabled for applicable fields.
 
 ### CEL editor
 
-Each CEL field registers its own features. `useGatewayCelLanguage(plugins, { minGatewayVersion })` adds them to the Gateway variables and returns the dialect, or `undefined` when the host has the editor off or a target Gateway is too old. `PluginCelField` renders `CelField` for a dialect and `StringField` otherwise. The condition field registers plugin state and `default()`, ACL rules register `kongAclRule()`, and expressible fields register `kongExpressibleField()`. The condition schema stays `type: 'string'`.
+Each CEL field registers its own features. `useGatewayCelKind(plugins, { minGatewayVersion })` adds them to the Gateway variables and returns the field's CEL kind, or `undefined` when the host has the editor off or a target Gateway is too old. `PluginCelField` renders `CelField` for a kind and `StringField` otherwise. The condition field registers plugin state and `default()`, ACL rules register `kongAclRule()`, and expression fields (`ExpressionCelField`) register `kongExpressibleField()`. The condition schema stays `type: 'string'`.
 
 Konnect enables the editor by providing `FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR` as a boolean or Vue ref. Kong Manager opts in separately with `config.enableCelEditor: true`. For the plugin `condition` field, the host must also supply known CEL-compatible Gateway versions. Konnect uses `config.dataPlaneVersions` for all target data planes. Kong Manager uses `config.gatewayInfo` for its Enterprise Gateway. CEL conditions require Gateway 3.15 or later. The existing condition field visibility flag still applies.
 
