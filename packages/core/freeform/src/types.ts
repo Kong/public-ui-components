@@ -1,5 +1,6 @@
 import type { UnionFieldSchema } from './form-schema'
 import type { Component, ComponentPublicInstance, Slot } from 'vue'
+import type { CelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
 import { type LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
@@ -10,7 +11,14 @@ export type PropType<T extends ComponentPublicInstanceConstructor> =
   InstanceType<T>['$props'] & { [key: string]: unknown }
 
 
+export type CelExpressionKind = 'expression' | 'condition' | 'acl-rule'
+
 export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
+  celExpression?: {
+    enabled: boolean
+    /** Supported dialects in preference order. An empty list selects the plain input. */
+    getSupportedLanguages: (kind: CelExpressionKind) => readonly CelLanguage[]
+  }
   prepareFormData?: (data: any) => any
   transformLabel?: (label: string, fieldPath: string) => string
   hasValue?: (data: T | undefined) => boolean

@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick, ref } from 'vue'
 import { KInput } from '@kong/kongponents'
 import { defineCelLanguage } from '@kong-ui-public/monaco-editor/languages/cel'
-import { provideCelInput } from '../composables/cel-input'
+import { useCelExpression } from '../composables/cel-expression'
 import type { ExpressionFieldSchema, FormSchema } from '../form-schema'
 import Form from './Form.vue'
 import CelField from './CelField.vue'
@@ -18,6 +18,23 @@ enableAutoUnmount(afterEach)
 const language = defineCelLanguage([])
 
 describe('CelField', () => {
+  it('reports the rollout flag separately from the dialects supported for a field kind', () => {
+    const flag = ref(false)
+    const languages = [language, defineCelLanguage([])]
+    const lookup = vi.fn((kind: string) => kind === 'expression' ? languages : [])
+    const { enabled, getSupportedLanguages } = useCelExpression(() => ({
+      celExpression: { enabled: flag.value, getSupportedLanguages: lookup },
+    }))
+    expect(enabled.value).toBe(false)
+    expect(getSupportedLanguages('expression')).toEqual([])
+    expect(lookup).not.toHaveBeenCalled()
+
+    flag.value = true
+    expect(enabled.value).toBe(true)
+    expect(getSupportedLanguages('condition')).toEqual([])
+    expect(getSupportedLanguages('expression')).toBe(languages)
+  })
+
   it('switches only the selected field and preserves the value across rollout changes', async () => {
     const enabled = ref(false)
     const schema: FormSchema = { type: 'record', fields: [{ condition: { type: 'string' } }] }
@@ -42,23 +59,21 @@ describe('CelField', () => {
   })
 
   it('uses the existing schema type dispatch without guessing field names', () => {
-    const resolve = vi.fn(() => ({ language }))
+    const getSupportedLanguages = vi.fn(() => [language])
     const schema: FormSchema = { type: 'record', fields: [
       { condition: { type: 'string' } },
       { allow_when: { type: 'string' } },
       { choice: { type: 'string', one_of: ['true', 'false'] } },
     ] }
-    const wrapper = mount({
-      setup() {
-        provideCelInput(resolve)
-        return () => h(Form, { schema })
-      },
-    }, { global: { stubs: { EnumField: true } } })
+    const wrapper = mount(Form, {
+      props: { schema, config: { celExpression: { enabled: true, getSupportedLanguages } } },
+      global: { stubs: { EnumField: true } },
+    })
     expect(wrapper.get('[data-testid="ff-condition"]').element.tagName).toBe('INPUT')
     expect(wrapper.get('[data-testid="ff-allow_when"]').element.tagName).toBe('INPUT')
     expect(wrapper.findComponent(CelInput).exists()).toBe(false)
     expect(wrapper.getComponent(EnumField).props('name')).toContain('choice')
-    expect(resolve).not.toHaveBeenCalled()
+    expect(getSupportedLanguages).not.toHaveBeenCalled()
     wrapper.unmount()
   })
 
@@ -163,16 +178,14 @@ describe('CelField', () => {
         type: 'string', expressible_kong_type: 'number',
       } as ExpressionFieldSchema } }] } },
     ] }
-    const resolve = vi.fn(() => ({ language }))
-    const wrapper = mount({
-      setup() {
-        provideCelInput(resolve)
-        return () => h(Form, { schema, data: { config: { limit: [10, 20] } } })
-      },
-    }, { global: { stubs: { MonacoEditor: true } } }).getComponent(Form)
-    expect(resolve).not.toHaveBeenCalled()
+    const getSupportedLanguages = vi.fn(() => [language])
+    const wrapper = mount(Form, {
+      props: { schema, data: { config: { limit: [10, 20] } }, config: { celExpression: { enabled: true, getSupportedLanguages } } },
+      global: { stubs: { MonacoEditor: true } },
+    })
+    expect(getSupportedLanguages).not.toHaveBeenCalled()
     await wrapper.get('[data-testid="ff-expression-add-config.limit.1"]').trigger('click')
-    expect(resolve).toHaveBeenCalledWith('expression')
+    expect(getSupportedLanguages).toHaveBeenCalledWith('expression')
     const input = wrapper.getComponent(CelInput)
     input.vm.$emit('update:modelValue', '30')
     await nextTick()

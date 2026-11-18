@@ -91,21 +91,23 @@ const language = computed(() => defineCelLanguage([
 
 Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom dialects can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
 
-Inside a Freeform form, the host calls `provideCelInput(resolve)` during setup. The resolver accepts a language key and returns `{ language }` when the editor is enabled. A descendant renderer calls `useCelInput` to edit an existing string field.
+Inside a Freeform form, pass `celExpression: { enabled, getSupportedLanguages }` in the form configuration. Set `enabled` from the host's feature flag. Return the supported dialects for each field kind in preference order. A custom renderer can use the first dialect to edit an existing string field.
 
 ```vue
 <script setup lang="ts">
-import { CelField, StringField, useCelInput } from '@kong-ui-public/freeform'
+import { computed } from 'vue'
+import { CelField, StringField, useCelExpression } from '@kong-ui-public/freeform'
 
-const celInput = useCelInput('condition')
+const { getSupportedLanguages } = useCelExpression()
+const language = computed(() => getSupportedLanguages('condition')[0])
 </script>
 
 <template>
-  <component :is="celInput ? CelField : StringField" v-bind="celInput" name="condition" />
+  <component :is="language ? CelField : StringField" :language="language" name="condition" />
 </template>
 ```
 
-`useCelInput` returns a computed ref that follows the host's rollout settings. It yields `undefined` when the provider is absent or the editor is disabled, so the renderer falls back to its usual input. `ExpressionEditor` requests `expression` when expanded. Plugin renderers request `condition` or `acl-rule`. `CelField` handles form binding, empty values, blur commits, visibility, and version locks.
+`useCelExpression()` returns a reactive `enabled` flag and a `getSupportedLanguages(kind)` function. An absent configuration, disabled flag, or unsupported kind yields an empty list and the normal string input. `ExpressionEditor` requests `expression` when expanded. Plugin renderers request `condition` or `acl-rule`.
 
 The host supplies rollout/version gates, language declarations, and authorized records. Freeform does not fetch records or infer Gateway globals. The Monaco runtime loads when a CEL input is rendered.
 

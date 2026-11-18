@@ -42,12 +42,12 @@
       class="ff-expression-editor-expanded"
     >
       <component
-        :is="celInput ? CelField : StringField"
-        v-bind="celInput"
+        :is="language ? CelField : StringField"
         class="ff-expression-editor-input"
         :disabled="isLocked"
         :label="i18n.t('expression.label')"
         :label-attributes="labelAttributes"
+        :language="language"
         multiline
         :name="expressionName"
         :placeholder="placeholder ?? ''"
@@ -110,7 +110,7 @@ import StringField from './StringField.vue'
 import CelField from './CelField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
-import { useCelInput, useExpressionField, useFieldPath } from '../composables'
+import { useCelExpression, useExpressionField, useFieldPath } from '../composables'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -156,7 +156,8 @@ const isLocked = computed(() => !!versionInfo.value)
  * open while the user clears and retypes, and only `remove` collapses it.
  */
 const expanded = ref(expression.hasExpression.value)
-const celInput = useCelInput('expression', () => expression.available.value && expanded.value)
+const { getSupportedLanguages } = useCelExpression()
+const language = computed(() => getSupportedLanguages('expression')[0])
 watch(expression.hasExpression, (hasExpression) => {
   if (hasExpression) expanded.value = true
 })

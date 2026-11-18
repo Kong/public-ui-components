@@ -6,7 +6,6 @@ import CelField from '../../components/CelField.vue'
 import StringField from '../../components/StringField.vue'
 import NumberField from '../../components/NumberField.vue'
 import ArrayField from '../../components/ArrayField.vue'
-import { provideCelInput } from '../../composables/cel-input'
 import { schema } from './cel'
 
 const props = defineProps<{
@@ -17,7 +16,7 @@ const props = defineProps<{
 
 // The host supplies only language configuration; Freeform owns the real input.
 const language = defineCelLanguage([kongHttp(), kongConsumer()])
-provideCelInput(() => props.enabled ? { language } : undefined)
+const getSupportedLanguages = () => [language]
 
 const data = {
   condition: '',
@@ -29,7 +28,7 @@ const payload = ref<Record<string, any>>(data)
 
 <template>
   <Form
-    :config="{ updateOnChange }"
+    :config="{ updateOnChange, celExpression: { enabled, getSupportedLanguages } }"
     :data="data"
     :schema="schema"
     @change="payload = $event"
