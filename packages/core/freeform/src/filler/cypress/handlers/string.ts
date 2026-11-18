@@ -1,7 +1,6 @@
 import type { StringFieldSchema } from '../../../form-schema'
 import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
-import { fillCelInput } from './cel'
 
 export function fillString(option: HandlerOption<StringFieldSchema>): void {
   const { fieldKey, value } = option
@@ -11,12 +10,6 @@ export function fillString(option: HandlerOption<StringFieldSchema>): void {
   scrollIntoViewNative(selector)
 
   cy.get(selector).then(($el) => {
-    // Conditions, ACL rules and expression twins can render their string as a CEL input.
-    if ($el.hasClass('cel-input')) {
-      fillCelInput(selector, value)
-      return
-    }
-
     // Commit the clear before a controlled textarea can restore its old value.
     cy.wrap($el).clear(SCROLL_BEHAVIOR)
     cy.wrap($el).trigger('change')

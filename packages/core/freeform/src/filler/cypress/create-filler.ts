@@ -24,6 +24,7 @@ import {
   type ArrayFieldSchema,
   type RecordFieldSchema,
 } from '../shared/field-walker'
+import { selectors } from '../shared/selectors'
 
 export interface FillerInstance {
   fill: (data: Record<string, any>) => void
@@ -48,7 +49,11 @@ export function createFiller(
   function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill): void {
     switch (handlerType) {
       case 'string':
-        mergedHandlers.fillString({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
+        // A host can render a string field, such as a plugin condition or an ACL rule, as a CEL input.
+        cy.get(selectors.field(fieldKey)).then(($el) => {
+          const fill = $el.hasClass('cel-input') ? mergedHandlers.fillCel : mergedHandlers.fillString
+          fill({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
+        })
         break
       case 'number':
         mergedHandlers.fillNumber({ fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value })

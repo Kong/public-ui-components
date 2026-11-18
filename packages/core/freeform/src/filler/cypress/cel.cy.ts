@@ -31,12 +31,14 @@ for (const enabled of [false, true]) {
     filler.fillField('condition', conditionValue)
     assertField('condition', conditionValue)
 
+    // The handlers are the per-control entry points; `fillField` picks one from the rendered control.
+    const fillRow = enabled ? filler.handlers.fillCel : filler.handlers.fillString
     for (const name of ['allow_when', 'deny_when']) {
       filler.fillField(`config.${name}`, [acl, 'true'])
       assertField(`config.${name}`, [acl, 'true'])
-      filler.handlers.fillString({ fieldKey: `config.${name}.0`, fieldSchema: { type: 'string' }, value: 'false' })
+      fillRow({ fieldKey: `config.${name}.0`, fieldSchema: { type: 'string' }, value: 'false' })
       assertField(`config.${name}`, ['false', 'true'])
-      filler.handlers.fillString({ fieldKey: `config.${name}.0`, fieldSchema: { type: 'string' }, value: null })
+      fillRow({ fieldKey: `config.${name}.0`, fieldSchema: { type: 'string' }, value: null })
       assertField(`config.${name}`, [null, 'true'])
     }
 
