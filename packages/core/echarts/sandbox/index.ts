@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'treemap',
       component: () => import('./pages/TreeMapDemo.vue'),
     },
+    {
+      path: '/sankey',
+      name: 'sankey',
+      component: () => import('./pages/SankeyDemo.vue'),
+    },
   ],
 })
 

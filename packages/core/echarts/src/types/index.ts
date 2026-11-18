@@ -1,8 +1,8 @@
 import type * as designTokens from '@kong/design-tokens'
-import type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption } from 'echarts'
+import type { EChartsOption, HeatmapSeriesOption, SankeySeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption } from 'echarts'
 
 // Re-export echarts option types for consumer convenience
-export type { EChartsOption, HeatmapSeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption }
+export type { EChartsOption, HeatmapSeriesOption, SankeySeriesOption, TooltipComponentFormatterCallbackParams, TreemapSeriesOption }
 
 /**
  * Color token values resolved at runtime, keyed by the design token names
@@ -131,4 +131,48 @@ export interface HeatmapChartProps extends BaseChartProps {
    * borders or label styles. The series `data` still comes from `data`.
    */
   seriesOption?: HeatmapSeriesOption
+}
+
+/**
+ * A node in the sankey diagram. It's ECharts' own node option, so per-node
+ * `depth`, `value`, `itemStyle`, `label`, etc. work too; see the [sankey data docs](../docs/sankey-chart.md#data).
+ */
+export type SankeyNode = Omit<NonNullable<SankeySeriesOption['data']>[number], 'id' | 'name'> & {
+  /** Unique across the whole chart. Links point at it. */
+  id: string
+  /** Label shown next to the node. Can repeat across nodes, e.g. an `Other` node in several columns. */
+  name: string
+}
+
+/** A flow between two nodes, with its width set by `value`. */
+export type SankeyLink = Omit<NonNullable<SankeySeriesOption['links']>[number], 'source' | 'target' | 'value'> & {
+  /** `id` of the node the flow starts from. */
+  source: string
+  /** `id` of the node the flow goes to. */
+  target: string
+  value: number
+}
+
+export interface SankeyChartProps extends BaseChartProps {
+  /** Nodes, linked by their `id`. Renders an empty chart when omitted. */
+  nodes?: SankeyNode[]
+  /** Flows between nodes. Links must not form a cycle. */
+  links?: SankeyLink[]
+  seriesName?: string
+  /** Shows each node's value (formatted with `valueFormatter`) after its name. */
+  showValues?: boolean
+  /** Formats values in the tooltip and the node labels. */
+  valueFormatter?: (value: number) => string
+  /**
+   * Categorical node colors, cycled if there are more nodes than colors.
+   * To color specific nodes, set `itemStyle.color` on them in `nodes`.
+   */
+  colorPalette?: string[]
+  /** Color of the links: their source node's, their target node's, or a gradient between the two. Defaults to `source`. */
+  linkColor?: 'source' | 'target' | 'gradient'
+  /**
+   * Deep-merged into the generated sankey series, e.g. to change node widths
+   * or label styles. The series `data` and `links` still come from `nodes` and `links`.
+   */
+  seriesOption?: SankeySeriesOption
 }
