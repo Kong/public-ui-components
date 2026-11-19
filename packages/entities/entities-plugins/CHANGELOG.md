@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.4.1...%40kong-ui-public%2Fentities-plugins%4011.5.0) (2026-11-19)
+
+### Features
+
+* **entities-plugins:** adapt plugin forms to shared CEL inputs ([#4053](https://github.com/Kong/public-ui-components/issues/4053)) ([fcc28d2](https://github.com/Kong/public-ui-components/commit/fcc28d20004f3c5eafebee5a701784b5c6ab0f20))
+
+
 ## [11.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.4.0...%40kong-ui-public%2Fentities-plugins%4011.4.1) (2026-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
