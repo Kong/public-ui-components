@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.5.2...%40kong-ui-public%2Fdashboard-renderer%4010.6.0) (2026-11-19)
+
+### Features
+
+* **observability:** support grouped tiles in dashboards ma-5688 ([#4093](https://github.com/Kong/public-ui-components/issues/4093)) ([5cbb45d](https://github.com/Kong/public-ui-components/commit/5cbb45d5d95836f9640612e8ee5fbe629c808ca0))
+
+
 ## [10.5.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.5.1...%40kong-ui-public%2Fdashboard-renderer%4010.5.2) (2026-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
