@@ -72,6 +72,17 @@
         />
       </div>
 
+      <div
+        v-if="showViewSelector"
+        class="view-selector-wrapper"
+      >
+        <KSegmentedControl
+          v-model="activeView"
+          data-testid="view-selector"
+          :options="viewOptions"
+        />
+      </div>
+
       <div v-if="showRefresh">
         <KButton
           appearance="secondary"
@@ -253,6 +264,7 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 import HeatmapRenderer from './HeatmapRenderer.vue'
 import TreemapRenderer from './TreemapRenderer.vue'
+import SankeyRenderer from './SankeyRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -386,6 +398,7 @@ const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && k
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'heatmap': HeatmapRenderer,
   'treemap': TreemapRenderer,
+  'sankey': SankeyRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,
@@ -430,6 +443,7 @@ const componentData = computed(() => {
   const chartRendererProps = {
     chartOptions: definition.chart,
     activeMetric: activeMetric.value,
+    activeView: activeView.value,
     headerDescription: tileDescription.value,
     requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
     exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
@@ -505,6 +519,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(tileDescription.value),
     showRefresh,
     showMetricSelector.value,
+    showViewSelector.value,
   ].some(Boolean)
 })
 
@@ -554,6 +569,15 @@ const singleValueMetricLabel = computed<string | undefined>(() => {
 
   return fieldLabel(metric)
 })
+
+// Ways to break down the same query, e.g. a sankey of models or of users
+const viewOptions = computed<Array<SegmentedControlOption<number>>>(() => (
+  chart.value.type === 'sankey' ? (chart.value.views ?? []).map(({ label }, value) => ({ label, value })) : []
+))
+
+const activeView = ref(0)
+
+const showViewSelector = computed(() => viewOptions.value.length > 1)
 
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,

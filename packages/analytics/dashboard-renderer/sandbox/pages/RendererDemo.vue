@@ -572,6 +572,35 @@ const dashboardConfig = ref<DashboardConfig>({
       },
       layout: { position: { col: 0, row: 24 }, size: { cols: 6, rows: 3 } },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'sankey',
+          chart_title: 'Usage breakdown',
+          views: [
+            { label: 'Models', dimensions: ['ai_gateway_model', 'oidc_credential'] },
+            { label: 'Providers', dimensions: ['ai_provider', 'ai_gateway_model', 'oidc_credential'] },
+            { label: 'Consumers', dimensions: ['oidc_credential', 'ai_provider', 'ai_gateway_model'] },
+            {
+              label: 'MCP servers',
+              dimensions: ['ai_gateway_mcp_server', 'mcp_tool_name', 'oidc_credential'],
+              datasource: 'agentic_usage',
+              metrics: ['request_count'],
+              filters: [{ field: 'mcp_tool_name', operator: 'not_empty' }],
+            },
+          ],
+        },
+        query: {
+          datasource: 'llm_usage',
+          dimensions: ['ai_gateway_model', 'oidc_credential'],
+          metrics: ['ai_request_count'],
+          limit: 5,
+          time_range: { type: 'relative', time_range: '7d' },
+        },
+      },
+      layout: { position: { col: 0, row: 27 }, size: { cols: 6, rows: 3 } },
+    } satisfies TileConfig,
   ],
 })
 

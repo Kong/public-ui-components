@@ -162,6 +162,84 @@ const aiModelHeatmapResponse = (): ExploreResultV4 => {
   return { data, meta: aiModelMeta(start.toISOString(), end.toISOString(), dayMs, { ai_gateway_model: aiModelDisplay }) }
 }
 
+// Provider → model → consumer request counts for the sankey: a few heavy consumers per model, some
+// of them shared between models, and a long tail the sankey leaves out of each model's top 5
+const sankeyConsumers = ['alex', 'sam', 'kim', 'lee', 'jo', 'max', 'ana', 'raj', 'zoe', 'leo', 'mia', 'ivan']
+
+type SankeyRecord = { values: Record<string, string>, requests: number }
+
+const aiModelConsumerRequests: SankeyRecord[] = aiModelRequests
+  .flatMap(([provider, model, requests], modelIndex) => sankeyConsumers.map((consumer, consumerIndex) => {
+    // Each model's heaviest consumers start at a different offset, so their top 5s overlap partly
+    const rank = (consumerIndex - modelIndex * 2 + sankeyConsumers.length) % sankeyConsumers.length
+
+    return {
+      values: { ai_provider: provider, ai_gateway_model: model, oidc_credential: `${consumer}@example.com` },
+      requests: Math.round(requests / (rank + 1) ** 1.4),
+    }
+  }))
+
+// MCP server → tool → consumer tool calls, for the sankey's MCP view
+const mcpServerTools: Array<[server: string, tools: string[], calls: number]> = [
+  ['github', ['search_code', 'pull_request_read', 'get_file_contents', 'list_issues'], 4000],
+  ['slack', ['search_channels', 'read_thread', 'post_message'], 3000],
+  ['datadog', ['get_metric', 'search_logs', 'get_trace'], 2500],
+  ['jira', ['get_issue', 'search_issues'], 1200],
+]
+
+const mcpToolCalls: SankeyRecord[] = mcpServerTools
+  .flatMap(([server, tools, calls], serverIndex) => tools.flatMap((tool, toolIndex) => sankeyConsumers.map((consumer, consumerIndex) => {
+    const rank = (consumerIndex - serverIndex * 3 + sankeyConsumers.length) % sankeyConsumers.length
+
+    return {
+      values: { ai_gateway_mcp_server: server, mcp_tool_name: tool, oidc_credential: `${consumer}@example.com` },
+      requests: Math.round(calls / (toolIndex + 1) / (rank + 1) ** 1.4),
+    }
+  })))
+
+const sankeyDisplay: ExploreResultV4['meta']['display'] = {
+  ai_provider: aiProviderExploreResponse.meta.display.ai_provider,
+  ai_gateway_model: aiModelDisplay,
+  oidc_credential: Object.fromEntries(sankeyConsumers.map((consumer) => [`${consumer}@example.com`, { name: `${consumer}@example.com`, deleted: false }])),
+  ai_gateway_mcp_server: Object.fromEntries(mcpServerTools.map(([server]) => [server, { name: server, deleted: false }])),
+  mcp_tool_name: Object.fromEntries(mcpServerTools.flatMap(([, tools]) => tools.map((tool) => [tool, { name: tool, deleted: false }]))),
+}
+
+// Grouped by the queried dimensions, with `display` in query order like the API, which sets the sankey's column order.
+// Applies `in` filters, so clicking a sankey node narrows the data
+const sankeyResponse = (
+  records: SankeyRecord[],
+  metric: AllAggregations,
+  dimensions: string[],
+  filters: Array<{ field: string, operator: string, value?: unknown }> = [],
+): ExploreResultV4 => {
+  const rows = new Map<string, { event: Record<string, string | number>, requests: number }>()
+
+  for (const { values, requests } of records) {
+    if (filters.some(({ field, operator, value }) => operator === 'in' && field in values && !(value as string[]).includes(values[field]))) {
+      continue
+    }
+
+    const event = Object.fromEntries(dimensions.map((dimension) => [dimension, values[dimension]]))
+    const key = JSON.stringify(event)
+    const row = rows.get(key) ?? { event, requests: 0 }
+    row.requests += requests
+    rows.set(key, row)
+  }
+
+  return {
+    data: [...rows.values()].map(({ event, requests }) => ({
+      event: { ...event, [metric]: requests },
+      timestamp: '2024-01-31T20:00:00.000Z',
+    })),
+    meta: {
+      ...aiModelMeta('2024-01-24T20:00:00.000Z', '2024-01-31T20:00:00.000Z', 7 * 86400000, Object.fromEntries(dimensions.map((dimension) => [dimension, sankeyDisplay[dimension]]))),
+      metric_names: [metric],
+      metric_units: { [metric]: 'count' },
+    },
+  }
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -180,6 +258,16 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     && singleValueTrendMocks[query.query.metrics[0]]
   ) {
     return await delayedResponse(singleValueTrendMocks[query.query.metrics[0]])
+  }
+
+  // MCP server → tool → consumer: the sankey's MCP view
+  if (query.datasource === 'agentic_usage' && query.query.dimensions?.includes('mcp_tool_name')) {
+    return await delayedResponse(sankeyResponse(mcpToolCalls, 'request_count', query.query.dimensions, query.query.filters))
+  }
+
+  // Model usage by consumer: a sankey of model → consumer
+  if (query.query.dimensions?.includes('oidc_credential')) {
+    return await delayedResponse(sankeyResponse(aiModelConsumerRequests, 'ai_request_count', query.query.dimensions, query.query.filters))
   }
 
   // Model usage: a heatmap over time, or a treemap of provider → model
