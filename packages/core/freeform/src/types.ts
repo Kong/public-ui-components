@@ -1,6 +1,6 @@
 import type { UnionFieldSchema } from './form-schema'
 import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
-import { type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
