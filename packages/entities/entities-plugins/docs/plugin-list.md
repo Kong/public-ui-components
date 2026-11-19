@@ -207,6 +207,20 @@ The table is rendered inside a `KCard`. `title` text is displayed in the upper l
 HTML element you want title to be rendered as. Defaults to `h2`.
 
 
+### Slots
+
+#### `empty-state`
+
+Replaces the empty state for an unfiltered Konnect plugin list. The `canCreate` slot prop reflects the resolved create permission.
+
+Render your custom content conditionally to keep the default empty state for users who cannot create plugins.
+
+```vue
+<template #empty-state="{ canCreate }">
+  <CustomPluginEmptyState v-if="canCreate" />
+</template>
+```
+
 ### Events
 
 #### error

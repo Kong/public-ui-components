@@ -71,43 +71,48 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <KEmptyState
-          :data-testid="config.entityId ? 'nested-plugins-entity-empty-state' : 'plugins-entity-empty-state'"
-          icon-background
-          :message="t('plugins.list.empty_state_v2.description')"
-          :title="t('plugins.list.empty_state_v2.title')"
+        <slot
+          :can-create="userCanCreate"
+          name="empty-state"
         >
-          <template #icon>
-            <PlugIcon decorative />
-          </template>
-
-          <template
-            v-if="config?.isControlPlaneGroup"
-            #default
+          <KEmptyState
+            :data-testid="config.entityId ? 'nested-plugins-entity-empty-state' : 'plugins-entity-empty-state'"
+            icon-background
+            :message="t('plugins.list.empty_state_v2.description')"
+            :title="t('plugins.list.empty_state_v2.title')"
           >
-            {{ t('plugins.list.empty_state_v2.group') }}
-          </template>
+            <template #icon>
+              <PlugIcon decorative />
+            </template>
 
-          <template #action>
-            <KButton
-              v-if="userCanCreate"
-              data-testid="entity-create-button"
-              @click="handleCreate"
+            <template
+              v-if="config?.isControlPlaneGroup"
+              #default
             >
-              <AddIcon decorative />
-              {{ t('plugins.list.empty_state_v2.create_cta') }}
-            </KButton>
+              {{ t('plugins.list.empty_state_v2.group') }}
+            </template>
 
-            <KButton
-              appearance="secondary"
-              data-testid="entity-learn-more-button"
-              @click="$emit('click:learn-more')"
-            >
-              <BookIcon decorative />
-              {{ t('plugins.list.empty_state_v2.learn_more') }}
-            </KButton>
-          </template>
-        </KEmptyState>
+            <template #action>
+              <KButton
+                v-if="userCanCreate"
+                data-testid="entity-create-button"
+                @click="handleCreate"
+              >
+                <AddIcon decorative />
+                {{ t('plugins.list.empty_state_v2.create_cta') }}
+              </KButton>
+
+              <KButton
+                appearance="secondary"
+                data-testid="entity-learn-more-button"
+                @click="$emit('click:learn-more')"
+              >
+                <BookIcon decorative />
+                {{ t('plugins.list.empty_state_v2.learn_more') }}
+              </KButton>
+            </template>
+          </KEmptyState>
+        </slot>
       </template>
 
 
