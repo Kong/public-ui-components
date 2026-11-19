@@ -1,6 +1,6 @@
 import type { UnionFieldSchema } from './form-schema'
-import type { Component, ComponentPublicInstance, Slot } from 'vue'
-import { type LabelAttributes } from '@kong/kongponents'
+import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
+import type { LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -158,7 +158,8 @@ export type Match = (opt: {
   schema: UnionFieldSchema
 }) => boolean
 
-export type MatchMap = Map<Match, Slot<{ name: string }>>
+/** A slot renderer, or a component renderer that also receives the field's events and named slots. */
+export type MatchMap = Map<Match, Slot<{ name: string }> | Readonly<Ref<Component | undefined>>>
 
 export type PropsOverridesFn = (props: Record<string, unknown>) => Record<string, unknown>
 

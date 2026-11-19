@@ -21,7 +21,7 @@ import { fillRecord } from './record'
 import { fillMap } from './map'
 import { fillJson } from './json'
 import { fillForeign } from './foreign'
-import { fillExpression } from './expression'
+import { fillCel, fillExpression } from './expression'
 
 export const handlers = {
   fillString,
@@ -35,6 +35,7 @@ export const handlers = {
   fillJson,
   fillForeign,
   fillExpression,
+  fillCel,
 }
 
 export type Handlers = typeof handlers

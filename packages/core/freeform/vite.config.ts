@@ -20,6 +20,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
+        /^@kong-ui-public\/monaco-editor(?:\/|$)/,
         'lodash-es',
         'marked',
         'dompurify',
