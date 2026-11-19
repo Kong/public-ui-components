@@ -303,6 +303,9 @@ async function waitForSlideTransitions(timeout = 1000) {
  * The first element a vnode renders, or `null` when it renders none. A
  * fragment is searched up to its end anchor only, so a component that
  * renders nothing doesn't hand out the element of the field after it.
+ *
+ * A `KAlert` for a field error is not the field: a reveal should land on the
+ * field's wrapper, where its input and label are.
  */
 export function getVNodeElement(vnode: VNode): Element | null {
   if (vnode.component) {
@@ -313,7 +316,10 @@ export function getVNodeElement(vnode: VNode): Element | null {
   let node = vnode.el as Node | null
   while (node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
-      return node as Element
+      const element = node as Element
+      if (!element.classList.contains('k-alert')) {
+        return element
+      }
     }
     if (!end || node === end) {
       return null
