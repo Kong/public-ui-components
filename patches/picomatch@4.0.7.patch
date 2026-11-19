@@ -1,33 +1,21 @@
 diff --git a/lib/parse.js b/lib/parse.js
-index 2920751..6c11fa3 100644
+index 29207512c60183b4bb9bf5112be3b9b5f4a9a9fd..253a21202a52eb2ceeea43da4845bde508e8c9c1 100644
 --- a/lib/parse.js
 +++ b/lib/parse.js
-@@ -284,6 +284,35 @@ const repeatedExtglobRecursion = pattern => {
+@@ -284,6 +284,23 @@ const repeatedExtglobRecursion = pattern => {
    return depth;
  };
  
++// True when the branch has an unescaped `*` that compiles to a wildcard. A `*`
++// opens a nested extglob only where `parse` opens one (`/^\([^?]/`).
++// Brackets and quotes are not tracked, so a literal `*` (`+([*])`) also counts
++// and that glob is matched as literal text. Tracking them differently from
++// `parse` would hide a wildcard instead, e.g. `+([[]*a)` or `+("["*"]")`.
 +const hasUnboundedStar = branch => {
-+  let bracket = 0;
-+
 +  for (let i = 0; i < branch.length; i++) {
-+    const ch = branch[i];
-+
-+    if (ch === '\\') {
++    if (branch[i] === '\\') {
 +      i++;
-+      continue;
-+    }
-+
-+    if (ch === '[') {
-+      bracket++;
-+      continue;
-+    }
-+
-+    if (ch === ']' && bracket > 0) {
-+      bracket--;
-+      continue;
-+    }
-+
-+    if (bracket === 0 && ch === '*' && branch[i + 1] !== '(') {
++    } else if (branch[i] === '*' && !/^\([^?]/.test(branch.slice(i + 1))) {
 +      return true;
 +    }
 +  }
@@ -38,14 +26,14 @@ index 2920751..6c11fa3 100644
  const analyzeRepeatedExtglob = (body, options) => {
    if (options.maxExtglobRecursion === false) {
      return { risky: false };
-@@ -296,6 +325,13 @@ const analyzeRepeatedExtglob = (body, options) => {
+@@ -296,6 +313,13 @@ const analyzeRepeatedExtglob = (body, options) => {
  
    const branches = splitTopLevel(body).map(branch => branch.trim());
  
 +  // CVE-2026-112366: a `*` wildcard inside a repeated extglob nests unbounded
 +  // quantifiers (e.g. `+(*a)` -> `(?:[^/]*?a)+`), which backtracks
 +  // exponentially. Check every branch, also when there is only one.
-+  if (branches.some(branch => hasUnboundedStar(branch) && !/^\*+$/.test(branch))) {
++  if (branches.some(hasUnboundedStar)) {
 +    return { risky: true };
 +  }
 +
