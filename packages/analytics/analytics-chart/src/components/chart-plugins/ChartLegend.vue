@@ -124,13 +124,13 @@ const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex?: number):
     // of this "segment" is stored in a different place in chart.js, which is why the `toggleDataVisibility`
     // method works here. https://www.chartjs.org/docs/latest/developers/api.html#toggledatavisibility-index
     chart.toggleDataVisibility(segmentIndex)
+    // chart.hide() or chart.show() will call chart.update() themselves, no need to call update outside of this condition.
+    chart.update()
   } else if (visible) {
     chart.hide(datasetIndex, segmentIndex)
   } else {
     chart.show(datasetIndex, segmentIndex)
   }
-
-  chart.update()
 }
 
 // Donut charts contain only a single dataset; it is safe to default datasetIndex `0`

@@ -1,9 +1,12 @@
 import type { Chart, ChartData, DefaultDataPoint } from 'chart.js'
+import type { Dataset, KChartData } from '../types'
 import { toFont } from 'chart.js/helpers'
 import composables from '../composables'
 import { unitFormatter, numberFormatter } from '@kong-ui-public/analytics-utilities'
 
 export type BarChartData = ChartData<'bar', DefaultDataPoint<'bar'>, string>
+
+type BarPoint = { x: number, y: number }
 
 const labelHeightCache = new Map()
 
@@ -70,4 +73,31 @@ export const drawPercentage = (value: number, total: number) => {
   const percentage = (value / total * 100).toFixed(1)
 
   return ` (${percentage}%)`
+}
+
+/**
+ * Dense bar data has one slot per label in every dataset, with group-by, one dataset per entity
+ * leaves almost every slot `null`, and Chart.js does work per slot per dataset, which **really**
+ * adds up depending on how many entities are being displayed.
+ *
+ * This keeps only the bars that exist (i.e. not `null` or `0`). Points reference labels by index, which keeps entities with
+ * duplicate display names on separate rows.
+ */
+export const toSparseBarData = (data: KChartData, indexAxis: 'x' | 'y'): KChartData => {
+  const valueAxis = indexAxis === 'y' ? 'x' : 'y'
+
+  const toPoints = (values: readonly unknown[]): BarPoint[] =>
+    values.flatMap((value, labelIndex) => {
+      // Nulls and zeros draw nothing, and the bar hover mode already skips falsy values
+      if (typeof value !== 'number' || !value) {
+        return []
+      }
+
+      return [{ [indexAxis]: labelIndex, [valueAxis]: value } as BarPoint]
+    })
+
+  return {
+    ...data,
+    datasets: data.datasets.map(dataset => ({ ...dataset, data: toPoints(dataset.data) }) as Dataset),
+  }
 }

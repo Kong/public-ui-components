@@ -105,7 +105,9 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
   const options = computed(() => {
     return {
       indexAxis: chartOptions.indexAxis,
-      skipNull: true,
+      // skipNull only narrows grouped bars, when the bars are stacked it changes nothing but
+      // costs a linear search of every series per bar
+      skipNull: !chartOptions.stacked.value,
       scales: {
         x: {
           stacked: chartOptions.stacked.value,

@@ -49,10 +49,11 @@ export const createZeroFilledTimeSeries = (startMs: number, endMs: number, stepM
   // to match those coming from druid which are rounded to the
   // nearest step size
   const ZERO_FILL_PADDING = 60 * 1000 // now - 60 seconds
-  const lastEndMs = Math.max(
-    ((endMs) - ZERO_FILL_PADDING),
-    Math.max(...(records || []).map(e => (new Date(e.timestamp).valueOf()))),
+  const latestRecordMs = (records || []).reduce(
+    (latest, e) => Math.max(latest, new Date(e.timestamp).valueOf()),
+    -Infinity,
   )
+  const lastEndMs = Math.max(endMs - ZERO_FILL_PADDING, latestRecordMs)
 
   const roundedStart = Math.floor((startMs - offsetMs) / stepMs) * stepMs + offsetMs
   const roundedEnd = Math.floor((lastEndMs - offsetMs) / stepMs) * stepMs + offsetMs + stepMs
