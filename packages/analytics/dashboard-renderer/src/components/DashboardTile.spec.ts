@@ -732,3 +732,75 @@ describe('<DashboardTile /> single value tiles', () => {
     expect(fitted.findComponent(SimpleChartRenderer).props('fitToContent')).toBe(true)
   })
 })
+
+describe('<DashboardTile /> tile groups', () => {
+  beforeEach(() => {
+    setupPiniaTestStore()
+  })
+
+  const makeDefinition = (title: string, metric: string) => ({
+    ...baseDefinition,
+    chart: { type: 'timeseries_line', chart_title: title },
+    query: { ...baseDefinition.query, metrics: [metric] },
+  }) as TileDefinition
+
+  const groupTiles = [
+    { id: 'first', label: 'First tab', definition: makeDefinition('First chart', 'request_count') },
+    { id: 'second', label: 'Second tab', definition: makeDefinition('Second chart', 'response_latency_p99') },
+  ]
+
+  const mountGroupedTile = (tiles?: typeof groupTiles) => mount(DashboardTile, {
+    props: {
+      definition: groupTiles[0].definition,
+      groupTiles: tiles,
+      context: mockContext,
+      queryReady: true,
+      refreshCounter: 0,
+      tileId: 'first',
+    },
+    shallow: true,
+    global: {
+      plugins: [Kongponents],
+      provide: {
+        [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+      },
+      stubs: {
+        KBadge: false,
+        KTooltip: false,
+        KButton: false,
+        KTabs: false,
+        TimeseriesChartRenderer: false,
+      },
+    },
+  })
+
+  it('renders a tab per grouped tile and shows the first tile by default', () => {
+    const wrapper = mountGroupedTile(groupTiles)
+
+    expect(wrapper.findTestId('tile-group-tabs').exists()).toBe(true)
+    expect(wrapper.text()).toContain('First tab')
+    expect(wrapper.text()).toContain('Second tab')
+    expect(wrapper.find('.title').text()).toBe('First chart')
+  })
+
+  it('switches the rendered tile when another tab is selected', async () => {
+    const wrapper = mountGroupedTile(groupTiles)
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    expect(renderer.props('query')).toMatchObject({ metrics: ['request_count'] })
+
+    await wrapper.find('[data-testid="second-tab"] button').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('.title').text()).toBe('Second chart')
+    expect(wrapper.findComponent(TimeseriesChartRenderer).props('query')).toMatchObject({ metrics: ['response_latency_p99'] })
+  })
+
+  it('does not render tabs when no group is provided', () => {
+    expect(mountGroupedTile(undefined).findTestId('tile-group-tabs').exists()).toBe(false)
+  })
+
+  it('does not render tabs for a group with a single tile', () => {
+    expect(mountGroupedTile([groupTiles[0]]).findTestId('tile-group-tabs').exists()).toBe(false)
+  })
+})
