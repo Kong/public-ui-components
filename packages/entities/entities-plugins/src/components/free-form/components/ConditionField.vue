@@ -19,11 +19,13 @@
       </div>
     </KLabel>
 
-    <StringField
+    <PluginCelField
       :input-id="conditionFieldId"
       :label="''"
+      min-gateway-version="3.15"
       name="condition"
       :placeholder="t('plugins.form.fields.condition.placeholder')"
+      :plugins="CONDITION_CEL"
     >
       <template #help>
         <i18nT keypath="plugins.form.fields.condition.help.about">
@@ -37,7 +39,7 @@
           </template>
         </i18nT>
       </template>
-    </StringField>
+    </PluginCelField>
   </div>
 </template>
 
@@ -45,12 +47,15 @@
 import { KTooltip } from '@kong/kongponents'
 import { InfoIcon } from '@kong/icons'
 import { useId } from 'vue'
-import { StringField } from '@kong-ui-public/freeform'
+import { kongFallback, kongPluginState } from '@kong-ui-public/monaco-editor/languages/cel'
+import PluginCelField from './PluginCelField'
 import externalLinks from '../../../external-links'
 import useI18n from '../../../composables/useI18n'
 
 const conditionFieldId = useId()
 const { i18n: { t }, i18nT } = useI18n()
+// Gateway 3.14 evaluates `condition` as ATC, so CEL needs every target on 3.15 or later.
+const CONDITION_CEL = [kongPluginState(), kongFallback()]
 </script>
 
 <style lang="scss" scoped>
