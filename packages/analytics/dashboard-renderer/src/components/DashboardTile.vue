@@ -209,6 +209,7 @@
       <component
         :is="componentData.component"
         v-if="componentData"
+        :key="activeTileId"
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
@@ -303,6 +304,9 @@ const activeDefinitionTileId = computed<string | undefined>(() =>
   groupTiles?.find(t => t.id === activeGroupTileId.value)?.id ?? groupTiles?.[0]?.id,
 )
 
+// The id of the tile currently shown: the selected group member, or the tile itself.
+const activeTileId = computed<string>(() => activeDefinitionTileId.value ?? tileId.toString())
+
 const activeDefinition = computed<TileDefinition>(() =>
   groupTiles?.find(t => t.id === activeGroupTileId.value)?.definition
   ?? groupTiles?.[0]?.definition
@@ -325,9 +329,9 @@ const refresh = () => {
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'tile-loaded'): void
-  (e: 'edit-tile', tile: TileDefinition): void
-  (e: 'duplicate-tile', tile: TileDefinition): void
-  (e: 'remove-tile', tile: TileDefinition): void
+  (e: 'edit-tile', tile: TileDefinition, tileId: string): void
+  (e: 'duplicate-tile', tile: TileDefinition, tileId: string): void
+  (e: 'remove-tile', tile: TileDefinition, tileId: string): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
   (e: 'tile-bounds-change', boundsEvent: TileBoundsChangeEvent): void
 }>()
@@ -551,6 +555,14 @@ watch(metricNames, metrics => {
   }
 }, { immediate: true })
 
+// When switching between grouped tiles, drop the previous member's result so neither the
+// chart nor CSV export can use it while the new member's query is pending.
+watch(activeTileId, () => {
+  chartData.value = undefined
+  activeMetric.value = undefined
+  loadingChartData.value = true
+})
+
 const isDualAxisChart = computed(() => {
   const chartOptions = chart.value
 
@@ -642,15 +654,15 @@ const datasourceScopedFilters = computed(() => {
 })
 
 const editTile = () => {
-  emit('edit-tile', activeDefinition.value)
+  emit('edit-tile', activeDefinition.value, activeTileId.value)
 }
 
 const duplicateTile = () => {
-  emit('duplicate-tile', activeDefinition.value)
+  emit('duplicate-tile', activeDefinition.value, activeTileId.value)
 }
 
 const removeTile = () => {
-  emit('remove-tile', activeDefinition.value)
+  emit('remove-tile', activeDefinition.value, activeTileId.value)
 }
 
 const onChartData = (data: ExploreResultV4) => {
@@ -721,7 +733,7 @@ const exportCsv = async () => {
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   const zoomEvent: TileZoomEvent = {
-    tileId: tileId.toString(),
+    tileId: activeTileId.value,
     timeRange: newTimeRange,
   }
   emit('tile-time-range-zoom', zoomEvent)
@@ -729,7 +741,7 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 
 const onBoundsChange = (e: Array<[number, number]>) => {
   const boundsEvent: TileBoundsChangeEvent = {
-    tileId: tileId.toString(),
+    tileId: activeTileId.value,
     bounds: e,
   }
   emit('tile-bounds-change', boundsEvent)

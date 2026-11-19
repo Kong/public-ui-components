@@ -86,9 +86,9 @@
               :query-ready="queryReady"
               :tile-id="tile.id"
               :tile-type="tile.type"
-              @duplicate-tile="onDuplicateTile(tile, index)"
-              @edit-tile="onEditTile(tile)"
-              @remove-tile="onRemoveTile(tile, index)"
+              @duplicate-tile="(_: unknown, memberId: string) => onDuplicateTile(tile, index, memberId)"
+              @edit-tile="(_: unknown, memberId: string) => onEditTile(tile, memberId)"
+              @remove-tile="(_: unknown, memberId: string) => onRemoveTile(tile, index, memberId)"
               @tile-loaded="onTileLoaded(tile, index)"
               @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
             />
@@ -161,13 +161,31 @@ const sections = computed<DashboardSection[]>(() => {
 
 const getModelByIndex = (index: number): DashboardConfig => sections.value[index].definition
 
+// Tiles in a tile group render as a single tile, so each group counts once.
 const nonSlottableTileCount = computed<number>(() => {
-  const tiles: TileConfig[] = sections.value.flatMap(section => section.definition.tiles)
-
   const isSlottableConfig = (tile: TileConfig): boolean => tile.type === 'slottable'
     || ('definition' in tile && (tile.definition as ChartTileDefinition)?.chart?.type === 'slottable')
 
-  return tiles.filter((tile) => !isSlottableConfig(tile)).length
+  return sections.value.reduce((count, section) => {
+    const tileGroupMap = getTileGroupMap(section)
+    const countedGroups = new Set<string>()
+
+    section.definition.tiles.forEach((tile) => {
+      if (isSlottableConfig(tile)) {
+        return
+      }
+
+      const group = tile.id ? tileGroupMap[tile.id] : undefined
+      if (!group) {
+        count++
+      } else if (!countedGroups.has(group.groupId)) {
+        countedGroups.add(group.groupId)
+        count++
+      }
+    })
+
+    return count
+  }, 0)
 })
 
 const { i18n } = composables.useI18n()
@@ -321,8 +339,20 @@ const gridTiles = computed<Array<Array<GridTile<TileDefinition>>>>(() => section
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
 
-const onEditTile = (tile: GridTile<TileDefinition>) => {
-  emit('edit-tile', tile)
+type GroupTiles = Array<{ id: string, label: string, definition: TileDefinition }>
+
+// A grouped grid tile is keyed by the group's first tile. Resolve the member that was
+// actually selected in the tab bar so edit/duplicate/remove act on the visible tile.
+const resolveGroupMember = (tile: GridTile<TileDefinition>, memberId?: string): GridTile<TileDefinition> => {
+  const member = (tile as { groupTiles?: GroupTiles }).groupTiles?.find(t => t.id === memberId)
+
+  return member && member.id !== tile.id
+    ? { ...tile, id: member.id, meta: member.definition }
+    : tile
+}
+
+const onEditTile = (tile: GridTile<TileDefinition>, memberId?: string) => {
+  emit('edit-tile', resolveGroupMember(tile, memberId))
 }
 
 const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
@@ -347,10 +377,10 @@ const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefine
   return chart && isSlottable(chart) ? chart.id : undefined
 }
 
-const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number) => {
+const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number, memberId?: string) => {
   const model = getModelByIndex(index)
   try {
-    const newTile = duplicateChartTile(tile)
+    const newTile = duplicateChartTile(resolveGroupMember(tile, memberId))
 
     // deep cloning to avoid duplicated references
     model.tiles.push(JSON.parse(JSON.stringify(newTile)))
@@ -360,9 +390,19 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>, index: number) => {
   }
 }
 
-const onRemoveTile = (tile: GridTile<TileDefinition>, index: number) => {
-  gridLayoutRefs[index]?.removeWidget(tile.id)
-  loadedTileIds.delete(`${index}-${tile.id}`)
+const onRemoveTile = (tile: GridTile<TileDefinition>, index: number, memberId?: string) => {
+  const groupTiles = (tile as { groupTiles?: GroupTiles }).groupTiles
+  const removedId = groupTiles?.some(t => t.id === memberId) ? memberId : tile.id
+
+  if (groupTiles && groupTiles.length > 1) {
+    // Only remove the selected member; the rest of the group stays on the grid.
+    const model = getModelByIndex(index)
+    model.tiles = model.tiles.filter(t => t.id !== removedId)
+  } else {
+    gridLayoutRefs[index]?.removeWidget(tile.id)
+  }
+
+  loadedTileIds.delete(`${index}-${removedId}`)
 }
 
 const refreshTiles = () => {

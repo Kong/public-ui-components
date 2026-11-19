@@ -796,6 +796,37 @@ describe('<DashboardTile /> tile groups', () => {
     expect(wrapper.findComponent(TimeseriesChartRenderer).props('query')).toMatchObject({ metrics: ['response_latency_p99'] })
   })
 
+  it('clears the previous member\'s data and remounts the renderer on tab switch', async () => {
+    const wrapper = mountGroupedTile(groupTiles)
+
+    wrapper.findComponent(TimeseriesChartRenderer).vm.$emit('chart-data', groupedMetricsResult)
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(true)
+    const firstRenderer = wrapper.findComponent(TimeseriesChartRenderer).vm
+
+    await wrapper.find('[data-testid="second-tab"] button').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.findComponent(TimeseriesChartRenderer).vm).not.toBe(firstRenderer)
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(false)
+    expect(wrapper.findComponent(TimeseriesChartRenderer).props('activeMetric')).toBeUndefined()
+  })
+
+  it('emits the selected member id when zooming', async () => {
+    const wrapper = mountGroupedTile(groupTiles)
+    const timeRange = { start: new Date('2026-01-01'), end: new Date('2026-01-02'), type: 'absolute' as const }
+
+    wrapper.findComponent(TimeseriesChartRenderer).vm.$emit('zoom-time-range', timeRange)
+    expect(wrapper.emitted('tile-time-range-zoom')?.[0]?.[0]).toMatchObject({ tileId: 'first' })
+
+    await wrapper.find('[data-testid="second-tab"] button').trigger('click')
+    await flushPromises()
+
+    wrapper.findComponent(TimeseriesChartRenderer).vm.$emit('zoom-time-range', timeRange)
+    expect(wrapper.emitted('tile-time-range-zoom')?.[1]?.[0]).toMatchObject({ tileId: 'second' })
+  })
+
   it('does not render tabs when no group is provided', () => {
     expect(mountGroupedTile(undefined).findTestId('tile-group-tabs').exists()).toBe(false)
   })
