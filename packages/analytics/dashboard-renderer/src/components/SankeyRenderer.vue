@@ -127,27 +127,27 @@ const onNodeClick = (result: ExploreResultV4, node: SankeyNode): void => {
         </template>
       </KEmptyState>
       <template v-else-if="toChartProps(data)">
-        <div
-          v-if="narrowedTo"
-          class="narrowed-to"
-          data-testid="sankey-narrowed-to"
-        >
-          <span>{{ i18n.t('renderer.sankeyNarrowedTo', { name: narrowedTo.name }) }}</span>
-          <KButton
-            appearance="tertiary"
-            data-testid="sankey-show-all"
-            size="small"
-            @click="narrowedTo = undefined"
-          >
-            {{ i18n.t('renderer.sankeyShowAll') }}
-          </KButton>
-        </div>
         <SankeyChart
           height="100%"
           :tooltip-title="chartOptions.chart_title ?? undefined"
           v-bind="toChartProps(data)!.chartProps"
           @node-click="onNodeClick(data, $event)"
         />
+        <p
+          v-if="narrowedTo"
+          class="narrowed-to"
+          data-testid="sankey-narrowed-to"
+        >
+          {{ i18n.t('renderer.sankeyNarrowedTo', { name: narrowedTo.name }) }}
+          <button
+            class="show-all"
+            data-testid="sankey-show-all"
+            type="button"
+            @click="narrowedTo = undefined"
+          >
+            {{ i18n.t('renderer.sankeyShowAll') }}
+          </button>
+        </p>
       </template>
       <KEmptyState
         v-else
@@ -176,11 +176,23 @@ const onNodeClick = (result: ExploreResultV4, node: SankeyNode): void => {
     min-height: 0;
   }
 
+  // Centered under the chart
   .narrowed-to {
-    align-items: center;
-    display: flex;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     flex: none;
-    gap: var(--kui-space-40, $kui-space-40);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    margin: 0;
+    text-align: center;
+  }
+
+  .show-all {
+    background: none;
+    border: 0;
+    color: var(--kui-color-text, $kui-color-text);
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-decoration: underline;
   }
 }
 </style>

@@ -56,29 +56,56 @@ interface NodeSource {
 // Prefixed with the dimension, so the same value in two columns stays two nodes
 const nodeId = (dimension: string, id: string): string => `${dimension}:${id}`
 
-const sankeyNode = (
-  { dimension, id, depth, total }: NodeSource,
-  dimensionDisplay: Display | undefined,
+/** A first-column value's color, which every flow through it takes on */
+const rankedColor = (
+  dimension: string,
+  id: string,
   order: number,
   { coordinator, chartUuid }: SankeyAdapterOptions,
-): SankeyNode => ({
-  id: nodeId(dimension, id),
-  name: dimensionDisplay?.[id]?.name ?? id,
-  depth,
-  ...(total !== undefined && { total }),
-  itemStyle: {
-    // Like the analytics charts: the coordinator keeps a value's color across the dashboard, and
-    // without one each node takes the next palette color, so neighbors don't share a color
-    color: color({
-      ...(!coordinator && { discriminator: order }),
-      dimension,
-      dimensionValue: id,
-      coordinator,
-      order,
-      chartUuid,
+): string => (
+  // Like the analytics charts: the coordinator keeps a value's color across the dashboard, and
+  // without one each value takes the next palette color, so neighbors don't share a color
+  color({
+    ...(!coordinator && { discriminator: order }),
+    dimension,
+    dimensionValue: id,
+    coordinator,
+    order,
+    chartUuid,
+  })
+)
+
+type NodeColor = NonNullable<NonNullable<SankeyNode['itemStyle']>['color']>
+
+/**
+ * A later node's fill: the colors of the links arriving at it, stacked in hard-edged segments
+ * in the order they land (their sources' order down the previous column), or one solid color.
+ */
+const stackedColor = (incoming: SankeyLink[], fallback: string): NodeColor => {
+  const colors = incoming.map(({ lineStyle }) => String(lineStyle?.color ?? fallback))
+
+  if (new Set(colors).size <= 1) {
+    return colors[0] ?? fallback
+  }
+
+  const total = incoming.reduce((sum, { value }) => sum + value, 0)
+  let offset = 0
+
+  return {
+    type: 'linear',
+    x: 0,
+    y: 0,
+    x2: 0,
+    y2: 1,
+    colorStops: incoming.flatMap(({ value }, index) => {
+      const from = offset / total
+
+      offset += value
+
+      return [{ offset: from, color: colors[index] }, { offset: offset / total, color: colors[index] }]
     }),
-  },
-})
+  }
+}
 
 /** The `limit` largest entries, largest first */
 const topEntries = (values: Map<string, number>, limit = Infinity): Array<[string, number]> => {
@@ -108,6 +135,10 @@ const addToGroup = (groups: Map<string, Map<string, number>>, group: string, key
  *
  * The API's `Other` groups are left out. First-column nodes are as tall as their links, in ranked order,
  * and carry their full total for the tooltip, since their links only cover part of it.
+ *
+ * Each first-column value has a color. A link takes the color of the first-column value that sends the
+ * most through it, so a color runs from the first column to the last, and later nodes stack the colors
+ * of the links arriving at them.
  */
 export const exploreResultToSankey = (
   result: ExploreResultV4 | undefined,
@@ -186,22 +217,28 @@ export const exploreResultToSankey = (
     dimension === rankedDimension || !!picked.get(dimension)?.get(ids[rankedDimension])?.has(ids[dimension])
   )
 
+  const colors = new Map(rankedEntries.map(([id], order) => [id, rankedColor(rankedDimension, id, order, colorOptions)]))
   const links: SankeyLink[] = []
 
   // Links between each pair of neighboring columns
   for (const [index, source] of dimensions.slice(0, -1).entries()) {
     const target = dimensions[index + 1]
     const pairFlows = new Map<string, Map<string, number>>()
+    // Per link, the flow from each first-column value through it
+    const pairLeads = new Map<string, Map<string, number>>()
 
     for (const { ids, value } of records) {
       if (rankedIds.has(ids[rankedDimension]) && isPicked(source, ids) && isPicked(target, ids)) {
         addToGroup(pairFlows, ids[source], ids[target], value)
+        addToGroup(pairLeads, JSON.stringify([ids[source], ids[target]]), ids[rankedDimension], value)
       }
     }
 
     for (const sourceId of shown.get(source)!) {
       for (const [targetId, value] of topEntries(pairFlows.get(sourceId) ?? new Map())) {
-        links.push({ source: nodeId(source, sourceId), target: nodeId(target, targetId), value })
+        const [[lead]] = topEntries(pairLeads.get(JSON.stringify([sourceId, targetId]))!, 1)
+
+        links.push({ source: nodeId(source, sourceId), target: nodeId(target, targetId), value, lineStyle: { color: colors.get(lead) } })
       }
     }
   }
@@ -211,8 +248,23 @@ export const exploreResultToSankey = (
     ...otherDimensions.flatMap((dimension) => [...shown.get(dimension)!].map((id) => ({ dimension, id, depth: dimensions.indexOf(dimension) }))),
   ]
 
-  // Already column by column, so the ranked nodes get the most distinct colors
-  const nodes = nodeSources.map((node, order) => sankeyNode(node, display[node.dimension], order, colorOptions))
+  const nodeIds = nodeSources.map(({ dimension, id }) => nodeId(dimension, id))
+  // For a node no link arrives at
+  const fallback = colors.get(rankedEntries[0]?.[0])!
+
+  const nodes = nodeSources.map(({ dimension, id, depth, total }, index): SankeyNode => {
+    const incoming = links
+      .filter(({ target }) => target === nodeIds[index])
+      .sort((a, b) => nodeIds.indexOf(a.source) - nodeIds.indexOf(b.source))
+
+    return {
+      id: nodeIds[index],
+      name: display[dimension]?.[id]?.name ?? id,
+      depth,
+      ...(total !== undefined && { total }),
+      itemStyle: { color: depth === 0 ? colors.get(id)! : stackedColor(incoming, fallback) },
+    }
+  })
 
   const rankedValues = new Map(rankedEntries.map(([id]) => [nodeId(rankedDimension, id), id]))
 

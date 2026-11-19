@@ -31,8 +31,8 @@
       "title": "This query can't be shown as a sankey diagram",
       "description": "Sankey diagrams need a count or total metric, such as requests or tokens, and two or three dimensions, none of them time"
     },
-    "sankeyNarrowedTo": "Showing {name}",
-    "sankeyShowAll": "Show all"
+    "sankeyNarrowedTo": "Showing only {name}.",
+    "sankeyShowAll": "Clear"
   },
   "pdfExport": {
     "branding": "Kong Konnect",

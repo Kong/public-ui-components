@@ -68,7 +68,7 @@ const nodes: SankeyNode[] = [
 ]
 ```
 
-Links take their source node's color by default. Set `linkColor` to `target`, or to `gradient` for a fade from the source's color to the target's.
+Links take their source node's color by default. Set `linkColor` to `target`, or to `gradient` for a fade from the source's color to the target's. A link's own `lineStyle.color` wins over `linkColor`.
 
 ## Props
 
@@ -88,7 +88,7 @@ Links take their source node's color by default. Set `linkColor` to `target`, or
 
 ## Interaction
 
-Hovering a node or link highlights the links connected to it and fades the rest. Nodes can't be dragged.
+Hovering a node or link highlights every flow through it, from the first column to the last, and fades the rest of the chart. Nodes can't be dragged.
 
 Clicking a node emits `node-click` with that node, as it was passed in `nodes`:
 
@@ -106,7 +106,7 @@ Long node names are truncated to fit the room on the right of the chart. Change 
 
 Hovering shows the tooltip shared by all charts in this package (the same look as the `@kong-ui-public/analytics-chart` tooltips), with `seriesName` as the metric and values formatted with `valueFormatter`:
 
-- A link shows its source node as the subtitle, and a row with its target node and value, in the source node's color.
+- A link shows its source node as the subtitle, and a row with its target node and value, in the link's own `lineStyle.color` or else the source node's color.
 - A node shows a row with its name and value, or its `total` when set.
 
 ```vue

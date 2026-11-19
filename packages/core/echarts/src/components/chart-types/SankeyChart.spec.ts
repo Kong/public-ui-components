@@ -120,6 +120,15 @@ describe('<SankeyChart />', () => {
       })
     })
 
+    it('shows a link in its own color when it has one', () => {
+      const wrapper = mountChart({ nodes, links })
+      const link = { ...links[0], lineStyle: { color: '#abcdef' } }
+
+      expect(tooltipContent(wrapper)({ dataType: 'edge', data: link, value: 300 } as any)).toMatchObject({
+        rows: [{ color: '#abcdef' }],
+      })
+    })
+
     it('falls back to the node ids for links to unknown nodes', () => {
       const wrapper = mountChart({ nodes })
       const link = { source: 'model:missing', target: 'consumer:missing', value: 1 }

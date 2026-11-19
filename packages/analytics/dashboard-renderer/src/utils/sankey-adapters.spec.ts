@@ -101,7 +101,7 @@ describe('exploreResultToSankey', () => {
       expect(new Set(modelColors).size).toBe(5)
     })
 
-    it('resolves colors through the coordinator, first-dimension nodes first', () => {
+    it('resolves the first-dimension colors through the coordinator', () => {
       const resolveDiscriminator = vi.fn(({ order }: { order?: number }) => order ?? 0)
 
       exploreResultToSankey(buildResult([
@@ -112,8 +112,6 @@ describe('exploreResultToSankey', () => {
       expect(resolveDiscriminator.mock.calls.map(([args]) => args)).toEqual([
         expect.objectContaining({ name: 'ai_gateway_modelgpt', order: 0, chartUuid: 'chart-1' }),
         expect.objectContaining({ name: 'ai_gateway_modelclaude', order: 1, chartUuid: 'chart-1' }),
-        expect.objectContaining({ name: 'oidc_credentialalex', order: 2, chartUuid: 'chart-1' }),
-        expect.objectContaining({ name: 'oidc_credentialsam', order: 3, chartUuid: 'chart-1' }),
       ])
     })
   })
@@ -286,12 +284,60 @@ describe('exploreResultToSankey with three dimensions', () => {
     ])
   })
 
-  it('colors the nodes column by column', () => {
-    const resolveDiscriminator = vi.fn(({ order }: { order?: number }) => order ?? 0)
+  describe('colors', () => {
+    // Alex sends the most through openai -> gpt, sam through openai -> mini
+    const sankey = exploreResultToSankey(buildThreeDimensionResult([
+      ['openai', 'gpt', 'alex', 30],
+      ['openai', 'mini', 'alex', 10],
+      ['openai', 'mini', 'sam', 20],
+    ], ['oidc_credential', 'ai_provider', 'ai_gateway_model']))
+    const colorOf = (id: string) => sankey?.nodes.find((node) => node.id === id)?.itemStyle?.color
+    const alex = colorOf('oidc_credential:alex')
+    const sam = colorOf('oidc_credential:sam')
 
-    exploreResultToSankey(buildThreeDimensionResult([['openai', 'gpt', 'alex', 10]]), { coordinator: { resolveDiscriminator, reset: vi.fn() } })
+    it('gives each first-column value its own color', () => {
+      expect(alex).toEqual(expect.any(String))
+      expect(sam).toEqual(expect.any(String))
+      expect(alex).not.toBe(sam)
+    })
 
-    expect(resolveDiscriminator.mock.calls.map(([{ name }]) => name)).toEqual(['ai_provideropenai', 'ai_gateway_modelgpt', 'oidc_credentialalex'])
+    it('colors each link like the first-column value that sends the most through it', () => {
+      expect(sankey?.links.map(({ source, target, lineStyle }) => [`${source} -> ${target}`, lineStyle?.color])).toEqual([
+        ['oidc_credential:alex -> ai_provider:openai', alex],
+        ['oidc_credential:sam -> ai_provider:openai', sam],
+        ['ai_provider:openai -> ai_gateway_model:gpt', alex],
+        ['ai_provider:openai -> ai_gateway_model:mini', sam],
+      ])
+    })
+
+    it('stacks the colors of the links arriving at a later node, in their sources\' order', () => {
+      expect(colorOf('ai_provider:openai')).toEqual({
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0,
+        y2: 1,
+        colorStops: [
+          { offset: 0, color: alex },
+          { offset: 40 / 60, color: alex },
+          { offset: 40 / 60, color: sam },
+          { offset: 1, color: sam },
+        ],
+      })
+    })
+
+    it('gives a later node one color when its links share it', () => {
+      expect(colorOf('ai_gateway_model:gpt')).toBe(alex)
+      expect(colorOf('ai_gateway_model:mini')).toBe(sam)
+    })
+
+    it('resolves only the first-column colors through the coordinator', () => {
+      const resolveDiscriminator = vi.fn(({ order }: { order?: number }) => order ?? 0)
+
+      exploreResultToSankey(buildThreeDimensionResult([['openai', 'gpt', 'alex', 10]]), { coordinator: { resolveDiscriminator, reset: vi.fn() } })
+
+      expect(resolveDiscriminator.mock.calls.map(([{ name }]) => name)).toEqual(['ai_provideropenai'])
+    })
   })
 
   it('maps the first-column nodes to their values', () => {

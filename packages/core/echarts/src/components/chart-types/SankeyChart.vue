@@ -80,8 +80,8 @@ const flowTooltipContent: ChartTooltipContent = (params) => {
   const [item] = tooltipItems(params)
 
   if (item.dataType === 'edge') {
-    const { source, target, value } = item.data as SankeyLink
-    const sourceColor = nodesById.value.get(source)?.itemStyle?.color
+    const { source, target, value, lineStyle } = item.data as SankeyLink
+    const color = lineStyle?.color ?? nodesById.value.get(source)?.itemStyle?.color
 
     return {
       title: tooltipTitle,
@@ -89,8 +89,8 @@ const flowTooltipContent: ChartTooltipContent = (params) => {
       metric: seriesName,
       rows: [{
         ...tooltipRow(item, nodeName(target), value, valueFormatter),
-        // ECharts gives links no color of their own, so use their source node's
-        color: typeof sourceColor === 'string' ? sourceColor : undefined,
+        // The link's own color, else its source node's: ECharts gives tooltips no link color
+        color: typeof color === 'string' ? color : undefined,
       }],
     }
   }
@@ -147,8 +147,8 @@ const generatedOption = computed((): EChartsOption => ({
       // Keep each column in the given order, stacked from the top
       layoutIterations: 0,
       draggable: false,
-      // Hovering a node or link highlights its connected flows and fades the rest
-      emphasis: { focus: 'adjacency' },
+      // Hovering a node or link highlights every flow through it, first column to last, and fades the rest
+      emphasis: { focus: 'trajectory', blurScope: 'global' },
       itemStyle: { borderWidth: 0 },
       lineStyle: {
         color: linkColor,
