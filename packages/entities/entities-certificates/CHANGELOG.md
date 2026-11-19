@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.19.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-certificates%403.19.2...%40kong-ui-public%2Fentities-certificates%403.19.3) (2026-11-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
 ## [3.19.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-certificates%403.19.1...%40kong-ui-public%2Fentities-certificates%403.19.2) (2026-11-15)
 
 ### Bug Fixes

@@ -167,6 +167,16 @@ Control if the View Configuration action button is hidden.
 
 Control if the vault secret picker is enabled for applicable fields.
 
+### CEL editor
+
+Each CEL field registers its own features. `useGatewayCelKind(plugins, { minGatewayVersion })` adds them to the Gateway variables and returns the field's CEL kind, or `undefined` when the host has the editor off or a target Gateway is too old. `PluginCelField` renders `CelField` for a kind and `StringField` otherwise. The condition field registers plugin state and `default()`, ACL rules register `kongAclRule()`, and expression fields (`ExpressionCelField`) register `kongExpressibleField()`. The condition schema stays `type: 'string'`.
+
+Konnect enables the editor by providing `FEATURE_FLAGS.KM_PLUGINS_CEL_EXPRESSION_EDITOR` as a boolean or Vue ref. Kong Manager opts in separately with `config.enableCelEditor: true`. For the plugin `condition` field, the host must also supply known CEL-compatible Gateway versions. Konnect uses `config.dataPlaneVersions` for all target data planes. Kong Manager uses `config.gatewayInfo` for its Enterprise Gateway. CEL conditions require Gateway 3.15 or later. The existing condition field visibility flag still applies.
+
+All three editors offer `principal.groups` and `principal.type` when every target runs Gateway 3.17.0.0-rc.1 or later. Older or unknown target versions get the common principal fields. Only AI Gateway data planes populate the groups.
+
+Both hosts can provide `config.getCelSubjects(): Promise<CelSubjects>`. A field calls it once it shows a CEL editor, and fields that read the same callback and scope share one lookup. Hosts such as AI Manager that mount `PluginConfigurationForm` directly supply the same callback in their existing `kong-ui-forms-config` context. Switching control planes, workspaces, or AI gateways reloads the records. The host checks list access for each collection before calling its API, follows pagination, and returns the accessible Consumers, Consumer Groups, principals, and principal groups. Replace the callback when the user's access changes. Without a callback the editor provides field and function suggestions using its declarations alone.
+
 ### Events
 
 #### cancel

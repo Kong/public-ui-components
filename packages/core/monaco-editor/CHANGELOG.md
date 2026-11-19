@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.27.11...%40kong-ui-public%2Fmonaco-editor%400.28.0) (2026-11-19)
+
+### Features
+
+* **monaco-editor:** add configurable CEL language support ([#4081](https://github.com/Kong/public-ui-components/issues/4081)) ([ceda060](https://github.com/Kong/public-ui-components/commit/ceda0603b051a7f8ac8acf4d6372699e14c70702))
+
+
 ## [0.27.11](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.27.10...%40kong-ui-public%2Fmonaco-editor%400.27.11) (2026-11-15)
 
 ### Bug Fixes

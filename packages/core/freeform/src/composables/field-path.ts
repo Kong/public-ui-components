@@ -1,4 +1,4 @@
-import { computed, inject, provide, toValue, useSlots } from 'vue'
+import { computed, inject, provide, toValue, unref, useSlots } from 'vue'
 import { FIELD_PATH_KEY, FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { generalizePath } from './schema'
 import { useFormShared } from './form-context'
@@ -62,10 +62,10 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
     // todo(zehao): priority
     const sm = getSchemaMap()
-    for (const [matcher, slot] of fieldRendererRegistry) {
+    for (const [matcher, renderer] of fieldRendererRegistry) {
       const genericPath = generalizePath(pathValue, sm)
       if (matcher({ path: pathValue, genericPath, schema: getSchema(pathValue)! })) {
-        return slot
+        return unref(renderer)
       }
     }
     return undefined
