@@ -140,5 +140,5 @@ watch([() => v4Data.value, () => state.value], ([data, state]) => {
     oldData.value = data
     emit('chart-data', data)
   }
-})
+}, { immediate: true })
 </script>

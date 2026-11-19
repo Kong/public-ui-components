@@ -15,6 +15,7 @@
     >
       <KTabs
         v-model="activeGroupTab"
+        v-bind="{ hidePanels: true }"
         data-testid="tile-group-tabs"
         :tabs="groupTabs"
       />
