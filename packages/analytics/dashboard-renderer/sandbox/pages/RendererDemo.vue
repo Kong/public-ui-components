@@ -582,6 +582,13 @@ const dashboardConfig = ref<DashboardConfig>({
             { label: 'Models', dimensions: ['ai_gateway_model', 'oidc_credential'] },
             { label: 'Providers', dimensions: ['ai_provider', 'ai_gateway_model', 'oidc_credential'] },
             { label: 'Consumers', dimensions: ['oidc_credential', 'ai_provider', 'ai_gateway_model'] },
+            {
+              label: 'MCP servers',
+              dimensions: ['ai_gateway_mcp_server', 'mcp_tool_name', 'oidc_credential'],
+              datasource: 'agentic_usage',
+              metrics: ['request_count'],
+              filters: [{ field: 'mcp_tool_name', operator: 'not_empty' }],
+            },
           ],
         },
         query: {

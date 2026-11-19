@@ -23,19 +23,26 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const metricFormatter = composables.useMetricFormatter()
 
-// The selected view's dimensions replace the query's
+// The selected view's dimensions, and any datasource, metrics or filters it gives, replace the query's
 const view = computed(() => props.chartOptions.views?.[props.activeView ?? 0])
 
 /** The first-column value the chart is narrowed to, after clicking its node */
 const narrowedTo = ref<{ dimension: string, id: string, name: string }>()
 
 const viewQuery = computed((): ValidDashboardChartQuery => {
-  const dimensions = view.value?.dimensions ?? props.query.dimensions
-  const filters = narrowedTo.value
-    ? [...(props.query.filters ?? []), { field: narrowedTo.value.dimension, operator: 'in', value: [narrowedTo.value.id] }]
-    : props.query.filters
+  const { datasource, metrics, dimensions, filters } = view.value ?? {}
+  const viewFilters = filters ?? props.query.filters
+  const narrowedFilters = narrowedTo.value
+    ? [...(viewFilters ?? []), { field: narrowedTo.value.dimension, operator: 'in', value: [narrowedTo.value.id] }]
+    : viewFilters
 
-  return { ...props.query, dimensions, filters } as ValidDashboardChartQuery
+  return {
+    ...props.query,
+    datasource: datasource ?? props.query.datasource,
+    metrics: metrics ?? props.query.metrics,
+    dimensions: dimensions ?? props.query.dimensions,
+    filters: narrowedFilters,
+  } as ValidDashboardChartQuery
 })
 
 // A narrowed value may not be in the other view's columns

@@ -20,6 +20,7 @@ import {
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
   queryableManagedCacheExploreDimensions,
+  queryDatasources,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -361,48 +362,6 @@ export const treemapChartSchema = {
 
 export type TreemapChartOptions = FromSchemaWithOptions<typeof treemapChartSchema>
 
-const sankeyViewSchema = {
-  type: 'object',
-  properties: {
-    label: {
-      type: 'string',
-      description: 'The view\'s name in the tile header.',
-    },
-    dimensions: {
-      type: 'array',
-      items: { type: 'string' },
-      minItems: 2,
-      maxItems: 3,
-      description: 'The columns, in order. Replaces the query\'s dimensions while the view is selected.',
-    },
-  },
-  required: ['label', 'dimensions'],
-  additionalProperties: false,
-} as const satisfies JSONSchema
-
-// Two or three dimensions, one column each, e.g. provider -> model -> consumer. The query's `limit`
-// is the top N in each column: the top N values of the first column (e.g. providers), and for each of
-// them, its own top N values in every other column
-export const sankeyChartSchema = {
-  type: 'object',
-  properties: {
-    type: {
-      type: 'string',
-      enum: ['sankey'],
-    },
-    chart_title: chartTitle,
-    views: {
-      type: 'array',
-      items: sankeyViewSchema,
-      description: 'Ways to break down the query, picked in the tile header. The selected view\'s dimensions replace the query\'s, and the first view is shown first.',
-    },
-  },
-  required: ['type'],
-  additionalProperties: false,
-} as const satisfies JSONSchema
-
-export type SankeyChartOptions = FromSchemaWithOptions<typeof sankeyChartSchema>
-
 export const columnIconSet = ['ai_provider'] as const
 
 export type ColumnIconSet = typeof columnIconSet[number]
@@ -592,6 +551,62 @@ export const topTalkersSchema = {
 } as const satisfies JSONSchema
 
 export type TopTalkersOptions = FromSchemaWithOptions<typeof topTalkersSchema>
+
+const sankeyViewSchema = {
+  type: 'object',
+  properties: {
+    label: {
+      type: 'string',
+      description: 'The view\'s name in the tile header.',
+    },
+    dimensions: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 2,
+      maxItems: 3,
+      description: 'The columns, in order. Replaces the query\'s dimensions while the view is selected.',
+    },
+    datasource: {
+      type: 'string',
+      enum: queryDatasources,
+      description: 'Replaces the query\'s datasource while the view is selected, to break down another datasource in the same tile. Its `metrics` and `filters` usually need replacing too.',
+    },
+    metrics: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'Replaces the query\'s metrics while the view is selected.',
+    },
+    filters: {
+      ...filtersFn(),
+      description: 'Replaces the query\'s filters while the view is selected.',
+    },
+  },
+  required: ['label', 'dimensions'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+// Two or three dimensions, one column each, e.g. provider -> model -> consumer. The query's `limit`
+// is the top N in each column: the top N values of the first column (e.g. providers), and for each of
+// them, its own top N values in every other column
+export const sankeyChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['sankey'],
+    },
+    chart_title: chartTitle,
+    views: {
+      type: 'array',
+      items: sankeyViewSchema,
+      description: 'Ways to break down the query, picked in the tile header. The selected view\'s dimensions, and any datasource, metrics or filters it gives, replace the query\'s. The first view is shown first.',
+    },
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SankeyChartOptions = FromSchemaWithOptions<typeof sankeyChartSchema>
 
 export const tableChartSchema = {
   type: 'object',
