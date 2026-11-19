@@ -144,6 +144,8 @@ const generatedOption = computed((): EChartsOption => ({
       bottom: 10,
       nodeWidth: 12,
       nodeGap: 10,
+      // Keep each column in the given order, stacked from the top
+      layoutIterations: 0,
       draggable: false,
       // Hovering a node or link highlights its connected flows and fades the rest
       emphasis: { focus: 'adjacency' },

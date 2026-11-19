@@ -39,6 +39,8 @@ const links: SankeyLink[] = [
 
 Columns come from the links: nodes with no incoming links start on the left, and each link moves one column to the right. Set `depth` on a node to put it in a specific column.
 
+Each column stacks its nodes from the top, in the order they're listed in `nodes`, so list them in the order to show them, e.g. largest first. To let ECharts move nodes around to reduce crossing links instead, set `seriesOption: { layoutIterations: 32 }`.
+
 A node's height is the larger of its incoming and outgoing values. When the links only cover part of a node's value, e.g. a model linked to just its top consumers, set `total` on it: the tooltip (and the label with `showValues`) shows the total, while the node stays as tall as its links:
 
 ```ts

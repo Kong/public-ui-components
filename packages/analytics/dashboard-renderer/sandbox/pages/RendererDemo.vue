@@ -584,7 +584,6 @@ const dashboardConfig = ref<DashboardConfig>({
             { label: 'Consumers', dimensions: ['oidc_credential', 'ai_provider', 'ai_gateway_model'] },
           ],
         },
-        header_description: 'Click a ranked node to see only that value.',
         query: {
           datasource: 'llm_usage',
           dimensions: ['ai_gateway_model', 'oidc_credential'],

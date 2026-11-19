@@ -74,11 +74,10 @@
 
       <div
         v-if="showViewSelector"
-        class="metric-selector-wrapper"
+        class="view-selector-wrapper"
       >
         <KSegmentedControl
           v-model="activeView"
-          class="metric-selector"
           data-testid="view-selector"
           :options="viewOptions"
         />
