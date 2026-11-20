@@ -305,7 +305,8 @@ async function waitForSlideTransitions(timeout = 1000) {
  * renders nothing doesn't hand out the element of the field after it.
  *
  * A `KAlert` for a field error is not the field: a reveal should land on the
- * field's wrapper, where its input and label are.
+ * field's wrapper, where its input and label are. A field that renders only an
+ * alert (e.g. one with no renderer) still lands on it.
  */
 export function getVNodeElement(vnode: VNode): Element | null {
   if (vnode.component) {
@@ -314,19 +315,21 @@ export function getVNodeElement(vnode: VNode): Element | null {
 
   const end = vnode.anchor as Node | null
   let node = vnode.el as Node | null
+  let alert: Element | null = null
   while (node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
       const element = node as Element
       if (!element.classList.contains('k-alert')) {
         return element
       }
+      alert ??= element
     }
     if (!end || node === end) {
-      return null
+      return alert
     }
     node = node.nextSibling
   }
-  return null
+  return alert
 }
 
 function prefersReducedMotion() {
