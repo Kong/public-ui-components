@@ -229,5 +229,39 @@ describe('<EntityBaseTable />', () => {
 
       cy.get('.kong-ui-entity-base-table thead th').should('contain.text', mockTableHeaders.hosts.label)
     })
+
+    it('should show a non-hidable column the user hid before it became non-hidable', () => {
+      const cacheId = `entity-base-table-${crypto.randomUUID()}`
+      seedStoredPreferences(cacheId, {
+        columnVisibility: {
+          // Given name is hidden in localStorage
+          // i.e. the user hid it before it became non-hidable
+          name: false,
+          hosts: false,
+        },
+      })
+
+      // When the table loads
+      cy.mount(EntityBaseTable, {
+        props: {
+          tableHeaders: {
+            ...mockTableHeaders,
+            name: {
+              ...mockTableHeaders.name,
+              // And name isn't hidable
+              // i.e. it has no checkbox in the column visibility menu to show it again
+              hidable: false,
+            },
+          },
+          fetcher: () => mockTableData,
+          cacheIdentifier: cacheId,
+        },
+      })
+
+      // Then the name column is visible
+      cy.get('.kong-ui-entity-base-table thead th').should('contain.text', mockTableHeaders.name.label)
+      // And the hidable hosts column stays hidden
+      cy.get('.kong-ui-entity-base-table thead th').should('not.contain.text', mockTableHeaders.hosts.label)
+    })
   })
 })
