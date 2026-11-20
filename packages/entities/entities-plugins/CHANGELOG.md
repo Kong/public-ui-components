@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.5.1...%40kong-ui-public%2Fentities-plugins%4011.6.0) (2026-11-20)
+
+### Features
+
+* **entities-plugins:** turn error responses into field errors [KM-3728] ([#4098](https://github.com/Kong/public-ui-components/issues/4098)) ([5bdafe7](https://github.com/Kong/public-ui-components/commit/5bdafe79b92b91786a1cb7bea4b4d7980127a62b))
+
+
 ## [11.5.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.5.0...%40kong-ui-public%2Fentities-plugins%4011.5.1) (2026-11-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

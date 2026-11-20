@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.13.1...%40kong-ui-public%2Ffreeform%400.14.0) (2026-11-20)
+
+### Bug Fixes
+
+* **freeform:** show CEL diagnostics inline ([#4101](https://github.com/Kong/public-ui-components/issues/4101)) ([d5476ae](https://github.com/Kong/public-ui-components/commit/d5476ae58f7e237ed8a403fbcbfc9c7760488c7d))
+
+### Features
+
+* **freeform:** drop an error once a value it is about changes [KM-3728] ([#4097](https://github.com/Kong/public-ui-components/issues/4097)) ([781ff1d](https://github.com/Kong/public-ui-components/commit/781ff1d94803931e898650597ea9a7f5e5f2c51a))
+
+
 ## [0.13.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.13.0...%40kong-ui-public%2Ffreeform%400.13.1) (2026-11-20)
 
 ### Bug Fixes

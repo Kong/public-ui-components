@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.28.0...%40kong-ui-public%2Fmonaco-editor%400.28.1) (2026-11-20)
+
+### Bug Fixes
+
+* **freeform:** show CEL diagnostics inline ([#4101](https://github.com/Kong/public-ui-components/issues/4101)) ([d5476ae](https://github.com/Kong/public-ui-components/commit/d5476ae58f7e237ed8a403fbcbfc9c7760488c7d))
+
+
 # [0.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.27.11...%40kong-ui-public%2Fmonaco-editor%400.28.0) (2026-11-19)
 
 ### Features
