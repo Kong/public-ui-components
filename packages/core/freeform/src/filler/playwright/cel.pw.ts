@@ -3,6 +3,34 @@ import { createFiller } from './create-filler'
 import CelFormWrapper from '../fixtures/CelFormWrapper.vue'
 import { acl, condition, expression, parsePayload, schema } from '../fixtures/cel'
 
+test('underlines a lone equals sign until the comparison operator is complete', async ({ mount, page }) => {
+  await mount(CelFormWrapper, { props: { enabled: true } })
+  const field = page.getByTestId('ff-condition')
+  const input = field.locator('.monaco-editor textarea')
+  const marker = field.locator('.squiggly-error')
+
+  await input.focus()
+  await page.keyboard.insertText('consumer.id =')
+  await expect(marker).toBeVisible()
+  await expect(field.locator('.cel-input-hint')).toHaveCount(0)
+  await page.keyboard.type('=')
+  await expect(marker).toHaveCount(0)
+  await page.keyboard.insertText(' "a=b" // =')
+  await expect(marker).toHaveCount(0)
+})
+
+test('shows simultaneous CEL errors and warnings inline and clears them on correction', async ({ mount, page }) => {
+  await mount(CelFormWrapper, { props: { enabled: true } })
+  const field = page.getByTestId('ff-condition')
+  const filler = createFiller(page, schema)
+  await filler.fillField('condition', 'consumers.id == http.headers["X-Tenant"] && consumer.missing')
+  await expect(field.locator('.squiggly-error')).toHaveCount(2)
+  await expect(field.locator('.squiggly-warning')).toHaveCount(1)
+  await expect(field.locator('.cel-input-hint')).toHaveCount(0)
+  await filler.fillField('condition', 'consumer.id == http.headers["x_tenant"] && consumer.username')
+  await expect(field.locator('.squiggly-error, .squiggly-warning')).toHaveCount(0)
+})
+
 for (const enabled of [false, true]) {
   test(`fills, replaces and clears expression, condition and ACL inputs with CEL ${enabled ? 'on' : 'off'}`, async ({ mount, page }) => {
     await mount(CelFormWrapper, { props: { enabled } })
