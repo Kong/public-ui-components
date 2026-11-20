@@ -127,7 +127,7 @@ describe('Field errors', () => {
   })
 })
 
-describe('Field errors: structure changes', () => {
+describe('Field errors: data changes', () => {
   /** A host that binds `v-model:errors`, exposing the list it holds */
   function mountHost(initial: FieldError[]) {
     const hostErrors = ref<FieldError[]>(initial)
@@ -174,5 +174,18 @@ describe('Field errors: structure changes', () => {
 
     cy.get('[data-testid^="ff-field-errors-"]').should('not.exist')
     cy.get('@hostErrors').its('value').should('deep.equal', [])
+  })
+
+  it('drops an error once the value of its field changes, and keeps the others', () => {
+    mountHost([
+      { path: 'name', message: 'name is taken' },
+      { path: 'port', message: 'out of range' },
+    ])
+
+    cy.getTestId('ff-name').type('x')
+
+    cy.getTestId('ff-field-errors-name').should('not.exist')
+    cy.getTestId('ff-field-errors-port').should('have.text', 'out of range')
+    cy.get('@hostErrors').its('value').should('deep.equal', [{ path: 'port', message: 'out of range' }])
   })
 })

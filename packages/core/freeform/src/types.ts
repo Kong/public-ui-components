@@ -178,4 +178,10 @@ export interface FieldError {
   /** Data path in the `formatDataPath` format, e.g. `config.headers["x.y"]` */
   path: string
   message: string
+  /**
+   * Data paths of the fields the error is about, e.g. the fields an entity check
+   * names. The form drops the error once the value of one of them changes.
+   * Defaults to `[path]`.
+   */
+  fields?: string[]
 }

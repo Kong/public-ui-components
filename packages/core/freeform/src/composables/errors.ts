@@ -1,5 +1,5 @@
-import { computed, toValue } from 'vue'
-import { get } from 'lodash-es'
+import { computed, toRaw, toValue, watch } from 'vue'
+import { cloneDeep, get, isEqual } from 'lodash-es'
 import * as utils from '../utils'
 import { isKid } from './key-id-map'
 import { toDataPath, toFieldPath } from './reveal'
@@ -16,10 +16,18 @@ import type { UnionFieldSchema } from '../form-schema'
  * that isn't in the data, sits under a record or array item that has no
  * value (e.g. a record that is switched off), is hidden by a render rule, or
  * no mounted field renders it (e.g. it is left out with `omit` everywhere).
+ *
+ * An error is dropped once the value of a field it is about changes (see
+ * `FieldError.fields`), whatever the new value is.
  */
 export function createFieldErrors(options: {
   errors: MaybeRefOrGetter<FieldError[] | undefined>
   formData: Record<string, any>
+  /**
+   * The form data with map entries keyed by their names, which stay the same when
+   * the data is set again. Without it, errors are not dropped as values change.
+   */
+  getData?: () => Record<string, any>
   getSchema: (path: string) => UnionFieldSchema | undefined
   getKey: (id: KeyId) => string | undefined
   isFieldHidden: (path: string) => boolean
@@ -31,7 +39,22 @@ export function createFieldErrors(options: {
   /** Called with the errors rewritten after the data's structure changed */
   onChange?: (errors: FieldError[]) => void
 }) {
-  const { formData, getSchema, getKey, isFieldHidden, isFieldRendered, onChange } = options
+  const { formData, getData, getSchema, getKey, isFieldHidden, isFieldRendered, onChange } = options
+
+  /**
+   * The errors the form last emitted, until the host passes them back: the data
+   * may change before it does, e.g. as an array item is removed
+   */
+  let emitted: FieldError[] | undefined
+
+  function getErrors(): FieldError[] {
+    return emitted ?? toValue(options.errors) ?? []
+  }
+
+  function emitErrors(errors: FieldError[]) {
+    emitted = errors
+    onChange?.(errors)
+  }
 
   /**
    * The nearest ancestor of `fieldPath` that is a set or a JSON field
@@ -158,38 +181,103 @@ export function createFieldErrors(options: {
    * elsewhere are kept as they are.
    */
   function rewriteErrorsUnder(containerFieldPath: string, fn: (rest: string[]) => string[] | null) {
-    const errors = toValue(options.errors) ?? []
     const prefix = utils.parseDataPath(toDataPath(containerFieldPath, getKey))
-    let changed = false
 
-    const next = errors.flatMap((error) => {
+    function rewrite(path: string): string | null {
       let segments: string[]
       try {
-        segments = utils.parseDataPath(error.path)
+        segments = utils.parseDataPath(path)
       } catch {
-        return [error]
+        return path
       }
       const isUnder = segments.length > prefix.length && prefix.every((segment, i) => segments[i] === segment)
       if (!isUnder) {
-        return [error]
+        return path
       }
-
       const rest = fn(segments.slice(prefix.length))
-      if (!rest) {
+      return rest && utils.formatDataPath([...prefix, ...rest])
+    }
+
+    let changed = false
+
+    const next = getErrors().flatMap((error) => {
+      const path = rewrite(error.path)
+      const fields = error.fields?.map(rewrite)
+      // A field the error is about is gone, so its value changed
+      if (path == null || fields?.includes(null)) {
         changed = true
         return []
       }
-      const path = utils.formatDataPath([...prefix, ...rest])
-      if (path === error.path) {
+      if (path === error.path && (fields ?? []).every((field, i) => field === error.fields![i])) {
         return [error]
       }
       changed = true
-      return [{ ...error, path }]
+      return [{ ...error, path, ...(fields && { fields: fields as string[] }) }]
     })
 
     if (changed) {
-      onChange?.(next)
+      emitErrors(next)
     }
+  }
+
+  /**
+   * The data path segments of the values an error is about: those of its
+   * `fields`, or else of its `path`. An error inside a set or a JSON value is
+   * about the whole field.
+   */
+  function getValueSegments(error: FieldError): string[][] {
+    return (error.fields ?? [error.path]).flatMap((path) => {
+      let segments: string[]
+      try {
+        segments = utils.parseDataPath(path)
+      } catch {
+        return []
+      }
+      if (!segments.length) {
+        return [segments]
+      }
+      const fieldPath = toFieldPath(segments, options)
+      const owner = getSchema(fieldPath) ? null : findValueField(fieldPath)
+      return [owner ? segments.slice(0, utils.toArray(owner).length) : segments]
+    })
+  }
+
+  /** The values the errors are about, as each error first saw them */
+  const snapshots = new WeakMap<FieldError, unknown[]>()
+
+  /**
+   * Drops the errors a value they are about changed for. An error seen for the
+   * first time keeps the values as they are now, to compare with later.
+   */
+  function dropEditedErrors(data: Record<string, any>) {
+    let changed = false
+
+    const next = getErrors().filter((error) => {
+      const values = getValueSegments(error).map(segments => segments.length ? get(data, segments) : data)
+      const snapshot = snapshots.get(toRaw(error))
+      if (!snapshot) {
+        snapshots.set(toRaw(error), cloneDeep(values))
+        return true
+      }
+      if (isEqual(snapshot, values)) {
+        return true
+      }
+      changed = true
+      return false
+    })
+
+    if (changed) {
+      emitErrors(next)
+    }
+  }
+
+  if (getData) {
+    // `sync`: takes the snapshots of new errors before the data changes any further
+    watch(() => toValue(options.errors), () => {
+      emitted = undefined
+      dropEditedErrors(getData())
+    }, { immediate: true, flush: 'sync' })
+    watch(getData, dropEditedErrors)
   }
 
   /**
