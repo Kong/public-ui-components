@@ -474,8 +474,8 @@ const isEditing = computed(() => isEditingRef?.value ?? false)
 const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 // `config.principals.jit` is a required record, so the form always submits one with
-// `all_claims` prefilled: sharing every token claim is the intended starting point and
-// the user narrows it down by unchecking.
+// `all_claims` prefilled: "share all" is the intended starting point and the user
+// narrows it down by picking the sub-and-iss radio.
 //
 // Seeded here, not in PrincipalLookupSettings: that component is torn down and
 // recreated when the auth mode switches, so a setup-time prefill there re-applies over

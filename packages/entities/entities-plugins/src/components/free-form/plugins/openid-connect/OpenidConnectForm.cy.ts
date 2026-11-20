@@ -1568,17 +1568,19 @@ describe('OpenidConnectForm', () => {
       })
     })
 
-    it('disables the fields while the principal lookup toggle is off', () => {
+    it('disables the radios while the principal lookup toggle is off', () => {
       mountPrincipalsForm({ withJit: true })
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('be.disabled')
+      cy.getTestId('principals-jit-subset-claims').should('be.disabled')
 
       cy.getTestId('use-principal-lookup').click({ force: true })
       cy.getTestId('principals-jit-all-claims').should('not.be.disabled')
+      cy.getTestId('principals-jit-subset-claims').should('not.be.disabled')
     })
 
-    it('renders the fields but disabled when the runtime is below 2.3', () => {
+    it('renders the radios but disabled when the runtime is below 2.3', () => {
       mountPrincipalsForm({
         isEditing: true,
         withJit: true,
@@ -1589,10 +1591,10 @@ describe('OpenidConnectForm', () => {
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('be.disabled')
-      cy.getTestId('principals-jit-claims').should('be.disabled')
+      cy.getTestId('principals-jit-subset-claims').should('be.disabled')
     })
 
-    it('renders the fields enabled when the runtime meets 2.3', () => {
+    it('renders the radios enabled when the runtime meets 2.3', () => {
       mountPrincipalsForm({
         isEditing: true,
         withJit: true,
@@ -1603,7 +1605,7 @@ describe('OpenidConnectForm', () => {
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('not.be.disabled')
-      cy.getTestId('principals-jit-claims').should('not.be.disabled')
+      cy.getTestId('principals-jit-subset-claims').should('not.be.disabled')
     })
 
     // A real create hands the form no draft, so the engine fills the whole model
@@ -1614,7 +1616,7 @@ describe('OpenidConnectForm', () => {
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('be.checked')
-      cy.getTestId('principals-jit-claims').should('not.exist')
+      cy.getTestId('principals-jit-subset-claims').should('not.be.checked')
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
@@ -1623,18 +1625,19 @@ describe('OpenidConnectForm', () => {
 
     // Switching the auth mode tears down and recreates the lookup settings, so a
     // setup-time prefill in that component would re-apply over the user's choice.
-    it('keeps share-all-claims unchecked across an auth mode switch on create', () => {
+    it('keeps the sub-and-iss choice across an auth mode switch on create', () => {
       mountPrincipalsForm({ withJit: true, model: {} })
 
       expandSettings()
-      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
 
       cy.getTestId('oidc-auth-mode-external').click({ force: true })
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+      cy.getTestId('principals-jit-subset-claims').should('be.checked')
 
       lastFormChange().then((payload) => {
-        expect(payload.config.principals.jit.all_claims).to.equal(false)
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['sub', 'iss'] })
       })
     })
 
@@ -1643,7 +1646,7 @@ describe('OpenidConnectForm', () => {
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('be.checked')
-      cy.getTestId('principals-jit-claims').should('not.exist')
+      cy.getTestId('principals-jit-subset-claims').should('not.be.checked')
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
@@ -1657,6 +1660,7 @@ describe('OpenidConnectForm', () => {
 
       expandSettings()
       cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+      cy.getTestId('principals-jit-subset-claims').should('not.be.checked')
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.jit).to.equal(null)
@@ -1678,31 +1682,30 @@ describe('OpenidConnectForm', () => {
       })
     })
 
-    it('share-all-claims hides the claims input and nulls it in the payload, restoring it when unchecked', () => {
+    it('switching to sub-and-iss seeds the claim pair, switching back to all nulls and restores it', () => {
       mountPrincipalsForm({ withJit: true, model: lookupOnModel() })
 
       expandSettings()
-      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
-      cy.getTestId('principals-jit-claims').type('sub, email')
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
+      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', 'sub, iss')
 
       lastFormChange().then((payload) => {
-        expect(payload.config.principals.jit.claims).to.deep.equal(['sub', 'email'])
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['sub', 'iss'] })
       })
 
-      cy.getTestId('principals-jit-all-claims').check({ force: true })
+      cy.getTestId('principals-jit-all-claims').click({ force: true })
       cy.getTestId('principals-jit-claims').should('not.exist')
 
       lastFormChange().then((payload) => {
-        expect(payload.config.principals.jit.all_claims).to.equal(true)
-        expect(payload.config.principals.jit.claims).to.equal(null)
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: true, claims: null })
       })
 
-      // Unchecking restores the claims the user had typed before share-all
-      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
-      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', 'sub, email')
+      // Switching back restores the claims the input held before share-all
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
+      cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', 'sub, iss')
 
       lastFormChange().then((payload) => {
-        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['sub', 'email'] })
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['sub', 'iss'] })
       })
     })
 
@@ -1710,7 +1713,8 @@ describe('OpenidConnectForm', () => {
       mountPrincipalsForm({ withJit: true, model: lookupOnModel() })
 
       expandSettings()
-      cy.getTestId('principals-jit-all-claims').uncheck({ force: true })
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
+      cy.getTestId('principals-jit-claims').clear()
       cy.getTestId('principals-jit-claims').type('sub, email')
 
       lastFormChange().then((payload) => {
@@ -1732,8 +1736,20 @@ describe('OpenidConnectForm', () => {
       })
 
       expandSettings()
-      cy.getTestId('principals-jit-all-claims').should('not.be.checked')
+      cy.getTestId('principals-jit-subset-claims').should('be.checked')
       cy.getTestId('principals-jit-claims').should('have.value', 'email')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['email'] })
+      })
+
+      // Re-picking the subset radio keeps the saved list; only an empty claims
+      // value gets the sub-and-iss default seeded.
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: ['email'] })
+      })
     })
   })
 })
