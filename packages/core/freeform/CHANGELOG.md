@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.13.0...%40kong-ui-public%2Ffreeform%400.13.1) (2026-11-20)
+
+### Bug Fixes
+
+* **freeform:** focus the revealed field's control, add a form-append slot [KM-3728] ([#4096](https://github.com/Kong/public-ui-components/issues/4096)) ([bbb1809](https://github.com/Kong/public-ui-components/commit/bbb1809aa9e3fb292100a9a789f6fdbbec8dfd32))
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.12.2...%40kong-ui-public%2Ffreeform%400.13.0) (2026-11-19)
 
 ### Features
