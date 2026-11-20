@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { reactive } from 'vue'
+import { nextTick, reactive } from 'vue'
 import { createFieldErrors } from './errors'
+import { deserializeData } from './key-id-map'
 import { buildSchemaMap, generalizePath } from './schema'
 
 import type { FormSchema } from '../form-schema'
@@ -167,6 +168,114 @@ describe('createFieldErrors: structure changes', () => {
     const { onArrayItemRemoved } = setup([error('name'), error('headers.X-Request-Id')], onChange)
 
     onArrayItemRemoved('servers', 0)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+})
+
+describe('createFieldErrors: value changes', () => {
+  const error = (path: string, fields?: string[]) => ({ path, message: path, ...(fields && { fields }) })
+
+  function setupWithData(errors: FieldError[]) {
+    const onChange = vi.fn()
+    const names = reactive<Record<KeyId, string>>({ 'kid:1': 'X-Request-Id', 'kid:2': 'x.y' })
+    const data = reactive({
+      name: '',
+      tls: { client_cert: 'cert' },
+      headers: { 'kid:1': 'abc', 'kid:2': 'dotted' } as Record<string, string>,
+      tags: ['a', 'B'],
+      servers: [{ port: 1 }, { port: 2 }, { port: 3 }],
+      redis: { host: '' },
+    })
+    const getName = (id: KeyId) => names[id]
+    const fieldErrors = createFieldErrors({
+      errors,
+      formData: data,
+      // The root has no path
+      getData: () => deserializeData(data, (path?: string) => path ? getSchema(path) : schema, getName),
+      getSchema,
+      getKey: getName,
+      isFieldHidden: () => false,
+      onChange,
+    })
+    return { ...fieldErrors, data, names, onChange }
+  }
+
+  it('should drop an error once the value of its field changes', async () => {
+    const { data, onChange } = setupWithData([error('name'), error('tls.client_cert')])
+
+    data.name = 'changed'
+    await nextTick()
+
+    expect(onChange).toHaveBeenCalledWith([error('tls.client_cert')])
+  })
+
+  it('should drop an error on a record once a value inside it changes', async () => {
+    const { data, onChange } = setupWithData([error('tls'), error('name')])
+
+    data.tls.client_cert = 'changed'
+    await nextTick()
+
+    expect(onChange).toHaveBeenCalledWith([error('name')])
+  })
+
+  it('should drop an error with `fields` only once one of those fields changes', async () => {
+    const { data, onChange } = setupWithData([error('', ['redis.host'])])
+
+    data.name = 'changed'
+    await nextTick()
+    expect(onChange).not.toHaveBeenCalled()
+
+    data.redis.host = 'changed'
+    await nextTick()
+    expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('should drop an error inside a set once any value of the set changes', async () => {
+    const { data, onChange } = setupWithData([error('tags.1')])
+
+    data.tags.push('c')
+    await nextTick()
+
+    expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('should keep the moved errors of the items after a removed one, and drop the array\'s own', async () => {
+    const { data, onArrayItemRemoved, onChange } = setupWithData([error('servers'), error('servers.2.port')])
+
+    onArrayItemRemoved('servers', 0)
+    data.servers.splice(0, 1)
+    await nextTick()
+
+    expect(onChange).toHaveBeenLastCalledWith([{ path: 'servers.1.port', message: 'servers.2.port' }])
+  })
+
+  it('should drop an error once a field in its `fields` is removed', () => {
+    const { onArrayItemRemoved, onChange } = setupWithData([error('', ['servers.0.port', 'name'])])
+
+    onArrayItemRemoved('servers', 0)
+
+    expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('should keep the errors of a map entry whose key is renamed', async () => {
+    const { names, onMapKeyRenamed, onChange } = setupWithData([error('headers.X-Request-Id')])
+
+    names['kid:1'] = 'renamed'
+    onMapKeyRenamed('headers', 'X-Request-Id', 'renamed')
+    await nextTick()
+
+    expect(onChange).toHaveBeenLastCalledWith([{ path: 'headers.renamed', message: 'headers.X-Request-Id' }])
+  })
+
+  it('should keep the errors when the data is set again with the same values', async () => {
+    const { data, names, onChange } = setupWithData([error('headers.X-Request-Id')])
+
+    // As `setValue` does: new key IDs for the same entries
+    names['kid:3' as KeyId] = 'X-Request-Id'
+    names['kid:4' as KeyId] = 'x.y'
+    data.headers = { 'kid:3': 'abc', 'kid:4': 'dotted' }
+    await nextTick()
 
     expect(onChange).not.toHaveBeenCalled()
   })

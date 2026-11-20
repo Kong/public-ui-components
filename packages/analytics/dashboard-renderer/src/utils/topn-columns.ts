@@ -266,9 +266,10 @@ export const createTopNPresentation = ({
     key,
     label: getColumnLabel(
       key,
+      // A lone dimension still gets its field label; "Name" is only the fallback for fields with no translation.
       hasMultipleDimensions
         ? getChartLabel(key)
-        : i18n.t('topNTable.nameLabel'),
+        : fieldLabel(i18n, fieldTranslationMap, key, { fallback: i18n.t('topNTable.nameLabel') }),
     ),
     type: 'dimension',
     valueFormatter: (_value, row) => getDimension(row, key).label,

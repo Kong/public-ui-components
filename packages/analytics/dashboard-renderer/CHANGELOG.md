@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.6.2...%40kong-ui-public%2Fdashboard-renderer%4010.7.0) (2026-11-20)
+
+### Features
+
+* don't use 'Name' as a column label unless no other choice ([#4105](https://github.com/Kong/public-ui-components/issues/4105)) ([11404b8](https://github.com/Kong/public-ui-components/commit/11404b816dc01a137fd5ab70b70641d711645d57))
+
+
+## [10.6.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.6.1...%40kong-ui-public%2Fdashboard-renderer%4010.6.2) (2026-11-20)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [10.6.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.6.0...%40kong-ui-public%2Fdashboard-renderer%4010.6.1) (2026-11-20)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [10.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.5.2...%40kong-ui-public%2Fdashboard-renderer%4010.6.0) (2026-11-19)
+
+### Features
+
+* **observability:** support grouped tiles in dashboards ma-5688 ([#4093](https://github.com/Kong/public-ui-components/issues/4093)) ([5cbb45d](https://github.com/Kong/public-ui-components/commit/5cbb45d5d95836f9640612e8ee5fbe629c808ca0))
+
+
+## [10.5.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.5.1...%40kong-ui-public%2Fdashboard-renderer%4010.5.2) (2026-11-19)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [10.5.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.5.0...%40kong-ui-public%2Fdashboard-renderer%4010.5.1) (2026-11-18)
 
 ### Bug Fixes

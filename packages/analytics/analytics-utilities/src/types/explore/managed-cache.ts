@@ -2,6 +2,7 @@ import { makeFilterable } from './util'
 import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 
 export const queryableManagedCacheExploreDimensions = [
+  'ai_gateway',
   'control_plane',
   'data_plane_group',
   'managed_cache',

@@ -5,11 +5,10 @@ import { selectors } from '../../shared/selectors'
 export async function fillString(option: HandlerOption<StringFieldSchema>): Promise<void> {
   const { page, fieldKey, value } = option
 
-  const selector = selectors.field(fieldKey)
-  const element = page.locator(selector)
+  const element = page.locator(selectors.field(fieldKey))
 
-  await element.clear()
-  if (value !== undefined && value !== null && value !== '') {
-    await element.fill(String(value))
-  }
+  await element.fill(value == null ? '' : String(value))
+  // Commit explicitly: a controlled textarea can restore its old value before blur.
+  await element.dispatchEvent('change')
+  await element.blur()
 }

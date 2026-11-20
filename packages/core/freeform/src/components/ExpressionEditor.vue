@@ -41,7 +41,8 @@
       v-else
       class="ff-expression-editor-expanded"
     >
-      <StringField
+      <component
+        :is="inputRenderer ?? StringField"
         class="ff-expression-editor-input"
         :disabled="isLocked"
         :label="i18n.t('expression.label')"
@@ -53,7 +54,7 @@
         @update:model-value="rewriteThroughComposable"
       >
         <template #tooltip>
-          <!-- Replaces StringField's own fallback (which reads the twin schema alone):
+          <!-- Replaces the field's own fallback (which reads the twin schema alone):
                the pair locks as one, source first, so the note must come from the
                combined lock. The info tooltip stays regardless. -->
           <p
@@ -82,7 +83,7 @@
             </i18nT>
           </slot>
         </template>
-      </StringField>
+      </component>
 
       <KButton
         appearance="tertiary"
@@ -100,14 +101,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, isRef, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink, KTooltip } from '@kong/kongponents'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'
-import { useExpressionField, useFieldPath } from '../composables'
+import { generalizePath, useExpressionField, useFieldPath, useFormShared } from '../composables'
 
 import type { EmptyValue, SharedExpressionEditorFieldProps } from '../types'
 
@@ -135,6 +136,22 @@ const path = useFieldPath(toRef(() => name))
 const expression = useExpressionField(path)
 
 const expressionName = computed(() => utils.resolveRoot(expression.expressionPath.value!))
+const { fieldRendererRegistry, getSchema, getSchemaMap } = useFormShared()
+
+/**
+ * A host replaces the expanded input by registering a component with
+ * `FieldRenderer`. Slot renderers are skipped: a slot cannot receive the
+ * tooltip and help slots below, so the input would lose them.
+ */
+const inputRenderer = computed(() => {
+  const twinPath = expression.expressionPath.value
+  if (!twinPath) return undefined
+  const genericPath = generalizePath(twinPath, getSchemaMap())
+  for (const [match, renderer] of fieldRendererRegistry) {
+    if (isRef(renderer) && match({ path: twinPath, genericPath, schema: getSchema(twinPath)! })) return renderer.value
+  }
+  return undefined
+})
 
 /**
  * Version lock for the value/expression pair, resolved by `useExpressionField`
@@ -180,7 +197,7 @@ const labelAttributes = computed(() => ({
 }))
 
 /**
- * `StringField` binds the twin path itself, so its writes bypass this
+ * `StringField`/`CelField` bind the twin path themselves, so their writes bypass this
  * composable: typing into an untouched slot of a twin array would leave holes
  * in front of it, and emptying the input would write the form's null sentinel —
  * neither of which the Gateway accepts. Re-writing the same value through the

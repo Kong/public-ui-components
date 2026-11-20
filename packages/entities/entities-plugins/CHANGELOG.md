@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.5.1...%40kong-ui-public%2Fentities-plugins%4011.6.0) (2026-11-20)
+
+### Features
+
+* **entities-plugins:** turn error responses into field errors [KM-3728] ([#4098](https://github.com/Kong/public-ui-components/issues/4098)) ([5bdafe7](https://github.com/Kong/public-ui-components/commit/5bdafe79b92b91786a1cb7bea4b4d7980127a62b))
+
+
+## [11.5.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.5.0...%40kong-ui-public%2Fentities-plugins%4011.5.1) (2026-11-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [11.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.4.1...%40kong-ui-public%2Fentities-plugins%4011.5.0) (2026-11-19)
+
+### Features
+
+* **entities-plugins:** adapt plugin forms to shared CEL inputs ([#4053](https://github.com/Kong/public-ui-components/issues/4053)) ([fcc28d2](https://github.com/Kong/public-ui-components/commit/fcc28d20004f3c5eafebee5a701784b5c6ab0f20))
+
+
+## [11.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.4.0...%40kong-ui-public%2Fentities-plugins%4011.4.1) (2026-11-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [11.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.3.3...%40kong-ui-public%2Fentities-plugins%4011.4.0) (2026-11-19)
+
+### Features
+
+* **entities-plugins:** expose a plugin list empty-state slot [KM-3742] ([#4094](https://github.com/Kong/public-ui-components/issues/4094)) ([583c6dd](https://github.com/Kong/public-ui-components/commit/583c6dd6c0fc69453c6cc78adafed54cf1b06aae))
+
+
 ## [11.3.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.3.2...%40kong-ui-public%2Fentities-plugins%4011.3.3) (2026-11-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

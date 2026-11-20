@@ -19,7 +19,8 @@ const schema: FormSchema = {
           {
             tls: {
               type: 'record',
-              fields: [{ client_cert: { type: 'string' } }],
+              // The description puts a focusable tooltip trigger in the label, before the input
+              fields: [{ client_cert: { type: 'string', description: 'A PEM certificate' } }],
             },
           },
         ],

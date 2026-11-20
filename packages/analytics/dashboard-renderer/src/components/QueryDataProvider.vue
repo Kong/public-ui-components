@@ -180,7 +180,7 @@ watch([() => v4Data.value, () => state.value], ([data, state]) => {
     oldData.value = data
     emit('chart-data', data)
   }
-})
+}, { immediate: true })
 
 watch(suppliedState, current => {
   if (!current || current.status === 'loading') {

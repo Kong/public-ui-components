@@ -25,6 +25,7 @@ import {
   type ArrayFieldSchema,
   type RecordFieldSchema,
 } from '../shared/field-walker'
+import { selectors } from '../shared/selectors'
 
 export interface FillerInstance {
   fill: (data: Record<string, any>) => Promise<void>
@@ -49,9 +50,13 @@ export function createFiller(
 
   async function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill): Promise<void> {
     switch (handlerType) {
-      case 'string':
-        await mergedHandlers.fillString({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
+      case 'string': {
+        // A host can render a string field, such as a plugin condition or an ACL rule, as a CEL input.
+        const isCel = await page.locator(selectors.field(fieldKey)).evaluate(el => el.classList.contains('cel-input'))
+        const fill = isCel ? mergedHandlers.fillCel : mergedHandlers.fillString
+        await fill({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
         break
+      }
       case 'number':
         await mergedHandlers.fillNumber({ page, fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value })
         break

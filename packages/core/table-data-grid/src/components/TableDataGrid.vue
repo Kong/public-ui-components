@@ -4,6 +4,7 @@
     class="kong-ui-public-table-data-grid"
     :class="{ 'fit-to-content': fitToContent, 'is-scrolled': isBodyScrolled }"
     data-testid="table-data-grid"
+    @mouseleave="onGridLeave"
   >
     <div
       v-if="hostError"
@@ -43,6 +44,7 @@
       :dom-layout="fitToContent ? 'autoHeight' : 'normal'"
       :infinite-initial-row-count="mode === 'infinite' ? 1 : undefined"
       :loading="isFetching"
+      :row-class-rules="rowClassRules"
       :row-data="mode === 'unpaginated' ? rowData : undefined"
       :row-model-type="mode === 'unpaginated' ? 'clientSide' : 'infinite'"
       :suppress-cell-focus="true"
@@ -50,6 +52,7 @@
       :theme="gridTheme"
       @body-scroll="onBodyScroll"
       @cell-clicked="onCellClick"
+      @cell-mouse-over="onCellMouseOver"
       @grid-ready="onGridReady"
       @new-columns-loaded="reconcileGridSort"
       @row-clicked="onRowClick"
@@ -72,6 +75,8 @@ import type {
   ColDef,
   GridApi,
   GridReadyEvent,
+  CellMouseOverEvent,
+  RowClassRules,
   RowClickedEvent,
 } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
@@ -83,6 +88,7 @@ import {
   themeQuartz,
 } from 'ag-grid-community'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, toRef, useSlots, useTemplateRef, watch } from 'vue'
+import { useTableDataGridCoordinator } from '../composables/useTableDataGridCoordinator'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
@@ -180,6 +186,15 @@ const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
   headers: toRef(() => headers),
   rowClick: (row, event) => emit('row:click', row, event),
 })
+
+const { isHighlighted, onCellHover, onGridLeave } = useTableDataGridCoordinator<Row>({
+  gridApi,
+  headers: toRef(() => headers),
+})
+const rowClassRules: RowClassRules<Row> = {
+  'is-coordinator-highlighted': params => isHighlighted(params.data),
+}
+const onCellMouseOver = (event: CellMouseOverEvent<Row>) => onCellHover(event.colDef.colId, event.data, event.value)
 
 const defaultColDef: ColDef<Row> = {
   resizable: false,
@@ -321,6 +336,10 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 
 .is-scrolled .table-data-grid-grid :deep(.ag-header) {
   box-shadow: var(--kui-table-header-shadow-scrolled, var(--kui-shadow, $kui-shadow));
+}
+
+.table-data-grid-grid :global(.ag-row.is-coordinator-highlighted) {
+  background-color: var(--kui-table-row-color-background-hover, var(--kui-color-background-primary-weakest, #{$kui-color-background-primary-weakest}));
 }
 
 .table-data-grid-grid :global(.ag-cell) {

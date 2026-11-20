@@ -3,6 +3,15 @@
     <template #field-renderers>
       <FieldRenderer
         v-slot="slotProps"
+        :match="({ genericPath }) => CEL_FIELDS.includes(genericPath)"
+      >
+        <PluginCelField
+          v-bind="slotProps"
+          :plugins="ACL_RULE_CEL"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
         :match="({ path }) => path === 'config.default_acl'"
       >
         <ArrayField
@@ -52,6 +61,8 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import { provide } from 'vue'
+import { kongAclRule, kongFallback } from '@kong-ui-public/monaco-editor/languages/cel'
+import PluginCelField from '../../components/PluginCelField'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
 import { ArrayField, FieldRenderer, ObjectField, StringArrayField, MapField } from '@kong-ui-public/freeform'
 import composables from '../../../../composables'
@@ -59,6 +70,14 @@ import composables from '../../../../composables'
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 
 const props = defineProps<Props>()
+
+const CEL_FIELDS = [
+  'config.default_acl.*.allow_when.*',
+  'config.default_acl.*.deny_when.*',
+  'config.tools.*.acl.allow_when.*',
+  'config.tools.*.acl.deny_when.*',
+]
+const ACL_RULE_CEL = [kongAclRule(), kongFallback()]
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
