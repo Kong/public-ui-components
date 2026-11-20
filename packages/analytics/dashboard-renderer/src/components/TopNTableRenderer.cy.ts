@@ -174,7 +174,7 @@ describe('<TopNTableRenderer /> grid integration', () => {
     }
     mountRenderer({ data: backendOrderedResult })
     cy.getTestId('table-data-grid').should('be.visible')
-    expectHeaders(['Name', 'Requests'])
+    expectHeaders(['Gateway service', 'Requests'])
     cell(0, 'gateway_service').should('contain.text', 'Service 1')
     cell(1, 'gateway_service').should('contain.text', 'Service 40')
     cy.get('a[href="https://example.com/services/service-1"]').should('exist')
@@ -302,7 +302,7 @@ describe('<TopNTableRenderer /> grid integration', () => {
     mountRenderer().then(({ wrapper }) => {
       cell(0, 'request_count').should('contain.text', '%')
       cy.then(() => wrapper.setProps({ chartOptions: { type: 'top_n', column_options: { request_count: { label: 'New label', bar: 'relative' } } } }))
-      expectHeaders(['Name', 'New label'])
+      expectHeaders(['Gateway service', 'New label'])
       cell(0, 'request_count').should('contain.text', '40').and('not.contain.text', '%')
       cy.get('@queryFn').should('have.been.calledOnce')
     })
