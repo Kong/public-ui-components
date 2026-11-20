@@ -54,8 +54,11 @@ export {
   pluginConfigRegistry,
 } from './components/free-form/plugin-registry'
 
-// Turns the body of an error response into field errors
-export { toFieldErrors } from './components/free-form/field-errors'
+// Errors of a failed save, shown on the fields of a plugin form (see `usePluginFormFieldErrors`)
+export {
+  toFieldErrors,
+  usePluginFormFieldErrors,
+} from './components/free-form/field-errors'
 
 export type {
   FieldErrorContext,

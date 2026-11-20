@@ -225,6 +225,8 @@ import { REFERENCE_FIELD_CONFIG } from '../composables/useReferenceEntityNames'
 import CredentialConfigurationForm from './CredentialConfigurationForm.vue'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
+import { usePluginFormFieldErrors } from './free-form/field-errors'
+import { getPluginConfig } from './free-form/plugin-registry'
 import cloneDeep from 'lodash-es/cloneDeep'
 import isEqual from 'lodash-es/isEqual'
 import unset from 'lodash-es/unset'
@@ -390,6 +392,14 @@ const pluginPartialType = ref<PluginPartialType | undefined>() // specify whethe
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 
 const clonedSourcePlugin = ref<string | null>(null)
+
+const enableFieldErrors = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS, false)
+
+// A failed save shows its errors on the fields, listed in an error summary (both by the layout's form).
+// Credentials and opted-out plugins (Datakit) keep the one message.
+const fieldErrors = usePluginFormFieldErrors(() => enableFieldErrors
+  && !treatAsCredential.value
+  && getPluginConfig(clonedSourcePlugin.value ?? props.pluginType)?.fieldErrors !== false)
 
 // Used by both the plugin form (`PluginEntityForm`) and the credential form
 provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
@@ -820,12 +830,17 @@ const saveFormData = async (): Promise<void> => {
     return
   }
 
+  // The errors of the last save no longer hold
+  fieldErrors.clear()
+
+  // Kept outside `try` to read the map keys in the errors of a failed save
+  const payload = JSON.parse(JSON.stringify(getRequestBody.value))
+
   try {
     form.isReadonly = true
 
     let response: AxiosResponse | undefined
 
-    const payload = JSON.parse(JSON.stringify(getRequestBody.value))
     // The inputs stay editable during the request, so keep the values that are sent
     const savedFields = cloneDeep(form.fields)
     if (treatAsCredential.value && props.config.app === 'kongManager' && ['key-auth', 'key-auth-enc'].includes(props.pluginType) && typeof payload.ttl !== 'number') {
@@ -852,7 +867,9 @@ const saveFormData = async (): Promise<void> => {
     // Emit an update event for the host app to respond to
     emit('update', response?.data)
   } catch (error: any) {
-    form.serverErrorMessage = getMessageFromError(error)
+    form.serverErrorMessage = fieldErrors.show(error?.response?.data, payload)
+      ? ''
+      : getMessageFromError(error)
     // Emit the error for the host app
     emit('error', error)
   } finally {

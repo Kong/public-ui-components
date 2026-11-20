@@ -231,7 +231,14 @@ type RuleBasedConfig = {
   fieldRenderers?: FieldRendererRule[]
 }
 
-export type PluginFormConfig = ComponentBasedConfig | RuleBasedConfig
+export type PluginFormConfig = (ComponentBasedConfig | RuleBasedConfig) & {
+  /**
+   * Whether a failed save shows the errors on the fields, listed in an error summary
+   * (behind the `KM-3728-plugin-form-field-errors` flag). Defaults to `true`; turn it
+   * off for a form that can't show them there, and it shows one message instead.
+   */
+  fieldErrors?: boolean
+}
 
 export interface AutofillSlotProps {
   schema: Record<string, any>
