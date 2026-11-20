@@ -11,7 +11,7 @@ import {
   KUI_STATUS_COLOR_400,
   KUI_STATUS_COLOR_500,
 } from '@kong/design-tokens'
-import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
+import useExploreResultToTimeDataset, { createZeroFilledTimeSeries } from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
@@ -1106,5 +1106,35 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(us.data.some(p => Number((p as { x: number, y: number }).y) === 10)).toBe(true)
     expect(de.data.some(p => Number((p as { x: number, y: number }).y) === 7)).toBe(true)
+  })
+})
+
+describe('createZeroFilledTimeSeries', () => {
+  const HOUR = 60 * 60 * 1000
+  const START = Date.UTC(2024, 0, 1)
+  const END = START + 24 * HOUR
+
+  const recordsAt = (count: number, latestMs: number): AnalyticsExploreRecord[] =>
+    Array.from({ length: count }, (_, i) => ({
+      timestamp: new Date(latestMs - (i % 24) * HOUR).toISOString(),
+      event: {},
+    }))
+
+  it('handles more records than fit in a single function call', () => {
+    // 300k records: more than a spread into Math.max() can pass as arguments
+    const series = createZeroFilledTimeSeries(START, END, HOUR, 0, recordsAt(300_000, END - HOUR))
+
+    expect(series).toHaveLength(24)
+    expect(series[23]).toBe(END - HOUR)
+  })
+
+  it('extends the series to a record later than the requested end', () => {
+    const series = createZeroFilledTimeSeries(START, END, HOUR, 0, recordsAt(1, END + 6 * HOUR))
+
+    expect(series.at(-1)).toBe(END + 6 * HOUR)
+  })
+
+  it('ends at the requested end when there are no records', () => {
+    expect(createZeroFilledTimeSeries(START, END, HOUR, 0, [])).toHaveLength(24)
   })
 })

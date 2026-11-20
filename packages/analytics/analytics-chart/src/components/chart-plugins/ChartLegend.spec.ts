@@ -171,7 +171,8 @@ describe('ChartLegend', () => {
 
       expect(chart.hide).toHaveBeenCalledWith(1, 0)
       expect(chart.toggleDataVisibility).not.toHaveBeenCalled()
-      expect(chart.update).toHaveBeenCalledOnce()
+      // Chart.js's hide() already updates the chart
+      expect(chart.update).not.toHaveBeenCalled()
     })
 
     it('shows hidden datasets for line and bar charts', async () => {
@@ -182,6 +183,8 @@ describe('ChartLegend', () => {
 
       expect(chart.show).toHaveBeenCalledWith(1, 0)
       expect(chart.toggleDataVisibility).not.toHaveBeenCalled()
+      // Chart.js's show() already updates the chart
+      expect(chart.update).not.toHaveBeenCalled()
     })
 
     it('falls back to hide/show when the item has no segment index', async () => {
