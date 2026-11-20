@@ -2,12 +2,16 @@ import { makeFilterable } from './util'
 import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 import { exploreAggregations, queryableExploreDimensions } from './advanced'
 
-// consumer_group (AIGW1) is intentionally excluded here: Agentic usage only supports the AIGW2
-// equivalent, ai_gateway_consumer_group.
-type AgenticBaseDimension = Exclude<typeof queryableExploreDimensions[number], 'consumer_group'>
+const excludedAgenticDimensions = ['consumer_group', 'workspace'] as const
+
+type ExcludedAgenticDimension = typeof excludedAgenticDimensions[number]
+type AgenticBaseDimension = Exclude<typeof queryableExploreDimensions[number], ExcludedAgenticDimension>
+
+const isAgenticBaseDimension = (d: typeof queryableExploreDimensions[number]): d is AgenticBaseDimension =>
+  !(excludedAgenticDimensions as readonly string[]).includes(d)
 
 export const queryableAgenticExploreDimensions = [
-  ...(queryableExploreDimensions.filter(d => d !== 'consumer_group') as AgenticBaseDimension[]),
+  ...queryableExploreDimensions.filter(isAgenticBaseDimension),
   'a2a_context_id',
   'a2a_error',
   'a2a_method',
