@@ -1,7 +1,7 @@
 import { nextTick, shallowReactive, shallowRef, type VNode } from 'vue'
 import { get } from 'lodash-es'
 import * as utils from '../utils'
-import { FOCUSABLE_SELECTOR } from '../constants'
+import { FIELD_CONTROL_SELECTOR, FOCUSABLE_SELECTOR } from '../constants'
 import { isKid } from './key-id-map'
 
 import type { KeyId } from '../types'
@@ -303,6 +303,10 @@ async function waitForSlideTransitions(timeout = 1000) {
  * The first element a vnode renders, or `null` when it renders none. A
  * fragment is searched up to its end anchor only, so a component that
  * renders nothing doesn't hand out the element of the field after it.
+ *
+ * A `KAlert` for a field error is not the field: a reveal should land on the
+ * field's wrapper, where its input and label are. A field that renders only an
+ * alert (e.g. one with no renderer) still lands on it.
  */
 export function getVNodeElement(vnode: VNode): Element | null {
   if (vnode.component) {
@@ -311,16 +315,21 @@ export function getVNodeElement(vnode: VNode): Element | null {
 
   const end = vnode.anchor as Node | null
   let node = vnode.el as Node | null
+  let alert: Element | null = null
   while (node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
-      return node as Element
+      const element = node as Element
+      if (!element.classList.contains('k-alert')) {
+        return element
+      }
+      alert ??= element
     }
     if (!end || node === end) {
-      return null
+      return alert
     }
     node = node.nextSibling
   }
-  return null
+  return alert
 }
 
 function prefersReducedMotion() {
@@ -422,10 +431,15 @@ function highlight(element: Element, duration: number) {
   }, { once: true })
 }
 
+/**
+ * Focuses the field's control, or else the first focusable element (e.g. a
+ * record's toggle). The label comes first in the field, so the first focusable
+ * element may be a tooltip trigger in it.
+ */
 function focusWithin(element: Element) {
-  const focusable = element.matches(FOCUSABLE_SELECTOR)
-    ? element
-    : element.querySelector(FOCUSABLE_SELECTOR)
+  const focusable = [FIELD_CONTROL_SELECTOR, FOCUSABLE_SELECTOR]
+    .map(selector => element.matches(selector) ? element : element.querySelector(selector))
+    .find(found => found instanceof HTMLElement)
 
   if (focusable instanceof HTMLElement) {
     focusable.focus({ preventScroll: true })

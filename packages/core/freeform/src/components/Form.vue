@@ -10,6 +10,9 @@
         @global-action="(name: GlobalAction, payload: any) => emit('globalAction', name, payload)"
       />
     </slot>
+
+    <!-- After the fields. Field names are snake_case, so a name with a hyphen cannot clash with a field-name slot -->
+    <slot name="form-append" />
   </component>
 </template>
 
@@ -46,6 +49,7 @@ defineSlots<
   {
     default?: Slot
     [FIELD_RENDERERS]?: Slot<{ name: string }>
+    'form-append'?: Slot
   } & Partial<Record<string, Slot<{ name: string }>>>
 >()
 

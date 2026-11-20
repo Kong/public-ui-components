@@ -10,3 +10,9 @@ export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'
  * focusable element (e.g. links), only what field components render.
  */
 export const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
+
+/**
+ * The controls that take a field's value, among the focusable elements: a reveal
+ * focuses one of these before anything else, e.g. a tooltip trigger in the label
+ */
+export const FIELD_CONTROL_SELECTOR = 'input:not(:disabled):not([type="hidden"]), textarea:not(:disabled), select:not(:disabled), [contenteditable="true"]'
