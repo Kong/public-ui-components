@@ -189,6 +189,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       errors: propsErrors,
       onChange: onErrorsChange,
       formData: innerData,
+      getData: () => keyIdMap.deserialize(innerData),
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
       isFieldHidden,

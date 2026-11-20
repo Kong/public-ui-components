@@ -127,15 +127,17 @@ describe('Field errors', () => {
   })
 })
 
-describe('Field errors: structure changes', () => {
-  /** A host that binds `v-model:errors`, exposing the list it holds */
+describe('Field errors: data changes', () => {
+  /** A host that binds `v-model:errors`, exposing the list and the data it holds */
   function mountHost(initial: FieldError[]) {
     const hostErrors = ref<FieldError[]>(initial)
+    const hostData = ref<Record<string, any>>(data)
     cy.wrap(hostErrors).as('hostErrors')
+    cy.wrap(hostData).as('hostData')
     cy.mount(defineComponent({
       setup: () => () => h(Form, {
         schema,
-        data,
+        data: hostData.value,
         errors: hostErrors.value,
         'onUpdate:errors': (value: FieldError[]) => {
           hostErrors.value = value
@@ -174,5 +176,33 @@ describe('Field errors: structure changes', () => {
 
     cy.get('[data-testid^="ff-field-errors-"]').should('not.exist')
     cy.get('@hostErrors').its('value').should('deep.equal', [])
+  })
+
+  it('keeps the errors that arrive with new data', () => {
+    mountHost([])
+
+    // e.g. a host that switches to another entity, with the errors of its last save
+    cy.get('@hostData').then((hostData: any) => {
+      cy.get('@hostErrors').then((hostErrors: any) => {
+        hostData.value = { ...data, name: 'other' }
+        hostErrors.value = [{ path: 'name', message: 'name is taken' }]
+      })
+    })
+
+    cy.getTestId('ff-field-errors-name').should('have.text', 'name is taken')
+    cy.get('@hostErrors').its('value').should('deep.equal', [{ path: 'name', message: 'name is taken' }])
+  })
+
+  it('drops an error once the value of its field changes, and keeps the others', () => {
+    mountHost([
+      { path: 'name', message: 'name is taken' },
+      { path: 'port', message: 'out of range' },
+    ])
+
+    cy.getTestId('ff-name').type('x')
+
+    cy.getTestId('ff-field-errors-name').should('not.exist')
+    cy.getTestId('ff-field-errors-port').should('have.text', 'out of range')
+    cy.get('@hostErrors').its('value').should('deep.equal', [{ path: 'port', message: 'out of range' }])
   })
 })
