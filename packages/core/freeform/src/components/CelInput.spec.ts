@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { attachCelLanguage, defineCelKind, kongHttp } from '@kong-ui-public/monaco-editor/languages/cel'
+import { attachCelLanguage, defineCelKind, kongHttp, setCelMarkers } from '@kong-ui-public/monaco-editor/languages/cel'
 import type * as CelLanguageApi from '@kong-ui-public/monaco-editor/languages/cel'
 import type { editor } from 'monaco-editor'
 import CelInput from './CelInput.vue'
@@ -8,6 +8,7 @@ import CelInput from './CelInput.vue'
 vi.mock('monaco-editor', () => ({}))
 vi.mock('@kong-ui-public/monaco-editor/languages/cel', async (importOriginal) => ({
   ...await importOriginal<typeof CelLanguageApi>(),
+  setCelMarkers: vi.fn(),
   attachCelLanguage: vi.fn(() => ({ dispose: vi.fn() })),
 }))
 vi.mock('@kong-ui-public/monaco-editor', async () => {
@@ -35,7 +36,9 @@ describe('standalone CelInput', () => {
     let blur = () => {}
     const resizeDispose = vi.fn()
     const blurDispose = vi.fn()
+    const model = { getValue: () => 'http.custom =', onDidChangeContent: () => ({ dispose: vi.fn() }), isDisposed: () => false }
     const instance = {
+      getModel: () => model,
       getContentHeight: () => 100,
       getDomNode: () => wrapper.element,
       onDidContentSizeChange: () => ({ dispose: resizeDispose }),
@@ -50,9 +53,14 @@ describe('standalone CelInput', () => {
     expect(wrapper.get('label').attributes('for')).toBe('rule')
     const options = vi.mocked(attachCelLanguage).mock.calls.at(-1)![1]
     expect(options.kind()).toEqual(kind)
+    expect(wrapper.find('[role="status"]').exists()).toBe(false)
+    const [, issues, format] = vi.mocked(setCelMarkers).mock.calls.at(-1)!
+    expect(issues.map(issue => format(issue.hint))).toEqual(['Use "==" to compare. CEL has no "=" operator.'])
     const nextKind = defineCelKind([kongHttp()])
     await wrapper.setProps({ kind: nextKind })
     expect(options.kind()).toEqual(nextKind)
+    const [, updated] = vi.mocked(setCelMarkers).mock.calls.at(-1)!
+    expect(updated.map(issue => issue.hint.kind)).toEqual(['assignment', 'unknown-field'])
     blur()
     expect(wrapper.emitted('change')).toHaveLength(1)
 
@@ -63,12 +71,11 @@ describe('standalone CelInput', () => {
     expect(languageDispose).toHaveBeenCalledOnce()
   })
 
-  it('renders the messages for each built-in hint kind', async () => {
+  it('retains a field message for plugin checks that supply no location', async () => {
     const wrapper = mount(CelInput, { props: { kind: defineCelKind([]), modelValue: 'true' } })
     await vi.waitFor(() => expect(wrapper.find('textarea').exists()).toBe(true))
 
     for (const [hintKind, message] of [
-      ['assignment', 'Use "==" to compare'],
       ['alias', 'Did you mean "consumer"?'],
       ['plugin-state', 'not supported in access control expressions'],
       ['header-name', 'Use "consumer" instead of "user"'],
@@ -94,7 +101,7 @@ describe('standalone CelInput', () => {
     expect(wrapper.getComponent({ name: 'MonacoEditor' }).props('options').readOnly).toBe(true)
     expect(wrapper.text()).toContain('Invalid rule')
     expect(wrapper.text()).not.toContain('Enter a rule')
-    expect(wrapper.find('[role="status"]').exists()).toBe(true)
+    expect(wrapper.find('[role="status"]').exists()).toBe(false)
     await wrapper.get('textarea').setValue('false')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     await wrapper.setProps({ kind: defineCelKind([{

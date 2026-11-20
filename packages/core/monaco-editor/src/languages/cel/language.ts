@@ -6,6 +6,7 @@ import {
 } from './catalog'
 import type { CelCallable, CelKind, CelSubjectValue, CelType } from './catalog'
 import { endsInCelLiteral, maskCelLiterals } from './tokens'
+import type { CelDiagnostic, CelHint } from './hints'
 import { getCelHoveredSubject, getCelKeys, getCelSubjectSuggestions } from './subjects'
 
 export const CEL_LANGUAGE_ID = 'kong-cel'
@@ -276,6 +277,26 @@ const register = () => {
       },
     }),
   ]
+}
+
+/** Replace only this CEL model's inline diagnostics. */
+export function setCelMarkers(model: editor.ITextModel, diagnostics: readonly CelDiagnostic[], format: (hint: CelHint) => string) {
+  const markers: editor.IMarkerData[] = []
+  for (const { hint, range } of diagnostics) {
+    if (!range) continue
+    const message = format(hint)
+    if (!message) continue
+    const start = model.getPositionAt(range.start)
+    const end = model.getPositionAt(range.end)
+    const advisory = hint.kind === 'unguarded' || hint.kind === 'header-name'
+    markers.push({
+      message,
+      severity: advisory ? monaco.MarkerSeverity.Warning : monaco.MarkerSeverity.Error,
+      startLineNumber: start.lineNumber, startColumn: start.column,
+      endLineNumber: end.lineNumber, endColumn: end.column,
+    })
+  }
+  monaco.editor.setModelMarkers(model, CEL_LANGUAGE_ID, markers)
 }
 
 /** The returned registration belongs to this editor, never to the whole app. */

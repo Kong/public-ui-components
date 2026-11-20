@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, inject, onBeforeUnmount, ref, shallowRef, useId } from 'vue'
+import { computed, defineAsyncComponent, inject, onBeforeUnmount, ref, shallowRef, useId, watchEffect } from 'vue'
 import type { ComputedRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 import type { LabelAttributes } from '@kong/kongponents'
@@ -133,22 +133,26 @@ const PADDING = 16
 const minHeight = computed(() => rows * LINE_HEIGHT + PADDING)
 const editorHeight = ref(minHeight.value)
 
-const hint = computed(() => languageApi.value?.getCelHint(modelValue ?? '', kind))
+const editorText = shallowRef<string>()
+const diagnostics = computed(() => Array.from(languageApi.value?.getCelDiagnostics(editorText.value ?? modelValue ?? '', kind) ?? []))
 const hintText = computed(() => {
-  const value = hint.value
-  if (!value) return ''
+  const issue = diagnostics.value.find(({ range }) => !range)
+  return issue ? hintMessage(issue.hint) : ''
+})
+
+function hintMessage(value: CelHint) {
   const message = formatHint?.(value)
   if (message !== undefined) return message
+  if (value.kind === 'assignment') return t('cel.assignment_hint')
   if (value.kind === 'alias') return t('cel.alias_hint', { typed: value.typed, expected: value.expected })
   if (value.kind === 'plugin-state') return t('cel.plugin_state_hint')
   if (value.kind === 'header-name') return t('cel.header_name_hint', { typed: value.typed, expected: value.expected })
   if (value.kind === 'unguarded') return t('cel.unguarded_hint', { field: value.field })
   if (value.kind === 'default') return t('cel.default_hint')
-  if (value.kind === 'assignment') return t('cel.assignment_hint')
   if (value.kind === 'unknown-member') return t('cel.unknown_member_hint', { field: value.field, base: value.base, type: value.type })
   if (value.kind === 'unknown-field') return t('cel.unknown_field_hint', { field: value.field })
   return ''
-})
+}
 
 const subjectHover = (subject: CelSubjectValue) => {
   if (formatSubject) return formatSubject(subject)
@@ -182,6 +186,7 @@ const editorOptions = computed<Partial<editor.IStandaloneEditorConstructionOptio
   scrollBeyondLastLine: false,
   scrollbar: { alwaysConsumeMouseWheel: false },
   readOnly: disabled,
+  renderValidationDecorations: 'on',
   tabIndex: 0,
   quickSuggestions: { other: true, comments: false, strings: true },
   wordBasedSuggestions: 'off',
@@ -203,8 +208,21 @@ const ready = async (instance: editor.IStandaloneCodeEditor) => {
   const input = instance.getDomNode()?.querySelector<HTMLElement>('textarea, [contenteditable="true"]')
   if (input) input.id = inputId.value
   disposables.push(instance.onDidBlurEditorText(() => emit('change')))
-  const { attachCelLanguage } = await loadLanguage
-  if (!unmounted) disposables.push(attachCelLanguage(instance, { kind: () => kind, formatSubject: subjectHover }))
+  const { attachCelLanguage, setCelMarkers } = await loadLanguage
+  if (unmounted) return
+  disposables.push(attachCelLanguage(instance, { kind: () => kind, formatSubject: subjectHover }))
+  const model = instance.getModel()
+  if (!model) return
+  const readText = () => {
+    editorText.value = model.getValue()
+  }
+  readText()
+  disposables.push(model.onDidChangeContent(readText))
+  const stop = watchEffect(() => setCelMarkers(model, diagnostics.value, hintMessage))
+  disposables.push({ dispose() {
+    stop()
+    if (!model.isDisposed()) setCelMarkers(model, [], hintMessage)
+  } })
 }
 
 onBeforeUnmount(() => {
