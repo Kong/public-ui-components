@@ -272,11 +272,13 @@ export function createFieldErrors(options: {
   }
 
   if (getData) {
-    // `sync`: takes the snapshots of new errors before the data changes any further
+    // `post`: a host may pass new data with the errors, and the form applies it in
+    // the pre queue, so the snapshots wait for it. Their order there follows the
+    // order the props are set in.
     watch(() => toValue(options.errors), () => {
       emitted = undefined
       dropEditedErrors(getData())
-    }, { immediate: true, flush: 'sync' })
+    }, { immediate: true, flush: 'post' })
     watch(getData, dropEditedErrors)
   }
 
