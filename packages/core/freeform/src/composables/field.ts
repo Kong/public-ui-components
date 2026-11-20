@@ -1,4 +1,4 @@
-import { computed, getCurrentInstance, onBeforeUnmount, onUnmounted, toRaw, toValue, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUnmounted, toRaw, toValue, watch } from 'vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../constants'
 import { get, set, uniqueId } from 'lodash-es'
 import { useFieldAncestors } from './ancestors'
@@ -35,7 +35,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
 ) {
   const {
     getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue, getFieldVersionInfo,
-    revealTarget: formRevealTarget, registerFieldElement, getFieldErrors,
+    revealTarget: formRevealTarget, registerFieldElement, rememberField, findAnchor, getFieldErrors,
   } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
@@ -93,11 +93,29 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
   // where a reveal of this path lands.
   const instance = getCurrentInstance()
   if (instance) {
-    onBeforeUnmount(registerFieldElement({
+    const unregister = registerFieldElement({
       path: () => fieldPath.value,
       element: () => getVNodeElement(instance.subTree),
       exclude: () => toValue(options.exclude),
-    }))
+    })
+    // Once the fields around it have mounted too
+    let mountAnchor: string | null = null
+    onMounted(async () => {
+      await nextTick()
+      mountAnchor = findAnchor(fieldPath.value, getVNodeElement(instance.subTree))
+    })
+    onBeforeUnmount(() => {
+      // Taken out (e.g. by a `v-if`), the field is remembered
+      const element = getVNodeElement(instance.subTree)
+      const unmountAnchor = findAnchor(fieldPath.value, element)
+      unregister()
+      rememberField({
+        path: fieldPath.value,
+        exclude: toValue(options.exclude),
+        ancestors: getAncestors(element),
+        anchors: [mountAnchor, unmountAnchor],
+      })
+    })
   }
 
   return {
@@ -190,4 +208,12 @@ export function useSchemaExposer(
       delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
     }
   })
+}
+
+function getAncestors(element: Element | null): Element[] {
+  const ancestors: Element[] = []
+  for (let current = element?.parentElement; current && current !== document.body; current = current.parentElement) {
+    ancestors.push(current)
+  }
+  return ancestors
 }
