@@ -164,19 +164,26 @@
           {{ t('plugins.free-form.openid-connect.jit.section_label') }}
         </KLabel>
 
-        <KCheckbox
+        <KRadio
           data-testid="principals-jit-all-claims"
+          :description="t('plugins.free-form.openid-connect.jit.all_claims.description')"
           :disabled="jitDisabled"
+          :label="t('plugins.free-form.openid-connect.jit.all_claims.label')"
           :label-attributes="jitVersionLabelAttributes"
-          :model-value="allClaims ?? false"
-          @update:model-value="handleAllClaimsChange"
-        >
-          {{ t('plugins.free-form.openid-connect.jit.all_claims.label') }}
-          <template #description>
-            {{ t('plugins.free-form.openid-connect.jit.all_claims.description') }}
-          </template>
-        </KCheckbox>
-
+          :model-value="jitSharingMode"
+          selected-value="all"
+          @change="handleJitSharingChange('all')"
+        />
+        <KRadio
+          data-testid="principals-jit-subset-claims"
+          :description="t('plugins.free-form.openid-connect.jit.subset_claims.description')"
+          :disabled="jitDisabled"
+          :label="t('plugins.free-form.openid-connect.jit.subset_claims.label')"
+          :label-attributes="jitVersionLabelAttributes"
+          :model-value="jitSharingMode"
+          selected-value="subset"
+          @change="handleJitSharingChange('subset')"
+        />
         <KInput
           v-if="!allClaims"
           class="principals-jit-claims-input"
@@ -298,15 +305,24 @@ function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
 const allClaims = useJitField('all_claims')
 const jitClaims = useJitField('claims')
 
-// Checking "share all" makes the claims list meaningless — null it out so the
+// The radios are the PM-requested replacement for the share-all checkbox; the
+// claims input stays for narrowing the shared set. A record saved from before
+// the radios existed can still carry a custom claims list — it maps onto the
+// subset radio and is kept as-is until the user actually switches.
+const jitSharingMode = computed<'all' | 'subset' | null>(() => {
+  if (allClaims.value === true) return 'all'
+  if (allClaims.value === false || hasValue(jitClaims.value)) return 'subset'
+  return null
+})
+
+// Switching to share-all makes the claims list meaningless — null it out so the
 // payload never ships a value the (now hidden) input last held. The typed
-// claims are cached so unchecking restores them instead of losing the input —
-// the same stash/restore contract as PrincipalsSection's issuer mode cache.
+// claims are cached so switching back restores them instead of losing the input.
 let cachedClaims: string[] | null = null
 
-function handleAllClaimsChange(checked: boolean) {
-  allClaims.value = checked
-  if (checked) {
+function handleJitSharingChange(mode: 'all' | 'subset') {
+  allClaims.value = mode === 'all'
+  if (mode === 'all') {
     cachedClaims = Array.isArray(jitClaims.value) && jitClaims.value.length > 0
       ? [...jitClaims.value]
       : null
@@ -317,6 +333,12 @@ function handleAllClaimsChange(checked: boolean) {
     // restore deterministic and avoids a flash of the stale (cleared) text.
     claimsInput.value = encodeClaims(cachedClaims)
     cachedClaims = null
+  } else if (!hasValue(jitClaims.value)) {
+    // A fresh switch from share-all (or a record with no claims) starts at the
+    // PM default pair; a list the user already typed or a record already saved
+    // with claims is left alone.
+    jitClaims.value = ['sub', 'iss']
+    claimsInput.value = 'sub, iss'
   }
 }
 
@@ -338,9 +360,8 @@ function handleClaimsChange(rawValue: string) {
   jitClaims.value = parseClaims(rawValue)
 }
 
-// Re-sync the display only when the model changes from elsewhere (e.g.
-// share-all-claims restores the stashed list), never while it reflects the
-// user's typing.
+// Re-sync the display only when the model changes from elsewhere (e.g. picking
+// the subset radio seeds sub + iss), never while it reflects the user's typing.
 watch(jitClaims, (claims) => {
   if (!isEqual(claims ?? null, parseClaims(claimsInput.value) ?? null)) {
     claimsInput.value = encodeClaims(claims)
