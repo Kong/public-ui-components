@@ -95,7 +95,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@zumer/snapdom": "^2.24.18",
+    "@zumer/snapdom": "^3.7.2",
     "ag-grid-community": "^36.3.0",
     "ag-grid-vue3": "^36.3.0",
     "date-fns": "^4.4.0",
