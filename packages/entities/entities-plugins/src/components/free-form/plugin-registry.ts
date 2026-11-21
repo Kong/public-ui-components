@@ -7,6 +7,7 @@ export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
   renderRules?: RenderRules
   fieldRenderers: FieldRendererRule[]
+  fieldErrors: boolean
 }
 
 type PluginConfigModule = PluginFormConfig
@@ -51,6 +52,7 @@ export function buildPluginConfigRegistry(
       component: pluginConfig.component ?? CommonForm,
       renderRules: pluginConfig.renderRules,
       fieldRenderers: pluginConfig.fieldRenderers ?? [],
+      fieldErrors: pluginConfig.fieldErrors ?? true,
     }
   }
 

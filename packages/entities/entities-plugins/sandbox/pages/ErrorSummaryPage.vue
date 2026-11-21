@@ -28,6 +28,7 @@
         :errors="errors"
         :schema="schema"
         :unmatched-errors="formRef?.unmatchedErrors"
+        @reveal="path => formRef?.reveal(path)"
         @select="error => formRef?.reveal(error.path)"
       />
     </div>

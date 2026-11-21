@@ -8,10 +8,12 @@
     :data-instance-id="instanceId"
     :data-plugin-name="pluginName"
     :data-testid="formTestId"
+    :errors="fieldErrors?.enabled.value ? fieldErrors.errors.value : undefined"
     :render-rules="renderRules"
     :schema="finalSchema"
     tag="div"
     @change="handleDataChange"
+    @update:errors="handleErrorsUpdate"
   >
     <template #[FIELD_RENDERERS]>
       <FieldRenderer
@@ -49,6 +51,18 @@
     >
       <slot />
     </template>
+
+    <!-- Not in the default slot: without one, the form renders every field itself -->
+    <template #form-append>
+      <ErrorSummary
+        v-if="fieldErrors?.enabled.value"
+        :errors="fieldErrors.errors.value"
+        :schema="schema"
+        :unmatched-errors="formRef?.unmatchedErrors"
+        @reveal="(path: string) => formRef?.reveal(path)"
+        @select="(error: FieldError) => formRef?.reveal(error.path)"
+      />
+    </template>
   </Form>
 </template>
 
@@ -61,13 +75,15 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 
 <script setup lang="ts" generic="T extends Record<string, any>">
 import '@kong-ui-public/freeform/style.css'
-import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, inject, onBeforeUnmount, useAttrs, useId, useTemplateRef, watchEffect } from 'vue'
 import { pick } from 'lodash-es'
 import { Form, isExpressionFieldSchema, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'
-import type { FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FieldRendererRule, FormConfig, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../field-errors'
 import ExpressionCelField from './ExpressionCelField'
 import RedisSelector from './RedisSelector.vue'
+import ErrorSummary from './ErrorSummary.vue'
 import { appendEntityChecksFromMetadata, convertConfigSetsToArrays, distributeEntityChecks } from '../schema-enhancement'
 import type { PluginConfigurationBaseProps } from '../layout/provider'
 
@@ -138,6 +154,26 @@ defineExpose({
   setValue: (value: T) => formRef.value?.setValue(value),
   getEmptyValue: () => formRef.value?.getEmptyValue(),
 })
+
+// The errors of a failed save, from the plugin form that saves this one (`usePluginFormFieldErrors`).
+// This form shows them on the fields and lists them in the error summary; the plugin form
+// reads its schema to parse them.
+const fieldErrors = inject(PLUGIN_FORM_FIELD_ERRORS, undefined)
+
+function handleErrorsUpdate(errors: FieldError[]) {
+  if (fieldErrors) {
+    fieldErrors.errors.value = errors
+  }
+}
+
+if (fieldErrors) {
+  watchEffect(() => {
+    fieldErrors.schema.value = props.schema
+  })
+  onBeforeUnmount(() => {
+    fieldErrors.schema.value = undefined
+  })
+}
 
 useSchemaExposer(() => finalSchema.value, instanceId)
 </script>

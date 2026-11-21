@@ -1446,6 +1446,106 @@ describe('<PluginForm />', () => {
       cy.wait('@createPlugin')
     })
 
+    describe('field errors', () => {
+      const validationErrors = {
+        code: 3,
+        message: 'validation errors',
+        details: [
+          { type: 'ERROR_TYPE_FIELD', field: 'config.max_age', messages: ['value must be greater than 0'] },
+          { type: 'ERROR_TYPE_ENTITY', messages: ['the plugin is invalid'] },
+        ],
+      }
+
+      beforeEach(() => {
+        // Opening the advanced section resizes the form while it is observed
+        cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop'))
+      })
+
+      const mountCors = (flags: Record<string, boolean>) => {
+        interceptKonnectSchema()
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType: 'cors',
+          },
+          global: { provide: flags },
+          router,
+        })
+        cy.wait('@getPluginSchema')
+      }
+
+      const submit = () => {
+        // The errors come from the mocked response, so there is nothing to type
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createPlugin')
+      }
+
+      it('shows the errors on their fields and lists them in the summary', () => {
+        interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
+        mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+        submit()
+
+        cy.getTestId('ff-field-errors-config.max_age').should('have.text', 'value must be greater than 0')
+        cy.getTestId('ff-error-summary').should('contain.text', '2 errors')
+          .and('contain.text', 'Max age:')
+          .and('contain.text', 'Plugin:')
+        cy.getTestId('form-error').should('not.exist')
+        // The first error with a field is revealed: `max_age` is optional, so the
+        // collapsed advanced section opens for it
+        cy.getTestId('ff-config.max_age').should('be.visible').and('have.focus')
+      })
+
+      it('reveals a field an entity check names when it is clicked', () => {
+        interceptKonnectCreatePlugin({
+          status: 400,
+          mockData: {
+            ...validationErrors,
+            details: [{
+              type: 'ERROR_TYPE_ENTITY',
+              messages: ["at least one of these fields must be non-empty: 'config.max_age', 'config.credentials'"],
+            }],
+          },
+        })
+        mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+        submit()
+
+        cy.getTestId('ff-error-summary-field-link-config.max_age').click()
+        cy.getTestId('ff-config.max_age').should('have.focus')
+      })
+
+      it('clears the errors when the form is saved again', () => {
+        interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
+        mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+        submit()
+        cy.getTestId('ff-error-summary').should('exist')
+
+        interceptKonnectCreatePlugin()
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createPlugin')
+        cy.getTestId('ff-error-summary').should('not.exist')
+        cy.getTestId('ff-field-errors-config.max_age').should('not.exist')
+      })
+
+      it('shows one message when the flag is off', () => {
+        interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
+        mountCors({})
+        submit()
+
+        cy.getTestId('form-error').should('contain.text', 'config.max_age - value must be greater than 0')
+        cy.getTestId('ff-error-summary').should('not.exist')
+        cy.getTestId('ff-field-errors-config.max_age').should('not.exist')
+      })
+
+      it('shows one message for a response with no field errors', () => {
+        interceptKonnectCreatePlugin({ status: 409, mockData: { message: 'name must be unique' } })
+        mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+        submit()
+
+        cy.getTestId('form-error').should('contain.text', 'name must be unique')
+        cy.getTestId('ff-error-summary').should('not.exist')
+      })
+    })
+
     it('should pick correct url while creating plugin credential', () => {
       const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedConsumer.item.id, entityType: 'consumers' }
       interceptKonnectCreatePlugin({ credential: true, entityId: scopedConsumer.item.id })

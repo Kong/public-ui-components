@@ -9,6 +9,7 @@ export const FEATURE_FLAGS = {
   KM_2485_CLONED_PLUGINS: 'KM-2485-cloned-plugins',
   KHCP_20393_IDENTITY_PRINCIPALS_UI: 'khcp-20393-identity-principals-ui',
   KM_3444_GATEWAY_317: 'KM-3444-gateway-317',
+  KM_3728_PLUGIN_FORM_FIELD_ERRORS: 'KM-3728-plugin-form-field-errors',
   /**
    * The Konnect CEL editor for plugin expressions (`condition`, `expressions.*`, ACL
    * `allow_when`/`deny_when`): Monaco with typed suggestions, hints and record

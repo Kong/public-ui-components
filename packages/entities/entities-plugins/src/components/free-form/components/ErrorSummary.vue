@@ -1,6 +1,9 @@
 <template>
   <!-- Always mounted: it holds the sticky position and the live region -->
-  <div class="ff-error-summary-container">
+  <div
+    class="ff-error-summary-container"
+    :class="{ 'is-empty': !errors.length }"
+  >
     <!-- Announces the count as errors show up and change; a whole-list `alert` would re-read every change -->
     <div
       aria-live="polite"
@@ -58,23 +61,38 @@
               :key="index"
               :data-testid="`ff-error-summary-item-${error.path}`"
             >
-              <template v-if="isLinked(error)">
+              <button
+                v-if="isLinked(error)"
+                class="ff-error-summary-link"
+                :title="error.path || undefined"
+                type="button"
+                @click="emit('select', error)"
+              >
+                {{ getLabel(error) }}
+              </button>
+              <span
+                v-else
+                class="ff-error-summary-label"
+                :title="error.path || undefined"
+              >{{ getLabel(error) }}</span>:
+              <!-- The fields the message names (e.g. those of an entity check) show their labels and link to them too -->
+              <template
+                v-for="(part, partIndex) in getMessageParts(error.message, error.path, schema)"
+                :key="partIndex"
+              >
                 <button
-                  class="ff-error-summary-link"
-                  :title="error.path || undefined"
+                  v-if="part.path"
+                  class="ff-error-summary-message-link"
+                  :data-testid="`ff-error-summary-field-link-${part.path}`"
+                  :title="part.path"
                   type="button"
-                  @click="emit('select', error)"
+                  @click="emit('reveal', part.path)"
                 >
-                  {{ getLabel(error) }}
-                </button>:
-                {{ error.message }}
-              </template>
-              <template v-else>
-                <span
-                  class="ff-error-summary-label"
-                  :title="error.path || undefined"
-                >{{ getLabel(error) }}:</span>
-                {{ error.message }}
+                  {{ getErrorLabel(part.path, schema) }}
+                </button>
+                <template v-else>
+                  {{ part.text }}
+                </template>
               </template>
             </li>
           </ul>
@@ -90,6 +108,7 @@ import { ChevronDownIcon, DangerCircleIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import useI18n from '../../../composables/useI18n'
 import { getErrorLabel } from '../error-label'
+import { getMessageParts } from '../message-fields'
 
 import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 
@@ -99,6 +118,7 @@ import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
  * Clicking an error emits `select`, so the host can reveal its field. When errors
  * show up (on mount, or after there were none), it emits `select` for the first
  * error that can be clicked, so the host can take the user there at once.
+ * The fields a message names (e.g. those of an entity check) emit `reveal`.
  */
 
 const props = defineProps<{
@@ -111,6 +131,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   select: [error: FieldError]
+  /** A field the message of an error names was clicked */
+  reveal: [path: string]
 }>()
 
 const expanded = defineModel<boolean>('expanded', { default: true })
@@ -161,6 +183,11 @@ $indent: calc(var(--kui-space-50, #{$kui-space-50}) + var(--kui-icon-size-40, #{
   bottom: 0;
   position: sticky;
   z-index: 10;
+
+  // Out of the flow, so a host laying out its children with `gap` adds no space for it
+  &.is-empty {
+    position: absolute;
+  }
 }
 
 // Read by screen readers only
@@ -274,7 +301,26 @@ $indent: calc(var(--kui-space-50, #{$kui-space-50}) + var(--kui-icon-size-40, #{
   }
 }
 
+// A field named in a message: a link in the message's own weight
+.ff-error-summary-message-link {
+  background: none;
+  border: none;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--kui-color-text-danger-stronger, $kui-color-text-danger-stronger);
+    text-decoration-thickness: 2px;
+  }
+}
+
 .ff-error-summary-link,
+.ff-error-summary-message-link,
 .ff-error-summary-toggle {
   &:focus-visible {
     box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);

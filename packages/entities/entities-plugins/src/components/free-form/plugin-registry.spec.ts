@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import CommonForm from './components/CommonForm.vue'
 import ACLForm from './plugins/acl/ACLForm.vue'
-import { buildPluginConfigRegistry, derivePluginName, getFreeFormComponent } from './plugin-registry'
+import { buildPluginConfigRegistry, derivePluginName, getFreeFormComponent, getPluginConfig } from './plugin-registry'
 
 describe('derivePluginName', () => {
   it('converts paths to plugin names', () => {
@@ -36,5 +36,15 @@ describe('getFreeFormComponent', () => {
 
   it('returns CommonForm for a plugin without a config', () => {
     expect(getFreeFormComponent('my-custom-plugin')).toBe(CommonForm)
+  })
+})
+
+describe('fieldErrors', () => {
+  it('is on by default', () => {
+    expect(getPluginConfig('cors')?.fieldErrors).toBe(true)
+  })
+
+  it('is off for Datakit', () => {
+    expect(getPluginConfig('datakit')?.fieldErrors).toBe(false)
   })
 })
