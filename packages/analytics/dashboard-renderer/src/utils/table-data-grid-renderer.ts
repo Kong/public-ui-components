@@ -22,7 +22,7 @@ type StripUnknownFilters = ReturnType<typeof useDatasourceConfigStore>['stripUnk
  * @param response - Platform tabular API response, including records and optional display metadata.
  * @returns A new row array with display labels substituted where metadata provides them.
  */
-const platformTabularResponseToTableDataGridRows = (
+export const platformTabularResponseToTableDataGridRows = (
   response: PlatformTabularResponse,
 ): TableDataGridRow[] => response.records.map(record => {
   const mappedRecord: TableDataGridRow = { ...record }

@@ -2,7 +2,10 @@ import type {
   AllAggregations,
   AllFilters,
   ApiRequestsQuery,
+  ApiRequestsResult,
   DashboardConfig,
+  ExploreResultV4,
+  PlatformTabularResponse,
   ScatterChartOptions,
   TileLayout,
   TimeRangeV4,
@@ -107,6 +110,22 @@ export interface PdfExportState {
   error?: unknown
 }
 
+/**
+ * Data a host supplies to a tile in place of the tile's query result.
+ * Table tiles take `PlatformTabularResponse`, scatter tiles on the `requests`
+ * datasource take `ApiRequestsResult`, and other chart tiles take `ExploreResultV4`.
+ */
+export type TileData = ExploreResultV4 | PlatformTabularResponse | ApiRequestsResult
+
+/**
+ * Host-supplied tile data as passed to the tile loaders. The wrapper is present only
+ * when the host passed `data`, so a `value` of `undefined` means "loading", not "not set".
+ * `null` means "no data", and an `Error` means the host failed to load it.
+ */
+export interface SuppliedTileData {
+  value: TileData | null | Error | undefined
+}
+
 export interface ChartRendererProps<T> {
   query: ValidDashboardChartQuery
   context: DashboardRendererContext
@@ -123,6 +142,8 @@ export interface ChartRendererProps<T> {
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
   zoomConfiguration?: ZoomConfiguration
+  /** When set, the renderer shows this data and doesn't run a query. */
+  suppliedData?: SuppliedTileData
 }
 
 export interface ScatterRendererProps extends Omit<ChartRendererProps<ScatterChartOptions>, 'query'> {
@@ -136,4 +157,6 @@ export interface TableRendererProps {
   queryReady: boolean
   height?: number
   refreshCounter: number
+  /** When set, the renderer shows this data and doesn't run a query. */
+  suppliedData?: SuppliedTileData
 }

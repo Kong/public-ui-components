@@ -26,6 +26,7 @@
       :definition="definition"
       :height="height"
       hide-actions
+      v-bind="dataProps"
       :preview="preview"
       :query-ready="queryReady"
       show-refresh
@@ -39,7 +40,7 @@
 
 <script setup lang="ts">
 import { computed, toRef, ref, useTemplateRef, onMounted, onUnmounted } from 'vue'
-import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, TileBoundsChangeEvent, TileData, TileZoomEvent } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import type {
   AllFilters,
@@ -48,7 +49,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
 const root = useTemplateRef('root')
 const tileRef = useTemplateRef('dashboard-tile')
@@ -56,11 +57,17 @@ const randomId = crypto.randomUUID()
 
 const {
   context,
+  data,
   definition,
   globalFilters = [],
   preview = false,
 } = defineProps<{
   context: DashboardRendererContext
+  /**
+   * Data to render in place of the tile's query result. When passed, the tile doesn't run a query.
+   * `undefined` shows the loading state, `null` the empty state, and an `Error` the error state.
+   */
+  data?: TileData | null | Error
   definition: TileDefinition
   globalFilters?: AllFilters[]
   preview?: boolean
@@ -93,7 +100,17 @@ const { enrichedContext, queryReady } = composables.useDashboardContext({
 
 const isTableDefinition = computed((): boolean => isTableChartDefinition(definition))
 
+// Forward `data` only when the host passes it, because an explicit `undefined` means "loading".
+const isDataPassed = composables.useIsPropPassed('data')
+const dataProps = computed(() => isDataPassed.value ? { data } : {})
+
 const chartNotConfigured = computed(() => {
+  // Supplied data needs no query, so the query's metrics and columns don't matter.
+  // A `requests` scatter tile is the exception: it plots supplied data by the query's metric.
+  if (isDataPassed.value) {
+    return isRequestsChartDefinition(definition) && !definition.query.metric
+  }
+
   if (isTableDefinition.value) {
     return 'columns' in definition.query && !definition.query.columns?.length
   }

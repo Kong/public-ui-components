@@ -6,6 +6,7 @@
     :query="exploreQuery"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :supplied-data="suppliedData"
     @chart-data="emit('chart-data', $event)"
     @query-complete="emit('query-complete')"
   >
@@ -32,17 +33,30 @@
     data-testid="scatter-chart-empty-state"
   >
     <template #icon>
-      <VisibilityOffIcon v-if="queryError?.type === 'forbidden'" />
+      <VisibilityOffIcon v-if="displayError?.type === 'forbidden'" />
       <WarningOutlineIcon v-else />
     </template>
     <template #title>
-      <p>{{ queryError?.message || i18n.t('renderer.unexpectedError') }}</p>
+      <p>{{ displayError?.message || i18n.t('renderer.unexpectedError') }}</p>
     </template>
     <template
-      v-if="queryError?.details"
+      v-if="displayError?.details"
       #default
     >
-      <p>{{ queryError.details }}</p>
+      <p>{{ displayError.details }}</p>
+    </template>
+  </KEmptyState>
+
+  <KEmptyState
+    v-else-if="isEmpty"
+    :action-button-visible="false"
+    data-testid="scatter-chart-no-data-state"
+  >
+    <template #title>
+      <p>{{ i18n.t('renderer.noDataAvailable.title') }}</p>
+    </template>
+    <template #default>
+      <p>{{ i18n.t('renderer.noDataAvailable.description') }}</p>
     </template>
   </KEmptyState>
 
@@ -75,6 +89,7 @@ import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 import composables from '../composables'
 import { toRequestsScatterOptions } from '../utils/requests-query'
+import { isApiRequestsResult, resolveSuppliedData } from '../utils/supplied-tile-data'
 import { getTimeRangeDurationMs } from '../utils/time-range-support'
 import QueryDataProvider from './QueryDataProvider.vue'
 
@@ -89,6 +104,15 @@ const { i18n } = composables.useI18n()
 const { issueRequestsQuery } = composables.useIssueRequestsQuery()
 
 const isRequestsQuery = computed(() => props.query.datasource === 'requests')
+
+// Explore-backed scatter tiles pass supplied data to QueryDataProvider, which checks it there.
+const suppliedState = computed(() => isRequestsQuery.value && props.suppliedData
+  ? resolveSuppliedData({
+    supplied: props.suppliedData,
+    isExpected: isApiRequestsResult,
+    mismatchMessage: i18n.t('renderer.suppliedDataMismatch'),
+  })
+  : undefined)
 
 const exploreQuery = computed<ValidDashboardChartQuery>(() => {
   const query = props.query as ValidDashboardChartQuery
@@ -112,7 +136,7 @@ const exploreQuery = computed<ValidDashboardChartQuery>(() => {
 })
 
 const queryKey = () => {
-  if (isRequestsQuery.value && props.queryReady) {
+  if (isRequestsQuery.value && props.queryReady && !props.suppliedData) {
     return JSON.stringify([props.query, props.context, props.refreshCounter])
   }
 
@@ -165,7 +189,6 @@ const data = computed(() => keyedData.value?.result)
 const { state, swrvState: STATE } = useSwrvState(keyedData, error, isValidating)
 
 const oldData = ref<ScatterChartData | undefined>()
-const displayData = computed(() => data.value ?? oldData.value)
 
 watch(data, newData => {
   if (newData) {
@@ -173,11 +196,46 @@ watch(data, newData => {
   }
 })
 
-const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
+// Each state below reads the supplied data when the host passes it, and the query otherwise.
+const displayData = computed(() => {
+  if (suppliedState.value) {
+    // Supplied data is complete, so it is never truncated.
+    return suppliedState.value.status === 'success'
+      ? requestsToScatterData(
+        { ...suppliedState.value.data, truncated: false, limit: suppliedState.value.data.results.length },
+        toRequestsScatterOptions(props.query as ApiRequestsQuery),
+      )
+      : undefined
+  }
 
-const isLoading = computed(() => !hasError.value && (!props.queryReady || state.value === STATE.PENDING) && !displayData.value)
+  return data.value ?? oldData.value
+})
 
-const isStale = computed(() => !!displayData.value && keyedData.value?.key !== queryKey())
+const displayError = computed<QueryError | null>(() => {
+  if (suppliedState.value) {
+    return suppliedState.value.status === 'error' ? { type: 'other', message: suppliedState.value.message } : null
+  }
+
+  return queryError.value
+})
+
+const hasError = computed(() => suppliedState.value
+  ? suppliedState.value.status === 'error'
+  : state.value === STATE.ERROR || !!queryError.value)
+
+const isLoading = computed(() => suppliedState.value
+  ? suppliedState.value.status === 'loading'
+  : !hasError.value && (!props.queryReady || state.value === STATE.PENDING) && !displayData.value)
+
+const isEmpty = computed(() => suppliedState.value?.status === 'empty')
+
+const isStale = computed(() => !suppliedState.value && !!displayData.value && keyedData.value?.key !== queryKey())
+
+watch(suppliedState, current => {
+  if (current && current.status !== 'loading') {
+    emit('query-complete')
+  }
+}, { immediate: true })
 
 const options = computed((): AnalyticsChartOptions => ({
   type: 'scatter',

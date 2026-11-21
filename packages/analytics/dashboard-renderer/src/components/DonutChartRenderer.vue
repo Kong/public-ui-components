@@ -6,6 +6,7 @@
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :supplied-data="suppliedData"
   />
 </template>
 

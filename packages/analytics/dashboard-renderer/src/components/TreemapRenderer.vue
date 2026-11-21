@@ -57,6 +57,7 @@ const toChartProps = (result: ExploreResultV4) => {
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :supplied-data="suppliedData"
     @chart-data="emit('chart-data', $event)"
     @query-complete="emit('query-complete')"
   >
