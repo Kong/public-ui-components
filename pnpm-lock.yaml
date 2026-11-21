@@ -567,8 +567,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       gridstack:
-        specifier: ^11.5.1
-        version: 11.5.1
+        specifier: ^14.1.0
+        version: 14.1.1
       jspdf:
         specifier: ^4.2.1
         version: 4.2.1
@@ -6697,8 +6697,8 @@ packages:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
 
-  gridstack@11.5.1:
-    resolution: {integrity: sha512-qgbH65F6TtyKyi9t6fCkrxLhiobgYR3RBjnK0AzZl+YO7hreMVlsZ1MFbkPV0+7ZhjXdvcaRSZp3UA1yAJqYBQ==}
+  gridstack@14.1.1:
+    resolution: {integrity: sha512-7oxosr/htheY2QCgONtyMt/lQAS0z/34aQpib7X/VEDTWsINIiJQ/aI7+yVAvoW1GI7BhRBlbo/gXlXhLM/LOg==}
 
   hachure-fill@0.5.2:
     resolution: {integrity: sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==}
@@ -16920,7 +16920,7 @@ snapshots:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
 
-  gridstack@11.5.1: {}
+  gridstack@14.1.1: {}
 
   hachure-fill@0.5.2: {}
 
