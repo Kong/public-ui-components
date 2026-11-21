@@ -1782,8 +1782,8 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2(webpack@5.112.2)
       style-loader:
-        specifier: ^3.3.4
-        version: 3.3.4(webpack@5.112.2)
+        specifier: ^4.0.0
+        version: 4.0.0(webpack@5.112.2)
       terser-webpack-plugin:
         specifier: ^5.6.1
         version: 5.6.1(@swc/core@1.15.7)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.29)(uglify-js@3.19.3)(webpack@5.112.2)
@@ -9627,11 +9627,11 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  style-loader@3.3.4:
-    resolution: {integrity: sha512-0WqXzrsMTyb8yjZJHDqwmnwRJvhALK9LfRtRc6B4UTWe8AijYLZYZ9thuJTZc2VfQWINADW/j+LiJnfy2RoC1w==}
-    engines: {node: '>= 12.13.0'}
+  style-loader@4.0.0:
+    resolution: {integrity: sha512-1V4WqhhZZgjVAVJyt7TdDPZoPBPNHbekX4fWnCJL1yQukhCeZhJySUL+gL9y6sNdN95uEOS83Y55SqHcP7MzLA==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
-      webpack: ^5.0.0
+      webpack: ^5.27.0
 
   style-search@0.1.0:
     resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
@@ -20370,7 +20370,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  style-loader@3.3.4(webpack@5.112.2):
+  style-loader@4.0.0(webpack@5.112.2):
     dependencies:
       webpack: 5.112.2(@swc/core@1.15.7)(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.29)(uglify-js@3.19.3)(webpack-cli@7.3.1)
 
