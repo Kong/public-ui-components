@@ -69,7 +69,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
     "@kong/design-tokens": "3.5.3",
-    "@kong/kongponents": "9.66.16",
+    "@kong/kongponents": "9.66.17",
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.21.0",
     "pug": "^3.0.4",
