@@ -547,6 +547,14 @@ function handleEnableToggle(enabled: boolean) {
       flex: 1;
       min-width: 220px;
     }
+
+    // Card radios label at --kui-label-font-size, which hosts set to 16px —
+    // oversized inside these compact option cards. Pin them to the standard
+    // label size so the row reads like the rest of the form's controls.
+    // (.k-radio.radio-card added to out-specify kongponents' own chain.)
+    :deep(.k-radio.radio-card .radio-label) {
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+    }
   }
 
   .principals-learn-more-link {
