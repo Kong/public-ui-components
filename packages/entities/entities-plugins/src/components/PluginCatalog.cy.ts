@@ -8,6 +8,7 @@ import {
   konnectStreamingCustomPlugins,
 } from '../../fixtures/mockData'
 import { createMemoryHistory, createRouter } from 'vue-router'
+import { defineComponent, h, ref } from 'vue'
 
 const baseConfigKonnect: KonnectPluginSelectConfig = {
   app: 'konnect',
@@ -177,6 +178,63 @@ describe('<PluginCatalog />', {
     cy.getTestId('plugin-catalog-card-wrapper').should('have.length', 0)
     cy.getTestId('plugins-empty-state').contains(/No results/i).should('exist')
 
+  })
+
+  it('should open with the groups and search passed through v-model', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'schema',
+        groups: [PluginGroup.SECURITY, PluginGroup.AUTHENTICATION],
+        search: 'jwt',
+      },
+      router,
+    })
+    cy.wait('@getAvailablePlugins')
+
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.AUTHENTICATION}`).should('be.checked')
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.SECURITY}`).should('be.checked')
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).should('not.be.checked')
+    cy.getTestId('plugins-filter-input').should('have.value', 'jwt')
+    cy.getTestId('jwt-card').should('be.visible')
+    cy.getTestId('clear-filter-selection').should('not.be.disabled')
+  })
+
+  it('should keep a bound v-model in sync and ignore unknown groups', () => {
+    interceptKonnect()
+    const groups = ref<string[]>([PluginGroup.TRAFFIC_CONTROL, 'Not a group'])
+    const search = ref('')
+    const Host = defineComponent(() => () => h(PluginCatalog, {
+      config: baseConfigKonnect,
+      customPluginSupport: 'schema',
+      groups: groups.value,
+      'onUpdate:groups': (value: string[]) => {
+        groups.value = value
+      },
+      search: search.value,
+      'onUpdate:search': (value: string) => {
+        search.value = value
+      },
+    }))
+
+    cy.mount(Host, { router })
+    cy.wait('@getAvailablePlugins')
+
+    cy.getTestId(`plugin-group-${PluginGroup.TRAFFIC_CONTROL}`).should('exist')
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('not.exist')
+
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.SECURITY}`).check()
+    cy.wrap(groups).its('value').should('deep.equal', [PluginGroup.TRAFFIC_CONTROL, 'Not a group', PluginGroup.SECURITY])
+    cy.getTestId(`plugin-group-${PluginGroup.SECURITY}`).should('exist')
+
+    cy.getTestId('clear-filter-selection').click()
+    cy.wrap(groups).its('value').should('deep.equal', [])
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('exist')
+
+    cy.getTestId('plugins-filter-input').type('rate')
+    cy.wrap(search).its('value').should('equal', 'rate')
   })
 
   it('should correctly hide ignored plugins', () => {

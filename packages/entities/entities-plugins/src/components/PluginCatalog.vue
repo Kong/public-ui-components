@@ -13,7 +13,7 @@
           appearance="tertiary"
           class="clear-selection"
           data-testid="clear-filter-selection"
-          :disabled="!Object.values(typeFilter).some(v => v)"
+          :disabled="!selectedGroups.length"
           @click="clearTypeFilter"
         >
           {{ t('plugins.select.filter.clear') }}
@@ -33,8 +33,9 @@
             :data-testid="`plugin-filter-item-${feature}`"
           >
             <KCheckbox
-              v-model="typeFilter[feature]"
               :label="feature"
+              :model-value="isGroupSelected(feature)"
+              @update:model-value="(checked: boolean) => setGroupSelected(feature, checked)"
             />
             <KBadge appearance="neutral">
               {{ pluginsList?.[feature]?.length || 0 }}
@@ -56,9 +57,10 @@
             :data-testid="`plugin-filter-item-${group}`"
           >
             <KCheckbox
-              v-model="typeFilter[group]"
               :data-testid="`plugin-filter-checkbox-${group}`"
               :label="group"
+              :model-value="isGroupSelected(group)"
+              @update:model-value="(checked: boolean) => setGroupSelected(group, checked)"
             />
             <KBadge
               appearance="neutral"
@@ -179,6 +181,7 @@ import {
   type PluginCardList,
   type StreamingCustomPluginSchema,
   type CustomPluginDeletePayload,
+  type PluginCatalogFilterGroup,
 } from '../types'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
@@ -237,10 +240,19 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const searchFilterInput = useTemplateRef('filter-input')
 
-const searchFilter = ref('')
+/**
+ * Search text. Bind with `v-model:search` to open the catalog pre-searched or to sync it elsewhere
+ * (e.g. the URL). Unbound, the catalog keeps it internally.
+ */
+const searchFilter = defineModel<string>('search', { default: '' })
+/**
+ * Ticked filter groups, any of `PluginGroup` or `Featured`. Bind with `v-model:groups` to open the
+ * catalog with one or more groups pre-selected. Unknown values are ignored.
+ */
+const selectedGroups = defineModel<PluginCatalogFilterGroup[]>('groups', { default: () => [] })
 const featuredFilterCollapse = ref(false)
 const groupFilterCollapse = ref(false)
-const typeFilter = ref(Object.fromEntries(PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically).map(item => [item, false])))
+const filterGroups: PluginCatalogFilterGroup[] = [...PluginFeaturedArray, ...PluginGroupArraySortedAlphabetically]
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')
@@ -340,9 +352,9 @@ const filteredPlugins = computed((): PluginCardListExtended => {
     return {}
   }
 
-  const activeGroups = Object.entries(typeFilter.value)
-    .filter(([, checked]) => checked)
-    .map(([group]) => group)
+  // Keep the sidebar order (Featured first, then alphabetical) whatever order the groups were passed in.
+  const selected = new Set(selectedGroups.value)
+  const activeGroups = filterGroups.filter(group => selected.has(group))
 
   let filtered: PluginCardList = {}
 
@@ -397,10 +409,16 @@ const noSearchResults = computed((): boolean => {
   return (Object.keys(pluginsList.value).length > 0 && !hasFilteredResults.value)
 })
 
+const isGroupSelected = (group: PluginCatalogFilterGroup): boolean => selectedGroups.value.includes(group)
+
+// Always assign a new array so a bound `v-model:groups` sees the change.
+const setGroupSelected = (group: PluginCatalogFilterGroup, checked: boolean): void => {
+  const others = selectedGroups.value.filter(item => item !== group)
+  selectedGroups.value = checked ? [...others, group] : others
+}
+
 const clearTypeFilter = (): void => {
-  Object.keys(typeFilter.value).forEach(key => {
-    typeFilter.value[key] = false
-  })
+  selectedGroups.value = []
 }
 
 const buildPluginList = (): PluginCardList => {
