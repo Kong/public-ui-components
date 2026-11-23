@@ -231,7 +231,7 @@ importers:
         version: 1.8.1(@typescript-eslint/parser@8.64.0(eslint@10.14.0(jiti@2.5.1)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3))(eslint@10.14.0(jiti@2.5.1)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@kong/stylelint-plugin-design-tokens':
         specifier: ^2.0.3
         version: 2.0.3(stylelint@17.16.0(supports-color@8.1.1)(typescript@5.9.3))
@@ -368,8 +368,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
       vue-tsc:
         specifier: ^3.3.11
         version: 3.3.11(typescript@5.9.3)
@@ -427,7 +427,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       pinia:
         specifier: ^4.1.0
         version: 4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3))
@@ -467,7 +467,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/geobuf':
         specifier: ^4.0.0
         version: 4.0.0
@@ -513,7 +513,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       pinia:
         specifier: ^4.1.0
         version: 4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3))
@@ -626,7 +626,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -693,7 +693,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -701,8 +701,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/core/cli:
     devDependencies:
@@ -761,7 +761,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -779,7 +779,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       echarts:
         specifier: ^6.1.0
         version: 6.1.0
@@ -797,7 +797,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
@@ -843,7 +843,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -889,7 +889,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -900,8 +900,8 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/core/freeform:
     dependencies:
@@ -941,7 +941,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@playwright/experimental-ct-vue':
         specifier: ^1.62.1
         version: 1.62.1(@types/node@24.19.2)(esbuild@0.28.1)(jiti@2.5.1)(sass@1.108.2)(terser@5.51.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(yaml@2.9.1)
@@ -958,8 +958,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/core/i18n:
     dependencies:
@@ -989,7 +989,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
@@ -1014,7 +1014,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@peculiar/x509':
         specifier: ^3.1.0
         version: 3.1.0(@peculiar/asn1-schema@3.0.0(asn1js@4.0.0))(asn1js@4.0.0)
@@ -1063,13 +1063,13 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/core/sandbox-layout:
     dependencies:
@@ -1082,13 +1082,13 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/core/split-pane:
     dependencies:
@@ -1107,7 +1107,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
@@ -1129,7 +1129,7 @@ importers:
         version: link:../sandbox-layout
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       vue:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
@@ -1160,7 +1160,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1168,8 +1168,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-consumer-credentials:
     devDependencies:
@@ -1187,7 +1187,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1195,8 +1195,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-consumer-groups:
     devDependencies:
@@ -1214,7 +1214,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1222,8 +1222,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-consumers:
     devDependencies:
@@ -1241,7 +1241,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1249,8 +1249,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-data-plane-nodes:
     devDependencies:
@@ -1268,7 +1268,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1276,8 +1276,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-gateway-services:
     dependencies:
@@ -1302,7 +1302,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1310,8 +1310,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-key-sets:
     devDependencies:
@@ -1326,7 +1326,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1334,8 +1334,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-keys:
     devDependencies:
@@ -1353,7 +1353,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1361,8 +1361,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-plugins:
     dependencies:
@@ -1423,7 +1423,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@peculiar/x509':
         specifier: ^3.1.0
         version: 3.1.0(@peculiar/asn1-schema@3.0.0(asn1js@4.0.0))(asn1js@4.0.0)
@@ -1461,8 +1461,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
       zod:
         specifier: ^4.5.4
         version: 4.6.6
@@ -1513,7 +1513,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1524,8 +1524,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-routes:
     dependencies:
@@ -1550,7 +1550,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -1561,8 +1561,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-shared:
     dependencies:
@@ -1590,7 +1590,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@shikijs/core':
         specifier: ^4.6.0
         version: 4.6.0
@@ -1619,8 +1619,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-snis:
     devDependencies:
@@ -1638,7 +1638,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1646,8 +1646,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-upstreams-targets:
     devDependencies:
@@ -1665,7 +1665,7 @@ importers:
         version: 1.64.0(vue@3.5.43(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1673,8 +1673,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/entities/entities-vaults:
     dependencies:
@@ -1696,7 +1696,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       axios:
         specifier: ^1.21.0
         version: 1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1704,8 +1704,8 @@ importers:
         specifier: ^3.5.43
         version: 3.5.43(typescript@5.9.3)
       vue-router:
-        specifier: ^5.4.0
-        version: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+        specifier: ^5.5.0
+        version: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
 
   packages/portal/document-viewer:
     dependencies:
@@ -1721,7 +1721,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/prismjs':
         specifier: ^1.26.6
         version: 1.26.6
@@ -1755,7 +1755,7 @@ importers:
         version: 3.5.3
       '@kong/kongponents':
         specifier: 9.66.17
-        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -1770,7 +1770,7 @@ importers:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
         specifier: ^4.3.3
-        version: 4.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@2.80.0)(supports-color@10.2.2)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+        version: 4.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@2.80.0)(supports-color@10.2.2)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -5131,6 +5131,10 @@ packages:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
 
+  chokidar@6.0.0:
+    resolution: {integrity: sha512-Ec2Z7wpcKBiMpR7DxteoqS/sq5G5d2A4fpxzPv6+fD7xNNdrTghn7L11YwV5EN1B3i72Erc3XVT5FkWIDx90+A==}
+    engines: {node: '>= 22.22'}
+
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
 
@@ -7578,6 +7582,10 @@ packages:
     resolution: {integrity: sha512-++gUqRDEvcnN6Zhqrr+y/CkVEHhlrR96vZn3nZZPYzMcBUyBtTKzB9NadClFIsIVSsu+3i9tfk/erqy9kAmt7Q==}
     engines: {node: '>=14'}
 
+  local-pkg@2.0.0:
+    resolution: {integrity: sha512-xvTNwM27EpU+fkLSpo33Pq/nm8m5zNf0aU/hF4W4ZM9RHQjVZa5KTmmXIzEzVsdI09NOUqj0djHhTv96sUowSQ==}
+    engines: {node: '>=20.19.0'}
+
   locate-path@5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
@@ -8822,6 +8830,9 @@ packages:
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
+  quansync@1.0.0:
+    resolution: {integrity: sha512-5xZacEEufv3HSTPQuchrvV6soaiACMFnq1H8wkVioctoH3TRha9Sz66lOxRwPK/qZj7HPiSveih9yAyh98gvqA==}
+
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
 
@@ -8989,6 +9000,10 @@ packages:
 
   readdirp@5.0.0:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
+    engines: {node: '>= 20.19.0'}
+
+  readdirp@5.1.1:
+    resolution: {integrity: sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==}
     engines: {node: '>= 20.19.0'}
 
   rechoir@1.0.0:
@@ -10563,8 +10578,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
 
-  vue-router@5.4.0:
-    resolution: {integrity: sha512-pFvcYcxinDHjZUlf7AzFBrT8r8Xqvv4uMHoJnjc+EqPawXQvHTkF8S4tfSmQLpriVHUGfkaKlI7Et0KRjTMTdw==}
+  vue-router@5.5.1:
+    resolution: {integrity: sha512-lUENd/QIhKd2HWACnXID3us0GWBnuOi3BwkTUzce2+4nfM/b3seV5saNURM9+wt48/qUxviotpcm7yFxC0U4qA==}
     peerDependencies:
       '@pinia/colada': '>=0.21.2'
       '@vue/compiler-sfc': ^3.5.34 || ^4.0.0
@@ -12127,7 +12142,7 @@ snapshots:
     dependencies:
       vue: 3.5.43(typescript@5.9.3)
 
-  '@kong/kongponents@8.128.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
+  '@kong/kongponents@8.128.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.43(typescript@5.9.3))
       '@kong/icons': 1.64.0(vue@3.5.43(typescript@5.9.3))
@@ -12144,12 +12159,12 @@ snapshots:
       vue: 3.5.43(typescript@5.9.3)
       vue-bind-once: 0.2.3(vue@3.5.43(typescript@5.9.3))
       vue-draggable-next: 2.3.0(sortablejs@1.15.7)(vue@3.5.43(typescript@5.9.3))
-      vue-router: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+      vue-router: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - '@vue/test-utils'
 
-  '@kong/kongponents@9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
+  '@kong/kongponents@9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.43(typescript@5.9.3))
       '@kong/icons': 1.64.0(vue@3.5.43(typescript@5.9.3))
@@ -12167,7 +12182,7 @@ snapshots:
       vue: 3.5.43(typescript@5.9.3)
       vue-clamp: 1.7.2(vue@3.5.43(typescript@5.9.3))
       vue-draggable-next: 2.3.0(sortablejs@1.15.7)(vue@3.5.43(typescript@5.9.3))
-      vue-router: 5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+      vue-router: 5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
     transitivePeerDependencies:
       - '@angular/common'
       - '@angular/core'
@@ -12178,7 +12193,7 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/kongponents@9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.4.0(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
+  '@kong/kongponents@9.66.17(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.5.1(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.43(typescript@5.9.3))
       '@kong/icons': 1.64.0(vue@3.5.43(typescript@5.9.3))
@@ -12196,7 +12211,7 @@ snapshots:
       vue: 3.5.43(typescript@5.9.3)
       vue-clamp: 1.7.2(vue@3.5.43(typescript@5.9.3))
       vue-draggable-next: 2.3.0(sortablejs@1.15.7)(vue@3.5.43(typescript@5.9.3))
-      vue-router: 5.4.0(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
+      vue-router: 5.5.1(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2)
     transitivePeerDependencies:
       - '@angular/common'
       - '@angular/core'
@@ -12247,10 +12262,10 @@ snapshots:
     dependencies:
       stylelint: 17.16.0(supports-color@8.1.1)(typescript@5.9.3)
 
-  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@2.80.0)(supports-color@10.2.2)(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
+  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@2.80.0)(supports-color@10.2.2)(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))':
     dependencies:
       '@braintree/sanitize-url': 6.0.2
-      '@kong/kongponents': 8.128.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
+      '@kong/kongponents': 8.128.0(@vue/test-utils@2.5.1(@vue/compiler-dom@3.5.43)(@vue/server-renderer@3.5.43)(vue@3.5.43(typescript@5.9.3)))(axios@1.21.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2))(vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2))(vue@3.5.43(typescript@5.9.3))
       '@kyleshockey/xml': 1.0.2
       classnames: 2.5.1
       curl-to-har: 1.0.1
@@ -15104,6 +15119,10 @@ snapshots:
     dependencies:
       readdirp: 5.0.0
 
+  chokidar@6.0.0:
+    dependencies:
+      readdirp: 5.1.1
+
   chownr@1.1.4:
     optional: true
 
@@ -17926,6 +17945,12 @@ snapshots:
       pkg-types: 2.3.1
       quansync: 0.2.11
 
+  local-pkg@2.0.0:
+    dependencies:
+      mlly: 1.8.2
+      pkg-types: 2.3.1
+      quansync: 1.0.0
+
   locate-path@5.0.0:
     dependencies:
       p-locate: 4.1.0
@@ -19442,6 +19467,8 @@ snapshots:
 
   quansync@0.2.11: {}
 
+  quansync@1.0.0: {}
+
   querystringify@2.2.0: {}
 
   queue-lit@1.5.0: {}
@@ -19640,6 +19667,8 @@ snapshots:
       picomatch: 2.3.2
 
   readdirp@5.0.0: {}
+
+  readdirp@5.1.1: {}
 
   rechoir@1.0.0: {}
 
@@ -21095,7 +21124,7 @@ snapshots:
   unplugin-utils@0.3.2:
     dependencies:
       pathe: 2.0.3
-      picomatch: 4.0.5
+      picomatch: 4.0.7
 
   unplugin@3.7.0(@swc/core@1.15.7)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(webpack@5.112.2):
     dependencies:
@@ -21434,14 +21463,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
+  vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@2.80.0)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
     dependencies:
       '@vue-macros/common': 3.1.4(vue@3.5.43(typescript@5.9.3))
       '@vue/devtools-api': 8.2.1
       ast-walker-scope: 0.10.0
-      chokidar: 5.0.0
+      chokidar: 6.0.0
       confbox: 0.3.2
-      local-pkg: 1.2.1
+      local-pkg: 2.0.0
       magic-string: 1.4.5
       mlly: 1.8.2
       muggle-string: 0.4.1
@@ -21471,14 +21500,14 @@ snapshots:
       - unloader
       - webpack
 
-  vue-router@5.4.0(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
+  vue-router@5.5.1(@swc/core@1.15.7)(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@10.2.2))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@10.2.2)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
     dependencies:
       '@vue-macros/common': 3.1.4(vue@3.5.43(typescript@5.9.3))
       '@vue/devtools-api': 8.2.1
       ast-walker-scope: 0.10.0
-      chokidar: 5.0.0
+      chokidar: 6.0.0
       confbox: 0.3.2
-      local-pkg: 1.2.1
+      local-pkg: 2.0.0
       magic-string: 1.4.5
       mlly: 1.8.2
       muggle-string: 0.4.1
@@ -21508,14 +21537,14 @@ snapshots:
       - unloader
       - webpack
 
-  vue-router@5.4.0(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
+  vue-router@5.5.1(@vue/compiler-sfc@3.5.43)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.28.1)(pinia@4.1.0(@vue/devtools-api@8.2.1)(typescript@5.9.3)(vue@3.5.43(typescript@5.9.3)))(rolldown@1.2.14)(rollup@4.62.2)(supports-color@8.1.1)(vite@7.3.7(@types/node@24.19.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass@1.108.2)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@5.9.3))(webpack@5.112.2):
     dependencies:
       '@vue-macros/common': 3.1.4(vue@3.5.43(typescript@5.9.3))
       '@vue/devtools-api': 8.2.1
       ast-walker-scope: 0.10.0
-      chokidar: 5.0.0
+      chokidar: 6.0.0
       confbox: 0.3.2
-      local-pkg: 1.2.1
+      local-pkg: 2.0.0
       magic-string: 1.4.5
       mlly: 1.8.2
       muggle-string: 0.4.1

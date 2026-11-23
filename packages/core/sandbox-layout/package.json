@@ -42,7 +42,7 @@
     "@kong/design-tokens": "3.5.3",
     "@kong/kongponents": "9.66.17",
     "vue": "^3.5.43",
-    "vue-router": "^5.4.0"
+    "vue-router": "^5.5.0"
   },
   "repository": {
     "type": "git",
