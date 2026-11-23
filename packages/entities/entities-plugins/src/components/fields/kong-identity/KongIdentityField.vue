@@ -27,43 +27,21 @@
 
       <template v-else>
         <KRadio
+          v-for="option in modeOptions"
+          :key="option.mode"
           card
           card-orientation="horizontal"
-          data-testid="kong-identity-mode-consumers"
-          :description="consumersDescription"
-          :label="t('custom_field.kong_identity.consumers_label')"
+          :data-testid="option.testId"
+          :description="option.description"
+          :label="option.label"
           :model-value="selectedMode"
-          selected-value="consumers"
+          :selected-value="option.mode"
           @update:model-value="handleModeChange"
         >
-          <TeamIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
-        </KRadio>
-
-        <KRadio
-          v-if="showCentrallyManaged"
-          card
-          card-orientation="horizontal"
-          data-testid="kong-identity-mode-centrally-managed"
-          :description="t('custom_field.kong_identity.centrally_managed_description')"
-          :label="t('custom_field.kong_identity.centrally_managed_label')"
-          :model-value="selectedMode"
-          selected-value="centrally-managed"
-          @update:model-value="handleModeChange"
-        >
-          <AccountTreeIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
-        </KRadio>
-
-        <KRadio
-          card
-          card-orientation="horizontal"
-          data-testid="kong-identity-mode-kong-identity"
-          :description="kongIdentityDescription"
-          :label="t('custom_field.kong_identity.kong_identity_label')"
-          :model-value="selectedMode"
-          selected-value="kong-identity"
-          @update:model-value="handleModeChange"
-        >
-          <KeyIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
+          <component
+            :is="option.icon"
+            :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
+          />
         </KRadio>
       </template>
     </div>
@@ -78,6 +56,7 @@ import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '@kong-ui-public/freeform'
 import composables from '../../../composables'
 
+import type { Component } from 'vue'
 import type { AuthMode } from './types'
 
 defineOptions({ name: 'KongIdentityField' })
@@ -85,6 +64,8 @@ defineOptions({ name: 'KongIdentityField' })
 const props = defineProps<{
   identityRealmsInSchema?: boolean
   loadingRealms?: boolean
+  /** Host opted in to listing Kong Identity principals first (AI Manager auth strategies). */
+  prioritizePrincipals?: boolean
 }>()
 const { i18n } = composables.useI18n()
 const { t } = i18n
@@ -118,6 +99,46 @@ const kongIdentityDescription = computed(() => {
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.kong_identity_description_key_auth')
     : t('custom_field.kong_identity.kong_identity_description_basic_auth')
+})
+
+type ModeOption = {
+  mode: AuthMode
+  testId: string
+  label: string
+  description: string
+  icon: Component
+}
+
+// AI Manager auth strategies list Kong Identity principals first; every other host
+// keeps Consumers first. The order is rendered from this list rather than CSS so the
+// DOM order matches what users see.
+const modeOptions = computed<ModeOption[]>(() => {
+  const kongIdentity: ModeOption = {
+    mode: 'kong-identity',
+    testId: 'kong-identity-mode-kong-identity',
+    label: t('custom_field.kong_identity.kong_identity_label'),
+    description: kongIdentityDescription.value,
+    icon: KeyIcon,
+  }
+  const consumers: ModeOption = {
+    mode: 'consumers',
+    testId: 'kong-identity-mode-consumers',
+    label: t('custom_field.kong_identity.consumers_label'),
+    description: consumersDescription.value,
+    icon: TeamIcon,
+  }
+  const centrallyManaged: ModeOption = {
+    mode: 'centrally-managed',
+    testId: 'kong-identity-mode-centrally-managed',
+    label: t('custom_field.kong_identity.centrally_managed_label'),
+    description: t('custom_field.kong_identity.centrally_managed_description'),
+    icon: AccountTreeIcon,
+  }
+
+  const options = props.prioritizePrincipals ? [kongIdentity, consumers] : [consumers]
+  if (showCentrallyManaged.value) options.push(centrallyManaged)
+  if (!props.prioritizePrincipals) options.push(kongIdentity)
+  return options
 })
 
 const model = defineModel<AuthMode>()

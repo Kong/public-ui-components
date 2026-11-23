@@ -254,6 +254,8 @@ function mountContent(
     dataPlaneVersions?: string[]
     /** FORM_EDITING: set to `true` to simulate an edit-load rather than a fresh create. */
     isEditing?: boolean
+    /** AI Manager auth strategies list and select Kong Identity principals first. */
+    prioritizePrincipals?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -286,6 +288,7 @@ function mountContent(
         onChange: onChangeSpy,
       }, {
         default: () => h(ConfigFormContent, {
+          'prioritizePrincipals': options.prioritizePrincipals,
           'onClick:learn-more': onLearnMoreSpy,
           'onClick:create-entity': onCreatePrincipalSpy,
         }),
@@ -410,6 +413,95 @@ describe('ConfigFormContent', () => {
           .should('have.class', 'checked')
       })
 
+    })
+
+    describe('Prioritized principals (AI Manager)', () => {
+      type EmittedConfig = {
+        config?: {
+          principals?: { enabled?: boolean, directory?: string } | null
+        }
+      }
+
+      it('selects Kong Identity by default and emits principals.enabled', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true }, {
+          config: {},
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.enabled === true
+        }))
+      })
+
+      it('lists Kong Identity before Consumers', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true })
+
+        cy.get('.kong-identity-options [data-testid="kong-identity-mode-kong-identity"], .kong-identity-options [data-testid="kong-identity-mode-consumers"]').then(($modes) => {
+          const testIds = Array.from($modes).map(mode => mode.getAttribute('data-testid'))
+          expect(testIds).to.deep.equal([
+            'kong-identity-mode-kong-identity',
+            'kong-identity-mode-consumers',
+          ])
+        })
+      })
+
+      it('leaves Consumers first when the host does not prioritize principals', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true })
+
+        cy.get('.kong-identity-options [data-testid="kong-identity-mode-kong-identity"], .kong-identity-options [data-testid="kong-identity-mode-consumers"]').then(($modes) => {
+          const testIds = Array.from($modes).map(mode => mode.getAttribute('data-testid'))
+          expect(testIds).to.deep.equal([
+            'kong-identity-mode-consumers',
+            'kong-identity-mode-kong-identity',
+          ])
+        })
+      })
+
+      it('switches a strategy saved as Consumers to Kong Identity on edit', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+          principalsDirectoryName: 'my-directory',
+        }, {
+          config: { principals: null },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.enabled === true
+            && val.config?.principals?.directory === 'my-directory'
+        }))
+      })
+
+      it('keeps a saved principals directory when editing an already-principals strategy', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+          principalsDirectoryName: 'host-directory',
+        }, {
+          config: { principals: { enabled: true, directory: 'saved-directory' } },
+        })
+
+        cy.get('@onChangeSpy').should('not.have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.directory === 'host-directory'
+        }))
+      })
+
+      it('does not prioritize principals when the identity principals UI flag is off', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          prioritizePrincipals: true,
+          identityPrincipalsUiEnabled: false,
+        })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+      })
     })
 
     describe('Mode switching', () => {

@@ -13,6 +13,7 @@
     class="kong-identity-section"
     :identity-realms-in-schema="identityRealmsInSchema"
     :loading-realms="isLoadingRealms"
+    :prioritize-principals="prioritizePrincipals"
   />
 
   <div
@@ -106,6 +107,15 @@ const emit = defineEmits<{
   'click:create-entity': [payload: EntityCreateEvent]
 }>()
 
+const props = defineProps<{
+  /**
+   * Host opted in to Kong Identity principals as the primary identity mode: the form
+   * starts in that mode and the submitted config carries `principals.enabled = true`,
+   * including when editing a strategy saved as Consumers.
+   */
+  prioritizePrincipals?: boolean
+}>()
+
 // Kong Identity principals require Gateway 3.15+ on the data plane.
 const KONG_IDENTITY_MIN_DP_VERSION = { major: 3, minor: 15 }
 
@@ -125,7 +135,7 @@ const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | und
 const isKonnect = computed(() => appConfig?.app === 'konnect')
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
-const { formData, getSchema } = useFormShared()
+const { formData, getSchema, getEmptyOrDefault } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
@@ -197,6 +207,43 @@ const hasPrincipals = computed(() =>
   && !!getSchema('$.config.principals'),
 )
 
+// AI Manager treats Kong Identity principals as the primary identity mode. Seed the
+// config so the mode is selected and the submitted payload carries it, including when
+// an existing strategy was saved in Consumers mode.
+const hadPrincipalsEnabled = !!formData.config?.principals?.enabled
+const prioritizePrincipals = computed(() => props.prioritizePrincipals === true && hasPrincipals.value)
+const synthesizedPrincipals = prioritizePrincipals.value && !hadPrincipalsEnabled
+
+// `formData.config` can still be empty at setup on create, so wait for the schema's
+// defaults to populate it before enabling principals. Run once: switching back to
+// Consumers afterwards must stick.
+let prioritizedConfigApplied = false
+watch(
+  () => formData.config,
+  (config) => {
+    if (prioritizedConfigApplied || !prioritizePrincipals.value || !config) return
+
+    prioritizedConfigApplied = true
+    config.principals = {
+      ...getEmptyOrDefault('$.config.principals'),
+      ...config.principals,
+      enabled: true,
+    }
+    if (identityRealmsInSchema.value) {
+      config.identity_realms = []
+    }
+    // A saved directory is authoritative on edit; only the synthesized (Consumers →
+    // Kong Identity) path adopts the host-resolved directory.
+    if (synthesizedPrincipals) {
+      const directory = (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName
+      if (directory != null) {
+        config.principals.directory = directory
+      }
+    }
+  },
+  { immediate: true },
+)
+
 // True when at least one connected data plane node can't process Kong Identity principals
 // (Gateway 3.15+ required). Drives a warning alert, not field hiding.
 const hasIncompatibleDataPlane = computed(() =>
@@ -220,13 +267,16 @@ function hasActualRealm(realms: any[] | null | undefined): boolean {
   return realms.some((r) => r.scope !== 'cp' && r.id != null)
 }
 
-const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(detectInitialMode())
+const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(
+  prioritizePrincipals.value ? 'kong-identity' : detectInitialMode(),
+)
 
-// Create flow: adopt on mount or when host resolves late. Edit-load preserves saved value.
+// Create flow: adopt on mount or when host resolves late. Edit-load preserves a saved
+// directory, except when priority synthesized principals for a previously Consumers strategy.
 watch(
   () => (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName,
   (name) => {
-    if (isEditing?.value || selectedMode.value !== 'kong-identity' || name == null) return
+    if ((isEditing?.value && !synthesizedPrincipals) || selectedMode.value !== 'kong-identity' || name == null) return
     if (formData.config?.principals) {
       formData.config.principals.directory = name
     }
