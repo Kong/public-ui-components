@@ -37,7 +37,7 @@
         },
         "general": {
           "title": "General information",
-          "description": "General information will help identify and manage this certificate."
+          "description": "Add tags to group and filter this certificate."
         }
       },
       "source_type": {
@@ -157,7 +157,7 @@
         },
         "general": {
           "title": "General information",
-          "description": "General information will help identify and manage this key."
+          "description": "Add tags to group and filter this CA certificate."
         }
       },
       "fields": {

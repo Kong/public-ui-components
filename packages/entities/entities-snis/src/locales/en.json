@@ -41,7 +41,7 @@
     "sections": {
       "general": {
         "title": "General information",
-        "description": "General information will help identify and manage this SNI."
+        "description": "Name this SNI with the hostname it should match and add tags to group and filter it."
       },
       "certificate": {
         "title": "Certificate",

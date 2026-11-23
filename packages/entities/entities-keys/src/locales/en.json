@@ -58,7 +58,7 @@
       "sections": {
         "general": {
           "title": "General information",
-          "description": "General information will help identify and manage this key."
+          "description": "Identify this key, optionally assign it to a key set, and add tags to group and filter it."
         },
         "keys": {
           "title": "Asymmetric keys",

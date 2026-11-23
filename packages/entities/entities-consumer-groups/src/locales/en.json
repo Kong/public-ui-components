@@ -71,7 +71,7 @@
     "form": {
       "general_info": {
         "title": "General information",
-        "description": "General information will help identify and manage this consumer group."
+        "description": "Name this consumer group and add tags to organize and filter it."
       },
       "consumers": {
         "title": "Consumers",

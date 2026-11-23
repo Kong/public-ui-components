@@ -73,11 +73,11 @@
       "title": "Consumer identification",
       "info": {
         "title": "General information",
-        "description": "General information will help identify and manage added consumer."
+        "description": "Identify this consumer and add tags to group and filter it."
       },
       "consumer_identification": {
         "title": "Consumer identification",
-        "description": "A consumer can have both unique username and unique custom ID or one of them."
+        "description": "Provide a username, a custom ID, or both. At least one is required, and each must be unique."
       }
     },
     "fields": {
