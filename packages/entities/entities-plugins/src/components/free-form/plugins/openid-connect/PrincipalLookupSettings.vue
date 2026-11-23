@@ -164,28 +164,46 @@
           {{ t('plugins.free-form.openid-connect.jit.section_label') }}
         </KLabel>
 
-        <KRadio
-          data-testid="principals-jit-all-claims"
-          :description="t('plugins.free-form.openid-connect.jit.all_claims.description')"
-          :disabled="jitDisabled"
-          :label="t('plugins.free-form.openid-connect.jit.all_claims.label')"
-          :label-attributes="jitVersionLabelAttributes"
-          :model-value="jitSharingMode"
-          selected-value="all"
-          @change="handleJitSharingChange('all')"
-        />
-        <KRadio
-          data-testid="principals-jit-subset-claims"
-          :description="t('plugins.free-form.openid-connect.jit.subset_claims.description')"
-          :disabled="jitDisabled"
-          :label="t('plugins.free-form.openid-connect.jit.subset_claims.label')"
-          :label-attributes="jitVersionLabelAttributes"
-          :model-value="jitSharingMode"
-          selected-value="subset"
-          @change="handleJitSharingChange('subset')"
-        />
+        <div class="principals-jit-card-group">
+          <KRadio
+            card
+            card-orientation="horizontal"
+            data-testid="principals-jit-all-claims"
+            :description="t('plugins.free-form.openid-connect.jit.all_claims.description')"
+            :disabled="jitDisabled"
+            :label="t('plugins.free-form.openid-connect.jit.all_claims.label')"
+            :label-attributes="jitVersionLabelAttributes"
+            :model-value="jitSharingMode"
+            selected-value="all"
+            @change="handleJitSharingChange('all')"
+          />
+          <KRadio
+            card
+            card-orientation="horizontal"
+            data-testid="principals-jit-subset-claims"
+            :description="t('plugins.free-form.openid-connect.jit.subset_claims.description')"
+            :disabled="jitDisabled"
+            :label="t('plugins.free-form.openid-connect.jit.subset_claims.label')"
+            :label-attributes="jitVersionLabelAttributes"
+            :model-value="jitSharingMode"
+            selected-value="subset"
+            @change="handleJitSharingChange('subset')"
+          />
+          <KRadio
+            card
+            card-orientation="horizontal"
+            data-testid="principals-jit-custom-claims"
+            :description="t('plugins.free-form.openid-connect.jit.custom_claims.description')"
+            :disabled="jitDisabled"
+            :label="t('plugins.free-form.openid-connect.jit.custom_claims.label')"
+            :label-attributes="jitVersionLabelAttributes"
+            :model-value="jitSharingMode"
+            selected-value="custom"
+            @change="handleJitSharingChange('custom')"
+          />
+        </div>
         <KInput
-          v-if="!allClaims"
+          v-if="jitSharingMode === 'custom'"
           class="principals-jit-claims-input"
           data-testid="principals-jit-claims"
           :disabled="jitDisabled"
@@ -305,41 +323,47 @@ function useJitField<K extends keyof OidcPrincipalsJit>(key: K) {
 const allClaims = useJitField('all_claims')
 const jitClaims = useJitField('claims')
 
-// The radios are the PM-requested replacement for the share-all checkbox; the
-// claims input stays for narrowing the shared set. A record saved from before
-// the radios existed can still carry a custom claims list — it maps onto the
-// subset radio and is kept as-is until the user actually switches.
-const jitSharingMode = computed<'all' | 'subset' | null>(() => {
+// Three sharing options, one per payload shape:
+//   all    → { all_claims: true }                        (every verified claim)
+//   subset → { all_claims: false }                       (sub + iss)
+//   custom → { all_claims: false, claims: [...] }        (the named claims only)
+// A selected-but-empty custom choice is indistinguishable from subset on the
+// model, so `customClaimsSelected` keeps radio 3 checked until a claim is
+// typed — the payload stays subset-shaped until then.
+const customClaimsSelected = ref(false)
+
+const jitSharingMode = computed<'all' | 'subset' | 'custom' | null>(() => {
   if (allClaims.value === true) return 'all'
-  if (allClaims.value === false || hasValue(jitClaims.value)) return 'subset'
+  if (hasValue(jitClaims.value)) return 'custom'
+  if (allClaims.value === false) return customClaimsSelected.value ? 'custom' : 'subset'
   return null
 })
 
-// Switching to share-all makes the claims list meaningless — null it out so the
-// payload never ships a value the (now hidden) input last held. The typed
-// claims are cached so switching back restores them instead of losing the input.
+// Leaving custom (either direction) makes the claims list meaningless — null
+// it out so the payload never ships a value the (now hidden) input last held.
+// The typed claims are cached so returning to custom restores them.
 let cachedClaims: string[] | null = null
 
-function handleJitSharingChange(mode: 'all' | 'subset') {
-  allClaims.value = mode === 'all'
-  if (mode === 'all') {
-    cachedClaims = Array.isArray(jitClaims.value) && jitClaims.value.length > 0
-      ? [...jitClaims.value]
-      : null
-    jitClaims.value = getEmptyValue()
-  } else if (cachedClaims) {
-    jitClaims.value = cachedClaims
-    // Sync the display eagerly; the watcher would too, but this keeps the
-    // restore deterministic and avoids a flash of the stale (cleared) text.
-    claimsInput.value = encodeClaims(cachedClaims)
-    cachedClaims = null
-  } else if (!hasValue(jitClaims.value)) {
-    // A fresh switch from share-all (or a record with no claims) starts at the
-    // PM default pair; a list the user already typed or a record already saved
-    // with claims is left alone.
-    jitClaims.value = ['sub', 'iss']
-    claimsInput.value = 'sub, iss'
+function handleJitSharingChange(mode: 'all' | 'subset' | 'custom') {
+  if (mode === 'custom') {
+    customClaimsSelected.value = true
+    allClaims.value = false
+    if (cachedClaims) {
+      jitClaims.value = cachedClaims
+      // Sync the display eagerly; the watcher would too, but this keeps the
+      // restore deterministic and avoids a flash of the stale (cleared) text.
+      claimsInput.value = encodeClaims(cachedClaims)
+      cachedClaims = null
+    }
+    return
   }
+
+  customClaimsSelected.value = false
+  allClaims.value = mode === 'all'
+  cachedClaims = Array.isArray(jitClaims.value) && jitClaims.value.length > 0
+    ? [...jitClaims.value]
+    : null
+  jitClaims.value = getEmptyValue()
 }
 
 const encodeClaims = (claims: string[] | null | undefined): string =>
@@ -360,8 +384,9 @@ function handleClaimsChange(rawValue: string) {
   jitClaims.value = parseClaims(rawValue)
 }
 
-// Re-sync the display only when the model changes from elsewhere (e.g. picking
-// the subset radio seeds sub + iss), never while it reflects the user's typing.
+// Re-sync the display only when the model changes from elsewhere (e.g. an
+// all/subset switch nulls the stashed claims), never while it reflects the
+// user's typing.
 watch(jitClaims, (claims) => {
   if (!isEqual(claims ?? null, parseClaims(claimsInput.value) ?? null)) {
     claimsInput.value = encodeClaims(claims)
@@ -509,6 +534,19 @@ function handleEnableToggle(enabled: boolean) {
   .principals-custom-identity-name-input,
   .principals-jit-claims-input {
     margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .principals-jit-card-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--kui-space-50, $kui-space-50);
+
+    // Let the cards share the row evenly rather than hug their content
+    > * {
+      flex: 1;
+      min-width: 220px;
+    }
   }
 
   .principals-learn-more-link {

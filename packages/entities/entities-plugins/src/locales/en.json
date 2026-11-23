@@ -1202,6 +1202,10 @@
             "label": "Share sub and iss token claims with Konnect",
             "description": "Send only the token's subject and issuer claims with the Kong Identity principal lookup."
           },
+          "custom_claims": {
+            "label": "Share specific token claims with Konnect",
+            "description": "Send only the claims listed below with the Kong Identity principal lookup."
+          },
           "claims": {
             "label": "Claims to share",
             "placeholder": "e.g., email, department",
