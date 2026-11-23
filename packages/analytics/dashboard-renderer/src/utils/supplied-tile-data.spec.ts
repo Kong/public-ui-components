@@ -1,21 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import type { ApiRequestsResult, ExploreResultV4, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
+import { TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
+import type { SuppliedTileData } from '../types'
 import { isApiRequestsResult, isExploreResultV4, isPlatformTabularResponse, resolveSuppliedData } from './supplied-tile-data'
 
 const exploreResult = { data: [], meta: {} } as unknown as ExploreResultV4
 const tabularResponse = { records: [], meta: {} } as unknown as PlatformTabularResponse
 const requestsResult = { results: [], meta: {} } as unknown as ApiRequestsResult
 
-const resolveExplore = (value: Parameters<typeof resolveSuppliedData>[0]['supplied']['value']) => resolveSuppliedData({
-  supplied: { value },
+const resolveExplore = (supplied: SuppliedTileData) => resolveSuppliedData({
+  supplied,
   isExpected: isExploreResultV4,
   mismatchMessage: 'mismatch',
 })
 
 describe('resolveSuppliedData', () => {
-  it('maps undefined, null, and an Error to the loading, empty, and error states', () => {
-    expect(resolveExplore(undefined)).toEqual({ status: 'loading' })
-    expect(resolveExplore(null)).toEqual({ status: 'empty' })
+  it('maps TILE_DATA_LOADING, TILE_DATA_EMPTY, and an Error to the loading, empty, and error states', () => {
+    expect(resolveExplore(TILE_DATA_LOADING)).toEqual({ status: 'loading' })
+    expect(resolveExplore(TILE_DATA_EMPTY)).toEqual({ status: 'empty' })
     expect(resolveExplore(new Error('boom'))).toEqual({ status: 'error', message: 'boom' })
   })
 

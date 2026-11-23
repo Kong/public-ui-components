@@ -13,6 +13,7 @@ import type {
   ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import type { TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
@@ -118,13 +119,11 @@ export interface PdfExportState {
 export type TileData = ExploreResultV4 | PlatformTabularResponse | ApiRequestsResult
 
 /**
- * Host-supplied tile data as passed to the tile loaders. The wrapper is present only
- * when the host passed `data`, so a `value` of `undefined` means "loading", not "not set".
- * `null` means "no data", and an `Error` means the host failed to load it.
+ * What a host passes as a tile's `data`: the data itself, `TILE_DATA_LOADING` while
+ * the host loads it, `TILE_DATA_EMPTY` when there is no data, or an `Error` when the
+ * host failed to load it.
  */
-export interface SuppliedTileData {
-  value: TileData | null | Error | undefined
-}
+export type SuppliedTileData = TileData | typeof TILE_DATA_LOADING | typeof TILE_DATA_EMPTY | Error
 
 export interface ChartRendererProps<T> {
   query: ValidDashboardChartQuery

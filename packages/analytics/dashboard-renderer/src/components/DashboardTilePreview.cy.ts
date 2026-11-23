@@ -3,8 +3,8 @@ import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { defineComponent, h, onMounted } from 'vue'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContext, TileData } from '../types'
+import { INJECT_QUERY_PROVIDER, TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
+import type { DashboardRendererContext, SuppliedTileData } from '../types'
 import type {
   AllFilters,
   ApiRequestsResult,
@@ -457,12 +457,10 @@ describe('<DashboardTilePreview /> with supplied data', () => {
     definition,
     attrs = {},
     data,
-    passData = true,
   }: {
     definition: TileDefinition
     attrs?: Record<string, unknown>
-    data?: TileData | null | Error
-    passData?: boolean
+    data?: SuppliedTileData
   }) => {
     const bridge = {
       configFn: () => Promise.resolve({ analytics: { percentiles: true } }),
@@ -479,7 +477,7 @@ describe('<DashboardTilePreview /> with supplied data', () => {
       props: {
         context: { filters: [], timeSpec: { type: 'relative', time_range: '1h' } },
         definition,
-        ...(passData && { data }),
+        data,
       },
       attrs,
       global: {
@@ -521,15 +519,15 @@ describe('<DashboardTilePreview /> with supplied data', () => {
     expectNoBridgeQuery()
   })
 
-  it('shows the loading state for undefined data', () => {
-    mountPreview({ definition: timeseriesDefinition, data: undefined })
+  it('shows the loading state for TILE_DATA_LOADING', () => {
+    mountPreview({ definition: timeseriesDefinition, data: TILE_DATA_LOADING })
 
     cy.get('.chart-skeleton').should('exist')
     expectNoBridgeQuery()
   })
 
-  it('shows the empty state for null data', () => {
-    mountPreview({ definition: timeseriesDefinition, data: null })
+  it('shows the empty state for TILE_DATA_EMPTY', () => {
+    mountPreview({ definition: timeseriesDefinition, data: TILE_DATA_EMPTY })
 
     cy.getTestId('chart-no-data-state').should('exist')
     expectNoBridgeQuery()
@@ -543,16 +541,16 @@ describe('<DashboardTilePreview /> with supplied data', () => {
   })
 
   it('shows the loading, empty, and error states for table and scatter tiles', () => {
-    mountPreview({ definition: tableDefinition, data: undefined })
+    mountPreview({ definition: tableDefinition, data: TILE_DATA_LOADING })
     cy.getTestId('table-skeleton').should('exist')
 
-    mountPreview({ definition: tableDefinition, data: null })
+    mountPreview({ definition: tableDefinition, data: TILE_DATA_EMPTY })
     cy.getTestId('table-empty-state').should('exist')
 
     mountPreview({ definition: tableDefinition, data: new Error('Table failed') })
     cy.getTestId('table-supplied-data-error').should('contain.text', 'Table failed')
 
-    mountPreview({ definition: scatterDefinition, data: null })
+    mountPreview({ definition: scatterDefinition, data: TILE_DATA_EMPTY })
     cy.getTestId('scatter-chart-no-data-state').should('exist')
 
     mountPreview({ definition: scatterDefinition, data: new Error('Scatter failed') })
@@ -615,7 +613,7 @@ describe('<DashboardTilePreview /> with supplied data', () => {
 
   it('stops querying when the host starts passing data after mount', () => {
     const onChartData = cy.spy().as('chartData')
-    mountPreview({ definition: timeseriesDefinition, passData: false, attrs: { onChartData } }).then(({ wrapper }) => {
+    mountPreview({ definition: timeseriesDefinition, attrs: { onChartData } }).then(({ wrapper }) => {
       cy.get('@queryFn').should('have.been.calledOnce').then(() => {
         const suppliedResult = { ...exploreResult, meta: { ...exploreResult.meta, query_id: 'supplied' } }
 
@@ -629,7 +627,7 @@ describe('<DashboardTilePreview /> with supplied data', () => {
   })
 
   it('runs the query when data is not passed', () => {
-    mountPreview({ definition: timeseriesDefinition, passData: false })
+    mountPreview({ definition: timeseriesDefinition })
 
     cy.get('@queryFn').should('have.been.called')
     cy.get('.refresh-button').should('exist')

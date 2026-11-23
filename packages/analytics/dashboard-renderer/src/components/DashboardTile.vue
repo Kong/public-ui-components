@@ -155,12 +155,12 @@
           </KButton>
           <template #items>
             <KDropdownItem
-              v-if="!suppliedData && !!exploreLinkKebabMenu"
+              v-if="!usesSuppliedData && !!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!suppliedData && !isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
+              v-if="!usesSuppliedData && !isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -221,7 +221,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, SuppliedTileData, TileBoundsChangeEvent, TileData, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, SuppliedTileData, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
@@ -289,9 +289,9 @@ const {
   context: DashboardRendererContext
   /**
    * Data to render in place of the tile's query result. When passed, the tile doesn't run a query.
-   * `undefined` shows the loading state, `null` the empty state, and an `Error` the error state.
+   * `TILE_DATA_LOADING` shows the loading state, `TILE_DATA_EMPTY` the empty state, and an `Error` the error state.
    */
-  data?: TileData | null | Error
+  data?: SuppliedTileData
   definition: TileDefinition
   fitToContent?: boolean
   groupTiles?: Array<{ id: string, label: string, definition: TileDefinition }>
@@ -326,13 +326,10 @@ const fieldLabel = composables.useFieldLabel()
 // These renderers run their own queries and don't read supplied data, so they keep the query behavior.
 const QUERY_ONLY_TILE_TYPES: DashboardTileType[] = ['golden_signals', 'top_talkers']
 
-// An explicit `undefined` means the host is loading the data, so check whether `data` was passed, not its value.
-const isDataPassed = composables.useIsPropPassed('data')
-const suppliedData = computed<SuppliedTileData | undefined>(() => (
-  isDataPassed.value && !QUERY_ONLY_TILE_TYPES.includes(activeDefinition.value.chart.type) ? { value: data } : undefined
-))
+// True when the host passes `data` and this tile type renders it instead of querying.
+const usesSuppliedData = computed<boolean>(() => data !== undefined && !QUERY_ONLY_TILE_TYPES.includes(activeDefinition.value.chart.type))
 // Supplied data has no query to refresh.
-const showRefreshAction = computed<boolean>(() => showRefresh && !suppliedData.value)
+const showRefreshAction = computed<boolean>(() => showRefresh && !usesSuppliedData.value)
 
 const { zoomConfiguration } = composables.useDashboardContext({
   context: computed(() => context),
@@ -425,7 +422,7 @@ watch(activeDefinition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => (!suppliedData.value && !!exploreLinkKebabMenu.value) || canExportCsv.value || !!context.editable)
+const kebabMenuHasItems = computed((): boolean => (!usesSuppliedData.value && !!exploreLinkKebabMenu.value) || canExportCsv.value || !!context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
@@ -474,15 +471,15 @@ const componentData = computed(() => {
     height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
     zoomConfiguration: zoomConfiguration.value,
-    suppliedData: suppliedData.value,
+    suppliedData: usesSuppliedData.value ? data : undefined,
   }
   // The Explore and Requests links would query data the host supplied, so hide them.
   const chartRendererProps = {
     chartOptions: activeDefinition.value.chart,
     activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
-    requestsLink: zoomConfiguration.value.showRequestsAction && !suppliedData.value ? requestsLinkZoomActions.value : undefined,
-    exploreLink: zoomConfiguration.value.showExploreAction && !suppliedData.value ? exploreLinkZoomActions.value : undefined,
+    requestsLink: zoomConfiguration.value.showRequestsAction && !usesSuppliedData.value ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction && !usesSuppliedData.value ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {
@@ -715,12 +712,10 @@ const getExportData = (): Promise<ExploreResultV4> => {
     throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
   }
 
-  if (suppliedData.value) {
+  if (usesSuppliedData.value) {
     // Export what the tile shows. There is no query to rerun with a higher limit.
-    const suppliedValue = suppliedData.value.value
-
-    return isExploreResultV4(suppliedValue)
-      ? Promise.resolve(suppliedValue)
+    return isExploreResultV4(data)
+      ? Promise.resolve(data)
       : Promise.reject(new Error('No supplied data to export'))
   }
 

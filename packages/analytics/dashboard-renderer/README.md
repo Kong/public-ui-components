@@ -97,13 +97,14 @@ The value sets the state:
 
 | Value | State |
 |-------|-------|
-| `undefined` | Loading skeleton |
-| `null` | Empty state |
+| `TILE_DATA_LOADING` | Loading skeleton |
+| `TILE_DATA_EMPTY` | Empty state |
 | An `Error` | Error state with the error message |
 | Data | The chart. Data that doesn't match the tile type shows the error state. |
 
-Pass `undefined` while the host loads, not an omitted prop. Without `data`,
-the tile queries through the `AnalyticsBridge`.
+Both constants are exported from `@kong-ui-public/dashboard-renderer`, and the
+type of every accepted value is exported as `SuppliedTileData`. Without `data`,
+or with `data` set to `undefined`, the tile queries through the `AnalyticsBridge`.
 
 With `data`:
 
@@ -130,8 +131,8 @@ With `data`:
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DashboardTilePreview } from '@kong-ui-public/dashboard-renderer'
-import type { DashboardRendererContext, TileData, TileZoomEvent } from '@kong-ui-public/dashboard-renderer'
+import { DashboardTilePreview, TILE_DATA_LOADING } from '@kong-ui-public/dashboard-renderer'
+import type { DashboardRendererContext, SuppliedTileData, TileZoomEvent } from '@kong-ui-public/dashboard-renderer'
 import type { ChartTileDefinition, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 
 const context: DashboardRendererContext = {
@@ -147,11 +148,11 @@ const definition: ChartTileDefinition = {
   },
 }
 
-// `undefined` shows the loading skeleton until the host's request settles.
-const data = ref<TileData | null | Error>()
+// TILE_DATA_LOADING shows the loading skeleton until the host's request settles.
+const data = ref<SuppliedTileData>(TILE_DATA_LOADING)
 
 const load = async (timeRange: TimeRangeV4) => {
-  data.value = undefined
+  data.value = TILE_DATA_LOADING
   try {
     data.value = await fetchRequestCounts(timeRange) // The host's own request, which returns ExploreResultV4.
   } catch (error) {

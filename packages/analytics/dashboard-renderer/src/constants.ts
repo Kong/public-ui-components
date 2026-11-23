@@ -18,3 +18,9 @@ export const FULLSCREEN_SHORT_REFRESH_INTERVAL_MS = 300000
  * default refresh interval for queries that are greater than 24 hours is 1 hour
  */
 export const FULLSCREEN_LONG_REFRESH_INTERVAL_MS = 3600000
+
+/** Pass as a tile's `data` while the host loads the data. The tile shows its loading state. */
+export const TILE_DATA_LOADING = 'loading'
+
+/** Pass as a tile's `data` when the host has no data to show. The tile shows its empty state. */
+export const TILE_DATA_EMPTY = 'empty'

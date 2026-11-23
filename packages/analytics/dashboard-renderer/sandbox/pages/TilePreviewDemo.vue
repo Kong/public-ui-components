@@ -65,17 +65,17 @@
       <DashboardTilePreview
         v-if="context && definition && globalFilters"
         :context="context"
+        :data="suppliedData"
         :definition="definition"
         :global-filters="globalFilters"
-        v-bind="dataProps"
       />
     </div>
   </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, TileData } from '../../src'
-import { DashboardTilePreview } from '../../src'
+import type { DashboardRendererContext, SuppliedTileData, TileData } from '../../src'
+import { DashboardTilePreview, TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../../src'
 import { computed, ref, inject } from 'vue'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
@@ -164,7 +164,7 @@ const requestsResponseExample: ApiRequestsResult = {
   },
 }
 
-const dataModes = ['query', 'data', 'undefined', 'null', 'Error'] as const
+const dataModes = ['query', 'data', 'TILE_DATA_LOADING', 'TILE_DATA_EMPTY', 'Error'] as const
 const dataMode = ref<typeof dataModes[number]>('query')
 
 const sampleData = computed<TileData>(() => {
@@ -175,17 +175,17 @@ const sampleData = computed<TileData>(() => {
   return definition.value?.query.datasource === 'requests' ? requestsResponseExample : nonTsExploreResponse
 })
 
-// "query" omits the prop. The other modes pass it, including an explicit `undefined`.
-const dataProps = computed(() => {
+// "query" leaves `data` unset, so the tile runs its query.
+const suppliedData = computed<SuppliedTileData | undefined>(() => {
   switch (dataMode.value) {
-    case 'query': return {}
-    case 'data': return { data: sampleData.value }
-    case 'undefined': return { data: undefined }
-    case 'null': return { data: null }
-    case 'Error': return { data: new Error('The host failed to load this data.') }
+    case 'query': return undefined
+    case 'data': return sampleData.value
+    case 'TILE_DATA_LOADING': return TILE_DATA_LOADING
+    case 'TILE_DATA_EMPTY': return TILE_DATA_EMPTY
+    case 'Error': return new Error('The host failed to load this data.')
   }
 
-  return {}
+  return undefined
 })
 
 const contextText = ref(stringifyExample({

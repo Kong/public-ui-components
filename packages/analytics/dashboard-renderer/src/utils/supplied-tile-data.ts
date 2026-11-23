@@ -3,6 +3,7 @@ import type {
   ExploreResultV4,
   PlatformTabularResponse,
 } from '@kong-ui-public/analytics-utilities'
+import { TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
 import type { SuppliedTileData, TileData } from '../types'
 
 /** The state a tile loader shows for host-supplied data. */
@@ -29,10 +30,10 @@ export const isApiRequestsResult = (value: unknown): value is ApiRequestsResult 
  * Maps host-supplied tile data to the state a tile loader shows.
  *
  * @param options - Resolver options.
- * @param options.supplied - The host-supplied data wrapper.
+ * @param options.supplied - The host-supplied data.
  * @param options.isExpected - Checks that the data has the shape this tile type renders.
  * @param options.mismatchMessage - Error message when the data has the wrong shape.
- * @returns `loading` for `undefined`, `empty` for `null`, `error` for an `Error` or a shape mismatch, otherwise `success`.
+ * @returns `loading` for `TILE_DATA_LOADING`, `empty` for `TILE_DATA_EMPTY`, `error` for an `Error` or a shape mismatch, otherwise `success`.
  */
 export const resolveSuppliedData = <T extends TileData>({
   supplied,
@@ -43,23 +44,21 @@ export const resolveSuppliedData = <T extends TileData>({
   isExpected: (value: unknown) => value is T
   mismatchMessage: string
 }): SuppliedDataState<T> => {
-  const { value } = supplied
-
-  if (value === undefined) {
+  if (supplied === TILE_DATA_LOADING) {
     return { status: 'loading' }
   }
 
-  if (value === null) {
+  if (supplied === TILE_DATA_EMPTY) {
     return { status: 'empty' }
   }
 
-  if (value instanceof Error) {
-    return { status: 'error', message: value.message }
+  if (supplied instanceof Error) {
+    return { status: 'error', message: supplied.message }
   }
 
-  if (!isExpected(value)) {
+  if (!isExpected(supplied)) {
     return { status: 'error', message: mismatchMessage }
   }
 
-  return { status: 'success', data: value }
+  return { status: 'success', data: supplied }
 }
