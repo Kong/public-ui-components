@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/table-data-grid",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "type": "module",
   "main": "./dist/table-data-grid.umd.js",
   "module": "./dist/table-data-grid.es.js",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/kongponents": "9.66.16",
+    "@kong/kongponents": "9.66.17",
     "vue": "^3.5.43"
   },
   "repository": {
