@@ -73,7 +73,7 @@
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.21.0",
     "pug": "^3.0.4",
-    "vue-router": "^5.4.0"
+    "vue-router": "^5.5.0"
   },
   "distSizeChecker": {
     "errorLimit": "1.2MB"
