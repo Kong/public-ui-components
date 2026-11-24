@@ -3,7 +3,7 @@
 // expression can read comes from plugins: a host picks the ones its
 // expressions support (see `kong.ts` for Kong Gateway's).
 import { maskCelLiterals } from './tokens'
-import type { CelHint } from './hints'
+import type { CelDiagnostic, CelHint } from './hints'
 
 export type CelType =
   /** `subject`: the kind of record the string names, so plugins can suggest its values. */
@@ -59,6 +59,8 @@ export interface CelPlugin {
   keys?: (source: string) => ReadonlyArray<{ key: string, types: readonly string[] }>
   /** A hint about the expression as a whole, literals included. */
   check?: (expression: string) => CelHint | undefined
+  /** Located expression hints. Takes precedence over the single-message check when supplied. */
+  checkRanges?: (expression: string, masked: string) => Iterable<CelDiagnostic>
   /** A hint about a variable the expression reads: the dotted path from a global, as typed. */
   checkPath?: (path: readonly string[]) => CelHint | undefined
 }

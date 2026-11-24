@@ -44,8 +44,18 @@ const subjectValue = (kind: string, value: string | null | undefined, name: stri
   value ? [{ kind, value, name: name || id, id }] : []
 
 // Bracket access keeps the literal, which dot access cannot hold: http.headers["X-Tenant"].
-const HEADER_INDEX = /(?<![\w.])http\s*\.\s*headers(?:_list)?\s*\[\s*(["'])((?:\\.|(?!\1)[^\\])*)\1\s*\]/g
+const HEADER_INDEX = /(?<![\w.])http\s*\.\s*headers(?:_list)?\s*\[/g
 const headerName = (name: string) => name.toLowerCase().replace(/-/g, '_')
+
+// Keep the single-hint plugin API available to callers that use it directly.
+function expressionChecks(checkRanges: NonNullable<CelPlugin['checkRanges']>): Pick<CelPlugin, 'check' | 'checkRanges'> {
+  return {
+    checkRanges,
+    check(expression) {
+      for (const { hint } of checkRanges(expression, maskCelLiterals(expression))) return hint
+    },
+  }
+}
 
 /** The request: method, host, path, headers and query. Hints at header names that are not lowercase with `_` for `-`. */
 export const kongHttp = (): CelPlugin => ({
@@ -72,11 +82,17 @@ export const kongHttp = (): CelPlugin => ({
     'http.queries_list.*': 'All values of the query parameter, or null when it is absent.',
   },
   aliases: { request: 'http', headers: 'http.headers' },
-  check: (expression) => {
-    for (const [, , name] of expression.matchAll(HEADER_INDEX)) {
-      if (name !== headerName(name)) return { kind: 'header-name', typed: name, expected: headerName(name) }
+  ...expressionChecks(function* (expression, masked) {
+    for (const prefix of masked.matchAll(HEADER_INDEX)) {
+      const offset = prefix.index + prefix[0].length
+      const key = expression.slice(offset).match(/^(\s*)(["'])((?:\\.|(?!\2)[^\\])*)\2\s*\]/)
+      if (!key) continue
+      const [, space, , name] = key
+      if (name === headerName(name)) continue
+      const start = offset + space.length + 1
+      yield { hint: { kind: 'header-name', typed: name, expected: headerName(name) }, range: { start, end: start + name.length } }
     }
-  },
+  }),
   checkPath: ([root, map, key]) => {
     if (root === 'http' && key !== undefined && /^headers(?:_list)?$/.test(map) && key !== headerName(key)) {
       return { kind: 'header-name', typed: key, expected: headerName(key) }
@@ -247,5 +263,8 @@ export const kongAclRule = (): CelPlugin => ({
 
 /** An expressible field (`expressions.*`) falls back to its config value, so the Gateway rejects `default()` there. */
 export const kongExpressibleField = (): CelPlugin => ({
-  check: expression => /^\s*default\s*\(/.test(maskCelLiterals(expression)) ? { kind: 'default' } : undefined,
+  ...expressionChecks(function* (_expression, masked) {
+    const call = masked.match(/^(\s*)default\s*\(/)
+    if (call) yield { hint: { kind: 'default' }, range: { start: call[1].length, end: call[1].length + 'default'.length } }
+  }),
 })

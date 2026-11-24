@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.36.17",
+  "version": "4.36.20",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -69,11 +69,11 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
     "@kong/design-tokens": "3.5.3",
-    "@kong/kongponents": "9.66.16",
+    "@kong/kongponents": "9.66.17",
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.21.0",
     "pug": "^3.0.4",
-    "vue-router": "^5.4.0"
+    "vue-router": "^5.5.0"
   },
   "distSizeChecker": {
     "errorLimit": "1.2MB"

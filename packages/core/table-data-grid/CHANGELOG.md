@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.10.1...%40kong-ui-public%2Ftable-data-grid%400.10.2) (2026-11-23)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.10.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.10.0...%40kong-ui-public%2Ftable-data-grid%400.10.1) (2026-11-22)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.9.2...%40kong-ui-public%2Ftable-data-grid%400.10.0) (2026-11-20)
+
+### Features
+
+* wire table to coordinator ([#4103](https://github.com/Kong/public-ui-components/issues/4103)) ([0ee64bc](https://github.com/Kong/public-ui-components/commit/0ee64bc17b27f21bac2f62ebd39edffb32cbd1fa))
+
+
 ## [0.9.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.9.1...%40kong-ui-public%2Ftable-data-grid%400.9.2) (2026-11-18)
 
 ### Bug Fixes

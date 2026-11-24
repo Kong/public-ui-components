@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-key-sets",
-  "version": "3.16.3",
+  "version": "3.16.6",
   "type": "module",
   "main": "./dist/entities-key-sets.umd.js",
   "module": "./dist/entities-key-sets.es.js",
@@ -33,10 +33,10 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.64.0",
-    "@kong/kongponents": "9.66.16",
+    "@kong/kongponents": "9.66.17",
     "axios": "^1.21.0",
     "vue": "^3.5.43",
-    "vue-router": "^5.4.0"
+    "vue-router": "^5.5.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

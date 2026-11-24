@@ -6,6 +6,9 @@ export const CEL_LITERALS_AND_COMMENTS = /\/\/[^\n]*|(?:[rRbB]{1,2})?(?:"""[\s\S
 export const maskCelLiterals = (source: string) =>
   source.replace(CEL_LITERALS_AND_COMMENTS, token => ' '.repeat(token.length))
 
+/** Matches lone equals signs after literals and comments have been masked. */
+export const CEL_ASSIGNMENT = /(?<![=!<>])=(?!=)/g
+
 /** Whether the end of `before` is inside a literal or comment. */
 export const endsInCelLiteral = (before: string) => {
   // A token that reaches past a sentinel character is still open at the cursor.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { defineCelKind } from './catalog'
-import { getCelHint } from './hints'
+import { getCelDiagnostics, getCelHint } from './hints'
 import { kongAclRule, kongConsumer, kongConsumerGroup, kongContext, kongExpressibleField, kongFallback, kongHttp, kongNet, kongPluginState, kongPrincipal, kongRoute, kongService } from './kong'
 
 const gateway = [kongHttp(), kongNet(), kongConsumer(), kongConsumerGroup(), kongRoute(), kongService(), kongPrincipal(), kongContext()]
@@ -71,4 +71,23 @@ describe('getCelHint', () => {
   it('rejects plugin state in ACL rules', () => {
     expect(getCelHint('plugins.key_auth.is_matched', acl)).toEqual({ kind: 'plugin-state' })
   })
+})
+
+it('locates simultaneous diagnostics in the original multiline expression', () => {
+  const expression = [
+    'default(consumers.id = principal.missing,',
+    '  http.headers.X_Flag == http.headers_list[ "X-List" ] &&',
+    '  http.headers["X-Other"] != principal.metadata.team &&',
+    '  principal.groups.exists(g, g . missing) && plugins.key_auth.is_matched)',
+    '// http.headers["X-Comment"] = consumers',
+    '\'http.headers["X-Literal"]\'',
+  ].join('\n')
+  const kind = defineCelKind([...gateway, kongExpressibleField(), kongAclRule()])
+  const tokens = [...getCelDiagnostics(expression, kind)].map(({ hint, range }) =>
+    [hint.kind, expression.slice(range!.start, range!.end)])
+  expect(tokens).toEqual([
+    ['assignment', '='], ['header-name', 'X-List'], ['header-name', 'X-Other'], ['default', 'default'],
+    ['alias', 'consumers'], ['unknown-field', 'missing'], ['header-name', 'X_Flag'], ['unguarded', 'team'],
+    ['unknown-member', 'missing'], ['plugin-state', 'plugins.key_auth.is_matched'],
+  ])
 })

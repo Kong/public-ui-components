@@ -15,6 +15,7 @@ export const queryableBasicExploreDimensions = [
   'status_code',
   'status_code_grouped',
   'time',
+  'workspace',
 ] as const
 
 export type QueryableBasicExploreDimensions = typeof queryableBasicExploreDimensions[number]
