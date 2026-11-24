@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.6.3...%40kong-ui-public%2Fentities-plugins%4011.7.0) (2026-11-24)
+
+### Features
+
+* **entities-plugins:** show plugin form errors on their fields [KM-3728] ([#4074](https://github.com/Kong/public-ui-components/issues/4074)) ([b77195f](https://github.com/Kong/public-ui-components/commit/b77195f3f9a77eeaf0d4a6d4f8133b5ca339b3bf))
+
+
 ## [11.6.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.6.2...%40kong-ui-public%2Fentities-plugins%4011.6.3) (2026-11-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
