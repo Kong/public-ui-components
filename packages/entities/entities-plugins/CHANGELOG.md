@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.9.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.0...%40kong-ui-public%2Fentities-plugins%4011.9.1) (2026-11-24)
+
+### Bug Fixes
+
+* **entities-plugins:** convert OIDC jit share-all-claims checkbox to radio pair ([#4099](https://github.com/Kong/public-ui-components/issues/4099)) ([c4928ca](https://github.com/Kong/public-ui-components/commit/c4928cacfda941ec5e34f72e4e4e63aaa9b73133))
+
+
 # [11.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.8.1...%40kong-ui-public%2Fentities-plugins%4011.9.0) (2026-11-24)
 
 ### Features
