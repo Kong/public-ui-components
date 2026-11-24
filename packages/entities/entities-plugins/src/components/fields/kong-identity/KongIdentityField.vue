@@ -76,7 +76,7 @@ const props = defineProps<{
 // first and selected by default. Gateway Manager's key-auth/basic-auth plugin forms
 // provide no context, so they keep the existing Consumers-first behavior.
 const keyAuthContext = usePluginContext('key-auth')
-const prioritizePrincipals = computed(() => keyAuthContext?.source === 'ai-manager')
+const isAiManagerKeyAuth = computed(() => keyAuthContext?.source === 'ai-manager')
 const { i18n } = composables.useI18n()
 const { t } = i18n
 
@@ -94,7 +94,7 @@ const identityRealmsInSchema = computed(() => {
 const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
-  if (prioritizePrincipals.value) {
+  if (isAiManagerKeyAuth.value) {
     return t('custom_field.kong_identity.description_without_realms_ai_manager')
   }
   return identityRealmsInSchema.value
@@ -103,7 +103,7 @@ const descriptionText = computed(() => {
 })
 
 const consumersDescription = computed(() => {
-  if (prioritizePrincipals.value) {
+  if (isAiManagerKeyAuth.value) {
     return t('custom_field.kong_identity.consumers_description_key_auth_ai_manager')
   }
   return identityRealmsInSchema.value
@@ -112,7 +112,7 @@ const consumersDescription = computed(() => {
 })
 
 const kongIdentityDescription = computed(() => {
-  if (prioritizePrincipals.value) {
+  if (isAiManagerKeyAuth.value) {
     return t('custom_field.kong_identity.kong_identity_description_key_auth_ai_manager')
   }
   return identityRealmsInSchema.value
@@ -149,7 +149,7 @@ const modeOptions = computed<ModeOption[]>(() => {
     label: t('custom_field.kong_identity.consumers_label'),
     description: consumersDescription.value,
     icon: TeamIcon,
-    legacy: prioritizePrincipals.value,
+    legacy: isAiManagerKeyAuth.value,
   }
   const centrallyManaged: ModeOption = {
     mode: 'centrally-managed',
@@ -159,9 +159,9 @@ const modeOptions = computed<ModeOption[]>(() => {
     icon: AccountTreeIcon,
   }
 
-  const options = prioritizePrincipals.value ? [kongIdentity, consumers] : [consumers]
+  const options = isAiManagerKeyAuth.value ? [kongIdentity, consumers] : [consumers]
   if (showCentrallyManaged.value) options.push(centrallyManaged)
-  if (!prioritizePrincipals.value) options.push(kongIdentity)
+  if (!isAiManagerKeyAuth.value) options.push(kongIdentity)
   return options
 })
 

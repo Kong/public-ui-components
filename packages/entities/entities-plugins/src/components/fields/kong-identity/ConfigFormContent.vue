@@ -198,45 +198,25 @@ const hasPrincipals = computed(() =>
   && !!getSchema('$.config.principals'),
 )
 
-// AI Manager treats Kong Identity principals as the primary identity mode. Seed the
-// config so the mode is selected and the submitted payload carries it, including when
-// an existing strategy was saved in Consumers mode.
+// AI Manager lists Kong Identity first and starts new strategies on it.
 const keyAuthContext = usePluginContext('key-auth')
-const hadPrincipalsEnabled = !!formData.config?.principals?.enabled
-const prioritizePrincipals = computed(() =>
-  keyAuthContext?.source === 'ai-manager'
-  && hasPrincipals.value
-  // A strategy saved as centrally managed keeps its realm selection: the priority
-  // default must not open it in Kong Identity mode or clear that selection on save.
-  && !hasActualRealm(formData.config?.identity_realms),
+const isAiManagerKeyAuth = computed(() =>
+  keyAuthContext?.source === 'ai-manager' && hasPrincipals.value,
 )
-const synthesizedPrincipals = prioritizePrincipals.value && !hadPrincipalsEnabled
 
-// `formData.config` can still be empty at setup on create, so wait for the schema's
-// defaults to populate it before enabling principals. Run once: switching back to
-// Consumers afterwards must stick.
+// New AI Manager strategies start on Kong Identity. Edit is deliberately excluded:
+// opening a saved strategy must never rewrite the mode the user already chose.
 let prioritizedConfigApplied = false
 watch(
   () => formData.config,
   (config) => {
-    if (prioritizedConfigApplied || !prioritizePrincipals.value || !config) return
+    if (isEditing?.value || prioritizedConfigApplied || !isAiManagerKeyAuth.value || !config) return
 
     prioritizedConfigApplied = true
     config.principals = {
       ...getEmptyOrDefault('$.config.principals'),
       ...config.principals,
       enabled: true,
-    }
-    if (identityRealmsInSchema.value) {
-      config.identity_realms = []
-    }
-    // A saved directory is authoritative on edit; only the synthesized (Consumers →
-    // Kong Identity) path adopts the host-resolved directory.
-    if (synthesizedPrincipals) {
-      const directory = (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName
-      if (directory != null) {
-        config.principals.directory = directory
-      }
     }
   },
   { immediate: true },
@@ -266,15 +246,14 @@ function hasActualRealm(realms: any[] | null | undefined): boolean {
 }
 
 const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(
-  prioritizePrincipals.value ? 'kong-identity' : detectInitialMode(),
+  !isEditing?.value && isAiManagerKeyAuth.value ? 'kong-identity' : detectInitialMode(),
 )
 
-// Create flow: adopt on mount or when host resolves late. Edit-load preserves a saved
-// directory, except when priority synthesized principals for a previously Consumers strategy.
+// Create flow: adopt on mount or when host resolves late. Edit-load preserves a saved value.
 watch(
   () => (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName,
   (name) => {
-    if ((isEditing?.value && !synthesizedPrincipals) || selectedMode.value !== 'kong-identity' || name == null) return
+    if (isEditing?.value || selectedMode.value !== 'kong-identity' || name == null) return
     if (formData.config?.principals) {
       formData.config.principals.directory = name
     }

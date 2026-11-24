@@ -497,7 +497,7 @@ describe('ConfigFormContent', () => {
         })
       })
 
-      it('switches a strategy saved as Consumers to Kong Identity on edit', () => {
+      it('does not convert a strategy saved as Consumers on edit', () => {
         mountContent(schemaWithoutRealms, {
           isKonnect: true,
           isEditing: true,
@@ -507,12 +507,11 @@ describe('ConfigFormContent', () => {
           config: { principals: null },
         })
 
-        cy.getTestId('kong-identity-mode-kong-identity')
+        cy.getTestId('kong-identity-mode-consumers')
           .closest('.k-radio')
           .should('have.class', 'checked')
-        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+        cy.get('@onChangeSpy').should('not.have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
           return val.config?.principals?.enabled === true
-            && val.config?.principals?.directory === 'my-directory'
         }))
       })
 
