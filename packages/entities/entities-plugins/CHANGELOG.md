@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.7.0...%40kong-ui-public%2Fentities-plugins%4011.8.0) (2026-11-24)
+
+### Features
+
+* **entities-plugins:** add search and group models to PluginCatalog [KM-3758] ([#4108](https://github.com/Kong/public-ui-components/issues/4108)) ([79f4b05](https://github.com/Kong/public-ui-components/commit/79f4b055d23bd6f4ba3e2c1a237a04b19d3046c3))
+
+
 # [11.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.6.3...%40kong-ui-public%2Fentities-plugins%4011.7.0) (2026-11-24)
 
 ### Features
