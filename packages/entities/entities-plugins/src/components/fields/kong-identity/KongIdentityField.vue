@@ -26,23 +26,28 @@
       />
 
       <template v-else>
-        <KRadio
+        <div
           v-for="option in modeOptions"
           :key="option.mode"
-          card
-          card-orientation="horizontal"
-          :data-testid="option.testId"
-          :description="option.description"
-          :label="option.label"
-          :model-value="selectedMode"
-          :selected-value="option.mode"
-          @update:model-value="handleModeChange"
+          class="kong-identity-option"
+          :style="option.legacy ? { '--kong-ui-entities-plugins-legacy-label': `'${legacyLabel}'` } : undefined"
         >
-          <component
-            :is="option.icon"
-            :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
-          />
-        </KRadio>
+          <KRadio
+            card
+            card-orientation="horizontal"
+            :data-testid="option.testId"
+            :description="option.description"
+            :label="option.label"
+            :model-value="selectedMode"
+            :selected-value="option.mode"
+            @update:model-value="handleModeChange"
+          >
+            <component
+              :is="option.icon"
+              :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
+            />
+          </KRadio>
+        </div>
       </template>
     </div>
   </div>
@@ -90,16 +95,24 @@ const descriptionText = computed(() => {
 })
 
 const consumersDescription = computed(() => {
+  if (props.prioritizePrincipals) {
+    return t('custom_field.kong_identity.consumers_description_key_auth_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.consumers_description_key_auth')
     : t('custom_field.kong_identity.consumers_description_basic_auth')
 })
 
 const kongIdentityDescription = computed(() => {
+  if (props.prioritizePrincipals) {
+    return t('custom_field.kong_identity.kong_identity_description_key_auth_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.kong_identity_description_key_auth')
     : t('custom_field.kong_identity.kong_identity_description_basic_auth')
 })
+
+const legacyLabel = computed(() => t('custom_field.kong_identity.legacy_label'))
 
 type ModeOption = {
   mode: AuthMode
@@ -107,6 +120,8 @@ type ModeOption = {
   label: string
   description: string
   icon: Component
+  /** Render the "Legacy" tag after the label (AI Manager only). */
+  legacy?: boolean
 }
 
 // AI Manager auth strategies list Kong Identity principals first; every other host
@@ -126,6 +141,7 @@ const modeOptions = computed<ModeOption[]>(() => {
     label: t('custom_field.kong_identity.consumers_label'),
     description: consumersDescription.value,
     icon: TeamIcon,
+    legacy: props.prioritizePrincipals,
   }
   const centrallyManaged: ModeOption = {
     mode: 'centrally-managed',
@@ -220,8 +236,31 @@ function handleModeChange(mode: AuthMode) {
     width: 100%;
   }
 
+  // AI Manager marks the Consumers card as Legacy. The copy is a localized CSS
+  // custom property on that card, so the tag follows the active locale.
+  :deep([data-testid="kong-identity-mode-consumers"] .radio-label)::after {
+    align-items: center;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    content: var(--kong-ui-entities-plugins-legacy-label);
+    display: inline-flex;
+    font-size: var(--kui-font-size-10, $kui-font-size-10);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin-left: var(--kui-space-20, $kui-space-20);
+    padding: 0 var(--kui-space-20, $kui-space-20);
+    vertical-align: middle;
+  }
+
+  .kong-identity-option {
+    display: flex;
+    flex: 1;
+  }
+
   :deep(.k-radio.radio-card) {
     flex: 1;
+    width: 100%;
 
     .radio-card-wrapper.radio-label-wrapper {
       flex-direction: column !important;

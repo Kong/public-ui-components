@@ -435,6 +435,34 @@ describe('ConfigFormContent', () => {
         }))
       })
 
+      it('uses the AI Manager copy and marks Consumers as Legacy', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true }, {
+          config: {},
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('contain.text', 'authenticate Virtual Keys and map request to Kong Identity Users and Agents')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.k-radio')
+          .should('contain.text', 'Use consumer-managed API key credentials.')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.kong-identity-option')
+          .should('have.attr', 'style')
+          .and('contain', '--kong-identity-legacy-label')
+      })
+
+      it('keeps the standard copy and no Legacy tag without the AI Manager priority', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true }, { config: {} })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('not.contain.text', 'Virtual Keys')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.kong-identity-option')
+          .should('not.have.attr', 'style')
+      })
+
       it('lists Kong Identity before Consumers', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true })
 
