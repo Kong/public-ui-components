@@ -839,6 +839,49 @@ describe('<UpstreamsList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
     })
+
+    const searchCases = [
+      { title: 'with workspace', workspace: 'default', path: 'core-entities/default/upstreams' },
+      { title: 'without workspace', workspace: undefined, path: 'core-entities/upstreams' },
+    ]
+
+    searchCases.forEach(({ title, workspace, path }) => {
+      it(`uses the search URL when filtering ${title}`, () => {
+        const baseUrl = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/${path}`
+
+        cy.intercept(
+          { method: 'GET', url: `${baseUrl}*` },
+          (req) => {
+            if (!req.url.includes('/upstreams/search')) {
+              req.reply({ statusCode: 200, body: upstreams })
+            }
+          },
+        ).as('getUpstreams')
+
+        cy.intercept(
+          { method: 'GET', url: `${baseUrl}/search*` },
+          { statusCode: 200, body: { data: [], total: 0 } },
+        ).as('searchUpstreams')
+
+        cy.mount(UpstreamsList, {
+          props: {
+            cacheIdentifier: `upstreams-list-${uuidv4()}`,
+            config: { ...baseConfigKonnect, workspace },
+            canCreate: () => false,
+            canEdit: () => false,
+            canDelete: () => false,
+            canRetrieve: () => false,
+          },
+        })
+
+        cy.wait('@getUpstreams')
+        cy.get('.kong-ui-entity-filter-input input').type('upstream-1')
+        cy.wait('@searchUpstreams').its('request.url').should((url: string) => {
+          expect(url).to.include(`${path}/search`)
+          expect(url).to.include('filter[name][contains]=')
+        })
+      })
+    })
   })
 })
 

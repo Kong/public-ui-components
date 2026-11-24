@@ -6,6 +6,9 @@ export default {
     konnect: `${konnectBaseApiUrl}/upstreams`,
     kongManager: `${KMBaseApiUrl}/upstreams`,
   },
+  search: {
+    konnect: `${konnectBaseApiUrl}/upstreams/search`,
+  },
   form: {
     konnect: {
       getServices: `${konnectBaseApiUrl}/services`,
