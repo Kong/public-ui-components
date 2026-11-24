@@ -12,6 +12,37 @@ function findField(fields: NamedFieldSchema[], name: string): UnionFieldSchema |
   return fields.find(field => name in field)?.[name]
 }
 
+/** The label of one segment; an item number joins the label before it */
+interface LabelPart {
+  text: string
+  /** An array or set item, labeled `#n` after its array */
+  item?: boolean
+}
+
+function getLabelParts(segments: string[], schema?: FormSchema): LabelPart[] {
+  let current: UnionFieldSchema | FormSchema | undefined = schema
+  return segments.map((segment) => {
+    if (current?.type === 'array' || current?.type === 'set') {
+      current = current.elements
+      return { text: `#${Number(segment) + 1}`, item: true }
+    }
+    if (current?.type === 'map') {
+      current = current.values
+      return { text: JSON.stringify(segment) }
+    }
+    // A record field, or a segment the schema doesn't describe
+    current = current?.type === 'record' ? findField(current.fields, segment) : undefined
+    return { text: toFieldLabel(segment) }
+  })
+}
+
+function joinLabelParts(parts: LabelPart[]): string {
+  return parts.reduce((label, part) => {
+    if (!label) return part.text
+    return part.item ? `${label} ${part.text}` : `${label} › ${part.text}`
+  }, '')
+}
+
 /**
  * A readable label for the field at a data path, in the style of the form's labels.
  *
@@ -23,9 +54,12 @@ function findField(fields: NamedFieldSchema[], name: string): UnionFieldSchema |
  * Without a schema, or below a field the schema doesn't describe, each segment is
  * labeled as a record field.
  *
+ * @param from A data path to label the field relative to, when the field is below it,
+ * e.g. the record an error is on for the fields its message names:
+ * `config.redis.host` from `config.redis` → `Host`
  * @returns `''` for the whole entity (an empty path), or the path itself when it is malformed
  */
-export function getErrorLabel(path: string, schema?: FormSchema): string {
+export function getErrorLabel(path: string, schema?: FormSchema, from?: string): string {
   let segments: string[]
   try {
     segments = parseDataPath(path)
@@ -33,29 +67,19 @@ export function getErrorLabel(path: string, schema?: FormSchema): string {
     return path
   }
 
-  const parts: string[] = []
-  let current: UnionFieldSchema | FormSchema | undefined = schema
+  const parts = getLabelParts(segments, schema)
 
-  segments.forEach((segment, index) => {
-    if (current?.type === 'array' || current?.type === 'set') {
-      const itemNumber = Number(segment) + 1
-      if (parts.length) {
-        parts[parts.length - 1] += ` #${itemNumber}`
-      } else {
-        parts.push(`#${itemNumber}`)
-      }
-      current = current.elements
-    } else if (current?.type === 'map') {
-      parts.push(JSON.stringify(segment))
-      current = current.values
-    } else {
-      // A record field, or a segment the schema doesn't describe
-      if (!(index === 0 && segment === 'config' && segments.length > 1)) {
-        parts.push(toFieldLabel(segment))
-      }
-      current = current?.type === 'record' ? findField(current.fields, segment) : undefined
-    }
-  })
+  let base: string[] = []
+  try {
+    base = from ? parseDataPath(from) : []
+  } catch {
+    // A malformed base: label from the root
+  }
+  if (base.length && base.length < segments.length && base.every((segment, index) => segment === segments[index])) {
+    return joinLabelParts(parts.slice(base.length))
+  }
 
-  return parts.join(' › ')
+  // Left out unless it is the whole path
+  const first = segments[0] === 'config' && segments.length > 1 ? 1 : 0
+  return joinLabelParts(parts.slice(first))
 }

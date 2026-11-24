@@ -88,7 +88,7 @@
                   type="button"
                   @click="emit('reveal', part.path)"
                 >
-                  {{ getErrorLabel(part.path, schema) }}
+                  {{ getErrorLabel(part.path, schema, error.path) }}
                 </button>
                 <template v-else>
                   {{ part.text }}

@@ -98,6 +98,20 @@ describe('<ErrorSummary />', () => {
     cy.get('@onSelect').should('not.have.been.called')
   })
 
+  it('labels the fields a message names relative to the record the error is on', () => {
+    const recordError: FieldError = {
+      path: 'config.redis',
+      message: "all or none of these fields must be set: 'host', 'config.servers'",
+    }
+    mountSummary([recordError])
+
+    // `host` is in the record, so the record's label is not repeated; `config.servers` is not
+    cy.getTestId('ff-error-summary-item-config.redis')
+      .should('contain.text', 'Redis: all or none of these fields must be set: Host, Servers')
+    cy.getTestId('ff-error-summary-field-link-config.redis.host').should('have.text', 'Host')
+    cy.getTestId('ff-error-summary-field-link-config.servers').should('have.text', 'Servers')
+  })
+
   it('collapses to the count and expands again', () => {
     mountSummary([hostError])
 
