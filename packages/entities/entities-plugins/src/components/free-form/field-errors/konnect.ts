@@ -153,8 +153,11 @@ export const parseKonnectErrors: FieldErrorParser = (body, context) => {
   }
 
   return details.filter(isErrorDetail).flatMap((detail): FieldError[] => {
-    const path = detail.field ? toDataPath(detail.field, context) : ''
-    const messages = Array.isArray(detail.messages) ? detail.messages : []
+    const path = typeof detail.field === 'string' && detail.field ? toDataPath(detail.field, context) : ''
+    // Only text can be shown, and the summary reads each message as text
+    const messages = Array.isArray(detail.messages)
+      ? detail.messages.filter((message): message is string => typeof message === 'string' && !!message)
+      : []
     return messages.map(message => ({ path, message }))
   })
 }

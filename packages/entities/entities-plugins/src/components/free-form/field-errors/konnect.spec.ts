@@ -72,6 +72,18 @@ describe('parseKonnectErrors', () => {
     ])
   })
 
+  it('keeps only messages that are text, and reads a field that is not text as the whole entity', () => {
+    expect(parseKonnectErrors({
+      details: [
+        { field: 'config.minute', messages: [null, 3, '', 'value must be greater than 0'] },
+        { field: 42, messages: ['invalid entity'] },
+      ],
+    })).toEqual([
+      { path: 'config.minute', message: 'value must be greater than 0' },
+      { path: '', message: 'invalid entity' },
+    ])
+  })
+
   it('skips entries without messages or that are not objects', () => {
     expect(parseKonnectErrors({
       details: [null, 'oops', { field: 'config.minute' }, field('config.hour', 'invalid')],
