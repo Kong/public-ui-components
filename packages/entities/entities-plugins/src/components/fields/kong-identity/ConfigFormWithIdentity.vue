@@ -5,7 +5,6 @@
     :render-rules="RENDER_RULES"
   >
     <ConfigFormContent
-      :prioritize-principals="prioritizePrincipals"
       @click:create-entity="(payload) => emit('click:create-entity', payload)"
       @click:learn-more="(entity: string) => emit('click:learn-more', entity)"
     />
@@ -21,7 +20,6 @@ import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 import { FORM_EDITING } from '../../free-form/const'
-import { usePluginContext } from '../../free-form/plugin-context'
 
 import type { PluginFormLayoutProps as Props } from '../../free-form/layout/provider'
 import type { EntityCreateEvent } from '../../../types'
@@ -59,14 +57,6 @@ const FIELD_RENDERERS: FieldRendererRule[] = [
 ]
 
 const props = defineProps<Props>()
-
-// AI Manager auth strategies prioritize Kong Identity principals: the card is listed
-// first and selected by default. Gateway Manager's key-auth/basic-auth plugin forms
-// provide no context, so they keep the existing Consumers-first behavior.
-const keyAuthContext = usePluginContext('key-auth')
-const prioritizePrincipals = computed(() =>
-  props.pluginName === 'key-auth' && keyAuthContext?.source === 'ai-manager',
-)
 
 const emit = defineEmits<{
   'click:learn-more': [entity: string]

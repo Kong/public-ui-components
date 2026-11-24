@@ -13,7 +13,6 @@
     class="kong-identity-section"
     :identity-realms-in-schema="identityRealmsInSchema"
     :loading-realms="isLoadingRealms"
-    :prioritize-principals="prioritizePrincipals"
   />
 
   <div
@@ -84,6 +83,7 @@
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { ObjectField, useFormShared } from '@kong-ui-public/freeform'
+import { usePluginContext } from '../../free-form/plugin-context'
 import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
@@ -105,15 +105,6 @@ import type { EntityCreateEvent, KonnectPluginFormConfig } from '../../../types'
 const emit = defineEmits<{
   'click:learn-more': [entity: string]
   'click:create-entity': [payload: EntityCreateEvent]
-}>()
-
-const props = defineProps<{
-  /**
-   * Host opted in to Kong Identity principals as the primary identity mode: the form
-   * starts in that mode and the submitted config carries `principals.enabled = true`,
-   * including when editing a strategy saved as Consumers.
-   */
-  prioritizePrincipals?: boolean
 }>()
 
 // Kong Identity principals require Gateway 3.15+ on the data plane.
@@ -210,8 +201,11 @@ const hasPrincipals = computed(() =>
 // AI Manager treats Kong Identity principals as the primary identity mode. Seed the
 // config so the mode is selected and the submitted payload carries it, including when
 // an existing strategy was saved in Consumers mode.
+const keyAuthContext = usePluginContext('key-auth')
 const hadPrincipalsEnabled = !!formData.config?.principals?.enabled
-const prioritizePrincipals = computed(() => props.prioritizePrincipals === true && hasPrincipals.value)
+const prioritizePrincipals = computed(() =>
+  keyAuthContext?.source === 'ai-manager' && hasPrincipals.value,
+)
 const synthesizedPrincipals = prioritizePrincipals.value && !hadPrincipalsEnabled
 
 // `formData.config` can still be empty at setup on create, so wait for the schema's

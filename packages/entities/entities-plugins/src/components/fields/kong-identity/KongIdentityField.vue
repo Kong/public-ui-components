@@ -59,6 +59,7 @@ import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '@kong-ui-public/freeform'
+import { usePluginContext } from '../../free-form/plugin-context'
 import composables from '../../../composables'
 
 import type { Component } from 'vue'
@@ -69,9 +70,13 @@ defineOptions({ name: 'KongIdentityField' })
 const props = defineProps<{
   identityRealmsInSchema?: boolean
   loadingRealms?: boolean
-  /** Host opted in to listing Kong Identity principals first (AI Manager auth strategies). */
-  prioritizePrincipals?: boolean
 }>()
+
+// AI Manager auth strategies prioritize Kong Identity principals: the card is listed
+// first and selected by default. Gateway Manager's key-auth/basic-auth plugin forms
+// provide no context, so they keep the existing Consumers-first behavior.
+const keyAuthContext = usePluginContext('key-auth')
+const prioritizePrincipals = computed(() => keyAuthContext?.source === 'ai-manager')
 const { i18n } = composables.useI18n()
 const { t } = i18n
 
@@ -95,7 +100,7 @@ const descriptionText = computed(() => {
 })
 
 const consumersDescription = computed(() => {
-  if (props.prioritizePrincipals) {
+  if (prioritizePrincipals.value) {
     return t('custom_field.kong_identity.consumers_description_key_auth_ai_manager')
   }
   return identityRealmsInSchema.value
@@ -104,7 +109,7 @@ const consumersDescription = computed(() => {
 })
 
 const kongIdentityDescription = computed(() => {
-  if (props.prioritizePrincipals) {
+  if (prioritizePrincipals.value) {
     return t('custom_field.kong_identity.kong_identity_description_key_auth_ai_manager')
   }
   return identityRealmsInSchema.value
@@ -141,7 +146,7 @@ const modeOptions = computed<ModeOption[]>(() => {
     label: t('custom_field.kong_identity.consumers_label'),
     description: consumersDescription.value,
     icon: TeamIcon,
-    legacy: props.prioritizePrincipals,
+    legacy: prioritizePrincipals.value,
   }
   const centrallyManaged: ModeOption = {
     mode: 'centrally-managed',
@@ -151,9 +156,9 @@ const modeOptions = computed<ModeOption[]>(() => {
     icon: AccountTreeIcon,
   }
 
-  const options = props.prioritizePrincipals ? [kongIdentity, consumers] : [consumers]
+  const options = prioritizePrincipals.value ? [kongIdentity, consumers] : [consumers]
   if (showCentrallyManaged.value) options.push(centrallyManaged)
-  if (!props.prioritizePrincipals) options.push(kongIdentity)
+  if (!prioritizePrincipals.value) options.push(kongIdentity)
   return options
 })
 

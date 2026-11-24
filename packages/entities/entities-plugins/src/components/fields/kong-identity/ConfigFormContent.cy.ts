@@ -6,6 +6,7 @@ import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
 import { FORM_EDITING } from '../../free-form/const'
+import { PLUGIN_CONTEXT_KEY } from '../../free-form/plugin-context'
 
 // Schema with both principals and identity_realms (like key-auth)
 const schemaWithRealms: FormSchema = {
@@ -288,7 +289,6 @@ function mountContent(
         onChange: onChangeSpy,
       }, {
         default: () => h(ConfigFormContent, {
-          'prioritizePrincipals': options.prioritizePrincipals,
           'onClick:learn-more': onLearnMoreSpy,
           'onClick:create-entity': onCreatePrincipalSpy,
         }),
@@ -303,6 +303,9 @@ function mountContent(
         },
         ...(options.isEditing !== undefined
           ? { [FORM_EDITING as symbol]: computed(() => options.isEditing) }
+          : {}),
+        ...(options.prioritizePrincipals
+          ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': { source: 'ai-manager' } } }
           : {}),
       },
     },
@@ -449,7 +452,7 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-consumers')
           .closest('.kong-identity-option')
           .should('have.attr', 'style')
-          .and('contain', '--kong-identity-legacy-label')
+          .and('contain', '--kong-ui-entities-plugins-legacy-label')
       })
 
       it('keeps the standard copy and no Legacy tag without the AI Manager priority', () => {
