@@ -26,45 +26,28 @@
       />
 
       <template v-else>
-        <KRadio
-          card
-          card-orientation="horizontal"
-          data-testid="kong-identity-mode-consumers"
-          :description="consumersDescription"
-          :label="t('custom_field.kong_identity.consumers_label')"
-          :model-value="selectedMode"
-          selected-value="consumers"
-          @update:model-value="handleModeChange"
+        <div
+          v-for="option in modeOptions"
+          :key="option.mode"
+          class="kong-identity-option"
+          :style="option.legacy ? { '--kong-ui-entities-plugins-legacy-label': `'${legacyLabel}'` } : undefined"
         >
-          <TeamIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
-        </KRadio>
-
-        <KRadio
-          v-if="showCentrallyManaged"
-          card
-          card-orientation="horizontal"
-          data-testid="kong-identity-mode-centrally-managed"
-          :description="t('custom_field.kong_identity.centrally_managed_description')"
-          :label="t('custom_field.kong_identity.centrally_managed_label')"
-          :model-value="selectedMode"
-          selected-value="centrally-managed"
-          @update:model-value="handleModeChange"
-        >
-          <AccountTreeIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
-        </KRadio>
-
-        <KRadio
-          card
-          card-orientation="horizontal"
-          data-testid="kong-identity-mode-kong-identity"
-          :description="kongIdentityDescription"
-          :label="t('custom_field.kong_identity.kong_identity_label')"
-          :model-value="selectedMode"
-          selected-value="kong-identity"
-          @update:model-value="handleModeChange"
-        >
-          <KeyIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
-        </KRadio>
+          <KRadio
+            card
+            card-orientation="horizontal"
+            :data-testid="option.testId"
+            :description="option.description"
+            :label="option.label"
+            :model-value="selectedMode"
+            :selected-value="option.mode"
+            @update:model-value="handleModeChange"
+          >
+            <component
+              :is="option.icon"
+              :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
+            />
+          </KRadio>
+        </div>
       </template>
     </div>
   </div>
@@ -76,8 +59,10 @@ import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '@kong-ui-public/freeform'
+import { usePluginContext } from '../../free-form/plugin-context'
 import composables from '../../../composables'
 
+import type { Component } from 'vue'
 import type { AuthMode } from './types'
 
 defineOptions({ name: 'KongIdentityField' })
@@ -86,6 +71,12 @@ const props = defineProps<{
   identityRealmsInSchema?: boolean
   loadingRealms?: boolean
 }>()
+
+// AI Manager auth strategies prioritize Kong Identity principals: the card is listed
+// first and selected by default. Gateway Manager's key-auth/basic-auth plugin forms
+// provide no context, so they keep the existing Consumers-first behavior.
+const keyAuthContext = usePluginContext('key-auth')
+const isAiManagerKeyAuth = computed(() => keyAuthContext?.source === 'ai-manager')
 const { i18n } = composables.useI18n()
 const { t } = i18n
 
@@ -103,21 +94,75 @@ const identityRealmsInSchema = computed(() => {
 const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
+  if (isAiManagerKeyAuth.value) {
+    return t('custom_field.kong_identity.description_without_realms_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.description_with_realms')
     : t('custom_field.kong_identity.description_without_realms')
 })
 
 const consumersDescription = computed(() => {
+  if (isAiManagerKeyAuth.value) {
+    return t('custom_field.kong_identity.consumers_description_key_auth_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.consumers_description_key_auth')
     : t('custom_field.kong_identity.consumers_description_basic_auth')
 })
 
 const kongIdentityDescription = computed(() => {
+  if (isAiManagerKeyAuth.value) {
+    return t('custom_field.kong_identity.kong_identity_description_key_auth_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.kong_identity_description_key_auth')
     : t('custom_field.kong_identity.kong_identity_description_basic_auth')
+})
+
+const legacyLabel = computed(() => t('custom_field.kong_identity.legacy_label'))
+
+type ModeOption = {
+  mode: AuthMode
+  testId: string
+  label: string
+  description: string
+  icon: Component
+  /** Render the "Legacy" tag after the label (AI Manager only). */
+  legacy?: boolean
+}
+
+// AI Manager auth strategies list Kong Identity principals first; every other host
+// keeps Consumers first. The order is rendered from this list rather than CSS so the
+// DOM order matches what users see.
+const modeOptions = computed<ModeOption[]>(() => {
+  const kongIdentity: ModeOption = {
+    mode: 'kong-identity',
+    testId: 'kong-identity-mode-kong-identity',
+    label: t('custom_field.kong_identity.kong_identity_label'),
+    description: kongIdentityDescription.value,
+    icon: KeyIcon,
+  }
+  const consumers: ModeOption = {
+    mode: 'consumers',
+    testId: 'kong-identity-mode-consumers',
+    label: t('custom_field.kong_identity.consumers_label'),
+    description: consumersDescription.value,
+    icon: TeamIcon,
+    legacy: isAiManagerKeyAuth.value,
+  }
+  const centrallyManaged: ModeOption = {
+    mode: 'centrally-managed',
+    testId: 'kong-identity-mode-centrally-managed',
+    label: t('custom_field.kong_identity.centrally_managed_label'),
+    description: t('custom_field.kong_identity.centrally_managed_description'),
+    icon: AccountTreeIcon,
+  }
+
+  const options = isAiManagerKeyAuth.value ? [kongIdentity, consumers] : [consumers]
+  if (showCentrallyManaged.value) options.push(centrallyManaged)
+  if (!isAiManagerKeyAuth.value) options.push(kongIdentity)
+  return options
 })
 
 const model = defineModel<AuthMode>()
@@ -199,8 +244,32 @@ function handleModeChange(mode: AuthMode) {
     width: 100%;
   }
 
+  // AI Manager marks the Consumers card as Legacy. The copy is a localized CSS
+  // custom property on that card's wrapper; cards without it compute no content,
+  // so this rule only paints the Legacy tag there.
+  :deep(.radio-label)::after {
+    align-items: center;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    content: var(--kong-ui-entities-plugins-legacy-label);
+    display: inline-flex;
+    font-size: var(--kui-font-size-10, $kui-font-size-10);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-10, $kui-line-height-10);
+    margin-left: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+    vertical-align: middle;
+  }
+
+  .kong-identity-option {
+    display: flex;
+    flex: 1;
+  }
+
   :deep(.k-radio.radio-card) {
     flex: 1;
+    width: 100%;
 
     .radio-card-wrapper.radio-label-wrapper {
       flex-direction: column !important;

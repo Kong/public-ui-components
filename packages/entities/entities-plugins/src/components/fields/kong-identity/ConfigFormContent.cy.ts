@@ -6,6 +6,7 @@ import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
 import { FORM_EDITING } from '../../free-form/const'
+import { PLUGIN_CONTEXT_KEY } from '../../free-form/plugin-context'
 
 // Schema with both principals and identity_realms (like key-auth)
 const schemaWithRealms: FormSchema = {
@@ -254,6 +255,8 @@ function mountContent(
     dataPlaneVersions?: string[]
     /** FORM_EDITING: set to `true` to simulate an edit-load rather than a fresh create. */
     isEditing?: boolean
+    /** AI Manager auth strategies list and select Kong Identity principals first. */
+    prioritizePrincipals?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -300,6 +303,9 @@ function mountContent(
         },
         ...(options.isEditing !== undefined
           ? { [FORM_EDITING as symbol]: computed(() => options.isEditing) }
+          : {}),
+        ...(options.prioritizePrincipals
+          ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': { source: 'ai-manager' } } }
           : {}),
       },
     },
@@ -410,6 +416,147 @@ describe('ConfigFormContent', () => {
           .should('have.class', 'checked')
       })
 
+    })
+
+    describe('Prioritized principals (AI Manager)', () => {
+      type EmittedConfig = {
+        config?: {
+          principals?: { enabled?: boolean, directory?: string } | null
+        }
+      }
+
+      it('selects Kong Identity by default and emits principals.enabled', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true }, {
+          config: {},
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.enabled === true
+        }))
+      })
+
+      it('uses the AI Manager copy and marks Consumers as Legacy', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true }, {
+          config: {},
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('contain.text', 'authenticate Virtual Keys and map requests to Kong Identity Users and Agents')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.k-radio')
+          .should('contain.text', 'Use consumer-managed API Key credentials.')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.kong-identity-option')
+          .should('have.attr', 'style')
+          .and('contain', '--kong-ui-entities-plugins-legacy-label')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.k-radio')
+          .then(($radio) => {
+            const label = $radio[0].querySelector('.radio-label')
+            if (!label) throw new Error('Consumers radio label not found')
+            expect(getComputedStyle(label, '::after').content).to.contain('Legacy')
+          })
+      })
+
+      it('keeps the standard copy and no Legacy tag without the AI Manager priority', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true }, { config: {} })
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .should('not.contain.text', 'Virtual Keys')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.kong-identity-option')
+          .should('not.have.attr', 'style')
+      })
+
+      it('lists Kong Identity before Consumers', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, prioritizePrincipals: true })
+
+        cy.get('.kong-identity-options [data-testid="kong-identity-mode-kong-identity"], .kong-identity-options [data-testid="kong-identity-mode-consumers"]').then(($modes) => {
+          const testIds = Array.from($modes).map(mode => mode.getAttribute('data-testid'))
+          expect(testIds).to.deep.equal([
+            'kong-identity-mode-kong-identity',
+            'kong-identity-mode-consumers',
+          ])
+        })
+      })
+
+      it('leaves Consumers first when the host does not prioritize principals', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true })
+
+        cy.get('.kong-identity-options [data-testid="kong-identity-mode-kong-identity"], .kong-identity-options [data-testid="kong-identity-mode-consumers"]').then(($modes) => {
+          const testIds = Array.from($modes).map(mode => mode.getAttribute('data-testid'))
+          expect(testIds).to.deep.equal([
+            'kong-identity-mode-consumers',
+            'kong-identity-mode-kong-identity',
+          ])
+        })
+      })
+
+      it('does not convert a strategy saved as Consumers on edit', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+          principalsDirectoryName: 'my-directory',
+        }, {
+          config: { principals: null },
+        })
+
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.get('@onChangeSpy').should('not.have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.enabled === true
+        }))
+      })
+
+      it('keeps a centrally managed strategy in its saved mode', () => {
+        mountContent(schemaWithRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+        }, {
+          config: {
+            principals: { enabled: false },
+            identity_realms: [{ scope: 'realm', id: 'realm-1', region: 'us' }],
+          },
+        })
+
+        cy.getTestId('kong-identity-mode-centrally-managed')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.getTestId('ff-identity-realms-field').should('exist')
+      })
+
+      it('keeps a saved principals directory when editing an already-principals strategy', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+          principalsDirectoryName: 'host-directory',
+        }, {
+          config: { principals: { enabled: true, directory: 'saved-directory' } },
+        })
+
+        cy.get('@onChangeSpy').should('not.have.been.calledWithMatch', Cypress.sinon.match((val: EmittedConfig) => {
+          return val.config?.principals?.directory === 'host-directory'
+        }))
+      })
+
+      it('does not prioritize principals when the identity principals UI flag is off', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          prioritizePrincipals: true,
+          identityPrincipalsUiEnabled: false,
+        })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+      })
     })
 
     describe('Mode switching', () => {

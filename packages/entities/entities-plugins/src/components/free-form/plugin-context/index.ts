@@ -2,6 +2,7 @@ import { getCurrentInstance, inject, provide, reactive } from 'vue'
 
 import type { ComponentInternalInstance, InjectionKey } from 'vue'
 import type { OpenidConnectContext } from '../plugins/openid-connect/context'
+import type { KeyAuthContext } from '../plugins/key-auth/context'
 
 /**
  * Central registry mapping each plugin that needs host-injected context to its context type.
@@ -9,6 +10,7 @@ import type { OpenidConnectContext } from '../plugins/openid-connect/context'
  */
 export interface PluginContextRegistry {
   'openid-connect': OpenidConnectContext
+  'key-auth': KeyAuthContext
 }
 
 export type PluginName = keyof PluginContextRegistry
