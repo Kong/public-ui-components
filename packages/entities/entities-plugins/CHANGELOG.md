@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.9.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.8.1...%40kong-ui-public%2Fentities-plugins%4011.9.0) (2026-11-24)
+
+### Features
+
+* **entities-plugins:** key auth prioritize principals ([#4113](https://github.com/Kong/public-ui-components/issues/4113)) ([0e86309](https://github.com/Kong/public-ui-components/commit/0e863095921502f7962a4a010c6a74bb86c24f7d))
+
+
 ## [11.8.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.8.0...%40kong-ui-public%2Fentities-plugins%4011.8.1) (2026-11-24)
 
 ### Bug Fixes
