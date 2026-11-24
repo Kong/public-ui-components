@@ -1709,6 +1709,15 @@ describe('OpenidConnectForm', () => {
         expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: null })
       })
 
+      // …a second leave-custom click must not clobber the stash (the claims
+      // are already empty, so there is nothing new to cache)…
+      cy.getTestId('principals-jit-all-claims').click({ force: true })
+      cy.getTestId('principals-jit-subset-claims').click({ force: true })
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.jit).to.deep.equal({ all_claims: false, claims: null })
+      })
+
       // …and returning to custom restores what was typed
       cy.getTestId('principals-jit-custom-claims').click({ force: true })
       cy.getTestId('principals-jit-claims').should('be.visible').and('have.value', 'suba, issa')

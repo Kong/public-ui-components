@@ -360,9 +360,12 @@ function handleJitSharingChange(mode: 'all' | 'subset' | 'custom') {
 
   customClaimsSelected.value = false
   allClaims.value = mode === 'all'
-  cachedClaims = Array.isArray(jitClaims.value) && jitClaims.value.length > 0
-    ? [...jitClaims.value]
-    : null
+  // Only overwrite the stash with a list the user actually had; claims is
+  // already empty on a second consecutive leave-custom click, and nulling
+  // there would drop the list stashed by the earlier switch.
+  if (Array.isArray(jitClaims.value) && jitClaims.value.length > 0) {
+    cachedClaims = [...jitClaims.value]
+  }
   jitClaims.value = getEmptyValue()
 }
 

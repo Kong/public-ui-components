@@ -479,14 +479,14 @@ const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue, getSchem
 //
 // Seeded here, not in PrincipalLookupSettings: that component is torn down and
 // recreated when the auth mode switches, so a setup-time prefill there re-applies over
-// the user's uncheck. This section survives the switch.
+// the user's radio pick. This section survives the switch.
 //
 // A blank create never arrives with an empty record — the engine fills the model from
 // schema defaults first (`isSchemaDefaulted`), writing the schema's own
 // `all_claims: false` — so the prefill has to overwrite that fill. Host-supplied data
 // (edit, clone draft) is the user's: only a missing record is filled in, which is the
 // OIDC plugin saved before `jit` existed. Skipped while the version lock is on, where
-// both controls are disabled and a prefilled record would be config the user can't undo.
+// every control is disabled and a prefilled record would be config the user can't undo.
 if (getSchema('$.config.principals.jit') && !getFieldVersionInfo('$.config.principals.jit')
   && formData.config?.principals
   && (!formData.config.principals.jit || isSchemaDefaulted.value)) {
