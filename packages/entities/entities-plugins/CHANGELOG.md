@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.8.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.8.0...%40kong-ui-public%2Fentities-plugins%4011.8.1) (2026-11-24)
+
+### Bug Fixes
+
+* **entities-plugins:** label message fields relative to the error [KM-3771] ([#4114](https://github.com/Kong/public-ui-components/issues/4114)) ([0920df1](https://github.com/Kong/public-ui-components/commit/0920df1908b805dd536c52472a91d8acc1f7af79))
+
+
 # [11.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.7.0...%40kong-ui-public%2Fentities-plugins%4011.8.0) (2026-11-24)
 
 ### Features
