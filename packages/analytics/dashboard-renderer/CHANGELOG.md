@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.8.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.7.2...%40kong-ui-public%2Fdashboard-renderer%4010.8.0) (2026-11-24)
+
+### Features
+
+* **dashboard-renderer:** render DashboardTilePreview from a data prop [MA-5690] ([#4084](https://github.com/Kong/public-ui-components/issues/4084)) ([27a06a2](https://github.com/Kong/public-ui-components/commit/27a06a2e935d2434cc2b80c2390012fe10758fce))
+
+
 ## [10.7.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%4010.7.1...%40kong-ui-public%2Fdashboard-renderer%4010.7.2) (2026-11-23)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
