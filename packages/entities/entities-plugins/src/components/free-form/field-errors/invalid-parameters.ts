@@ -43,7 +43,7 @@ export const parseInvalidParameters: FieldErrorParser = (body, context) => {
     if (typeof parameter.reason !== 'string' || !parameter.reason) {
       return []
     }
-    const path = parameter.field ? toDataPath(parameter.field, context) : ''
+    const path = typeof parameter.field === 'string' && parameter.field ? toDataPath(parameter.field, context) : ''
     return [{ path, message: parameter.reason }]
   })
 }

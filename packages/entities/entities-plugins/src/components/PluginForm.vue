@@ -833,10 +833,13 @@ const saveFormData = async (): Promise<void> => {
   // The errors of the last save no longer hold
   fieldErrors.clear()
 
-  // Kept outside `try` to read the map keys in the errors of a failed save
-  const payload = JSON.parse(JSON.stringify(getRequestBody.value))
+  // Declared outside `try` to read the map keys in the errors of a failed save, and
+  // assigned inside it, so a payload that can't be cloned still fails the save there
+  let payload: Record<string, any> | undefined
 
   try {
+    payload = JSON.parse(JSON.stringify(getRequestBody.value)) as Record<string, any>
+
     form.isReadonly = true
 
     let response: AxiosResponse | undefined

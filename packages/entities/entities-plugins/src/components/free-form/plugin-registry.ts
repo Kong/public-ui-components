@@ -7,7 +7,8 @@ export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
   renderRules?: RenderRules
   fieldRenderers: FieldRendererRule[]
-  fieldErrors: boolean
+  /** Hosts build these entries too (e.g. AI Manager), so absent means on, as in `PluginFormConfig` */
+  fieldErrors?: boolean
 }
 
 type PluginConfigModule = PluginFormConfig

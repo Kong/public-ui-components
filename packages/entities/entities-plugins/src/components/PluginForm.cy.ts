@@ -1513,6 +1513,31 @@ describe('<PluginForm />', () => {
         cy.getTestId('ff-config.max_age').should('have.focus')
       })
 
+      it('keeps an entity check error until a field it names changes', () => {
+        interceptKonnectCreatePlugin({
+          status: 400,
+          mockData: {
+            ...validationErrors,
+            details: [{
+              type: 'ERROR_TYPE_ENTITY',
+              messages: ["at least one of these fields must be non-empty: 'config.max_age'"],
+            }],
+          },
+        })
+        mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+        submit()
+        cy.getTestId('ff-error-summary').should('contain.text', '1 error')
+
+        // A field the check does not name: the error stays, though it is on the whole entity
+        cy.getTestId('ff-instance_name').type('my-cors')
+        cy.getTestId('ff-error-summary').should('contain.text', '1 error')
+
+        // The field it names: the error goes
+        cy.getTestId('ff-error-summary-field-link-config.max_age').click()
+        cy.getTestId('ff-config.max_age').should('be.enabled').type('600')
+        cy.getTestId('ff-error-summary').should('not.exist')
+      })
+
       it('clears the errors when the form is saved again', () => {
         interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
         mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
