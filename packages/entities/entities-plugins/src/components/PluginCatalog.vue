@@ -27,7 +27,7 @@
         </template>
         <div class="plugin-featured-filter">
           <div
-            v-for="feature in PluginFeaturedArray"
+            v-for="feature in featuredGroups"
             :key="feature"
             class="plugin-filter-item"
             :data-testid="`plugin-filter-item-${feature}`"
@@ -252,7 +252,9 @@ const searchFilter = defineModel<string>('search', { default: '' })
 const selectedGroups = defineModel<PluginCatalogFilterGroup[]>('groups', { default: () => [] })
 const featuredFilterCollapse = ref(false)
 const groupFilterCollapse = ref(false)
-const filterGroups: PluginCatalogFilterGroup[] = [...PluginFeaturedArray, ...PluginGroupArraySortedAlphabetically]
+// PluginFeaturedArray is typed string[]; its only entry is 'Featured'.
+const featuredGroups = PluginFeaturedArray as PluginCatalogFilterGroup[]
+const filterGroups: PluginCatalogFilterGroup[] = [...featuredGroups, ...PluginGroupArraySortedAlphabetically]
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')

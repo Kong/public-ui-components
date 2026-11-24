@@ -1,5 +1,5 @@
 import PluginCatalog from './PluginCatalog.vue'
-import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
+import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig, type PluginCatalogFilterGroup } from '../types'
 import { PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import { FEATURE_FLAGS } from '../constants'
 import {
@@ -204,13 +204,13 @@ describe('<PluginCatalog />', {
 
   it('should keep a bound v-model in sync and ignore unknown groups', () => {
     interceptKonnect()
-    const groups = ref<string[]>([PluginGroup.TRAFFIC_CONTROL, 'Not a group'])
+    const groups = ref<PluginCatalogFilterGroup[]>([PluginGroup.TRAFFIC_CONTROL, 'Not a group' as PluginCatalogFilterGroup])
     const search = ref('')
     const Host = defineComponent(() => () => h(PluginCatalog, {
       config: baseConfigKonnect,
       customPluginSupport: 'schema',
       groups: groups.value,
-      'onUpdate:groups': (value: string[]) => {
+      'onUpdate:groups': (value: PluginCatalogFilterGroup[]) => {
         groups.value = value
       },
       search: search.value,
