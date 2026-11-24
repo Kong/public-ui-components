@@ -7,6 +7,9 @@ export const PluginFeaturedArray = [
 
 type PluginFeatured = (typeof PluginFeaturedArray)[number]
 
+/** A filter group in the PluginCatalog sidebar: a plugin group or the Featured section. */
+export type PluginCatalogFilterGroup = PluginGroup | 'Featured'
+
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
   PluginGroup.AI,
