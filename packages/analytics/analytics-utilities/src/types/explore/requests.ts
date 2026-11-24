@@ -62,6 +62,7 @@ export const queryableRequestDimensions = [
   'upstream_status_code_grouped',
   'upstream_uri',
   'websocket',
+  'workspace',
 ] as const
 
 export type QueryableRequestDimensions = typeof queryableRequestDimensions[number]

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [14.11.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.10.0...%40kong-ui-public%2Fanalytics-utilities%4014.11.0) (2026-11-20)
+
+### Features
+
+* add workspace and ai_gateway dimensions ([#4104](https://github.com/Kong/public-ui-components/issues/4104)) ([85dd540](https://github.com/Kong/public-ui-components/commit/85dd5402e9bba7568c4ab79ff7d506d67d86ec22))
+
+
 # [14.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4014.9.0...%40kong-ui-public%2Fanalytics-utilities%4014.10.0) (2026-11-17)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-config-editor",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "type": "module",
   "main": "./dist/entities-config-editor.umd.js",
   "module": "./dist/entities-config-editor.es.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "3.5.3",
-    "@kong/kongponents": "9.66.16",
+    "@kong/kongponents": "9.66.17",
     "vue": "^3.5.43"
   },
   "repository": {

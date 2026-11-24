@@ -54,6 +54,17 @@ export {
   pluginConfigRegistry,
 } from './components/free-form/plugin-registry'
 
+// Errors of a failed save, shown on the fields of a plugin form (see `usePluginFormFieldErrors`)
+export {
+  toFieldErrors,
+  usePluginFormFieldErrors,
+} from './components/free-form/field-errors'
+
+export type {
+  FieldErrorContext,
+  FieldErrorParser,
+} from './components/free-form/field-errors'
+
 export type {
   ResolvedPluginFormConfig,
 } from './components/free-form/plugin-registry'

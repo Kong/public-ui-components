@@ -1,4 +1,5 @@
 import type { GridApi } from 'ag-grid-community'
+import type { Ref } from 'vue'
 
 export type TableDataGridMode = 'infinite' | 'unpaginated'
 export type TableDataGridRow = Record<string, unknown>
@@ -79,6 +80,19 @@ export type TableDataGridConfig = TableDataGridSort & {
   pageSize?: number
   /** Size to all returned rows in unpaginated mode. Ignored in infinite mode. */
   fitToContent?: boolean
+}
+
+/**
+ * The subset of `@kong-ui-public/analytics-utilities`' `InteractionCoordinator`
+ * that the grid uses. The full coordinator satisfies it structurally.
+ */
+export type TableDataGridCoordinator = {
+  activate: (args: { chartUuid: string | null, dimension?: string | null, dimensionValue?: string | null }) => void
+  deactivate: (args: { chartUuid: string }) => void
+  activeChart: Readonly<Ref<string | null>>
+  activeDimension: Readonly<Ref<string | null>>
+  activeDimensionValue: Readonly<Ref<string | null>>
+  DIMENSION_DEBOUNCE_MS: number
 }
 
 export type TableDataGridProps<Row extends object = TableDataGridRow> = {

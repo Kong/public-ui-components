@@ -10,6 +10,17 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
+      v-if="groupTiles && groupTiles.length > 1"
+      class="group-tabs"
+    >
+      <KTabs
+        v-model="activeGroupTab"
+        v-bind="{ hidePanels: true }"
+        data-testid="tile-group-tabs"
+        :tabs="groupTabs"
+      />
+    </div>
+    <div
       v-if="hasTileHeader && !isSlottableTile"
       class="tile-header"
     >
@@ -72,7 +83,7 @@
         />
       </div>
 
-      <div v-if="showRefresh">
+      <div v-if="showRefreshAction">
         <KButton
           appearance="secondary"
           class="refresh-button"
@@ -144,12 +155,12 @@
           </KButton>
           <template #items>
             <KDropdownItem
-              v-if="!!exploreLinkKebabMenu"
+              v-if="!usesSuppliedData && !!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!isTableChartDefinition(definition) && !!requestsLinkKebabMenu"
+              v-if="!usesSuppliedData && !isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -199,6 +210,7 @@
       <component
         :is="componentData.component"
         v-if="componentData"
+        :key="activeTileId"
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
@@ -209,7 +221,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, SuppliedTileData, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
@@ -242,12 +254,13 @@ import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 import { isTimeRangeUnsupported } from '../utils/time-range-support'
+import { isExploreResultV4 } from '../utils/supplied-tile-data'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
-import { KSegmentedControl } from '@kong/kongponents'
+import { KSegmentedControl, KTabs } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -260,8 +273,10 @@ const isActionMenuOpen = ref<boolean>(false)
 
 const {
   context,
-  definition,
+  data,
+  definition: baseDefinition,
   fitToContent = false,
+  groupTiles,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
   isFullscreen,
@@ -272,8 +287,14 @@ const {
   tileType = 'chart',
 } = defineProps<{
   context: DashboardRendererContext
+  /**
+   * Data to render in place of the tile's query result. When passed, the tile doesn't run a query.
+   * `TILE_DATA_LOADING` shows the loading state, `TILE_DATA_EMPTY` the empty state, and an `Error` the error state.
+   */
+  data?: SuppliedTileData
   definition: TileDefinition
   fitToContent?: boolean
+  groupTiles?: Array<{ id: string, label: string, definition: TileDefinition }>
   height?: number
   hideActions?: boolean
   isFullscreen?: boolean
@@ -284,7 +305,31 @@ const {
   tileType?: TileConfig['type']
 }>()
 
+const activeGroupTileId = ref<string>()
+
+// Switching between grouped tiles happens here so the rest of the dashboard is untouched.
+const activeDefinitionTileId = computed<string | undefined>(() =>
+  groupTiles?.find(t => t.id === activeGroupTileId.value)?.id ?? groupTiles?.[0]?.id,
+)
+
+// The id of the tile currently shown: the selected group member, or the tile itself.
+const activeTileId = computed<string>(() => activeDefinitionTileId.value ?? tileId.toString())
+
+const activeDefinition = computed<TileDefinition>(() =>
+  groupTiles?.find(t => t.id === activeGroupTileId.value)?.definition
+  ?? groupTiles?.[0]?.definition
+  ?? baseDefinition,
+)
+
 const fieldLabel = composables.useFieldLabel()
+
+// These renderers run their own queries and don't read supplied data, so they keep the query behavior.
+const QUERY_ONLY_TILE_TYPES: DashboardTileType[] = ['golden_signals', 'top_talkers']
+
+// True when the host passes `data` and this tile type renders it instead of querying.
+const usesSuppliedData = computed<boolean>(() => data !== undefined && !QUERY_ONLY_TILE_TYPES.includes(activeDefinition.value.chart.type))
+// Supplied data has no query to refresh.
+const showRefreshAction = computed<boolean>(() => showRefresh && !usesSuppliedData.value)
 
 const { zoomConfiguration } = composables.useDashboardContext({
   context: computed(() => context),
@@ -300,9 +345,9 @@ const refresh = () => {
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'tile-loaded'): void
-  (e: 'edit-tile', tile: TileDefinition): void
-  (e: 'duplicate-tile', tile: TileDefinition): void
-  (e: 'remove-tile', tile: TileDefinition): void
+  (e: 'edit-tile', tile: TileDefinition, tileId: string): void
+  (e: 'duplicate-tile', tile: TileDefinition, tileId: string): void
+  (e: 'remove-tile', tile: TileDefinition, tileId: string): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
   (e: 'tile-bounds-change', boundsEvent: TileBoundsChangeEvent): void
 }>()
@@ -319,7 +364,7 @@ const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 
-const chart = computed(() => definition.chart)
+const chart = computed(() => activeDefinition.value.chart)
 const isSingleValue = computed<boolean>(() => chart.value.type === 'single_value')
 const tileTitle = computed<string | undefined>(() => {
   const title = 'chart_title' in chart.value ? chart.value.chart_title : undefined
@@ -327,10 +372,10 @@ const tileTitle = computed<string | undefined>(() => {
   // Single value tiles fall back to the metric name
   return title || (isSingleValue.value ? singleValueMetricLabel.value : undefined)
 })
-const tileDescription = computed<string | undefined>(() => definition.header_description)
+const tileDescription = computed<string | undefined>(() => activeDefinition.value.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableChartDefinition(definition) || isRequestsChartDefinition(definition)) {
+  if (isTableChartDefinition(activeDefinition.value) || isRequestsChartDefinition(activeDefinition.value)) {
     return false
   }
 
@@ -352,13 +397,13 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: toRef(() => definition),
+  definition: activeDefinition,
   context: readonly(toRef(() => context)),
 })
 
 const { issueQuery } = composables.useIssueQuery()
 
-watch(() => definition, async (newValue, oldValue) => {
+watch(activeDefinition, async (newValue, oldValue) => {
   await nextTick()
 
   if (titleRef.value) {
@@ -377,7 +422,7 @@ watch(() => definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || !!context.editable)
+const kebabMenuHasItems = computed((): boolean => (!usesSuppliedData.value && !!exploreLinkKebabMenu.value) || canExportCsv.value || !!context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
@@ -410,29 +455,31 @@ const componentEventHandlers = computed(() => ({
 }))
 
 const componentData = computed(() => {
-  const component = rendererLookup[definition.chart.type]
-  const isTableChart = isTableChartDefinition(definition)
+  const component = rendererLookup[activeDefinition.value.chart.type]
+  const isTableChart = isTableChartDefinition(activeDefinition.value)
 
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
-  const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsBounds = activeDefinition.value.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
   const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
   const rendererProps = {
-    query: definition.query,
+    query: activeDefinition.value.query,
     context: context,
     queryReady: queryReady,
     height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
     zoomConfiguration: zoomConfiguration.value,
+    suppliedData: usesSuppliedData.value ? data : undefined,
   }
+  // The Explore and Requests links would query data the host supplied, so hide them.
   const chartRendererProps = {
-    chartOptions: definition.chart,
+    chartOptions: activeDefinition.value.chart,
     activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
-    requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
-    exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
+    requestsLink: zoomConfiguration.value.showRequestsAction && !usesSuppliedData.value ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction && !usesSuppliedData.value ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {
@@ -440,7 +487,7 @@ const componentData = computed(() => {
     rendererProps: {
       ...rendererProps,
       ...(!isTableChart ? chartRendererProps : {}),
-      ...(['top_n', 'single_value'].includes(definition.chart.type) ? { fitToContent } : {}),
+      ...(['top_n', 'single_value'].includes(activeDefinition.value.chart.type) ? { fitToContent } : {}),
     },
     rendererEvents: {
       supportsRequests,
@@ -452,11 +499,11 @@ const componentData = computed(() => {
 })
 
 const badgeData = computed<string | null>(() => {
-  if (isTableChartDefinition(definition)) {
+  if (isTableChartDefinition(activeDefinition.value)) {
     return null
   }
 
-  const query = definition.query
+  const query = activeDefinition.value.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -483,7 +530,7 @@ const badgeData = computed<string | null>(() => {
 })
 
 const rangeUnsupported = computed(() => {
-  const query = definition.query
+  const query = activeDefinition.value.query
   const datasource = query?.datasource
   const supportedTimeRanges = datasource ? datasourceConfigMap.value[datasource]?.timeRangeOptions : undefined
   const tileTimeRange = query && 'time_range' in query ? query.time_range : undefined
@@ -503,7 +550,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(badgeData.value),
     rangeUnsupported.value,
     Boolean(tileDescription.value),
-    showRefresh,
+    showRefreshAction.value,
     showMetricSelector.value,
   ].some(Boolean)
 })
@@ -526,6 +573,14 @@ watch(metricNames, metrics => {
   }
 }, { immediate: true })
 
+// When switching between grouped tiles, drop the previous member's result so neither the
+// chart nor CSV export can use it while the new member's query is pending.
+watch(activeTileId, () => {
+  chartData.value = undefined
+  activeMetric.value = undefined
+  loadingChartData.value = true
+})
+
 const isDualAxisChart = computed(() => {
   const chartOptions = chart.value
 
@@ -545,7 +600,7 @@ const showMetricSelector = computed(() => (
 ))
 
 const singleValueMetricLabel = computed<string | undefined>(() => {
-  const queryMetric = 'metrics' in definition.query ? definition.query.metrics?.[0] : undefined
+  const queryMetric = 'metrics' in activeDefinition.value.query ? activeDefinition.value.query.metrics?.[0] : undefined
   const metric = queryMetric ?? metricNames.value[0]
 
   if (!metric) {
@@ -555,6 +610,16 @@ const singleValueMetricLabel = computed<string | undefined>(() => {
   return fieldLabel(metric)
 })
 
+// KTabs identifies tabs by hash, so map group tile ids to `#id` hashes.
+const groupTabs = computed(() => (groupTiles ?? []).map(({ id, label }) => ({ hash: `#${id}`, title: label })))
+
+const activeGroupTab = computed<string>({
+  get: () => `#${activeDefinitionTileId.value}`,
+  set: (hash) => {
+    activeGroupTileId.value = hash.slice(1)
+  },
+})
+
 const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
   value,
   label: fieldLabel(value),
@@ -562,11 +627,11 @@ const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>((
 
 const isAgedOutQuery = computed(() => {
   // Check explore type tiles first so TypeScript narrows before reading query.granularity.
-  if (!isExploreChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
+  if (!isExploreChartDefinition(activeDefinition.value) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = definition.query.granularity
+  const savedGranularity = activeDefinition.value.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -578,7 +643,7 @@ const isAgedOutQuery = computed(() => {
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
   // Check explore type tiles first so TypeScript narrows before reading query.granularity.
-  const savedGranularity = isExploreChartDefinition(definition) ? definition.query.granularity ?? 'unknown' : 'unknown'
+  const savedGranularity = isExploreChartDefinition(activeDefinition.value) ? activeDefinition.value.query.granularity ?? 'unknown' : 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -594,10 +659,10 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const filters = [...context.filters, ...definition.query.filters ?? []] as AllFilters[]
-  const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
+  const filters = [...context.filters, ...activeDefinition.value.query.filters ?? []] as AllFilters[]
+  const metrics = 'metrics' in activeDefinition.value.query ? activeDefinition.value.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
-  const datasource = definition.query.datasource ?? 'api_usage'
+  const datasource = activeDefinition.value.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
@@ -607,15 +672,15 @@ const datasourceScopedFilters = computed(() => {
 })
 
 const editTile = () => {
-  emit('edit-tile', definition)
+  emit('edit-tile', activeDefinition.value, activeTileId.value)
 }
 
 const duplicateTile = () => {
-  emit('duplicate-tile', definition)
+  emit('duplicate-tile', activeDefinition.value, activeTileId.value)
 }
 
 const removeTile = () => {
-  emit('remove-tile', definition)
+  emit('remove-tile', activeDefinition.value, activeTileId.value)
 }
 
 const onChartData = (data: ExploreResultV4) => {
@@ -643,19 +708,26 @@ const hideExportModal = () => {
 }
 
 const getExportData = (): Promise<ExploreResultV4> => {
-  if (isRequestsChartDefinition(definition)) {
+  if (isRequestsChartDefinition(activeDefinition.value)) {
     throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
   }
 
+  if (usesSuppliedData.value) {
+    // Export what the tile shows. There is no query to rerun with a higher limit.
+    return isExploreResultV4(data)
+      ? Promise.resolve(data)
+      : Promise.reject(new Error('No supplied data to export'))
+  }
+
   // goap datasources don't allow limit increases
-  const isGoapDatasource = definition.query.datasource?.startsWith('goap')
+  const isGoapDatasource = activeDefinition.value.query.datasource?.startsWith('goap')
 
   // we intentionally default to true if unset
   const queryBridgeIncreases = queryBridge?.staticConfig?.increaseCsvExportLimit !== false
 
   if (queryBridgeIncreases && !isGoapDatasource) {
     // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-    return issueQuery(definition.query, context, EXPORT_RECORD_LIMIT)
+    return issueQuery(activeDefinition.value.query, context, EXPORT_RECORD_LIMIT)
   } else if (chartData.value) {
     // If we're not allowed to increase the limit, and results are available, use them.
     return Promise.resolve(chartData.value)
@@ -686,7 +758,7 @@ const exportCsv = async () => {
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   const zoomEvent: TileZoomEvent = {
-    tileId: tileId.toString(),
+    tileId: activeTileId.value,
     timeRange: newTimeRange,
   }
   emit('tile-time-range-zoom', zoomEvent)
@@ -694,7 +766,7 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 
 const onBoundsChange = (e: Array<[number, number]>) => {
   const boundsEvent: TileBoundsChangeEvent = {
-    tileId: tileId.toString(),
+    tileId: activeTileId.value,
     bounds: e,
   }
   emit('tile-bounds-change', boundsEvent)
@@ -720,6 +792,21 @@ defineExpose({ getExportData })
 
   &.fit-to-content {
     height: auto;
+  }
+
+  .group-tabs {
+    :deep(.tab-item) {
+      padding-bottom: 0 !important;
+    }
+
+    :deep(.tab-item .tab-link) {
+      font-size: var(--kui-font-size-20, $kui-font-size-20) !important;
+      padding: 0 var(--kui-space-40, $kui-space-40) !important;
+    }
+
+    :deep(.k-tabs ul) {
+      margin-bottom: 0;
+    }
   }
 
   .badge-container {

@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.14.1...%40kong-ui-public%2Ffreeform%400.14.2) (2026-11-23)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#4107](https://github.com/Kong/public-ui-components/issues/4107)) ([21e8222](https://github.com/Kong/public-ui-components/commit/21e82223502bb5d3c072f44663c507f1cb948254))
+
+
+## [0.14.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.14.0...%40kong-ui-public%2Ffreeform%400.14.1) (2026-11-22)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.13.1...%40kong-ui-public%2Ffreeform%400.14.0) (2026-11-20)
+
+### Bug Fixes
+
+* **freeform:** show CEL diagnostics inline ([#4101](https://github.com/Kong/public-ui-components/issues/4101)) ([d5476ae](https://github.com/Kong/public-ui-components/commit/d5476ae58f7e237ed8a403fbcbfc9c7760488c7d))
+
+### Features
+
+* **freeform:** drop an error once a value it is about changes [KM-3728] ([#4097](https://github.com/Kong/public-ui-components/issues/4097)) ([781ff1d](https://github.com/Kong/public-ui-components/commit/781ff1d94803931e898650597ea9a7f5e5f2c51a))
+
+
+## [0.13.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.13.0...%40kong-ui-public%2Ffreeform%400.13.1) (2026-11-20)
+
+### Bug Fixes
+
+* **freeform:** focus the revealed field's control, add a form-append slot [KM-3728] ([#4096](https://github.com/Kong/public-ui-components/issues/4096)) ([bbb1809](https://github.com/Kong/public-ui-components/commit/bbb1809aa9e3fb292100a9a789f6fdbbec8dfd32))
+
+
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.12.2...%40kong-ui-public%2Ffreeform%400.13.0) (2026-11-19)
+
+### Features
+
+* **freeform:** add CEL inputs and autofiller support ([#4082](https://github.com/Kong/public-ui-components/issues/4082)) ([fdac827](https://github.com/Kong/public-ui-components/commit/fdac827da6132db60f0227f35dd5a2db781e9b68))
+
+
+## [0.12.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.12.1...%40kong-ui-public%2Ffreeform%400.12.2) (2026-11-19)
+
+**Note:** Version bump only for package @kong-ui-public/freeform
+
+
+
+
+
 ## [0.12.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.12.0...%40kong-ui-public%2Ffreeform%400.12.1) (2026-11-18)
 
 **Note:** Version bump only for package @kong-ui-public/freeform

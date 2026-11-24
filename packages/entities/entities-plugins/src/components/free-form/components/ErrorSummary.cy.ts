@@ -32,11 +32,13 @@ describe('<ErrorSummary />', () => {
     // Deeply reactive, as a host's `ref` is: its items are proxies of the raw errors
     const errorsRef = ref(errors)
     const onSelect = cy.spy().as('onSelect')
+    const onReveal = cy.spy().as('onReveal')
     cy.mount(() => h(ErrorSummary, {
       errors: errorsRef.value,
       unmatchedErrors,
       schema,
       onSelect,
+      onReveal,
     }))
     return errorsRef
   }
@@ -76,6 +78,38 @@ describe('<ErrorSummary />', () => {
 
     cy.getTestId('ff-error-summary-item-config.servers.1.port').find('button').click()
     cy.get('@onSelect').should('have.been.calledWith', portError)
+  })
+
+  it('links the fields a message names by their labels, and emits `reveal` with their path', () => {
+    const checkError: FieldError = {
+      path: '',
+      message: "at least one of these fields must be non-empty: 'config.redis.host', 'config.unknown'",
+    }
+    mountSummary([checkError], [checkError])
+
+    // Only the name the schema has is a link, showing the field's label
+    cy.getTestId('ff-error-summary-item-').find('button').should('have.length', 1)
+      .and('have.text', 'Redis › Host')
+    cy.getTestId('ff-error-summary-item-')
+      .should('contain.text', "at least one of these fields must be non-empty: Redis › Host, 'config.unknown'")
+
+    cy.getTestId('ff-error-summary-field-link-config.redis.host').click()
+    cy.get('@onReveal').should('have.been.calledOnceWith', 'config.redis.host')
+    cy.get('@onSelect').should('not.have.been.called')
+  })
+
+  it('labels the fields a message names relative to the record the error is on', () => {
+    const recordError: FieldError = {
+      path: 'config.redis',
+      message: "all or none of these fields must be set: 'host', 'config.servers'",
+    }
+    mountSummary([recordError])
+
+    // `host` is in the record, so the record's label is not repeated; `config.servers` is not
+    cy.getTestId('ff-error-summary-item-config.redis')
+      .should('contain.text', 'Redis: all or none of these fields must be set: Host, Servers')
+    cy.getTestId('ff-error-summary-field-link-config.redis.host').should('have.text', 'Host')
+    cy.getTestId('ff-error-summary-field-link-config.servers').should('have.text', 'Servers')
   })
 
   it('collapses to the count and expands again', () => {

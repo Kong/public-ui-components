@@ -668,6 +668,13 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
+  it('excludes workspace and consumer_group from agentic dimensions', () => {
+    expect(queryableExploreDimensions).toContain('workspace')
+    expect(queryableAgenticExploreDimensions).not.toContain('workspace')
+    expect(queryableAgenticExploreDimensions).not.toContain('consumer_group')
+    expect(filterableAgenticExploreDimensions).not.toContain('workspace')
+  })
+
   it.each(['left', 'center', 'right'])('accepts %s single value alignment', align_x => {
     expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(true)
   })

@@ -1,6 +1,6 @@
 import type { UnionFieldSchema } from './form-schema'
-import type { Component, ComponentPublicInstance, Slot } from 'vue'
-import { type LabelAttributes } from '@kong/kongponents'
+import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
+import type { LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -158,7 +158,8 @@ export type Match = (opt: {
   schema: UnionFieldSchema
 }) => boolean
 
-export type MatchMap = Map<Match, Slot<{ name: string }>>
+/** A slot renderer, or a component renderer that also receives the field's events and named slots. */
+export type MatchMap = Map<Match, Slot<{ name: string }> | Readonly<Ref<Component | undefined>>>
 
 export type PropsOverridesFn = (props: Record<string, unknown>) => Record<string, unknown>
 
@@ -177,4 +178,10 @@ export interface FieldError {
   /** Data path in the `formatDataPath` format, e.g. `config.headers["x.y"]` */
   path: string
   message: string
+  /**
+   * Data paths of the fields the error is about, e.g. the fields an entity check
+   * names. The form drops the error once the value of one of them changes.
+   * Defaults to `[path]`.
+   */
+  fields?: string[]
 }

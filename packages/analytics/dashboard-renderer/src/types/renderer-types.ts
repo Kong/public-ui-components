@@ -2,13 +2,18 @@ import type {
   AllAggregations,
   AllFilters,
   ApiRequestsQuery,
+  ApiRequestsResult,
   DashboardConfig,
+  ExploreResultV4,
+  PlatformTabularResponse,
   ScatterChartOptions,
+  TileLayout,
   TimeRangeV4,
   ValidDashboardChartQuery,
   ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import type { TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
@@ -32,6 +37,16 @@ export interface DashboardSection {
    * can be linked to (e.g. `#my-section`). No anchor is rendered when omitted.
    */
   anchorId?: string
+  /**
+   * renders a single tile per groupId. Each tileId per groupId is the tile that
+   * will be rendered when the label is selected. Shows a tabbed interface with
+   * label as the text for switching between tiles.
+   */
+  tileGroups?: Array<{
+    groupId: string
+    tileIdLabels: Array<[string, string]>
+    layout: TileLayout
+  }>
   definition: DashboardConfig
 }
 
@@ -96,6 +111,20 @@ export interface PdfExportState {
   error?: unknown
 }
 
+/**
+ * Data a host supplies to a tile in place of the tile's query result.
+ * Table tiles take `PlatformTabularResponse`, scatter tiles on the `requests`
+ * datasource take `ApiRequestsResult`, and other chart tiles take `ExploreResultV4`.
+ */
+export type TileData = ExploreResultV4 | PlatformTabularResponse | ApiRequestsResult
+
+/**
+ * What a host passes as a tile's `data`: the data itself, `TILE_DATA_LOADING` while
+ * the host loads it, `TILE_DATA_EMPTY` when there is no data, or an `Error` when the
+ * host failed to load it.
+ */
+export type SuppliedTileData = TileData | typeof TILE_DATA_LOADING | typeof TILE_DATA_EMPTY | Error
+
 export interface ChartRendererProps<T> {
   query: ValidDashboardChartQuery
   context: DashboardRendererContext
@@ -112,6 +141,8 @@ export interface ChartRendererProps<T> {
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
   zoomConfiguration?: ZoomConfiguration
+  /** When set, the renderer shows this data and doesn't run a query. */
+  suppliedData?: SuppliedTileData
 }
 
 export interface ScatterRendererProps extends Omit<ChartRendererProps<ScatterChartOptions>, 'query'> {
@@ -125,4 +156,6 @@ export interface TableRendererProps {
   queryReady: boolean
   height?: number
   refreshCounter: number
+  /** When set, the renderer shows this data and doesn't run a query. */
+  suppliedData?: SuppliedTileData
 }

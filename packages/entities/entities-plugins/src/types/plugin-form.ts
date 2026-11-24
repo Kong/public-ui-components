@@ -1,5 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { CelSubjects } from '@kong-ui-public/monaco-editor/languages/cel'
 import type { CustomPluginType, EntityType } from './plugin'
 
 export interface BasePluginSelectConfig {
@@ -20,6 +21,9 @@ export interface BasePluginFormConfig {
   entityId?: string
   /** Whether to hide the consumer group scope field. For Kong Manager OSS, this is true */
   disableConsumerGroupScope?: boolean
+
+  /** Load only records the host has permission to list, including subsequent pages. */
+  getCelSubjects?: () => Promise<CelSubjects>
 
   viewServiceRoute?: (id: string) => RouteLocationRaw
   viewRouteRoute?: (id: string) => RouteLocationRaw
@@ -79,8 +83,10 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   dataPlaneVersions?: string[]
 }
 
-/** Kong Manager Plugin form config */
-export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
+/** Kong Manager controls its CEL rollout independently of the Konnect feature flag. */
+export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {
+  enableCelEditor?: boolean
+}
 
 /**
  * Payload for the `click:create-entity` event. The consuming app navigates to the

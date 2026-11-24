@@ -103,4 +103,13 @@ describe('getVNodeElement', () => {
   it('should not cross the end of a fragment that renders no element', () => {
     expect(elementOf(() => h(Fragment, [null, 'text']))).toBeNull()
   })
+
+  it('should skip the error alert before the field', () => {
+    expect(elementOf(() => h(Fragment, [h('div', { class: 'k-alert' }), h('section', { id: 'field' })]))?.id).toBe('field')
+  })
+
+  it('should return the alert of a field that renders only an alert', () => {
+    expect(elementOf(() => h(Fragment, [h('div', { class: 'k-alert', id: 'alert' }), null]))?.id).toBe('alert')
+    expect(elementOf(() => h('div', { class: 'k-alert', id: 'alert' }))?.id).toBe('alert')
+  })
 })

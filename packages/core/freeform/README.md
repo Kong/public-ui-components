@@ -45,6 +45,8 @@ src/
     ├── ExpressionEditor.vue # The collapsible expression editor; StringField/NumberField render one inline, or a host places it itself
     ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
     ├── FieldErrors.vue      # The list of a field's errors, rendered under its control
+    ├── CelInput.vue         # Standalone CEL input using the shared Monaco language API
+    ├── CelField.vue         # CEL form binding; selected by a custom renderer for a string field
     ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
     ├── SlideTransition.vue  # Height-animated collapse transition
     ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
@@ -55,6 +57,43 @@ src/
 Everything here is generic: no plugin registry, no layout, no scope/Redis/credential UI. That kind of
 entities-plugins-specific code (layout, plugin registry, Redis types, credential fields, etc.) stays in
 `@kong-ui-public/entities-plugins`, which depends on this package — never the other way around.
+
+## CEL input
+
+Import `CelInput` from `@kong-ui-public/freeform` and language declarations from `@kong-ui-public/monaco-editor/languages/cel`. The input works standalone without a Freeform `Form` parent. Each editor takes a `kind`: the variables and functions its kind of expression can use, for completion, hover, signature help, and hints. In an AI Manager ACL form the host can pass its authorized records and runtime capabilities directly.
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue'
+import { KTextArea } from '@kong/kongponents'
+import { CelInput } from '@kong-ui-public/freeform'
+import '@kong-ui-public/freeform/style.css'
+import {
+  defineCelKind, kongConsumer, kongConsumerGroup, kongPrincipal,
+  type CelSubjects,
+} from '@kong-ui-public/monaco-editor/languages/cel'
+
+const expression = defineModel<string>({ required: true })
+const props = defineProps<{ enableCelEditor: boolean, subjects: CelSubjects, supportsPrincipalGroups: boolean }>()
+const records = () => props.subjects
+const kind = computed(() => defineCelKind([
+  kongConsumer(records),
+  kongConsumerGroup(records),
+  kongPrincipal(records, { supportsPrincipalGroups: props.supportsPrincipalGroups }),
+], { standardCallables: ['has', 'matches', 'contains', 'startsWith', 'endsWith', 'all', 'exists', 'map', 'filter'] }))
+</script>
+
+<template>
+  <CelInput v-if="enableCelEditor" v-model="expression" label="ACL expression" :kind="kind" />
+  <KTextArea v-else v-model="expression" label="ACL expression" />
+</template>
+```
+
+Gateway Manager can add declarations such as `kongHttp()` and `kongRoute()`. Omitting `standardCallables` enables all built-in functions and methods. Custom kinds can provide their own `CelPlugin.variables`, `values`, and `keys`. Record collections are optional. A missing collection still allows completion of its declared field names.
+
+Use `<CelField :name="fieldName" :kind="kind" />` for a form-bound string field. The host selects the kind and supplies authorized records. The Monaco runtime loads when a CEL input is rendered.
+
+For expression twins, register your input component with `FieldRenderer :component` in the form's field-renderers slot. Match the twin with `isExpressionFieldSchema(schema)`. When expanded, `ExpressionEditor` passes its field name, update listener, tooltip and help slots to the registered component. Slot renderers do not replace the twin input, because a slot cannot receive those named slots. Its default input is `StringField`.
 
 ## Schema System
 
@@ -369,9 +408,10 @@ A section that is not a field path but keeps its fields mounted while closed (e.
 
 | Rule | Detail |
 |---|---|
-| Display only | The form only shows the errors. Turning a server response into `errors`, and when to set or clear them, is up to the host. Showing errors and revealing fields are separate: a host that lists the errors can call `reveal(error.path)` when one is clicked |
+| Display only | The form shows the errors, and drops them as the data changes (see below). Turning a server response into `errors`, and when to set or clear all of them, is up to the host. Showing errors and revealing fields are separate: a host that lists the errors can call `reveal(error.path)` when one is clicked |
 | Where an error shows | A field shows its own errors. A record, array or map shows only errors on itself, never a count of the ones inside. A set or a JSON field is one field, so it also shows the errors of its items (`tags.1`) |
-| Structure changes | An error belongs to the item it was raised on, not to its index. When an array item or a map entry is removed through the form, its errors are dropped and the errors of later array items move to their new index; when a map key is renamed, its errors follow it. The form emits the new list through `update:errors`, so bind `v-model:errors`. Whether an error still holds after the user edits the value is not decided here: that is up to the host |
+| Structure changes | An error belongs to the item it was raised on, not to its index. When an array item or a map entry is removed through the form, its errors are dropped and the errors of later array items move to their new index; when a map key is renamed, its errors follow it. The form emits the new list through `update:errors`, so bind `v-model:errors` |
+| Value changes | An error goes once the value of a field it is about changes, whatever the new value is. By default an error is about the field at its `path`, and everything inside it; set `fields` to the data paths of other fields instead, e.g. the fields an entity check names. An error inside a set or a JSON value is about the whole field. A new error keeps the values as they are when it arrives, so set errors that match the current data. The form emits the new list through `update:errors` |
 | Unmatched errors | An error no field can show in the current state — its path is malformed or not in the schema, names a map key that isn't in the data, sits under a record or array item without a value, is hidden by a render rule, or is rendered by no mounted field (e.g. every record that could show it leaves it out with `omit`) — is left out of the form and listed in the exposed `unmatchedErrors`, for the host to show elsewhere |
 
 A custom field component gets its errors from `useField(name)`: `fieldErrors` (its own and those below it), `ownFieldErrors`, and `fieldErrorMessage` (`fieldErrors` as one line). The `FieldErrors` component renders a list of them.

@@ -83,6 +83,7 @@
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { ObjectField, useFormShared } from '@kong-ui-public/freeform'
+import { usePluginContext } from '../../free-form/plugin-context'
 import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
@@ -125,7 +126,7 @@ const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | und
 const isKonnect = computed(() => appConfig?.app === 'konnect')
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
-const { formData, getSchema } = useFormShared()
+const { formData, getSchema, getEmptyOrDefault } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
@@ -197,6 +198,30 @@ const hasPrincipals = computed(() =>
   && !!getSchema('$.config.principals'),
 )
 
+// AI Manager lists Kong Identity first and starts new strategies on it.
+const keyAuthContext = usePluginContext('key-auth')
+const isAiManagerKeyAuth = computed(() =>
+  keyAuthContext?.source === 'ai-manager' && hasPrincipals.value,
+)
+
+// New AI Manager strategies start on Kong Identity. Edit is deliberately excluded:
+// opening a saved strategy must never rewrite the mode the user already chose.
+let prioritizedConfigApplied = false
+watch(
+  () => formData.config,
+  (config) => {
+    if (isEditing?.value || prioritizedConfigApplied || !isAiManagerKeyAuth.value || !config) return
+
+    prioritizedConfigApplied = true
+    config.principals = {
+      ...getEmptyOrDefault('$.config.principals'),
+      ...config.principals,
+      enabled: true,
+    }
+  },
+  { immediate: true },
+)
+
 // True when at least one connected data plane node can't process Kong Identity principals
 // (Gateway 3.15+ required). Drives a warning alert, not field hiding.
 const hasIncompatibleDataPlane = computed(() =>
@@ -220,9 +245,11 @@ function hasActualRealm(realms: any[] | null | undefined): boolean {
   return realms.some((r) => r.scope !== 'cp' && r.id != null)
 }
 
-const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(detectInitialMode())
+const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(
+  !isEditing?.value && isAiManagerKeyAuth.value ? 'kong-identity' : detectInitialMode(),
+)
 
-// Create flow: adopt on mount or when host resolves late. Edit-load preserves saved value.
+// Create flow: adopt on mount or when host resolves late. Edit-load preserves a saved value.
 watch(
   () => (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName,
   (name) => {

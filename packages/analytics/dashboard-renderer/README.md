@@ -3,6 +3,7 @@
 Render Analytics charts on a page from a JSON definition.
 
 - [Consumer entry points](#consumer-entry-points)
+  - [Render a tile from supplied data](#render-a-tile-from-supplied-data)
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Props](#props)
@@ -76,6 +77,94 @@ For a metric selector, set the tile query's `metrics` to the selected metric.
 `AnalyticsChart.activeMetric` only selects among grouped multi-metric time
 series; ungrouped results keep all queried metrics. Do not combine requests,
 tokens, latency, and cost on a single axis and rely on that prop to select one.
+
+### Render a tile from supplied data
+
+Pass the `data` prop to `DashboardTilePreview` to render data the host already
+has. When `data` is passed, the tile doesn't run a query. The definition still
+sets the chart type and options.
+
+The tile type sets the data shape. All three types are exported from
+`@kong-ui-public/analytics-utilities`, and the union is exported as `TileData`.
+
+| Tile | Data |
+|------|------|
+| `table` | `PlatformTabularResponse` |
+| `scatter` with the `requests` datasource | `ApiRequestsResult` |
+| Other chart tiles | `ExploreResultV4` |
+
+The value sets the state:
+
+| Value | State |
+|-------|-------|
+| `TILE_DATA_LOADING` | Loading skeleton |
+| `TILE_DATA_EMPTY` | Empty state |
+| An `Error` | Error state with the error message |
+| Data | The chart. Data that doesn't match the tile type shows the error state. |
+
+Both constants are exported from `@kong-ui-public/dashboard-renderer`, and the
+type of every accepted value is exported as `SuppliedTileData`. Without `data`,
+or with `data` set to `undefined`, the tile queries through the `AnalyticsBridge`.
+
+With `data`:
+
+- The refresh action and the "Jump to Explore" and "Jump to Requests" links
+  are hidden.
+- Zoom emits `tile-time-range-zoom`. Fetch data for the new time range and
+  pass it to `data`.
+- Chart tiles that take `ExploreResultV4` emit the supplied data in
+  `chart-data`, and CSV export uses it.
+- The renderer checks only the top-level shape of the data, such as its
+  `data` and `meta` fields.
+- `golden_signals` and `top_talkers` tiles don't support `data`. They run
+  their queries.
+
+```vue
+<template>
+  <DashboardTilePreview
+    :context="context"
+    :data="data"
+    :definition="definition"
+    @tile-time-range-zoom="onZoom"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DashboardTilePreview, TILE_DATA_LOADING } from '@kong-ui-public/dashboard-renderer'
+import type { DashboardRendererContext, SuppliedTileData, TileZoomEvent } from '@kong-ui-public/dashboard-renderer'
+import type { ChartTileDefinition, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+
+const context: DashboardRendererContext = {
+  filters: [],
+  timeSpec: { type: 'relative', time_range: '7d' },
+}
+const definition: ChartTileDefinition = {
+  chart: { type: 'timeseries_line' },
+  query: {
+    datasource: 'api_usage',
+    metrics: ['request_count'],
+    dimensions: ['time'],
+  },
+}
+
+// TILE_DATA_LOADING shows the loading skeleton until the host's request settles.
+const data = ref<SuppliedTileData>(TILE_DATA_LOADING)
+
+const load = async (timeRange: TimeRangeV4) => {
+  data.value = TILE_DATA_LOADING
+  try {
+    data.value = await fetchRequestCounts(timeRange) // The host's own request, which returns ExploreResultV4.
+  } catch (error) {
+    data.value = error instanceof Error ? error : new Error(String(error))
+  }
+}
+
+const onZoom = ({ timeRange }: TileZoomEvent) => load(timeRange)
+
+load(context.timeSpec!)
+</script>
+```
 
 ## Requirements
 
