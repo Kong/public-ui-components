@@ -59,6 +59,32 @@ describe('getErrorLabel', () => {
     expect(getErrorLabel('config.redis.ssl_verify')).toBe('Redis › SSL verify')
   })
 
+  describe('relative to a path', () => {
+    it('labels a field below the path from there', () => {
+      expect(getErrorLabel('config.redis.ssl_verify', schema, 'config.redis')).toBe('SSL verify')
+      expect(getErrorLabel('config.servers.1.port', schema, 'config.servers.1')).toBe('Port')
+      expect(getErrorLabel('config.limits.gold.per_minute', schema, 'config.limits.gold')).toBe('Per minute')
+      expect(getErrorLabel('config.limits.gold.per_minute', schema, 'config.limits')).toBe('"gold" › Per minute')
+    })
+
+    it('starts with the item number below an array', () => {
+      expect(getErrorLabel('config.servers.1.port', schema, 'config.servers')).toBe('#2 › Port')
+    })
+
+    it('labels from the root when the field is not below the path', () => {
+      expect(getErrorLabel('config.redis.ssl_verify', schema, 'config.servers')).toBe('Redis › SSL verify')
+      // The path itself, or a sibling whose name starts the same
+      expect(getErrorLabel('config.redis', schema, 'config.redis')).toBe('Redis')
+      expect(getErrorLabel('config.paths', schema, 'config.path')).toBe('Paths')
+    })
+
+    it('leaves `config` out from the root and from the whole entity', () => {
+      expect(getErrorLabel('config.redis.ssl_verify', schema, 'config')).toBe('Redis › SSL verify')
+      expect(getErrorLabel('config.redis.ssl_verify', schema, '')).toBe('Redis › SSL verify')
+      expect(getErrorLabel('config.redis.ssl_verify', schema, 'config.headers["x')).toBe('Redis › SSL verify')
+    })
+  })
+
   it('returns an empty label for the whole entity, and a malformed path as it is', () => {
     expect(getErrorLabel('', schema)).toBe('')
     expect(getErrorLabel('config.headers["x', schema)).toBe('config.headers["x')
