@@ -9,7 +9,7 @@ import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 import { createFieldReveal } from './reveal'
 import { createFieldErrors } from './errors'
-import { collectFieldCovers, coversFieldPath, findContainers, scanRevealTree } from './reveal-tree'
+import { coversFieldPath, flattenRevealTree, matchesContainer, scanRevealTree } from './reveal-tree'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { EmptyValue, FieldError, FormConfig, MatchMap, RenderRules } from '../types'
@@ -201,6 +201,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         scanning = false
       }
     })
+    const treeFields = computed(() => flattenRevealTree(revealTree.value))
 
     const {
       revealTarget, registerFieldElement, rememberField, findAnchor, getAnchoredMemories,
@@ -209,23 +210,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       formData: innerData,
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
-      getRevealTree: () => revealTree.value,
+      getTreeFields: () => treeFields.value,
       isFieldHidden: isPrunedAsHidden,
     })
-
-    // The fields in closed containers (e.g. an inactive tab) are not mounted:
-    // stand-ins tell the form it renders them, so their errors match. Updated
-    // only when the fields change, as the content scans again on any change.
-    let unregisterStandIns: Array<() => void> = []
-    watch(() => JSON.stringify(collectFieldCovers(revealTree.value)), (json) => {
-      unregisterStandIns.forEach(unregister => unregister())
-      unregisterStandIns = (JSON.parse(json) as Array<{ path: string, exclude?: string[] }>).map(cover => registerFieldElement({
-        path: () => cover.path,
-        element: () => null,
-        exclude: () => cover.exclude,
-        standIn: true,
-      }))
-    }, { immediate: true })
 
     const { getFieldErrors, getErrorsWhere, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
       errors: propsErrors,
@@ -246,7 +233,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       if (scanning) {
         return []
       }
-      const treeCovers = findContainers(revealTree.value, query).flatMap(node => collectFieldCovers(node.children))
+      const treeCovers = treeFields.value.filter(field => field.containers.some(node => matchesContainer(node, query)))
       // A remembered field sits in the containers of its anchor
       const remembered = getAnchoredMemories().filter(memory => treeCovers.some(cover => coversFieldPath(cover, memory.anchor)))
       const covers = [...treeCovers, ...remembered]

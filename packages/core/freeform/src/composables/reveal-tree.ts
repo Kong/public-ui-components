@@ -131,7 +131,10 @@ export function scanRevealTree(vnodes: VNodeChild, base = ''): RevealNode[] {
   return scanChildren(vnodes, base, 0)
 }
 
-/** Whether a cover stands for the field at `fieldPath`, see `entryCovers` */
+/**
+ * Whether a cover stands for the field at `fieldPath`: its own path, or a path
+ * below it that is not in a child it leaves out
+ */
 export function coversFieldPath(cover: FieldCover, fieldPath: string): boolean {
   if (fieldPath === cover.path) {
     return true
@@ -143,38 +146,34 @@ export function coversFieldPath(cover: FieldCover, fieldPath: string): boolean {
   return !cover.exclude?.includes(child)
 }
 
-/** Every field node in the tree */
-export function collectFieldCovers(nodes: RevealNode[]): FieldCover[] {
-  return nodes.flatMap(node => node.kind === 'field' ? [node.cover] : collectFieldCovers(node.children))
-}
-
 /**
- * The containers to open, outermost first, to show the field that most closely
- * stands for `fieldPath` (the deepest cover), or `null` when no field covers it
+ * The cover that most closely stands for `fieldPath`: the deepest one that
+ * covers it (see `coversFieldPath`). At the same depth, the first one wins.
  */
-export function findRevealChain(nodes: RevealNode[], fieldPath: string): RevealContainerNode[] | null {
-  let found: RevealContainerNode[] | null = null
+export function findDeepest<T extends FieldCover>(covers: Iterable<T>, fieldPath: string): T | null {
+  let found: T | null = null
   let foundDepth = -1
-
-  function walk(list: RevealNode[], chain: RevealContainerNode[]) {
-    for (const node of list) {
-      if (node.kind === 'container') {
-        walk(node.children, [...chain, node])
-        continue
-      }
-      if (!coversFieldPath(node.cover, fieldPath)) {
-        continue
-      }
-      const depth = utils.toArray(node.cover.path).length
-      if (depth > foundDepth) {
-        found = chain
-        foundDepth = depth
-      }
+  for (const cover of covers) {
+    const depth = utils.toArray(cover.path).length
+    if (depth > foundDepth && coversFieldPath(cover, fieldPath)) {
+      found = cover
+      foundDepth = depth
     }
   }
-
-  walk(nodes, [])
   return found
+}
+
+/** A field of the reveal tree */
+export interface RevealTreeField extends FieldCover {
+  /** The containers it sits in, outermost first: those to open to show it */
+  containers: RevealContainerNode[]
+}
+
+/** Every field of the tree, with the containers it sits in */
+export function flattenRevealTree(nodes: RevealNode[], containers: RevealContainerNode[] = []): RevealTreeField[] {
+  return nodes.flatMap(node => node.kind === 'field'
+    ? [{ ...node.cover, containers }]
+    : flattenRevealTree(node.children, [...containers, node]))
 }
 
 /** Picks the containers of a tree, e.g. to count the errors in a tab */
@@ -184,14 +183,8 @@ export interface RevealContainerQuery {
   key?: VNode['key']
 }
 
-export function findContainers(nodes: RevealNode[], query: RevealContainerQuery): RevealContainerNode[] {
-  return nodes.flatMap((node): RevealContainerNode[] => {
-    if (node.kind !== 'container') {
-      return []
-    }
-    const matches = node.component === query.component
-      && (query.slotName === undefined || node.slotName === query.slotName)
-      && (query.key === undefined || node.key === query.key)
-    return [...(matches ? [node] : []), ...findContainers(node.children, query)]
-  })
+export function matchesContainer(node: RevealContainerNode, query: RevealContainerQuery): boolean {
+  return node.component === query.component
+    && (query.slotName === undefined || node.slotName === query.slotName)
+    && (query.key === undefined || node.key === query.key)
 }

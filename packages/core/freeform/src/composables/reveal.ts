@@ -1,13 +1,14 @@
-import { nextTick, shallowReactive, shallowRef, type VNode } from 'vue'
-import { get } from 'lodash-es'
+import { computed, nextTick, shallowReactive, shallowRef, type VNode } from 'vue'
+import { get, isEqual } from 'lodash-es'
 import * as utils from '../utils'
 import { FIELD_CONTROL_SELECTOR, FOCUSABLE_SELECTOR } from '../constants'
 import { isKid } from './key-id-map'
 
 import type { KeyId } from '../types'
 import type { UnionFieldSchema } from '../form-schema'
-import { collectFieldCovers, findRevealChain } from './reveal-tree'
-import type { RevealNode } from './reveal-tree'
+import { findDeepest } from './reveal-tree'
+import type { FieldCover } from './reveal-adapter'
+import type { RevealTreeField } from './reveal-tree'
 
 export interface RevealResult {
   /**
@@ -50,22 +51,17 @@ export interface FieldElementEntry {
    * for its path and everything below it except these.
    */
   exclude?: () => string[] | undefined
-  /**
-   * Stands for fields that are not mounted, e.g. those in an inactive tab or
-   * those a `v-if` took out: it counts for which fields the form renders, but a
-   * reveal never lands on it as on the field itself
-   */
-  standIn?: boolean
-  /**
-   * For a stand-in: where a reveal lands when it finds the field nowhere, e.g.
-   * the section a `v-if` took the field out of
-   */
-  landing?: () => Element | null
-  /**
-   * For a remembered field: the field of the reveal tree it was shown next to,
-   * whose containers it sits in too
-   */
-  anchor?: () => string | undefined
+}
+
+/**
+ * A field that has unmounted, e.g. as a `v-if` took it out, see
+ * `rememberField`
+ */
+export interface FieldMemory extends FieldCover {
+  /** Its ancestors as it unmounts */
+  ancestors: Element[]
+  /** Its anchors as it mounted and as it unmounts */
+  anchors: Array<string | null>
 }
 
 /** Whether an element is on the page and takes up space */
@@ -82,22 +78,6 @@ function getDepth(element: Element): number {
   return depth
 }
 
-/**
- * Whether the entry stands for the field at `fieldPath`: its own path, or a
- * path below it that is not in a child it leaves out
- */
-function entryCovers(entry: FieldElementEntry, fieldPath: string): boolean {
-  const path = entry.path()
-  if (fieldPath === path) {
-    return true
-  }
-  if (!utils.isWithinPath(fieldPath, path)) {
-    return false
-  }
-  const child = utils.toArray(fieldPath)[utils.toArray(path).length]
-  return !entry.exclude?.()?.includes(child)
-}
-
 type PathMapOptions = {
   formData: Record<string, any>
   getSchema: (path: string) => UnionFieldSchema | undefined
@@ -105,8 +85,8 @@ type PathMapOptions = {
 }
 
 type FieldRevealOptions = PathMapOptions & {
-  /** The fields the form's content renders and the containers they sit in, see `scanRevealTree` */
-  getRevealTree?: () => RevealNode[]
+  /** The fields the form's content renders, mounted or not, see `flattenRevealTree` */
+  getTreeFields?: () => RevealTreeField[]
   /** Whether render rules hide the field at a path, e.g. for the data's current mode */
   isFieldHidden?: (fieldPath: string) => boolean
 }
@@ -161,6 +141,17 @@ export function createFieldReveal(options: FieldRevealOptions) {
   // errors) follows records expanding and tabs switching
   const fieldElements = shallowReactive(new Set<FieldElementEntry>())
 
+  // The fields that have unmounted, by path, see `rememberField`
+  const memories = shallowReactive(new Map<string, FieldMemory>())
+
+  // The fields of the reveal tree, mounted or not. The form's content scans
+  // again on any change it reads, so they are kept while they stay the same.
+  const treeCovers = computed<FieldCover[]>((previous) => {
+    const covers = (options.getTreeFields?.() ?? []).map(({ path, exclude }) => ({ path, exclude }))
+    return previous && isEqual(previous, covers) ? previous : covers
+  })
+  const treeLeaves = computed(() => new Set(treeCovers.value.map(cover => cover.path)))
+
   function registerFieldElement(entry: FieldElementEntry) {
     fieldElements.add(entry)
     return () => {
@@ -178,7 +169,7 @@ export function createFieldReveal(options: FieldRevealOptions) {
         continue
       }
       const element = entry.element()
-      if (element?.isConnected && element.getClientRects().length > 0) {
+      if (isVisible(element)) {
         return element
       }
     }
@@ -186,32 +177,22 @@ export function createFieldReveal(options: FieldRevealOptions) {
   }
 
   /**
-   * The mounted field that most closely stands for `fieldPath`: the field
-   * itself, or the deepest ancestor that renders it (see `entryCovers`)
+   * The field the form renders that most closely stands for `fieldPath`, see
+   * `findDeepest`. Only a mounted field has an element: at the same depth, it
+   * wins over the fields of closed containers and the remembered ones.
    */
-  function findCoveringEntry(fieldPath: string): FieldElementEntry | null {
-    let found: FieldElementEntry | null = null
-    let foundDepth = -1
-    for (const entry of fieldElements) {
-      if (!entryCovers(entry, fieldPath)) {
-        continue
-      }
-      const depth = utils.toArray(entry.path()).length
-      // At the same depth, a mounted field wins over a stand-in
-      if (depth > foundDepth || (depth === foundDepth && found?.standIn && !entry.standIn)) {
-        found = entry
-        foundDepth = depth
-      }
-    }
-    return found
+  function findCoveringField(fieldPath: string): (FieldCover & { element?: () => Element | null }) | null {
+    const mounted = [...fieldElements].map(entry => ({ path: entry.path(), exclude: entry.exclude?.(), element: entry.element }))
+    return findDeepest([...mounted, ...treeCovers.value, ...memories.values()], fieldPath)
   }
 
   /**
-   * Whether a mounted field shows the field at `fieldPath`, now or once the
-   * user expands it. A field left out with `omit` everywhere is not.
+   * Whether the form shows the field at `fieldPath`, now or once the user
+   * expands it or opens its container. A field left out with `omit`
+   * everywhere is not.
    */
   function isFieldRendered(fieldPath: string): boolean {
-    return !!findCoveringEntry(fieldPath)
+    return !!findCoveringField(fieldPath)
   }
 
   /**
@@ -220,28 +201,7 @@ export function createFieldReveal(options: FieldRevealOptions) {
    * field is inside it
    */
   function findCoveringElement(fieldPath: string): Element | null {
-    return findCoveringEntry(fieldPath)?.element() ?? null
-  }
-
-  /**
-   * Where a remembered field that is not on the page now was last shown: the
-   * deepest stand-in that covers `fieldPath` and has a visible landing
-   */
-  function findRememberedLanding(fieldPath: string) {
-    let found: { path: string, element: Element, remembered: true } | null = null
-    let foundDepth = -1
-    for (const entry of fieldElements) {
-      if (!entry.landing || !entryCovers(entry, fieldPath)) {
-        continue
-      }
-      const element = entry.landing()
-      const depth = utils.toArray(entry.path()).length
-      if (element?.isConnected && element.getClientRects().length > 0 && depth > foundDepth) {
-        found = { path: entry.path(), element, remembered: true }
-        foundDepth = depth
-      }
-    }
-    return found
+    return findCoveringField(fieldPath)?.element?.() ?? null
   }
 
   /**
@@ -255,6 +215,24 @@ export function createFieldReveal(options: FieldRevealOptions) {
     }
     const segments = utils.toArray(fieldPath)
     return segments.some((_, i) => options.isFieldHidden!(utils.resolve(...segments.slice(0, i + 1))))
+  }
+
+  /** The first anchor of a remembered field that the reveal tree still holds */
+  function getMemoryAnchor(memory: FieldMemory): string | undefined {
+    return memory.anchors.find((anchor): anchor is string => !!anchor && treeLeaves.value.has(anchor))
+  }
+
+  /** Where a remembered field was: the closest of its ancestors still on the page */
+  function getMemoryLanding(memory: FieldMemory): Element | null {
+    const kept = memory.ancestors.find(isVisible)
+    // Its section may have been rendered again (e.g. a tab shown again), so
+    // the old ancestors are gone: the anchor's section is where it was
+    const anchor = getMemoryAnchor(memory)
+    const anchorSection = anchor ? findFieldElement(anchor)?.parentElement : null
+    if (isVisible(anchorSection) && (!kept || kept.contains(anchorSection))) {
+      return anchorSection
+    }
+    return kept ?? null
   }
 
   /**
@@ -275,15 +253,15 @@ export function createFieldReveal(options: FieldRevealOptions) {
     if (ancestor?.path === fieldPath || isHiddenByRules(fieldPath)) {
       return ancestor
     }
-    const remembered = findRememberedLanding(fieldPath)
+    const landings = [...memories.values()].flatMap((memory) => {
+      const element = getMemoryLanding(memory)
+      return isVisible(element) ? [{ ...memory, element, remembered: true as const }] : []
+    })
+    const remembered = findDeepest(landings, fieldPath)
     if (remembered && (!ancestor || utils.toArray(remembered.path).length >= utils.toArray(ancestor.path).length)) {
       return remembered
     }
     return ancestor
-  }
-
-  function getTreeLeaves(): Set<string> {
-    return new Set(options.getRevealTree ? collectFieldCovers(options.getRevealTree()).map(cover => cover.path) : [])
   }
 
   /**
@@ -295,12 +273,11 @@ export function createFieldReveal(options: FieldRevealOptions) {
     if (!element) {
       return null
     }
-    const leaves = getTreeLeaves()
     let found: string | null = null
     let foundDepth = -1
     for (const entry of fieldElements) {
-      const other = entry.standIn ? null : entry.element()
-      if (!other?.isConnected || entry.path() === fieldPath || !leaves.has(entry.path())) {
+      const other = entry.element()
+      if (!other?.isConnected || entry.path() === fieldPath || !treeLeaves.value.has(entry.path())) {
         continue
       }
       let common = element.parentElement
@@ -328,60 +305,16 @@ export function createFieldReveal(options: FieldRevealOptions) {
    *   first one the reveal tree still holds counts. A `v-if` may take the one it
    *   had on mount out with it; a tab takes out the fields around it first.
    */
-  function rememberField(memory: { path: string, exclude?: string[], ancestors: Element[], anchors: Array<string | null> }) {
-    const getAnchor = () => {
-      const leaves = getTreeLeaves()
-      return memory.anchors.find((anchor): anchor is string => !!anchor && leaves.has(anchor))
-    }
-    for (const entry of fieldElements) {
-      if (entry.landing && entry.path() === memory.path) {
-        fieldElements.delete(entry)
-      }
-    }
-    fieldElements.add({
-      path: () => memory.path,
-      element: () => null,
-      exclude: () => memory.exclude,
-      standIn: true,
-      anchor: getAnchor,
-      landing: () => {
-        const kept = memory.ancestors.find(isVisible)
-        // Its section may have been rendered again (e.g. a tab shown again), so
-        // the old ancestors are gone: the anchor's section is where it was
-        const anchor = getAnchor()
-        const anchorSection = anchor ? findFieldElement(anchor)?.parentElement : null
-        if (isVisible(anchorSection) && (!kept || kept.contains(anchorSection))) {
-          return anchorSection
-        }
-        return kept ?? null
-      },
-    })
+  function rememberField(memory: FieldMemory) {
+    memories.set(memory.path, memory)
   }
 
   /** The remembered fields that have an anchor, see `rememberField` */
-  function getAnchoredMemories(): Array<{ path: string, exclude?: string[], anchor: string }> {
-    return [...fieldElements].flatMap((entry) => {
-      const anchor = entry.anchor?.()
-      return anchor ? [{ path: entry.path(), exclude: entry.exclude?.(), anchor }] : []
+  function getAnchoredMemories(): Array<FieldCover & { anchor: string }> {
+    return [...memories.values()].flatMap((memory) => {
+      const anchor = getMemoryAnchor(memory)
+      return anchor ? [{ path: memory.path, exclude: memory.exclude, anchor }] : []
     })
-  }
-
-  /** The containers of the anchor of the deepest remembered field that covers `fieldPath` */
-  function findRememberedChain(tree: RevealNode[], fieldPath: string) {
-    let found: string | null = null
-    let foundDepth = -1
-    for (const entry of fieldElements) {
-      const anchor = entry.anchor?.()
-      if (!anchor || !entryCovers(entry, fieldPath)) {
-        continue
-      }
-      const depth = utils.toArray(entry.path()).length
-      if (depth > foundDepth) {
-        found = anchor
-        foundDepth = depth
-      }
-    }
-    return found ? findRevealChain(tree, found) : null
   }
 
   /**
@@ -393,9 +326,11 @@ export function createFieldReveal(options: FieldRevealOptions) {
     if (isHiddenByRules(target)) {
       return
     }
-    const tree = options.getRevealTree?.() ?? []
-    const chain = findRevealChain(tree, target) ?? findRememberedChain(tree, target)
-    for (const container of chain ?? []) {
+    const fields = options.getTreeFields?.() ?? []
+    // A remembered field sits in the containers of its anchor
+    const memory = findDeepest(getAnchoredMemories(), target)
+    const field = findDeepest(fields, target) ?? (memory && findDeepest(fields, memory.anchor))
+    for (const container of field?.containers ?? []) {
       if (findFieldElement(target)) {
         return
       }
