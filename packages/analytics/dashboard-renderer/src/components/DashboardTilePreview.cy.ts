@@ -1,11 +1,15 @@
 import DashboardTilePreview from './DashboardTilePreview.vue'
 import DashboardTile from './DashboardTile.vue'
+import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { defineComponent, h, onMounted } from 'vue'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContext } from '../types'
+import { INJECT_QUERY_PROVIDER, TILE_DATA_EMPTY, TILE_DATA_LOADING } from '../constants'
+import type { DashboardRendererContext, SuppliedTileData } from '../types'
 import type {
   AllFilters,
+  ApiRequestsResult,
+  ExploreResultV4,
+  PlatformTabularResponse,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -384,5 +388,248 @@ describe('<DashboardTilePreview />', () => {
       expect(emitted).to.have.property('meta')
       expect(emitted.meta).to.have.property('granularity_ms', 3600000)
     })
+  })
+})
+
+describe('<DashboardTilePreview /> with supplied data', () => {
+  const START = '2024-06-16T00:00:00.000Z'
+  const END = '2024-06-16T01:00:00.000Z'
+
+  const exploreResult: ExploreResultV4 = {
+    data: [
+      { timestamp: START, event: { request_count: 3 } },
+      { timestamp: END, event: { request_count: 5 } },
+    ],
+    meta: {
+      start: START,
+      end: END,
+      granularity_ms: 3_600_000,
+      display: {},
+      metric_names: ['request_count'],
+      metric_units: { request_count: 'count' },
+      query_id: '',
+    },
+  } as unknown as ExploreResultV4
+
+  const tabularResponse: PlatformTabularResponse = {
+    records: [
+      { name: 'route-a', control_plane: 'cp-1' },
+      { name: 'route-b', control_plane: 'cp-2' },
+    ],
+    meta: {
+      query_id: '',
+      entity: 'route',
+      columns: ['name', 'control_plane'],
+      page_size: 25,
+      display: {},
+    },
+  }
+
+  const requestsResult: ApiRequestsResult = {
+    results: [
+      { request_start: START, latencies_response_ms: 10 },
+      { request_start: END, latencies_response_ms: 20 },
+    ],
+    meta: { query_id: '', time_range: { start: START, end: END }, size: 2 },
+  }
+
+  const timeseriesDefinition: TileDefinition = {
+    chart: { type: 'timeseries_line', chart_title: 'Requests' },
+    query: { datasource: 'api_usage', metrics: ['request_count'], dimensions: ['time'] },
+  }
+
+  const tableDefinition: TileDefinition = {
+    chart: { type: 'table', chart_title: 'Routes' },
+    query: { datasource: 'platform', entity: 'route', columns: ['name', 'control_plane'] },
+  }
+
+  const scatterDefinition: TileDefinition = {
+    chart: { type: 'scatter', chart_title: 'Latency' },
+    query: { datasource: 'requests', metric: 'latencies_response_ms' },
+  } as TileDefinition
+
+  beforeEach(() => {
+    cy.viewport(1200, 800)
+    setupPiniaTestStore()
+  })
+
+  const mountPreview = ({
+    definition,
+    attrs = {},
+    data,
+  }: {
+    definition: TileDefinition
+    attrs?: Record<string, unknown>
+    data?: SuppliedTileData
+  }) => {
+    const bridge = {
+      configFn: () => Promise.resolve({ analytics: { percentiles: true } }),
+      datasourceConfigFn: () => Promise.resolve([]),
+      evaluateFeatureFlagFn: () => true,
+      exploreBaseUrl: async () => 'http://test.com/explore',
+      requestsBaseUrl: async () => 'http://test.com/requests',
+      queryFn: cy.stub().as('queryFn').resolves(exploreResult),
+      tabularQueryFn: cy.stub().as('tabularQueryFn').resolves(tabularResponse),
+      requestsQueryFn: cy.stub().as('requestsQueryFn').resolves(requestsResult),
+    }
+
+    return cy.mount(DashboardTilePreview, {
+      props: {
+        context: { filters: [], timeSpec: { type: 'relative', time_range: '1h' } },
+        definition,
+        data,
+      },
+      attrs,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: bridge,
+        },
+      },
+    })
+  }
+
+  const expectNoBridgeQuery = () => {
+    cy.get('@queryFn').should('not.have.been.called')
+    cy.get('@tabularQueryFn').should('not.have.been.called')
+    cy.get('@requestsQueryFn').should('not.have.been.called')
+  }
+
+  it('renders a chart tile from supplied data and emits chart-data', () => {
+    const onChartData = cy.spy().as('chartData')
+    mountPreview({ definition: timeseriesDefinition, data: exploreResult, attrs: { onChartData } })
+
+    cy.get('.tile-content canvas').should('exist')
+    cy.get('@chartData').should('have.been.calledWith', exploreResult)
+    expectNoBridgeQuery()
+  })
+
+  it('renders a table tile from supplied data', () => {
+    mountPreview({ definition: tableDefinition, data: tabularResponse })
+
+    cy.get('.table-data-grid-renderer').should('contain.text', 'route-a')
+    cy.get('.table-data-grid-renderer').should('contain.text', 'route-b')
+    expectNoBridgeQuery()
+  })
+
+  it('renders a scatter tile from supplied data', () => {
+    mountPreview({ definition: scatterDefinition, data: requestsResult })
+
+    cy.get('.tile-content canvas').should('exist')
+    cy.getTestId('scatter-chart-empty-state').should('not.exist')
+    expectNoBridgeQuery()
+  })
+
+  it('shows the loading state for TILE_DATA_LOADING', () => {
+    mountPreview({ definition: timeseriesDefinition, data: TILE_DATA_LOADING })
+
+    cy.get('.chart-skeleton').should('exist')
+    expectNoBridgeQuery()
+  })
+
+  it('shows the empty state for TILE_DATA_EMPTY', () => {
+    mountPreview({ definition: timeseriesDefinition, data: TILE_DATA_EMPTY })
+
+    cy.getTestId('chart-no-data-state').should('exist')
+    expectNoBridgeQuery()
+  })
+
+  it('shows the error state with the message of a supplied Error', () => {
+    mountPreview({ definition: timeseriesDefinition, data: new Error('Host fetch failed') })
+
+    cy.getTestId('chart-empty-state').should('contain.text', 'Host fetch failed')
+    expectNoBridgeQuery()
+  })
+
+  it('shows the loading, empty, and error states for table and scatter tiles', () => {
+    mountPreview({ definition: tableDefinition, data: TILE_DATA_LOADING })
+    cy.getTestId('table-skeleton').should('exist')
+
+    mountPreview({ definition: tableDefinition, data: TILE_DATA_EMPTY })
+    cy.getTestId('table-empty-state').should('exist')
+
+    mountPreview({ definition: tableDefinition, data: new Error('Table failed') })
+    cy.getTestId('table-supplied-data-error').should('contain.text', 'Table failed')
+
+    mountPreview({ definition: scatterDefinition, data: TILE_DATA_EMPTY })
+    cy.getTestId('scatter-chart-no-data-state').should('exist')
+
+    mountPreview({ definition: scatterDefinition, data: new Error('Scatter failed') })
+    cy.getTestId('scatter-chart-empty-state').should('contain.text', 'Scatter failed')
+    expectNoBridgeQuery()
+  })
+
+  it('shows the error state when the data does not match the tile type', () => {
+    mountPreview({ definition: tableDefinition, data: exploreResult })
+    cy.getTestId('table-supplied-data-error').should('contain.text', "doesn't match this tile type")
+
+    mountPreview({ definition: scatterDefinition, data: exploreResult })
+    cy.getTestId('scatter-chart-empty-state').should('contain.text', "doesn't match this tile type")
+
+    mountPreview({ definition: timeseriesDefinition, data: tabularResponse })
+    cy.getTestId('chart-empty-state').should('contain.text', "doesn't match this tile type")
+    expectNoBridgeQuery()
+  })
+
+  it('hides the refresh action', () => {
+    mountPreview({ definition: timeseriesDefinition, data: exploreResult })
+
+    cy.get('.refresh-button').should('not.exist')
+  })
+
+  it('skips the "Chart not configured" state', () => {
+    mountPreview({
+      definition: { ...timeseriesDefinition, query: { datasource: 'api_usage', metrics: [] } } as TileDefinition,
+      data: exploreResult,
+    })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.get('.tile-content canvas').should('exist')
+  })
+
+  it('shows the "Chart not configured" state for a requests scatter tile with no metric', () => {
+    mountPreview({
+      definition: { ...scatterDefinition, query: { datasource: 'requests' } } as TileDefinition,
+      data: requestsResult,
+    })
+
+    cy.getTestId('chart-not-configured-empty-state').should('exist')
+    cy.get('.tile-content canvas').should('not.exist')
+    expectNoBridgeQuery()
+  })
+
+  it('emits tile-time-range-zoom on zoom without running a query', () => {
+    const onTileTimeRangeZoom = cy.spy().as('zoom')
+    const timeRange = { type: 'absolute', start: new Date(START), end: new Date(END) }
+
+    mountPreview({ definition: timeseriesDefinition, data: exploreResult, attrs: { onTileTimeRangeZoom } })
+      .then(({ wrapper }) => {
+        wrapper.findComponent(TimeseriesChartRenderer).vm.$emit('zoom-time-range', timeRange)
+      })
+
+    cy.get('@zoom').should('have.been.calledOnce')
+      .its('firstCall.args.0.timeRange').should('deep.equal', timeRange)
+    expectNoBridgeQuery()
+  })
+
+  it('stops querying when the host starts passing data after mount', () => {
+    const onChartData = cy.spy().as('chartData')
+    mountPreview({ definition: timeseriesDefinition, attrs: { onChartData } }).then(({ wrapper }) => {
+      cy.get('@queryFn').should('have.been.calledOnce').then(() => {
+        const suppliedResult = { ...exploreResult, meta: { ...exploreResult.meta, query_id: 'supplied' } }
+
+        return wrapper.setProps({ data: suppliedResult }).then(() => {
+          cy.get('@chartData').should('have.been.calledWith', suppliedResult)
+          cy.get('.refresh-button').should('not.exist')
+          cy.get('@queryFn').should('have.been.calledOnce')
+        })
+      })
+    })
+  })
+
+  it('runs the query when data is not passed', () => {
+    mountPreview({ definition: timeseriesDefinition })
+
+    cy.get('@queryFn').should('have.been.called')
+    cy.get('.refresh-button').should('exist')
   })
 })

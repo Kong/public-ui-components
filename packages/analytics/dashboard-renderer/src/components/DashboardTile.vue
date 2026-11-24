@@ -83,7 +83,7 @@
         />
       </div>
 
-      <div v-if="showRefresh">
+      <div v-if="showRefreshAction">
         <KButton
           appearance="secondary"
           class="refresh-button"
@@ -155,12 +155,12 @@
           </KButton>
           <template #items>
             <KDropdownItem
-              v-if="!!exploreLinkKebabMenu"
+              v-if="!usesSuppliedData && !!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
+              v-if="!usesSuppliedData && !isTableChartDefinition(activeDefinition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -221,7 +221,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, SuppliedTileData, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
@@ -254,6 +254,7 @@ import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 import { isTimeRangeUnsupported } from '../utils/time-range-support'
+import { isExploreResultV4 } from '../utils/supplied-tile-data'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -272,6 +273,7 @@ const isActionMenuOpen = ref<boolean>(false)
 
 const {
   context,
+  data,
   definition: baseDefinition,
   fitToContent = false,
   groupTiles,
@@ -285,6 +287,11 @@ const {
   tileType = 'chart',
 } = defineProps<{
   context: DashboardRendererContext
+  /**
+   * Data to render in place of the tile's query result. When passed, the tile doesn't run a query.
+   * `TILE_DATA_LOADING` shows the loading state, `TILE_DATA_EMPTY` the empty state, and an `Error` the error state.
+   */
+  data?: SuppliedTileData
   definition: TileDefinition
   fitToContent?: boolean
   groupTiles?: Array<{ id: string, label: string, definition: TileDefinition }>
@@ -315,6 +322,14 @@ const activeDefinition = computed<TileDefinition>(() =>
 )
 
 const fieldLabel = composables.useFieldLabel()
+
+// These renderers run their own queries and don't read supplied data, so they keep the query behavior.
+const QUERY_ONLY_TILE_TYPES: DashboardTileType[] = ['golden_signals', 'top_talkers']
+
+// True when the host passes `data` and this tile type renders it instead of querying.
+const usesSuppliedData = computed<boolean>(() => data !== undefined && !QUERY_ONLY_TILE_TYPES.includes(activeDefinition.value.chart.type))
+// Supplied data has no query to refresh.
+const showRefreshAction = computed<boolean>(() => showRefresh && !usesSuppliedData.value)
 
 const { zoomConfiguration } = composables.useDashboardContext({
   context: computed(() => context),
@@ -407,7 +422,7 @@ watch(activeDefinition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || !!context.editable)
+const kebabMenuHasItems = computed((): boolean => (!usesSuppliedData.value && !!exploreLinkKebabMenu.value) || canExportCsv.value || !!context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
@@ -456,13 +471,15 @@ const componentData = computed(() => {
     height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
     zoomConfiguration: zoomConfiguration.value,
+    suppliedData: usesSuppliedData.value ? data : undefined,
   }
+  // The Explore and Requests links would query data the host supplied, so hide them.
   const chartRendererProps = {
     chartOptions: activeDefinition.value.chart,
     activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
-    requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
-    exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
+    requestsLink: zoomConfiguration.value.showRequestsAction && !usesSuppliedData.value ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction && !usesSuppliedData.value ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {
@@ -533,7 +550,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(badgeData.value),
     rangeUnsupported.value,
     Boolean(tileDescription.value),
-    showRefresh,
+    showRefreshAction.value,
     showMetricSelector.value,
   ].some(Boolean)
 })
@@ -693,6 +710,13 @@ const hideExportModal = () => {
 const getExportData = (): Promise<ExploreResultV4> => {
   if (isRequestsChartDefinition(activeDefinition.value)) {
     throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
+  }
+
+  if (usesSuppliedData.value) {
+    // Export what the tile shows. There is no query to rerun with a higher limit.
+    return isExploreResultV4(data)
+      ? Promise.resolve(data)
+      : Promise.reject(new Error('No supplied data to export'))
   }
 
   // goap datasources don't allow limit increases

@@ -23,6 +23,7 @@
         ...enrichedContext,
         editable: false,
       }"
+      :data="data"
       :definition="definition"
       :height="height"
       hide-actions
@@ -39,7 +40,7 @@
 
 <script setup lang="ts">
 import { computed, toRef, ref, useTemplateRef, onMounted, onUnmounted } from 'vue'
-import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, SuppliedTileData, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import DashboardTile from './DashboardTile.vue'
 import type {
   AllFilters,
@@ -48,7 +49,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
 const root = useTemplateRef('root')
 const tileRef = useTemplateRef('dashboard-tile')
@@ -56,11 +57,17 @@ const randomId = crypto.randomUUID()
 
 const {
   context,
+  data,
   definition,
   globalFilters = [],
   preview = false,
 } = defineProps<{
   context: DashboardRendererContext
+  /**
+   * Data to render in place of the tile's query result. When passed, the tile doesn't run a query.
+   * `TILE_DATA_LOADING` shows the loading state, `TILE_DATA_EMPTY` the empty state, and an `Error` the error state.
+   */
+  data?: SuppliedTileData
   definition: TileDefinition
   globalFilters?: AllFilters[]
   preview?: boolean
@@ -94,6 +101,12 @@ const { enrichedContext, queryReady } = composables.useDashboardContext({
 const isTableDefinition = computed((): boolean => isTableChartDefinition(definition))
 
 const chartNotConfigured = computed(() => {
+  // Supplied data needs no query, so the query's metrics and columns don't matter.
+  // A `requests` scatter tile is the exception: it plots supplied data by the query's metric.
+  if (data !== undefined) {
+    return isRequestsChartDefinition(definition) && !definition.query.metric
+  }
+
   if (isTableDefinition.value) {
     return 'columns' in definition.query && !definition.query.columns?.length
   }
