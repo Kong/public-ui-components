@@ -204,7 +204,11 @@ const hasPrincipals = computed(() =>
 const keyAuthContext = usePluginContext('key-auth')
 const hadPrincipalsEnabled = !!formData.config?.principals?.enabled
 const prioritizePrincipals = computed(() =>
-  keyAuthContext?.source === 'ai-manager' && hasPrincipals.value,
+  keyAuthContext?.source === 'ai-manager'
+  && hasPrincipals.value
+  // A strategy saved as centrally managed keeps its realm selection: the priority
+  // default must not open it in Kong Identity mode or clear that selection on save.
+  && !hasActualRealm(formData.config?.identity_realms),
 )
 const synthesizedPrincipals = prioritizePrincipals.value && !hadPrincipalsEnabled
 

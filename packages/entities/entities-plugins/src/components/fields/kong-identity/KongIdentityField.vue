@@ -94,6 +94,9 @@ const identityRealmsInSchema = computed(() => {
 const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
+  if (prioritizePrincipals.value) {
+    return t('custom_field.kong_identity.description_without_realms_ai_manager')
+  }
   return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.description_with_realms')
     : t('custom_field.kong_identity.description_without_realms')
@@ -242,19 +245,20 @@ function handleModeChange(mode: AuthMode) {
   }
 
   // AI Manager marks the Consumers card as Legacy. The copy is a localized CSS
-  // custom property on that card, so the tag follows the active locale.
-  :deep([data-testid="kong-identity-mode-consumers"] .radio-label)::after {
+  // custom property on that card's wrapper; cards without it compute no content,
+  // so this rule only paints the Legacy tag there.
+  :deep(.radio-label)::after {
     align-items: center;
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
+    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     content: var(--kong-ui-entities-plugins-legacy-label);
     display: inline-flex;
     font-size: var(--kui-font-size-10, $kui-font-size-10);
     font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    line-height: var(--kui-line-height-10, $kui-line-height-10);
     margin-left: var(--kui-space-20, $kui-space-20);
-    padding: 0 var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
     vertical-align: middle;
   }
 

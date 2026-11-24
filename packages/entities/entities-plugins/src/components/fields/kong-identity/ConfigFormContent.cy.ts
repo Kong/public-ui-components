@@ -445,14 +445,21 @@ describe('ConfigFormContent', () => {
 
         cy.getTestId('kong-identity-mode-kong-identity')
           .closest('.k-radio')
-          .should('contain.text', 'authenticate Virtual Keys and map request to Kong Identity Users and Agents')
+          .should('contain.text', 'authenticate Virtual Keys and map requests to Kong Identity Users and Agents')
         cy.getTestId('kong-identity-mode-consumers')
           .closest('.k-radio')
-          .should('contain.text', 'Use consumer-managed API key credentials.')
+          .should('contain.text', 'Use consumer-managed API Key credentials.')
         cy.getTestId('kong-identity-mode-consumers')
           .closest('.kong-identity-option')
           .should('have.attr', 'style')
           .and('contain', '--kong-ui-entities-plugins-legacy-label')
+        cy.getTestId('kong-identity-mode-consumers')
+          .closest('.k-radio')
+          .then(($radio) => {
+            const label = $radio[0].querySelector('.radio-label')
+            if (!label) throw new Error('Consumers radio label not found')
+            expect(getComputedStyle(label, '::after').content).to.contain('Legacy')
+          })
       })
 
       it('keeps the standard copy and no Legacy tag without the AI Manager priority', () => {
@@ -507,6 +514,24 @@ describe('ConfigFormContent', () => {
           return val.config?.principals?.enabled === true
             && val.config?.principals?.directory === 'my-directory'
         }))
+      })
+
+      it('keeps a centrally managed strategy in its saved mode', () => {
+        mountContent(schemaWithRealms, {
+          isKonnect: true,
+          isEditing: true,
+          prioritizePrincipals: true,
+        }, {
+          config: {
+            principals: { enabled: false },
+            identity_realms: [{ scope: 'realm', id: 'realm-1', region: 'us' }],
+          },
+        })
+
+        cy.getTestId('kong-identity-mode-centrally-managed')
+          .closest('.k-radio')
+          .should('have.class', 'checked')
+        cy.getTestId('ff-identity-realms-field').should('exist')
       })
 
       it('keeps a saved principals directory when editing an already-principals strategy', () => {
