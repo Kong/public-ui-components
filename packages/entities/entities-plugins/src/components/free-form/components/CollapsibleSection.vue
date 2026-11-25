@@ -1,5 +1,8 @@
 <template>
-  <div class="ff-collapsible-section">
+  <div
+    ref="root"
+    class="ff-collapsible-section"
+  >
     <header class="ff-collapsible-section-header">
       <div class="ff-collapsible-section-header-toggle">
         <button
@@ -22,7 +25,7 @@
 
     <SlideTransition>
       <div
-        v-if="expanded"
+        v-show="expanded"
         class="ff-collapsible-section-content"
       >
         <slot />
@@ -37,16 +40,29 @@
 </template>
 
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 import { ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { SlideTransition } from '@kong-ui-public/freeform'
+import { SlideTransition, useRevealOpen } from '@kong-ui-public/freeform'
+
+/**
+ * A section that hides its content while collapsed, but keeps it mounted, so it
+ * opens when the form reveals a field inside it.
+ * Must be rendered inside a free-form `Form`.
+ */
 
 defineProps<{
   label: string
 }>()
 
 const expanded = defineModel<boolean>('expanded', { default: true })
+
+const root = useTemplateRef<HTMLElement>('root')
+
+useRevealOpen(root, () => {
+  expanded.value = true
+})
 </script>
 
 <style lang="scss" scoped>
