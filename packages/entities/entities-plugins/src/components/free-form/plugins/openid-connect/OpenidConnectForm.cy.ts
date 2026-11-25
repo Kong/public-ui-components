@@ -1,11 +1,12 @@
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { FORMS_CONFIG } from '../../const'
 import OpenidConnectForm from './OpenidConnectForm.vue'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../../const'
 import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
 import { PLUGIN_CONTEXT_KEY } from '../../plugin-context'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors/context'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
 
@@ -240,6 +241,8 @@ interface MountOptions {
   identityPrincipalsUi?: boolean
   /** Opt in to SecretInput for encrypted free-form fields. */
   useSecretInput?: boolean
+  /** The errors of a failed save, shown on the fields and in the error summary */
+  fieldErrors?: FieldError[]
 }
 
 const mountForm = (options: MountOptions = {}) => {
@@ -256,6 +259,7 @@ const mountForm = (options: MountOptions = {}) => {
     minRuntimeVersion,
     identityPrincipalsUi = false,
     useSecretInput = false,
+    fieldErrors,
   } = options
 
   cy.mount(OpenidConnectForm, {
@@ -289,6 +293,9 @@ const mountForm = (options: MountOptions = {}) => {
         ...(aiManager ? { [PLUGIN_CONTEXT_KEY]: { 'openid-connect': { source: 'ai-manager' } } } : {}),
         [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: identityPrincipalsUi,
         [USE_SECRET_INPUT_KEY as symbol]: ref(useSecretInput),
+        ...(fieldErrors
+          ? { [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() } }
+          : {}),
       },
     },
   })
@@ -356,6 +363,40 @@ describe('OpenidConnectForm', () => {
       clickTab('advanced')
 
       cy.getTestId('ff-config.authorization_endpoint').should('exist')
+    })
+  })
+
+  describe('field errors in inactive tabs', () => {
+    const errors: FieldError[] = [
+      { path: 'config.client_id', message: 'required field missing' },
+      { path: 'config.scopes_claim', message: 'unknown claim' },
+      { path: 'config.authorization_endpoint', message: 'must be a URL' },
+    ]
+
+    it('matches the errors of the fields in inactive tabs', () => {
+      mountForm({ fieldErrors: errors })
+
+      cy.getTestId('ff-array-config.scopes_claim').should('not.exist')
+      cy.getTestId('ff-config.authorization_endpoint').should('not.exist')
+      // A matched error links to its field
+      for (const error of errors) {
+        cy.getTestId(`ff-error-summary-item-${error.path}`).find('.ff-error-summary-link').should('exist')
+      }
+    })
+
+    it('switches to the tab of a field it reveals', () => {
+      mountForm({ fieldErrors: errors })
+
+      cy.getTestId('ff-error-summary-item-config.scopes_claim').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-array-config.scopes_claim').should('be.visible')
+      cy.getTestId('ff-field-errors-config.scopes_claim').should('contain.text', 'unknown claim')
+
+      cy.getTestId('ff-error-summary-item-config.authorization_endpoint').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-config.authorization_endpoint').should('be.visible').and('have.focus')
+
+      cy.getTestId('ff-error-summary-item-config.client_id').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-array-config.client_id').should('be.visible')
+      cy.getTestId('ff-config.authorization_endpoint').should('not.exist')
     })
   })
 

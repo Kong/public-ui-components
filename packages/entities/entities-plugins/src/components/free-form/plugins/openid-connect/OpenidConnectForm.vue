@@ -64,7 +64,11 @@
       </FieldRenderer>
     </template>
 
-    <KTabs :tabs="TABS">
+    <!-- `v-model` lets a reveal switch to the tab of a field (see `reveal-adapters.ts`) -->
+    <KTabs
+      v-model="activeTab"
+      :tabs="TABS"
+    >
       <template #common-anchor>
         <span data-testid="oidc-tab-common">Common</span>
       </template>
@@ -180,6 +184,8 @@ const TABS = [
   { hash: '#authorization', title: 'Authorization' },
   { hash: '#advanced', title: 'Advanced' },
 ] as const
+
+const activeTab = ref<typeof TABS[number]['hash']>('#common')
 
 const ADVANCED_OMIT = [
   'client_id',
