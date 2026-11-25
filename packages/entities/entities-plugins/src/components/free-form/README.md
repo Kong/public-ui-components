@@ -250,7 +250,7 @@ Adding a new generic field type (not plugin-specific) is now done in `@kong-ui-p
 
 Register it against a field path with `FieldRenderer`, or place it directly inside a `Form`/layout slot with `name` set to the field's path — both wire into the same reactive form state as the built-in field components.
 
-When the field needs to write an "empty" value (the user clears it, or a mode switch blanks it), use `emptyValue` from `useField()` instead of hardcoding `null` — see [Empty Field Values](#empty-field-values). Several plugin-specific fields under `plugins/` were written before this existed and had to be retrofitted; new field components should use it from the start.
+When the field needs to write an "empty" value (the user clears it, or a mode switch blanks it), use `emptyValue` from `useField()` instead of hardcoding `null` — see [Empty Field Values](../../../../../core/freeform/docs/empty-field-values.md). Several plugin-specific fields under `plugins/` were written before this existed and had to be retrofitted; new field components should use it from the start.
 
 ## Reference
 
