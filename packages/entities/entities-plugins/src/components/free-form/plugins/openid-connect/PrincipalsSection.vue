@@ -162,62 +162,78 @@
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
       >
-        <KInput
-          v-if="!hasAuthServersAccess"
-          autocomplete="new-password"
-          class="principals-client-select"
-          data-testid="principals-client-id-input"
-          :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.label') : undefined"
-          :model-value="clientId ?? undefined"
-          :placeholder="t('plugins.free-form.openid-connect.principals.client.id_placeholder')"
-          @update:model-value="handleClientChange(index, $event)"
-        />
-        <KSelect
-          v-else
-          class="principals-client-select"
-          data-testid="principals-client-select"
-          :disabled="!selectedServer"
-          enable-filtering
-          :items="getClientItemsForRow(index)"
-          :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.label') : undefined"
-          :loading="clientsLoading"
-          :model-value="clientId ?? undefined"
-          :placeholder="t('plugins.free-form.openid-connect.principals.client.placeholder')"
-          @update:model-value="handleClientChange(index, $event)"
+        <FieldControl
+          v-slot="{ error, errorMessage }"
+          :name="`config.client_id.${index}`"
         >
-          <template
-            v-if="canCreateAuthServerClient"
-            #dropdown-footer-text
-          >
-            <button
-              class="create-action"
-              data-testid="create-client-action"
-              type="button"
-              @click.stop="leavePromptType = 'client'"
-            >
-              <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
-              <div class="create-action-content">
-                <span>{{ t('plugins.free-form.openid-connect.principals.client.create') }}</span>
-                <div class="create-action-hint">
-                  {{ t('plugins.free-form.openid-connect.principals.client.create_hint') }}
-                </div>
-              </div>
-            </button>
-          </template>
-        </KSelect>
-        <div class="principals-client-secret-wrapper">
-          <component
-            :is="useSecretInput ? SecretInput : KInput"
+          <KInput
+            v-if="!hasAuthServersAccess"
             autocomplete="new-password"
-            class="principals-client-secret"
-            data-testid="principals-client-secret"
-            :disabled="hasAuthServersAccess && !selectedServer"
-            :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecrets[index] ?? undefined"
-            :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
-            v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
-            @update:model-value="handleClientSecretChange(index, $event)"
+            class="principals-client-select"
+            data-testid="principals-client-id-input"
+            :error="error"
+            :error-message="errorMessage"
+            :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.label') : undefined"
+            :model-value="clientId ?? undefined"
+            :placeholder="t('plugins.free-form.openid-connect.principals.client.id_placeholder')"
+            @update:model-value="handleClientChange(index, $event)"
           />
+          <KSelect
+            v-else
+            class="principals-client-select"
+            data-testid="principals-client-select"
+            :disabled="!selectedServer"
+            enable-filtering
+            :error="error"
+            :help="errorMessage || undefined"
+            :items="getClientItemsForRow(index)"
+            :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.label') : undefined"
+            :loading="clientsLoading"
+            :model-value="clientId ?? undefined"
+            :placeholder="t('plugins.free-form.openid-connect.principals.client.placeholder')"
+            @update:model-value="handleClientChange(index, $event)"
+          >
+            <template
+              v-if="canCreateAuthServerClient"
+              #dropdown-footer-text
+            >
+              <button
+                class="create-action"
+                data-testid="create-client-action"
+                type="button"
+                @click.stop="leavePromptType = 'client'"
+              >
+                <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+                <div class="create-action-content">
+                  <span>{{ t('plugins.free-form.openid-connect.principals.client.create') }}</span>
+                  <div class="create-action-hint">
+                    {{ t('plugins.free-form.openid-connect.principals.client.create_hint') }}
+                  </div>
+                </div>
+              </button>
+            </template>
+          </KSelect>
+        </FieldControl>
+        <div class="principals-client-secret-wrapper">
+          <FieldControl
+            v-slot="{ error, errorMessage }"
+            :name="`config.client_secret.${index}`"
+          >
+            <component
+              :is="useSecretInput ? SecretInput : KInput"
+              autocomplete="new-password"
+              class="principals-client-secret"
+              data-testid="principals-client-secret"
+              :disabled="hasAuthServersAccess && !selectedServer"
+              :error="error"
+              :error-message="errorMessage"
+              :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
+              :model-value="clientSecrets[index] ?? undefined"
+              :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
+              v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
+              @update:model-value="handleClientSecretChange(index, $event)"
+            />
+          </FieldControl>
           <component
             :is="autofillSlot"
             v-if="autofillSlot"
@@ -268,62 +284,76 @@
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
       >
-        <div class="external-client-field">
-          <KInput
-            autocomplete="new-password"
-            class="external-client-input"
-            data-testid="external-client-id"
-            :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.id_label') : undefined"
-            :model-value="clientId ?? undefined"
-            :placeholder="t('plugins.free-form.openid-connect.principals.client.id_placeholder')"
-            @update:model-value="handleClientChange(index, $event)"
-          >
-            <!-- Schema help text is markdown-rendered, sanitized HTML — render it via the
-                 label tooltip slot (labelAttributes.info is plain-text only). -->
-            <template
-              v-if="index === 0 && clientIdInfo"
-              #label-tooltip
+        <FieldControl
+          v-slot="{ error, errorMessage }"
+          :name="`config.client_id.${index}`"
+        >
+          <div class="external-client-field">
+            <KInput
+              autocomplete="new-password"
+              class="external-client-input"
+              data-testid="external-client-id"
+              :error="error"
+              :error-message="errorMessage"
+              :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.id_label') : undefined"
+              :model-value="clientId ?? undefined"
+              :placeholder="t('plugins.free-form.openid-connect.principals.client.id_placeholder')"
+              @update:model-value="handleClientChange(index, $event)"
             >
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <div v-html="clientIdInfo" />
-            </template>
-          </KInput>
-          <component
-            :is="autofillSlot"
-            v-if="autofillSlot"
-            :schema="{ model: 'config-client_id', referenceable: true }"
-            :update="(val: string) => handleClientChange(index, val)"
-            :value="clientId"
-          />
-        </div>
-        <div class="external-client-field">
-          <component
-            :is="useSecretInput ? SecretInput : KInput"
-            autocomplete="new-password"
-            class="external-client-input"
-            data-testid="external-client-secret"
-            :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecrets[index] ?? undefined"
-            :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
-            v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
-            @update:model-value="handleClientSecretChange(index, $event)"
-          >
-            <template
-              v-if="index === 0 && clientSecretInfo"
-              #label-tooltip
+              <!-- Schema help text is markdown-rendered, sanitized HTML — render it via the
+                   label tooltip slot (labelAttributes.info is plain-text only). -->
+              <template
+                v-if="index === 0 && clientIdInfo"
+                #label-tooltip
+              >
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div v-html="clientIdInfo" />
+              </template>
+            </KInput>
+            <component
+              :is="autofillSlot"
+              v-if="autofillSlot"
+              :schema="{ model: 'config-client_id', referenceable: true }"
+              :update="(val: string) => handleClientChange(index, val)"
+              :value="clientId"
+            />
+          </div>
+        </FieldControl>
+        <FieldControl
+          v-slot="{ error, errorMessage }"
+          :name="`config.client_secret.${index}`"
+        >
+          <div class="external-client-field">
+            <component
+              :is="useSecretInput ? SecretInput : KInput"
+              autocomplete="new-password"
+              class="external-client-input"
+              data-testid="external-client-secret"
+              :error="error"
+              :error-message="errorMessage"
+              :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
+              :model-value="clientSecrets[index] ?? undefined"
+              :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
+              v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
+              @update:model-value="handleClientSecretChange(index, $event)"
             >
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <div v-html="clientSecretInfo" />
-            </template>
-          </component>
-          <component
-            :is="autofillSlot"
-            v-if="autofillSlot"
-            :schema="{ model: 'config-client_secret', referenceable: true }"
-            :update="(val: string) => handleClientSecretChange(index, val)"
-            :value="clientSecrets[index]"
-          />
-        </div>
+              <template
+                v-if="index === 0 && clientSecretInfo"
+                #label-tooltip
+              >
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div v-html="clientSecretInfo" />
+              </template>
+            </component>
+            <component
+              :is="autofillSlot"
+              v-if="autofillSlot"
+              :schema="{ model: 'config-client_secret', referenceable: true }"
+              :update="(val: string) => handleClientSecretChange(index, val)"
+              :value="clientSecrets[index]"
+            />
+          </div>
+        </FieldControl>
         <button
           :aria-label="t('plugins.free-form.openid-connect.principals.client.remove')"
           class="remove-client-btn"

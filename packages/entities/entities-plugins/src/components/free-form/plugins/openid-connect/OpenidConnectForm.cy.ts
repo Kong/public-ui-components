@@ -1151,6 +1151,59 @@ describe('OpenidConnectForm', () => {
       })
     })
 
+    describe('errors on the clients', () => {
+      const errors: FieldError[] = [
+        { path: 'config.client_id.0', message: 'required field missing' },
+        { path: 'config.client_id.1', message: 'required field missing' },
+        { path: 'config.client_secret.1', message: 'required field missing' },
+      ]
+      // Two client rows, both empty
+      const clients = { client_id: [null, null], client_secret: [null, null] }
+
+      it('shows them on the Kong Identity client rows and links to them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: errors,
+        })
+
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+        cy.getTestId('principals-client-id-input').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+        for (const error of errors) {
+          cy.getTestId(`ff-error-summary-item-${error.path}`).find('.ff-error-summary-link').should('exist')
+        }
+        cy.getTestId('ff-error-summary-item-config.client_secret.1').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-client-secret').eq(1).closest('.k-input').find('input').should('have.focus')
+      })
+
+      it('shows them on the External client rows and links to them', () => {
+        mountPrincipalsForm({
+          isEditing: true,
+          model: createPrincipalsModel({ id: 'plugin-id', issuer: 'https://accounts.example.com', ...clients }),
+          fieldErrors: errors,
+        })
+
+        cy.getTestId('external-client-id').should('have.length', 2)
+        cy.getTestId('external-client-secret').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').click()
+        cy.getTestId('external-client-id').eq(1).should('have.focus')
+      })
+
+      it('switches back to the Common tab to reveal them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: errors,
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+
+        clickTab('advanced')
+        cy.getTestId('principals-client-id-input').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-client-id-input').eq(1).should('have.focus')
+      })
+    })
+
     it('does not render the section on Kong Manager even when the schema has principals', () => {
       mountForm({
         app: 'kongManager',
