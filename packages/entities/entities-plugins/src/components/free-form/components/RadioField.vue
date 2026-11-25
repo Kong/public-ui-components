@@ -38,13 +38,18 @@
         @update:model-value="onChange"
       />
     </div>
+
+    <FieldErrors
+      :errors="field.fieldErrors.value"
+      :path="field.path.value"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
 import { KRadio, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from '@kong-ui-public/freeform'
+import { FieldErrors, useField, useFieldAttrs, useFormShared } from '@kong-ui-public/freeform'
 import type { BaseFieldProps } from '@kong-ui-public/freeform'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
