@@ -100,7 +100,7 @@
     "sections": {
       "general": {
         "title": "General information",
-        "description": "General information helps identify and manage this vault instance."
+        "description": "Name this vault, add an optional description, and add tags to group and filter it."
       },
       "config": {
         "title": "Vault configuration",

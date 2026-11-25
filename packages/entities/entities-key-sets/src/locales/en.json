@@ -51,7 +51,7 @@
       "sections": {
         "general": {
           "title": "General information",
-          "description": "General information will help identify and manage this key set."
+          "description": "Name this key set and add tags to group and filter it."
         }
       },
       "fields": {

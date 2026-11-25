@@ -101,7 +101,7 @@
     "sections": {
       "general": {
         "title": "General information",
-        "description": "General information will help you identify and manage this route"
+        "description": "Name this route, assign a gateway service, and add tags to group and filter it."
       },
       "config": {
         "title": "Route configuration",

@@ -55,7 +55,7 @@
       },
       "general_info": {
         "title": "General information",
-        "help": "General information will help identify and manage this upstream."
+        "help": "Name this upstream with the host of the service it serves. You can also set a host header, a client certificate and tags."
       },
       "load_balancing": {
         "title": "Load balancing",
