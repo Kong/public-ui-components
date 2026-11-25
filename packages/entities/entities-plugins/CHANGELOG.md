@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.9.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.3...%40kong-ui-public%2Fentities-plugins%4011.9.4) (2026-11-25)
+
+### Bug Fixes
+
+* **entities-plugins:** open collapsed Metering & Billing sections for a reveal [KM-3796] ([#4122](https://github.com/Kong/public-ui-components/issues/4122)) ([21b186a](https://github.com/Kong/public-ui-components/commit/21b186aa520af955cf44222419c86c4708b88234))
+
+
 ## [11.9.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.2...%40kong-ui-public%2Fentities-plugins%4011.9.3) (2026-11-25)
 
 ### Bug Fixes
