@@ -59,7 +59,7 @@ them, it doesn't own them.
 
 ### Expressible Fields (`expressions`)
 
-See the framework README for the full semantics of the `expressions` twin-field convention
+See the framework's [Expressible Fields](../../../../../core/freeform/docs/expressions.md) doc for the full semantics of the `expressions` twin-field convention
 (`ExpressionEditor`, array pairing, empty-slot rules). The rest of this section covers
 what's specific to **this app's** integration.
 
@@ -197,7 +197,7 @@ schema -> appendEntityChecksFromMetadata(pluginName, schema)
 ## Custom Field Rendering
 
 Plugins can override how specific fields render using `FieldRenderer` (the component — see
-`@kong-ui-public/freeform`'s README for `Custom Field Rendering` and the `FieldRendererRule` type used by
+`@kong-ui-public/freeform`'s [Custom Fields](../../../../../core/freeform/docs/custom-fields.md) doc for `Custom Field Rendering` and the `FieldRendererRule` type used by
 `pluginConfig.fieldRenderers`):
 
 ```vue
@@ -246,7 +246,7 @@ Field-component and framework-composable tests (`free-form-basic.cy.ts`, `expres
 4. Add `fieldRenderers` for flat renderer overrides
 5. Add `renderRules` in the plugin config when free-form layout rules are needed
 
-Adding a new generic field type (not plugin-specific) is now done in `@kong-ui-public/freeform` — see its README.
+Adding a new generic field type (not plugin-specific) is now done in `@kong-ui-public/freeform` — see its [Filler](../../../../../core/freeform/docs/filler.md#adding-a-new-field-type) doc.
 
 Register it against a field path with `FieldRenderer`, or place it directly inside a `Form`/layout slot with `name` set to the field's path — both wire into the same reactive form state as the built-in field components.
 
