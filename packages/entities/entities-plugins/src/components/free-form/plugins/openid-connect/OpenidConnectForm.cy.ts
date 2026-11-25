@@ -1129,6 +1129,28 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('ff-array-config.client_id').should('not.exist')
     })
 
+    describe('an error on the authorization server', () => {
+      const errors: FieldError[] = [{ path: 'config.issuer', message: 'required field missing' }]
+
+      it('shows it on the select and links to it', () => {
+        mountPrincipalsForm({ fieldErrors: errors })
+
+        cy.getTestId('principals-directory-select').closest('.k-select').should('contain.text', 'required field missing')
+        cy.getTestId('ff-error-summary-item-config.issuer').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-directory-select').closest('.k-select').find(':focus').should('exist')
+      })
+
+      it('switches back to the Common tab to reveal it', () => {
+        mountPrincipalsForm({ fieldErrors: errors })
+        cy.getTestId('principals-directory-select').should('exist')
+
+        clickTab('authorization')
+        cy.getTestId('principals-directory-select').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.issuer').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-directory-select').closest('.k-select').find(':focus').should('exist')
+      })
+    })
+
     it('does not render the section on Kong Manager even when the schema has principals', () => {
       mountForm({
         app: 'kongManager',

@@ -172,6 +172,7 @@ import { isSingularClaimDeprecated, migrateDeprecatedClaim } from './useDeprecat
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
 import PrincipalsSection from './PrincipalsSection.vue'
+import './reveal-adapters'
 import VerifySignatureField from './VerifySignatureField.vue'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'

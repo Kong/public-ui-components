@@ -94,57 +94,67 @@
     </div>
 
     <template v-if="selectedMode === MODE_KONG_IDENTITY">
-      <KSelect
-        v-if="hasAuthServersAccess"
-        class="principals-directory-select"
-        data-testid="principals-directory-select"
-        enable-filtering
-        :items="kongIdentityServerItems"
-        :label="t('plugins.free-form.openid-connect.principals.auth_server.label')"
-        :label-attributes="{
-          info: t('plugins.free-form.openid-connect.principals.auth_server.info'),
-          tooltipAttributes: { maxWidth: '300' },
-        }"
-        :loading="kongIdentityServersLoading"
-        :model-value="selectedServer?.id"
-        :placeholder="t('plugins.free-form.openid-connect.principals.auth_server.placeholder')"
-        required
-        @update:model-value="handleServerChange"
+      <!-- Picks `config.issuer`: the field a reveal of it lands on, and that shows its errors -->
+      <FieldControl
+        v-slot="{ error, errorMessage }"
+        name="config.issuer"
       >
-        <template
-          v-if="canCreateAuthServer"
-          #dropdown-footer-text
+        <KSelect
+          v-if="hasAuthServersAccess"
+          class="principals-directory-select"
+          data-testid="principals-directory-select"
+          enable-filtering
+          :error="error"
+          :help="errorMessage || undefined"
+          :items="kongIdentityServerItems"
+          :label="t('plugins.free-form.openid-connect.principals.auth_server.label')"
+          :label-attributes="{
+            info: t('plugins.free-form.openid-connect.principals.auth_server.info'),
+            tooltipAttributes: { maxWidth: '300' },
+          }"
+          :loading="kongIdentityServersLoading"
+          :model-value="selectedServer?.id"
+          :placeholder="t('plugins.free-form.openid-connect.principals.auth_server.placeholder')"
+          required
+          @update:model-value="handleServerChange"
         >
-          <button
-            class="create-action"
-            data-testid="create-auth-server-action"
-            type="button"
-            @click.stop="leavePromptType = 'authServer'"
+          <template
+            v-if="canCreateAuthServer"
+            #dropdown-footer-text
           >
-            <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
-            <div class="create-action-content">
-              <span>{{ t('plugins.free-form.openid-connect.principals.auth_server.create') }}</span>
-              <div class="create-action-hint">
-                {{ t('plugins.free-form.openid-connect.principals.auth_server.create_hint') }}
+            <button
+              class="create-action"
+              data-testid="create-auth-server-action"
+              type="button"
+              @click.stop="leavePromptType = 'authServer'"
+            >
+              <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+              <div class="create-action-content">
+                <span>{{ t('plugins.free-form.openid-connect.principals.auth_server.create') }}</span>
+                <div class="create-action-hint">
+                  {{ t('plugins.free-form.openid-connect.principals.auth_server.create_hint') }}
+                </div>
               </div>
-            </div>
-          </button>
-        </template>
-      </KSelect>
-      <KInput
-        v-else
-        data-testid="kong-identity-issuer-input"
-        :help="t('plugins.free-form.openid-connect.principals.auth_server.no_access_help')"
-        :label="t('plugins.free-form.openid-connect.principals.auth_server.label')"
-        :label-attributes="{
-          info: t('plugins.free-form.openid-connect.principals.auth_server.info'),
-          tooltipAttributes: { maxWidth: '300' },
-        }"
-        :model-value="issuer ?? undefined"
-        :placeholder="t('plugins.free-form.openid-connect.principals.auth_server.issuer_placeholder')"
-        required
-        @update:model-value="issuer = $event"
-      />
+            </button>
+          </template>
+        </KSelect>
+        <KInput
+          v-else
+          data-testid="kong-identity-issuer-input"
+          :error="error"
+          :error-message="errorMessage"
+          :help="t('plugins.free-form.openid-connect.principals.auth_server.no_access_help')"
+          :label="t('plugins.free-form.openid-connect.principals.auth_server.label')"
+          :label-attributes="{
+            info: t('plugins.free-form.openid-connect.principals.auth_server.info'),
+            tooltipAttributes: { maxWidth: '300' },
+          }"
+          :model-value="issuer ?? undefined"
+          :placeholder="t('plugins.free-form.openid-connect.principals.auth_server.issuer_placeholder')"
+          required
+          @update:model-value="issuer = $event"
+        />
+      </FieldControl>
 
       <div
         v-for="(clientId, index) in clientIds"
@@ -401,6 +411,7 @@
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { KButton, KExternalLink, KInput, KPrompt, KRadio, KSelect, KSkeleton } from '@kong/kongponents'
+import FieldControl from '../../components/FieldControl.vue'
 import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { AUTOFILL_SLOT, FORMS_CONFIG } from '../../const'
