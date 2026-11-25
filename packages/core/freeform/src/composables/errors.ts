@@ -57,7 +57,7 @@ export function createFieldErrors(options: {
   }
 
   /**
-   * The nearest ancestor of `fieldPath` that is a set or a JSON field
+   * The nearest ancestor of `fieldPath` that is a set, a JSON or a foreign field
    */
   function findValueField(fieldPath: string): string | null {
     const segments = utils.toArray(fieldPath)
@@ -65,7 +65,7 @@ export function createFieldErrors(options: {
       const path = utils.resolve(...segments.slice(0, length))
       const schema = getSchema(path)
       if (schema) {
-        return schema.type === 'set' || schema.type === 'json' ? path : null
+        return schema.type === 'set' || schema.type === 'json' || schema.type === 'foreign' ? path : null
       }
     }
     return null
@@ -87,8 +87,9 @@ export function createFieldErrors(options: {
 
     let fieldPath = toFieldPath(segments, options)
     if (!getSchema(fieldPath)) {
-      // A set or a JSON value is one field: its items and keys have no schema
-      // of their own (e.g. `tags.1`), so the field itself shows their errors.
+      // A set, a JSON or a foreign value is one field: its items and keys have
+      // no schema of their own (e.g. `tags.1`, `service.id`), so the field
+      // itself shows their errors.
       const owner = findValueField(fieldPath)
       if (!owner) {
         return null
@@ -222,8 +223,8 @@ export function createFieldErrors(options: {
 
   /**
    * The data path segments of the values an error is about: those of its
-   * `fields`, or else of its `path`. An error inside a set or a JSON value is
-   * about the whole field.
+   * `fields`, or else of its `path`. An error inside a set, a JSON or a foreign
+   * value is about the whole field.
    */
   function getValueSegments(error: FieldError): string[][] {
     return (error.fields ?? [error.path]).flatMap((path) => {

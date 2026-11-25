@@ -21,6 +21,7 @@ const schema: FormSchema = {
     { headers: { type: 'map', keys: { type: 'string' }, values: { type: 'string' } } },
     { tags: { type: 'set', elements: { type: 'string' } } },
     { metadata: { type: 'json', json_schema: {} } },
+    { service: { type: 'foreign', reference: 'services' } },
     { servers: { type: 'array', elements: { type: 'record', fields: [{ port: { type: 'integer' } }] } } },
     { redis: { type: 'record', fields: [{ host: { type: 'string' } }] } },
   ],
@@ -39,6 +40,7 @@ const formData = reactive({
   headers: { 'kid:1': 'abc', 'kid:2': 'dotted' },
   tags: ['a', 'B'],
   metadata: { a: 1 },
+  service: { id: 'svc-1' },
   servers: [{ port: 1 }, { port: 70000 }],
   redis: { host: '' },
 })
@@ -61,9 +63,10 @@ describe('createFieldErrors', () => {
     ['servers.1.port', 'servers.1.port'],
     ['headers.X-Request-Id', 'headers.kid:1'],
     ['headers["x.y"]', 'headers.kid:2'],
-    // A set or a JSON value is one field, so it shows the errors inside it
+    // A set, a JSON or a foreign value is one field, so it shows the errors inside it
     ['tags.1', 'tags'],
     ['metadata.a.b', 'metadata'],
+    ['service.id', 'service'],
   ])('should give the error at %s to the field %s', (path, fieldPath) => {
     const error = { path, message: 'invalid' }
     const { getFieldErrors, unmatchedErrors } = setup([error])
