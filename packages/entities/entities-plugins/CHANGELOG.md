@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.9.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.2...%40kong-ui-public%2Fentities-plugins%4011.9.3) (2026-11-25)
+
+### Bug Fixes
+
+* **entities-plugins:** keep OpenID Connect clients empty across mode switches [KM-3790] ([#4120](https://github.com/Kong/public-ui-components/issues/4120)) ([0d34f43](https://github.com/Kong/public-ui-components/commit/0d34f43c1c6568350f6d5a8b12bf0e85e084f8f5))
+
+
 ## [11.9.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.1...%40kong-ui-public%2Fentities-plugins%4011.9.2) (2026-11-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
