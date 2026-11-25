@@ -180,7 +180,8 @@ onMounted(async () => {
 $indent: calc(var(--kui-space-50, #{$kui-space-50}) + var(--kui-icon-size-40, #{$kui-icon-size-40}) + var(--kui-space-30, #{$kui-space-30}));
 
 .ff-error-summary-container {
-  bottom: 0;
+  // Above the plugin form's actions when they stick to the bottom too (see `PluginForm`)
+  bottom: var(--kong-ui-plugin-form-error-summary-bottom, 0);
   position: sticky;
   z-index: 10;
 
