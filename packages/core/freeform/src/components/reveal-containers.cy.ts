@@ -299,6 +299,24 @@ describe('Reveal memory', () => {
     cy.getTestId('ff-second.proxy').should('have.focus')
   })
 
+  it('forgets a field once it mounts again', () => {
+    mountHarness([])
+    set({ showExtra: true })
+    cy.getTestId('ff-first.redis.host').should('be.visible')
+    set({ showExtra: false })
+    cy.getTestId('ff-first.redis.host').should('not.exist')
+    set({ showExtra: true })
+    cy.getTestId('ff-first.redis.host').should('be.visible')
+
+    // Nothing shows a child that isn't in the schema: the reveal lands on the
+    // mounted record, not where the record was once remembered
+    reveal('first.redis.nope').should('deep.equal', { path: 'first.redis', exact: false })
+    cy.get('.ff-reveal-highlight').should('have.length', 1).then((landing) => {
+      expect(landing.find('[data-testid="ff-first.redis.host"]')).to.have.length(1)
+      expect(landing.find('[data-testid="ff-first.extra"]')).to.have.length(0)
+    })
+  })
+
   it('leaves a remembered field alone once render rules hide it', () => {
     const error = { path: 'first.redis.host', message: 'required field missing' }
     mountHarness([error])
