@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fecharts%400.9.3...%40kong-ui-public%2Fecharts%400.10.0) (2026-11-25)
+
+### Features
+
+* **echarts:** add sankey chart component [OLLY-1512] ([#4102](https://github.com/Kong/public-ui-components/issues/4102)) ([fe06190](https://github.com/Kong/public-ui-components/commit/fe06190592142bcf5bd8552565c1318c5277eb79))
+
+
 ## [0.9.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fecharts%400.9.2...%40kong-ui-public%2Fecharts%400.9.3) (2026-11-23)
 
 **Note:** Version bump only for package @kong-ui-public/echarts
