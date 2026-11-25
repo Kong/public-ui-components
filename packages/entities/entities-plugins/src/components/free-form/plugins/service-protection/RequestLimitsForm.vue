@@ -24,51 +24,77 @@
         />
       </div>
 
-      <div class="sp-form-request-limits-items">
-        <div
-          v-for="(requestLimit, index) in requestLimits"
-          :key="getKey(requestLimit, index)"
+      <!--
+        `config.limit` and `config.window_size` as a whole: a reveal of either
+        lands on the rows, and their own errors (e.g. no limit at all, while an
+        empty row still shows) go below them. The rows show the item errors.
+      -->
+      <FieldControl
+        v-slot="{ ownErrors: limitErrors }"
+        name="$.config.limit"
+      >
+        <FieldControl
+          v-slot="{ ownErrors: windowSizeErrors }"
+          name="$.config.window_size"
         >
-          <KLabel :for="`sp-form-request-limits-item-${index}-legend`">
-            {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
-          </KLabel>
-
-          <div class="sp-form-request-limits-row">
-            <legend
-              :id="`sp-form-request-limits-item-${index}-legend`"
-              class="sp-form-request-limits-inputs"
+          <div class="sp-form-request-limits-items">
+            <div
+              v-for="(requestLimit, index) in requestLimits"
+              :key="getKey(requestLimit, index)"
             >
-              <NumberField
-                :name="`$.config.limit.${index}`"
-                :placeholder="t('sp.request_limits.request_number')"
-              />
-              <div>{{ t('sp.request_limits.interval_determiner') }}</div>
-              <NumberField
-                :name="`$.config.window_size.${index}`"
-                :placeholder="t('sp.request_limits.time_interval')"
-              />
-              <div>{{ t('sp.request_limits.seconds') }}</div>
-            </legend>
+              <KLabel :for="`sp-form-request-limits-item-${index}-legend`">
+                {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
+              </KLabel>
 
-            <div class="sp-form-request-limits-actions">
-              <KButton
-                appearance="tertiary"
-                :disabled="requestLimits.length <= 1"
-                @click="() => removeRequestLimit(index)"
-              >
-                <RemoveIcon />
-              </KButton>
+              <div class="sp-form-request-limits-row">
+                <legend
+                  :id="`sp-form-request-limits-item-${index}-legend`"
+                  class="sp-form-request-limits-inputs"
+                >
+                  <NumberField
+                    :name="`$.config.limit.${index}`"
+                    :placeholder="t('sp.request_limits.request_number')"
+                  />
+                  <div>{{ t('sp.request_limits.interval_determiner') }}</div>
+                  <NumberField
+                    :name="`$.config.window_size.${index}`"
+                    :placeholder="t('sp.request_limits.time_interval')"
+                  />
+                  <div>{{ t('sp.request_limits.seconds') }}</div>
+                </legend>
 
-              <KButton
-                appearance="tertiary"
-                @click="() => addRequestLimit(index)"
-              >
-                <AddIcon />
-              </KButton>
+                <div class="sp-form-request-limits-actions">
+                  <KButton
+                    appearance="tertiary"
+                    :data-testid="`sp-form-remove-limit-${index}`"
+                    :disabled="requestLimits.length <= 1"
+                    @click="() => removeRequestLimit(index)"
+                  >
+                    <RemoveIcon />
+                  </KButton>
+
+                  <KButton
+                    appearance="tertiary"
+                    :data-testid="`sp-form-add-limit-${index}`"
+                    @click="() => addRequestLimit(index)"
+                  >
+                    <AddIcon />
+                  </KButton>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+
+          <FieldErrors
+            :errors="limitErrors"
+            path="config.limit"
+          />
+          <FieldErrors
+            :errors="windowSizeErrors"
+            path="config.window_size"
+          />
+        </FieldControl>
+      </FieldControl>
 
       <div
         v-if="filteredUseCases.length > 0"
@@ -108,8 +134,9 @@ import { get } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import { computed, nextTick, ref } from 'vue'
-import { useFormShared, useItemKeys, NumberField } from '@kong-ui-public/freeform'
+import { useFormShared, useItemKeys, FieldErrors, NumberField } from '@kong-ui-public/freeform'
 import type { EmptyValue } from '@kong-ui-public/freeform'
+import FieldControl from '../../components/FieldControl.vue'
 import RadioField from '../../components/RadioField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -138,7 +165,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
+const { formData, getSelectItems, getSchema, getEmptyOrDefault, onArrayItemInserted, onArrayItemRemoved } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -168,12 +195,20 @@ const addRequestLimit = (index: number) => {
   if (!formData.config.window_size?.length) {
     formData.config.window_size = [emptyWindowSize]
   }
+  // The new row goes after the one clicked, so the errors of the rows after it
+  // move along with them.
+  onArrayItemInserted('config.limit', index + 1)
+  onArrayItemInserted('config.window_size', index + 1)
   formData.config.limit.splice(index + 1, 0, emptyLimit)
   formData.config.window_size.splice(index + 1, 0, emptyWindowSize)
 }
 
 const removeRequestLimit = (index: number) => {
   if (!formData.config) return
+  // As `ArrayField` does: drop the removed row's errors, and move those of the
+  // rows after it, so no error lands on another row.
+  onArrayItemRemoved('config.limit', index)
+  onArrayItemRemoved('config.window_size', index)
   formData.config.limit!.splice(index, 1)
   formData.config.window_size!.splice(index, 1)
 }
