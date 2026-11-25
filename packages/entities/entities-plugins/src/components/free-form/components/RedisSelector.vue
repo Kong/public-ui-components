@@ -14,6 +14,12 @@
     >
       {{ redisCardTitle }}
     </div>
+    <!-- The record's own errors: the ObjectField variant shows them in its header -->
+    <FieldErrors
+      v-if="borderless"
+      :errors="ownFieldErrors"
+      :path="redisFieldPath"
+    />
     <div
       class="redis-config-radio-group"
       data-testid="redis-config-radio-group"
@@ -53,23 +59,31 @@
       <div class="shared-redis-config-title">
         {{ t('redis.shared_configuration.title') }}
       </div>
-      <div
-        class="redis-config-select"
-        data-testid="redis-config-select"
+      <!-- The selector is the field at `partials`: its errors (e.g. a partial that no longer exists) show here -->
+      <FieldControl
+        v-slot="{ error, errorMessage }"
+        name="$.partials"
       >
-        <RedisConfigurationSelector
-          :create-button-text="redisSelectorCreateButtonText"
-          data-testid="redis-config-select-trigger"
-          :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
-          :model-value="selectedRedisConfigItem"
-          :placeholder="redisSelectorPlaceholderText"
-          :redis-type="redisType"
-          :show-create-button="!hideNewRedis"
-          @error-change="onRedisSelectorFetchError"
-          @toast="toaster"
-          @update:model-value="redisConfigSelected"
-        />
-      </div>
+        <div
+          class="redis-config-select"
+          data-testid="redis-config-select"
+        >
+          <RedisConfigurationSelector
+            :create-button-text="redisSelectorCreateButtonText"
+            data-testid="redis-config-select-trigger"
+            :error="error"
+            :help="errorMessage || undefined"
+            :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
+            :model-value="selectedRedisConfigItem"
+            :placeholder="redisSelectorPlaceholderText"
+            :redis-type="redisType"
+            :show-create-button="!hideNewRedis"
+            @error-change="onRedisSelectorFetchError"
+            @toast="toaster"
+            @update:model-value="redisConfigSelected"
+          />
+        </div>
+      </FieldControl>
       <RedisConfigCard
         v-if="selectedRedisConfig"
         :config-fields="selectedRedisConfig"
@@ -86,6 +100,7 @@
       v-if="!usePartial"
       v-bind="props"
       as-child
+      class="redis-dedicated-config"
       :fields-order="redisFieldsOrder"
       :name="formRedisPath"
       :render-rules="redisRenderRules"
@@ -103,9 +118,10 @@
 </template>
 
 <script setup lang="ts">
-import { ObjectField, useField, useFormData } from '@kong-ui-public/freeform'
+import { FieldErrors, ObjectField, useField, useFormData } from '@kong-ui-public/freeform'
 import type { RenderRules } from '@kong-ui-public/freeform'
 import RedisConfigCard from './RedisConfigCard.vue'
+import FieldControl from './FieldControl.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -196,7 +212,7 @@ const partialsSaved = ref<PartialArray | undefined>()
 // initialize getter and setter for redis partial/redis fields
 const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
 
-const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
+const { value: redisFieldsValue, hide, ownFieldErrors, path: redisFieldPath } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 // A Konnect Cloud Gateway can't create a Redis configuration here
@@ -399,3 +415,10 @@ watch(() => hide?.value, (newHide) => {
 }
 </style>
 
+<style lang="scss">
+// Not scoped: the ObjectField card has several roots, so it doesn't get the scope attribute.
+// The card already shows the record's own errors, in either mode.
+.redis-dedicated-config > .ff-field-errors {
+  display: none;
+}
+</style>

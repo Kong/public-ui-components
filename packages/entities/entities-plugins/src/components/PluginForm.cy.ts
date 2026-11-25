@@ -1551,6 +1551,49 @@ describe('<PluginForm />', () => {
         cy.getTestId('ff-field-errors-config.max_age').should('not.exist')
       })
 
+      it('shows an error on the Redis partial on the partial selector', () => {
+        const partial = { id: 'redis-partial-1', name: 'my-redis', type: 'redis-ce', config: { host: 'localhost', port: 6379 } }
+        const message = `partial with ID "${partial.id}" not found`
+        interceptKonnectSchema({ mockData: schemaRateLimiting })
+        interceptKonnectOperatePlugin({
+          method: 'GET',
+          alias: 'getPlugin',
+          id: plugin1.id,
+          mockData: { ...plugin1, name: 'rate-limiting', config: { minute: 5, policy: 'redis', redis: null }, partials: [{ id: partial.id }] },
+        })
+        cy.intercept('GET', '**/core-entities/partials?size=1000', { statusCode: 200, body: { data: [partial] } })
+        cy.intercept('GET', `**/core-entities/partials/${partial.id}`, { statusCode: 200, body: partial }).as('getPartial')
+        // The partial was deleted since the form loaded
+        cy.intercept('PUT', `**/core-entities/plugins/${plugin1.id}`, {
+          statusCode: 404,
+          body: {
+            code: 5,
+            message: 'not found',
+            details: [{ type: 'ERROR_TYPE_FIELD', field: 'partials[0].id', messages: [message] }],
+          },
+        }).as('updatePlugin')
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType: 'rate-limiting',
+            pluginId: plugin1.id,
+          },
+          global: { provide: { [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true } },
+          router,
+        })
+        cy.wait(['@getPluginSchema', '@getPlugin', '@getPartial'])
+
+        cy.getTestId('ff-tags').type('a')
+        cy.getTestId('plugin-edit-form-submit').click()
+        cy.wait('@updatePlugin')
+
+        cy.getTestId('redis-config-select').should('contain.text', message)
+        cy.getTestId('ff-error-summary-item-partials.0.id').find('.ff-error-summary-link')
+          .should('have.text', 'Partials #1 › ID')
+        cy.getTestId('form-error').should('not.exist')
+      })
+
       it('shows one message when the flag is off', () => {
         interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
         mountCors({})
