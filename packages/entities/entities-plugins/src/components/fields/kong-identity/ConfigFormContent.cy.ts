@@ -1,8 +1,10 @@
-import { computed, h } from 'vue'
+import { computed, h, ref, shallowRef } from 'vue'
 import { FORMS_CONFIG } from '../../free-form/const'
 import { Form } from '@kong-ui-public/freeform'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 import ConfigFormContent from './ConfigFormContent.vue'
+import ConfigFormWithIdentity from './ConfigFormWithIdentity.vue'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../free-form/field-errors/context'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
 import { FORM_EDITING } from '../../free-form/const'
@@ -1077,5 +1079,67 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-dp-version-alert').should('be.visible')
       })
     })
+  })
+})
+
+// The whole plugin form, which shows the errors of a failed save on the fields and
+// lists them in an error summary
+function mountFormWithErrors(model: Record<string, any>, fieldErrors: FieldError[]) {
+  cy.intercept('GET', '**/v1/realms*', { body: { data: [{ id: 'realm-1', name: 'My Realm' }], meta: { next: null } } })
+
+  cy.mount(ConfigFormWithIdentity as any, {
+    props: {
+      schema: schemaWithRealms,
+      model,
+      isEditing: true,
+      pluginName: 'key-auth',
+      onFormChange: cy.spy(),
+    },
+    global: {
+      provide: {
+        [FORMS_CONFIG]: { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com', principalsCreationGuideVisible: false },
+        [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+        [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() },
+      },
+    },
+  })
+}
+
+describe('ConfigFormContent field errors', () => {
+  const kongIdentityModel = {
+    config: { principals: { enabled: true, directory: 'missing', error_on_miss: true }, identity_realms: null },
+  }
+
+  it('shows the principals errors on the mode cards and links to them', () => {
+    mountFormWithErrors(kongIdentityModel, [{ path: 'config.principals.directory', message: 'directory not found' }])
+
+    cy.getTestId('ff-field-errors-config.principals').should('contain.text', 'directory not found')
+    // The directory has no control of its own, so the reveal lands on the cards
+    // around it without focusing one
+    cy.getTestId('ff-error-summary-item-config.principals.directory').find('.ff-error-summary-link').click()
+    cy.getTestId('ff-field-errors-config.principals').parent().should('have.class', 'ff-reveal-highlight')
+  })
+
+  it('shows the error_on_miss errors on its radios only and links to them', () => {
+    mountFormWithErrors(kongIdentityModel, [{ path: 'config.principals.error_on_miss', message: 'expected a boolean' }])
+
+    // The advanced fields open to show it
+    cy.getTestId('ff-error-summary-item-config.principals.error_on_miss').find('.ff-error-summary-link').click()
+    cy.getTestId('ff-field-errors-config.principals.error_on_miss')
+      .should('be.visible')
+      .and('contain.text', 'expected a boolean')
+    cy.getTestId('principals-error-on-miss-true').should('have.focus')
+    cy.getTestId('ff-field-errors-config.principals').should('not.exist')
+  })
+
+  it('shows the identity_realms errors on the realms select and links to it', () => {
+    mountFormWithErrors(
+      { config: { principals: null, identity_realms: [{ scope: 'realm', id: 'realm-1', region: 'us' }] } },
+      [{ path: 'config.identity_realms', message: 'realm not found' }],
+    )
+
+    cy.getTestId('ff-identity-realms-field').should('contain.text', 'realm not found')
+    cy.getTestId('ff-error-summary-item-config.identity_realms').find('.ff-error-summary-link').click()
+    cy.getTestId('ff-identity-realms-field').should('have.class', 'ff-reveal-highlight')
   })
 })

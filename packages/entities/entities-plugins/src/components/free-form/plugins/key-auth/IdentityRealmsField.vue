@@ -19,6 +19,8 @@
     </KLabel>
     <Base
       v-model="value"
+      :error="!!fieldErrorMessage"
+      :help="fieldErrorMessage || undefined"
       :realms="fetchedRealms"
     />
   </div>
@@ -45,7 +47,7 @@ const props = defineProps<{
   resetLabelPath?: ResetLabelPathRule
 }>()
 
-const { error, value, path } = useField<IdentityRealmItem[]>(toRef(props, 'name'))
+const { error, value, path, fieldErrorMessage } = useField<IdentityRealmItem[]>(toRef(props, 'name'))
 
 if (error) {
   throw error

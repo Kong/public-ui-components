@@ -19,37 +19,51 @@
       </a>
     </p>
 
-    <div class="kong-identity-options">
-      <KSkeletonBox
-        v-if="loadingRealms"
-        class="kong-identity-options-skeleton"
-      />
+    <!-- The mode decides `config.principals`, which the API may reject, e.g. its directory -->
+    <FieldControl
+      v-slot="{ errors }"
+      :exclude="['error_on_miss']"
+      name="config.principals"
+    >
+      <div>
+        <div class="kong-identity-options">
+          <KSkeletonBox
+            v-if="loadingRealms"
+            class="kong-identity-options-skeleton"
+          />
 
-      <template v-else>
-        <div
-          v-for="option in modeOptions"
-          :key="option.mode"
-          class="kong-identity-option"
-          :style="option.legacy ? { '--kong-ui-entities-plugins-legacy-label': `'${legacyLabel}'` } : undefined"
-        >
-          <KRadio
-            card
-            card-orientation="horizontal"
-            :data-testid="option.testId"
-            :description="option.description"
-            :label="option.label"
-            :model-value="selectedMode"
-            :selected-value="option.mode"
-            @update:model-value="handleModeChange"
-          >
-            <component
-              :is="option.icon"
-              :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
-            />
-          </KRadio>
+          <template v-else>
+            <div
+              v-for="option in modeOptions"
+              :key="option.mode"
+              class="kong-identity-option"
+              :style="option.legacy ? { '--kong-ui-entities-plugins-legacy-label': `'${legacyLabel}'` } : undefined"
+            >
+              <KRadio
+                card
+                card-orientation="horizontal"
+                :data-testid="option.testId"
+                :description="option.description"
+                :label="option.label"
+                :model-value="selectedMode"
+                :selected-value="option.mode"
+                @update:model-value="handleModeChange"
+              >
+                <component
+                  :is="option.icon"
+                  :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
+                />
+              </KRadio>
+            </div>
+          </template>
         </div>
-      </template>
-    </div>
+
+        <FieldErrors
+          :errors="errors"
+          path="config.principals"
+        />
+      </div>
+    </FieldControl>
   </div>
 </template>
 
@@ -58,8 +72,9 @@ import { computed, ref } from 'vue'
 import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
-import { useFormShared } from '@kong-ui-public/freeform'
+import { FieldErrors, useFormShared } from '@kong-ui-public/freeform'
 import { usePluginContext } from '../../free-form/plugin-context'
+import FieldControl from '../../free-form/components/FieldControl.vue'
 import composables from '../../../composables'
 
 import type { Component } from 'vue'

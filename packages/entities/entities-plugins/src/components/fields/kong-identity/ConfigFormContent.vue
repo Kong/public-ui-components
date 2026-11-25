@@ -47,30 +47,37 @@
     class="ff-advanced-fields-container"
     data-testid="ff-advanced-fields-container"
   >
-    <div
+    <FieldControl
       v-if="isKonnect && hasPrincipals && selectedMode === 'kong-identity' && hasPrincipalsErrorOnMiss"
-      class="kong-identity-error-on-miss"
+      v-slot="{ errors }"
+      name="config.principals.error_on_miss"
     >
-      <KLabel data-testid="ff-principals-error-on-miss-label">
-        {{ i18n.t('custom_field.kong_identity.error_on_miss_label') }}
-      </KLabel>
-      <KRadio
-        data-testid="principals-error-on-miss-true"
-        :description="i18n.t('custom_field.kong_identity.error_on_miss_reject_description')"
-        :label="i18n.t('custom_field.kong_identity.error_on_miss_reject_label')"
-        :model-value="principalsErrorOnMiss"
-        :selected-value="true"
-        @update:model-value="handleErrorOnMissChange"
-      />
-      <KRadio
-        data-testid="principals-error-on-miss-false"
-        :description="i18n.t('custom_field.kong_identity.error_on_miss_continue_description')"
-        :label="i18n.t('custom_field.kong_identity.error_on_miss_continue_label')"
-        :model-value="principalsErrorOnMiss"
-        :selected-value="false"
-        @update:model-value="handleErrorOnMissChange"
-      />
-    </div>
+      <div class="kong-identity-error-on-miss">
+        <KLabel data-testid="ff-principals-error-on-miss-label">
+          {{ i18n.t('custom_field.kong_identity.error_on_miss_label') }}
+        </KLabel>
+        <KRadio
+          data-testid="principals-error-on-miss-true"
+          :description="i18n.t('custom_field.kong_identity.error_on_miss_reject_description')"
+          :label="i18n.t('custom_field.kong_identity.error_on_miss_reject_label')"
+          :model-value="principalsErrorOnMiss"
+          :selected-value="true"
+          @update:model-value="handleErrorOnMissChange"
+        />
+        <KRadio
+          data-testid="principals-error-on-miss-false"
+          :description="i18n.t('custom_field.kong_identity.error_on_miss_continue_description')"
+          :label="i18n.t('custom_field.kong_identity.error_on_miss_continue_label')"
+          :model-value="principalsErrorOnMiss"
+          :selected-value="false"
+          @update:model-value="handleErrorOnMissChange"
+        />
+        <FieldErrors
+          :errors="errors"
+          path="config.principals.error_on_miss"
+        />
+      </div>
+    </FieldControl>
     <ObjectField
       as-child
       name="config"
@@ -82,9 +89,10 @@
 
 <script setup lang="ts">
 import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
-import { ObjectField, useFormShared } from '@kong-ui-public/freeform'
+import { FieldErrors, ObjectField, useFormShared } from '@kong-ui-public/freeform'
 import { usePluginContext } from '../../free-form/plugin-context'
 import AdvancedFields from '../../free-form/components/AdvancedFields.vue'
+import FieldControl from '../../free-form/components/FieldControl.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
