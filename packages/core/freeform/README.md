@@ -66,6 +66,7 @@ function handleSubmit() {
 - [CEL Input](docs/cel-input.md): `CelInput` and `CelField`
 - [Custom Fields](docs/custom-fields.md): `FieldRenderer` and custom field components
 - [Field Navigation](docs/field-navigation.md): `reveal(path)`
+- [Closed Containers](docs/closed-containers.md): `defineRevealAdapter`, for fields in tabs, `v-if` sections and opaque components
 - [Field Errors](docs/field-errors.md): `errors` and `unmatchedErrors`
 - [Filler](docs/filler.md): test utilities for Cypress and Playwright, adding a new field type
 - [Reference](docs/reference.md): injection keys, `data-testid` conventions

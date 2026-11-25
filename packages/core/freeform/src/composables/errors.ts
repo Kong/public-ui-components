@@ -170,6 +170,20 @@ export function createFieldErrors(options: {
   }
 
   /**
+   * The errors of the fields whose path passes `predicate`, e.g. those a tab
+   * covers
+   */
+  function getErrorsWhere(predicate: (fieldPath: string) => boolean): FieldError[] {
+    const result: FieldError[] = []
+    for (const [path, errors] of matched.value.byFieldPath) {
+      if (predicate(path)) {
+        result.push(...errors)
+      }
+    }
+    return result
+  }
+
+  /**
    * The errors no field can show in the current state, for the host to show
    * elsewhere
    */
@@ -312,6 +326,7 @@ export function createFieldErrors(options: {
 
   return {
     getFieldErrors,
+    getErrorsWhere,
     unmatchedErrors,
     onArrayItemRemoved,
     onMapKeyRenamed,

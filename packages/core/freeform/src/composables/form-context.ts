@@ -2,17 +2,19 @@ import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
-import { provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
+import { computed, provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import { findExpressionSourceRecord, toSourcePath } from './expression-paths'
 import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 import { createFieldReveal } from './reveal'
 import { createFieldErrors } from './errors'
+import { coversFieldPath, flattenRevealTree, matchesContainer, scanRevealTree } from './reveal-tree'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { EmptyValue, FieldError, FormConfig, MatchMap, RenderRules } from '../types'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
+import type { RevealContainerQuery, RevealNode } from './reveal-tree'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
   function createFormShared<T extends Record<string, any> = Record<string, any>>(options: {
@@ -179,13 +181,31 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 
-    const { revealTarget, registerFieldElement, isFieldRendered, findCoveringElement, reveal } = createFieldReveal({
+    /**
+     * The fields the form's content renders and the containers they sit in,
+     * mounted or not, see `scanRevealTree`. Empty when the form renders the
+     * fields of its schema itself.
+     */
+    const revealTree = computed<RevealNode[]>(() => {
+      if (!slots.default) {
+        return []
+      }
+      return scanRevealTree(slots.default({}))
+    })
+    const treeFields = computed(() => flattenRevealTree(revealTree.value))
+
+    const {
+      revealTarget, registerFieldElement, rememberField, findAnchor, getAnchoredMemories,
+      isFieldRendered, findCoveringElement, reveal,
+    } = createFieldReveal({
       formData: innerData,
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
+      getTreeFields: () => treeFields.value,
+      isFieldHidden: isPrunedAsHidden,
     })
 
-    const { getFieldErrors, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
+    const { getFieldErrors, getErrorsWhere, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
       errors: propsErrors,
       onChange: onErrorsChange,
       formData: innerData,
@@ -195,6 +215,18 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       isFieldHidden,
       isFieldRendered,
     })
+
+    /**
+     * The errors of the fields in the containers `query` picks, e.g. to show how
+     * many errors an inactive tab holds
+     */
+    function getContainerErrors(query: RevealContainerQuery): FieldError[] {
+      const treeCovers = treeFields.value.filter(field => field.containers.some(node => matchesContainer(node, query)))
+      // A remembered field sits in the containers of its anchor
+      const remembered = getAnchoredMemories().filter(memory => treeCovers.some(cover => coversFieldPath(cover, memory.anchor)))
+      const covers = [...treeCovers, ...remembered]
+      return covers.length ? getErrorsWhere(path => covers.some(cover => coversFieldPath(cover, path))) : []
+    }
 
     return {
       /**
@@ -217,7 +249,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getEmptyOrDefault,
       revealTarget,
       registerFieldElement,
+      rememberField,
+      findAnchor,
       findCoveringElement,
+      revealTree,
+      getContainerErrors,
       /**
        * Reveals the field at a data path, see `createFieldReveal`
        */
