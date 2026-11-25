@@ -187,6 +187,7 @@ describe('createFieldErrors: value changes', () => {
       tls: { client_cert: 'cert' },
       headers: { 'kid:1': 'abc', 'kid:2': 'dotted' } as Record<string, string>,
       tags: ['a', 'B'],
+      service: { id: 'svc-1' },
       servers: [{ port: 1 }, { port: 2 }, { port: 3 }],
       redis: { host: '' },
     })
@@ -238,6 +239,15 @@ describe('createFieldErrors: value changes', () => {
     const { data, onChange } = setupWithData([error('tags.1')])
 
     data.tags.push('c')
+    await nextTick()
+
+    expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('should drop an error inside a foreign value once another entity is picked', async () => {
+    const { data, onChange } = setupWithData([error('service.id')])
+
+    data.service = { id: 'svc-2' }
     await nextTick()
 
     expect(onChange).toHaveBeenCalledWith([])
