@@ -181,10 +181,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 
-    // Set while the form's content is rendered to scan it, so what the content
-    // reads from the scan (e.g. a tab's error count) doesn't make it scan again
-    let scanning = false
-
     /**
      * The fields the form's content renders and the containers they sit in,
      * mounted or not, see `scanRevealTree`. Empty when the form renders the
@@ -194,12 +190,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       if (!slots.default) {
         return []
       }
-      scanning = true
-      try {
-        return scanRevealTree(slots.default({}))
-      } finally {
-        scanning = false
-      }
+      return scanRevealTree(slots.default({}))
     })
     const treeFields = computed(() => flattenRevealTree(revealTree.value))
 
@@ -230,9 +221,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * many errors an inactive tab holds
      */
     function getContainerErrors(query: RevealContainerQuery): FieldError[] {
-      if (scanning) {
-        return []
-      }
       const treeCovers = treeFields.value.filter(field => field.containers.some(node => matchesContainer(node, query)))
       // A remembered field sits in the containers of its anchor
       const remembered = getAnchoredMemories().filter(memory => treeCovers.some(cover => coversFieldPath(cover, memory.anchor)))
