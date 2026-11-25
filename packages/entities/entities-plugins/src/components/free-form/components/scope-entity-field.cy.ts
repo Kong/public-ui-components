@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import { Form } from '@kong-ui-public/freeform'
-import type { FormSchema, FormConfig } from '@kong-ui-public/freeform'
+import type { FormSchema, FormConfig, FieldError } from '@kong-ui-public/freeform'
 import ScopeEntityField from './ScopeEntityField.vue'
 import { FORMS_API_KEY } from '../const'
 
@@ -28,11 +28,13 @@ function createFakeApi() {
 function mountScopeEntityForm(options: {
   data?: Record<string, unknown>
   config?: FormConfig
+  errors?: FieldError[]
 }) {
   const props = {
     schema: createForeignSchema(),
     data: options.data,
     config: options.config,
+    errors: options.errors,
     onChange: cy.spy().as('onChangeSpy'),
   }
 
@@ -74,6 +76,28 @@ describe('ScopeEntityField', () => {
       cy.getTestId('clear-selection-icon').click()
 
       assertLastChange({ [FIELD_NAME]: undefined })
+    })
+  })
+
+  describe('field errors', () => {
+    for (const path of [FIELD_NAME, `${FIELD_NAME}.id`]) {
+      it(`should show an error at ${path} on the select`, () => {
+        mountScopeEntityForm({
+          data: { [FIELD_NAME]: { id: ENTITY_ID } },
+          errors: [{ path, message: 'service not found' }],
+        })
+
+        cy.getTestId(`ff-${FIELD_NAME}`).find('.help-text').should('have.text', 'service not found')
+      })
+    }
+
+    it('should show no error when the field has none', () => {
+      mountScopeEntityForm({
+        data: { [FIELD_NAME]: { id: ENTITY_ID } },
+        errors: [],
+      })
+
+      cy.getTestId(`ff-${FIELD_NAME}`).find('.help-text').should('not.exist')
     })
   })
 })

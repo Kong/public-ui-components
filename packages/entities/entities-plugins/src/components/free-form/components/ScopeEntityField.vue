@@ -17,6 +17,7 @@
       :disabled="loading"
       :dom-id="name"
       :entity="entity"
+      :error="field.fieldErrorMessage?.value || null"
       :field-disabled="disabled"
       :fields="searchFields"
       :label-field="labelField"
