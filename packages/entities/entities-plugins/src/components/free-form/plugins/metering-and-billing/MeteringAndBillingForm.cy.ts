@@ -1,6 +1,9 @@
+import { ref, shallowRef } from 'vue'
 import MeteringAndBillingForm from './MeteringAndBillingForm.vue'
 import { FORMS_CONFIG } from '../../const'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
+import type { PluginFormFieldErrors } from '../../field-errors'
 
 const createSchema = (): FormSchema => ({
   type: 'record',
@@ -48,8 +51,9 @@ const mountForm = (options: {
   model?: Record<string, any>
   geoApiServerUrl?: string
   app?: 'konnect' | 'kongManager'
+  fieldErrors?: PluginFormFieldErrors
 }) => {
-  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect' } = options
+  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', fieldErrors } = options
 
   const formsConfig = app === 'konnect'
     ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}) }
@@ -66,6 +70,7 @@ const mountForm = (options: {
     global: {
       provide: {
         [FORMS_CONFIG]: formsConfig,
+        ...(fieldErrors ? { [PLUGIN_FORM_FIELD_ERRORS]: fieldErrors } : {}),
       },
     },
   })
@@ -153,5 +158,21 @@ describe('MeteringAndBillingForm - allow_status_codes', () => {
     cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
       expect(payload.config.allow_status_codes).to.deep.equal(['200-299', '500-599'])
     })
+  })
+})
+
+describe('MeteringAndBillingForm - collapsible sections', () => {
+  it('opens a collapsed section to reveal a field with an error', () => {
+    const errors = ref<FieldError[]>([])
+    mountForm({ fieldErrors: { enabled: ref(true), errors, schema: shallowRef() } })
+
+    cy.contains('.ff-collapsible-section', 'Connection').find('.ff-collapsible-section-toggle-btn').click()
+    cy.getTestId('ff-config.ingest_endpoint').should('not.be.visible')
+
+    // The error summary reveals the first error as it shows up
+    cy.then(() => {
+      errors.value = [{ path: 'config.ingest_endpoint', message: 'invalid URL' }]
+    })
+    cy.getTestId('ff-config.ingest_endpoint').should('be.visible').and('have.focus')
   })
 })
