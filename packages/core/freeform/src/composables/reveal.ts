@@ -154,6 +154,9 @@ export function createFieldReveal(options: FieldRevealOptions) {
 
   function registerFieldElement(entry: FieldElementEntry) {
     fieldElements.add(entry)
+    // On the page again, the field has no use for its memory and the removed
+    // elements it holds
+    memories.delete(entry.path())
     return () => {
       fieldElements.delete(entry)
     }
@@ -297,7 +300,7 @@ export function createFieldReveal(options: FieldRevealOptions) {
    * Remembers a field as it unmounts, e.g. as a `v-if` takes it out, so the
    * form still knows it renders the field, and a reveal can open the
    * containers of its anchor and land where it was. It is forgotten once the
-   * form unmounts.
+   * field mounts again or the form unmounts.
    *
    * @param memory.ancestors The field's ancestors as it unmounts: the closest
    *   one still on the page is where it was
