@@ -26,84 +26,91 @@
       </div>
 
       <!--
-        `config.limit` and `config.window_size` as a whole: a reveal of either
-        lands on the rows, and their own errors (e.g. no limit at all, while an
-        empty row still shows) go below them. The rows show the item errors.
+        `config.limit` and `config.window_size` as a whole: their own errors
+        (e.g. no limit at all, while an empty row still shows) go below the
+        rows, and the rows show the item errors. A reveal of `config.limit`
+        lands on the rows, so it focuses the first limit.
       -->
       <FieldControl
         v-slot="{ ownErrors: limitErrors }"
         name="$.config.limit"
       >
-        <FieldControl
-          v-slot="{ ownErrors: windowSizeErrors }"
-          name="$.config.window_size"
-        >
-          <div class="rla-form-request-limits-items">
-            <div
-              v-for="(requestLimit, index) in requestLimits"
-              :key="`${getKey(requestLimit, index)}-${presetGeneration}`"
-            >
-              <KLabel :for="`rla-form-request-limits-item-${index}-legend`">
-                {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
-              </KLabel>
+        <div class="rla-form-request-limits-items">
+          <div
+            v-for="(requestLimit, index) in requestLimits"
+            :key="`${getKey(requestLimit, index)}-${presetGeneration}`"
+          >
+            <KLabel :for="`rla-form-request-limits-item-${index}-legend`">
+              {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
+            </KLabel>
 
-              <div class="rla-form-request-limits-row">
-                <legend
-                  :id="`rla-form-request-limits-item-${index}-legend`"
-                  class="rla-form-request-limits-inputs"
+            <div class="rla-form-request-limits-row">
+              <legend
+                :id="`rla-form-request-limits-item-${index}-legend`"
+                class="rla-form-request-limits-inputs"
+              >
+                <NumberField
+                  :expression-editor="false"
+                  :name="`$.config.limit.${index}`"
+                  :placeholder="t('sp.request_limits.custom')"
+                />
+                <div>{{ t('sp.request_limits.interval_determiner') }}</div>
+                <!-- A reveal of `config.window_size` as a whole lands on the first window size -->
+                <FieldControl
+                  v-if="index === 0"
+                  name="$.config.window_size"
                 >
-                  <NumberField
-                    :expression-editor="false"
-                    :name="`$.config.limit.${index}`"
-                    :placeholder="t('sp.request_limits.custom')"
-                  />
-                  <div>{{ t('sp.request_limits.interval_determiner') }}</div>
                   <NumberField
                     :name="`$.config.window_size.${index}`"
                     :placeholder="t('sp.request_limits.custom')"
                   />
-                  <div>{{ t('sp.request_limits.seconds') }}</div>
-                </legend>
+                </FieldControl>
+                <NumberField
+                  v-else
+                  :name="`$.config.window_size.${index}`"
+                  :placeholder="t('sp.request_limits.custom')"
+                />
+                <div>{{ t('sp.request_limits.seconds') }}</div>
+              </legend>
 
-                <!-- One limit is the minimum, so a lone row has nothing to remove. -->
-                <KButton
-                  v-if="requestLimits.length > 1"
-                  appearance="tertiary"
-                  :aria-label="t('sp.request_limits.remove_limit', { index: index + 1 })"
-                  class="rla-form-request-limits-remove"
-                  :data-testid="`rla-form-remove-limit-${index}`"
-                  icon
-                  @click="() => removeRequestLimit(index)"
-                >
-                  <CloseIcon />
-                </KButton>
-              </div>
-
-              <!--
-                `config.limit` is expressible element-wise, so the expression belongs
-                to the row rather than to the array. Placed here directly, with both
-                `NumberField`s' own editor turned off (`expression-editor="false"`):
-                this row pairs `limit` with `window_size`, so `NumberField`'s built-in
-                placement — inside its own column — would land inside the row instead
-                of spanning beneath it.
-              -->
-              <ExpressionEditor
-                class="rla-form-request-limits-expression"
-                :name="`$.config.limit.${index}`"
-                :placeholder="t('sp.request_limits.expression_placeholder')"
-              />
+              <!-- One limit is the minimum, so a lone row has nothing to remove. -->
+              <KButton
+                v-if="requestLimits.length > 1"
+                appearance="tertiary"
+                :aria-label="t('sp.request_limits.remove_limit', { index: index + 1 })"
+                class="rla-form-request-limits-remove"
+                :data-testid="`rla-form-remove-limit-${index}`"
+                icon
+                @click="() => removeRequestLimit(index)"
+              >
+                <CloseIcon />
+              </KButton>
             </div>
-          </div>
 
-          <FieldErrors
-            :errors="limitErrors"
-            path="config.limit"
-          />
-          <FieldErrors
-            :errors="windowSizeErrors"
-            path="config.window_size"
-          />
-        </FieldControl>
+            <!--
+              `config.limit` is expressible element-wise, so the expression belongs
+              to the row rather than to the array. Placed here directly, with both
+              `NumberField`s' own editor turned off (`expression-editor="false"`):
+              this row pairs `limit` with `window_size`, so `NumberField`'s built-in
+              placement — inside its own column — would land inside the row instead
+              of spanning beneath it.
+            -->
+            <ExpressionEditor
+              class="rla-form-request-limits-expression"
+              :name="`$.config.limit.${index}`"
+              :placeholder="t('sp.request_limits.expression_placeholder')"
+            />
+          </div>
+        </div>
+
+        <FieldErrors
+          :errors="limitErrors"
+          path="config.limit"
+        />
+        <FieldErrors
+          :errors="windowSizeErrors"
+          path="config.window_size"
+        />
       </FieldControl>
 
       <div
@@ -190,7 +197,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSchema, getEmptyOrDefault, getEmptyValue, onArrayItemRemoved } = useFormShared<FormData>()
+const { formData, getSchema, getEmptyOrDefault, getEmptyValue, getFieldErrors, onArrayItemRemoved } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -208,6 +215,10 @@ const requestLimits = computed<RequestLimit[]>(() => {
 })
 
 const { getKey } = useItemKeys('request-limits', requestLimits)
+
+// Shown below the rows. The `FieldControl` for the array wraps only the first
+// row's window size, so a reveal of it focuses that, not the first limit.
+const windowSizeErrors = computed(() => getFieldErrors('config.window_size', false))
 
 /**
  * The Gateway pairs `expressions.limit` with `config.limit` by position, so any

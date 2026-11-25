@@ -170,6 +170,9 @@ describe('<RateLimitingAdvancedForm />', () => {
       cy.getTestId('ff-config.limit.0').should('exist')
       cy.getTestId('ff-field-errors-config.limit').should('have.text', 'length must be at least 1')
       cy.getTestId('ff-field-errors-config.window_size').should('have.text', 'length must be at least 1')
+      // Each lands on its own control in the first row
+      cy.getTestId('ff-error-summary-item-config.window_size').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-config.window_size.0').should('have.focus')
       cy.getTestId('ff-error-summary-item-config.limit').find('.ff-error-summary-link').click()
       cy.getTestId('ff-config.limit.0').should('have.focus')
     })
