@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.10.6...%40kong-ui-public%2Fentities-consumers%404.10.7) (2026-11-25)
+
+### Bug Fixes
+
+* **entities:** helper text wording ([#4111](https://github.com/Kong/public-ui-components/issues/4111)) ([953c97b](https://github.com/Kong/public-ui-components/commit/953c97b38ce25d9961d04c73dd86c0228f2f7f92))
+
+
 ## [4.10.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-consumers%404.10.5...%40kong-ui-public%2Fentities-consumers%404.10.6) (2026-11-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers
