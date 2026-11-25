@@ -1189,6 +1189,44 @@ describe('OpenidConnectForm', () => {
         cy.getTestId('external-client-id').eq(1).should('have.focus')
       })
 
+      it('moves the errors of the rows after a removed one along with them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel({ client_id: [null, null, null], client_secret: [null, null, null] }),
+          fieldErrors: [
+            { path: 'config.client_id.0', message: 'required field missing' },
+            { path: 'config.client_id.2', message: 'required field missing' },
+            { path: 'config.client_secret.2', message: 'required field missing' },
+          ],
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 3)
+
+        cy.getTestId('remove-client-action').first().click()
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+        // The first row's error goes with it; the third row's errors are now the second row's
+        cy.getTestId('ff-error-summary-item-config.client_id.0').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.2').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').should('exist')
+        cy.getTestId('ff-error-summary-item-config.client_secret.1').find('.ff-error-summary-link').should('exist')
+        cy.getTestId('principals-client-secret').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+      })
+
+      it('drops the client errors once only an empty row is left', () => {
+        const issuerError = { path: 'config.issuer', message: 'required field missing' }
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: [...errors, issuerError],
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+
+        // The empty row left is no value at all, so nothing is wrong with it
+        cy.getTestId('remove-client-action').first().click()
+        cy.getTestId('principals-client-id-input').should('have.length', 1)
+        cy.get('[data-testid^="ff-error-summary-item-config.client_"]').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.issuer').should('exist')
+      })
+
       it('switches back to the Common tab to reveal them', () => {
         mountPrincipalsForm({
           formsConfig: { isKongIdentityAuthServersAvailable: false },

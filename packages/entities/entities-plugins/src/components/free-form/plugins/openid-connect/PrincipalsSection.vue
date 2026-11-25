@@ -512,7 +512,7 @@ const isEditing = computed(() => isEditingRef?.value ?? false)
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // `<Field name="config.issuer">` and slot content rendered below this component.
-const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue, getSchema, getDefault, getFieldVersionInfo, isSchemaDefaulted, onArrayItemRemoved } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 // `config.principals.jit` is a required record, so the form always submits one with
 // `all_claims` prefilled: "share all" is the intended starting point and the user
@@ -760,10 +760,19 @@ function removeClientRow(index: number) {
 
   const nextIds = [...clientIds.value]
   nextIds.splice(index, 1)
-  clientIds.value = nextIds
-
   const nextSecrets = [...clientSecrets.value]
   nextSecrets.splice(index, 1)
+
+  // As `ArrayField` does: drop the removed row's errors, and move those of the rows after
+  // it. A lone empty row left is no value (see the setters), so its errors go too.
+  for (const [path, next] of [['config.client_id', nextIds], ['config.client_secret', nextSecrets]] as const) {
+    onArrayItemRemoved(path, index)
+    if (next.length === 1 && !next[0]) {
+      onArrayItemRemoved(path, 0)
+    }
+  }
+
+  clientIds.value = nextIds
   clientSecrets.value = nextSecrets
 }
 
