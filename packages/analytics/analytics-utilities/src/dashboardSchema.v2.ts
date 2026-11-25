@@ -31,6 +31,7 @@ type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaulted
 export const dashboardTileTypes = [
   'heatmap',
   'treemap',
+  'sankey',
   'horizontal_bar',
   'vertical_bar',
   'gauge',
@@ -550,6 +551,26 @@ export const topTalkersSchema = {
 
 export type TopTalkersOptions = FromSchemaWithOptions<typeof topTalkersSchema>
 
+/**
+ * Two or three dimensions, one column each, e.g. provider -> model -> consumer. The query's `limit`
+ * is the top N in each column: the top N values of the first column (e.g. providers), and for each of
+ * them, its own top N values in every other column
+ */
+export const sankeyChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['sankey'],
+    },
+    chart_title: chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SankeyChartOptions = FromSchemaWithOptions<typeof sankeyChartSchema>
+
 export const tableChartSchema = {
   type: 'object',
   properties: {
@@ -1065,6 +1086,7 @@ const dashboardTileChartSchema = {
     donutChartSchema,
     heatmapChartSchema,
     treemapChartSchema,
+    sankeyChartSchema,
     timeseriesChartSchema,
     scatterChartSchema,
     metricCardSchema,

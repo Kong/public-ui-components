@@ -27,6 +27,10 @@
     "treemapUnsupported": {
       "title": "This query can't be shown as a treemap",
       "description": "Treemaps need a count or total metric, such as requests or tokens, and no time dimension"
+    },
+    "sankeyUnsupported": {
+      "title": "This query can't be shown as a sankey diagram",
+      "description": "Sankey diagrams need a count or total metric, such as requests or tokens, and two or three dimensions, none of them time"
     }
   },
   "pdfExport": {
