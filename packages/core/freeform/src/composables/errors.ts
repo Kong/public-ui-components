@@ -311,6 +311,18 @@ export function createFieldErrors(options: {
   }
 
   /**
+   * Moves the errors of the items at and after an inserted array item to
+   * their new index, so no error lands on the new item or on another one.
+   * Call before the item is inserted.
+   */
+  function onArrayItemInserted(arrayFieldPath: string, index: number) {
+    rewriteErrorsUnder(arrayFieldPath, ([itemIndex, ...rest]) => {
+      const current = Number(itemIndex)
+      return current >= index ? [String(current + 1), ...rest] : [itemIndex, ...rest]
+    })
+  }
+
+  /**
    * Moves the errors of a map entry along when its key is renamed
    */
   function onMapKeyRenamed(mapFieldPath: string, from: string, to: string) {
@@ -329,6 +341,7 @@ export function createFieldErrors(options: {
     getErrorsWhere,
     unmatchedErrors,
     onArrayItemRemoved,
+    onArrayItemInserted,
     onMapKeyRenamed,
     onMapKeyRemoved,
   }
