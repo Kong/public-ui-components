@@ -1332,6 +1332,31 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('external-client-secret').should('have.value', 'external-client-secret')
       cy.getTestId('ff-config.issuer').should('have.value', 'https://external-issuer.example.com')
     })
+
+    it('keeps empty client fields empty when toggling between Kong Identity and External', () => {
+      mountPrincipalsForm({ formsConfig: { isKongIdentityAuthServersAvailable: false } })
+      cy.getTestId('principals-client-id-input').should('exist')
+
+      const expectEmptyClients = () => {
+        cy.get('@onFormChange').its('lastCall.args.0.config').should((config) => {
+          // The inputs show an empty field as one empty row; the model keeps it empty, not `[null]`
+          expect(config.client_id ?? null).to.equal(null)
+          expect(config.client_secret ?? null).to.equal(null)
+        })
+      }
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+      cy.getTestId('external-client-id').should('exist')
+      expectEmptyClients()
+
+      cy.getTestId('oidc-auth-mode-kong-identity').click({ force: true })
+      cy.getTestId('principals-client-id-input').should('exist')
+      expectEmptyClients()
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+      cy.getTestId('external-client-id').should('exist')
+      expectEmptyClients()
+    })
   })
 
   // ── O: Principal lookup settings ───────────────────────────────────────────

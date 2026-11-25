@@ -805,9 +805,11 @@ watch(selectedMode, (newMode, oldMode) => {
     const cached = kongIdentityCache.value
     if (formData.config) {
       formData.config.issuer = cached?.issuer ?? getEmptyValue()
-      formData.config.client_id = cached?.clientId ?? getEmptyValue()
-      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
     }
+    // Through the setters, which turn the lone empty row the getters cached back into
+    // an empty field: written as is, `[null]` would be submitted
+    clientIds.value = cached?.clientId ?? null
+    clientSecrets.value = cached?.clientSecret ?? null
     if (cached?.selectedServer) {
       restoringServer = true
     }
@@ -817,9 +819,9 @@ watch(selectedMode, (newMode, oldMode) => {
     const cached = externalCache.value
     if (formData.config) {
       formData.config.issuer = cached?.issuer ?? getEmptyValue()
-      formData.config.client_id = cached?.clientId ?? getEmptyValue()
-      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
     }
+    clientIds.value = cached?.clientId ?? null
+    clientSecrets.value = cached?.clientSecret ?? null
     selectedServer.value = null
     clients.value = []
   }
