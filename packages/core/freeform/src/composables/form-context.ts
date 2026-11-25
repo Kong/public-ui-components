@@ -195,7 +195,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const treeFields = computed(() => flattenRevealTree(revealTree.value))
 
     const {
-      revealTarget, registerFieldElement, rememberField, findAnchor, getAnchoredMemories,
+      revealTarget, registerFieldElement, rememberField, findAnchor, getAnchoredFields,
       isFieldRendered, findCoveringElement, reveal,
     } = createFieldReveal({
       formData: innerData,
@@ -222,9 +222,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      */
     function getContainerErrors(query: RevealContainerQuery): FieldError[] {
       const treeCovers = treeFields.value.filter(field => field.containers.some(node => matchesContainer(node, query)))
-      // A remembered field sits in the containers of its anchor
-      const remembered = getAnchoredMemories().filter(memory => treeCovers.some(cover => coversFieldPath(cover, memory.anchor)))
-      const covers = [...treeCovers, ...remembered]
+      // A field the tree doesn't hold sits in the containers of its anchor
+      const anchored = getAnchoredFields().filter(field => treeCovers.some(cover => coversFieldPath(cover, field.anchor)))
+      const covers = [...treeCovers, ...anchored]
       return covers.length ? getErrorsWhere(path => covers.some(cover => coversFieldPath(cover, path))) : []
     }
 

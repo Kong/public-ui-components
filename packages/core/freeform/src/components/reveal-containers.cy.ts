@@ -283,6 +283,8 @@ describe('Reveal memory', () => {
     set({ tab: 'second' })
     cy.getTestId('ff-second.proxy').should('be.visible')
     cy.get('@harness').its('form.unmatchedErrors').should('deep.equal', [])
+    // Mounted, it counts in the container it shows in
+    getContainerErrors({ component: Tabs, slotName: 'second' }).should('deep.equal', [error])
 
     set({ tab: 'first' })
     cy.getTestId('ff-second.proxy').should('not.exist')

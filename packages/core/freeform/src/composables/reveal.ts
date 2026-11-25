@@ -321,6 +321,23 @@ export function createFieldReveal(options: FieldRevealOptions) {
   }
 
   /**
+   * The fields the form renders that the reveal tree doesn't hold, each with the field of the
+   * tree it sits next to, whose containers it sits in too: the remembered ones, and the
+   * mounted ones a component with no adapter renders
+   */
+  function getAnchoredFields(): Array<FieldCover & { anchor: string }> {
+    const mounted = [...fieldElements].flatMap((entry) => {
+      const path = entry.path()
+      if (findDeepest(treeCovers.value, path)) {
+        return []
+      }
+      const anchor = findAnchor(path, entry.element())
+      return anchor ? [{ path, exclude: entry.exclude?.(), anchor }] : []
+    })
+    return [...getAnchoredMemories(), ...mounted]
+  }
+
+  /**
    * Opens the containers on the way to a field that is not mounted, e.g. a tab
    * or a collapsed section, outermost first. Each gets a render, so the ones
    * inside it mount.
@@ -431,7 +448,7 @@ export function createFieldReveal(options: FieldRevealOptions) {
     registerFieldElement,
     rememberField,
     findAnchor,
-    getAnchoredMemories,
+    getAnchoredFields,
     isFieldRendered,
     findCoveringElement,
     reveal,
