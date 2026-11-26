@@ -28,6 +28,7 @@ export const selectors = {
   map: (path: string) => `[data-testid="ff-map-${path}"]`,
   mapContainer: (path: string, index: number) => `[data-testid="ff-map-container-${path}.${index}"]`,
   mapKey: (path: string, index: number) => `[data-testid="ff-map-key-${path}.${index}"]`,
+  mapKeyItems: (path: string, index: number) => `[data-testid="ff-map-key-${path}.${index}-items"]`,
   mapRemoveBtns: (path: string) => `[data-testid^="ff-map-remove-btn-${path}"]`,
   mapRemoveBtn: (path: string, index: number) => `[data-testid="ff-map-remove-btn-${path}.${index}"]`,
   mapAddBtn: (path: string) => `[data-testid="ff-map-add-btn-${path}"]`,

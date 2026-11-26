@@ -26,6 +26,7 @@ type AssertFieldFn<T extends UnionFieldSchema = UnionFieldSchema> = (option: Ass
 type AssertLabelOption = {
   hide?: boolean
   noAsterisk?: boolean
+  text?: string
 }
 
 export function assertFormRendering(schema: FormSchema, options?: {
@@ -247,7 +248,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabel({
       fieldKey,
-      labelText: asChild ? '' : convertFieldPathToLabel(fieldKey),
+      labelText: labelOption?.text ?? (asChild ? '' : convertFieldPathToLabel(fieldKey)),
       fieldSchema,
       labelOption: {
         ...labelOption,
@@ -386,7 +387,8 @@ export function assertFormRendering(schema: FormSchema, options?: {
         assertField({
           fieldSchema: fieldSchema.values,
           fieldKey: childFieldKey,
-          labelOption: { hide: true },
+          // The key input names the entry: only a record value has a generic label
+          labelOption: fieldSchema.values.type === 'record' ? { text: 'Value' } : { hide: true },
         })
       })
   }

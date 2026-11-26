@@ -274,6 +274,55 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-map-container-headers.1"] [data-testid^="ff-headers.kid:"]')).toHaveValue('Bearer token')
     })
 
+    test('should fill map field with enum keys', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            selection: {
+              type: 'map',
+              keys: { type: 'string', one_of: ['user', 'assistant', 'system'] },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('selection', {
+        system: 'foo',
+        user: 'bar',
+      })
+
+      await expect(page.locator('[data-testid="ff-map-key-selection.0"]')).toHaveValue('system')
+      await expect(page.locator('[data-testid="ff-map-container-selection.0"] [data-testid^="ff-selection.kid:"]')).toHaveValue('foo')
+      await expect(page.locator('[data-testid="ff-map-key-selection.1"]')).toHaveValue('user')
+      await expect(page.locator('[data-testid="ff-map-container-selection.1"] [data-testid^="ff-selection.kid:"]')).toHaveValue('bar')
+    })
+
+    test('should reject an enum map key that is not an option', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            selection: {
+              type: 'map',
+              keys: { type: 'string', one_of: ['user', 'assistant', 'system'] },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await expect(filler.fillField('selection', { legacy: 'c' }))
+        .rejects.toThrow('Map key "legacy" is not an option of "selection"')
+    })
+
     test('should clear existing map entries before refilling', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',

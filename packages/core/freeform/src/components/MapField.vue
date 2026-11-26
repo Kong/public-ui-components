@@ -68,7 +68,21 @@
     >
       <div class="ff-map-field-item-content">
         <div class="ff-map-field-fields">
+          <KSelect
+            v-if="keyOptions"
+            class="ff-map-field-fields-key"
+            :data-key-input="index"
+            :data-testid="`ff-map-key-${field.path.value}.${index}`"
+            :disabled="isLocked"
+            :items="getKeyItems(name)"
+            :kpop-attributes="{ 'data-testid': `ff-map-key-${field.path.value}.${index}-items` }"
+            :model-value="name"
+            :placeholder="keyPlaceholder || 'Key'"
+            @update:model-value="(value) => updateKey(keyId, String(value ?? ''))"
+          />
+
           <EnhancedInput
+            v-else
             class="ff-map-field-fields-key"
             :data-key-input="index"
             :data-testid="`ff-map-key-${field.path.value}.${index}`"
@@ -115,7 +129,7 @@
       :aria-label="i18n.t('actions.add_entity', { entity: fieldDisplayName })"
       class="ff-map-field-add-entry-btn"
       :data-testid="`ff-map-add-btn-${field.path.value}`"
-      :disabled="isLocked"
+      :disabled="isLocked || !canAddKey"
       @click="handleAddClick"
     >
       <AddIcon />
@@ -132,7 +146,7 @@ import { useFieldAttrs } from '../composables'
 import type { BaseFieldProps } from '../types'
 import { useMapField } from '../composables/useMapField'
 import Field from './Field.vue'
-import { KCard } from '@kong/kongponents'
+import { KCard, KSelect } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
 import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
@@ -190,6 +204,36 @@ const valueSchema = computed(() => {
   return field.schema?.value?.type === 'map' ? field.schema.value.values : undefined
 })
 
+// A `one_of` on the key schema limits the keys to a fixed set: pick them from a select
+const keyOptions = computed(() => {
+  const keySchema = field.schema?.value?.type === 'map' ? field.schema.value.keys : undefined
+  return keySchema?.type === 'string' && keySchema.one_of?.length ? keySchema.one_of : undefined
+})
+
+// Each key can be used only once, so hide the keys that other entries already use
+function getKeyItems(currentName: string) {
+  const usedNames = new Set(keys.value.map(([, name]) => name))
+  const options = keyOptions.value ?? []
+  const items = options
+    .filter(option => option === currentName || !usedNames.has(option))
+    .map(option => ({ label: option, value: option }))
+
+  // Keep a stored key that is not an option, so the entry still shows it
+  if (currentName && !options.includes(currentName)) {
+    items.unshift({ label: currentName, value: currentName })
+  }
+
+  return items
+}
+
+// Only the entries that hold an option, or no key yet, take up an option
+const canAddKey = computed(() => {
+  const options = keyOptions.value
+  if (!options) return true
+
+  return keys.value.filter(([, name]) => !name || options.includes(name)).length < options.length
+})
+
 const isStringValue = computed(() => valueSchema.value?.type === 'string' && !valueSchema.value?.one_of)
 
 const itemTag = computed(() => isSimpleMap.value ? 'div' : KCard)
@@ -200,6 +244,7 @@ function handleValueKeydown(event: KeyboardEvent, index: number) {
   if (props.appearance?.string?.multiline) return
   event.preventDefault()
   if (index === keys.value.length - 1) {
+    if (!canAddKey.value) return
     addKey()
   }
   focus(index + 1)

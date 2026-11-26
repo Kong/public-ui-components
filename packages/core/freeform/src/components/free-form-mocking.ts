@@ -293,6 +293,19 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
       },
     },
     {
+      map_key_enum: {
+        type: 'map',
+        description: 'A map field whose keys are limited to a fixed set',
+        keys: {
+          type: 'string',
+          one_of: ['user', 'assistant', 'system'],
+        },
+        values: {
+          type: 'string',
+        },
+      },
+    },
+    {
       map_value_record: {
         type: 'map',
         keys: {
