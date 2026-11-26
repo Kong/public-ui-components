@@ -1,5 +1,5 @@
-import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/freeform'
-import type { FormSchema, RenderRules } from '@kong-ui-public/freeform'
+import { Field, Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema, RenderRules, RevealResult } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import { FORMS_CONFIG } from '../const'
 import { ref } from 'vue'
@@ -110,8 +110,37 @@ const verifyFieldVisibility = ({
   }))
 }
 
+/** `partials` is a field of the plugin entity: the plugin form adds it to the schema (see `StandardLayout`) */
+const withPartials = (schema: FormSchema): FormSchema => ({
+  ...schema,
+  fields: [
+    ...schema.fields,
+    {
+      partials: {
+        type: 'array',
+        elements: { type: 'record', fields: [{ id: { type: 'string' } }, { name: { type: 'string' } }, { path: { type: 'string' } }] },
+      },
+    },
+  ],
+})
+
+/** What the tests need from the form's exposed API */
+type RevealingForm = {
+  reveal: (path: string) => Promise<RevealResult | null>
+  unmatchedErrors: FieldError[]
+}
+
+const reveal = (path: string) => cy.get<RevealingForm>('@form').then(form => cy.wrap(form.reveal(path)))
+
 // Helper function to mount the form with RedisSelector
-const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean, schema?: FormSchema }) => {
+const mountForm = (options?: {
+  renderRules?: RenderRules
+  isEditing?: boolean
+  schema?: FormSchema
+  data?: Record<string, any>
+  errors?: FieldError[]
+  borderless?: boolean
+}) => {
   const schema = options?.schema ?? (options?.renderRules ? createRedisSchemaWithDependency() : createRedisSchema())
   const redisPartialInfo = createRedisPartialInfo(options?.isEditing ?? false)
   const onChangeSpy = cy.spy().as('onChangeSpy')
@@ -119,15 +148,19 @@ const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean, s
   cy.mount(Form, {
     props: {
       schema,
+      data: options?.data,
+      errors: options?.errors,
       renderRules: options?.renderRules,
       onChange: onChangeSpy,
     },
     slots: {
       [FIELD_RENDERERS]: `
         <FieldRenderer :match="({ path }) => path === 'config.redis'">
-          <RedisSelector />
+          <RedisSelector${options?.borderless ? ' borderless' : ''} />
         </FieldRenderer>
       `,
+      // Like the plugin form, which renders `partials` only through RedisSelector
+      ...(options?.errors && { default: '<Field name="config" />' }),
     },
     global: {
       provide: {
@@ -135,10 +168,13 @@ const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean, s
         [FORMS_CONFIG]: createKonnectConfig(),
       },
       components: {
+        Field,
         FieldRenderer,
         RedisSelector,
       },
     },
+  }).then(({ wrapper }) => {
+    cy.wrap(wrapper.vm as unknown as RevealingForm).as('form')
   })
 }
 
@@ -633,6 +669,72 @@ describe('RedisSelector', () => {
           expect(lastCall.args[0].partials).to.equal(null)
         })
       })
+    })
+  })
+
+  describe('Field errors', () => {
+    const partialNotFound = 'partial with ID "redis-1" not found'
+
+    it('shows an error on the partial on the partial selector', () => {
+      mockGetRedisConfig()
+      mountForm({
+        isEditing: true,
+        schema: withPartials(createRedisSchema()),
+        data: { config: { redis: null }, partials: [{ id: 'redis-1' }] },
+        errors: [{ path: 'partials.0.id', message: partialNotFound }],
+      })
+      cy.wait('@getRedisConfig')
+
+      cy.getTestId('redis-config-select').should('contain.text', partialNotFound)
+      cy.get<RevealingForm>('@form').its('unmatchedErrors').should('have.length', 0)
+      reveal('partials.0.id').should('deep.equal', { path: 'partials', exact: false })
+    })
+
+    it('lands a reveal of a dedicated field on the card in shared mode, keeping the data', () => {
+      mockGetRedisConfig()
+      mountForm({
+        schema: withPartials(createRedisSchema()),
+        errors: [{ path: 'config.redis.host', message: 'required field missing' }],
+      })
+      cy.wait('@getRedisConfigList')
+      cy.getTestId('shared-redis-config-radio').should('have.attr', 'checked')
+
+      // Switching to dedicated mode would change the data (`partials`, `config.redis`),
+      // and a reveal only changes the view: it stops at the card, where the user picks the mode
+      reveal('config.redis.host').should('deep.equal', { path: 'config.redis', exact: false })
+      cy.getTestId('shared-redis-config-radio').should('have.attr', 'checked')
+      cy.getTestId('ff-config.redis.host').should('not.exist')
+    })
+
+    it('shows the errors of the Redis record itself in the borderless variant', () => {
+      mockGetRedisConfig()
+      mountForm({
+        borderless: true,
+        schema: withPartials(createRedisSchema()),
+        errors: [{ path: 'config.redis', message: 'redis is invalid' }],
+      })
+      cy.wait('@getRedisConfigList')
+
+      cy.getTestId('redis-config-card').find('[data-testid="ff-field-errors-config.redis"]:visible')
+        .should('have.length', 1)
+        .and('have.text', 'redis is invalid')
+      cy.getTestId('dedicated-redis-config-radio').click()
+      cy.getTestId('redis-config-card').find('[data-testid="ff-field-errors-config.redis"]:visible')
+        .should('have.length', 1)
+        .and('have.text', 'redis is invalid')
+    })
+
+    it('shows the errors of the Redis record itself once', () => {
+      mockGetRedisConfig()
+      mountForm({
+        schema: withPartials(createRedisSchema()),
+        errors: [{ path: 'config.redis', message: 'redis is invalid' }],
+      })
+      cy.wait('@getRedisConfigList')
+
+      cy.getTestId('redis-config-card').find('[data-testid="ff-field-errors-config.redis"]:visible').should('have.length', 1)
+      cy.getTestId('dedicated-redis-config-radio').click()
+      cy.getTestId('redis-config-card').find('[data-testid="ff-field-errors-config.redis"]:visible').should('have.length', 1)
     })
   })
 })

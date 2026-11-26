@@ -365,6 +365,25 @@ const freeFormSchema = computed(() => {
 
   result.fields.push({ enabled: { type: 'boolean', default: true } })
 
+  // `partials` is a field of every plugin entity, so the plugin schema doesn't
+  // have it. `RedisSelector` renders it: without it in the schema, an error on it
+  // (e.g. `partials[0].id` of a partial that no longer exists) can't match.
+  if (props.schema.supported_partials) {
+    result.fields.push({
+      partials: {
+        type: 'array',
+        elements: {
+          type: 'record',
+          fields: [
+            { id: { type: 'string' } },
+            { name: { type: 'string' } },
+            { path: { type: 'string' } },
+          ],
+        },
+      },
+    })
+  }
+
   scopeEntityFields.value.forEach((field) => {
     result.fields.push({
       [field.name]: {
