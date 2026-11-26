@@ -1,9 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { Comment, Fragment, defineComponent, h, Text } from 'vue'
-import { defineRevealAdapter, updateModelValue } from './reveal-adapter'
+import { defineRevealAdapter, getRevealAdapter, updateModelValue } from './reveal-adapter'
 import { coversFieldPath, findDeepest, flattenRevealTree, matchesContainer, scanRevealTree } from './reveal-tree'
 import ObjectField from '../components/ObjectField.vue'
 import '../reveal-adapters'
+import * as freeform from '../index'
 
 import type { VNode } from 'vue'
 import type { RevealContainerNode, RevealNode } from './reveal-tree'
@@ -187,5 +188,18 @@ describe('updateModelValue', () => {
     updateModelValue({ props: {}, type: Tabs } as unknown as VNode, false)
     expect(warn).toHaveBeenCalledOnce()
     warn.mockRestore()
+  })
+})
+
+describe('the built-in field components', () => {
+  // A field component the scan doesn't know is not found before it mounts, e.g. in an inactive tab
+  const fieldComponents = Object.entries(freeform).filter(([name, value]) => name.endsWith('Field') && typeof value === 'object')
+
+  it('finds them all', () => {
+    expect(fieldComponents.length).toBeGreaterThanOrEqual(13)
+  })
+
+  it.each(fieldComponents)('gives %s an adapter', (_, component) => {
+    expect(getRevealAdapter(component)?.field).toBeTypeOf('function')
   })
 })
