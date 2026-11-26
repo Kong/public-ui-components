@@ -46,6 +46,20 @@
         </i18nT>
       </template>
 
+      <template #http_version-label-tooltip>
+        <i18nT
+          keypath="gateway_services.form.fields.http_version.tooltip"
+          scope="global"
+        >
+          <template #code1>
+            <code>{{ t('gateway_services.form.fields.http_version.code1') }}</code>
+          </template>
+          <template #code2>
+            <code>{{ t('gateway_services.form.fields.http_version.code2') }}</code>
+          </template>
+        </i18nT>
+      </template>
+
       <template #tls_verify="slotProps">
         {{
           typeof getPropValue('rowValue', slotProps) === 'boolean'
