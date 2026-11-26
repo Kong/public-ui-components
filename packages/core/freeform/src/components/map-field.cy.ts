@@ -10,6 +10,7 @@ const FIELD_NAME = 'kv'
 function createMapSchema(options: {
   required?: boolean
   defaultValue?: Record<string, unknown>
+  keys?: UnionFieldSchema
   values?: UnionFieldSchema
   appearance?: {
     string?: {
@@ -22,7 +23,7 @@ function createMapSchema(options: {
     fields: [{
       [FIELD_NAME]: {
         type: 'map',
-        keys: { type: 'string' },
+        keys: options.keys ?? { type: 'string' },
         values: options.values ?? { type: 'string' },
         ...(options.required ? { required: true } : {}),
         ...(options.defaultValue !== undefined ? { default: options.defaultValue } : {}),
@@ -218,6 +219,62 @@ describe('MapField', () => {
       getValueControl(0).clear().type('newvalue')
 
       assertLastChange({ kv: { foo: 'newvalue' } })
+    })
+  })
+
+  describe('Enum keys', () => {
+    const enumKeys: UnionFieldSchema = { type: 'string', one_of: ['user', 'assistant', 'system'] }
+
+    it('should render a select for the key and emit the selected key', () => {
+      mountMapForm({
+        schema: createMapSchema({ required: true, keys: enumKeys }),
+      })
+
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).click()
+      getKeyInput(0).click()
+      cy.getTestId(`ff-map-key-${FIELD_NAME}.0-items`).should('be.visible')
+      cy.getTestId('select-item-assistant').click()
+      getValueControl(0).type('foo')
+
+      assertLastChange({ kv: { assistant: 'foo' } })
+    })
+
+    it('should show the initial keys as selected', () => {
+      mountMapForm({
+        schema: createMapSchema({ keys: enumKeys }),
+        data: { kv: { user: 'a', system: 'b' } },
+      })
+
+      getMapRows().should('have.length', 2)
+      getKeyInput(0).should('have.value', 'user')
+      getKeyInput(1).should('have.value', 'system')
+    })
+
+    it('should hide the keys that other entries already use', () => {
+      mountMapForm({
+        schema: createMapSchema({ keys: enumKeys }),
+        data: { kv: { user: 'a', system: 'b' } },
+      })
+
+      getKeyInput(0).click()
+      cy.getTestId(`ff-map-key-${FIELD_NAME}.0-items`).within(() => {
+        cy.getTestId('select-item-user').should('exist')
+        cy.getTestId('select-item-assistant').should('exist')
+        cy.getTestId('select-item-system').should('not.exist')
+      })
+    })
+
+    it('should disable the add button when all keys are used', () => {
+      mountMapForm({
+        schema: createMapSchema({ keys: enumKeys }),
+        data: { kv: { user: 'a', system: 'b' } },
+      })
+
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled').click()
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('be.disabled')
+
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled')
     })
   })
 
