@@ -1,5 +1,6 @@
 import { type MapHandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
+import type { MapFieldSchema } from '../../../form-schema'
 
 function extractKidId(testId: string | undefined, fieldKey: string): string {
   if (!testId) {
@@ -16,7 +17,9 @@ function extractKidId(testId: string | undefined, fieldKey: string): string {
 }
 
 export function fillMap(option: MapHandlerOption): void {
-  const { fieldKey, value, onFillEntry } = option
+  const { fieldKey, fieldSchema, value, onFillEntry } = option
+  const keySchema = (fieldSchema as MapFieldSchema).keys
+  const isEnumKey = keySchema?.type === 'string' && !!keySchema.one_of?.length
 
   // Clear existing entries
   const mapRemoveBtnsSelector = selectors.mapRemoveBtns(fieldKey)
@@ -50,8 +53,14 @@ export function fillMap(option: MapHandlerOption): void {
 
     const mapKeySelector = selectors.mapKey(fieldKey, i)
     scrollIntoViewNative(mapKeySelector)
-    cy.get(mapKeySelector).clear(SCROLL_BEHAVIOR)
-    cy.get(mapKeySelector).type(String(key), SCROLL_BEHAVIOR)
+    if (isEnumKey) {
+      // Enum keys are picked from a select
+      cy.get(mapKeySelector).click(SCROLL_BEHAVIOR)
+      cy.get(selectors.mapKeyItems(fieldKey, i)).find(selectors.selectItem(String(key))).click(SCROLL_BEHAVIOR)
+    } else {
+      cy.get(mapKeySelector).clear(SCROLL_BEHAVIOR)
+      cy.get(mapKeySelector).type(String(key), SCROLL_BEHAVIOR)
+    }
 
     cy.get(selectors.mapContainer(fieldKey, i))
       .find(`[data-testid*="${fieldKey}.kid:"]`)

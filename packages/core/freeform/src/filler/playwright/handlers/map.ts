@@ -1,5 +1,6 @@
 import type { MapHandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
+import type { MapFieldSchema } from '../../../form-schema'
 
 function extractKidId(testId: string | null, fieldKey: string): string {
   if (!testId) {
@@ -16,7 +17,9 @@ function extractKidId(testId: string | null, fieldKey: string): string {
 }
 
 export async function fillMap(option: MapHandlerOption): Promise<void> {
-  const { page, fieldKey, value, onFillEntry } = option
+  const { page, fieldKey, fieldSchema, value, onFillEntry } = option
+  const keySchema = (fieldSchema as MapFieldSchema).keys
+  const isEnumKey = keySchema?.type === 'string' && !!keySchema.one_of?.length
 
   // Clear existing entries
   const removeNext = async () => {
@@ -49,8 +52,14 @@ export async function fillMap(option: MapHandlerOption): Promise<void> {
     await container.waitFor()
 
     const keyElement = page.locator(selectors.mapKey(fieldKey, i))
-    await keyElement.clear()
-    await keyElement.fill(String(key))
+    if (isEnumKey) {
+      // Enum keys are picked from a select
+      await keyElement.click()
+      await page.locator(selectors.mapKeyItems(fieldKey, i)).locator(selectors.selectItem(String(key))).click()
+    } else {
+      await keyElement.clear()
+      await keyElement.fill(String(key))
+    }
 
     const childField = container.locator(`[data-testid*="${fieldKey}.kid:"]`).first()
     await childField.waitFor()
