@@ -40,7 +40,10 @@
     v-else
     v-show="!hide"
     class="ff-object-field"
-    :class="{ 'ff-object-field-collapsed': !effectiveExpanded }"
+    :class="{
+      'ff-object-field-collapsed': !effectiveExpanded,
+      'ff-object-field-in-map': isChildOfMap,
+    }"
     :data-testid="`ff-object-${field.path.value}`"
     v-bind="$attrs"
   >
@@ -53,7 +56,7 @@
         <button
           :aria-controls="contentId"
           :aria-expanded="effectiveExpanded"
-          :aria-label="fieldAttrs.label"
+          :aria-label="headerLabel"
           class="ff-object-field-toggle-btn"
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
           :disabled="!realAdded || isLocked"
@@ -71,7 +74,6 @@
         </button>
 
         <KLabel
-          v-if="!isChildOfMap"
           class="ff-object-field-label"
           :data-testid="`ff-label-${field.path.value}`"
           v-bind="{
@@ -82,10 +84,10 @@
           @click.prevent.stop="toggleDisplay"
         >
           <slot
-            :label="fieldAttrs.label"
+            :label="headerLabel"
             name="label"
           >
-            {{ fieldAttrs.label }}
+            {{ headerLabel }}
           </slot>
           <template
             v-if="fieldAttrs.labelAttributes?.info || versionInfo"
@@ -160,12 +162,14 @@ import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from '../composables'
 import Field from './Field.vue'
 import EntityChecksAlert from './EntityChecksAlert.vue'
+import useI18n from '../composables/useI18n.ts'
 import { sortFieldsByBundles, sortFieldsByFieldNames } from '../utils'
 
 import type { RecordFieldSchema } from '../form-schema'
 import type { RenderRules, ResetLabelPathRule } from '../types'
 
 const contentId = useId()
+const { i18n } = useI18n()
 
 defineOptions({
   inheritAttrs: false,
@@ -243,6 +247,9 @@ const isChildOfMap = computed(() => {
 })
 
 const fieldAttrs = useFieldAttrs(field.path!, { required, ...props, resetLabelPath })
+
+// The key input names a map entry, so the record value of an entry gets a generic label
+const headerLabel = computed(() => isChildOfMap.value ? i18n.t('map_value_label') : fieldAttrs.value.label)
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const asChild = computed(() => {
@@ -352,6 +359,15 @@ $indent-guide-top-offset: 20px;
     &:hover::before {
       border-left-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
     }
+  }
+
+  // The toggle and the indent guide sit in the space-70 left of the field. A map entry is a
+  // KCard, and some themes give it less left padding than that (mono-lime: 0 + 8px body
+  // padding): move the field right by the missing part only
+  &-in-map {
+    --kong-ui-ff-map-entry-padding-left: calc(var(--kui-card-padding, var(--kui-space-70, $kui-space-70)) + var(--kui-card-body-padding, var(--kui-space-0, $kui-space-0)));
+
+    margin-left: max(0px, calc(var(--kui-space-70, $kui-space-70) - var(--kong-ui-ff-map-entry-padding-left)));
   }
 
   &-as-child {

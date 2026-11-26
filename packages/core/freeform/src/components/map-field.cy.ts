@@ -337,6 +337,20 @@ describe('MapField', () => {
 
       assertLastChange({ kv: { foo: { name: 'Bob' } } })
     })
+
+    it('should label the record value as "Value"', () => {
+      mountMapForm({
+        schema: createMapSchema({
+          values: {
+            type: 'record',
+            fields: [{ name: { type: 'string' } }],
+          },
+        }),
+        data: { kv: { foo: { name: 'Alice' } } },
+      })
+
+      getMapRow(0).find('[data-testid^="ff-object-header-kv."] .ff-object-field-label').should('have.text', 'Value')
+    })
   })
 
   describe('Empty value on remove all entries', () => {

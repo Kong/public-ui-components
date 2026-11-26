@@ -15,6 +15,7 @@
     "tooltip": "The minimum runtime version required to use this feature is {version}. Please upgrade the minimum runtime version to use this feature."
   },
   "foreign_placeholder": "Enter a UUID of {entity}",
+  "map_value_label": "Value",
   "vault_picker": {
     "component_error": "The vault secret picker is not available"
   },
