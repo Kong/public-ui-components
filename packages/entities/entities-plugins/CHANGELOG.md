@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.9.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.5...%40kong-ui-public%2Fentities-plugins%4011.9.6) (2026-11-26)
+
+### Bug Fixes
+
+* **entities-plugins:** show field errors on scope entity selects [KM-3792] ([#4123](https://github.com/Kong/public-ui-components/issues/4123)) ([5f93649](https://github.com/Kong/public-ui-components/commit/5f93649cdad42b2a7319bef7e48b90ab87d26916))
+
+
 ## [11.9.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%4011.9.4...%40kong-ui-public%2Fentities-plugins%4011.9.5) (2026-11-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
