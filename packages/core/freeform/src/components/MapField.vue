@@ -213,12 +213,26 @@ const keyOptions = computed(() => {
 // Each key can be used only once, so hide the keys that other entries already use
 function getKeyItems(currentName: string) {
   const usedNames = new Set(keys.value.map(([, name]) => name))
-  return (keyOptions.value ?? [])
+  const options = keyOptions.value ?? []
+  const items = options
     .filter(option => option === currentName || !usedNames.has(option))
     .map(option => ({ label: option, value: option }))
+
+  // Keep a stored key that is not an option, so the entry still shows it
+  if (currentName && !options.includes(currentName)) {
+    items.unshift({ label: currentName, value: currentName })
+  }
+
+  return items
 }
 
-const canAddKey = computed(() => !keyOptions.value || keys.value.length < keyOptions.value.length)
+// Only the entries that hold an option, or no key yet, take up an option
+const canAddKey = computed(() => {
+  const options = keyOptions.value
+  if (!options) return true
+
+  return keys.value.filter(([, name]) => !name || options.includes(name)).length < options.length
+})
 
 const isStringValue = computed(() => valueSchema.value?.type === 'string' && !valueSchema.value?.one_of)
 

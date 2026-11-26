@@ -276,6 +276,16 @@ describe('MapField', () => {
       cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
       cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled')
     })
+
+    it('should keep a stored key that is not an option and not count it as used', () => {
+      mountMapForm({
+        schema: createMapSchema({ keys: enumKeys }),
+        data: { kv: { user: 'a', assistant: 'b', legacy: 'c' } },
+      })
+
+      getKeyInput(2).should('have.value', 'legacy')
+      cy.getTestId(`ff-map-add-btn-${FIELD_NAME}`).should('not.be.disabled')
+    })
   })
 
   describe('Passive update by external data prop change', () => {
