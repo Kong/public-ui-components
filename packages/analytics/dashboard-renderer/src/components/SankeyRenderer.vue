@@ -97,14 +97,21 @@ const buildChartProps = (result: ExploreResultV4) => {
   }
 }
 
-const chartPropsCache = new WeakMap<ExploreResultV4, ReturnType<typeof buildChartProps>>()
+// Rebuilt when the limit changes, since supplied data can stay the same object
+const chartPropsCache = new WeakMap<ExploreResultV4, { limit: number, chartProps: ReturnType<typeof buildChartProps> }>()
 
 const toChartProps = (result: ExploreResultV4) => {
-  if (!chartPropsCache.has(result)) {
-    chartPropsCache.set(result, buildChartProps(result))
+  const cached = chartPropsCache.get(result)
+
+  if (cached?.limit === limit.value) {
+    return cached.chartProps
   }
 
-  return chartPropsCache.get(result)
+  const chartProps = buildChartProps(result)
+
+  chartPropsCache.set(result, { limit: limit.value, chartProps })
+
+  return chartProps
 }
 </script>
 

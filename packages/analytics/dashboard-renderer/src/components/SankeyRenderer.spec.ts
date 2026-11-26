@@ -11,6 +11,8 @@ import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 /** Model -> consumer requests: six models, each with one consumer */
 let records: Array<[model: string, consumer: string]> = []
 
+let result: ExploreResultV4 | undefined
+
 /** A result grouped by the query's dimensions, like the API */
 const resultFor = (query: ValidDashboardChartQuery): ExploreResultV4 => {
   const [modelDimension, consumerDimension] = query.dimensions as string[]
@@ -38,7 +40,8 @@ const resultFor = (query: ValidDashboardChartQuery): ExploreResultV4 => {
 const QueryDataProvider = defineComponent({
   name: 'QueryDataProvider',
   props: { query: { type: Object, required: true } },
-  setup: (props, { slots }) => () => h('div', slots.default?.({ data: resultFor(props.query as ValidDashboardChartQuery) })),
+  // The same result object on every render, like data that hasn't changed
+  setup: (props, { slots }) => () => h('div', slots.default?.({ data: result ??= resultFor(props.query as ValidDashboardChartQuery) })),
 })
 
 const context: DashboardRendererContext = {
@@ -86,10 +89,19 @@ describe('<SankeyRenderer />', () => {
   beforeEach(() => {
     setupPiniaTestStore()
     records = ['a', 'b', 'c', 'd', 'e', 'f'].map((model) => [model, `user-${model}`])
+    result = undefined
   })
 
   it('keeps the query\'s limit of nodes in each column', () => {
     expect(rankedNodeIds(mountRenderer({ limit: 2 }))).toEqual(['ai_gateway_model:a', 'ai_gateway_model:b'])
+  })
+
+  it('picks the nodes again when the limit changes but the data doesn\'t', async () => {
+    const wrapper = mountRenderer({ limit: 2 })
+
+    await wrapper.setProps({ query: { ...baseQuery, limit: 1 } as ValidDashboardChartQuery })
+
+    expect(rankedNodeIds(wrapper)).toEqual(['ai_gateway_model:a'])
   })
 
   it('explains that a query with one dimension can\'t be shown', () => {

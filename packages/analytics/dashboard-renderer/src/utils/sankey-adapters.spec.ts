@@ -271,6 +271,21 @@ describe('exploreResultToSankey with three dimensions', () => {
     ])
   })
 
+  it('picks the last column\'s values only through the middle values picked, so each one has a link', () => {
+    // A's top model is gpt, but its top user overall, kim, only uses mini
+    const sankey = exploreResultToSankey(buildThreeDimensionResult([
+      ['A', 'gpt', 'alex', 10],
+      ['A', 'gpt', 'sam', 5],
+      ['A', 'mini', 'kim', 12],
+    ]), { limit: 1 })
+
+    expect(linkSummary(sankey)).toEqual([
+      'ai_provider:A -> ai_gateway_model:gpt: 15',
+      'ai_gateway_model:gpt -> oidc_credential:alex: 10',
+    ])
+    expect(nodeSummary(sankey)?.map(([id]) => id)).toEqual(['ai_provider:A', 'ai_gateway_model:gpt', 'oidc_credential:alex'])
+  })
+
   it('leaves out an Other group in a later column, but counts it in the first column\'s totals', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     const sankey = exploreResultToSankey(buildThreeDimensionResult([

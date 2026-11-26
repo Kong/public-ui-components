@@ -125,8 +125,9 @@ const addToGroup = (groups: Map<string, Map<string, number>>, group: string, key
  * Each dimension is a column, in query order.
  *
  * The first dimension is ranked: the chart keeps its top `limit` values by total. Every other column
- * breaks them down into each one's own top `limit` values, so a value shared by several of them appears
- * once, e.g. provider -> its top models and its top users. Links only count traffic through the ranked
+ * breaks them down into each one's own top `limit` values, through the values picked for it in the
+ * columns before, so every value shown has a link. A value shared by several of them appears once,
+ * e.g. provider -> its top models -> their top users. Links only count traffic through the ranked
  * values shown and the values picked for them.
  *
  * The API's `Other` groups are left out. First-column nodes are as tall as their links, in ranked order,
@@ -165,8 +166,6 @@ export const exploreResultToSankey = (
 
   const records: Array<{ ids: Record<string, string>, value: number }> = []
   const rankedTotals = new Map<string, number>()
-  // Per other dimension, per ranked value: its flow to each of the dimension's values
-  const flows = new Map(otherDimensions.map((dimension) => [dimension, new Map<string, Map<string, number>>()]))
 
   for (const { event } of result.data as AnalyticsExploreRecord[]) {
     const value = toMetricValue(event[metric])
@@ -180,12 +179,6 @@ export const exploreResultToSankey = (
     records.push({ ids, value })
     // The total counts every value around the ranked value, including Other groups and values past the top N
     addTo(rankedTotals, rankedId, value)
-
-    for (const dimension of otherDimensions) {
-      if (!isOtherGroup(display[dimension], ids[dimension])) {
-        addToGroup(flows.get(dimension)!, rankedId, ids[dimension], value)
-      }
-    }
   }
 
   const rankedEntries = topEntries(rankedTotals, limit)
@@ -196,11 +189,24 @@ export const exploreResultToSankey = (
   // Per dimension, the values shown, in the order they were picked
   const shown = new Map<string, Set<string>>([[rankedDimension, rankedIds]])
 
-  for (const dimension of otherDimensions) {
+  const isPicked = (dimension: string, ids: Record<string, string>): boolean => (
+    dimension === rankedDimension || !!picked.get(dimension)?.get(ids[rankedDimension])?.has(ids[dimension])
+  )
+
+  for (const [index, dimension] of otherDimensions.entries()) {
     const columnValues = new Set<string>()
+    // Per ranked value: its flow to each of this column's values, only through the values picked
+    // for it in the columns before, so each value picked here has a link to it
+    const flows = new Map<string, Map<string, number>>()
+
+    for (const { ids, value } of records) {
+      if (!isOtherGroup(display[dimension], ids[dimension]) && otherDimensions.slice(0, index).every((previous) => isPicked(previous, ids))) {
+        addToGroup(flows, ids[rankedDimension], ids[dimension], value)
+      }
+    }
 
     for (const [rankedId] of rankedEntries) {
-      const top = topEntries(flows.get(dimension)!.get(rankedId) ?? new Map(), limit).map(([id]) => id)
+      const top = topEntries(flows.get(rankedId) ?? new Map(), limit).map(([id]) => id)
 
       picked.get(dimension)!.set(rankedId, new Set(top))
       top.forEach((id) => columnValues.add(id))
@@ -208,10 +214,6 @@ export const exploreResultToSankey = (
 
     shown.set(dimension, columnValues)
   }
-
-  const isPicked = (dimension: string, ids: Record<string, string>): boolean => (
-    dimension === rankedDimension || !!picked.get(dimension)?.get(ids[rankedDimension])?.has(ids[dimension])
-  )
 
   const colors = new Map(rankedEntries.map(([id], order) => [id, rankedColor(rankedDimension, id, order, colorOptions)]))
   const links: SankeyLink[] = []
