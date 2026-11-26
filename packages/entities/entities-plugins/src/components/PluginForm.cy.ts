@@ -1569,6 +1569,44 @@ describe('<PluginForm />', () => {
         cy.getTestId('form-error').should('contain.text', 'name must be unique')
         cy.getTestId('ff-error-summary').should('not.exist')
       })
+
+      describe('sticky actions', () => {
+        const getRect = (el: JQuery<HTMLElement>) => el[0].getBoundingClientRect()
+
+        it('keeps the actions at the bottom of the viewport while the form scrolls', () => {
+          mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+
+          cy.getTestId('form-actions').should('have.css', 'position', 'sticky')
+            .and('have.css', 'border-top-style', 'solid')
+          // The form is taller than the viewport, yet its actions show at the bottom
+          cy.getTestId('form-content').then(form => expect(getRect(form).bottom).to.be.greaterThan(Cypress.config('viewportHeight')))
+          cy.getTestId('form-actions').then(actions => expect(getRect(actions).bottom).to.be.closeTo(Cypress.config('viewportHeight'), 1))
+          cy.getTestId('plugin-create-form-submit').should('be.visible')
+        })
+
+        it('keeps the actions in place when the flag is off', () => {
+          mountCors({})
+
+          cy.getTestId('form-actions').should('have.css', 'position', 'static')
+        })
+
+        it('keeps the error summary above the actions', () => {
+          interceptKonnectCreatePlugin({ status: 400, mockData: validationErrors })
+          mountCors({ [FEATURE_FLAGS.KM_3728_PLUGIN_FORM_FIELD_ERRORS]: true })
+          submit()
+
+          cy.getTestId('ff-error-summary').should('be.visible')
+          cy.window().then(win => win.scrollTo(0, 0))
+          cy.getTestId('ff-error-summary').then((summary) => {
+            cy.getTestId('form-actions').then((actions) => {
+              expect(getRect(summary).bottom).to.be.closeTo(getRect(actions).top, 1)
+            })
+          })
+          // The summary sits right on the actions, so they drop their border
+          cy.getTestId('form-actions').should('have.css', 'border-top-style', 'none')
+            .and('have.css', 'margin-top', '0px')
+        })
+      })
     })
 
     it('should pick correct url while creating plugin credential', () => {

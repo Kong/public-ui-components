@@ -1,7 +1,12 @@
 <template>
   <div
     class="kong-ui-entities-plugin-form-container"
-    :class="{ 'new-form-layout': usesFreeformLayout }"
+    :class="{
+      'new-form-layout': usesFreeformLayout,
+      'sticky-form-actions': stickyActions,
+      'has-error-summary': stickyActions && fieldErrors.hasErrors.value,
+    }"
+    :style="stickyActions ? { '--kong-ui-plugin-form-error-summary-bottom': `${actionsHeight}px` } : undefined"
   >
     <KSkeleton
       v-if="schemaLoading"
@@ -82,7 +87,10 @@
           v-else
           :teleport-target="actionsTeleportTarget"
         >
-          <div class="plugin-form-actions">
+          <div
+            ref="actions"
+            class="plugin-form-actions"
+          >
             <KButton
               v-if="!hideViewConfigAction"
               appearance="tertiary"
@@ -202,7 +210,8 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
-import { computed, onBeforeMount, provide, reactive, ref, toRef, type PropType, inject } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, toRef, useTemplateRef, type PropType, inject } from 'vue'
+import { useElementSize } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -400,6 +409,17 @@ const enableFieldErrors = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_3728_PLUGIN_FO
 const fieldErrors = usePluginFormFieldErrors(() => enableFieldErrors
   && !treatAsCredential.value
   && getPluginConfig(clonedSourcePlugin.value ?? props.pluginType)?.fieldErrors !== false)
+
+// With the field errors, the actions stay at the bottom of the viewport while the form scrolls,
+// unless the host renders them elsewhere
+const stickyActions = computed(() => enableFieldErrors && !props.isWizardStep && !props.actionsTeleportTarget)
+const actionsRef = useTemplateRef<HTMLElement>('actions')
+// The error summary sticks to the bottom too: it stays above the actions
+const { height: actionsHeight } = useElementSize(
+  computed(() => actionsRef.value?.closest<HTMLElement>('.form-actions')),
+  undefined,
+  { box: 'border-box' },
+)
 
 // Used by both the plugin form (`PluginEntityForm`) and the credential form
 provide(USE_SECRET_INPUT_KEY, toRef(props, 'useSecretInput'))
@@ -1019,6 +1039,27 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
     flex-direction: row;
     justify-content: flex-end;
     margin-bottom: var(--kui-space-60, $kui-space-60);
+  }
+
+  &.sticky-form-actions {
+    :deep(.form-actions) {
+      background-color: var(--kui-color-background, $kui-color-background);
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      bottom: 0;
+      position: sticky;
+      z-index: 10;
+    }
+
+    .plugin-form-actions {
+      padding-bottom: var(--kui-space-70, $kui-space-70);
+      padding-top: var(--kui-space-70, $kui-space-70);
+    }
+
+    // The error summary sits right on the actions, and is border enough
+    &.has-error-summary :deep(form > .form-actions) {
+      border-top: none;
+      margin-top: 0;
+    }
   }
 }
 </style>

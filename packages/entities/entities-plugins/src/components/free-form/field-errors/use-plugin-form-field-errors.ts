@@ -55,5 +55,8 @@ export function usePluginFormFieldErrors(enabled: MaybeRefOrGetter<boolean>) {
     return true
   }
 
-  return { clear, show }
+  /** Whether this form shows errors on the fields, and has some: the error summary shows */
+  const hasErrors = computed(() => context.enabled.value && context.errors.value.length > 0)
+
+  return { clear, show, hasErrors }
 }
