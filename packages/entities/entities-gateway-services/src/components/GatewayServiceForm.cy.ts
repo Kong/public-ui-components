@@ -391,6 +391,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
       })
 
+      cy.getTestId('gateway-service-url-input').type('https://api.kong-air.com/flights')
       cy.getTestId('gateway-service-http-version-select').should('have.value', 'HTTP/1.1')
       cy.contains('The upstream must support HTTP/2.').should('not.exist')
 
