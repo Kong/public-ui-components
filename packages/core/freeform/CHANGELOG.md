@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.14.4...%40kong-ui-public%2Ffreeform%400.15.0) (2026-11-26)
+
+### Features
+
+* **freeform:** support enum keys in map fields [KM-3641] ([#4128](https://github.com/Kong/public-ui-components/issues/4128)) ([8d38d6d](https://github.com/Kong/public-ui-components/commit/8d38d6dbd6890cc30d395ea6fdb9ba65d073f857))
+
+
 ## [0.14.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ffreeform%400.14.3...%40kong-ui-public%2Ffreeform%400.14.4) (2026-11-26)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.31.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.30.6...%40kong-ui-public%2Fentities-gateway-services%403.31.0) (2026-11-26)
+
+### Features
+
+* **entities-gateway-services:** add upstream HTTP version to service form ([#4129](https://github.com/Kong/public-ui-components/issues/4129)) ([8c6bdca](https://github.com/Kong/public-ui-components/commit/8c6bdcac4737ddc8f354964702dcf8c290b1e1d7))
+
+
 ## [3.30.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.30.5...%40kong-ui-public%2Fentities-gateway-services%403.30.6) (2026-11-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
