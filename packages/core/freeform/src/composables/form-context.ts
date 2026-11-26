@@ -205,7 +205,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       isFieldHidden: isPrunedAsHidden,
     })
 
-    const { getFieldErrors, getErrorsWhere, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
+    const { getFieldErrors, getErrorsWhere, unmatchedErrors, onArrayItemRemoved, onArrayItemInserted, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
       errors: propsErrors,
       onChange: onErrorsChange,
       formData: innerData,
@@ -261,6 +261,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getFieldErrors,
       unmatchedErrors,
       onArrayItemRemoved,
+      onArrayItemInserted,
       onMapKeyRenamed,
       onMapKeyRemoved,
     }

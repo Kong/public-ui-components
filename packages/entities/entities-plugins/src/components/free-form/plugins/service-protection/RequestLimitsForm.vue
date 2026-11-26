@@ -24,51 +24,84 @@
         />
       </div>
 
-      <div class="sp-form-request-limits-items">
-        <div
-          v-for="(requestLimit, index) in requestLimits"
-          :key="getKey(requestLimit, index)"
-        >
-          <KLabel :for="`sp-form-request-limits-item-${index}-legend`">
-            {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
-          </KLabel>
+      <!--
+        `config.limit` and `config.window_size` as a whole: their own errors
+        (e.g. no limit at all, while an empty row still shows) go below the
+        rows, and the rows show the item errors. A reveal of `config.limit`
+        lands on the rows, so it focuses the first limit.
+      -->
+      <FieldControl
+        v-slot="{ ownErrors: limitErrors }"
+        name="$.config.limit"
+      >
+        <div class="sp-form-request-limits-items">
+          <div
+            v-for="(requestLimit, index) in requestLimits"
+            :key="getKey(requestLimit, index)"
+          >
+            <KLabel :for="`sp-form-request-limits-item-${index}-legend`">
+              {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
+            </KLabel>
 
-          <div class="sp-form-request-limits-row">
-            <legend
-              :id="`sp-form-request-limits-item-${index}-legend`"
-              class="sp-form-request-limits-inputs"
-            >
-              <NumberField
-                :name="`$.config.limit.${index}`"
-                :placeholder="t('sp.request_limits.request_number')"
-              />
-              <div>{{ t('sp.request_limits.interval_determiner') }}</div>
-              <NumberField
-                :name="`$.config.window_size.${index}`"
-                :placeholder="t('sp.request_limits.time_interval')"
-              />
-              <div>{{ t('sp.request_limits.seconds') }}</div>
-            </legend>
-
-            <div class="sp-form-request-limits-actions">
-              <KButton
-                appearance="tertiary"
-                :disabled="requestLimits.length <= 1"
-                @click="() => removeRequestLimit(index)"
+            <div class="sp-form-request-limits-row">
+              <legend
+                :id="`sp-form-request-limits-item-${index}-legend`"
+                class="sp-form-request-limits-inputs"
               >
-                <RemoveIcon />
-              </KButton>
+                <NumberField
+                  :name="`$.config.limit.${index}`"
+                  :placeholder="t('sp.request_limits.request_number')"
+                />
+                <div>{{ t('sp.request_limits.interval_determiner') }}</div>
+                <!-- A reveal of `config.window_size` as a whole lands on the first window size -->
+                <FieldControl
+                  v-if="index === 0"
+                  name="$.config.window_size"
+                >
+                  <NumberField
+                    :name="`$.config.window_size.${index}`"
+                    :placeholder="t('sp.request_limits.time_interval')"
+                  />
+                </FieldControl>
+                <NumberField
+                  v-else
+                  :name="`$.config.window_size.${index}`"
+                  :placeholder="t('sp.request_limits.time_interval')"
+                />
+                <div>{{ t('sp.request_limits.seconds') }}</div>
+              </legend>
 
-              <KButton
-                appearance="tertiary"
-                @click="() => addRequestLimit(index)"
-              >
-                <AddIcon />
-              </KButton>
+              <div class="sp-form-request-limits-actions">
+                <KButton
+                  appearance="tertiary"
+                  :data-testid="`sp-form-remove-limit-${index}`"
+                  :disabled="requestLimits.length <= 1"
+                  @click="() => removeRequestLimit(index)"
+                >
+                  <RemoveIcon />
+                </KButton>
+
+                <KButton
+                  appearance="tertiary"
+                  :data-testid="`sp-form-add-limit-${index}`"
+                  @click="() => addRequestLimit(index)"
+                >
+                  <AddIcon />
+                </KButton>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+        <FieldErrors
+          :errors="limitErrors"
+          path="config.limit"
+        />
+        <FieldErrors
+          :errors="windowSizeErrors"
+          path="config.window_size"
+        />
+      </FieldControl>
 
       <div
         v-if="filteredUseCases.length > 0"
@@ -108,8 +141,9 @@ import { get } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import { computed, nextTick, ref } from 'vue'
-import { useFormShared, useItemKeys, NumberField } from '@kong-ui-public/freeform'
+import { useFormShared, useItemKeys, FieldErrors, NumberField } from '@kong-ui-public/freeform'
 import type { EmptyValue } from '@kong-ui-public/freeform'
+import FieldControl from '../../components/FieldControl.vue'
 import RadioField from '../../components/RadioField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -138,7 +172,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
+const { formData, getSelectItems, getSchema, getEmptyOrDefault, getFieldErrors, onArrayItemInserted, onArrayItemRemoved } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -157,6 +191,10 @@ const requestLimits = computed<RequestLimit[]>(() => {
 
 const { getKey } = useItemKeys('request-limits', requestLimits)
 
+// Shown below the rows. The `FieldControl` for the array wraps only the first
+// row's window size, so a reveal of it focuses that, not the first limit.
+const windowSizeErrors = computed(() => getFieldErrors('config.window_size', false))
+
 const addRequestLimit = (index: number) => {
   selectedUseCase.value = undefined
   if (!formData.config) return
@@ -168,12 +206,20 @@ const addRequestLimit = (index: number) => {
   if (!formData.config.window_size?.length) {
     formData.config.window_size = [emptyWindowSize]
   }
+  // The new row goes after the one clicked, so the errors of the rows after it
+  // move along with them.
+  onArrayItemInserted('config.limit', index + 1)
+  onArrayItemInserted('config.window_size', index + 1)
   formData.config.limit.splice(index + 1, 0, emptyLimit)
   formData.config.window_size.splice(index + 1, 0, emptyWindowSize)
 }
 
 const removeRequestLimit = (index: number) => {
   if (!formData.config) return
+  // As `ArrayField` does: drop the removed row's errors, and move those of the
+  // rows after it, so no error lands on another row.
+  onArrayItemRemoved('config.limit', index)
+  onArrayItemRemoved('config.window_size', index)
   formData.config.limit!.splice(index, 1)
   formData.config.window_size!.splice(index, 1)
 }

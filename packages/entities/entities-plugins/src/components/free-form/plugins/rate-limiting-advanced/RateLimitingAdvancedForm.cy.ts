@@ -1,10 +1,11 @@
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { FORMS_CONFIG } from '../../const'
 import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import { REDIS_PARTIAL_INFO } from '../../const'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors/context'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
 
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 
 /**
  * Covers the plugin-level wiring only: which fields Advanced renders, the
@@ -25,11 +26,14 @@ const mockPartials = () => {
   cy.intercept('GET', `**/partials/${partial.id}`, { body: partial }).as('getPartial')
 }
 
-const mountForm = (config: Record<string, any>, { isEditing = false } = {}) => {
+const mountForm = (
+  config: Record<string, any>,
+  { isEditing = false, fieldErrors, model }: { isEditing?: boolean, fieldErrors?: FieldError[], model?: Record<string, any> } = {},
+) => {
   cy.mount(RateLimitingAdvancedForm, {
     props: {
       schema: { type: 'record', ...schema } as unknown as FormSchema,
-      model: { config: { identifier: 'consumer', limit: [10], window_size: [60], ...config } },
+      model: { ...model, config: { identifier: 'consumer', limit: [10], window_size: [60], ...config } },
       isEditing,
       pluginName: 'rate-limiting-advanced',
       onFormChange: cy.spy().as('onFormChange'),
@@ -49,6 +53,9 @@ const mountForm = (config: Record<string, any>, { isEditing = false } = {}) => {
           workspace: 'default',
           apiBaseUrl: '/kong-manager',
         },
+        ...(fieldErrors
+          ? { [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() } }
+          : {}),
       },
     },
   })
@@ -127,4 +134,54 @@ describe('<RateLimitingAdvancedForm />', () => {
       lastFormChange().its('partials').should(isEditing ? 'be.null' : 'be.undefined')
     })
   }
+  describe('errors on the request limits', () => {
+    it('moves the errors of the rows after a removed one along with them', () => {
+      mountForm({ strategy: 'local', limit: [1, 2, 3], window_size: [60, 60, 60] }, {
+        model: { expressions: { limit: ['', '', 'true'] } },
+        fieldErrors: [
+          { path: 'config.limit.0', message: 'first limit' },
+          { path: 'config.limit.2', message: 'third limit' },
+          { path: 'config.window_size.2', message: 'third window' },
+          { path: 'expressions.limit.2', message: 'third expression' },
+        ],
+      })
+      cy.getTestId('ff-field-errors-config.limit.2').should('contain.text', 'third limit')
+
+      cy.getTestId('rla-form-remove-limit-0').click()
+
+      // The first row's error goes with it; the third row's errors are now the second row's
+      cy.getTestId('ff-config.limit.2').should('not.exist')
+      cy.getTestId('ff-field-errors-config.limit.0').should('not.exist')
+      cy.getTestId('ff-field-errors-config.limit.1').should('have.text', 'third limit')
+      cy.getTestId('ff-field-errors-config.window_size.1').should('have.text', 'third window')
+      cy.getTestId('ff-error-summary-item-expressions.limit.1').should('contain.text', 'third expression')
+      cy.getTestId('ff-error-summary-item-expressions.limit.2').should('not.exist')
+    })
+
+    it('shows the errors of the whole arrays below the rows and links to them', () => {
+      mountForm({ strategy: 'local', limit: [], window_size: [] }, {
+        fieldErrors: [
+          { path: 'config.limit', message: 'length must be at least 1' },
+          { path: 'config.window_size', message: 'length must be at least 1' },
+        ],
+      })
+
+      // No limit yet, so one empty row shows
+      cy.getTestId('ff-config.limit.0').should('exist')
+      cy.getTestId('ff-field-errors-config.limit').should('have.text', 'length must be at least 1')
+      cy.getTestId('ff-field-errors-config.window_size').should('have.text', 'length must be at least 1')
+      // Each lands on its own control in the first row
+      cy.getTestId('ff-error-summary-item-config.window_size').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-config.window_size.0').should('have.focus')
+      cy.getTestId('ff-error-summary-item-config.limit').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-config.limit.0').should('have.focus')
+    })
+
+    it('leaves the errors of the items to their rows', () => {
+      mountForm({ strategy: 'local' }, { fieldErrors: [{ path: 'config.limit.0', message: 'invalid limit' }] })
+
+      cy.getTestId('ff-field-errors-config.limit.0').should('have.text', 'invalid limit')
+      cy.getTestId('ff-field-errors-config.limit').should('not.exist')
+    })
+  })
 })

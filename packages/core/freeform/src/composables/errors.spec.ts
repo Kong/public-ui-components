@@ -145,6 +145,36 @@ describe('createFieldErrors: structure changes', () => {
     ])
   })
 
+  it('should move the errors of the items at and after an inserted array item', () => {
+    const onChange = vi.fn()
+    const { onArrayItemInserted } = setup([
+      error('servers'),
+      error('servers.0.port'),
+      error('servers.1.port'),
+      error('servers.2.port'),
+      error('name'),
+    ], onChange)
+
+    onArrayItemInserted('servers', 1)
+
+    expect(onChange).toHaveBeenCalledWith([
+      error('servers'),
+      error('servers.0.port'),
+      { path: 'servers.2.port', message: 'servers.1.port' },
+      { path: 'servers.3.port', message: 'servers.2.port' },
+      error('name'),
+    ])
+  })
+
+  it('should not emit when an array item is appended after every item with errors', () => {
+    const onChange = vi.fn()
+    const { onArrayItemInserted } = setup([error('servers'), error('servers.0.port')], onChange)
+
+    onArrayItemInserted('servers', 1)
+
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   it('should move the errors of a map entry to its new key, with brackets where needed', () => {
     const onChange = vi.fn()
     const { onMapKeyRenamed } = setup([error('headers.X-Request-Id'), error('headers["x.y"]')], onChange)
@@ -261,6 +291,24 @@ describe('createFieldErrors: value changes', () => {
     await nextTick()
 
     expect(onChange).toHaveBeenLastCalledWith([{ path: 'servers.1.port', message: 'servers.2.port' }])
+  })
+
+  it('should keep the moved errors of the items after an inserted one, and drop the array\'s own', async () => {
+    const { data, onArrayItemInserted, onChange } = setupWithData([error('servers'), error('servers.0.port'), error('servers.1.port')])
+
+    onArrayItemInserted('servers', 1)
+    data.servers.splice(1, 0, { port: 0 })
+    await nextTick()
+
+    expect(onChange).toHaveBeenLastCalledWith([error('servers.0.port'), { path: 'servers.2.port', message: 'servers.1.port' }])
+  })
+
+  it('should move the `fields` of an error along with an inserted array item', () => {
+    const { onArrayItemInserted, onChange } = setupWithData([error('', ['servers.0.port', 'servers.1.port'])])
+
+    onArrayItemInserted('servers', 1)
+
+    expect(onChange).toHaveBeenCalledWith([error('', ['servers.0.port', 'servers.2.port'])])
   })
 
   it('should drop an error once a field in its `fields` is removed', () => {
