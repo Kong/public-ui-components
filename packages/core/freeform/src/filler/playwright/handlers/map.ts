@@ -54,6 +54,10 @@ export async function fillMap(option: MapHandlerOption): Promise<void> {
     const keyElement = page.locator(selectors.mapKey(fieldKey, i))
     if (isEnumKey) {
       // Enum keys are picked from a select
+      if (keySchema?.type !== 'string' || !keySchema.one_of?.includes(String(key))) {
+        throw new Error(`Map key "${String(key)}" is not an option of "${fieldKey}"`)
+      }
+
       await keyElement.click()
       await page.locator(selectors.mapKeyItems(fieldKey, i)).locator(selectors.selectItem(String(key))).click()
     } else {

@@ -55,6 +55,10 @@ export function fillMap(option: MapHandlerOption): void {
     scrollIntoViewNative(mapKeySelector)
     if (isEnumKey) {
       // Enum keys are picked from a select
+      if (keySchema?.type !== 'string' || !keySchema.one_of?.includes(String(key))) {
+        throw new Error(`Map key "${String(key)}" is not an option of "${fieldKey}"`)
+      }
+
       cy.get(mapKeySelector).click(SCROLL_BEHAVIOR)
       cy.get(selectors.mapKeyItems(fieldKey, i)).find(selectors.selectItem(String(key))).click(SCROLL_BEHAVIOR)
     } else {

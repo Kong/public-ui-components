@@ -302,6 +302,27 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-map-container-selection.1"] [data-testid^="ff-selection.kid:"]')).toHaveValue('bar')
     })
 
+    test('should reject an enum map key that is not an option', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            selection: {
+              type: 'map',
+              keys: { type: 'string', one_of: ['user', 'assistant', 'system'] },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await expect(filler.fillField('selection', { legacy: 'c' }))
+        .rejects.toThrow('Map key "legacy" is not an option of "selection"')
+    })
+
     test('should clear existing map entries before refilling', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',

@@ -304,6 +304,27 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-map-container-selection.1"] [data-testid^="ff-selection.kid:"]').should('have.value', 'bar')
     })
 
+    it('should reject an enum map key that is not an option', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            selection: {
+              type: 'map',
+              keys: { type: 'string', one_of: ['user', 'assistant', 'system'] },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      expect(() => filler.fillField('selection', { legacy: 'c' }))
+        .to.throw('Map key "legacy" is not an option of "selection"')
+    })
+
     it('should clear existing map entries before refilling', () => {
       const schema: FormSchema = {
         type: 'record',
