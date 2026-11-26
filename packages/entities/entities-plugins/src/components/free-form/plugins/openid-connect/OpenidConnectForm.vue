@@ -64,7 +64,11 @@
       </FieldRenderer>
     </template>
 
-    <KTabs :tabs="TABS">
+    <!-- `v-model` lets a reveal switch to the tab of a field (see `reveal-adapters.ts`) -->
+    <KTabs
+      v-model="activeTab"
+      :tabs="TABS"
+    >
       <template #common-anchor>
         <span data-testid="oidc-tab-common">Common</span>
       </template>
@@ -168,6 +172,7 @@ import { isSingularClaimDeprecated, migrateDeprecatedClaim } from './useDeprecat
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
 import PrincipalsSection from './PrincipalsSection.vue'
+import './reveal-adapters'
 import VerifySignatureField from './VerifySignatureField.vue'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
@@ -180,6 +185,8 @@ const TABS = [
   { hash: '#authorization', title: 'Authorization' },
   { hash: '#advanced', title: 'Advanced' },
 ] as const
+
+const activeTab = ref<typeof TABS[number]['hash']>('#common')
 
 const ADVANCED_OMIT = [
   'client_id',

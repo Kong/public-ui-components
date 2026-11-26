@@ -1,11 +1,12 @@
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { FORMS_CONFIG } from '../../const'
 import OpenidConnectForm from './OpenidConnectForm.vue'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../../const'
 import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
 import { PLUGIN_CONTEXT_KEY } from '../../plugin-context'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors/context'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
 
@@ -240,6 +241,8 @@ interface MountOptions {
   identityPrincipalsUi?: boolean
   /** Opt in to SecretInput for encrypted free-form fields. */
   useSecretInput?: boolean
+  /** The errors of a failed save, shown on the fields and in the error summary */
+  fieldErrors?: FieldError[]
 }
 
 const mountForm = (options: MountOptions = {}) => {
@@ -256,6 +259,7 @@ const mountForm = (options: MountOptions = {}) => {
     minRuntimeVersion,
     identityPrincipalsUi = false,
     useSecretInput = false,
+    fieldErrors,
   } = options
 
   cy.mount(OpenidConnectForm, {
@@ -289,6 +293,9 @@ const mountForm = (options: MountOptions = {}) => {
         ...(aiManager ? { [PLUGIN_CONTEXT_KEY]: { 'openid-connect': { source: 'ai-manager' } } } : {}),
         [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: identityPrincipalsUi,
         [USE_SECRET_INPUT_KEY as symbol]: ref(useSecretInput),
+        ...(fieldErrors
+          ? { [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() } }
+          : {}),
       },
     },
   })
@@ -356,6 +363,40 @@ describe('OpenidConnectForm', () => {
       clickTab('advanced')
 
       cy.getTestId('ff-config.authorization_endpoint').should('exist')
+    })
+  })
+
+  describe('field errors in inactive tabs', () => {
+    const errors: FieldError[] = [
+      { path: 'config.client_id', message: 'required field missing' },
+      { path: 'config.scopes_claim', message: 'unknown claim' },
+      { path: 'config.authorization_endpoint', message: 'must be a URL' },
+    ]
+
+    it('matches the errors of the fields in inactive tabs', () => {
+      mountForm({ fieldErrors: errors })
+
+      cy.getTestId('ff-array-config.scopes_claim').should('not.exist')
+      cy.getTestId('ff-config.authorization_endpoint').should('not.exist')
+      // A matched error links to its field
+      for (const error of errors) {
+        cy.getTestId(`ff-error-summary-item-${error.path}`).find('.ff-error-summary-link').should('exist')
+      }
+    })
+
+    it('switches to the tab of a field it reveals', () => {
+      mountForm({ fieldErrors: errors })
+
+      cy.getTestId('ff-error-summary-item-config.scopes_claim').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-array-config.scopes_claim').should('be.visible')
+      cy.getTestId('ff-field-errors-config.scopes_claim').should('contain.text', 'unknown claim')
+
+      cy.getTestId('ff-error-summary-item-config.authorization_endpoint').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-config.authorization_endpoint').should('be.visible').and('have.focus')
+
+      cy.getTestId('ff-error-summary-item-config.client_id').find('.ff-error-summary-link').click()
+      cy.getTestId('ff-array-config.client_id').should('be.visible')
+      cy.getTestId('ff-config.authorization_endpoint').should('not.exist')
     })
   })
 
@@ -1086,6 +1127,119 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('principals-directory-select').should('exist')
       // Plain common fields are replaced by the guided experience
       cy.getTestId('ff-array-config.client_id').should('not.exist')
+    })
+
+    describe('an error on the authorization server', () => {
+      const errors: FieldError[] = [{ path: 'config.issuer', message: 'required field missing' }]
+
+      it('shows it on the select and links to it', () => {
+        mountPrincipalsForm({ fieldErrors: errors })
+
+        cy.getTestId('principals-directory-select').closest('.k-select').should('contain.text', 'required field missing')
+        cy.getTestId('ff-error-summary-item-config.issuer').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-directory-select').closest('.k-select').find(':focus').should('exist')
+      })
+
+      it('switches back to the Common tab to reveal it', () => {
+        mountPrincipalsForm({ fieldErrors: errors })
+        cy.getTestId('principals-directory-select').should('exist')
+
+        clickTab('authorization')
+        cy.getTestId('principals-directory-select').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.issuer').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-directory-select').closest('.k-select').find(':focus').should('exist')
+      })
+    })
+
+    describe('errors on the clients', () => {
+      const errors: FieldError[] = [
+        { path: 'config.client_id.0', message: 'required field missing' },
+        { path: 'config.client_id.1', message: 'required field missing' },
+        { path: 'config.client_secret.1', message: 'required field missing' },
+      ]
+      // Two client rows, both empty
+      const clients = { client_id: [null, null], client_secret: [null, null] }
+
+      it('shows them on the Kong Identity client rows and links to them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: errors,
+        })
+
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+        cy.getTestId('principals-client-id-input').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+        for (const error of errors) {
+          cy.getTestId(`ff-error-summary-item-${error.path}`).find('.ff-error-summary-link').should('exist')
+        }
+        cy.getTestId('ff-error-summary-item-config.client_secret.1').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-client-secret').eq(1).closest('.k-input').find('input').should('have.focus')
+      })
+
+      it('shows them on the External client rows and links to them', () => {
+        mountPrincipalsForm({
+          isEditing: true,
+          model: createPrincipalsModel({ id: 'plugin-id', issuer: 'https://accounts.example.com', ...clients }),
+          fieldErrors: errors,
+        })
+
+        cy.getTestId('external-client-id').should('have.length', 2)
+        cy.getTestId('external-client-secret').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').click()
+        cy.getTestId('external-client-id').eq(1).should('have.focus')
+      })
+
+      it('moves the errors of the rows after a removed one along with them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel({ client_id: [null, null, null], client_secret: [null, null, null] }),
+          fieldErrors: [
+            { path: 'config.client_id.0', message: 'required field missing' },
+            { path: 'config.client_id.2', message: 'required field missing' },
+            { path: 'config.client_secret.2', message: 'required field missing' },
+          ],
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 3)
+
+        cy.getTestId('remove-client-action').first().click()
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+        // The first row's error goes with it; the third row's errors are now the second row's
+        cy.getTestId('ff-error-summary-item-config.client_id.0').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.2').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').should('exist')
+        cy.getTestId('ff-error-summary-item-config.client_secret.1').find('.ff-error-summary-link').should('exist')
+        cy.getTestId('principals-client-secret').eq(1).closest('.k-input').should('contain.text', 'required field missing')
+      })
+
+      it('drops the client errors once only an empty row is left', () => {
+        const issuerError = { path: 'config.issuer', message: 'required field missing' }
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: [...errors, issuerError],
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+
+        // The empty row left is no value at all, so nothing is wrong with it
+        cy.getTestId('remove-client-action').first().click()
+        cy.getTestId('principals-client-id-input').should('have.length', 1)
+        cy.get('[data-testid^="ff-error-summary-item-config.client_"]').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.issuer').should('exist')
+      })
+
+      it('switches back to the Common tab to reveal them', () => {
+        mountPrincipalsForm({
+          formsConfig: { isKongIdentityAuthServersAvailable: false },
+          model: createPrincipalsModel(clients),
+          fieldErrors: errors,
+        })
+        cy.getTestId('principals-client-id-input').should('have.length', 2)
+
+        clickTab('advanced')
+        cy.getTestId('principals-client-id-input').should('not.exist')
+        cy.getTestId('ff-error-summary-item-config.client_id.1').find('.ff-error-summary-link').click()
+        cy.getTestId('principals-client-id-input').eq(1).should('have.focus')
+      })
     })
 
     it('does not render the section on Kong Manager even when the schema has principals', () => {
