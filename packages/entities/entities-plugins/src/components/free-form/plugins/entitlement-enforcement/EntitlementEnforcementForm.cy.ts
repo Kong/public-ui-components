@@ -1,5 +1,8 @@
+import { ref, shallowRef } from 'vue'
 import EntitlementEnforcementForm from './EntitlementEnforcementForm.vue'
 import { FORMS_CONFIG } from '../../const'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors/context'
+import type { FieldError } from '@kong-ui-public/freeform'
 import entitlementEnforcementSchema from '../../../../../fixtures/schemas/entitlement-enforcement'
 
 const mountForm = (options: {
@@ -8,8 +11,10 @@ const mountForm = (options: {
   geoApiServerUrl?: string
   app?: 'konnect' | 'kongManager'
   metering?: { featuresEndpoint?: string, canListFeatures?: boolean, canCreateFeature?: boolean }
+  /** The errors of a failed save, shown on the fields and in the error summary */
+  fieldErrors?: FieldError[]
 }) => {
-  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', metering } = options
+  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', metering, fieldErrors } = options
 
   const formsConfig = app === 'konnect'
     ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}), ...(metering ? { metering } : {}) }
@@ -27,6 +32,9 @@ const mountForm = (options: {
     global: {
       provide: {
         [FORMS_CONFIG]: formsConfig,
+        ...(fieldErrors
+          ? { [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() } }
+          : {}),
       },
     },
   })
@@ -51,6 +59,31 @@ describe('EntitlementEnforcementForm - multi-section layout', () => {
     // General Info block is always rendered; step 4 means the step text is "4"
     cy.getTestId('form-section-general-info').should('exist')
     cy.getTestId('form-section-general-info').contains('4')
+  })
+})
+
+describe('EntitlementEnforcementForm - field errors', () => {
+  it('shows the errors on the card radios and links to them', () => {
+    const errors: FieldError[] = [
+      { path: 'config.fail_policy', message: 'expected one of: allow, block' },
+      { path: 'config.deny_unknown_customers', message: 'expected a boolean' },
+    ]
+    mountForm({ fieldErrors: errors })
+
+    cy.getTestId('ff-field-errors-config.fail_policy').should('contain.text', 'expected one of: allow, block')
+    for (const error of errors) {
+      cy.getTestId(`ff-error-summary-item-${error.path}`).find('.ff-error-summary-link').should('exist')
+    }
+
+    // The advanced settings open to show the field
+    cy.getTestId('ff-error-summary-item-config.deny_unknown_customers').find('.ff-error-summary-link').click()
+    cy.getTestId('ff-field-errors-config.deny_unknown_customers')
+      .should('be.visible')
+      .and('contain.text', 'expected a boolean')
+      .parent()
+      .find('input')
+      .first()
+      .should('have.focus')
   })
 })
 

@@ -1,7 +1,9 @@
+import { ref, shallowRef } from 'vue'
 import KongCircuitBreakerForm from './KongCircuitBreakerForm.vue'
 import { FORMS_CONFIG } from '../../const'
+import { PLUGIN_FORM_FIELD_ERRORS } from '../../field-errors/context'
 import schema from '../../../../../fixtures/schemas/kong-circuit-breaker'
-import type { FormSchema } from '@kong-ui-public/freeform'
+import type { FieldError, FormSchema } from '@kong-ui-public/freeform'
 
 interface CircuitBreakerPayload {
   config: {
@@ -12,7 +14,7 @@ interface CircuitBreakerPayload {
   }
 }
 
-const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}, isEditing = false) => {
+const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}, isEditing = false, fieldErrors?: FieldError[]) => {
   cy.mount(KongCircuitBreakerForm, {
     props: {
       schema: formSchema as FormSchema,
@@ -24,13 +26,16 @@ const mountSchema = (formSchema: unknown, model: Record<string, unknown> = {}, i
     global: {
       provide: {
         [FORMS_CONFIG]: { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123' },
+        ...(fieldErrors
+          ? { [PLUGIN_FORM_FIELD_ERRORS as symbol]: { enabled: ref(true), errors: ref(fieldErrors), schema: shallowRef() } }
+          : {}),
       },
     },
   })
 }
 
-const mountForm = (model: Record<string, unknown> = {}, isEditing = false) =>
-  mountSchema({ type: 'record', ...schema }, model, isEditing)
+const mountForm = (model: Record<string, unknown> = {}, isEditing = false, fieldErrors?: FieldError[]) =>
+  mountSchema({ type: 'record', ...schema }, model, isEditing, fieldErrors)
 
 const openAdvanced = () => cy.getTestId('view-advanced').findTestId('collapse-trigger-content').click()
 
@@ -103,6 +108,17 @@ describe('KongCircuitBreakerForm', () => {
     cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
       expect(value.config.identifier).to.eq('route')
     })
+  })
+
+  it('shows an error on the identifier radios and links to them', () => {
+    mountForm({}, false, [{ path: 'config.identifier', message: 'expected one of: service, route' }])
+
+    // The advanced settings open to show the field
+    cy.getTestId('ff-error-summary-item-config.identifier').find('.ff-error-summary-link').click()
+    cy.getTestId('ff-field-errors-config.identifier')
+      .should('be.visible')
+      .and('contain.text', 'expected one of: service, route')
+    cy.getTestId('ff-radio-config.identifier-service').should('have.focus')
   })
 
   it('switches a circuit\'s threshold condition', () => {

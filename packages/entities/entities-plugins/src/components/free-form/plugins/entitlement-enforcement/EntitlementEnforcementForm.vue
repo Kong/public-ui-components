@@ -86,11 +86,7 @@
         <ObjectField
           as-child
           name="config.customer"
-          :render-rules="{
-            dependencies: {
-              field: ['look_up_value_in', ['header', 'query']],
-            },
-          }"
+          :render-rules="customerRenderRules"
           reset-label-path="reset"
         />
       </div>
@@ -161,7 +157,7 @@
     <!-- ── Section 3: Entitlement Enforcement settings ──────────────────── -->
     <template #section-entitlement-enforcement>
       <!-- credit_balance_required — 2-card boolean radio
-           CardRadioField calls useFormShared() internally; rendered inside
+           CardRadioField calls useField() internally; rendered inside
            Form.vue's provider context via the slot. -->
       <CardRadioField
         :label="t('plugins.free-form.governance.fields.credit_balance_required.label')"
@@ -219,11 +215,21 @@ import useI18n from '../../../../composables/useI18n'
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
 import type { ConfigSection } from '../../types'
 import type { EntityCreateEvent } from '../../../../types'
+import type { RenderRules } from '@kong-ui-public/freeform'
 import ResponseMappingField from './ResponseMappingField.vue'
 import CardRadioField from './CardRadioField.vue'
 import FeatureSelectField from './FeatureSelectField.vue'
 
 const props = defineProps<Props>()
+
+// Not inline in the template: the form renders its content again as field errors
+// change, and a new rules object each time registers the rules again, which
+// re-renders the form in a loop
+const customerRenderRules: RenderRules = {
+  dependencies: {
+    field: ['look_up_value_in', ['header', 'query']],
+  },
+}
 
 const emit = defineEmits<{
   'click:create-entity': [payload: EntityCreateEvent]

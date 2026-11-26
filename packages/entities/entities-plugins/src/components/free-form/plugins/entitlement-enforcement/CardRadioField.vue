@@ -1,5 +1,15 @@
 <template>
-  <div class="ff-card-radio-field">
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
+
+  <div
+    v-else
+    class="ff-card-radio-field"
+  >
     <KLabel v-if="label">
       {{ label }}
     </KLabel>
@@ -7,7 +17,7 @@
       <KRadio
         v-for="option in options"
         :key="String(option.value)"
-        v-model="fieldValue"
+        v-model="field.value.value"
         card
         card-orientation="horizontal"
         :description="option.description"
@@ -15,14 +25,17 @@
         :selected-value="option.value"
       />
     </div>
+    <FieldErrors
+      :errors="field.fieldErrors.value"
+      :path="field.path.value"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { KLabel, KRadio } from '@kong/kongponents'
-import { get, set } from 'lodash-es'
-import { useFormShared } from '@kong-ui-public/freeform'
+import { toRef } from 'vue'
+import { KAlert, KLabel, KRadio } from '@kong/kongponents'
+import { FieldErrors, useField } from '@kong-ui-public/freeform'
 
 interface CardRadioOption {
   label: string
@@ -37,18 +50,7 @@ const props = defineProps<{
   options: CardRadioOption[]
 }>()
 
-const { formData } = useFormShared()
-
-const fieldValue = computed<boolean | string>({
-  get: () => {
-    const parts = props.name.split('.')
-    return get(formData, parts)
-  },
-  set: (v) => {
-    const parts = props.name.split('.')
-    set(formData, parts, v)
-  },
-})
+const field = useField<boolean | string>(toRef(() => props.name))
 </script>
 
 <style lang="scss" scoped>
