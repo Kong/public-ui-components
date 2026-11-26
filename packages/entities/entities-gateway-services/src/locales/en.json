@@ -137,6 +137,17 @@
             "udp": "udp"
           }
         },
+        "http_version": {
+          "label": "Upstream HTTP version",
+          "help": "The upstream must support HTTP/2. Requests fail if an HTTP/2 connection cannot be established; Kong does not fall back to HTTP/1.1.",
+          "tooltip": "The HTTP version used to talk to the upstream server. {code1} needs an upstream that accepts HTTP/2, in cleartext with prior knowledge when the protocol is {code2}. If unset, Kong uses HTTP/1.1.",
+          "code1": "2",
+          "code2": "http",
+          "options": {
+            "http_1_1": "HTTP/1.1",
+            "http_2": "HTTP/2"
+          }
+        },
         "host": {
           "label": "Host",
           "placeholder": "e.g. api.kong-air.com",

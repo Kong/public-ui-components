@@ -342,6 +342,113 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-ca-certs-select').should('not.exist')
     })
 
+    it('should not render the upstream HTTP version field when the feature is disabled', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          // isHttpVersionEnabled defaults to false
+        },
+      })
+
+      cy.getTestId('gateway-service-url-input').type(gatewayService1.url)
+
+      cy.getTestId('gateway-service-http-version-select').should('not.exist')
+    })
+
+    it('should only render the upstream HTTP version field for http and https upstreams', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isHttpVersionEnabled: true,
+        },
+      })
+
+      // Nothing is shown until a URL with an http/https scheme is entered
+      cy.getTestId('gateway-service-http-version-select').should('not.exist')
+
+      // Full URL mode: the field follows the scheme in the URL
+      cy.getTestId('gateway-service-url-input').type('https://api.kong-air.com/flights')
+      cy.getTestId('gateway-service-http-version-select').should('be.visible')
+
+      cy.getTestId('gateway-service-url-input').clear()
+      cy.getTestId('gateway-service-url-input').type('tcp://api.kong-air.com:80')
+      cy.getTestId('gateway-service-http-version-select').should('not.exist')
+
+      // Protocol mode: the field follows the protocol select
+      cy.getTestId('gateway-service-protocol-radio').click()
+      cy.getTestId('gateway-service-http-version-select').should('be.visible')
+
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-tcp').click()
+      cy.getTestId('gateway-service-http-version-select').should('not.exist')
+    })
+
+    it('should show the HTTP/2 helper text only when HTTP/2 is selected', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isHttpVersionEnabled: true,
+        },
+      })
+
+      cy.getTestId('gateway-service-http-version-select').should('have.value', 'HTTP/1.1')
+      cy.contains('The upstream must support HTTP/2.').should('not.exist')
+
+      cy.getTestId('gateway-service-http-version-select').click()
+      cy.getTestId('select-item-2').click()
+
+      cy.contains('The upstream must support HTTP/2.').should('be.visible')
+    })
+
+    it('should submit http_version for http and https upstreams', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services`,
+        },
+        { statusCode: 201, body: { ...gatewayService1, http_version: '2' } },
+      ).as('createService')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isHttpVersionEnabled: true,
+        },
+      })
+
+      cy.getTestId('gateway-service-url-input').type('https://api.kong-air.com/flights')
+      cy.getTestId('gateway-service-http-version-select').click()
+      cy.getTestId('select-item-2').click()
+      cy.getTestId('service-create-form-submit').click()
+
+      cy.wait('@createService').its('request.body.http_version').should('equal', '2')
+    })
+
+    it('should omit http_version when the upstream protocol is not http or https', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services`,
+        },
+        { statusCode: 201, body: gatewayService1 },
+      ).as('createService')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isHttpVersionEnabled: true,
+        },
+      })
+
+      cy.getTestId('gateway-service-protocol-radio').click()
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-tcp').click()
+      cy.getTestId('gateway-service-host-input').type('api.kong-air.com')
+      cy.getTestId('service-create-form-submit').click()
+
+      cy.wait('@createService').its('request.body').should('not.have.property', 'http_version')
+    })
+
     it('should handle error state - failed to load Gateway Service', () => {
       cy.intercept(
         {
