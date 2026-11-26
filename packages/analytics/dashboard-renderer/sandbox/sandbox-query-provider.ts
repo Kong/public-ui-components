@@ -170,8 +170,9 @@ type SankeyRecord = { values: Record<string, string>, requests: number }
 
 const aiModelConsumerRequests: SankeyRecord[] = aiModelRequests
   .flatMap(([provider, model, requests], modelIndex) => sankeyConsumers.map((consumer, consumerIndex) => {
-    // Each model's heaviest consumers start at a different offset, so their top 5s overlap partly
-    const rank = (consumerIndex - modelIndex * 2 + sankeyConsumers.length) % sankeyConsumers.length
+    // Each model's heaviest consumers start at a different offset, so their top 5s overlap partly.
+    // Adding the length after `%` keeps the rank positive for any model
+    const rank = ((consumerIndex - modelIndex * 2) % sankeyConsumers.length + sankeyConsumers.length) % sankeyConsumers.length
 
     return {
       values: { ai_provider: provider, ai_gateway_model: model, oidc_credential: `${consumer}@example.com` },
