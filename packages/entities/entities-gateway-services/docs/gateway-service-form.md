@@ -107,6 +107,20 @@ backed by the `/certificates` and `/ca_certificates` endpoints). When `false` (d
 original free-text inputs are shown instead (client certificate ID input; comma-separated CA
 certificate IDs input). Host apps should pass their resolved feature-flag value here.
 
+#### `isHttpVersionEnabled`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Feature-flag guard for the upstream HTTP version select (`http_version`). When `true`, an
+`Upstream HTTP version` select (`HTTP/1.1` or `HTTP/2`) is rendered in the service endpoint
+section. It is shown for the full URL form as soon as the URL parses as `http`/`https`, and for
+the protocol form when the selected protocol is `http` or `https`; it defaults to `HTTP/1.1`.
+`http_version` is only sent in the payload for those two protocols. When `false` (default), the
+select is not rendered and `http_version` is omitted from the payload. Host apps should pass
+their resolved feature-flag value here.
+
 ### Slots
 
 #### `form-actions`

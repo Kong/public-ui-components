@@ -14,18 +14,28 @@ export function createConfigCardSchema(t: ReturnType<typeof useI18n>['i18n']['t'
     protocol: {
       section: ConfigurationSchemaSection.Basic,
       tooltip: t('gateway_services.form.fields.protocol.tooltip'),
+      order: 8,
     },
     host: {
       section: ConfigurationSchemaSection.Basic,
       tooltip: t('gateway_services.form.fields.host.tooltip'),
+      order: 5,
     },
     path: {
       section: ConfigurationSchemaSection.Basic,
       tooltip: t('gateway_services.form.fields.path.tooltip'),
+      order: 6,
     },
     port: {
       section: ConfigurationSchemaSection.Basic,
       tooltip: t('gateway_services.form.fields.port.tooltip'),
+      order: 7,
+    },
+    http_version: {
+      section: ConfigurationSchemaSection.Basic,
+      label: t('gateway_services.form.fields.http_version.label'),
+      tooltip: t('gateway_services.form.fields.http_version.tooltip'),
+      order: 9,
     },
     tags: {
       tooltip: t('gateway_services.form.fields.tags.tooltip'),

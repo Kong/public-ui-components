@@ -4,6 +4,7 @@
     :config="konnectConfig"
     :gateway-service-id="id"
     is-certificate-select-enabled
+    is-http-version-enabled
     @error="onError"
     @update="onUpdate"
   />
@@ -13,6 +14,7 @@
     :config="kongManagerConfig"
     :gateway-service-id="id"
     is-certificate-select-enabled
+    is-http-version-enabled
     @error="onError"
     @update="onUpdate"
   />

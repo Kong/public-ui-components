@@ -21,6 +21,7 @@ export interface TlsSans {
 export interface GatewayServiceFormFields {
   name: string
   protocol: string
+  http_version: string
   host: string
   path: string
   port: number

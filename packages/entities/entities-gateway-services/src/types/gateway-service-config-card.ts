@@ -17,6 +17,7 @@ export interface GatewayServiceConfigurationSchema {
   host: ConfigurationSchemaItem
   path: ConfigurationSchemaItem
   port: ConfigurationSchemaItem
+  http_version: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
   // advanced fields
   retries: ConfigurationSchemaItem

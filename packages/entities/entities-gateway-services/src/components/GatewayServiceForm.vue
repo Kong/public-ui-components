@@ -83,6 +83,12 @@
                   </KButton>
                 </template>
               </KInput>
+
+              <GatewayServiceHttpVersionField
+                v-if="isHttpVersionApplicable"
+                v-model="form.fields.http_version"
+                :readonly="form.isReadonly"
+              />
             </div>
           </Transition>
         </div>
@@ -104,6 +110,12 @@
               required
               width="100%"
               @selected="handleProtocolSelect"
+            />
+
+            <GatewayServiceHttpVersionField
+              v-if="isHttpVersionApplicable"
+              v-model="form.fields.http_version"
+              :readonly="form.isReadonly"
             />
 
             <KInput
@@ -600,6 +612,7 @@ import type { MultiselectItem, SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { KongAirService } from '../constants'
 import GatewayServiceFormTlsSansField from './GatewayServiceFormTlsSansField.vue'
+import GatewayServiceHttpVersionField from './GatewayServiceHttpVersionField.vue'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void
@@ -656,6 +669,17 @@ const props = defineProps({
    * feature-flag value here.
    */
   isCertificateSelectEnabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  /**
+   * Feature-flag guard for the upstream HTTP version select (`http_version`).
+   * When `false` (default), the select is not rendered and `http_version` is
+   * omitted from the request payload. Host apps should pass the resolved
+   * feature-flag value here.
+   */
+  isHttpVersionEnabled: {
     type: Boolean,
     required: false,
     default: false,
@@ -820,6 +844,7 @@ const form = reactive<GatewayServiceFormState>({
   fields: {
     name: '',
     protocol: 'http',
+    http_version: '1.1',
     host: '',
     path: '',
     port: 80,
@@ -861,6 +886,7 @@ const form = reactive<GatewayServiceFormState>({
 const formFieldsOriginal = reactive<GatewayServiceFormFields>({
   name: '',
   protocol: 'http',
+  http_version: '1.1',
   host: '',
   path: '',
   port: 80,
@@ -965,6 +991,7 @@ const initFieldDefaultValues = (): void => {
   form.fields.path = formFieldsOriginal.path
   form.fields.port = formFieldsOriginal.port
   form.fields.protocol = formFieldsOriginal.protocol
+  form.fields.http_version = formFieldsOriginal.http_version
   form.fields.url = formFieldsOriginal.url
   form.fields.retries = formFieldsOriginal.retries
   form.fields.connect_timeout = formFieldsOriginal.connect_timeout
@@ -1170,6 +1197,25 @@ const showCaCertField = computed((): boolean => {
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
+// Resolves the protocol the same way `handleValidateFullUrl` does, so an unparsable URL has none
+const getUrlProtocol = (url: string): string => {
+  try {
+    return new URL(url).protocol.slice(0, -1)
+  } catch {
+    return ''
+  }
+}
+
+// `http_version` only applies to http/https upstreams, the services schema clears it otherwise.
+const isHttpVersionApplicable = computed((): boolean => {
+  if (!props.isHttpVersionEnabled) return false
+
+  // In URL mode the URL is the only source of truth, so nothing is shown until it parses as http(s)
+  const protocol = checkedGroup.value === 'url' ? getUrlProtocol(form.fields.url) : form.fields.protocol
+
+  return ['http', 'https'].includes(protocol)
+})
+
 const validateName = (input: string): void => {
   // reset the errors
   resetFormFieldErrors('name')
@@ -1198,6 +1244,7 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
   form.fields.tags = data?.tags?.join(', ') || ''
   form.fields.protocol = data?.protocol || 'http'
+  form.fields.http_version = data?.http_version || '1.1'
   form.fields.path = data?.path || ''
   form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ? data?.read_timeout : 60000
   form.fields.retries = (data?.retries || data?.retries === 0) ? data?.retries : 5
@@ -1298,6 +1345,10 @@ const getPayload = computed((): Record<string, any> => {
     requestBody.path = null
   }
 
+  if (isHttpVersionApplicable.value) {
+    requestBody.http_version = form.fields.http_version
+  }
+
   if (formType.value === 'create') {
     // Only submit the appropriate fields based on current checked group
     if (checkedGroup.value === 'url') {
@@ -1343,6 +1394,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.name = data?.name || ''
       form.fields.port = data.port || getPort.getPortFromProtocol(data.protocol)
       form.fields.protocol = data?.protocol || 'http'
+      form.fields.http_version = data?.http_version || '1.1'
       form.fields.host = data?.host || ''
       form.fields.path = data?.path || ''
       form.fields.url = data?.url || ''
