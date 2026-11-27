@@ -162,6 +162,40 @@ describe('KongCircuitBreakerForm', () => {
     })
   })
 
+  // The preselect has to come from the schema: a value the Gateway dropped
+  // from `one_of` leaves every radio unselected and fails its enum check.
+  it('preselects a declared condition when the schema has no count-only option', () => {
+    mountSchema({
+      type: 'record',
+      fields: [{
+        config: {
+          type: 'record',
+          required: true,
+          fields: [{
+            policy_circuit: {
+              type: 'record',
+              required: true,
+              fields: [
+                { enabled: { type: 'boolean', default: false } },
+                { open_when: { type: 'string', required: true, one_of: ['failure_percentage', 'both'] } },
+                { max_failures: { type: 'integer', required: true, default: 20 } },
+                { failure_percentage: { type: 'number', required: true, default: 10 } },
+              ],
+            },
+          }],
+        },
+      }],
+    })
+
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-failure_percentage').should('be.checked')
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit.open_when).to.eq('failure_percentage')
+      expect(value.config.policy_circuit).to.not.have.property('max_failures')
+    })
+  })
+
   // A circuit record is optional in the schema, so an empty draft carries no
   // record at all: the policy circuit still has to start on and filled, and
   // the switch is what creates the latency one, with its field defaults.

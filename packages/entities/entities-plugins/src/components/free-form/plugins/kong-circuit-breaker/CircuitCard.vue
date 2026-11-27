@@ -203,7 +203,9 @@ function syncThreshold(field: string, visible: boolean) {
  * That is also why editing is not skipped: the circuit record is optional, so
  * a plugin saved with it unset comes back empty and needs the same fill.
  * The condition starts at "Count only" even when the schema declares no
- * default for `open_when`.
+ * default for `open_when` — but only while the schema still declares that
+ * value: writing one it dropped from `one_of` would leave every radio
+ * unselected and fail the Gateway's enum check.
  */
 watch(() => formData.config?.[circuit]?.enabled, (enabled) => {
   if (!enabled) return
@@ -216,7 +218,12 @@ watch(() => formData.config?.[circuit]?.enabled, (enabled) => {
     if (key !== 'enabled' && record[key] == null && value != null) record[key] = value
   }
 
-  if (!record.open_when) record.open_when = 'max_failures'
+  if (!record.open_when) {
+    const conditions = getSchema(path('open_when'))?.one_of ?? []
+    if (conditions.length) {
+      record.open_when = conditions.includes('max_failures') ? 'max_failures' : conditions[0]
+    }
+  }
 
   // The fill restores both thresholds; the condition only uses one, and
   // `showsCount`/`showsPercentage` alone would not react when the selected
