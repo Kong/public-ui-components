@@ -59,7 +59,7 @@
           :aria-label="headerLabel"
           class="ff-object-field-toggle-btn"
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
-          :disabled="!realAdded || isLocked"
+          :disabled="!canToggle"
           :style="{ visibility: realAdded ? undefined : 'hidden' }"
           type="button"
           @click.prevent.stop="toggleDisplay"
@@ -75,13 +75,14 @@
 
         <KLabel
           class="ff-object-field-label"
+          :class="{ 'ff-object-field-label-clickable': canToggle }"
           :data-testid="`ff-label-${field.path.value}`"
           v-bind="{
             ...fieldAttrs,
             required: false,
           }"
           :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
-          @click.prevent.stop="toggleDisplay"
+          @click.prevent.stop="canToggle && toggleDisplay()"
         >
           <slot
             :label="headerLabel"
@@ -251,6 +252,7 @@ const fieldAttrs = useFieldAttrs(field.path!, { required, ...props, resetLabelPa
 // The key input names a map entry, so the record value of an entry gets a generic label
 const headerLabel = computed(() => isChildOfMap.value ? i18n.t('map_value_label') : fieldAttrs.value.label)
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
+const canToggle = computed(() => realAdded.value && !isLocked.value)
 
 const asChild = computed(() => {
   if (defaultAsChild !== undefined) return defaultAsChild
@@ -392,7 +394,7 @@ $indent-guide-top-offset: 20px;
       display: flex;
     }
 
-    .k-label {
+    .k-label.ff-object-field-label-clickable {
       cursor: pointer;
     }
   }
