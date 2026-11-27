@@ -298,8 +298,8 @@ const { defaultTablePreferences, tableHeaders } = useManagedByColumn(fields)
 /**
  * Fetcher & Filtering
  */
-const fetcherBaseUrl = computed((): string => {
-  let url: string = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
+const buildFetcherUrl = (endpoint: string): string => {
+  let url: string = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
@@ -307,6 +307,18 @@ const fetcherBaseUrl = computed((): string => {
 
   return url
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+}
+
+const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(endpoints.list[props.config.app]))
+
+const activeFetcherUrl = computed<string>(() => {
+  // The Konnect upstream list endpoint has no name filter, so searching goes
+  // through /upstreams/search, with or without a workspace
+  if (props.config.app === 'konnect' && filterQuery.value) {
+    return buildFetcherUrl(endpoints.search.konnect)
+  }
+
+  return fetcherBaseUrl.value
 })
 
 const filterQuery = ref<string>('')
@@ -334,7 +346,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), activeFetcherUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
