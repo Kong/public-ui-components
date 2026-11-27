@@ -75,7 +75,12 @@ export default function useChartJSCommon<T extends ChartType>(
   // try to instantiate a chart, without there being a canvas
   // available yet. Need to watch the canvas ref for change, create
   // a new chart when/if the canvas "updates"
-  watch(canvas, () => {
+  watch(canvas, (newCanvas) => {
+    // The ref also fills in on first render, after onMounted already built on this canvas
+    if (newCanvas && chartInstance.value?.canvas === newCanvas) {
+      return
+    }
+
     if (!isNullOrUndef(chartInstance.value)) {
       chartInstance.value.destroy()
     }

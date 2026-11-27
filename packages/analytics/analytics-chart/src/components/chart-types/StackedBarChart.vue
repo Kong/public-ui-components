@@ -56,24 +56,43 @@
 
 <script setup lang="ts">
 import type { ChartOptions } from 'chart.js'
-import { Chart } from 'chart.js'
-import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
-import { color } from '@kong-ui-public/analytics-utilities/coordination'
-import type { EventContext } from 'chartjs-plugin-annotation'
-import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
 import type { Ref } from 'vue'
+import type { EventContext } from 'chartjs-plugin-annotation'
+import type { InteractionCoordinator } from '@kong-ui-public/analytics-utilities'
+import type { BarChartData } from '../../utils'
+import type {
+  AxesTooltipState,
+  ChartLegendSortFn,
+  ChartTooltipSortFn,
+  EnhancedLegendItem,
+  KChartData,
+  LegendValues,
+  TooltipEntry,
+  TooltipState,
+} from '../../types'
+
+import { Chart } from 'chart.js'
+import { color } from '@kong-ui-public/analytics-utilities/coordination'
+import annotationPlugin from 'chartjs-plugin-annotation'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, useTemplateRef } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
-import { type BarChartData, generateLegendItems } from '../../utils'
-import { MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, conditionalDataTotal, debounce } from '../../utils'
-import composables from '../../composables'
-import { v4 as uuidv4 } from 'uuid'
-import { ChartLegendPosition } from '../../enums'
-import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
 import { CoordinatorPlugin } from '../chart-plugins/CoordinatorPlugin'
-
+import {
+  conditionalDataTotal,
+  drawPercentage,
+  formatNumber,
+  generateLegendItems,
+  getTextHeight,
+  getTextWidth,
+  MAX_LABEL_LENGTH,
+  toSparseBarData,
+} from '../../utils'
+import composables from '../../composables'
+import { ChartLegendPosition } from '../../enums'
 
 const props = withDefaults(defineProps<{
   chartData: KChartData
@@ -129,11 +148,10 @@ const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
-const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer')
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
-  const chartData: BarChartData = chart.data as BarChartData
+  const chartData = props.chartData as BarChartData
   const labelIndex = chartData.labels?.indexOf(label) as number
 
   return chartData.datasets.reduce<number>((acc: number, current, idx: number) => {
@@ -317,21 +335,14 @@ const numLabels = computed(() => {
   return (props.chartData.labels && props.chartData.labels.length) || 0
 })
 
-const baseWidth = ref<number>(0)
-const baseHeight = ref<number>(0)
-
-const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry[]) => {
-  // Only observing one element
-  baseWidth.value = entries[0].contentRect.width
-  baseHeight.value = entries[0].contentRect.height
-}, 100))
-
+// max() resolves against the container on the first render, so the canvas already has its
+// final size when Chart.js builds. Measuring the container after mount and resizing forced
+// a second Chart.js update.
 const chartWidth = computed<string>(() => {
   const numLabels = props.chartData?.labels?.length
-  if (canvasRef.value && numLabels && !isHorizontal.value) {
-    const preferredChartWidth = Math.max(numLabels * (MIN_BAR_WIDTH + BAR_MARGIN), baseWidth.value)
 
-    return `${preferredChartWidth}px`
+  if (numLabels && !isHorizontal.value) {
+    return `max(${numLabels * (MIN_BAR_WIDTH + BAR_MARGIN)}px, ${DEFAULT_CHART_WIDTH})`
   }
 
   return DEFAULT_CHART_WIDTH
@@ -339,10 +350,9 @@ const chartWidth = computed<string>(() => {
 
 const chartHeight = computed<string>(() => {
   const numLabels = props.chartData?.labels?.length
-  if (canvasRef.value && numLabels && isHorizontal.value) {
-    const preferredChartHeight = Math.max(numLabels * (MIN_BAR_HEIGHT + BAR_MARGIN), baseHeight.value)
 
-    return `${preferredChartHeight}px`
+  if (numLabels && isHorizontal.value) {
+    return `max(${numLabels * (MIN_BAR_HEIGHT + BAR_MARGIN)}px, ${DEFAULT_CHART_HEIGHT})`
   }
 
   return DEFAULT_CHART_HEIGHT
@@ -359,19 +369,6 @@ onMounted(() => {
   if (props.annotations) {
     Chart.register(annotationPlugin)
   }
-
-  if (chartContainerRef.value) {
-    // Initialize base dimensions since resize observer is debounced.
-    baseWidth.value = chartContainerRef.value.offsetWidth
-    baseHeight.value = chartContainerRef.value.offsetHeight
-    resizeObserver.observe(chartContainerRef.value)
-  }
-})
-
-onUnmounted(() => {
-  if (chartContainerRef.value) {
-    resizeObserver.unobserve(chartContainerRef.value)
-  }
 })
 
 const options = computed<ChartOptions>(() => {
@@ -387,6 +384,7 @@ const options = computed<ChartOptions>(() => {
 
   return {
     ...defaultOptions.value,
+    parsing: false,
     plugins: {
       ...defaultOptions.value.plugins,
       annotation: {
@@ -397,10 +395,14 @@ const options = computed<ChartOptions>(() => {
   } as unknown as ChartOptions
 })
 
+// Chart.js only gets the bars that exist (see toSparseBarData). props.chartData stays dense
+// for annotations and synthetics, which index values by label position.
+const chartJsData = computed(() => toSparseBarData(props.chartData, isHorizontal.value ? 'y' : 'x'))
+
 const chartInstance = composables.useChartJSCommon(
   'bar',
   canvasRef,
-  toRef(props, 'chartData'),
+  chartJsData,
   plugins,
   options,
 ) as Ref<Chart | undefined>

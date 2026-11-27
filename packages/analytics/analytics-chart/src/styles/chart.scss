@@ -16,6 +16,7 @@ $legend-height-values: var(--kui-space-140, $kui-space-140);
     flex-direction: column;
 
     .chart-container {
+      flex-grow: 0;
       flex-shrink: 0;
       height: calc(100% - #{$legend-height});
       width: 100%;
