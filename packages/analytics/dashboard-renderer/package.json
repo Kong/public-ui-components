@@ -103,7 +103,7 @@
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "p-queue": "^9.3.3",
+    "p-queue": "^10.0.0",
     "papaparse": "^5.7.0"
   }
 }
