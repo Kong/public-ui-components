@@ -273,14 +273,19 @@ export function createFieldReveal(options: FieldRevealOptions) {
    * once a `v-if` takes it out, or a component with no adapter renders it
    */
   function findAnchor(fieldPath: string, element: Element | null): string | null {
-    if (!element) {
+    if (!element || !treeLeaves.value.size) {
       return null
     }
     let found: string | null = null
     let foundDepth = -1
     for (const entry of fieldElements) {
+      // The path first: finding an element walks the field's vnodes
+      const path = entry.path()
+      if (path === fieldPath || !treeLeaves.value.has(path)) {
+        continue
+      }
       const other = entry.element()
-      if (!other?.isConnected || entry.path() === fieldPath || !treeLeaves.value.has(entry.path())) {
+      if (!other?.isConnected) {
         continue
       }
       let common = element.parentElement
@@ -289,7 +294,7 @@ export function createFieldReveal(options: FieldRevealOptions) {
       }
       const depth = common ? getDepth(common) : -1
       if (depth > foundDepth) {
-        found = entry.path()
+        found = path
         foundDepth = depth
       }
     }
@@ -312,9 +317,16 @@ export function createFieldReveal(options: FieldRevealOptions) {
     memories.set(memory.path, memory)
   }
 
-  /** The remembered fields that have an anchor, see `rememberField` */
+  /**
+   * The remembered fields that have an anchor, see `rememberField`. A field the
+   * reveal tree holds itself sits in its own containers, not in its anchor's:
+   * as a tab closes, its anchor may be a field in another section.
+   */
   function getAnchoredMemories(): Array<FieldCover & { anchor: string }> {
     return [...memories.values()].flatMap((memory) => {
+      if (treeLeaves.value.has(memory.path)) {
+        return []
+      }
       const anchor = getMemoryAnchor(memory)
       return anchor ? [{ path: memory.path, exclude: memory.exclude, anchor }] : []
     })
@@ -347,9 +359,14 @@ export function createFieldReveal(options: FieldRevealOptions) {
       return
     }
     const fields = options.getTreeFields?.() ?? []
-    // A remembered field sits in the containers of its anchor
+    // A remembered field sits in the containers of its anchor: it wins over a
+    // field of the tree that covers the target less closely, e.g. the record
+    // around the tabs it sits in
     const memory = findDeepest(getAnchoredMemories(), target)
-    const field = findDeepest(fields, target) ?? (memory && findDeepest(fields, memory.anchor))
+    const treeField = findDeepest(fields, target)
+    const field = memory && (!treeField || utils.toArray(memory.path).length > utils.toArray(treeField.path).length)
+      ? findDeepest(fields, memory.anchor)
+      : treeField
     for (const container of field?.containers ?? []) {
       if (findFieldElement(target)) {
         return

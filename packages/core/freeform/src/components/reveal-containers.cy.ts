@@ -1,7 +1,8 @@
 /* eslint-disable vue/one-component-per-file -- small harness components wrap the form */
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import Form from './Form.vue'
 import Field from './Field.vue'
+import ObjectField from './ObjectField.vue'
 import { defineRevealAdapter, updateModelValue } from '../composables'
 import type { FormSchema } from '../form-schema'
 import type { FieldError, RenderRules } from '../types'
@@ -95,6 +96,13 @@ defineRevealAdapter(Opaque, {
 const NoAdapter = defineComponent({
   setup() {
     return () => h('div', [h(Field, { name: 'second.proxy' })])
+  },
+})
+
+/** Renders `secret` of the record around it and has no reveal adapter */
+const NoAdapterSecret = defineComponent({
+  setup() {
+    return () => h('div', [h(Field, { name: 'secret' })])
   },
 })
 
@@ -335,5 +343,130 @@ describe('Reveal memory', () => {
     set({ tab: 'second' })
     reveal('first.redis.host').should('equal', null)
     cy.get('@harness').its('tab').should('equal', 'second')
+  })
+})
+
+describe('Closed containers, edge cases', () => {
+  const configSchema: FormSchema = {
+    type: 'record',
+    fields: [{
+      config: {
+        type: 'record',
+        required: true,
+        fields: [
+          { host: { type: 'string' } },
+          { secret: { type: 'string' } },
+          { mode: { type: 'string' } },
+          { other: { type: 'string' } },
+          { extra: { type: 'string' } },
+        ],
+      },
+    }],
+  }
+  const configData = { config: { host: 'a', secret: 'b', mode: 'basic', other: 'c', extra: 'd' } }
+  const secretError = { path: 'config.secret', message: 'invalid' }
+
+  type FormApi = Harness['form'] & { revealTree: unknown }
+
+  it('reads a count the default slot shows itself', () => {
+    const form = ref<FormApi>()
+    cy.mount(() => h(Form, { ref: form, schema: configSchema, data: configData, errors: [secretError] }, {
+      default: () => [
+        // Read while the form scans this slot, before the tree it builds exists
+        h('span', { 'data-testid': 'count' }, form.value?.getContainerErrors({ component: Collapse }).length ?? 0),
+        h(Collapse, { modelValue: true }, { default: () => [h(Field, { name: 'config.secret' })] }),
+      ],
+    }))
+
+    cy.getTestId('count').should('have.text', '1')
+  })
+
+  it('scans again when the parent passes new slots', () => {
+    const name = ref('config.host')
+    let form: FormApi
+    cy.mount(() => h(defineComponent(() => () => {
+      // Picked before the slot, so the slot itself reads nothing reactive
+      const fieldName = name.value
+      return h(Form, { ref: (instance: unknown) => (form = instance as FormApi), schema: configSchema, data: configData, errors: [secretError] }, {
+        default: () => [h(Collapse, { modelValue: true }, { default: () => [h(Field, { name: fieldName })] })],
+      })
+    })))
+
+    cy.then(() => form.unmatchedErrors).should('deep.equal', [secretError])
+    cy.then(() => {
+      name.value = 'config.secret'
+      return nextTick()
+    })
+    cy.then(() => form.unmatchedErrors).should('deep.equal', [])
+  })
+
+  it('reads the render rules of a record in a closed container', () => {
+    const tab = ref('first')
+    let form: FormApi
+    cy.mount(() => h(defineComponent(() => () => h(Form, { ref: (instance: unknown) => (form = instance as FormApi), schema: configSchema, data: configData, errors: [secretError] }, {
+      default: () => [
+        h(Tabs, { modelValue: tab.value, 'onUpdate:modelValue': (value: string) => (tab.value = value) }, {
+          first: () => [h('p', 'nothing here')],
+          // `secret` shows only in the "token" mode, and the mode is "basic"
+          second: () => [h(ObjectField, { name: 'config', renderRules: { dependencies: { secret: ['mode', 'token'] } } })],
+        }),
+      ],
+    }))))
+
+    // Hidden before the record mounts, as once it has
+    cy.then(() => form.getContainerErrors({ component: Tabs, slotName: 'second' })).should('deep.equal', [])
+    cy.then(() => form.unmatchedErrors).should('deep.equal', [secretError])
+    cy.then(() => form.reveal('config.secret')).should('equal', null)
+    cy.then(() => tab.value).should('equal', 'first')
+  })
+
+  it('opens the containers of a remembered field inside a record around them', () => {
+    const tab = ref('second')
+    let form: FormApi
+    cy.mount(() => h(defineComponent(() => () => h(Form, { ref: (instance: unknown) => (form = instance as FormApi), schema: configSchema, data: configData }, {
+      default: () => [
+        // Covers `config.secret` too, less closely than the memory does
+        h(ObjectField, { name: 'config', omit: ['host', 'mode', 'other', 'extra'] }, {
+          default: () => [
+            h(Tabs, { modelValue: tab.value, 'onUpdate:modelValue': (value: string) => (tab.value = value) }, {
+              first: () => [h('div', [h(Field, { name: 'other' })])],
+              second: () => [h('section', [h(Field, { name: 'host' }), h(NoAdapterSecret)])],
+            }),
+          ],
+        }),
+      ],
+    }))))
+    cy.getTestId('ff-config.secret').should('be.visible')
+    cy.then(() => {
+      tab.value = 'first'
+    })
+    cy.getTestId('ff-config.secret').should('not.exist')
+
+    // The record covers the field less closely than the memory of its tab
+    cy.then(() => form.reveal('config.secret')).should('deep.equal', { path: 'config.secret', exact: true })
+    cy.then(() => tab.value).should('equal', 'second')
+  })
+
+  it('counts a field of a closed tab in its tab only', () => {
+    const tab = ref('second')
+    let form: FormApi
+    cy.mount(() => h(defineComponent(() => () => h(Form, { ref: (instance: unknown) => (form = instance as FormApi), schema: configSchema, data: configData, errors: [secretError] }, {
+      default: () => [
+        h(Collapse, { key: 'section', modelValue: false }, { default: () => [h(Field, { name: 'config.other' })] }),
+        h(Tabs, { modelValue: tab.value, 'onUpdate:modelValue': (value: string) => (tab.value = value) }, {
+          first: () => [h('div', [h(Field, { name: 'config.extra' })])],
+          second: () => [h('section', [h(Field, { name: 'config.secret' })])],
+        }),
+      ],
+    }))))
+    cy.getTestId('ff-config.secret').should('be.visible')
+    cy.then(() => {
+      tab.value = 'first'
+    })
+    cy.getTestId('ff-config.secret').should('not.exist')
+
+    // As it unmounted, its closest field was in the section: the tree still holds it in the tab
+    cy.then(() => form.getContainerErrors({ component: Collapse, key: 'section' })).should('deep.equal', [])
+    cy.then(() => form.getContainerErrors({ component: Tabs, slotName: 'second' })).should('deep.equal', [secretError])
   })
 })

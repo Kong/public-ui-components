@@ -1,8 +1,8 @@
-import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
+import { cloneDeep, get, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
-import { createRenderRuleRegistry } from './render-rules'
+import { createRenderRuleRegistry, meetsDependency } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
-import { computed, provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
+import { computed, onBeforeUpdate, provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import { findExpressionSourceRecord, toSourcePath } from './expression-paths'
 import * as utils from '../utils'
@@ -186,13 +186,68 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * mounted or not, see `scanRevealTree`. Empty when the form renders the
      * fields of its schema itself.
      */
+    // The slots are not reactive: a parent that renders again passes new ones
+    // (e.g. a field name it picks before the slot), and the form updates
+    const slotsVersion = ref(0)
+    onBeforeUpdate(() => {
+      slotsVersion.value++
+    })
+    // While the content's slots run to scan them: what they read of the tree
+    // then (e.g. a count in a tab's label) is not part of the tree
+    let scanning = false
     const revealTree = computed<RevealNode[]>(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      slotsVersion.value
       if (!slots.default) {
         return []
       }
-      return scanRevealTree(slots.default({}))
+      scanning = true
+      try {
+        return scanRevealTree(slots.default({}))
+      } finally {
+        scanning = false
+      }
     })
     const treeFields = computed(() => flattenRevealTree(revealTree.value))
+
+    /**
+     * Whether the render rules of a field of the tree hide the field at
+     * `fieldPath`. A field (e.g. an `ObjectField` with `renderRules`) registers
+     * its rules only as it mounts: until then, e.g. in a closed tab, they are
+     * read from the tree, so its hidden children don't count or open it.
+     */
+    function isHiddenByTreeRules(fieldPath: string): boolean {
+      if (scanning) {
+        return false
+      }
+      const parts = utils.toArray(fieldPath)
+      if (!parts.length) {
+        return false
+      }
+      const fieldName = parts[parts.length - 1]
+      const parentPath = utils.resolve(...parts.slice(0, -1))
+      return treeFields.value.some((field) => {
+        const dependency = field.path === parentPath ? field.renderRules?.dependencies?.[fieldName] : undefined
+        if (!dependency) {
+          return false
+        }
+        const [depName, expected] = dependency
+        return !meetsDependency(get(innerData, utils.toArray(utils.resolve(parentPath, depName))), expected)
+      })
+    }
+
+    /**
+     * Whether rules hide a field, for matching its errors and revealing it. The
+     * rules of fields that have not mounted count too, see `isHiddenByTreeRules`;
+     * they don't change the value the form submits.
+     */
+    function isHiddenForReveal(fieldPath: string): boolean {
+      return isPrunedAsHidden(fieldPath) || isHiddenByTreeRules(fieldPath)
+    }
+
+    function isHiddenForErrors(fieldPath: string): boolean {
+      return isFieldHidden(fieldPath) || isHiddenByTreeRules(fieldPath)
+    }
 
     const {
       revealTarget, registerFieldElement, rememberField, findAnchor, getAnchoredFields,
@@ -202,7 +257,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
       getTreeFields: () => treeFields.value,
-      isFieldHidden: isPrunedAsHidden,
+      isFieldHidden: isHiddenForReveal,
     })
 
     const { getFieldErrors, getErrorsWhere, unmatchedErrors, onArrayItemRemoved, onMapKeyRenamed, onMapKeyRemoved } = createFieldErrors({
@@ -212,7 +267,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getData: () => keyIdMap.deserialize(innerData),
       getSchema: (path) => schemaHelpers.getSchema(path),
       getKey: keyIdMap.getKey,
-      isFieldHidden,
+      isFieldHidden: isHiddenForErrors,
       isFieldRendered,
     })
 
@@ -221,6 +276,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * many errors an inactive tab holds
      */
     function getContainerErrors(query: RevealContainerQuery): FieldError[] {
+      // Called by the content as it is scanned, e.g. in a tab's label: the tree
+      // is what is being built, and the count shows once it is
+      if (scanning) {
+        return []
+      }
       const treeCovers = treeFields.value.filter(field => field.containers.some(node => matchesContainer(node, query)))
       // A field the tree doesn't hold sits in the containers of its anchor
       const anchored = getAnchoredFields().filter(field => treeCovers.some(cover => coversFieldPath(cover, field.anchor)))

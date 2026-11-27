@@ -38,7 +38,7 @@ function resolveName(base: string, name: string): string {
 function toCover(base: string, cover: string | FieldCover): FieldCover {
   return typeof cover === 'string'
     ? { path: resolveName(base, cover) }
-    : { path: resolveName(base, cover.path), exclude: cover.exclude }
+    : { ...cover, path: resolveName(base, cover.path) }
 }
 
 /** The slots of a component vnode, as functions */

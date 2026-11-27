@@ -1,4 +1,5 @@
 import type { VNode } from 'vue'
+import type { RenderRules } from '../types'
 
 /**
  * A field a part of the form covers: the field at `path` and everything below
@@ -7,6 +8,12 @@ import type { VNode } from 'vue'
 export interface FieldCover {
   path: string
   exclude?: string[]
+  /**
+   * The render rules the field applies to its children (e.g. `ObjectField`'s
+   * `renderRules`). A field registers them only as it mounts, so the form reads
+   * them here to know which children they hide before then.
+   */
+  renderRules?: RenderRules
 }
 
 export interface RevealAdapterContext<P = Record<string, any>> {

@@ -14,10 +14,18 @@ import StringField from './components/StringField.vue'
 import SwitchField from './components/SwitchField.vue'
 
 import type { FieldCover } from './composables/reveal-adapter'
+import type { RenderRules } from './types'
 
-/** A field component renders the field its `name` names, except what it `omit`s */
-function toField(props: { name?: string, omit?: string[] }): FieldCover | undefined {
-  return props.name ? { path: props.name, exclude: props.omit } : undefined
+/**
+ * A field component renders the field its `name` names, except what it `omit`s,
+ * and applies its `renderRules` to its children
+ */
+function toField(props: { name?: string, omit?: string[], renderRules?: RenderRules, 'render-rules'?: RenderRules }): FieldCover | undefined {
+  if (!props.name) {
+    return undefined
+  }
+  const renderRules = props.renderRules ?? props['render-rules']
+  return { path: props.name, exclude: props.omit, ...(renderRules ? { renderRules } : {}) }
 }
 
 for (const component of [
