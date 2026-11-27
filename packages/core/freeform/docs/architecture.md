@@ -62,6 +62,8 @@ All exports below are re-exported from the package root (`render-rules.ts` only 
 |---|---|---|
 | `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue, getEmptyOrDefault/getEmptyValue |
 | `reveal-open.ts` | `useRevealOpen(container, open)` | Opens a section that keeps its fields mounted while closed (e.g. `KCollapse`) when a reveal heads for a field inside it |
+| `reveal-adapter.ts` | `defineRevealAdapter()`, `updateModelValue()` | Tells the form what a component does with fields, so a reveal and the field errors reach fields that are not mounted, see [Closed Containers](closed-containers.md) |
+| `reveal-tree.ts` | `scanRevealTree()`, `flattenRevealTree()`, `findDeepest()`, `coversFieldPath()`, `matchesContainer()` | Finds the fields the form's content renders and the containers they sit in, from its vnodes, without mounting them |
 | `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors, emptyOrDefaultValue, emptyValue |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
 | `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getEmptyOrDefault, getEmptyValue, getSelectItems, getLabelAttributes |

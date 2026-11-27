@@ -45,5 +45,9 @@ const APP_LINKS: SandboxNavigationItem[] = [
     name: 'Split fields',
     to: { name: 'split-fields' },
   },
+  {
+    name: 'Reveal containers',
+    to: { name: 'reveal-containers' },
+  },
 ]
 </script>

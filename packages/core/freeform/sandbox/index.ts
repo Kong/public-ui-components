@@ -35,6 +35,11 @@ const router = createRouter({
       name: 'split-fields',
       component: () => import('./pages/SplitFieldsDemo.vue'),
     },
+    {
+      path: '/reveal-containers',
+      name: 'reveal-containers',
+      component: () => import('./pages/RevealContainersDemo.vue'),
+    },
   ],
 })
 

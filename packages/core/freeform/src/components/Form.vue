@@ -40,6 +40,7 @@ import { useSlots, type Slot, computed, toRaw, toRef } from 'vue'
 import { EXPRESSIONS_FIELD, FIELD_RENDERERS, provideFormShared } from '../composables'
 import type { FormSchema, UnionFieldSchema } from '../form-schema'
 import Field from './Field.vue'
+import '../reveal-adapters'
 import type { FieldError, FormConfig, GlobalAction, RenderRules } from '../types'
 import { sortFieldsByBundles, sortFieldsByFieldNames } from '../utils'
 
@@ -63,7 +64,10 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue, reveal, unmatchedErrors } = provideFormShared({
+const {
+  getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue, reveal, unmatchedErrors,
+  revealTree, getContainerErrors,
+} = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: () => config as FormConfig,
@@ -104,6 +108,16 @@ defineExpose({
    * The errors no field can show in the current state, see `createFieldErrors`
    */
   unmatchedErrors,
+  /**
+   * The fields the form's content renders and the containers they sit in,
+   * mounted or not, see `scanRevealTree`
+   */
+  revealTree,
+  /**
+   * The errors of the fields in the containers a query picks, e.g. to show how
+   * many errors an inactive tab holds
+   */
+  getContainerErrors,
 })
 </script>
 
