@@ -545,7 +545,7 @@ describe('dashboardSchema.v2', () => {
     expect(validate({ datasource: 'requests', metric: 'cost', unroll: ['ai'] })).toBe(false)
   })
 
-  describe('heatmap and treemap tiles', () => {
+  describe('heatmap, treemap and sankey tiles', () => {
     const chartTile = (chart: Record<string, unknown>, dimensions: string[]) => ({
       ...dashboardConfig,
       tiles: [
@@ -562,11 +562,12 @@ describe('dashboardSchema.v2', () => {
     it.each([
       ['heatmap', ['time', 'ai_gateway_model']],
       ['treemap', ['ai_provider', 'ai_gateway_model']],
+      ['sankey', ['ai_gateway_model', 'oidc_credential']],
     ])('accepts a %s tile with a chart title', (type, dimensions) => {
       expect(validateDashboardConfigSchema(chartTile({ type, chart_title: 'Model usage' }, dimensions))).toBe(true)
     })
 
-    it.each(['heatmap', 'treemap'])('rejects unknown %s chart options', (type) => {
+    it.each(['heatmap', 'treemap', 'sankey'])('rejects unknown %s chart options', (type) => {
       expect(validateDashboardConfigSchema(chartTile({ type, stacked: true }, ['ai_provider']))).toBe(false)
     })
   })

@@ -355,7 +355,7 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it('Renders heatmap and treemap tiles through their renderers', () => {
+  it('Renders heatmap, treemap and sankey tiles through their renderers', () => {
     const models = { 'gpt-4o': { name: 'gpt-4o' }, 'claude-opus-4-1': { name: 'claude-opus-4-1' } }
     const meta = {
       start: '2024-06-16T00:00:00.000Z',
@@ -385,7 +385,18 @@ describe('<DashboardRenderer />', () => {
       },
     }
 
-    const tile = (type: 'heatmap' | 'treemap', dimensions: string[], col: number): TileConfig => ({
+    const sankeyResponse: ExploreResultV4 = {
+      data: [
+        { timestamp: meta.start, event: { ai_gateway_model: 'gpt-4o', oidc_credential: 'alex', ai_request_count: 10 } },
+        { timestamp: meta.start, event: { ai_gateway_model: 'claude-opus-4-1', oidc_credential: 'alex', ai_request_count: 20 } },
+      ],
+      meta: {
+        ...meta,
+        display: { ai_gateway_model: models, oidc_credential: { alex: { name: 'alex@example.com' } } },
+      },
+    }
+
+    const tile = (type: 'heatmap' | 'treemap' | 'sankey', dimensions: string[], col: number): TileConfig => ({
       type: 'chart',
       definition: {
         chart: { type, chart_title: `Model usage ${type}` },
@@ -398,6 +409,10 @@ describe('<DashboardRenderer />', () => {
     const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
       const { query } = dsAwareQuery as AdvancedDatasourceQuery
 
+      if (query.dimensions?.includes('oidc_credential')) {
+        return Promise.resolve(sankeyResponse)
+      }
+
       return Promise.resolve(query.dimensions?.includes('time') ? heatmapResponse : treemapResponse)
     }
 
@@ -408,6 +423,8 @@ describe('<DashboardRenderer />', () => {
           tiles: [
             tile('heatmap', ['time', 'ai_gateway_model'], 0),
             tile('treemap', ['ai_provider', 'ai_gateway_model'], 3),
+            // Below the first two, which fill the dashboard's width
+            { ...tile('sankey', ['ai_gateway_model', 'oidc_credential'], 0), layout: { position: { col: 0, row: 2 }, size: { cols: 3, rows: 2 } } },
           ],
         },
       },
@@ -418,9 +435,10 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('.tile-boundary').should('have.length', 2)
+    cy.get('.tile-boundary').should('have.length', 3)
     cy.get('[data-testid="heatmap-chart"] canvas').should('be.visible')
     cy.get('[data-testid="treemap-chart"] canvas').should('be.visible')
+    cy.get('[data-testid="sankey-chart"] canvas').should('be.visible')
   })
 
   it('Changing the timeframe changes the query', () => {

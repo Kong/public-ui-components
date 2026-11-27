@@ -266,6 +266,7 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 import HeatmapRenderer from './HeatmapRenderer.vue'
 import TreemapRenderer from './TreemapRenderer.vue'
+import SankeyRenderer from './SankeyRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -431,6 +432,7 @@ const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && k
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'heatmap': HeatmapRenderer,
   'treemap': TreemapRenderer,
+  'sankey': SankeyRenderer,
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'scatter': ScatterChartRenderer,
