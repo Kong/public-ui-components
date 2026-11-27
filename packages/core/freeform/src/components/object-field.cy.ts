@@ -75,11 +75,9 @@ describe('ObjectField', () => {
   it('does not toggle by clicking the label when the optional object field is not added', () => {
     mountObjectForm({})
 
-    // Not added: clicking the label does not expand
     cy.getTestId(`ff-label-${FIELD_NAME}`).click({ force: true })
     cy.getTestId(`ff-object-content-${FIELD_NAME}`).should('not.exist')
 
-    // Added: clicking the label toggles again
     cy.getTestId(`ff-object-switch-${FIELD_NAME}`).click({ force: true })
     cy.getTestId(`ff-object-content-${FIELD_NAME}`).should('exist')
     cy.getTestId(`ff-label-${FIELD_NAME}`).click({ force: true })
