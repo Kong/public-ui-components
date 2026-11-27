@@ -178,10 +178,10 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   line-height: var(--kui-line-height-20, $kui-line-height-20);
   margin: var(--kui-space-0, $kui-space-0);
+  overflow-wrap: anywhere;
 }
 
 .about-card-description {
-  // One line: the ellipsis is CSS, the tooltip comes from `useTruncatedText`.
   color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   font-size: var(--kui-font-size-10, $kui-font-size-10);
   line-height: var(--kui-line-height-10, $kui-line-height-10);
@@ -284,6 +284,10 @@ const skeletonRowCount = computed<number>(() => rows.length || 4)
 
   .about-card-content {
     margin-top: var(--kui-space-40, $kui-space-40);
+
+    &:first-child {
+      margin-top: var(--kui-space-0, $kui-space-0);
+    }
   }
 
   // Below this the two columns no longer leave the value a usable amount of
