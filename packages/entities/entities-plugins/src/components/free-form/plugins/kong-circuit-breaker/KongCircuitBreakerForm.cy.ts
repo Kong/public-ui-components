@@ -115,6 +115,146 @@ describe('KongCircuitBreakerForm', () => {
     })
   })
 
+  // Toggling a circuit on while creating preselects "Count only"; with the
+  // schema declaring no default, an unset `open_when` would show both
+  // thresholds and select neither condition.
+  it('defaults a circuit to the count-only threshold when it is turned on', () => {
+    const circuit = (maxFailures: number) => ({
+      type: 'record',
+      required: true,
+      fields: [
+        { enabled: { type: 'boolean', default: false } },
+        { open_when: { type: 'string', required: true, one_of: ['max_failures', 'failure_percentage', 'both', 'either'] } },
+        { max_failures: { type: 'integer', required: true, default: maxFailures } },
+        { failure_percentage: { type: 'number', required: true, default: 10 } },
+      ],
+    })
+
+    mountSchema({
+      type: 'record',
+      fields: [{
+        config: {
+          type: 'record',
+          required: true,
+          fields: [
+            { policy_circuit: circuit(20) },
+            { latency_circuit: circuit(10) },
+          ],
+        },
+      }],
+    })
+
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-max_failures').should('be.checked')
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('not.exist')
+
+    cy.getTestId('ff-radio-config.latency_circuit.open_when-max_failures').should('not.exist')
+
+    enableCircuit('latency_circuit')
+
+    cy.getTestId('ff-radio-config.latency_circuit.open_when-max_failures').should('be.checked')
+    cy.getTestId('ff-config.latency_circuit.max_failures').should('have.value', '10')
+    cy.getTestId('ff-config.latency_circuit.failure_percentage').should('not.exist')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit.open_when).to.eq('max_failures')
+      expect(value.config.latency_circuit.open_when).to.eq('max_failures')
+    })
+  })
+
+  // A circuit record is optional in the schema, so an empty draft carries no
+  // record at all: the policy circuit still has to start on and filled, and
+  // the switch is what creates the latency one, with its field defaults.
+  it('fills an optional circuit record from the schema', () => {
+    const circuit = (maxFailures: number) => ({
+      type: 'record',
+      fields: [
+        { enabled: { type: 'boolean', default: false } },
+        { open_when: { type: 'string', required: true, one_of: ['max_failures', 'failure_percentage', 'both', 'either'], default: 'max_failures' } },
+        { max_failures: { type: 'integer', required: true, default: maxFailures } },
+        { failure_percentage: { type: 'number', required: true, default: 10 } },
+        { sampling_window_seconds: { type: 'integer', required: true, default: 60 } },
+        { recovery_period_ms: { type: 'integer', required: true, default: 30000 } },
+      ],
+    })
+
+    mountSchema({
+      type: 'record',
+      fields: [{
+        config: {
+          type: 'record',
+          required: true,
+          fields: [
+            { policy_circuit: circuit(20) },
+            { latency_circuit: circuit(10) },
+          ],
+        },
+      }],
+    })
+
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
+    cy.getTestId('ff-config.policy_circuit.sampling_window_seconds').should('have.value', '60')
+    cy.getTestId('ff-config.policy_circuit.recovery_period_ms').should('have.value', '30000')
+    cy.getTestId('ff-config.latency_circuit.max_failures').should('not.exist')
+
+    enableCircuit('latency_circuit')
+
+    cy.getTestId('ff-config.latency_circuit.max_failures').should('have.value', '10')
+    cy.getTestId('ff-config.latency_circuit.sampling_window_seconds').should('have.value', '60')
+    cy.getTestId('ff-config.latency_circuit.recovery_period_ms').should('have.value', '30000')
+
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit.enabled).to.eq(true)
+      expect(value.config.latency_circuit.enabled).to.eq(true)
+    })
+  })
+
+  // A plugin saved while the record was optional comes back without it, and
+  // the fill has to run while editing too.
+  it('fills a circuit saved without a record when it is turned on while editing', () => {
+    mountForm({
+      config: { policy_circuit: null, latency_circuit: null, half_open_calls: 5 },
+    }, true)
+
+    enableCircuit('policy_circuit')
+
+    cy.getTestId('ff-config.policy_circuit.max_failures').should('have.value', '20')
+    cy.getTestId('ff-config.policy_circuit.sampling_window_seconds').should('have.value', '60')
+  })
+
+  // The fill restores every missing key, including the threshold the selected
+  // condition does not use; that one has to be dropped again.
+  it('keeps the unused threshold out of the payload across an off/on toggle', () => {
+    mountForm()
+
+    cy.getTestId('ff-radio-config.policy_circuit.open_when-failure_percentage').click()
+    enableCircuit('policy_circuit')
+    enableCircuit('policy_circuit')
+
+    cy.getTestId('ff-config.policy_circuit.failure_percentage').should('have.value', '10')
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.policy_circuit).to.not.have.property('max_failures')
+    })
+  })
+
+  // The default is a create-time convenience: a saved threshold must survive a
+  // circuit being switched off and back on.
+  it('keeps a saved threshold when a circuit is turned back on while editing', () => {
+    mountForm({
+      config: {
+        policy_circuit: { enabled: false },
+        latency_circuit: { enabled: false, open_when: 'both', max_failures: 10, failure_percentage: 10 },
+      },
+    }, true)
+
+    enableCircuit('latency_circuit')
+
+    cy.getTestId('ff-radio-config.latency_circuit.open_when-both').should('be.checked')
+    cy.get('@onFormChange').its('lastCall.args.0').should((value: CircuitBreakerPayload) => {
+      expect(value.config.latency_circuit.open_when).to.eq('both')
+    })
+  })
+
   // Both thresholds are `required`: the Gateway rejects a null ("required field
   // missing") but accepts an absent key, so the unused one is dropped.
   it('shows only the threshold its condition uses, and drops the other', () => {
