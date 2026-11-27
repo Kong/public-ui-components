@@ -11,6 +11,14 @@ const rows: AboutCardRow[] = [
   { key: 'enabled', label: 'Enabled' },
 ]
 
+// jsdom defines neither ResizeObserver nor text layout; the description's truncation
+// detection observes its element and measures it with scrollWidth/clientWidth.
+global.ResizeObserver = class {
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+}
+
 describe('<AboutCard />', () => {
   const createWrapper = (props = {}, slots = {}) => mount(AboutCard, {
     props: { rows, ...props },
@@ -25,6 +33,10 @@ describe('<AboutCard />', () => {
       expect(createWrapper().find('.kong-ui-public-about-card').exists()).toBe(true)
     })
 
+    it('should render the body panel the rows sit on', () => {
+      expect(createWrapper().find('.about-card-panel').exists()).toBe(true)
+    })
+
     it('should render the title', () => {
       expect(createWrapper({ title: 'About this model' }).text()).toContain('About this model')
     })
@@ -32,7 +44,15 @@ describe('<AboutCard />', () => {
     it('should render the title as the tag given by `titleTag`', () => {
       const wrapper = createWrapper({ title: 'About this model', titleTag: 'h3' })
 
-      expect(wrapper.find('h3.card-title').exists()).toBe(true)
+      expect(wrapper.getTestId('about-card-title').element.tagName).toBe('H3')
+    })
+
+    it('should not render the header without a title, description or actions', () => {
+      expect(createWrapper().findTestId('about-card-header').exists()).toBe(false)
+    })
+
+    it('should render the header when a title is given', () => {
+      expect(createWrapper({ title: 'About this model' }).findTestId('about-card-header').exists()).toBe(true)
     })
 
     it('should render the description only when one is given', () => {
@@ -41,6 +61,21 @@ describe('<AboutCard />', () => {
       const wrapper = createWrapper({ description: 'A model served by the gateway.' })
 
       expect(wrapper.getTestId('about-card-description').text()).toBe('A model served by the gateway.')
+    })
+
+    it('should put the whole description in a native tooltip only while it is truncated', async () => {
+      const wrapper = createWrapper({ description: 'A model served by the gateway.' })
+      const description = wrapper.getTestId('about-card-description')
+
+      // jsdom lays no text out, so the element reports as fitting unless the spec says otherwise.
+      expect(description.attributes('title')).toBeUndefined()
+
+      Object.defineProperty(description.element, 'scrollWidth', { value: 200 })
+      Object.defineProperty(description.element, 'clientWidth', { value: 100 })
+      // `measure` runs on the component's next update.
+      await wrapper.setProps({ rows })
+
+      expect(description.attributes('title')).toBe('A model served by the gateway.')
     })
 
     it('should render a row per entry, with its label and value', () => {

@@ -338,18 +338,30 @@ const breadcrumbs = [
     title="My Control Plane"
   >
     <template #aside>
-      <KCard title="Summary">
-        <!-- Supporting content -->
-      </KCard>
+      <AboutCard
+        title="Summary"
+        :rows="summaryRows"
+      >
+        <!-- Supporting content in the default slot -->
+      </AboutCard>
       <!-- More elements stack below, and stick together with the first -->
-      <KCard title="Spend limit">
+      <AboutCard title="Spend limit">
         <!-- Supporting content -->
-      </KCard>
+      </AboutCard>
     </template>
 
     <div>Page content here</div>
   </PageLayout>
 </template>
+
+<script setup lang="ts">
+import { AboutCard } from '@kong-ui-public/page-layout'
+import type { AboutCardRow } from '@kong-ui-public/page-layout'
+
+const summaryRows: AboutCardRow[] = [
+  { key: 'region', label: 'Region', value: 'us-east-1' },
+]
+</script>
 ```
 
 #### With back button (string URL)
