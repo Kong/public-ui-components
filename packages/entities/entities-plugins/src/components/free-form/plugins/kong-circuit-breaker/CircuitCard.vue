@@ -127,9 +127,10 @@ const { i18n: { t } } = useI18n()
 type MessageKey = Parameters<typeof t>[0]
 
 const f = (key: string) => t(`plugins.free-form.kong-circuit-breaker.fields.${key}` as MessageKey)
-const { formData, getSchema, getSelectItems, getEmptyOrDefault } = useFormShared<Record<string, any>>()
+const { formData, getSchema, getSelectItems, getEmptyOrDefault, getDefault } = useFormShared<Record<string, any>>()
 
-const path = (field: string) => `config.${circuit}.${field}`
+const recordPath = `config.${circuit}`
+const path = (field: string) => `${recordPath}.${field}`
 
 /**
  * The Gateway owns the field list, and this plugin's schema is still changing.
@@ -190,6 +191,46 @@ function syncThreshold(field: string, visible: boolean) {
     record[field] = getEmptyOrDefault(path(field))
   }
 }
+
+/**
+ * Freeform fills a record's defaults when the record is switched on
+ * (`ObjectField` calls `getDefault`; `ArrayField` does the same for a new
+ * item). This card hand-places its own switch on `enabled` instead of an
+ * `ObjectField`, so that fill is repeated here: without it the switch writes
+ * `{ enabled: true }` alone and every field under the circuit renders empty.
+ *
+ * Only missing keys are filled, so a value already on the record always wins.
+ * That is also why editing is not skipped: the circuit record is optional, so
+ * a plugin saved with it unset comes back empty and needs the same fill.
+ * The condition starts at "Count only" even when the schema declares no
+ * default for `open_when` — but only while the schema still declares that
+ * value: writing one it dropped from `one_of` would leave every radio
+ * unselected and fail the Gateway's enum check.
+ */
+watch(() => formData.config?.[circuit]?.enabled, (enabled) => {
+  if (!enabled) return
+
+  const record = formData.config?.[circuit]
+  if (!record) return
+
+  const defaults: Record<string, unknown> = getDefault(recordPath) ?? {}
+  for (const [key, value] of Object.entries(defaults)) {
+    if (key !== 'enabled' && record[key] == null && value != null) record[key] = value
+  }
+
+  if (!record.open_when) {
+    const conditions = getSchema(path('open_when'))?.one_of ?? []
+    if (conditions.length) {
+      record.open_when = conditions.includes('max_failures') ? 'max_failures' : conditions[0]
+    }
+  }
+
+  // The fill restores both thresholds; the condition only uses one, and
+  // `showsCount`/`showsPercentage` alone would not react when the selected
+  // condition is unchanged (a circuit switched off and back on).
+  syncThreshold('max_failures', showsCount.value)
+  syncThreshold('failure_percentage', showsPercentage.value)
+}, { immediate: true })
 
 watch([showsCount, showsPercentage], ([count, percentage]) => {
   syncThreshold('max_failures', count)

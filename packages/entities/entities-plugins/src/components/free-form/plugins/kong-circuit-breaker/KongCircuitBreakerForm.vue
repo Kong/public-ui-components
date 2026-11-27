@@ -30,8 +30,18 @@ const { i18n: { t } } = useI18n()
 /** The shape `prepareFormData` reaches into; the rest stays schema-driven. */
 interface CircuitBreakerFormData {
   config?: {
-    policy_circuit?: { enabled?: boolean }
+    policy_circuit?: { enabled?: boolean } | null
   }
+}
+
+/**
+ * The circuit records are optional in the schema, so a new plugin's data can
+ * arrive without one; writing the key then would be inventing a field the
+ * schema never declared.
+ */
+const declaresPolicyCircuit = (): boolean => {
+  const config = props.schema?.fields?.find(field => 'config' in field)?.config
+  return config?.type === 'record' && config.fields.some(field => 'policy_circuit' in field)
 }
 
 const formConfig = {
@@ -39,10 +49,12 @@ const formConfig = {
    * A circuit breaker with both circuits off does nothing, and the Gateway
    * rejects it ("at least one of policy_circuit or latency_circuit must be
    * enabled"), so a new plugin starts with the policy circuit on. The schema
-   * default is `false`; an existing plugin keeps whatever it was saved with.
+   * default is `false` (and the record itself may be absent); an existing
+   * plugin keeps whatever it was saved with. `CircuitCard` fills the rest of
+   * the circuit's fields once `enabled` is on.
    */
   prepareFormData: (data: CircuitBreakerFormData): CircuitBreakerFormData => {
-    if (props.isEditing || !data?.config?.policy_circuit) return data
+    if (props.isEditing || !data?.config || !declaresPolicyCircuit()) return data
 
     return {
       ...data,
