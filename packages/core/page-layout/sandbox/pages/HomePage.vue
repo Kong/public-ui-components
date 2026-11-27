@@ -100,7 +100,7 @@
         </AboutCard>
 
         <!-- A second card, to show that every element in the aside sticks, in order -->
-        <KCard title="Spend limit">
+        <AboutCard title="Spend limit">
           <p>$62,400 of $100,000</p>
           <KBadge appearance="info">
             62% consumed
@@ -110,7 +110,7 @@
             <AddIcon decorative />
             Set spend limit
           </KButton>
-        </KCard>
+        </AboutCard>
       </template>
     </PageLayout>
 

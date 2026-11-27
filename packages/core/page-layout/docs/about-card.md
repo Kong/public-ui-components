@@ -1,6 +1,6 @@
 # AboutCard.vue
 
-A card that presents entity metadata as a list of label/value rows. Built on Kongponents `KCard`, with no overrides of its styles.
+A card that presents entity metadata as a list of label/value rows. A frame-and-panel card in the style of the new appearance: a gray frame holding a header and a white body panel.
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -26,7 +26,6 @@ A card that presents entity metadata as a list of label/value rows. Built on Kon
 
 - `vue` must be initialized in the host application
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. Specifically, the following Kongponents must be available:
-  - `KCard`
   - `KSkeletonBox`
   - `KTooltip`
 
@@ -114,9 +113,13 @@ The label column is a fixed `140px`. Labels longer than that wrap within the col
 
 ## Card styling
 
-The card reads slightly more compact than a default `KCard`: a smaller title and a tighter gap between the title and the content. These are set through `KCard`'s own `--kui-card-title-font-size` and `--kui-card-gap` custom properties rather than by overriding its rules, so they keep working across `KCard` changes.
+The card follows the new appearance's frame-and-panel pattern, the same one `ContentFrame` and `ContentFrameSection` implement in the host applications:
 
-They are scoped to AboutCard's own root element, so other cards on the page — including a sibling `KCard` in the same `aside` slot — are unaffected.
+- The **frame** is the outer gray box (`--kui-color-background-neutral-weakest`) with a hairline border and a generous corner radius. It holds the header and the panel.
+- The **header** carries the title, the one-line description and the actions. It renders only when at least one of the three is present.
+- The **panel** is the white, bordered inner box the rows sit on, so the card reads as a framed caption over a content surface.
+
+The description is a single line: when it does not fit the header's width it ends in an ellipsis, and its whole text moves to a native browser tooltip — but only while the text is actually truncated, so short descriptions never get a pointless tooltip.
 
 ## Accessibility
 
