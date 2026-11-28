@@ -41,8 +41,8 @@
   "devDependencies": {
     "@kong/design-tokens": "3.5.3",
     "@kong/kongponents": "9.66.17",
-    "vue": "^3.5.43",
-    "vue-router": "^5.5.0"
+    "vue": "^3.5.45",
+    "vue-router": "^5.5.1"
   },
   "repository": {
     "type": "git",
