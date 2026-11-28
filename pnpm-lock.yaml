@@ -558,8 +558,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@zumer/snapdom':
-        specifier: ^2.24.18
-        version: 2.24.18
+        specifier: ^3.7.6
+        version: 3.8.3
       ag-grid-community:
         specifier: ^36.3.0
         version: 36.3.0
@@ -4581,8 +4581,8 @@ packages:
     resolution: {integrity: sha512-nrUSn7hzt7J6JWgWGz78ZYI8wj+gdIJdk0Ynjpp8l+trkn58Uqsf6RYrYkEK+3X18EX+TNdtJI0WxAtc+L84SQ==}
     hasBin: true
 
-  '@zumer/snapdom@2.24.18':
-    resolution: {integrity: sha512-wMw8lNY5l0pyarAv8jbe5ayOmrR2OUnK5KLtCwuhcLhFv88d2Y38Sertb+d9pn5g20Cet4eLCRXd3yFHcWiDIQ==}
+  '@zumer/snapdom@3.8.3':
+    resolution: {integrity: sha512-WW/T0i3S2pYqjzLOsBrOO/lTaHGS/EEu1DQyC+XCWpR+N7sBxlOmWLwy35GAuH29UA37GC1nv7kOgvrKLe8bJg==}
 
   abbrev@5.0.0:
     resolution: {integrity: sha512-/XrFJgzQQQHpti1raDJC6m4ws6aNktmjBlhk8Fdlk7LwCEuDoieEJJY9OFHjfiFJFFRM2tK+Ky/IsfbbmlMu1w==}
@@ -14475,7 +14475,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  '@zumer/snapdom@2.24.18': {}
+  '@zumer/snapdom@3.8.3': {}
 
   abbrev@5.0.0: {}
 
