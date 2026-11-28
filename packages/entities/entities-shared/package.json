@@ -50,11 +50,11 @@
     "@shikijs/langs": "^4.6.0",
     "@shikijs/themes": "^4.6.0",
     "@vueuse/core": "^15.0.0",
-    "axios": "^1.21.0",
+    "axios": "^1.21.1",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.6.0",
-    "vue": "^3.5.43",
-    "vue-router": "^5.5.0"
+    "vue": "^3.5.45",
+    "vue-router": "^5.5.1"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
